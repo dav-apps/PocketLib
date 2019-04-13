@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationPageComponent } from './pages/navigation-page/navigation-page.component';
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
+import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 
 @NgModule({
    declarations: [
 		AppComponent,
       NavigationPageComponent,
-      LibraryPageComponent
+      LibraryPageComponent,
+      SettingsPageComponent
   	],
   	imports: [
    	BrowserModule,
