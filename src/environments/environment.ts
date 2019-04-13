@@ -4,7 +4,9 @@
 
 export const environment = {
 	production: false,
-	appId: 1
+   appId: 5,
+   bookTableId: 10,
+   bookFileTableId: 11
 };
 
 /*
