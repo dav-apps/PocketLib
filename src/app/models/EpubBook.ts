@@ -5,9 +5,14 @@ export class EpubBook{
    author: string
 	chapters: EpubChapter[] = [];
 	entries: any[] = [];
+	manifestItems: EpubManifestItem[] = [];
 
    async ReadEpubFile(zipFile: File){
-      zip.workerScriptsPath = "/assets/libraries/";
+		zip.workerScriptsPath = "/assets/libraries/";
+		
+		this.chapters = [];
+		this.entries = [];
+		this.manifestItems = [];
       
       // Create a reader
       var readZipPromise: Promise<any> = new Promise((resolve) => {
@@ -63,9 +68,9 @@ export class EpubBook{
 		let manifestTag = opfDoc.getElementsByTagName("manifest")[0];
 		let manifestItemTags = manifestTag.getElementsByTagName("item");
 
-		let manifestItems: Map<string, string> = new Map();
 		for(let i = 0; i < manifestItemTags.length; i++){
-			manifestItems.set(manifestItemTags[i].getAttribute("id"), opfFileDirectory + manifestItemTags[i].getAttribute("href"));
+			let manifestItemTag = manifestItemTags[i];
+			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), opfFileDirectory + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")));
 		}
 
 		// Get the spine content
@@ -77,8 +82,10 @@ export class EpubBook{
 			let idref = spineItemTags[i].getAttribute("idref");
 
 			// Get the item with the id from the manifest items
-			let itemPath = manifestItems.get(idref);
-			if(itemPath != null){
+			let index = this.manifestItems.findIndex(item => item.id == idref);
+			if(index !== -1){
+				let itemPath = this.manifestItems[index].href;
+
 				// Get the entry with the filename
 				index = this.entries.findIndex(entry => entry.filename.includes(itemPath));
 				if(index == -1) continue;
@@ -161,7 +168,10 @@ export class EpubChapter{
 				let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
 				let byteContent = await GetBlobContent(imageContent);
 				let base64BytesContent = btoa(byteContent);
-				let mimeType = "image/jpg";
+
+				// Get the mime type from the manifest items
+				index = this.book.manifestItems.findIndex(item => item.href == imagePath);
+				let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
 
 				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
 
@@ -214,6 +224,14 @@ export class EpubChapter{
 			return "";
 		}
 	}
+}
+
+class EpubManifestItem{
+	constructor(
+		public id: string,
+		public href: string,
+		public mediaType: string
+	){}
 }
 
 function GetFileDirectory(filePath: string){
