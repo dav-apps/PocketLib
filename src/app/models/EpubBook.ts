@@ -135,11 +135,60 @@ export class EpubChapter{
 		let chapterBody = chapterDocument.getElementsByTagName("body")[0];
 
 		let newHeadHtml = await this.GetHeadHtml(chapterHead);
-		let newBodyHtml = chapterBody.innerHTML;
+		let newBodyHtml = await this.GetBodyHtml(chapterBody);
 
 		newHead.innerHTML = newHeadHtml;
 		newBody.innerHTML = newBodyHtml;
 		return newHtmlTag;
+	}
+
+	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
+		// Inject the images directly into the html
+		// Get the image tags
+		let imageTags = chapterBody.getElementsByTagName("img");
+
+		for(let i = 0; i < imageTags.length; i++){
+			let newImageTag = document.createElement("img");
+			let imageTag = imageTags[i];
+			
+			let src = imageTag.getAttribute("src");
+
+			// Get the image from the zip package
+			let imagePath = this.currentPath;
+			while(src.includes("../")){
+				// For each ../ go one directory up in the path
+				src = src.replace('../', '');
+				imagePath = GetParentDirectory(imagePath);
+			}
+			imagePath = imagePath + src;
+
+			// Get the image from the zip file entries
+			let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
+			if(index !== -1){
+				// Get the image content
+				var contentPromise: Promise<Blob> = new Promise((resolve) => {
+					this.book.entries[index].getData(new zip.BlobWriter(), resolve);
+				});
+				let imageContent = await contentPromise;
+
+				let byteContentPromise: Promise<ProgressEvent> = new Promise((resolve) => {
+					let fileReader = new FileReader();
+					fileReader.readAsBinaryString(imageContent);
+					fileReader.onloadend = resolve;
+				});
+				let byteContent = await byteContentPromise;
+				let rawBytesContent = byteContent.currentTarget["result"];
+				let base64BytesContent = btoa(rawBytesContent);
+				let mimeType = "image/jpg";
+
+				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
+
+				newImageTag.setAttribute("src", newSrc);
+				imageTag.parentNode.replaceChild(newImageTag, imageTag)
+			}
+		}
+
+		return chapterBody.outerHTML;
 	}
 
 	private async GetHeadHtml(chapterHead: HTMLHeadElement) : Promise<string>{
