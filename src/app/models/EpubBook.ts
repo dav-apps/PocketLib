@@ -48,7 +48,7 @@ export class EpubBook{
 		let opfFileEntry = this.entries[index];
 
 		// Get the content of the container
-		let opfContent = await GetZipEntryContent(opfFileEntry);
+		let opfContent = await GetZipEntryTextContent(opfFileEntry);
 
 		// Read the OPF file content
 		let parser = new DOMParser();
@@ -148,42 +148,28 @@ export class EpubChapter{
 		let imageTags = chapterBody.getElementsByTagName("img");
 
 		for(let i = 0; i < imageTags.length; i++){
-			let newImageTag = document.createElement("img");
 			let imageTag = imageTags[i];
-			
 			let src = imageTag.getAttribute("src");
 
 			// Get the image from the zip package
-			let imagePath = this.currentPath;
-			while(src.includes("../")){
-				// For each ../ go one directory up in the path
-				src = src.replace('../', '');
-				imagePath = GetParentDirectory(imagePath);
-			}
-			imagePath = imagePath + src;
+			let imagePath = MergePaths(this.currentPath, src);
 
 			// Get the image from the zip file entries
 			let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
 			if(index !== -1){
 				// Get the image content
-				var contentPromise: Promise<Blob> = new Promise((resolve) => {
-					this.book.entries[index].getData(new zip.BlobWriter(), resolve);
-				});
-				let imageContent = await contentPromise;
-
-				let byteContentPromise: Promise<ProgressEvent> = new Promise((resolve) => {
-					let fileReader = new FileReader();
-					fileReader.readAsBinaryString(imageContent);
-					fileReader.onloadend = resolve;
-				});
-				let byteContent = await byteContentPromise;
-				let rawBytesContent = byteContent.currentTarget["result"];
-				let base64BytesContent = btoa(rawBytesContent);
+				let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
+				let byteContent = await GetBlobContent(imageContent);
+				let base64BytesContent = btoa(byteContent);
 				let mimeType = "image/jpg";
 
 				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
 
+				// Creata the new image tag with the new src
+				let newImageTag = document.createElement("img");
 				newImageTag.setAttribute("src", newSrc);
+
+				// Replace the old image tag with the new one
 				imageTag.parentNode.replaceChild(newImageTag, imageTag)
 			}
 		}
@@ -219,18 +205,11 @@ export class EpubChapter{
 			let href = linkTag.getAttribute("href");
 			
 			// Find the correct path
-			let stylePath = this.currentPath;
-			while(href.includes('../')){
-				// Remove the '../' and the last directory in the style path
-				// For each ../ go one directory up in the style path
-				href = href.replace('../', '');
-				stylePath = GetParentDirectory(stylePath);
-			}
-			stylePath = stylePath + href;
-
+			let stylePath = MergePaths(this.currentPath, href);
+			
 			// Get the content of the file
 			let index = this.book.entries.findIndex(entry => entry.filename == stylePath);
-			return index !== -1 ? await GetZipEntryContent(this.book.entries[index]) : "";
+			return index !== -1 ? await GetZipEntryTextContent(this.book.entries[index]) : "";
 		}else{
 			return "";
 		}
@@ -245,9 +224,36 @@ function GetParentDirectory(directoryPath: string){
 	return directoryPath.split('/').slice(0, -2).join('/') + '/'
 }
 
-async function GetZipEntryContent(entry: any) : Promise<string>{
+async function GetZipEntryTextContent(entry: any) : Promise<string>{
 	var contentPromise: Promise<string> = new Promise((resolve) => {
 		entry.getData(new zip.TextWriter(), resolve);
 	});
 	return await contentPromise;
+}
+
+async function GetZipEntryBlobContent(entry: any) : Promise<Blob>{
+	var contentPromise: Promise<Blob> = new Promise((resolve) => {
+		entry.getData(new zip.BlobWriter(), resolve);
+	});
+	return await contentPromise;
+}
+
+async function GetBlobContent(blob: Blob) : Promise<string>{
+	let byteContentPromise: Promise<ProgressEvent> = new Promise((resolve) => {
+		let fileReader = new FileReader();
+		fileReader.onloadend = resolve;
+		fileReader.readAsBinaryString(blob);
+	});
+	let byteContent = await byteContentPromise;
+	return byteContent.currentTarget["result"];
+}
+
+function MergePaths(currentPath: string, source: string){
+	let path = currentPath;
+	while(source.includes("../")){
+		// For each ../ go one directory up in the path
+		source = source.replace('../', '');
+		path = GetParentDirectory(path);
+	}
+	return path + source;
 }
