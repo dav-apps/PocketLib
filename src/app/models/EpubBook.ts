@@ -38,7 +38,7 @@ export class EpubBook{
 		var containerEntry = this.entries[index];
    
 		// Get the content of the container
-		let opfFilePath = await this.GetOpfFilePath(containerEntry);
+		let opfFilePath = await GetOpfFilePath(containerEntry);
 		let opfFileDirectory = GetFileDirectory(opfFilePath);
 		
 		// Get the opf file from the entries
@@ -100,20 +100,6 @@ export class EpubBook{
 			}
 		}
 	}
-	
-	private async GetOpfFilePath(containerEntry: any) : Promise<string>{
-		var containerContentPromise: Promise<string> = new Promise((resolve) => {
-			containerEntry.getData(new zip.TextWriter(), resolve);
-		});
-		let containerContent = await containerContentPromise;
-
-		let parser = new DOMParser();
-		let containerDoc = parser.parseFromString(containerContent, "text/xml");
-		let container = containerDoc.getElementsByTagName("container")[0];
-		let rootFiles = container.getElementsByTagName("rootfiles")[0]
-		let rootFile = rootFiles.getElementsByTagName("rootfile")[0];
-		return rootFile.getAttribute("full-path");
-	}
 }
 
 export class EpubChapter{
@@ -149,67 +135,29 @@ export class EpubChapter{
 		return newHtmlTag;
 	}
 
-	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
-		// Inject the images directly into the html
-		// Get the image tags
-		let imageTags = chapterBody.getElementsByTagName("img");
-
-		for(let i = 0; i < imageTags.length; i++){
-			let imageTag = imageTags[i];
-			let src = imageTag.getAttribute("src");
-
-			// Get the image from the zip package
-			let imagePath = MergePaths(this.currentPath, src);
-
-			// Get the image from the zip file entries
-			let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
-			if(index !== -1){
-				// Get the image content
-				let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
-				let byteContent = await GetBlobContent(imageContent);
-				let base64BytesContent = btoa(byteContent);
-
-				// Get the mime type from the manifest items
-				index = this.book.manifestItems.findIndex(item => item.href == imagePath);
-				let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
-
-				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
-
-				// Creata the new image tag with the new src
-				let newImageTag = document.createElement("img");
-				newImageTag.setAttribute("src", newSrc);
-
-				// Replace the old image tag with the new one
-				imageTag.parentNode.replaceChild(newImageTag, imageTag)
-			}
-		}
-
-		return chapterBody.outerHTML;
-	}
-
 	private async GetHeadHtml(chapterHead: HTMLHeadElement) : Promise<string>{
 		// Get the link tags of the chapter head
 		let chapterLinkTags = chapterHead.getElementsByTagName("link");
 		let styleElement = document.createElement("style");
 		let css = "";
-
+	
 		for(let i = 0; i < chapterLinkTags.length; i++){
 			css += await this.GetStyleTagContent(chapterLinkTags[i]);
 		}
-
+	
 		// Get the style tags and add them without changes to the css
 		let chapterStyleTags = chapterHead.getElementsByTagName("style");
 		for(let i = 0; i < chapterStyleTags.length; i++){
 			css += chapterStyleTags[i].outerHTML;
 		}
-
+	
 		styleElement.innerHTML = css;
 		return styleElement.outerHTML;
 	}
-
+	
 	private async GetStyleTagContent(linkTag: HTMLLinkElement) : Promise<string>{
 		let type = linkTag.getAttribute("type");
-
+	
 		if(type == "text/css"){
 			// Get the CSS file
 			let href = linkTag.getAttribute("href");
@@ -224,14 +172,66 @@ export class EpubChapter{
 			return "";
 		}
 	}
+	
+	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
+		// Inject the images directly into the html
+		// Get the image tags
+		let imageTags = chapterBody.getElementsByTagName("img");
+	
+		for(let i = 0; i < imageTags.length; i++){
+			let imageTag = imageTags[i];
+			let src = imageTag.getAttribute("src");
+	
+			// Get the image from the zip package
+			let imagePath = MergePaths(this.currentPath, src);
+	
+			// Get the image from the zip file entries
+			let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
+			if(index !== -1){
+				// Get the image content
+				let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
+				let byteContent = await GetBlobContent(imageContent);
+				let base64BytesContent = btoa(byteContent);
+	
+				// Get the mime type from the manifest items
+				index = this.book.manifestItems.findIndex(item => item.href == imagePath);
+				let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
+	
+				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
+	
+				// Creata the new image tag with the new src
+				let newImageTag = document.createElement("img");
+				newImageTag.setAttribute("src", newSrc);
+	
+				// Replace the old image tag with the new one
+				imageTag.parentNode.replaceChild(newImageTag, imageTag)
+			}
+		}
+	
+		return chapterBody.outerHTML;
+	}
 }
 
-class EpubManifestItem{
+export class EpubManifestItem{
 	constructor(
 		public id: string,
 		public href: string,
 		public mediaType: string
 	){}
+}
+
+async function GetOpfFilePath(containerEntry: any) : Promise<string>{
+	var containerContentPromise: Promise<string> = new Promise((resolve) => {
+		containerEntry.getData(new zip.TextWriter(), resolve);
+	});
+	let containerContent = await containerContentPromise;
+
+	let parser = new DOMParser();
+	let containerDoc = parser.parseFromString(containerContent, "text/xml");
+	let container = containerDoc.getElementsByTagName("container")[0];
+	let rootFiles = container.getElementsByTagName("rootfiles")[0]
+	let rootFile = rootFiles.getElementsByTagName("rootfile")[0];
+	return rootFile.getAttribute("full-path");
 }
 
 function GetFileDirectory(filePath: string){
