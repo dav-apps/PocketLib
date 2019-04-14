@@ -143,13 +143,19 @@ export class EpubChapter{
 	}
 
 	private async GetHeadHtml(chapterHead: HTMLHeadElement) : Promise<string>{
-		// Get the style tags of the chapter head
+		// Get the link tags of the chapter head
 		let chapterLinkTags = chapterHead.getElementsByTagName("link");
 		let styleElement = document.createElement("style");
 		let css = "";
 
 		for(let i = 0; i < chapterLinkTags.length; i++){
 			css += await this.GetStyleTagContent(chapterLinkTags[i]);
+		}
+
+		// Get the style tags and add them without changes to the css
+		let chapterStyleTags = chapterHead.getElementsByTagName("style");
+		for(let i = 0; i < chapterStyleTags.length; i++){
+			css += chapterStyleTags[i].outerHTML;
 		}
 
 		styleElement.innerHTML = css;
