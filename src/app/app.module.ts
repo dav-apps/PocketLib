@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgxFileHelpersModule } from 'ngx-file-helpers';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { DataService } from './services/data-service';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +20,8 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
   	imports: [
    	BrowserModule,
       AppRoutingModule,
-      NgxFileHelpersModule
+      NgxFileHelpersModule,
+      BrowserAnimationsModule
   	],
   	providers: [
       DataService
