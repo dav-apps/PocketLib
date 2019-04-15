@@ -168,11 +168,42 @@ export class EpubChapter{
 		let chapterStyleTags = chapterHead.getElementsByTagName("style");
 		for(let i = 0; i < chapterStyleTags.length; i++){
 			css += chapterStyleTags[i].outerHTML;
+      }
+      
+      // Replace the font file references with the content of them
+		let fontUrl = GetFirstUrlParameterFromCssString(css);
+      let a = 0;
+
+		while(fontUrl != null){
+			// Get the correct url of the font file
+         let fontFilePath = MergePaths(this.currentPath, fontUrl);
+         let newUrl = "";
+
+			// Get the content of the file
+			let index = this.book.entries.findIndex(entry => entry.filename == fontFilePath);
+			if(index !== -1){
+				let fontFileBlob = await GetZipEntryBlobContent(this.book.entries[index]);
+				let fontFileContent = await GetBlobContent(fontFileBlob);
+				let base64FontFileContent = btoa(fontFileContent);
+
+				// Get the mime type from the manifest items
+            index = this.book.manifestItems.findIndex(item => item.href == fontFilePath)
+            let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "application/x-font-ttf";
+
+            newUrl = `data:${mimeType};base64,${base64FontFileContent}`;
+			}
+
+			// Replace the url with the raw data
+			css = css.replace(fontUrl, newUrl)
+
+			// Get the next url
+			fontUrl = GetFirstUrlParameterFromCssString(css);
+			a++;
 		}
 	
 		styleElement.innerHTML = css;
 		return styleElement.outerHTML;
-	}
+   }
 	
 	private async GetStyleTagContent(linkTag: HTMLLinkElement) : Promise<string>{
 		let type = linkTag.getAttribute("type");
@@ -293,4 +324,50 @@ function MergePaths(currentPath: string, source: string){
 		path = GetParentDirectory(path);
 	}
 	return path + source;
+}
+
+function GetFirstUrlParameterFromCssString(css: string) : string{
+   let startPosition = 0;
+   let index = -1;
+
+   // Get the first url property without raw data
+   while(true){
+      index = css.indexOf("url(", startPosition);
+
+      // Return null if there is no url
+      if(index == -1){
+         return null;
+      }
+
+      // Check if the url already contains the raw data
+      // If there is something like url(data: there is raw data
+      if(css.slice(index + 4, index + 9) == "data:"){
+         startPosition = index + 1;
+      }else{
+         break;
+      }
+   }
+
+   let currentChar = css[index];
+   let isInParenthesis = false;
+   let startIndex = index;
+   let endIndex = index;
+
+   while(currentChar != ')'){
+      if(!isInParenthesis && currentChar == "("){
+         isInParenthesis = true;
+         startIndex = index + 1;
+         continue;
+      }
+
+      index++;
+      currentChar = css[index];
+
+      if(isInParenthesis && currentChar != ')'){
+         // Get the text in the parenthesis
+         endIndex = index + 1;
+      }
+   }
+
+   return css.slice(startIndex, endIndex)
 }
