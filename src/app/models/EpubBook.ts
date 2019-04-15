@@ -1,11 +1,13 @@
 declare var zip: any;
 
 export class EpubBook{
-   title: string
-   author: string
+   title: string;
+   author: string;
+   language: string;
+   cover: EpubManifestItem;
 	chapters: EpubChapter[] = [];
 	entries: any[] = [];
-	manifestItems: EpubManifestItem[] = [];
+   manifestItems: EpubManifestItem[] = [];
 
    async ReadEpubFile(zipFile: File){
 		zip.workerScriptsPath = "/assets/libraries/";
@@ -59,11 +61,6 @@ export class EpubBook{
 		let parser = new DOMParser();
 		let opfDoc = parser.parseFromString(opfContent, "text/xml");
 
-		/*
-		// Get the metadata content
-		let metadataTag = opfDoc.getElementsByTagName("metadata")[0];
-		*/
-
 		// Get the manifest items
 		let manifestTag = opfDoc.getElementsByTagName("manifest")[0];
 		let manifestItemTags = manifestTag.getElementsByTagName("item");
@@ -71,7 +68,29 @@ export class EpubBook{
 		for(let i = 0; i < manifestItemTags.length; i++){
 			let manifestItemTag = manifestItemTags[i];
 			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), opfFileDirectory + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")));
-		}
+      }
+      
+      // Get the metadata content
+      let metadataTag = opfDoc.getElementsByTagName("metadata")[0];
+      this.title = metadataTag.getElementsByTagName("dc:title").item(0).innerHTML;
+      this.author = metadataTag.getElementsByTagName("dc:creator").item(0).innerHTML;
+      this.language = metadataTag.getElementsByTagName("dc:language").item(0).innerHTML;
+
+      // Find the cover image tag
+      let metaTags = metadataTag.getElementsByTagName("meta");
+      for(let i = 0; i < metaTags.length; i++){
+         let metaTagName = metaTags.item(i).getAttribute("name");
+         if(metaTagName == "cover"){
+            // Get the content attribute
+            let metaTagContent = metaTags.item(i).getAttribute("content");
+
+            // Find the manifest item with id = metaTagContent
+            let index = this.manifestItems.findIndex(item => item.id == metaTagContent);
+            if(index !== -1){
+               this.cover = this.manifestItems[index];
+            }
+         }
+      }
 
 		// Get the spine content
 		let spineTag = opfDoc.getElementsByTagName("spine")[0];
