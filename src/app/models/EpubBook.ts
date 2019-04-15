@@ -170,9 +170,31 @@ export class EpubChapter{
 			css += chapterStyleTags[i].outerHTML;
       }
       
-      // Replace the font file references with the content of them
+		styleElement.innerHTML = await this.ReplaceFontFileUrlsWithContent(css);
+		return styleElement.outerHTML;
+   }
+	
+	private async GetStyleTagContent(linkTag: HTMLLinkElement) : Promise<string>{
+		let type = linkTag.getAttribute("type");
+	
+		if(type == "text/css"){
+			// Get the CSS file
+			let href = linkTag.getAttribute("href");
+			
+			// Find the correct path
+			let stylePath = MergePaths(this.currentPath, href);
+			
+			// Get the content of the file
+			let index = this.book.entries.findIndex(entry => entry.filename == stylePath);
+			return index !== -1 ? await GetZipEntryTextContent(this.book.entries[index]) : "";
+		}else{
+			return "";
+		}
+	}
+
+	private async ReplaceFontFileUrlsWithContent(css: string) : Promise<string>{
+		// Replace the font file references with the content of them
 		let fontUrl = GetFirstUrlParameterFromCssString(css);
-      let a = 0;
 
 		while(fontUrl != null){
 			// Get the correct url of the font file
@@ -198,29 +220,8 @@ export class EpubChapter{
 
 			// Get the next url
 			fontUrl = GetFirstUrlParameterFromCssString(css);
-			a++;
 		}
-	
-		styleElement.innerHTML = css;
-		return styleElement.outerHTML;
-   }
-	
-	private async GetStyleTagContent(linkTag: HTMLLinkElement) : Promise<string>{
-		let type = linkTag.getAttribute("type");
-	
-		if(type == "text/css"){
-			// Get the CSS file
-			let href = linkTag.getAttribute("href");
-			
-			// Find the correct path
-			let stylePath = MergePaths(this.currentPath, href);
-			
-			// Get the content of the file
-			let index = this.book.entries.findIndex(entry => entry.filename == stylePath);
-			return index !== -1 ? await GetZipEntryTextContent(this.book.entries[index]) : "";
-		}else{
-			return "";
-		}
+		return css;
 	}
 	
 	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
