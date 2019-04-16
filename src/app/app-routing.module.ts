@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
+import { BookPageComponent } from './pages/book-page/book-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { AccountPageComponent } from './pages/account-page/account-page.component';
 
 const routes: Routes = [
-	{ path: "", component: LibraryPageComponent },
+   { path: "", component: LibraryPageComponent },
+   { path: "book", component: BookPageComponent },
 	{ path: "account", component: AccountPageComponent },
    { path: "settings", component: SettingsPageComponent }
 ];
