@@ -1,4 +1,4 @@
-import { GetTableObject, TableObject } from 'dav-npm';
+import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 
 export class Book{
@@ -46,4 +46,29 @@ export class Book{
 			await tableObject.SetPropertyValue(environment.bookTableFileUuidKey, fileTableObject.Uuid);
 		}
 	}
+}
+
+export async function GetAllBooks() : Promise<Book[]>{
+	let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
+	let books: Book[] = [];
+
+	for(let tableObject of tableObjects){
+		let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
+		if(!fileUuid) continue;
+
+		let fileTableObject = await GetTableObject(fileUuid);
+		if(!fileTableObject) continue;
+
+		books.push(ConvertTableObjectsToBook(tableObject, fileTableObject));
+	}
+
+	return books;
+}
+
+function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : Book{
+	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null;
+	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null;
+
+	// Get the file from the book file table object
+	return new Book(bookFileTableObject.File);
 }

@@ -1,6 +1,7 @@
 import { Component, Renderer2, ElementRef } from "@angular/core";
 import { ReadFile } from 'ngx-file-helpers';
 import { EpubBook } from 'src/app/models/EpubBook';
+import { Book, GetAllBooks } from 'src/app/models/Book';
 
 @Component({
    selector: "pocketlib-library-page",
@@ -14,7 +15,10 @@ export class LibraryPageComponent{
 	){}
 
 	async filePick(file: ReadFile){
-      await this.LoadEpubFile(file.underlyingFile);
+		//await this.LoadEpubFile(file.underlyingFile);
+		
+		// Create a new book
+		await Book.Create(file.underlyingFile);
 	}
 	
 	async LoadEpubFile(file: File){
