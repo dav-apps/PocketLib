@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import * as Dav from 'dav-npm';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-root',
@@ -10,15 +11,17 @@ import { environment } from 'src/environments/environment.prod';
 export class AppComponent {
 	title = 'PocketLib';
 
+	constructor(private router: Router){}
+
 	ngOnInit(){
 		let notificationOptions = {
 			icon: "",
 			badge: ""
-		}
+      }
 
 		Dav.Initialize(environment.production ? Dav.DavEnvironment.Production : Dav.DavEnvironment.Development,
 							environment.appId,
-							[],
+							[environment.bookTableId, environment.bookFileTableId],
 							[],
 							notificationOptions,
 							{
@@ -36,4 +39,12 @@ export class AppComponent {
 								}
 							});
 	}
+	
+	ShowAccountPage(){
+		this.router.navigate(["account"])
+	}
+   
+   ShowSettingsPage(){
+      this.router.navigate(["settings"])
+   }
 }
