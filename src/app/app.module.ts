@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgxFileHelpersModule } from 'ngx-file-helpers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 
 import { DataService } from './services/data-service';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,7 +23,9 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
    	BrowserModule,
       AppRoutingModule,
       NgxFileHelpersModule,
-      BrowserAnimationsModule
+      BrowserAnimationsModule,
+      MatToolbarModule,
+      MatButtonModule
   	],
   	providers: [
       DataService

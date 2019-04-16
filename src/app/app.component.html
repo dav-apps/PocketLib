@@ -1,1 +1,22 @@
-<router-outlet></router-outlet>
+<mat-toolbar class="bg-primary default-font">
+   <mat-toolbar-row>
+		<a routerLink="/" 
+			routerLinkActive="active" 
+			[routerLinkActiveOptions]="{exact: true}" 
+			class="nav-link"
+			style="color: white">Your Library</a>
+
+		<span style="flex: 1 1 auto"></span>
+
+		<div class="btn btn-primary mr-2">
+			<i class="material-icons" style="margin-top: 6px; font-size: 25px">account_circle</i>
+		</div>
+		<div class="btn btn-primary">
+			<i class="material-icons" style="margin-top: 6px; font-size: 25px">settings</i>
+		</div>
+	</mat-toolbar-row>
+</mat-toolbar>
+
+<div class="default-font">
+   <router-outlet></router-outlet>
+</div>
