@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, Renderer2, ElementRef } from "@angular/core";
+import { ReadFile } from 'ngx-file-helpers';
+import { EpubBook } from 'src/app/models/EpubBook';
 
 @Component({
    selector: "pocketlib-library-page",
@@ -6,7 +8,22 @@ import { Component } from "@angular/core";
 })
 export class LibraryPageComponent{
 
-	constructor(){
+	constructor(
+		private renderer: Renderer2,
+		private element: ElementRef
+	){}
+
+	async filePick(file: ReadFile){
+      await this.LoadEpubFile(file.underlyingFile);
+	}
+	
+	async LoadEpubFile(file: File){
+      let book = new EpubBook();
+      await book.ReadEpubFile(file);
 		
+		let htmlTag = await book.chapters[8].GetChapterHtml();
+		let htmlElement = this.renderer.createElement("html");
+		htmlElement.innerHTML = htmlTag.innerHTML;
+		this.renderer.appendChild(this.element.nativeElement, htmlElement);
 	}
 }
