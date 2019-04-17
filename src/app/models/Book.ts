@@ -1,8 +1,12 @@
 import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { EpubBook } from './EpubBook';
 
 export class Book{
 	uuid: string;
+	public title: string;
+	public author: string;
+	public cover: string;
 
    constructor(
 		public file: File
@@ -59,7 +63,9 @@ export async function GetAllBooks() : Promise<Book[]>{
 		let fileTableObject = await GetTableObject(fileUuid);
 		if(!fileTableObject) continue;
 
-		books.push(ConvertTableObjectsToBook(tableObject, fileTableObject));
+		let book = ConvertTableObjectsToBook(tableObject, fileTableObject);
+		LoadBookDetails(book);
+		books.push(book);
 	}
 
 	return books;
@@ -71,4 +77,15 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 
 	// Get the file from the book file table object
 	return new Book(bookFileTableObject.File);
+}
+
+async function LoadBookDetails(book: Book) : Promise<Book>{
+	let epubBook = new EpubBook();
+	await epubBook.ReadEpubFile(book.file);
+
+	book.title = epubBook.title;
+	book.author = epubBook.author;
+	book.cover = epubBook.coverSrc;
+
+	return book;
 }
