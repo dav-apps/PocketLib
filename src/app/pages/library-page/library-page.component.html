@@ -4,3 +4,12 @@
 			ngxFilePicker 
 			(filePick)="filePick($event)"
          accept="application/epub+zip">Browse</button>
+
+<div class="container">
+	<div class="row">
+		<mat-card class="cursor m-3" *ngFor="let book of books">
+			<img [src]="book.cover ? book.cover : 'https://via.placeholder.com/160x250'" style="width: 160px; height: 250px" />
+			<p class="d-flex justify-content-center mt-3" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
+		</mat-card>
+	</div>
+</div>

@@ -75,3 +75,12 @@ $primary: #0d47a1;	// Blue 900
 
 // Import the bootstrap css
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+// Other global styles
+body{
+	font-family: 'Roboto', sans-serif;
+}
+
+.cursor:hover{
+   cursor: pointer;
+}

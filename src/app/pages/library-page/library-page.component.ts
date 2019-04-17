@@ -8,11 +8,17 @@ import { Book, GetAllBooks } from 'src/app/models/Book';
    templateUrl: "./library-page.component.html"
 })
 export class LibraryPageComponent{
+	books: Book[] = [];
 
 	constructor(
 		private renderer: Renderer2,
 		private element: ElementRef
 	){}
+
+	async ngOnInit(){
+		// Get all book from the database
+		this.books = await GetAllBooks();
+	}
 
 	async filePick(file: ReadFile){
 		//await this.LoadEpubFile(file.underlyingFile);
