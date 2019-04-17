@@ -1,11 +1,4 @@
-<h3>Hello World on Library page!</h3>
-
-<button type="button" 
-			ngxFilePicker 
-			(filePick)="filePick($event)"
-         accept="application/epub+zip">Browse</button>
-
-<div class="container">
+<div class="container" style="height: 90vh;">
 	<div class="row">
 		<mat-card class="cursor m-3" *ngFor="let book of books">
 			<img [src]="book.cover ? book.cover : 'https://via.placeholder.com/160x250'" style="width: 160px; height: 250px" />
@@ -13,3 +6,11 @@
 		</mat-card>
 	</div>
 </div>
+
+<button mat-mini-fab 
+			ngxFilePicker
+			(filePick)="filePick($event)"
+			accept="application/epub+zip"
+			style="outline: none; width: 56px; height: 56px; bottom: 16px; right: 16px; position: absolute;">
+	<i class="material-icons">add</i>
+</button>
