@@ -4,7 +4,8 @@ export class EpubBook{
    title: string;
    author: string;
    language: string;
-   cover: EpubManifestItem;
+	cover: EpubManifestItem;
+	coverSrc: string;
 	chapters: EpubChapter[] = [];
 	entries: any[] = [];
    manifestItems: EpubManifestItem[] = [];
@@ -72,9 +73,12 @@ export class EpubBook{
       
       // Get the metadata content
       let metadataTag = opfDoc.getElementsByTagName("metadata")[0];
-      this.title = metadataTag.getElementsByTagName("dc:title").item(0).innerHTML;
-      this.author = metadataTag.getElementsByTagName("dc:creator").item(0).innerHTML;
-      this.language = metadataTag.getElementsByTagName("dc:language").item(0).innerHTML;
+      let titleItem = metadataTag.getElementsByTagName("dc:title").item(0);
+      if(titleItem) this.title = titleItem.innerHTML;
+      let authorItem = metadataTag.getElementsByTagName("dc:creator").item(0);
+      if(authorItem) this.author = authorItem.innerHTML;
+      let languageItem = metadataTag.getElementsByTagName("dc:language").item(0);
+      if(languageItem) this.language = languageItem.innerHTML;
 
       // Find the cover image tag
       let metaTags = metadataTag.getElementsByTagName("meta");
@@ -87,7 +91,20 @@ export class EpubBook{
             // Find the manifest item with id = metaTagContent
             let index = this.manifestItems.findIndex(item => item.id == metaTagContent);
             if(index !== -1){
-               this.cover = this.manifestItems[index];
+					this.cover = this.manifestItems[index];
+					
+					// Get the content of the cover file
+					index = this.entries.findIndex(entry => entry.filename == this.cover.href);
+					
+					if(index !== -1){
+						let coverBlob = await GetZipEntryBlobContent(this.entries[index]);
+						let coverByteContent = await GetBlobContent(coverBlob);
+						let base64ByteContent = btoa(coverByteContent);
+
+						// Get the mime type
+						let mimeType = this.cover.mediaType;
+						this.coverSrc = `data:${mimeType};base64,${base64ByteContent}`;
+					}
             }
          }
       }
