@@ -1,24 +1,21 @@
 import { Component, Renderer2, ElementRef } from "@angular/core";
+import { Router } from '@angular/router';
 import { ReadFile } from 'ngx-file-helpers';
 import { EpubBook } from 'src/app/models/EpubBook';
 import { Book, GetAllBooks } from 'src/app/models/Book';
+import { DataService } from 'src/app/services/data-service';
 
 @Component({
    selector: "pocketlib-library-page",
    templateUrl: "./library-page.component.html"
 })
 export class LibraryPageComponent{
-	books: Book[] = [];
-
 	constructor(
 		private renderer: Renderer2,
-		private element: ElementRef
+      private element: ElementRef,
+		private router: Router,
+		private dataService: DataService
 	){}
-
-	async ngOnInit(){
-		// Get all book from the database
-		this.books = await GetAllBooks();
-	}
 
 	async filePick(file: ReadFile){
 		//await this.LoadEpubFile(file.underlyingFile);
@@ -38,6 +35,6 @@ export class LibraryPageComponent{
    }
    
    ShowBook(book: Book){
-      
+      this.router.navigate(["/book"]);
    }
 }

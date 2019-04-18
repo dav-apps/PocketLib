@@ -1,7 +1,7 @@
 <div class="container">
 	<div class="row mt-5">
       <div class="card-deck">
-         <div class="card cursor shadow" *ngFor="let book of books" style="width: 180px;" (click)="ShowBook(book)">
+         <div class="card cursor shadow" *ngFor="let book of dataService.books" style="width: 180px;" (click)="ShowBook(book)">
             <img [src]="book.cover ? book.cover : 'https://via.placeholder.com/160x250'" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
             <div class="card-body">
                <p class="card-text text-center" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
