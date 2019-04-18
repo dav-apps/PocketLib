@@ -1,4 +1,4 @@
-<div class="container" style="height: 90vh;">
+<div class="container">
 	<div class="row mt-5">
       <div class="card-deck">
          <div class="card cursor shadow" *ngFor="let book of books" style="width: 180px;" (click)="ShowBook(book)">
@@ -14,7 +14,7 @@
 <button mat-mini-fab 
 			ngxFilePicker
 			(filePick)="filePick($event)"
-			accept="application/epub+zip"
+         accept="application/epub+zip"
 			style="outline: none; width: 56px; height: 56px; bottom: 16px; right: 16px; position: absolute;">
 	<i class="material-icons">add</i>
 </button>

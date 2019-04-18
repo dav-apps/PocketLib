@@ -30,7 +30,7 @@ export class EpubBook{
 		this.entries = await getEntriesPromise;
 
       // Get the container file
-		let index = this.entries.findIndex(entry => entry.filename == "META-INF/container.xml");
+      let index = this.entries.findIndex(entry => entry.filename == "META-INF/container.xml");
 		
 		if(index == -1){
 			// The epub file is not valid
@@ -42,7 +42,7 @@ export class EpubBook{
    
 		// Get the content of the container
 		let opfFilePath = await GetOpfFilePath(containerEntry);
-		let opfFileDirectory = GetFileDirectory(opfFilePath);
+      let opfFileDirectory = GetFileDirectory(opfFilePath);
 		
 		// Get the opf file from the entries
 		index = this.entries.findIndex(entry => entry.filename == opfFilePath);
@@ -67,7 +67,7 @@ export class EpubBook{
 		let manifestItemTags = manifestTag.getElementsByTagName("item");
 
 		for(let i = 0; i < manifestItemTags.length; i++){
-			let manifestItemTag = manifestItemTags[i];
+         let manifestItemTag = manifestItemTags[i];
 			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), opfFileDirectory + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")));
       }
       
@@ -91,10 +91,10 @@ export class EpubBook{
             // Find the manifest item with id = metaTagContent
             let index = this.manifestItems.findIndex(item => item.id == metaTagContent);
             if(index !== -1){
-					this.cover = this.manifestItems[index];
+               this.cover = this.manifestItems[index];
 					
 					// Get the content of the cover file
-					index = this.entries.findIndex(entry => entry.filename == this.cover.href);
+               index = this.entries.findIndex(entry => entry.filename == this.cover.href);
 					
 					if(index !== -1){
 						let coverBlob = await GetZipEntryBlobContent(this.entries[index]);
@@ -303,7 +303,11 @@ async function GetOpfFilePath(containerEntry: any) : Promise<string>{
 }
 
 function GetFileDirectory(filePath: string){
-	return filePath.split('/').slice(0, -1).join('/') + '/';
+   let directory = filePath.split('/').slice(0, -1).join('/');
+   if(directory.length > 0){
+      directory += '/';
+   }
+	return directory;
 }
 
 function GetParentDirectory(directoryPath: string){
