@@ -6,4 +6,5 @@ import { Book } from '../models/Book';
 export class DataService{
    user: DavUser
    books: Book[] = [];
+   currentBook: Book = null;
 }
