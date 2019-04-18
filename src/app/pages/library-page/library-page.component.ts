@@ -35,5 +35,9 @@ export class LibraryPageComponent{
 		let htmlElement = this.renderer.createElement("html");
 		htmlElement.innerHTML = htmlTag.innerHTML;
 		this.renderer.appendChild(this.element.nativeElement, htmlElement);
-	}
+   }
+   
+   ShowBook(book: Book){
+      
+   }
 }
