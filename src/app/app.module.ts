@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { PortalModule } from '@angular/cdk/portal';
 
 import { DataService } from './services/data-service';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,6 +14,7 @@ import { LibraryPageComponent } from './pages/library-page/library-page.componen
 import { BookPageComponent } from './pages/book-page/book-page.component';
 import { AccountPageComponent } from './pages/account-page/account-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
+import { BookContentComponent } from './components/book-content/book-content.component';
 
 @NgModule({
    declarations: [
@@ -20,7 +22,8 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
       LibraryPageComponent,
       BookPageComponent,
       AccountPageComponent,
-      SettingsPageComponent
+      SettingsPageComponent,
+      BookContentComponent
   	],
   	imports: [
    	BrowserModule,
@@ -29,11 +32,15 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
       BrowserAnimationsModule,
       MatToolbarModule,
       MatButtonModule,
-      MatCardModule
+      MatCardModule,
+      PortalModule
   	],
   	providers: [
       DataService
    ],
-  	bootstrap: [AppComponent]
+   bootstrap: [AppComponent],
+   entryComponents: [
+      BookContentComponent
+   ]
 })
 export class AppModule { }
