@@ -243,40 +243,75 @@ export class EpubChapter{
 	
 	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
 		// Inject the images directly into the html
-		// Get the image tags
-		let imageTags = chapterBody.getElementsByTagName("img");
+		// Get the img tags with src attribute
+		let imgTags = chapterBody.getElementsByTagName("img");
 	
-		for(let i = 0; i < imageTags.length; i++){
-			let imageTag = imageTags[i];
+		for(let i = 0; i < imgTags.length; i++){
+			let imageTag = imgTags[i];
 			let src = imageTag.getAttribute("src");
+			let newSrc = await this.GetRawImageSource(src);
 	
-			// Get the image from the zip package
-			let imagePath = MergePaths(this.currentPath, src);
-	
-			// Get the image from the zip file entries
-			let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
-			if(index !== -1){
-				// Get the image content
-				let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
-				let byteContent = await GetBlobContent(imageContent);
-				let base64BytesContent = btoa(byteContent);
-	
-				// Get the mime type from the manifest items
-				index = this.book.manifestItems.findIndex(item => item.href == imagePath);
-				let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
-	
-				let newSrc = `data:${mimeType};base64,${base64BytesContent}`;
-	
-				// Creata the new image tag with the new src
+			// Create the new image tag with the new src
+			let newImageTag = document.createElement("img");
+			newImageTag.setAttribute("src", newSrc);
+
+			// Replace the old image tag with the new one
+			imageTag.parentNode.replaceChild(newImageTag, imageTag)
+		}
+
+		// Get the images from svg tags and add them as img tags
+		let svgTags = chapterBody.getElementsByTagName("svg");
+		for(let i = 0; i < svgTags.length; i++){
+			let svgTag = svgTags[i];
+			
+			// Get the image tags
+			let imageTags = chapterBody.getElementsByTagName("image");
+			let newImageTags = [];
+
+			for(let j = 0; j < imageTags.length; j++){
+				let imageTag = imageTags[i];
+				let src = imageTag.getAttribute("xlink:href");
+				let newSrc = await this.GetRawImageSource(src);
+
+				// Get height & width
+				let height = imageTag.getAttribute("height");
+				let width = imageTag.getAttribute("width");
+
+				// Create the new image tag with the new src
 				let newImageTag = document.createElement("img");
 				newImageTag.setAttribute("src", newSrc);
-	
-				// Replace the old image tag with the new one
-				imageTag.parentNode.replaceChild(newImageTag, imageTag)
+				newImageTag.setAttribute("style", `height: ${height}px; width: ${width}px`);
+				newImageTags.push(newImageTag);
+			}
+
+			// Replace the svg tags with the content
+			for(let newImageTag of newImageTags){
+				svgTag.parentNode.replaceChild(newImageTag, svgTag);
 			}
 		}
 	
 		return chapterBody.outerHTML;
+	}
+
+	private async GetRawImageSource(src: string) : Promise<string>{
+		// Get the image from the zip package
+		let imagePath = MergePaths(this.currentPath, src);
+	
+		// Get the image from the zip file entries
+		let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
+		if(index !== -1){
+			// Get the image content
+			let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
+			let byteContent = await GetBlobContent(imageContent);
+			let base64BytesContent = btoa(byteContent);
+	
+			// Get the mime type from the manifest items
+			index = this.book.manifestItems.findIndex(item => item.href == imagePath);
+			let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
+	
+			return `data:${mimeType};base64,${base64BytesContent}`;
+		}
+		return "";
 	}
 }
 
