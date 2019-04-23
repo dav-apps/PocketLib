@@ -7,4 +7,5 @@ export class DataService{
    user: DavUser
    books: Book[] = [];
    currentBook: Book = null;
+   currentChapter: number = 0;
 }
