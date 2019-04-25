@@ -8,7 +8,12 @@ import { EpubBook } from 'src/app/models/EpubBook';
 })
 export class BookContentComponent{
 	book = new EpubBook();
+	chapterHtmlElement: HTMLHtmlElement;
 	currentElement: HTMLElement;
+	chapterFinished: boolean = false;
+	chapterElements: number = 0;
+	currentPosition: number = 0;
+	readerPosition: number = 0;
 
 	constructor(
 		private dataService: DataService,
@@ -22,39 +27,46 @@ export class BookContentComponent{
 
 		if(this.dataService.currentBook){
 			await this.book.ReadEpubFile(this.dataService.currentBook.file);
-         //await this.LoadCurrentPage();
-
-         //this.book.GeneratePages();
-         this.LoadPage();
+			await this.LoadChapter();
+			this.LoadPage();
 		}
 	}
-	
-	async LoadCurrentPage(){
-		let htmlTag = await this.book.chapters[this.dataService.currentChapter].GetChapterHtml();
-		this.currentElement.innerHTML = htmlTag.innerHTML;
-	}
-	
-	PrevPage(){
+
+	async PrevPage(){
 		if(this.dataService.currentChapter > 0){
 			this.dataService.currentChapter--;
-			//this.LoadCurrentPage();
-			this.LoadPage();
+			this.currentPosition = 0;
+
+			await this.LoadPage();
 		}
 	}
 
-	NextPage(){
-		if(this.book.chapters.length > this.dataService.currentChapter + 1){
-			this.dataService.currentChapter++;
-			//this.LoadCurrentPage();
+	async NextPage(){
+		if(this.chapterFinished){
+			if(this.book.chapters.length > this.dataService.currentChapter + 1){
+				this.dataService.currentChapter++;
+				this.currentPosition = 0;
+	
+				await this.LoadChapter();
+				this.LoadPage();
+			}
+		}else{
+			this.currentPosition++;
 			this.LoadPage();
 		}
-   }
-   
-   async LoadPage(){
-		let doc = await this.book.chapters[this.dataService.currentChapter].GetChapterHtml();
+	}
+	
+	async LoadChapter(){
+		this.chapterFinished = false;
+		this.chapterElements = 0;
+		this.currentPosition = 0;
 
-      let head = doc.getElementsByTagName("head")[0];
-      let body = doc.getElementsByTagName("body")[0];
+		this.chapterHtmlElement = await this.book.chapters[this.dataService.currentChapter].GetChapterHtml();
+	}
+   
+   LoadPage(){
+      let head = this.chapterHtmlElement.getElementsByTagName("head")[0];
+		let body = this.chapterHtmlElement.getElementsByTagName("body")[0];
 
 		let newHtml = document.createElement("html");
 		
@@ -66,26 +78,61 @@ export class BookContentComponent{
 		newHtml.appendChild(newBody);
 
 		this.currentElement.innerHTML = newHtml.outerHTML;
-		this.AppendChildren(newBody, body.children.item(0), newHtml);
+		this.chapterElements = 0;
+
+		this.readerPosition = 0;
+		this.AppendChildren(newBody, body.cloneNode(true), newHtml, true);
+
+		console.log(newBody)
+		console.log("Position: " + this.currentPosition);
+		console.log("Elements: " + this.chapterElements);
+
+		if(this.chapterElements == this.currentPosition){
+			this.chapterFinished = true;
+		}
+		console.log("Chapter finished: " + this.chapterFinished)
 	}
 
-	AppendChildren(newElement: Node, currentElement: Node, html: HTMLHtmlElement){
+	AppendChildren(newElement: Node, currentElement: Node, html: HTMLHtmlElement, root: boolean){
+		console.log("Reader position: " + this.readerPosition + ", Position: " + this.currentPosition);
+
 		this.currentElement.innerHTML = html.innerHTML;
-		console.log(this.currentElement.offsetHeight);
+
+		// Return if the element is text without content
+		if(currentElement.nodeType === 3 && currentElement.textContent.trim().length == 0) return;
+
+		if(!root) this.chapterElements++;
+
+		//console.log(this.currentElement.offsetHeight);
 		if(this.currentElement.offsetHeight > 500) return;
+
+		if(!root){
+			if(this.readerPosition >= this.currentPosition){
+				this.currentPosition++;
+			}
+			this.readerPosition++;
+		}
 
 		// Go through the children of the current element
 		if(currentElement.childNodes.length > 0){
 			// Copy the current element without the children
-         let e = currentElement.cloneNode(false) as Element;
-         newElement.appendChild(e);
+			let e = currentElement.cloneNode(false) as Element;
+			if(!root) newElement.appendChild(e);
 
 			for(let i = 0; i < currentElement.childNodes.length; i++){
-				this.AppendChildren(e, currentElement.childNodes.item(i), html);
+				this.AppendChildren(root ? newElement : e, currentElement.childNodes.item(i), html, false);
+			}
+
+			// Remove the element if the readerPosition is still < currentPosition
+			if(this.readerPosition < this.currentPosition){
+				newElement.removeChild(e);
 			}
 		}else{
 			// Add the current element as it has no children
-         newElement.appendChild(currentElement.cloneNode(true));
+			// Run AppendChildren without adding elements until readerPosition is equals to currentPosition
+			if(this.readerPosition >= this.currentPosition){
+				newElement.appendChild(currentElement.cloneNode(true));
+			}
 		}
 	}
 }
