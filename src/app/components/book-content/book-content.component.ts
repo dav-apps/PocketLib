@@ -1,8 +1,6 @@
-import { Component, Renderer2, ElementRef } from '@angular/core';
+import { Component, Renderer2, ElementRef, HostListener } from '@angular/core';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
-
-const maxPageHeight = 500;
 
 @Component({
    selector: 'pocketlib-book-content',
@@ -11,19 +9,22 @@ const maxPageHeight = 500;
 export class BookContentComponent{
 	book = new EpubBook();
 	chapterHtmlElement: HTMLHtmlElement;
+	maxPageHeight: number = 500;
 	currentElement: HTMLElement;
 	elementsCount: number = 0;
 	currentPosition: number = 0;					// The current position in the chapter html when reading it
 	readerPosition: number = 0;					// Indicates the current position in the html when rendering it
 	chapterPages: HTMLHtmlElement[][] = [];	// This contains the html for each page of each chapter
 	currentChapter: number = 0;
-	currentPage: number = 0;
+   currentPage: number = 0;
 
 	constructor(
 		private dataService: DataService,
 		private renderer: Renderer2,
 		private element: ElementRef
-	){}
+	){
+		this.dataService.navbarVisible = false;
+	}
 
 	async ngOnInit(){
 		this.currentElement = this.renderer.createElement("html");
@@ -38,6 +39,18 @@ export class BookContentComponent{
 
 			await this.ShowPage(0, 0);
 		}
+	}
+
+	@HostListener('window:resize', ['$event'])
+	onResize(event?){
+		console.log("Resize!")
+		console.log("height: " + window.innerHeight);
+      console.log("width: " + window.innerWidth)
+      console.log("Element width: " + this.currentElement.clientWidth)
+	}
+
+	setSize(){
+		
 	}
 
 	async PrevPage(){
@@ -113,6 +126,7 @@ export class BookContentComponent{
 		while(!chapterFinished){
 			let newHtmlPage = newHtml.cloneNode(true) as HTMLHtmlElement;
 			let newBody = document.createElement("body");
+			newBody.setAttribute("style", "padding: 50px")
 			newHtmlPage.appendChild(newBody);
 
 			this.currentElement.innerHTML = newHtmlPage.innerHTML;
@@ -138,7 +152,7 @@ export class BookContentComponent{
 		console.log("AppendChildren")
 		console.log(currentElement)
 
-		if(this.currentElement.offsetHeight > maxPageHeight) return;
+		if(this.currentElement.offsetHeight > this.maxPageHeight) return;
 
 		// Go through the children of the current element
 		if(currentElement.childNodes.length > 0){

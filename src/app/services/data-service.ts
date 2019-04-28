@@ -4,8 +4,8 @@ import { Book } from '../models/Book';
 
 @Injectable()
 export class DataService{
-   user: DavUser
+   user: DavUser;
+   navbarVisible: boolean = true;
    books: Book[] = [];
    currentBook: Book = null;
-   currentChapter: number = 0;
 }

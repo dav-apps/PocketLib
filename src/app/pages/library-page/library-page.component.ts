@@ -12,7 +12,9 @@ export class LibraryPageComponent{
 	constructor(
 		private router: Router,
 		private dataService: DataService
-	){}
+   ){
+      this.dataService.navbarVisible = true;
+   }
 
 	async filePick(file: ReadFile){
 		// Create a new book
