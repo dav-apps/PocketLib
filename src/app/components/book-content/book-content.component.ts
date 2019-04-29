@@ -1,10 +1,14 @@
 import { Component, Renderer2, ElementRef, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
 
 @Component({
    selector: 'pocketlib-book-content',
-   templateUrl: './book-content.component.html'
+   templateUrl: './book-content.component.html',
+   styleUrls: [
+      './book-content.component.scss'
+   ]
 })
 export class BookContentComponent{
 	book = new EpubBook();
@@ -21,7 +25,8 @@ export class BookContentComponent{
 	constructor(
 		private dataService: DataService,
 		private renderer: Renderer2,
-		private element: ElementRef
+      private element: ElementRef,
+      private router: Router
 	){
 		this.dataService.navbarVisible = false;
 	}
@@ -203,5 +208,11 @@ export class BookContentComponent{
 			}
 		}
 		if(!root) this.elementsCount++;
-	}
+   }
+   
+   //#region Event Handlers
+   GoBack(){
+      this.router.navigate(["/"])
+   }
+   //#endregion
 }
