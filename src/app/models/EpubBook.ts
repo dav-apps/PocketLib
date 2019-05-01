@@ -245,15 +245,26 @@ export class EpubChapter{
 		// Inject the images directly into the html
 		// Get the img tags with src attribute
 		let imgTags = chapterBody.getElementsByTagName("img");
-	
+		
 		for(let i = 0; i < imgTags.length; i++){
 			let imageTag = imgTags[i];
 			let src = imageTag.getAttribute("src");
-			let newSrc = await this.GetRawImageSource(src);
+         let newSrc = await this.GetRawImageSource(src);
 	
 			// Create the new image tag with the new src
-			let newImageTag = document.createElement("img");
-			newImageTag.setAttribute("src", newSrc);
+         let newImageTag = document.createElement("img");
+         
+         let imageLoadPromise = new Promise(resolve => {
+            newImageTag.onload = resolve
+         });
+         newImageTag.src = newSrc
+         
+			// Wait until the image loaded
+			await imageLoadPromise;
+
+			// Set the width and height attributes
+			newImageTag.setAttribute("height", newImageTag.naturalHeight.toString());
+			newImageTag.setAttribute("width", newImageTag.naturalWidth.toString());
 
 			// Replace the old image tag with the new one
 			imageTag.parentNode.replaceChild(newImageTag, imageTag)
@@ -279,8 +290,9 @@ export class EpubChapter{
 
 				// Create the new image tag with the new src
 				let newImageTag = document.createElement("img");
-				newImageTag.setAttribute("src", newSrc);
-				newImageTag.setAttribute("style", `height: ${height}px; width: ${width}px`);
+				newImageTag.src = newSrc;
+				newImageTag.setAttribute("height", height);
+            newImageTag.setAttribute("width", width);
 				newImageTags.push(newImageTag);
 			}
 
