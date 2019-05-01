@@ -14,13 +14,15 @@ export class BookContentComponent{
 	book = new EpubBook();
 	chapterHtmlElement: HTMLHtmlElement;
 	maxPageHeight: number = 500;
+	htmlPaddingX: number = 0;
+	htmlPaddingY: number = 0;
 	currentElement: HTMLElement;
 	elementsCount: number = 0;
 	currentPosition: number = 0;					// The current position in the chapter html when reading it
 	readerPosition: number = 0;					// Indicates the current position in the html when rendering it
 	chapterPages: HTMLHtmlElement[][] = [];	// This contains the html for each page of each chapter
 	currentChapter: number = 0;
-   currentPage: number = 0;
+	currentPage: number = 0;
 
 	constructor(
 		private dataService: DataService,
@@ -40,7 +42,7 @@ export class BookContentComponent{
 
 			for(let i = 0; i < this.book.chapters.length; i++){
 				this.chapterPages.push([]);
-			}
+         }
 
 			await this.ShowPage(0, 0);
 		}
@@ -51,11 +53,12 @@ export class BookContentComponent{
 		console.log("Resize!")
 		console.log("height: " + window.innerHeight);
       console.log("width: " + window.innerWidth)
-      console.log("Element width: " + this.currentElement.clientWidth)
+		console.log("Element width: " + this.currentElement.clientWidth)
 	}
 
 	setSize(){
-		
+		// Calculate the padding of the book html content
+
 	}
 
 	async PrevPage(){
@@ -101,7 +104,7 @@ export class BookContentComponent{
 		if(page >= this.chapterPages[chapter].length) return;
 
 		// Show the page
-		this.currentElement.innerHTML = this.chapterPages[chapter][page].innerHTML;
+      this.SetCurrentElement(this.chapterPages[chapter][page])
 	}
 
 	async CreateChapterPages(chapter: number){
@@ -131,25 +134,23 @@ export class BookContentComponent{
 		while(!chapterFinished){
 			let newHtmlPage = newHtml.cloneNode(true) as HTMLHtmlElement;
 			let newBody = document.createElement("body");
-			newBody.setAttribute("style", "padding: 50px")
+			newBody.setAttribute("style", `padding: ${this.htmlPaddingY}px ${this.htmlPaddingX}px; background-color: yellow;`)
 			newHtmlPage.appendChild(newBody);
 
-			this.currentElement.innerHTML = newHtmlPage.innerHTML;
+			this.ResetCurrentElement();
 			this.readerPosition = 0;
 
-			this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
+			await this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
 
 			// Add the current html to the chapters array
 			this.chapterPages[chapter].push(newHtmlPage);
 			chapterFinished = this.currentPosition >= this.elementsCount;
 		}
 	}
-	
+
 	AppendChildren(newElement: Node, currentElement: Node, html: HTMLHtmlElement, root: boolean){
 		// Go through all children, beginning at the bottom, and add the children if readerPosition >= startPosition
-		//console.log("Reader position: " + this.readerPosition + ", Position: " + this.currentPosition + ", Total count: " + this.elementsCount);
-
-		this.currentElement.innerHTML = html.innerHTML;
+		this.SetCurrentElement(html);
 
 		// Return if the element is text without content
 		if(currentElement.nodeType === 3 && currentElement.textContent.trim().length == 0) return;
@@ -173,7 +174,23 @@ export class BookContentComponent{
 			}
 
 			for(let i = 0; i < currentElement.childNodes.length; i++){
-				this.AppendChildren(newParent, currentElement.childNodes.item(i), html, false);
+				// If the child is text, split the text by spaces
+				let child = currentElement.childNodes.item(i);
+
+				if(child.nodeType === 3 && child.textContent.trim().length > 0){
+					let textParts = child.textContent.split(' ');
+
+					for(let j = 0; j < textParts.length; j++){
+						let textPart = textParts[j];
+						
+						// Append the space to the last element
+						if(j != textParts.length) textPart += ' ';
+						let textPartNode = document.createTextNode(textPart)
+						this.AppendChildren(newParent, textPartNode, html, false);
+					}
+				}else if(child.nodeType !== 3){
+					this.AppendChildren(newParent, child, html, false);
+				}
 			}
 
 			// Remove the element if it has no children
@@ -190,6 +207,8 @@ export class BookContentComponent{
 
 			if(!root) this.readerPosition++;
 		}
+		
+		this.SetCurrentElement(html);
 	}
 
 	StartCountBodyChildren(html: HTMLHtmlElement){
@@ -204,11 +223,35 @@ export class BookContentComponent{
 
 		if(currentElement.childNodes.length > 0){
 			for(let i = 0; i < currentElement.childNodes.length; i++){
-				this.CountChildren(currentElement.childNodes.item(i), false);
+				let child = currentElement.childNodes.item(i);
+
+				// If the child is text, split it by spaces and count the parts
+				if(child.nodeType === 3 && child.textContent.trim().length > 0){
+					let textParts = child.textContent.split(' ').filter((value: string) => value.trim().length > 0);
+					if(!root){
+						this.elementsCount += textParts.length;
+					}
+				}else{
+					this.CountChildren(child, false);
+				}
 			}
 		}
 		if(!root) this.elementsCount++;
-   }
+	}
+	
+	ResetCurrentElement(){
+		if(this.currentElement){
+			// Remove the children of current element
+			while(this.currentElement.firstChild) {
+				this.currentElement.removeChild(this.currentElement.firstChild);
+			}
+		}
+	}
+
+	SetCurrentElement(element: HTMLHtmlElement){
+		this.ResetCurrentElement();
+		this.currentElement.appendChild(element.cloneNode(true));
+	}
    
    //#region Event Handlers
    GoBack(){
