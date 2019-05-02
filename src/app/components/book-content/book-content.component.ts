@@ -12,7 +12,6 @@ import { EpubBook } from 'src/app/models/EpubBook';
 })
 export class BookContentComponent{
 	book = new EpubBook();
-	chapterHtmlElement: HTMLHtmlElement;
 
 	maxPageHeight: number = 500;
 	htmlPaddingX: number = 0;
@@ -26,7 +25,7 @@ export class BookContentComponent{
 	lastChildRemoved: boolean = false;			// Indicates if the last child was removed that caused the page to have a heigher height than maxPageHeight
 	lastChild: Node = null;
 
-	chapterPages: HTMLHtmlElement[][] = [];	// This contains the html for each page of each chapter
+	chapterPages: HtmlChapter[] = [];	// This contains the html for each chapter and each page of each chapter
 	currentChapter: number = 0;
 	currentPage: number = 0;
 
@@ -48,7 +47,7 @@ export class BookContentComponent{
 			await this.book.ReadEpubFile(this.dataService.currentBook.file);
 
 			for(let i = 0; i < this.book.chapters.length; i++){
-				this.chapterPages.push([]);
+				this.chapterPages.push(new HtmlChapter(null));
          }
 
 			await this.ShowPage(0, 0);
@@ -57,10 +56,12 @@ export class BookContentComponent{
 
 	@HostListener('window:resize', ['$event'])
 	onResize(event?){
-		console.log("Resize!")
 		console.log("height: " + window.innerHeight);
       console.log("width: " + window.innerWidth)
-		console.log("Element width: " + this.currentElement.clientWidth)
+		this.setSize();
+
+		// Update the layout
+		this.RerenderCurrentPage();
 	}
 
 	setSize(){
@@ -69,7 +70,7 @@ export class BookContentComponent{
 		this.htmlPaddingX = window.innerWidth * 0.15;
 
 		// Set the maxPageHeight
-		this.maxPageHeight = window.innerHeight - this.htmlPaddingY;
+		this.maxPageHeight = window.innerHeight - 2 * this.htmlPaddingY;
 	}
 
 	async PrevPage(){
@@ -77,7 +78,7 @@ export class BookContentComponent{
 		if(this.currentPage == 0 && this.currentChapter > 0){
 			// Show the previous chapter
 			this.currentChapter--;
-			this.currentPage = this.chapterPages[this.currentChapter].length - 1;
+			this.currentPage = this.chapterPages[this.currentChapter].pages.length - 1;
 		}else if(this.currentPage > 0){
 			// Show the previous page
 			this.currentPage--;
@@ -89,7 +90,7 @@ export class BookContentComponent{
 
 	async NextPage(){
 		// Check if the last page is shown
-		if(this.currentPage == this.chapterPages[this.currentChapter].length - 1){
+		if(this.currentPage == this.chapterPages[this.currentChapter].pages.length - 1){
 			// Show the next chapter
 			this.currentChapter++;
 			this.currentPage = 0;
@@ -106,16 +107,16 @@ export class BookContentComponent{
 		// Check if the chapter exists
 		if(chapter >= this.chapterPages.length) return;
 		
-		if(this.chapterPages[chapter].length == 0){
+		if(this.chapterPages[chapter].pages.length == 0){
 			// Load the chapter pages
 			await this.CreateChapterPages(chapter);
 		}
 
 		// Check if the page exists
-		if(page >= this.chapterPages[chapter].length) return;
+		if(page >= this.chapterPages[chapter].pages.length) return;
 
 		// Show the page
-      this.SetCurrentElement(this.chapterPages[chapter][page])
+		this.SetCurrentElement(this.chapterPages[chapter].pages[page].html)
 	}
 
 	async CreateChapterPages(chapter: number){
@@ -124,6 +125,7 @@ export class BookContentComponent{
 
 		// Get the html of the chapter
 		let html = await this.book.chapters[chapter].GetChapterHtml();
+		this.chapterPages[chapter].html = html.cloneNode(true) as HTMLHtmlElement;
 
 		// Create the pages of the chapter
 		let chapterFinished = false;
@@ -151,6 +153,7 @@ export class BookContentComponent{
 			let newBody = document.createElement("body");
 			newBody.setAttribute("style", `padding: ${this.htmlPaddingY}px ${this.htmlPaddingX}px; background-color: yellow;`)
 			newHtmlPage.appendChild(newBody);
+			let currentPagePosition = this.currentPosition;
 
 			this.ResetCurrentElement();
 			this.readerPosition = 0;
@@ -162,7 +165,7 @@ export class BookContentComponent{
 			await this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
 
 			// Add the current html to the chapters array
-			this.chapterPages[chapter].push(newHtmlPage);
+			this.chapterPages[chapter].pages.push(new HtmlPage(newHtmlPage.cloneNode(true) as HTMLHtmlElement, currentPagePosition));
 			chapterFinished = this.currentPosition >= this.elementsCount;
 		}
 	}
@@ -247,6 +250,31 @@ export class BookContentComponent{
 		this.SetCurrentElement(html);
 	}
 
+	RerenderCurrentPage(){
+		// This is called when the size of the window changed
+		// Get the position of the current page
+		let position = this.chapterPages[this.currentChapter].pages[this.currentPage].position;
+		let chapterHtml = this.chapterPages[this.currentChapter].html;
+		let chapterBody = chapterHtml.getElementsByTagName("body")[0];
+
+		// Remove the content of the current element body
+		let currentElementHtml = this.currentElement.cloneNode(true) as HTMLHtmlElement;
+		let body = currentElementHtml.getElementsByTagName("body")[0];
+		body.setAttribute("style", `padding: ${this.htmlPaddingY}px ${this.htmlPaddingX}px; background-color: yellow;`)
+		while(body.firstChild) {
+			body.removeChild(body.firstChild);
+		}
+		
+		// Start AppendChildren with the empty body
+		this.readerPosition = 0;
+		this.maxHeightReached = false;
+		this.lastChildRemoved = false;
+		this.lastChild = null;
+		this.currentPosition = position;
+
+		this.AppendChildren(body, chapterBody.cloneNode(true), currentElementHtml, true);
+	}
+
 	StartCountBodyChildren(html: HTMLHtmlElement){
 		this.elementsCount = 0;
 
@@ -298,4 +326,19 @@ export class BookContentComponent{
       this.router.navigate(["/"])
    }
    //#endregion
+}
+
+export class HtmlChapter{
+	public pages: HtmlPage[] = []			// All generated pages of the chapter
+
+	constructor(
+		public html: HTMLHtmlElement			// The html of the entire chapter
+	){}
+}
+
+export class HtmlPage{
+	constructor(
+		public html: HTMLHtmlElement,		// The generated html of the page
+		public position: number				// Indicates the position within the chapter
+	){}
 }
