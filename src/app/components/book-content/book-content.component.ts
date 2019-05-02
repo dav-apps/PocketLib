@@ -13,13 +13,19 @@ import { EpubBook } from 'src/app/models/EpubBook';
 export class BookContentComponent{
 	book = new EpubBook();
 	chapterHtmlElement: HTMLHtmlElement;
+
 	maxPageHeight: number = 500;
 	htmlPaddingX: number = 0;
 	htmlPaddingY: number = 0;
+
 	currentElement: HTMLElement;
 	elementsCount: number = 0;
 	currentPosition: number = 0;					// The current position in the chapter html when reading it
 	readerPosition: number = 0;					// Indicates the current position in the html when rendering it
+	maxHeightReached: boolean = false;			// If true, the currently created page is higher than maxPageHeigh
+	lastChildRemoved: boolean = false;			// Indicates if the last child was removed that caused the page to have a heigher height than maxPageHeight
+	lastChild: Node = null;
+
 	chapterPages: HTMLHtmlElement[][] = [];	// This contains the html for each page of each chapter
 	currentChapter: number = 0;
 	currentPage: number = 0;
@@ -140,6 +146,10 @@ export class BookContentComponent{
 			this.ResetCurrentElement();
 			this.readerPosition = 0;
 
+			this.maxHeightReached = false;
+			this.lastChildRemoved = false;
+			this.lastChild = null;
+
 			await this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
 
 			// Add the current html to the chapters array
@@ -149,16 +159,30 @@ export class BookContentComponent{
 	}
 
 	AppendChildren(newElement: Node, currentElement: Node, html: HTMLHtmlElement, root: boolean){
+		if(this.maxHeightReached){
+			if(!this.lastChildRemoved){
+				// Remove the last child
+				if(this.lastChild && this.lastChild.parentElement){
+					this.lastChild.parentElement.removeChild(this.lastChild);
+					this.currentPosition--;
+					this.readerPosition--;
+				}
+
+				this.lastChildRemoved = true;
+			}
+			return;
+		}
+
 		// Go through all children, beginning at the bottom, and add the children if readerPosition >= startPosition
 		this.SetCurrentElement(html);
 
 		// Return if the element is text without content
 		if(currentElement.nodeType === 3 && currentElement.textContent.trim().length == 0) return;
 
-		console.log("AppendChildren")
-		console.log(currentElement)
-
-		if(this.currentElement.offsetHeight > this.maxPageHeight) return;
+		if(this.currentElement.offsetHeight > this.maxPageHeight){
+			this.maxHeightReached = true;
+			return;
+		}
 
 		// Go through the children of the current element
 		if(currentElement.childNodes.length > 0){
@@ -166,6 +190,7 @@ export class BookContentComponent{
 			let newParent = root ? newElement : currentElement.cloneNode(false) as Element;
 			if(!root){
 				newElement.appendChild(newParent);
+				this.lastChild = newParent;
 
 				if(this.readerPosition >= this.currentPosition){
 					this.currentPosition++;
@@ -192,16 +217,18 @@ export class BookContentComponent{
 					this.AppendChildren(newParent, child, html, false);
 				}
 			}
-
+			
 			// Remove the element if it has no children
-			if(newParent.childNodes.length == 0 && !root){
+			if(newParent.childNodes.length == 0 && !root && newParent.parentElement){
 				newParent.parentElement.removeChild(newParent);
 			}
 		}else{
 			// Add the current element as it has no children
 			// Run AppendChildren without adding elements until readerPosition is equals to currentPosition
 			if(this.readerPosition >= this.currentPosition){
-				newElement.appendChild(currentElement.cloneNode(true));
+				let newChild = currentElement.cloneNode(true)
+				newElement.appendChild(newChild);
+				this.lastChild = newChild;
 				this.currentPosition++;
 			}
 
