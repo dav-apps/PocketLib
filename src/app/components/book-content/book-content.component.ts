@@ -16,7 +16,7 @@ export class BookContentComponent{
 
 	maxPageHeight: number = 500;
 	htmlPaddingX: number = 0;
-	htmlPaddingY: number = 0;
+	htmlPaddingY: number = 60;
 
 	currentElement: HTMLElement;
 	elementsCount: number = 0;
@@ -42,6 +42,7 @@ export class BookContentComponent{
 	async ngOnInit(){
 		this.currentElement = this.renderer.createElement("html");
 		this.renderer.appendChild(this.element.nativeElement, this.currentElement);
+		this.setSize();
 
 		if(this.dataService.currentBook){
 			await this.book.ReadEpubFile(this.dataService.currentBook.file);
@@ -64,7 +65,11 @@ export class BookContentComponent{
 
 	setSize(){
 		// Calculate the padding of the book html content
+		// Left and right padding is 15% of the width
+		this.htmlPaddingX = window.innerWidth * 0.15;
 
+		// Set the maxPageHeight
+		this.maxPageHeight = window.innerHeight - this.htmlPaddingY;
 	}
 
 	async PrevPage(){
@@ -134,7 +139,11 @@ export class BookContentComponent{
 		let newHtml = document.createElement("html");
 		let newHead = document.createElement("head");
 
-		newHead.innerHTML = head.innerHTML;
+		// Copy the head to the new head
+		for(let i = 0; i < head.childNodes.length; i++){
+			newHead.appendChild(head.childNodes.item(i).cloneNode(true));
+		}
+
 		newHtml.appendChild(newHead);
 
 		while(!chapterFinished){
@@ -277,7 +286,11 @@ export class BookContentComponent{
 
 	SetCurrentElement(element: HTMLHtmlElement){
 		this.ResetCurrentElement();
-		this.currentElement.appendChild(element.cloneNode(true));
+		
+		// Add all children to the element root
+		for(let i = 0; i < element.childNodes.length; i++){
+			this.currentElement.appendChild(element.childNodes.item(i).cloneNode(true));
+		}
 	}
    
    //#region Event Handlers

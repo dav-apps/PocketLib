@@ -184,7 +184,7 @@ export class EpubChapter{
 		// Get the style tags and add them without changes to the css
 		let chapterStyleTags = chapterHead.getElementsByTagName("style");
 		for(let i = 0; i < chapterStyleTags.length; i++){
-			css += chapterStyleTags[i].outerHTML;
+			css += chapterStyleTags[i].innerHTML;
       }
       
 		styleElement.innerHTML = await this.ReplaceFontFileUrlsWithContent(css);
