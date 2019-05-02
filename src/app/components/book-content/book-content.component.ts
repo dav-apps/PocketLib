@@ -114,6 +114,13 @@ export class BookContentComponent{
 
 		// Check if the page exists
 		if(page >= this.chapterPages[chapter].pages.length) return;
+		let currentPage = this.chapterPages[chapter].pages[page];
+
+		// Check if the html of the page must be updated
+		if(currentPage.windowHeight != window.innerHeight || currentPage.windowWidth != window.innerWidth){
+			// Rerender the html
+			this.RerenderCurrentPage();
+		}
 
 		// Show the page
 		this.SetCurrentElement(this.chapterPages[chapter].pages[page].html)
@@ -165,7 +172,7 @@ export class BookContentComponent{
 			await this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
 
 			// Add the current html to the chapters array
-			this.chapterPages[chapter].pages.push(new HtmlPage(newHtmlPage.cloneNode(true) as HTMLHtmlElement, currentPagePosition));
+			this.chapterPages[chapter].pages.push(new HtmlPage(newHtmlPage.cloneNode(true) as HTMLHtmlElement, currentPagePosition, window.innerHeight, window.innerWidth));
 			chapterFinished = this.currentPosition >= this.elementsCount;
 		}
 	}
@@ -273,6 +280,21 @@ export class BookContentComponent{
 		this.currentPosition = position;
 
 		this.AppendChildren(body, chapterBody.cloneNode(true), currentElementHtml, true);
+
+		// Update the html of the current page
+		this.chapterPages[this.currentChapter].pages[this.currentPage].html = currentElementHtml.cloneNode(true) as HTMLHtmlElement;
+
+		// Show the new page html
+		this.SetCurrentElement(currentElementHtml);
+
+		// Update the windowHeight and windowWidth of the current page
+		this.chapterPages[this.currentChapter].pages[this.currentPage].windowHeight = window.innerHeight;
+		this.chapterPages[this.currentChapter].pages[this.currentPage].windowWidth = window.innerWidth;
+
+		// Update the position of the next page if there is one
+		if(this.chapterPages[this.currentChapter].pages[this.currentPage + 1]){
+			this.chapterPages[this.currentChapter].pages[this.currentPage + 1].position = this.currentPosition;
+		}
 	}
 
 	StartCountBodyChildren(html: HTMLHtmlElement){
@@ -339,6 +361,8 @@ export class HtmlChapter{
 export class HtmlPage{
 	constructor(
 		public html: HTMLHtmlElement,		// The generated html of the page
-		public position: number				// Indicates the position within the chapter
+		public position: number,			// Indicates the position within the chapter
+		public windowHeight: number,		// The window height at the time of rendering this page
+		public windowWidth: number			// The window width at the time of rendering the page
 	){}
 }
