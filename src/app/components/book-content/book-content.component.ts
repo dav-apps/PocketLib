@@ -103,6 +103,12 @@ export class BookContentComponent{
 		await this.ShowPage(this.currentChapter, this.currentPage);
 	}
 
+	BookmarkClick(){
+		console.log("current chapter: " + this.currentChapter)
+		console.log("current page: " + this.currentPage)
+		console.log(this.chapterPages)
+	}
+
 	async ShowPage(chapter: number, page: number){
 		// Check if the chapter exists
 		if(chapter >= this.chapterPages.length) return;
@@ -141,6 +147,7 @@ export class BookContentComponent{
 
 		// Get the elements count
 		this.StartCountBodyChildren(html);
+		this.chapterPages[chapter].elements = this.elementsCount;
 
 		let head = html.getElementsByTagName("head")[0];
 		let body = html.getElementsByTagName("body")[0];
@@ -294,6 +301,9 @@ export class BookContentComponent{
 		// Update the position of the next page if there is one
 		if(this.chapterPages[this.currentChapter].pages[this.currentPage + 1]){
 			this.chapterPages[this.currentChapter].pages[this.currentPage + 1].position = this.currentPosition;
+		}else if(this.currentPosition < this.chapterPages[this.currentChapter].elements){
+			// Add a new page at the end of the chapter
+			this.chapterPages[this.currentChapter].pages.push(new HtmlPage(document.createElement("html"), this.currentPosition, 0, 0));
 		}
 	}
 
@@ -351,7 +361,8 @@ export class BookContentComponent{
 }
 
 export class HtmlChapter{
-	public pages: HtmlPage[] = []			// All generated pages of the chapter
+	public pages: HtmlPage[] = [];		// All generated pages of the chapter
+	public elements: number = 0;			// The number of elements in the html body
 
 	constructor(
 		public html: HTMLHtmlElement			// The html of the entire chapter
