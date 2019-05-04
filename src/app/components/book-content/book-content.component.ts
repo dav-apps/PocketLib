@@ -50,7 +50,7 @@ export class BookContentComponent{
 				this.chapterPages.push(new HtmlChapter(null));
          }
 
-			await this.ShowPage(0, 0);
+			await this.ShowPage();
 		}
 	}
 
@@ -83,7 +83,7 @@ export class BookContentComponent{
 		}
 		
 		// Render the html
-		await this.ShowPage(this.currentChapter, this.currentPage);
+		await this.ShowPage();
 	}
 
 	async NextPage(){
@@ -98,7 +98,7 @@ export class BookContentComponent{
 		}
 
 		// Render the html
-		await this.ShowPage(this.currentChapter, this.currentPage);
+		await this.ShowPage();
 	}
 
 	BookmarkClick(){
@@ -116,18 +116,18 @@ export class BookContentComponent{
 		console.log("---------------------")
 	}
 
-	async ShowPage(chapter: number, page: number){
+	async ShowPage(){
 		// Check if the chapter exists
-		if(chapter >= this.chapterPages.length) return;
+		if(this.currentChapter >= this.chapterPages.length) return;
 		
-		if(this.chapterPages[chapter].pages.length == 0){
+		if(this.chapterPages[this.currentChapter].pages.length == 0){
 			// Load the chapter pages
-			await this.CreateChapterPages(chapter);
+			await this.CreateChapterPages(this.currentChapter);
 		}
 
 		// Check if the page exists
-		if(page >= this.chapterPages[chapter].pages.length) return;
-		let currentPage = this.chapterPages[chapter].pages[page];
+		if(this.currentPage >= this.chapterPages[this.currentChapter].pages.length) return;
+		let currentPage = this.chapterPages[this.currentChapter].pages[this.currentPage];
 
 		// Check if the html of the page must be updated
 		if(currentPage.windowHeight != window.innerHeight || currentPage.windowWidth != window.innerWidth){
@@ -136,7 +136,7 @@ export class BookContentComponent{
 		}
 
 		// Show the page
-		this.SetCurrentElement(this.chapterPages[chapter].pages[page].html)
+		this.SetCurrentElement(this.chapterPages[this.currentChapter].pages[this.currentPage].html);
 	}
 
 	async CreateChapterPages(chapter: number){
