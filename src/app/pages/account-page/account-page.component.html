@@ -26,5 +26,27 @@
 </div>
 
 <div class="container mb-4" *ngIf="dataService.user.IsLoggedIn">
-	<p>Logged in!</p>
+	<h1 class="text-center mt-2" style="margin-bottom: 30px">Your Account</h1>
+
+	<div class="d-flex justify-content-center">
+		<img class="rounded-circle"
+				[src]="dataService.user.Avatar" 
+				height="150" width="150" />
+
+		<h3 style="width: 110px; margin-left: 40px">{{ dataService.user.Username }}</h3>
+	</div>
+
+	<div class="mt-4 d-flex justify-content-center" style="margin-left: -70px">
+		<div>
+			<div class="progress" style="width: 200px; height: 5%">
+				<div class="progress-bar" role="progressbar" [style.width.%]="getUsedStoragePercentage()" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+			</div>
+
+			<p class="mt-2 text-color" style="margin-bottom: 2px">{{ "{0} GB of {1} GB used".replace("{0}", bytesToGigabytes(dataService.user.UsedStorage, 1)).replace("{1}", bytesToGigabytes(dataService.user.TotalStorage, 0)) }}</p>
+			<a href="https://dav-apps.tech/pricing" target="blank">Need more?</a><br>
+			<button type="button" class="btn btn-outline-danger btn-sm" style="margin-top: 13px" (click)="ShowLogoutModal()">Log out</button>
+		</div>
+	</div>
+
+	<pocketlib-logout-modal (logout)="Logout()"></pocketlib-logout-modal>
 </div>

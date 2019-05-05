@@ -1,14 +1,17 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { DataService } from 'src/app/services/data-service';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { LogoutModalComponent } from '../../components/logout-modal/logout-modal.component';
 
 @Component({
    selector: "pocketlib-account-page",
    templateUrl: "./account-page.component.html"
 })
 export class AccountPageComponent{
-   
+	@ViewChild(LogoutModalComponent)
+	private logoutModalComponent: LogoutModalComponent;
+
    constructor(
       private dataService: DataService
    ){}
@@ -20,4 +23,23 @@ export class AccountPageComponent{
    ShowSignupPage(){
       Dav.ShowSignupPage(environment.baseUrl);
    }
+
+   ShowLogoutModal(){
+      this.logoutModalComponent.Show();
+   }
+
+   Logout(){
+      this.dataService.user.Logout().then(() => {
+         window.location.href = "/account";
+      });
+	}
+
+   bytesToGigabytes(bytes: number, rounding: number) : string{
+		if(bytes == 0) return "0";
+		return Math.round(bytes / 1000000000).toFixed(rounding);
+	}
+
+	getUsedStoragePercentage() : number{
+		return (this.dataService.user.UsedStorage / this.dataService.user.TotalStorage) * 100;
+	}
 }
