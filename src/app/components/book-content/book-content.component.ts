@@ -16,6 +16,7 @@ export class BookContentComponent{
 	maxPageHeight: number = 500;
 	htmlPaddingX: number = 0;
 	htmlPaddingY: number = 60;
+	navigationState: NavigationState = NavigationState.GoForward;
 
 	currentElement: HTMLElement;
 	elementsCount: number = 0;
@@ -59,6 +60,7 @@ export class BookContentComponent{
 		this.setSize();
 
 		// Update the layout
+		this.navigationState = NavigationState.Resize;
 		this.RerenderCurrentPage();
 	}
 
@@ -83,6 +85,7 @@ export class BookContentComponent{
 		}
 		
 		// Render the html
+		this.navigationState = NavigationState.GoBack;
 		await this.ShowPage();
 	}
 
@@ -98,6 +101,7 @@ export class BookContentComponent{
 		}
 
 		// Render the html
+		this.navigationState = NavigationState.GoForward;
 		await this.ShowPage();
 	}
 
@@ -296,6 +300,12 @@ export class BookContentComponent{
 		this.lastChild = null;
 		this.currentPosition = position;
 
+		// Get the startPosition from the next page
+		let nextPage = this.chapterPages[this.currentChapter].pages[this.currentPage + 1]
+		if(endPosition == -1 && nextPage && this.navigationState == NavigationState.GoBack){
+			endPosition = nextPage.startPosition - 1;
+		}
+
 		this.AppendChildren(body, chapterBody.cloneNode(true), currentElementHtml, true, endPosition);
 
 		// Update the html of the current page
@@ -310,26 +320,24 @@ export class BookContentComponent{
 		currentPage.endPosition = this.currentPosition - 1;
 
 		// Update the next page
-		let nextPage = this.chapterPages[this.currentChapter].pages[this.currentPage + 1]
 		if(nextPage){
-			if(nextPage.startPosition >= this.chapterPages[this.currentChapter].elements){
-				// The content of the next page(s) in now in the current page; remove the next page(s)
-				this.chapterPages[this.currentChapter].pages.splice(this.currentPage + 1);
+			// Check if there is a gap between the current page and the next page
+			if(nextPage.startPosition - currentPage.endPosition > 1 && this.navigationState == NavigationState.GoBack){
+				// Add a page with the elements between the two pages
+				// [currentPage][pageBetween][nextPage]
+				let pageBetweenEndPosition = nextPage.startPosition - 1;
+				this.chapterPages[this.currentChapter].pages.splice(this.currentPage + 1, 0, new HtmlPage(document.createElement("html"), this.currentPosition, pageBetweenEndPosition, window.innerHeight, window.innerWidth));
+
+				this.currentPage++;
+				// Call RerenderCurrentPage recursively until all gaps are filled
+				this.RerenderCurrentPage(pageBetweenEndPosition);
 			}else{
-				// Check if there is a gap between the current page and the next page
-				if(nextPage.startPosition - currentPage.endPosition > 1){
-					// Add a page with the elements between the two pages
-					// [currentPage][pageBetween][nextPage]
-					this.currentPage++;
+				// Update the position of the next page
+				nextPage.startPosition = this.currentPosition;
 
-					let pageBetweenEndPosition = nextPage.startPosition - 1;
-					this.chapterPages[this.currentChapter].pages.splice(this.currentPage, 0, new HtmlPage(document.createElement("html"), this.currentPosition, pageBetweenEndPosition, window.innerHeight, window.innerWidth));
-
-					// Call RerenderCurrentPage recursively until all gaps are filled
-					this.RerenderCurrentPage(pageBetweenEndPosition);
-				}else{
-					// Update the position of the next page
-					nextPage.startPosition = this.currentPosition;
+				if(nextPage.startPosition >= this.chapterPages[this.currentChapter].elements){
+					// The content of the next page(s) in now in the current page; remove the next page(s)
+					this.chapterPages[this.currentChapter].pages.splice(this.currentPage + 1);
 				}
 			}
 		}else if(this.currentPosition < this.chapterPages[this.currentChapter].elements){
@@ -408,4 +416,10 @@ export class HtmlPage{
 		public windowHeight: number,		// The window height at the time of rendering this page
 		public windowWidth: number			// The window width at the time of rendering the page
 	){}
+}
+
+enum NavigationState{
+	GoBack,
+	Resize,
+	GoForward
 }
