@@ -1,1 +1,30 @@
-<h3>Hello World on Account page</h3>
+<div class="container mb-4" *ngIf="!dataService.user.IsLoggedIn">
+	<h1 class="text-center mt-2">Your Account</h1>
+	<h5 class="text-center mt-4">Save your library and access it from anywhere</h5>
+
+	<div class="row mt-5">
+		<div class="col-6 col-md-4 offset-md-1 text-center">
+			<i class="material-icons" style="font-size: 60px">sync</i>
+			<p class="mt-4" style="font-size: 22px">Access the same library on all your devices</p>
+		</div>
+
+		<div class="col-6 col-md-4 offset-md-2 text-center">
+			<i class="material-icons" style="font-size: 60px">lock</i>
+			<p class="mt-4" style="font-size: 22px">Make sure your books don't get lost when you lose or reset your device</p>
+		</div>
+	</div>
+
+	<h3 class="text-center mt-5">Try it out for free</h3>
+	<div class="d-flex justify-content-center mt-4">
+		<button type="button" class="btn btn-primary mr-2" (click)="ShowLoginPage()">Log in</button>
+		<button type="button" class="btn btn-primary ml-2" (click)="ShowSignupPage()">Sign up</button>
+	</div>
+
+	<div class="d-flex justify-content-center">
+		<a class="mt-4 text-color" href="https://dav-apps.tech" target="blank">Visit dav-apps.tech</a>
+	</div>
+</div>
+
+<div class="container mb-4" *ngIf="dataService.user.IsLoggedIn">
+	<p>Logged in!</p>
+</div>

@@ -8,4 +8,8 @@ export class DataService{
    navbarVisible: boolean = true;
    books: Book[] = [];
    currentBook: Book = null;
+
+   constructor(){
+      this.user = new DavUser();
+   }
 }
