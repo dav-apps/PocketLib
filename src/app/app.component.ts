@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
@@ -15,8 +15,19 @@ export class AppComponent {
 
    constructor(
       private router: Router,
+      private activatedRoute: ActivatedRoute,
       private dataService: DataService
-   ){}
+   ){
+      // Log the user in if there is a jwt in the url
+      this.activatedRoute.queryParams.subscribe(async params => {
+         if(params["jwt"]){
+            // Login with the jwt
+            if(await this.dataService.user.Login(params["jwt"])){
+               window.location.href = "/";
+            }
+         }
+      });
+   }
 
 	ngOnInit(){
       // Start loading the books
