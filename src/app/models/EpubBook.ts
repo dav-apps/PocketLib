@@ -10,7 +10,7 @@ export class EpubBook{
 	entries: any[] = [];
    manifestItems: EpubManifestItem[] = [];
 
-   async ReadEpubFile(zipFile: File){
+   async ReadEpubFile(zipFile: Blob){
 		zip.workerScriptsPath = "/assets/libraries/";
 		
 		this.chapters = [];

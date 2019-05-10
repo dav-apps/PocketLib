@@ -3,16 +3,14 @@ import { environment } from 'src/environments/environment';
 import { EpubBook } from './EpubBook';
 
 export class Book{
-	uuid: string;
+   uuid: string;
 	public title: string;
 	public author: string;
 	public cover: string;
 
-   constructor(
-		public file: File
-	){}
+   constructor(public file: Blob){}
 	
-	public static async Create(file: File) : Promise<string>{
+	public static async Create(file: Blob) : Promise<string>{
 		let book = new Book(file);
 		await book.Save();
 		return book.uuid;
@@ -44,7 +42,7 @@ export class Book{
 			fileTableObject = new TableObject();
 			fileTableObject.TableId = environment.bookFileTableId;
 			fileTableObject.IsFile = true;
-			await fileTableObject.SetFile(this.file);
+			await fileTableObject.SetFile(this.file, "epub");
 
 			// Save the uuid of the file table object in the table object
 			await tableObject.SetPropertyValue(environment.bookTableFileUuidKey, fileTableObject.Uuid);
@@ -61,7 +59,8 @@ export async function GetAllBooks() : Promise<Book[]>{
 		if(!fileUuid) continue;
 
 		let fileTableObject = await GetTableObject(fileUuid);
-		if(!fileTableObject) continue;
+      if(!fileTableObject) continue;
+      if(!fileTableObject.File) return;
 
 		let book = ConvertTableObjectsToBook(tableObject, fileTableObject);
 		LoadBookDetails(book);
