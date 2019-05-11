@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { EpubBook } from './EpubBook';
 
 export class Book{
-   uuid: string;
+   public uuid: string;
 	public title: string;
 	public author: string;
 	public cover: string;
@@ -55,27 +55,32 @@ export async function GetAllBooks() : Promise<Book[]>{
 	let books: Book[] = [];
 
 	for(let tableObject of tableObjects){
-		let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
-		if(!fileUuid) continue;
-
-		let fileTableObject = await GetTableObject(fileUuid);
-      if(!fileTableObject) continue;
-      if(!fileTableObject.File) return;
-
-		let book = ConvertTableObjectsToBook(tableObject, fileTableObject);
-		LoadBookDetails(book);
+		let book = await GetBookByTableObject(tableObject);
+		if(!book) continue;
 		books.push(book);
 	}
 
 	return books;
 }
 
+export async function GetBook(uuid: string) : Promise<Book>{
+	let tableObject = await GetTableObject(uuid);
+	if(!tableObject) return null;
+
+	let book = await GetBookByTableObject(tableObject);
+	if(!book) return null;
+
+	return book;
+}
+
 function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : Book{
 	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null;
 	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null;
 
-	// Get the file from the book file table object
-	return new Book(bookFileTableObject.File);
+   // Get the file from the book file table object
+   let book = new Book(bookFileTableObject.File);
+   book.uuid = bookTableObject.Uuid;
+	return book;
 }
 
 async function LoadBookDetails(book: Book) : Promise<Book>{
@@ -87,4 +92,22 @@ async function LoadBookDetails(book: Book) : Promise<Book>{
 	book.cover = epubBook.coverSrc;
 
 	return book;
+}
+
+async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
+	// Get the book file
+	let fileTableObject = await GetBookFileOfBookTableObject(tableObject);
+	if(!fileTableObject) return null;
+
+	let book = ConvertTableObjectsToBook(tableObject, fileTableObject);
+	LoadBookDetails(book);
+	return book;
+}
+
+async function GetBookFileOfBookTableObject(tableObject: TableObject) : Promise<TableObject>{
+	let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
+	if(!fileUuid) return null;
+
+	let fileTableObject = await GetTableObject(fileUuid);
+	return (fileTableObject && fileTableObject.File) ? fileTableObject : null;
 }
