@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
-import { Book, GetAllBooks } from 'src/app/models/Book';
 
 @Component({
 	selector: 'app-root',
@@ -31,9 +30,7 @@ export class AppComponent {
 
 	ngOnInit(){
       // Start loading the books
-      GetAllBooks().then((books: Book[]) => {
-         this.dataService.books = books;
-      });
+      this.dataService.LoadAllBooks();
 
 		let notificationOptions = {
 			icon: "",
@@ -42,21 +39,27 @@ export class AppComponent {
 
 		Dav.Initialize(environment.production ? Dav.DavEnvironment.Production : Dav.DavEnvironment.Development,
 							environment.appId,
-							[environment.bookTableId, environment.bookFileTableId],
+							[environment.bookFileTableId, environment.bookTableId],
 							[],
 							notificationOptions,
 							{
 								UpdateAllOfTable: (tableId: number) => {
-
+									
 								},
-								UpdateTableObject: (tableObject: Dav.TableObject) => {
-
+								UpdateTableObject: (tableObject: Dav.TableObject, fileDownloaded: boolean = false) => {
+									if(tableObject.TableId == environment.bookTableId){
+										// Reload the book
+										this.dataService.ReloadBook(tableObject.Uuid);
+									}else if(tableObject.TableId == environment.bookFileTableId && fileDownloaded){
+										// Find the book with that file uuid and reload it
+										this.dataService.ReloadBookByFile(tableObject.Uuid);
+									}
 								},
 								DeleteTableObject: (tableObject: Dav.TableObject) => {
-
+                           
 								},
 								SyncFinished: () => {
-
+                           this.dataService.LoadAllBooks();
 								}
 							});
 	}
