@@ -18,7 +18,8 @@ export class LibraryPageComponent{
 
 	async filePick(file: ReadFile){
 		// Create a new book
-		await Book.Create(file.underlyingFile);
+      await Book.Create(file.underlyingFile);
+      this.dataService.LoadAllBooks();
 	}
    
    ShowBook(book: Book){

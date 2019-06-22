@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
 
+const toolbarHeight = 40;
+
 @Component({
    selector: 'pocketlib-book-content',
    templateUrl: './book-content.component.html',
@@ -70,7 +72,8 @@ export class BookContentComponent{
 		this.htmlPaddingX = window.innerWidth * 0.15;
 
 		// Set the maxPageHeight
-		this.maxPageHeight = window.innerHeight - 2 * this.htmlPaddingY;
+		// maxPageHeight = Window height - padding - heigth toolbar
+		this.maxPageHeight = window.innerHeight - 2 * this.htmlPaddingY - toolbarHeight;
 	}
 
 	async PrevPage(){
@@ -265,7 +268,8 @@ export class BookContentComponent{
 			// Add the current element as it has no children
 			// Run AppendChildren without adding elements until readerPosition is equals to currentPosition
 			if(this.readerPosition >= this.currentPosition){
-				let newChild = currentElement.cloneNode(true)
+				let newChild = currentElement.cloneNode(true);
+				this.AdaptImageTagDimensions(newChild);
 				newElement.appendChild(newChild);
 				this.lastChild = newChild;
 				this.currentPosition++;
@@ -275,6 +279,28 @@ export class BookContentComponent{
 		}
 		
 		this.SetCurrentElement(html);
+	}
+
+	AdaptImageTagDimensions(tag: Node){
+		// Check if the tag really is an image
+		if(tag.nodeType != 3 && tag.nodeName.toLowerCase() == "img"){
+			console.log(tag)
+			// If the image is too large, change the height and width
+			let imageTag = tag as HTMLImageElement;
+			let height = +imageTag.getAttribute("height");
+			let width = +imageTag.getAttribute("width");
+			if(height == 0 || width == 0) return;
+			
+			if(height > this.maxPageHeight){
+				// Change the heigth of the image to the maxPageHeigth and adjust the width
+				imageTag.setAttribute("height", this.maxPageHeight.toString());
+
+				// Calculate the new width and set the new width of the image tag
+				let diffPercent = (100 / height) * this.maxPageHeight / 100;
+				let newWidth = Math.round(width * diffPercent);
+				imageTag.setAttribute("width", newWidth.toString());
+			}
+		}
 	}
 
 	RerenderCurrentPage(endPosition: number = -1){
