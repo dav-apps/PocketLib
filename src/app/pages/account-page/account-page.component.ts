@@ -9,7 +9,7 @@ import { LogoutModalComponent } from '../../components/logout-modal/logout-modal
    templateUrl: "./account-page.component.html"
 })
 export class AccountPageComponent{
-	@ViewChild(LogoutModalComponent)
+	@ViewChild(LogoutModalComponent, { static: false })
 	private logoutModalComponent: LogoutModalComponent;
 
    constructor(
@@ -21,7 +21,7 @@ export class AccountPageComponent{
    }
 
    ShowSignupPage(){
-      Dav.ShowSignupPage(environment.baseUrl);
+      Dav.ShowSignupPage(environment.apiKey, environment.baseUrl);
    }
 
    ShowLogoutModal(){

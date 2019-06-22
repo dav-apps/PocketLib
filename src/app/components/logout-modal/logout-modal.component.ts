@@ -7,7 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class LogoutModalComponent{
 	@Output() logout = new EventEmitter();
-	@ViewChild('logoutModal') logoutModal: ElementRef;
+	@ViewChild('logoutModal', { static: true }) logoutModal: ElementRef;
 
    constructor(
       private modalService: NgbModal
