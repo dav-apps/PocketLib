@@ -105,10 +105,27 @@ export class BookContentComponent{
 		if(this.dataService.currentBook.position >= chapter.elements){
 			// Show the next chapter as this is the last page
 			this.dataService.currentBook.chapter++;
+			chapter = this.chapters[this.dataService.currentBook.chapter];
 			this.dataService.currentBook.position = 0;
 		}
 		
-		await this.ShowPage();
+		// Load the next page
+		await this.CreatePages(this.dataService.currentBook.chapter, this.dataService.currentBook.position);
+		pageIndex = Utils.GetPageByPosition(this.chapters[this.dataService.currentBook.chapter], this.dataService.currentBook.position);
+		this.ShowPage2(this.dataService.currentBook.chapter, pageIndex);
+
+		// Load the next next page
+		let newPosition = chapter.pages[pageIndex].endPosition + 1;
+		let newChapter = this.dataService.currentBook.chapter;
+
+		if(newPosition >= chapter.elements){
+			newPosition = 0;
+			newChapter++;
+		}
+
+		setTimeout(async () => {
+			await this.CreatePages(newChapter, newPosition);
+		}, 100);
 	}
 
 	// If necessary, generates the pages and then shows the current page, based on the chapter and position of currentBook
@@ -137,6 +154,36 @@ export class BookContentComponent{
 		// Show the page
 		let html = Utils.CreatePageHtml(chapter.GetPageTemplate(), chapter.pages[pageIndex].html.cloneNode(true) as HTMLDivElement, window.innerWidth - 2 * this.paddingX, this.paddingX, this.paddingY, false, true);
 		this.SetIframeContent(html);
+	}
+
+	// Takes the chapter and page from the chapters array and shows it in the iframe
+	ShowPage2(chapterIndex: number, pageIndex: number){
+		let chapter = this.chapters[chapterIndex];
+		if(!chapter) return;
+
+		let page = chapter.pages[pageIndex];
+		if(!page) return;
+
+		// Show the page
+		let html = Utils.CreatePageHtml(chapter.GetPageTemplate(), page.GetHtml(), window.innerWidth - 2 * this.paddingX, this.paddingX, this.paddingY, false, true);
+		this.SetIframeContent(html);
+	}
+
+	// Generates the pages for the specified chapter up to the given position
+	async CreatePages(chapterIndex: number, position: number){
+		let chapter = this.chapters[chapterIndex];
+
+		if(!chapter.IsInitialized()){
+			// Initialize the chapter
+			let chapterHtml = await this.book.chapters[chapterIndex].GetChapterHtml();
+			chapter.Init(chapterHtml);
+		}
+
+		let pageIndex = Utils.GetPageByPosition(chapter, position);
+		if(pageIndex != -1) return;
+
+		// Generate the pages up to the position
+		await this.CreatePagesToPosition(chapter, position);
 	}
 
 	// Creates all pages up to the given position
@@ -423,4 +470,8 @@ export class BookPage{
 		public windowHeight: number,		// The window height at the time of rendering the page
 		public windowWidth: number			// The window width at the time of rendering the page
 	){}
+
+	GetHtml() : HTMLDivElement{
+		return this.html.cloneNode(true) as HTMLDivElement;
+	}
 }
