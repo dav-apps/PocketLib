@@ -1,227 +1,210 @@
-import { Component, Renderer2, ElementRef, HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
 
-const toolbarHeight = 40;
+const toolbarHeight = 40;				// The height of the toolbar on the top of the page
+const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
 
 @Component({
-   selector: 'pocketlib-book-content',
-   templateUrl: './book-content.component.html',
-   styleUrls: [
+	selector: 'pocketlib-book-content',
+	templateUrl: './book-content.component.html',
+	styleUrls: [
       './book-content.component.scss'
    ]
 })
 export class BookContentComponent{
 	book = new EpubBook();
+	chapters: BookChapter[] = [];
 
+	renderDiv: HTMLDivElement;
+	viewer: HTMLDivElement;
+	width: number = 500;
+   height: number = 500;
+   paddingX: number = 0;
+   paddingY: number = 60;
+
+	//#region Variables for CreatePagesToPosition and AppendChildren
 	maxPageHeight: number = 500;
-	htmlPaddingX: number = 0;
-	htmlPaddingY: number = 60;
-	navigationState: NavigationState = NavigationState.GoForward;
-
-	currentElement: HTMLElement;
-	elementsCount: number = 0;
-	currentPosition: number = 0;					// The current position in the chapter html when reading it
-	readerPosition: number = 0;					// Indicates the current position in the html when rendering it
-	maxHeightReached: boolean = false;			// If true, the currently created page is higher than maxPageHeigh
-	lastChildRemoved: boolean = false;			// Indicates if the last child was removed that caused the page to have a heigher height than maxPageHeight
-	lastChild: Node = null;
-
-	chapterPages: HtmlChapter[] = [];	// This contains the html for each chapter and each page of each chapter
-	currentChapter: number = 0;
-	currentPage: number = 0;
+   appendPosition: number = 0;	      // The current position in the chapter html when reading it
+   readerPosition: number = 0;	      // Indicates the current position in the html when rendering it
+   maxHeightReached: boolean = false;	// If true, the currently created page is higher than maxPageHeight
+   lastChildRemoved: boolean = false;	// Indicates if the last child was removed that caused the page to have a heigher height than maxPageHeight
+	lastChild: Node = null;					// The last child that was added to the html in AppendChildren
+	//#endregion
 
 	constructor(
 		private dataService: DataService,
-		private renderer: Renderer2,
-      private element: ElementRef,
-      private router: Router
+		private router: Router
 	){
 		this.dataService.navbarVisible = false;
 	}
 
 	async ngOnInit(){
-		this.currentElement = this.renderer.createElement("html");
-		this.renderer.appendChild(this.element.nativeElement, this.currentElement);
+		this.renderDiv = document.getElementById("renderDiv") as HTMLDivElement;
+		this.viewer = document.getElementById("viewer") as HTMLDivElement;
 		this.setSize();
 
 		if(this.dataService.currentBook){
+			// Load the ebook
 			await this.book.ReadEpubFile(this.dataService.currentBook.file);
 
+			// Create a chapter for each chapter of the book
+			this.chapters = [];
 			for(let i = 0; i < this.book.chapters.length; i++){
-				this.chapterPages.push(new HtmlChapter(null));
-         }
-
+				this.chapters.push(new BookChapter());
+			}
+			
 			await this.ShowPage();
 		}
 	}
 
-	@HostListener('window:resize', ['$event'])
-	onResize(event?){
+	@HostListener('window:resize')
+	onResize(){
 		this.setSize();
-
-		// Update the layout
-		this.navigationState = NavigationState.Resize;
-		this.RerenderCurrentPage();
 	}
 
 	setSize(){
-		// Calculate the padding of the book html content
-		// Left and right padding is 15% of the width
-		this.htmlPaddingX = window.innerWidth * 0.15;
+		this.width = window.innerWidth;
+      this.height = window.innerHeight - toolbarHeight;
+      
+      // Calculate the padding of the html content
+      // Left and right padding is 15% of the width
+      this.paddingX = Math.round(window.innerWidth * 0.15);
+      if(window.innerWidth > secondPageMinWidth) this.paddingX /= 2;
 
-		// Set the maxPageHeight
-		// maxPageHeight = Window height - padding - heigth toolbar
-		this.maxPageHeight = window.innerHeight - 2 * this.htmlPaddingY - toolbarHeight;
+      this.maxPageHeight = window.innerHeight - 2 * this.paddingY - toolbarHeight;
 	}
 
 	async PrevPage(){
-		// Check if the first page is shown
-		if(this.currentPage == 0 && this.currentChapter > 0){
-			// Show the previous chapter
-			this.currentChapter--;
-			this.currentPage = this.chapterPages[this.currentChapter].pages.length - 1;
-		}else if(this.currentPage > 0){
-			// Show the previous page
-			this.currentPage--;
+		// Check if this is the first chapter
+		if(this.dataService.currentBook.chapter == 0) return;
+
+      let chapter = this.chapters[this.dataService.currentBook.chapter];
+      let pageIndex = Utils.GetPageByPosition(chapter, this.dataService.currentBook.position);
+      
+      if(pageIndex == 0){
+         // Show the previous chapter
+			this.dataService.currentBook.chapter--;
+			this.dataService.currentBook.position = this.chapters[this.dataService.currentBook.chapter].elements - 1;
+      }else{
+			// Update the position to the startPosition of the previous page
+			this.dataService.currentBook.position = chapter.pages[pageIndex - 1].startPosition;
 		}
-		
-		// Render the html
-		this.navigationState = NavigationState.GoBack;
+
 		await this.ShowPage();
 	}
 
 	async NextPage(){
-		// Check if the last page is shown
-		if(this.currentPage == this.chapterPages[this.currentChapter].pages.length - 1){
-			// Show the next chapter
-			this.currentChapter++;
-			this.currentPage = 0;
-		}else{
-			// Show the next page
-			this.currentPage++;
-		}
+		let chapter = this.chapters[this.dataService.currentBook.chapter];
+		let pageIndex = Utils.GetPageByPosition(chapter, this.dataService.currentBook.position);
 
-		// Render the html
-		this.navigationState = NavigationState.GoForward;
+		// Update the position to the startPosition of the next page
+		this.dataService.currentBook.position = pageIndex == -1 ? 0 : chapter.pages[pageIndex].endPosition + 1;
+
+		if(this.dataService.currentBook.position >= chapter.elements){
+			// Show the next chapter as this is the last page
+			this.dataService.currentBook.chapter++;
+			this.dataService.currentBook.position = 0;
+		}
+		
 		await this.ShowPage();
 	}
 
-	BookmarkClick(){
-		console.log("---------------------")
-		console.log("current chapter: " + this.currentChapter)
-		console.log("current page: " + this.currentPage)
-		console.log(this.chapterPages)
-
-		console.log("Elements: " + this.chapterPages[this.currentChapter].elements);
-		for(let i = 0; i < this.chapterPages[this.currentChapter].pages.length; i++){
-			console.log("Page " + i);
-			console.log("Position: " + this.chapterPages[this.currentChapter].pages[i].startPosition)
-			console.log("EndPosition: " + this.chapterPages[this.currentChapter].pages[i].endPosition)
-		}
-		console.log("---------------------")
-	}
-
+	// If necessary, generates the pages and then shows the current page, based on the chapter and position of currentBook
 	async ShowPage(){
 		// Check if the chapter exists
-		if(this.currentChapter >= this.chapterPages.length) return;
+		if(this.dataService.currentBook.chapter >= this.chapters.length) return;
+		let chapter = this.chapters[this.dataService.currentBook.chapter];
+		let position = this.dataService.currentBook.position;
 		
-		if(this.chapterPages[this.currentChapter].pages.length == 0){
-			// Load the chapter pages
-			await this.CreateChapterPages(this.currentChapter);
+		// Initialize the chapter if necessary
+		if(!chapter.IsInitialized()){
+			let chapterHtml = await this.book.chapters[this.dataService.currentBook.chapter].GetChapterHtml();
+			chapter.Init(chapterHtml);
 		}
 
-		// Check if the page exists
-		if(this.currentPage >= this.chapterPages[this.currentChapter].pages.length) return;
-		let currentPage = this.chapterPages[this.currentChapter].pages[this.currentPage];
-
-		// Check if the html of the page must be updated
-		if(currentPage.windowHeight != window.innerHeight || currentPage.windowWidth != window.innerWidth){
-			// Rerender the html
-			this.RerenderCurrentPage();
+		// Get the page by the position and if it does not exist, generate the html for the page(s)
+		let pageIndex = Utils.GetPageByPosition(chapter, position);
+		if(pageIndex == -1){
+			// Generate the html for the pages. The last page is then the page of the position
+			await this.CreatePagesToPosition(chapter, position);
+			pageIndex = chapter.pages.length - 1;
 		}
+
+		// TODO Check if the html of the page must be updated
 
 		// Show the page
-		this.SetCurrentElement(this.chapterPages[this.currentChapter].pages[this.currentPage].html);
+		let html = Utils.CreatePageHtml(chapter.GetPageTemplate(), chapter.pages[pageIndex].html.cloneNode(true) as HTMLDivElement, window.innerWidth - 2 * this.paddingX, this.paddingX, this.paddingY, false, true);
+		this.SetIframeContent(html);
 	}
 
-	async CreateChapterPages(chapter: number){
-		// Check if the chapter exists
-		if(chapter >= this.book.chapters.length) return;
+	// Creates all pages up to the given position
+	async CreatePagesToPosition(chapter: BookChapter, position: number){
+		this.ShowOrHideRenderDiv(false)
+		let body = chapter.GetHtml().getElementsByTagName("body")[0];
+		if(position >= chapter.elements) position = chapter.elements - 1;
+      let lastPosition = chapter.pages.length > 0 ? chapter.pages[chapter.pages.length - 1].endPosition : -1;	// lastPosition should always have endPosition of the last page of the chapter
 
-		// Get the html of the chapter
-		let html = await this.book.chapters[chapter].GetChapterHtml();
-		this.chapterPages[chapter].html = html.cloneNode(true) as HTMLHtmlElement;
-
-		// Create the pages of the chapter
-		let chapterFinished = false;
-		this.currentPosition = 0;
-		this.elementsCount = 0;
-
-		// Get the elements count
-		this.StartCountBodyChildren(html);
-		this.chapterPages[chapter].elements = this.elementsCount;
-
-		let head = html.getElementsByTagName("head")[0];
-		let body = html.getElementsByTagName("body")[0];
-
-		let newHtml = document.createElement("html");
-		let newHead = document.createElement("head");
-
-		// Copy the head to the new head
-		for(let i = 0; i < head.childNodes.length; i++){
-			newHead.appendChild(head.childNodes.item(i).cloneNode(true));
-		}
-
-		newHtml.appendChild(newHead);
-
-		while(!chapterFinished){
-			let newHtmlPage = newHtml.cloneNode(true) as HTMLHtmlElement;
-			let newBody = document.createElement("body");
-			newBody.setAttribute("style", `padding: ${this.htmlPaddingY}px ${this.htmlPaddingX}px; background-color: yellow;`)
-			newHtmlPage.appendChild(newBody);
-			let currentPagePosition = this.currentPosition;
-
-			this.ResetCurrentElement();
+		while(position > lastPosition){
+			// Create the next page
+			// Copy the template html
+			let pageTemplate = chapter.GetPageTemplate();
+         let templateBody = pageTemplate.getElementsByTagName("body")[0];
+			let leftPage = templateBody.firstChild as HTMLDivElement;
+			leftPage.setAttribute("style", `padding: ${this.paddingY}px ${this.paddingX}px`);
+			
+			let startPosition = lastPosition + 1;
+			this.appendPosition = startPosition;
 			this.readerPosition = 0;
 
+			this.ResetRenderDiv();
 			this.maxHeightReached = false;
 			this.lastChildRemoved = false;
 			this.lastChild = null;
 
-			await this.AppendChildren(newBody, body.cloneNode(true), newHtmlPage, true);
+			await this.AppendChildren(leftPage, body.cloneNode(true), pageTemplate, true);
 
-			// Add the current html to the chapters array
-			this.chapterPages[chapter].pages.push(new HtmlPage(newHtmlPage.cloneNode(true) as HTMLHtmlElement, currentPagePosition, this.currentPosition - 1, window.innerHeight, window.innerWidth));
-			chapterFinished = this.currentPosition >= this.elementsCount;
+			let newPage = new BookPage(leftPage.cloneNode(true) as HTMLDivElement, startPosition, this.appendPosition - 1, window.innerHeight, window.innerWidth);
+			chapter.pages.push(newPage);
+			lastPosition = newPage.endPosition;
+		}
+		this.ShowOrHideRenderDiv(true)
+	}
+	
+	ShowOrHideRenderDiv(hide: boolean = true){
+		if(hide){
+			this.renderDiv.setAttribute("style", "display: none");
+		}else{
+			this.renderDiv.setAttribute("style", "visibility: hidden");
 		}
 	}
-
-	AppendChildren(newElement: Node, currentElement: Node, html: HTMLHtmlElement, root: boolean, endPosition: number = -1){
-		if(this.maxHeightReached){
+	
+	// Clones the currentElement, which is within rootElement, into the destinationElement and returns when rootElement has reached the max height
+   async AppendChildren(destinationElement: Node, currentElement: Node, rootElement: HTMLHtmlElement, root: boolean, endPosition: number = -1){
+      if(this.maxHeightReached){
 			if(!this.lastChildRemoved){
 				// Remove the last child
 				if(this.lastChild && this.lastChild.parentElement){
 					this.lastChild.parentElement.removeChild(this.lastChild);
-					this.currentPosition--;
+					this.appendPosition--;
 					this.readerPosition--;
 				}
 
 				this.lastChildRemoved = true;
 			}
 			return;
-		}else if(endPosition > 0 && this.currentPosition > endPosition){
+		}else if(endPosition > 0 && this.appendPosition > endPosition){
 			return;
-		}
-
-		// Go through all children, beginning at the bottom, and add the children if readerPosition >= startPosition
-		this.SetCurrentElement(html);
-
+      }
+      
+      // Go through all children, beginning at the bottom, and add the children if readerPosition >= startPosition
+      await this.SetRenderDivContent(rootElement);
+      
 		// Return if the element is text without content
 		if(currentElement.nodeType === 3 && currentElement.textContent.trim().length == 0) return;
 
-		if(this.currentElement.offsetHeight > this.maxPageHeight){
+		if(this.renderDiv.offsetHeight > this.maxPageHeight){
 			this.maxHeightReached = true;
 			return;
 		}
@@ -229,13 +212,13 @@ export class BookContentComponent{
 		// Go through the children of the current element
 		if(currentElement.childNodes.length > 0){
 			// Copy the current element without the children
-			let newParent = root ? newElement : currentElement.cloneNode(false) as Element;
+			let newParent = root ? destinationElement : currentElement.cloneNode(false) as Element;
 			if(!root){
-				newElement.appendChild(newParent);
+				destinationElement.appendChild(newParent);
 				this.lastChild = newParent;
 
-				if(this.readerPosition >= this.currentPosition){
-					this.currentPosition++;
+				if(this.readerPosition >= this.appendPosition){
+					this.appendPosition++;
 				}
 				this.readerPosition++;
 			}
@@ -253,133 +236,69 @@ export class BookContentComponent{
 						// Append the space to the last element
 						if(j != textParts.length) textPart += ' ';
 						let textPartNode = document.createTextNode(textPart)
-						this.AppendChildren(newParent, textPartNode, html, false, endPosition);
+						await this.AppendChildren(newParent, textPartNode, rootElement, false, endPosition);
 					}
 				}else if(child.nodeType !== 3){
-					this.AppendChildren(newParent, child, html, false, endPosition);
+					await this.AppendChildren(newParent, child, rootElement, false, endPosition);
 				}
 			}
-			
+
 			// Remove the element if it has no children
 			if(newParent.childNodes.length == 0 && !root && newParent.parentElement){
 				newParent.parentElement.removeChild(newParent);
 			}
 		}else{
 			// Add the current element as it has no children
-			// Run AppendChildren without adding elements until readerPosition is equals to currentPosition
-			if(this.readerPosition >= this.currentPosition){
+			// Run AppendChildren without adding elements until readerPosition is equals to appendPosition
+			if(this.readerPosition >= this.appendPosition){
 				let newChild = currentElement.cloneNode(true);
-				this.AdaptImageTagDimensions(newChild);
-				newElement.appendChild(newChild);
+				//this.AdaptImageTagDimensions(newChild); TODO
+				destinationElement.appendChild(newChild);
 				this.lastChild = newChild;
-				this.currentPosition++;
+				this.appendPosition++;
 			}
 
 			if(!root) this.readerPosition++;
 		}
-		
-		this.SetCurrentElement(html);
+
+		this.SetRenderDivContent(rootElement);
+   }
+
+	ResetRenderDiv(){
+		// Remove all children of renderDiv
+		while(this.renderDiv.firstChild){
+			this.renderDiv.removeChild(this.renderDiv.firstChild);
+		}
+   }
+   
+   SetRenderDivContent(html: HTMLHtmlElement){
+		this.ResetRenderDiv();
+		this.renderDiv.appendChild(html.cloneNode(true));
+	}
+	
+	SetIframeContent(html: HTMLHtmlElement){
+		let iframe = this.viewer.firstElementChild as HTMLIFrameElement;
+		iframe.srcdoc = html.outerHTML;
 	}
 
-	AdaptImageTagDimensions(tag: Node){
-		// Check if the tag really is an image
-		if(tag.nodeType != 3 && tag.nodeName.toLowerCase() == "img"){
-			console.log(tag)
-			// If the image is too large, change the height and width
-			let imageTag = tag as HTMLImageElement;
-			let height = +imageTag.getAttribute("height");
-			let width = +imageTag.getAttribute("width");
-			if(height == 0 || width == 0) return;
-			
-			if(height > this.maxPageHeight){
-				// Change the heigth of the image to the maxPageHeigth and adjust the width
-				imageTag.setAttribute("height", this.maxPageHeight.toString());
-
-				// Calculate the new width and set the new width of the image tag
-				let diffPercent = (100 / height) * this.maxPageHeight / 100;
-				let newWidth = Math.round(width * diffPercent);
-				imageTag.setAttribute("width", newWidth.toString());
-			}
-		}
+	GoBack(){
+		this.router.navigate(["/"])
 	}
+}
 
-	RerenderCurrentPage(endPosition: number = -1){
-		// This is called when the size of the window changed
-		// Get the position of the current page
-		let currentPage = this.chapterPages[this.currentChapter].pages[this.currentPage];
-		let position = currentPage.startPosition;
-		let chapterHtml = this.chapterPages[this.currentChapter].html;
-		let chapterBody = chapterHtml.getElementsByTagName("body")[0];
+class Utils{
+	//#region Variables for GetChildrenCount and CountChildren
+	private static elementsCount: number = 0;
+	//#endregion
 
-		// Remove the content of the current element body
-		let currentElementHtml = this.currentElement.cloneNode(true) as HTMLHtmlElement;
-		let body = currentElementHtml.getElementsByTagName("body")[0];
-		body.setAttribute("style", `padding: ${this.htmlPaddingY}px ${this.htmlPaddingX}px; background-color: yellow;`)
-		while(body.firstChild) {
-			body.removeChild(body.firstChild);
-		}
-		
-		// Start AppendChildren with the empty body
-		this.readerPosition = 0;
-		this.maxHeightReached = false;
-		this.lastChildRemoved = false;
-		this.lastChild = null;
-		this.currentPosition = position;
-
-		// Get the startPosition from the next page
-		let nextPage = this.chapterPages[this.currentChapter].pages[this.currentPage + 1]
-		if(endPosition == -1 && nextPage && this.navigationState == NavigationState.GoBack){
-			endPosition = nextPage.startPosition - 1;
-		}
-
-		this.AppendChildren(body, chapterBody.cloneNode(true), currentElementHtml, true, endPosition);
-
-		// Update the html of the current page
-		this.chapterPages[this.currentChapter].pages[this.currentPage].html = currentElementHtml.cloneNode(true) as HTMLHtmlElement;
-
-		// Show the new page html
-		this.SetCurrentElement(currentElementHtml);
-
-		// Update the values of the current page
-		currentPage.windowHeight = window.innerHeight;
-		currentPage.windowWidth = window.innerWidth;
-		currentPage.endPosition = this.currentPosition - 1;
-
-		// Update the next page
-		if(nextPage){
-			// Check if there is a gap between the current page and the next page
-			if(nextPage.startPosition - currentPage.endPosition > 1 && this.navigationState == NavigationState.GoBack){
-				// Add a page with the elements between the two pages
-				// [currentPage][pageBetween][nextPage]
-				let pageBetweenEndPosition = nextPage.startPosition - 1;
-				this.chapterPages[this.currentChapter].pages.splice(this.currentPage + 1, 0, new HtmlPage(document.createElement("html"), this.currentPosition, pageBetweenEndPosition, window.innerHeight, window.innerWidth));
-
-				this.currentPage++;
-				// Call RerenderCurrentPage recursively until all gaps are filled
-				this.RerenderCurrentPage(pageBetweenEndPosition);
-			}else{
-				// Update the position of the next page
-				nextPage.startPosition = this.currentPosition;
-
-				if(nextPage.startPosition >= this.chapterPages[this.currentChapter].elements){
-					// The content of the next page(s) in now in the current page; remove the next page(s)
-					this.chapterPages[this.currentChapter].pages.splice(this.currentPage + 1);
-				}
-			}
-		}else if(this.currentPosition < this.chapterPages[this.currentChapter].elements){
-			// Add a new page at the end of the chapter
-			this.chapterPages[this.currentChapter].pages.push(new HtmlPage(document.createElement("html"), this.currentPosition, -1, 0, 0));
-		}
-	}
-
-	StartCountBodyChildren(html: HTMLHtmlElement){
+	static GetChildrenCount(htmlElement: Node) : number{
 		this.elementsCount = 0;
-
-		let body = html.getElementsByTagName("body")[0];
-		this.CountChildren(body, true);
+		this.CountChildren(htmlElement, true);
+		return this.elementsCount;
 	}
 
-	CountChildren(currentElement: Node, root: boolean){
+	// A recursive function to count the number of elements in the given node and counts up elementsCount
+	private static CountChildren(currentElement: Node, root: boolean){
 		if(currentElement.nodeType === 3 && currentElement.textContent.trim().length == 0) return;
 
 		if(currentElement.childNodes.length > 0){
@@ -399,53 +318,109 @@ export class BookContentComponent{
 		}
 		if(!root) this.elementsCount++;
 	}
-	
-	ResetCurrentElement(){
-		if(this.currentElement){
-			// Remove the children of current element
-			while(this.currentElement.firstChild) {
-				this.currentElement.removeChild(this.currentElement.firstChild);
+
+	static GetPageByPosition(chapter: BookChapter, position: number) : number{
+		if(position >= chapter.elements) position = chapter.elements - 1;
+		if(position < 0) position = 0;
+
+		for(let i = 0; i < chapter.pages.length; i++){
+			let page = chapter.pages[i];
+			
+			if(position >= page.startPosition && position <= page.endPosition){
+				return i;
 			}
 		}
+
+		return -1;
 	}
 
-	SetCurrentElement(element: HTMLHtmlElement){
-		this.ResetCurrentElement();
-		
-		// Add all children to the element root
-		for(let i = 0; i < element.childNodes.length; i++){
-			this.currentElement.appendChild(element.childNodes.item(i).cloneNode(true));
+	// Inserts the page html into the template html and returns it
+	static CreatePageHtml(template: HTMLHtmlElement, page: HTMLDivElement, width: number, paddingX: number, paddingY: number, secondPage: boolean = false, resetOtherPage: boolean = false) : HTMLHtmlElement{
+		// Find the div in which the page should be inserted
+		let body = template.getElementsByTagName("body")[0];
+		let destinationElement = body.children.item(secondPage ? 1 : 0) as HTMLDivElement;
+		let otherElement = body.children.item(secondPage ? 0 : 1) as HTMLDivElement;
+
+		if(resetOtherPage){
+			// Remove all children from the other page and set width and height to 0
+			otherElement.setAttribute("style", "width: 0px; padding: 0px 0px");
+
+			while(otherElement.firstChild){
+				otherElement.removeChild(otherElement.firstChild);
+			}
 		}
+
+		// Set the width and height attributes of the page div
+		destinationElement.setAttribute("style", `width: ${width}px; padding: ${paddingY}px ${paddingX - 2}px;`);
+
+		// Insert the page into the template
+		for(let i = 0; i < page.childNodes.length; i++){
+			destinationElement.appendChild(page.childNodes.item(i).cloneNode(true));
+		}
+
+		return template;
 	}
-   
-   //#region Event Handlers
-   GoBack(){
-      this.router.navigate(["/"])
-   }
-   //#endregion
 }
 
-export class HtmlChapter{
-	public pages: HtmlPage[] = [];		// All generated pages of the chapter
-	public elements: number = 0;			// The number of elements in the html body
+export class BookChapter{
+	private html: HTMLHtmlElement;				// The html of the entire chapter
+	private pageTemplate: HTMLHtmlElement;		// The html template where the html content of the pages are being inserted
+	public pages: BookPage[] = [];				// All generated pages of the chapter
+	public elements: number = 0;					// The number of elements in the html body
+	private initialized: boolean = false;		// If true, the html was added, the elements were count and the pageTemplateHtml was created
 
-	constructor(
-		public html: HTMLHtmlElement			// The html of the entire chapter
-	){}
+	Init(html: HTMLHtmlElement){
+		this.html = html;
+		let head = this.html.getElementsByTagName("head")[0];
+		let body = this.html.getElementsByTagName("body")[0];
+
+		// Count the elements in the html
+		this.elements = Utils.GetChildrenCount(body);
+		
+		// Create the template
+		let templateHtml = document.createElement("html");
+		let templateHead = document.createElement("head");
+		let templateBody = document.createElement("body");
+
+		templateHtml.appendChild(templateHead);
+		templateHtml.appendChild(templateBody);
+
+		for(let i = 0; i < head.childNodes.length; i++){
+			templateHead.appendChild(head.childNodes.item(i).cloneNode(true));
+		}
+
+		// Create the divs for the left and the right page
+		let leftPage = document.createElement("div");
+		let rightPage = document.createElement("div");
+		leftPage.setAttribute("id", "leftPage");
+		rightPage.setAttribute("id", "rightPage");
+
+		templateBody.appendChild(leftPage);
+		templateBody.appendChild(rightPage);
+
+		this.pageTemplate = templateHtml;
+		this.initialized = true;
+	}
+
+	IsInitialized() : boolean{
+		return this.initialized;
+	}
+
+	GetHtml() : HTMLHtmlElement{
+		return this.html.cloneNode(true) as HTMLHtmlElement;
+	}
+
+	GetPageTemplate() : HTMLHtmlElement{
+		return this.pageTemplate.cloneNode(true) as HTMLHtmlElement;
+	}
 }
 
-export class HtmlPage{
+export class BookPage{
 	constructor(
-		public html: HTMLHtmlElement,		// The generated html of the page
+		public html: HTMLDivElement,		// The generated html of the page, which is inserted into the pageTemplateHtml of the chapter
 		public startPosition: number,		// Indicates where the current page begins in the chapter html
 		public endPosition: number,		// The html between startPosition and the endPosition is the html of this page; The last page of the chapter has the endPosition chapter.elements - 1
-		public windowHeight: number,		// The window height at the time of rendering this page
+		public windowHeight: number,		// The window height at the time of rendering the page
 		public windowWidth: number			// The window width at the time of rendering the page
 	){}
-}
-
-enum NavigationState{
-	GoBack,
-	Resize,
-	GoForward
 }

@@ -6,7 +6,9 @@ export class Book{
    public uuid: string;
 	public title: string;
 	public author: string;
-	public cover: string;
+   public cover: string;
+   public chapter: number = 0;
+   public position: number = 0;
 
    constructor(public file: Blob){}
 	
