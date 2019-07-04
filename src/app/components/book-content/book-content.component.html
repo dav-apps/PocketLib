@@ -18,9 +18,5 @@
 	</div>
 </div>
 
-<div id="ebook-container" style="position: relative">
-	<div id="renderDiv"></div>
-   <div id="viewer" style="position: absolute; top: 0">
-      <iframe [style.width.px]="width" [style.height.px]="height - 7" style="border: none;"></iframe>
-   </div>
-</div>
+<iframe id="viewer" scrolling="no" style="border: none; position: absolute; margin-top: 60px" [style.width.px]="width" [style.height.px]="contentHeight - 8"></iframe>
+<div id="bottom-curtain" style="background-color: white; position: absolute; bottom: 0;" [style.width.px]="width" [style.height.px]="bottomCurtainHeight"></div>
