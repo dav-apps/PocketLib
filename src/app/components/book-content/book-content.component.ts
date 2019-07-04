@@ -26,7 +26,7 @@ export class BookContentComponent{
 	paddingTop: number = 60;
 	paddingBottom: number = 150;
 	bottomCurtainHeight: number = 0;
-	lastRenderedChapter: number = 0;
+	renderedChapter: number = 0;
 
 	currentChapter: number = 0;
 	currentPage: number = 0;
@@ -69,99 +69,13 @@ export class BookContentComponent{
 		this.setSize();
 	}
 
-	async ShowPage(lastPage: boolean = false){
-		let chapter = this.chapters[this.currentChapter];
-		if(!chapter) return;
-
-		if(!chapter.IsInitialized()){
-         let chapterHtml = await this.book.chapters[this.currentChapter].GetChapterHtml();
-			let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
-			chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin-bottom: 3000px`);
-			
-			await chapter.Init(chapterHtml);
-
-			this.viewer.srcdoc = chapter.GetHtml().outerHTML;
-
-			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
-            this.viewer.onload = resolve;
-			});
-
-         await viewerLoadPromise;
-			
-			this.CreateCurrentChapterPages();
-			for(let position of this.pagePositions){
-				chapter.pagePositions.push(position);
-			}
-
-			if(lastPage){
-				// Show the last page of the chapter
-				this.currentPage = chapter.pagePositions.length - 1;
-			}
-		}else if(this.lastRenderedChapter != this.currentChapter){
-			// Render the chapter and scroll
-			this.viewer.srcdoc = chapter.GetHtml().outerHTML;
-
-			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
-            this.viewer.onload = resolve;
-			});
-
-			await viewerLoadPromise;
-
-			if(lastPage){
-				this.currentPage = chapter.pagePositions.length - 1;
-			}
-		}
-
-		// Load the current page
-		this.viewer.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
-
-		if(this.currentPage >= chapter.pagePositions.length - 1){
-			this.bottomCurtainHeight = 0;
-		}else{
-			// height of bottom curtain = height - difference between the position of the next page and the position of the current page
-			this.bottomCurtainHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage])
-		}
-
-		this.lastRenderedChapter = this.currentChapter;
-	}
-
-	CreateCurrentChapterPages(){
-		this.pageHeight = this.contentHeight - this.paddingBottom;
-		this.searchedPage = 1;
-		this.pagePositions = [];
-		this.lastPosition = 0;
-
-		this.FindPagePositions(this.viewer.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
-	}
-
-	FindPagePositions(currentElement: Element){
-		let position = currentElement.getBoundingClientRect();
-		let yPos = position.height + position.top;
-		
-		if(yPos > this.pageHeight * this.searchedPage){
-			if(currentElement.children.length > 0){
-				// Call FindPagePositions for each child
-				for(let i = 0; i < currentElement.children.length; i++){
-					let child = currentElement.children.item(i);	
-					this.FindPagePositions(child);
-
-					let childPosition = child.getBoundingClientRect();
-               this.lastPosition = childPosition.height + childPosition.top;
-				}
-			}else{
-            this.searchedPage++;
-            if(this.lastPosition != 0){
-               this.pagePositions.push(this.lastPosition);
-            }
-			}
-		}
-	}
-
-	setSize(){
+	async setSize(){
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
 		this.contentHeight = this.height - toolbarHeight - this.paddingTop;
 		this.paddingX = Math.round(this.width * 0.15);
+
+		await this.ShowPage();
 	}
 
 	async PrevPage(){
@@ -197,6 +111,96 @@ export class BookContentComponent{
 		await this.ShowPage();
 	}
 
+	async ShowPage(lastPage: boolean = false){
+		let chapter = this.chapters[this.currentChapter];
+		if(!chapter) return;
+
+		if(chapter.windowWidth != window.innerWidth || chapter.windowHeight != window.innerHeight){
+			let chapterHtml: HTMLHtmlElement;
+			if(chapter.IsInitialized()){
+				chapterHtml = chapter.GetHtml();
+			}else{
+				chapterHtml = await this.book.chapters[this.currentChapter].GetChapterHtml();
+			}
+
+			let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
+			chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin-bottom: 3000px`);
+			
+			await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
+
+			this.viewer.srcdoc = chapter.GetHtml().outerHTML;
+
+			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
+            this.viewer.onload = resolve;
+			});
+
+			await viewerLoadPromise;
+			
+			this.CreateCurrentChapterPages();
+			for(let position of this.pagePositions){
+				chapter.pagePositions.push(position);
+			}
+
+			this.renderedChapter = this.currentChapter;
+		}else if(this.renderedChapter != this.currentChapter){
+			// Render the chapter and scroll
+			this.viewer.srcdoc = chapter.GetHtml().outerHTML;
+
+			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
+				this.viewer.onload = resolve;
+			});
+
+			await viewerLoadPromise;
+			this.renderedChapter = this.currentChapter;
+		}
+
+		if(lastPage){
+			this.currentPage = chapter.pagePositions.length - 1;
+		}
+
+		// Load the current page
+		this.viewer.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
+
+		if(this.currentPage >= chapter.pagePositions.length - 1){
+			this.bottomCurtainHeight = 0;
+		}else{
+			// height of bottom curtain = height - difference between the position of the next page and the position of the current page
+			this.bottomCurtainHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage])
+		}
+	}
+
+	CreateCurrentChapterPages(){
+		this.pageHeight = this.contentHeight - this.paddingBottom;
+		this.searchedPage = 1;
+		this.pagePositions = [];
+		this.lastPosition = 0;
+
+		this.FindPagePositions(this.viewer.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
+	}
+
+	FindPagePositions(currentElement: Element){
+		let position = currentElement.getBoundingClientRect();
+		let yPos = position.height + position.top;
+		
+		if(yPos > this.pageHeight * this.searchedPage){
+			if(currentElement.children.length > 0){
+				// Call FindPagePositions for each child
+				for(let i = 0; i < currentElement.children.length; i++){
+					let child = currentElement.children.item(i);	
+					this.FindPagePositions(child);
+
+					let childPosition = child.getBoundingClientRect();
+               this.lastPosition = childPosition.height + childPosition.top;
+				}
+			}else{
+            this.searchedPage++;
+            if(this.lastPosition != 0){
+               this.pagePositions.push(this.lastPosition);
+            }
+			}
+		}
+	}
+
 	GoBack(){
 		this.router.navigate(["/"])
 	}
@@ -206,11 +210,15 @@ export class BookChapter{
 	private html: HTMLHtmlElement;				// The html of the entire chapter
 	private initialized: boolean = false;		// If true, the html was added, the elements were count and the pageTemplateHtml was created
 	public pagePositions: number[] = [0];		// The positions for showing the pages
+	public windowWidth: number = 0;				// The window width at the time of initializing this chapter
+	public windowHeight: number = 0;				// The window height at the time of initializing this chapter
 
-	Init(html: HTMLHtmlElement){
+	Init(html: HTMLHtmlElement, windowWidth: number, windowHeight: number){
       this.html = html;
 		this.initialized = true;
 		this.pagePositions = [0];
+		this.windowWidth = windowWidth;
+		this.windowHeight = windowHeight;
 	}
 
 	IsInitialized() : boolean{
