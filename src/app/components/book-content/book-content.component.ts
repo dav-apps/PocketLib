@@ -24,7 +24,7 @@ export class BookContentComponent{
 	contentHeight: number = 500;	// The height of the iframe (height - toolbarHeight - 7 - paddingTop)
    paddingX: number = 0;
 	paddingTop: number = 60;
-	paddingBottom: number = 150;
+	paddingBottom: number = 60;
 	bottomCurtainHeight: number = 0;
 	renderedChapter: number = 0;
 
@@ -73,7 +73,7 @@ export class BookContentComponent{
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
 		this.contentHeight = this.height - toolbarHeight - this.paddingTop;
-		this.paddingX = Math.round(this.width * 0.15);
+		this.paddingX = Math.round(this.width * 0.1)
 
 		await this.ShowPage();
 	}
@@ -181,19 +181,20 @@ export class BookContentComponent{
 	FindPagePositions(currentElement: Element){
 		let position = currentElement.getBoundingClientRect();
 		let yPos = position.height + position.top;
+		let lastPosition = this.pagePositions.length > 0 ? this.pagePositions[this.pagePositions.length - 1] : 0;
 		
-		if(yPos > this.pageHeight * this.searchedPage){
+		if(yPos > lastPosition + this.pageHeight){
 			if(currentElement.children.length > 0){
 				// Call FindPagePositions for each child
 				for(let i = 0; i < currentElement.children.length; i++){
-					let child = currentElement.children.item(i);	
+					let child = currentElement.children.item(i);
 					this.FindPagePositions(child);
 
 					let childPosition = child.getBoundingClientRect();
                this.lastPosition = childPosition.height + childPosition.top;
 				}
 			}else{
-            this.searchedPage++;
+				this.searchedPage++;
             if(this.lastPosition != 0){
                this.pagePositions.push(this.lastPosition);
             }
