@@ -29,6 +29,8 @@ export class BookContentComponent{
 	paddingBottom: number = 60;
 	bottomCurtainLeftHeight: number = 0;
 	bottomCurtainRightHeight: number = 0;
+	viewerLeftWidth: number = 500;
+	viewerRightWidth: number = 500;
 
 	currentChapter: number = 0;
 	currentPage: number = 0;
@@ -81,18 +83,39 @@ export class BookContentComponent{
 		this.contentHeight = this.height - toolbarHeight - this.paddingTop;
 		this.pageHeight = this.contentHeight - this.paddingBottom;
 		this.paddingX = Math.round(this.width * 0.1);
+      
+      if(this.width > secondPageMinWidth){
+         // Show both pages
+			this.viewerLeftWidth = this.width / 2;
+			this.viewerRightWidth = this.width / 2;
+      }else{
+         // Hide the second page
+			this.viewerLeftWidth = this.width;
+			this.viewerRightWidth = 0;
+      }
 
 		await this.ShowPage();
 	}
 
 	async PrevPage(){
 		let lastPage = false;
-		if(this.currentPage <= 0 && this.currentChapter > 0){
+
+		if((this.width > secondPageMinWidth && this.currentPage <= 1)
+			|| (this.width <= secondPageMinWidth && this.currentPage <= 0)){
 			// Show the previous chapter
+			if(this.currentChapter <= 0) return;
 			this.currentChapter--;
-			let chapter = this.chapters[this.currentChapter];
-			this.currentPage = chapter.pagePositions.length - 1;
 			lastPage = true;
+			let chapter = this.chapters[this.currentChapter];
+			
+			if(this.width > secondPageMinWidth && chapter.pagePositions.length >= 2){
+				this.currentPage = chapter.pagePositions.length - 2;
+			}else{
+				this.currentPage = chapter.pagePositions.length - 1;
+			}
+		}else if(this.width > secondPageMinWidth){
+			// Go to the second previous page
+			this.currentPage -= 2;
 		}else{
 			// Show the previous page
 			this.currentPage--;
@@ -106,10 +129,15 @@ export class BookContentComponent{
 		if(this.currentChapter >= this.chapters.length - 1) return;
 
 		let chapter = this.chapters[this.currentChapter];
-		if(this.currentPage >= chapter.pagePositions.length - 1){
+
+		if((this.width > secondPageMinWidth && this.currentPage >= chapter.pagePositions.length - 2)
+			|| (this.width <= secondPageMinWidth && this.currentPage >= chapter.pagePositions.length - 1)){
 			// Show the next chapter
 			this.currentChapter++;
 			this.currentPage = 0;
+		}else if(this.width > secondPageMinWidth){
+			// Go to the second next page
+			this.currentPage += 2;
 		}else{
 			// Show the next page
 			this.currentPage++;
@@ -135,45 +163,97 @@ export class BookContentComponent{
 			
 			await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 
-			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
-
-			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
+			let viewerLeftLoadPromise: Promise<any> = new Promise((resolve) => {
             this.viewerLeft.onload = resolve;
 			});
 
-			await viewerLoadPromise;
+			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
+			await viewerLeftLoadPromise;
 			
 			this.CreateCurrentChapterPages();
 			for(let position of this.pagePositions){
 				chapter.pagePositions.push(position);
 			}
 
+			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+				// Render the chapter on the second page
+				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
+					this.viewerRight.onload = resolve;
+				});
+
+				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
+				await viewerRightLoadPromise;
+			}else if(this.width > secondPageMinWidth){
+				// Clear the second page
+				this.viewerRight.srcdoc = "";
+			}
+
 			this.renderedChapter = this.currentChapter;
 		}else if(this.renderedChapter != this.currentChapter){
-			// Render the chapter and scroll
-			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
-
-			let viewerLoadPromise: Promise<any> = new Promise((resolve) => {
+			// Render the chapter
+			let viewerLeftLoadPromise: Promise<any> = new Promise((resolve) => {
 				this.viewerLeft.onload = resolve;
 			});
 
-			await viewerLoadPromise;
+			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
+			await viewerLeftLoadPromise;
+
+			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
+					this.viewerRight.onload = resolve;
+				});
+
+				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
+				await viewerRightLoadPromise;
+			}else if(this.width > secondPageMinWidth){
+				// Clear the second page
+				this.viewerRight.srcdoc = "";
+			}
+
 			this.renderedChapter = this.currentChapter;
 		}
 
-		if(lastPage){
+		if(lastPage && this.width > secondPageMinWidth){
+			// If the chapter pages length is odd, show the last page on the left page
+			if(chapter.pagePositions.length % 2 == 0){
+				this.currentPage = chapter.pagePositions.length - 2;
+			}else{
+				this.currentPage = chapter.pagePositions.length - 1;
+			}
+		}else if(lastPage && this.width <= secondPageMinWidth){
 			this.currentPage = chapter.pagePositions.length - 1;
 		}
 
 		// Load the current page
 		this.viewerLeft.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
+		if(this.width > secondPageMinWidth && chapter.pagePositions[this.currentPage + 1]){
+			this.viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
+		}
 
-		if(this.currentPage >= chapter.pagePositions.length - 1){
-			this.bottomCurtainLeftHeight = 0;
-		}else{
-			// height of bottom curtain = height - difference between the position of the next page and the position of the current page
-			let newBottomCurtainHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage]);
-			this.bottomCurtainLeftHeight = newBottomCurtainHeight < 0 ? 0 : newBottomCurtainHeight;
+		// Correct currentPage to the last page if it is too high
+		if(this.currentPage > chapter.pagePositions.length - 1){
+			this.currentPage = chapter.pagePositions.length - 1;
+		}
+
+		// Update the height of the curtains
+		// height of curtain = height - difference between the position of the next page and the position of the current page
+		let newBottomCurtainLeftHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage]);
+		this.bottomCurtainLeftHeight = newBottomCurtainLeftHeight < 0 ? 0 : newBottomCurtainLeftHeight;
+
+		if(this.width > secondPageMinWidth){
+
+			if(this.currentPage == chapter.pagePositions.length - 1){
+				// The last page is shown on the left page
+				// Hide the right page
+				this.bottomCurtainRightHeight = this.contentHeight;
+			}else if(this.currentPage == chapter.pagePositions.length - 2){
+				// Ths last page is shown on the right page
+				// Show the entire right page
+				this.bottomCurtainRightHeight = 0;
+			}else{
+				let newBottomCurtainRightHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 2] - chapter.pagePositions[this.currentPage + 1]);
+				this.bottomCurtainRightHeight = newBottomCurtainRightHeight < 0 ? 0 : newBottomCurtainRightHeight;
+			}
 		}
 	}
 
