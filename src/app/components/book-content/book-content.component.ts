@@ -159,7 +159,16 @@ export class BookContentComponent{
 			}
 
 			let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
-			chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin-bottom: 3000px`);
+			chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px`);
+
+			// Adapt the image sizes to the page size
+			let imageTags = chapterHtml.getElementsByTagName("img");
+			let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width;
+			pageWidth = pageWidth - 2 * this.paddingX;
+
+			for(let i = 0; i < imageTags.length; i++){
+				Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth);
+			}
 			
 			await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 
@@ -303,6 +312,41 @@ class Utils{
 		}
 
 		return pagePositions;
+   }
+   
+   static AdaptImageTagDimensions(tag: Node, maxHeight: number, maxWidth: number){
+		// Check if the tag really is an image
+		if(tag.nodeType != 3 && tag.nodeName.toLowerCase() == "img"){
+			// If the image is too large, change the height and width
+			let imageTag = tag as HTMLImageElement;
+			let height = +imageTag.getAttribute("height");
+			let width = +imageTag.getAttribute("width");
+			if(height == 0 || width == 0) return;
+			
+			if(height > maxHeight){
+				// Change the heigth of the image to the maxHeigth and adjust the width
+				imageTag.setAttribute("height", maxHeight.toString());
+
+				// Calculate the new width and set the new width of the image tag
+				let diffPercent = (100 / height) * maxHeight / 100;
+				let newWidth = Math.round(width * diffPercent);
+				imageTag.setAttribute("width", newWidth.toString());
+
+				// Update the variables, for the case that the width is still too high
+				height = maxHeight;
+				width = newWidth;
+			}
+
+			if(width > maxWidth){
+				// Change the width of the image to the maxWidth and adjust the height
+				imageTag.setAttribute("width", maxWidth.toString());
+				
+				// Calculate the new height and set the new height of the image tag
+				let diffPercent = (100 / width) * maxWidth / 100;
+				let newHeight = Math.round(height * diffPercent);
+				imageTag.setAttribute("height", newHeight.toString());
+			}
+		}
 	}
 }
 
@@ -314,11 +358,11 @@ export class BookChapter{
 	public windowHeight: number = 0;				// The window height at the time of initializing this chapter
 
 	Init(html: HTMLHtmlElement, windowWidth: number, windowHeight: number){
-      this.html = html;
+		this.html = html;
 		this.initialized = true;
 		this.pagePositions = [0];
 		this.windowWidth = windowWidth;
-		this.windowHeight = windowHeight;
+      this.windowHeight = windowHeight;
 	}
 
 	IsInitialized() : boolean{
