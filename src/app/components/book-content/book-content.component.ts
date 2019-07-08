@@ -161,7 +161,7 @@ export class BookContentComponent{
 		await this.ShowPage();
 	}
 
-	async ShowPage(lastPage: boolean = false, tagId: string = null){
+	async ShowPage(lastPage: boolean = false, elementId: string = null){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
 
@@ -270,9 +270,9 @@ export class BookContentComponent{
 			}
 		}else if(lastPage && this.width <= secondPageMinWidth){
 			this.currentPage = chapter.pagePositions.length - 1;
-		}else if(tagId){
+		}else if(elementId){
 			// Find the position of the tag
-			let position = Utils.FindPositionById(this.viewerLeft.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, tagId);
+			let position = Utils.FindPositionById(this.viewerLeft.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, elementId);
 
 			if(position != -1){
 				// Find the page of the position
@@ -345,9 +345,19 @@ export class BookContentComponent{
 	}
 
 	async NavigateToLink(href: string){
-		// Get the chapter file name and the id of the target element from the href
-		let chapterName = href.slice(href.lastIndexOf('/') + 1, href.lastIndexOf('#'));
-		let elementId = href.slice(href.lastIndexOf('#') + 1);
+		// Get the chapter name and element id
+		let hrefEnd = href;
+		if(href.includes('/')){
+			hrefEnd = hrefEnd.slice(href.lastIndexOf('/') + 1);
+		}
+
+		let elementId = null;
+		let chapterName = hrefEnd;
+
+		if(chapterName.includes('#')){
+			elementId = chapterName.slice(chapterName.lastIndexOf('#') + 1);
+			chapterName = chapterName.slice(0, chapterName.lastIndexOf('#'));
+		}
 		
 		// Find the chapter of the href
 		let linkedChapterIndex = this.chapters.findIndex((chapter: BookChapter) => chapter.filename == chapterName);
@@ -359,9 +369,17 @@ export class BookContentComponent{
 			page: this.currentPage
 		});
 
-		// Navigate to the chapter with the id
 		this.currentChapter = linkedChapterIndex;
-		await this.ShowPage(false, elementId);
+		this.currentPage = 0;
+
+		if(elementId){
+			// Navigate to the page of the chapter with the element with the id
+			let elementId = href.slice(href.lastIndexOf('#') + 1);
+			await this.ShowPage(false, elementId);
+		}else{
+			// Navigate to the first page of the chapter
+			await this.ShowPage();
+		}
 
 		// Update the heights of the bottom curtains
 		this.changeDetectorRef.detectChanges();
@@ -393,7 +411,7 @@ class Utils{
 	static FindPositionById(currentElement: Element, id: string) : number{
 		if(currentElement.getAttribute("id") == id){
 			let position = currentElement.getBoundingClientRect();
-			return position.height + position.top;
+			return position.top;
 		}
 
 		if(currentElement.children.length > 0){
