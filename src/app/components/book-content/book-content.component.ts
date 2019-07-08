@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
@@ -44,9 +44,12 @@ export class BookContentComponent{
 	renderedChapter: number = 0;		// The currently rendered chapter, for determining if the chapter html should be rendered
 	//#endregion
 
+	navigationHistory: {chapter: number, page: number}[] = [];
+
 	constructor(
 		private dataService: DataService,
-		private router: Router
+		private router: Router,
+		private changeDetectorRef: ChangeDetectorRef
 	){
 		this.dataService.navbarVisible = false;
 	}
@@ -56,6 +59,7 @@ export class BookContentComponent{
 		this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
 		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
 		this.bottomCurtainRight = document.getElementById("bottom-curtain-right") as HTMLDivElement;
+		this.navigationHistory = [];
 		this.setSize();
 
 		if(this.dataService.currentBook){
@@ -65,7 +69,14 @@ export class BookContentComponent{
 			// Create a chapter for each chapter of the book
 			this.chapters = [];
 			for(let i = 0; i < this.book.chapters.length; i++){
-				this.chapters.push(new BookChapter());
+				let bookChapter = this.book.chapters[i];
+				let chapter = new BookChapter();
+
+				let index = bookChapter.filePath.lastIndexOf('/');
+				if(index < 0) index = 0;
+
+				chapter.filename = bookChapter.filePath.slice(index + 1);
+				this.chapters.push(chapter);
 			}
 			
 			await this.ShowPage();
@@ -146,7 +157,7 @@ export class BookContentComponent{
 		await this.ShowPage();
 	}
 
-	async ShowPage(lastPage: boolean = false){
+	async ShowPage(lastPage: boolean = false, tagId: string = null){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
 
@@ -178,6 +189,12 @@ export class BookContentComponent{
 
 			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
 			await viewerLeftLoadPromise;
+
+			// Adapt the links
+			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
+			for(let i = 0; i < linkTags.length; i++){
+				Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
+			}
 			
 			this.CreateCurrentChapterPages();
 			for(let position of this.pagePositions){
@@ -192,6 +209,12 @@ export class BookContentComponent{
 
 				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
 				await viewerRightLoadPromise;
+
+				// Adapt the links
+				let linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
+				for(let i = 0; i < linkTags.length; i++){
+					Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
+				}
 			}else if(this.width > secondPageMinWidth){
 				// Clear the second page
 				this.viewerRight.srcdoc = "";
@@ -207,6 +230,12 @@ export class BookContentComponent{
 			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
 			await viewerLeftLoadPromise;
 
+			// Adapt the links
+			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
+			for(let i = 0; i < linkTags.length; i++){
+				Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
+			}
+
 			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
 				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
 					this.viewerRight.onload = resolve;
@@ -214,6 +243,12 @@ export class BookContentComponent{
 
 				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
 				await viewerRightLoadPromise;
+
+				// Adapt the links
+				let linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
+				for(let i = 0; i < linkTags.length; i++){
+					Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
+				}
 			}else if(this.width > secondPageMinWidth){
 				// Clear the second page
 				this.viewerRight.srcdoc = "";
@@ -231,6 +266,19 @@ export class BookContentComponent{
 			}
 		}else if(lastPage && this.width <= secondPageMinWidth){
 			this.currentPage = chapter.pagePositions.length - 1;
+		}else if(tagId){
+			// Find the position of the tag
+			let position = Utils.FindPositionById(this.viewerLeft.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, tagId);
+
+			if(position != -1){
+				// Find the page of the position
+				let page = Utils.FindPageForPosition(position, chapter.pagePositions);
+				if(page != -1){
+					// If it shows two pages and the tag is on the second page, set the current page to the previous page
+					if(this.width > secondPageMinWidth && page % 2 == 1) page -= 1;
+					this.currentPage = page;
+				}
+			}
 		}
 
 		// Load the current page
@@ -247,10 +295,9 @@ export class BookContentComponent{
 		// Update the height of the curtains
 		// height of curtain = height - difference between the position of the next page and the position of the current page
 		let newBottomCurtainLeftHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage]);
-		this.bottomCurtainLeftHeight = newBottomCurtainLeftHeight < 0 ? 0 : newBottomCurtainLeftHeight;
+		this.bottomCurtainLeftHeight = newBottomCurtainLeftHeight < 0 || isNaN(newBottomCurtainLeftHeight) ? 0 : newBottomCurtainLeftHeight;
 
 		if(this.width > secondPageMinWidth){
-
 			if(this.currentPage == chapter.pagePositions.length - 1){
 				// The last page is shown on the left page
 				// Hide the right page
@@ -273,7 +320,38 @@ export class BookContentComponent{
 	}
 
 	GoBack(){
-		this.router.navigate(["/"])
+		if(this.navigationHistory.length > 0){
+			// Navigate back to the last position
+			let lastPosition = this.navigationHistory.pop();
+			this.currentChapter = lastPosition.chapter;
+			this.currentPage = lastPosition.page;
+			this.ShowPage();
+		}else{
+			this.router.navigate(["/"]);
+		}
+	}
+
+	async NavigateToLink(href: string){
+		// Get the chapter file name and the id of the target element from the href
+		let chapterName = href.slice(href.lastIndexOf('/') + 1, href.lastIndexOf('#'));
+		let elementId = href.slice(href.lastIndexOf('#') + 1);
+		
+		// Find the chapter of the href
+		let linkedChapterIndex = this.chapters.findIndex((chapter: BookChapter) => chapter.filename == chapterName);
+		if(linkedChapterIndex == -1) return;
+
+		// Add the current position to the navigation history
+		this.navigationHistory.push({
+			chapter: this.currentChapter,
+			page: this.currentPage
+		});
+
+		// Navigate to the chapter with the id
+		this.currentChapter = linkedChapterIndex;
+		await this.ShowPage(false, elementId);
+
+		// Update the heights of the bottom curtains
+		this.changeDetectorRef.detectChanges();
 	}
 }
 
@@ -283,7 +361,7 @@ class Utils{
 	// Go through each element and save the position
 	static FindPositions(currentElement: Element){
 		if(currentElement.children.length > 0){
-			// Call GetPagePositions for each child
+			// Call FindPositions for each child
 			for(let i = 0; i < currentElement.children.length; i++){
 				let child = currentElement.children.item(i);
 				this.FindPositions(child);
@@ -296,6 +374,28 @@ class Utils{
 				}
 			}
 		}
+	}
+
+	// Go through each element until the element was found, returns -1 if position was not found
+	static FindPositionById(currentElement: Element, id: string) : number{
+		if(currentElement.getAttribute("id") == id){
+			let position = currentElement.getBoundingClientRect();
+			return position.height + position.top;
+		}
+
+		if(currentElement.children.length > 0){
+			// Call FindPositionById for each child
+			for(let i = 0; i < currentElement.children.length; i++){
+				let child = currentElement.children.item(i);
+				let childPosition = this.FindPositionById(child, id);
+
+				if(childPosition != -1){
+					return childPosition;
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	// Finds the nearest values below the page heights
@@ -312,39 +412,68 @@ class Utils{
 		}
 
 		return pagePositions;
-   }
+	}
+	
+	static FindPageForPosition(position: number, pagePositions: number[]) : number{
+		for(let i = 0; i < pagePositions.length - 1; i++){
+			if(position >= pagePositions[i] && position < pagePositions[i + 1]){
+				return i;
+			}
+		}
+
+		return -1;
+	}
    
    static AdaptImageTagDimensions(tag: Node, maxHeight: number, maxWidth: number){
 		// Check if the tag really is an image
-		if(tag.nodeType != 3 && tag.nodeName.toLowerCase() == "img"){
-			// If the image is too large, change the height and width
-			let imageTag = tag as HTMLImageElement;
-			let height = +imageTag.getAttribute("height");
-			let width = +imageTag.getAttribute("width");
-			if(height == 0 || width == 0) return;
+		if(tag.nodeType == 3 || tag.nodeName.toLowerCase() != "img") return;
+
+		// If the image is too large, change the height and width
+		let imageTag = tag as HTMLImageElement;
+		let height = +imageTag.getAttribute("height");
+		let width = +imageTag.getAttribute("width");
+		if(height == 0 || width == 0) return;
+		
+		if(height > maxHeight){
+			// Change the heigth of the image to the maxHeigth and adjust the width
+			imageTag.setAttribute("height", maxHeight.toString());
+
+			// Calculate the new width and set the new width of the image tag
+			let diffPercent = (100 / height) * maxHeight / 100;
+			let newWidth = Math.round(width * diffPercent);
+			imageTag.setAttribute("width", newWidth.toString());
+
+			// Update the variables, for the case that the width is still too high
+			height = maxHeight;
+			width = newWidth;
+		}
+
+		if(width > maxWidth){
+			// Change the width of the image to the maxWidth and adjust the height
+			imageTag.setAttribute("width", maxWidth.toString());
 			
-			if(height > maxHeight){
-				// Change the heigth of the image to the maxHeigth and adjust the width
-				imageTag.setAttribute("height", maxHeight.toString());
+			// Calculate the new height and set the new height of the image tag
+			let diffPercent = (100 / width) * maxWidth / 100;
+			let newHeight = Math.round(height * diffPercent);
+			imageTag.setAttribute("height", newHeight.toString());
+		}
+	}
 
-				// Calculate the new width and set the new width of the image tag
-				let diffPercent = (100 / height) * maxHeight / 100;
-				let newWidth = Math.round(width * diffPercent);
-				imageTag.setAttribute("width", newWidth.toString());
+	static AdaptLinkTag(tag: Node, callback: Function){
+		if(tag.nodeType == 3 || tag.nodeName.toLowerCase() != "a") return;
 
-				// Update the variables, for the case that the width is still too high
-				height = maxHeight;
-				width = newWidth;
-			}
+		let linkTag = tag as HTMLAnchorElement;
+		let link = linkTag.getAttribute("href");
 
-			if(width > maxWidth){
-				// Change the width of the image to the maxWidth and adjust the height
-				imageTag.setAttribute("width", maxWidth.toString());
-				
-				// Calculate the new height and set the new height of the image tag
-				let diffPercent = (100 / width) * maxWidth / 100;
-				let newHeight = Math.round(height * diffPercent);
-				imageTag.setAttribute("height", newHeight.toString());
+		if(!link) return;
+
+		if(link.indexOf('http://') === 0 || link.indexOf('https://') === 0 || link.indexOf('www.') === 0){
+			// Set target = blank
+			linkTag.setAttribute("target", "blank");
+		}else if(link.indexOf('mailto:') !== 0){
+			linkTag.onclick = () => {
+				callback(link);
+				return false;
 			}
 		}
 	}
@@ -356,6 +485,7 @@ export class BookChapter{
 	public pagePositions: number[] = [0];		// The positions for showing the pages
 	public windowWidth: number = 0;				// The window width at the time of initializing this chapter
 	public windowHeight: number = 0;				// The window height at the time of initializing this chapter
+	public filename: string;						// The name of the chapter file
 
 	Init(html: HTMLHtmlElement, windowWidth: number, windowHeight: number){
 		this.html = html;
