@@ -7,12 +7,6 @@
 
 	<div class="float-right">
 		<button mat-button class="book-toolbar-button">
-			<i class="material-icons book-toolbar-button-icon" (click)="PrevPage()">keyboard_arrow_left</i>
-		</button>
-		<button mat-button class="book-toolbar-button">
-			<i class="material-icons book-toolbar-button-icon" (click)="NextPage()">keyboard_arrow_right</i>
-		</button>
-		<button mat-button class="book-toolbar-button">
 			<i class="material-icons book-toolbar-button-icon" (click)="BookmarkClick()">bookmark_border</i>
 		</button>
 	</div>
@@ -22,3 +16,11 @@
 <iframe id="viewer-right" scrolling="no" style="border: none; position: absolute; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="contentHeight - 8"></iframe>
 <div id="bottom-curtain-left" style="background-color: white; position: absolute; bottom: 0;" [style.width.px]="viewerLeftWidth" [style.height.px]="bottomCurtainLeftHeight"></div>
 <div id="bottom-curtain-right" style="background-color: white; position: absolute; bottom: 0; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="bottomCurtainRightHeight"></div>
+
+<!-- Navigation buttons -->
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
+	<i class="material-icons" style="font-size: 30px">keyboard_arrow_left</i>
+</button>
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0" [style.height.px]="height - 40" (click)="NextPage()" *ngIf="!lastPage">
+	<i class="material-icons" style="font-size: 30px">keyboard_arrow_right</i>
+</button>

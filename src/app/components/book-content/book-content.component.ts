@@ -33,7 +33,10 @@ export class BookContentComponent{
 	viewerRightWidth: number = 500;
 
 	currentChapter: number = 0;
-	currentPage: number = 0;
+   currentPage: number = 0;
+   
+   firstPage: boolean = false;
+   lastPage: boolean = false;
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
@@ -136,8 +139,9 @@ export class BookContentComponent{
 	}
 
 	async NextPage(){
-		// Return if this is the last chapter
-		if(this.currentChapter >= this.chapters.length - 1) return;
+		// Return if this is the last chapter and the last page
+		if(this.currentChapter >= this.chapters.length - 1 
+			&& this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1)) return;
 
 		let chapter = this.chapters[this.currentChapter];
 
@@ -311,6 +315,15 @@ export class BookContentComponent{
 				this.bottomCurtainRightHeight = newBottomCurtainRightHeight < 0 ? 0 : newBottomCurtainRightHeight;
 			}
 		}
+
+		this.setFirstLastPage();
+	}
+
+	setFirstLastPage(){
+		this.firstPage = this.currentChapter == 0 && this.currentPage == 0;
+		this.lastPage = 
+			(this.currentChapter == this.chapters.length - 1)
+			&& (this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1));
 	}
 
 	CreateCurrentChapterPages(){
