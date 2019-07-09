@@ -1,7 +1,8 @@
-import { Component, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, HostListener, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
+declare var $: any;
 
 const toolbarHeight = 40;				// The height of the toolbar on the top of the page
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -52,12 +53,13 @@ export class BookContentComponent{
 	constructor(
 		private dataService: DataService,
 		private router: Router,
-		private changeDetectorRef: ChangeDetectorRef
+		private ngZone: NgZone
 	){
 		this.dataService.navbarVisible = false;
 	}
 
 	async ngOnInit(){
+		// Initialize the html element variables
 		this.viewerLeft = document.getElementById("viewer-left") as HTMLIFrameElement;
 		this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
 		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
@@ -83,6 +85,23 @@ export class BookContentComponent{
 			}
 			
 			await this.ShowPage();
+		}
+
+		// Bind the keydown event
+		$(document).keydown((e) => this.onKeyDown(e.keyCode));
+	}
+
+	onKeyDown(keyCode: number){
+		switch (keyCode) {
+			case 8:		// Back key
+				this.ngZone.run(() => this.GoBack());
+				break;
+			case 37:		// Left arrow key
+				this.ngZone.run(() => this.PrevPage());
+				break;
+			case 39:		// Right arrow key
+				this.ngZone.run(() => this.NextPage());
+				break;
 		}
 	}
 
@@ -164,6 +183,7 @@ export class BookContentComponent{
 	async ShowPage(lastPage: boolean = false, elementId: string = null){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
+		let viewerContentChanged: boolean = false;
 
 		if(chapter.windowWidth != window.innerWidth || chapter.windowHeight != window.innerHeight){
 			let chapterHtml: HTMLHtmlElement;
@@ -193,12 +213,7 @@ export class BookContentComponent{
 
 			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
 			await viewerLeftLoadPromise;
-
-			// Adapt the links
-			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
-			for(let i = 0; i < linkTags.length; i++){
-				Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
-			}
+			viewerContentChanged = true;
 			
 			this.CreateCurrentChapterPages();
 			for(let position of this.pagePositions){
@@ -213,15 +228,11 @@ export class BookContentComponent{
 
 				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
 				await viewerRightLoadPromise;
-
-				// Adapt the links
-				let linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
-				for(let i = 0; i < linkTags.length; i++){
-					Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
-				}
+				viewerContentChanged = true;
 			}else if(this.width > secondPageMinWidth){
 				// Clear the second page
 				this.viewerRight.srcdoc = "";
+				viewerContentChanged = true;
 			}
 
 			this.renderedChapter = this.currentChapter;
@@ -233,12 +244,7 @@ export class BookContentComponent{
 
 			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
 			await viewerLeftLoadPromise;
-
-			// Adapt the links
-			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
-			for(let i = 0; i < linkTags.length; i++){
-				Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
-			}
+			viewerContentChanged = true;
 
 			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
 				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
@@ -247,12 +253,7 @@ export class BookContentComponent{
 
 				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
 				await viewerRightLoadPromise;
-
-				// Adapt the links
-				let linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
-				for(let i = 0; i < linkTags.length; i++){
-					Utils.AdaptLinkTag(linkTags.item(i), async (href: string) => await this.NavigateToLink(href));
-				}
+				viewerContentChanged = true;
 			}else if(this.width > secondPageMinWidth){
 				// Clear the second page
 				this.viewerRight.srcdoc = "";
@@ -317,6 +318,24 @@ export class BookContentComponent{
 		}
 
 		this.setFirstLastPage();
+
+		if(viewerContentChanged){
+			// Adapt the links
+			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
+			for(let i = 0; i < linkTags.length; i++){
+				Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
+			}
+
+			// Adapt the links
+			linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
+			for(let i = 0; i < linkTags.length; i++){
+				Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
+			}
+
+			// Bind the keydown event to the viewer documents
+			$(this.viewerLeft.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+			$(this.viewerRight.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+		}
 	}
 
 	setFirstLastPage(){
@@ -380,9 +399,6 @@ export class BookContentComponent{
 			// Navigate to the first page of the chapter
 			await this.ShowPage();
 		}
-
-		// Update the heights of the bottom curtains
-		this.changeDetectorRef.detectChanges();
 	}
 }
 
