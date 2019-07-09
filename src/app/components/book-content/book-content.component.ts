@@ -4,7 +4,6 @@ import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
 declare var $: any;
 
-const toolbarHeight = 40;				// The height of the toolbar on the top of the page
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
 
 @Component({
@@ -24,7 +23,7 @@ export class BookContentComponent{
 	bottomCurtainRight: HTMLDivElement;
 	width: number = 500;
 	height: number = 500;			// The height of the entire page
-	contentHeight: number = 500;	// The height of the iframe (height - toolbarHeight - 7 - paddingTop)
+	contentHeight: number = 500;	// The height of the iframe (height - 7 - paddingTop)
    paddingX: number = 0;
 	paddingTop: number = 60;
 	paddingBottom: number = 60;
@@ -88,7 +87,7 @@ export class BookContentComponent{
 		}
 
 		// Bind the keydown event
-		$(document).keydown((e) => this.onKeyDown(e.keyCode));
+		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
 	}
 
 	onKeyDown(keyCode: number){
@@ -113,7 +112,7 @@ export class BookContentComponent{
 	async setSize(){
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
-		this.contentHeight = this.height - toolbarHeight - this.paddingTop;
+		this.contentHeight = this.height - this.paddingTop;
 		this.pageHeight = this.contentHeight - this.paddingBottom;
 		this.paddingX = Math.round(this.width * 0.1);
       
