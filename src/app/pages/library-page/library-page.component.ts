@@ -19,11 +19,11 @@ export class LibraryPageComponent{
 	async filePick(file: ReadFile){
 		// Create a new book
       await Book.Create(file.underlyingFile);
-      this.dataService.LoadAllBooks();
+      await this.dataService.LoadAllBooks();
 	}
    
    ShowBook(book: Book){
 		this.dataService.currentBook = book;
-		this.router.navigate(["/book"]);
+		this.router.navigate(["book"]);
    }
 }
