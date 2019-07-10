@@ -5,6 +5,7 @@ import { EpubBook } from 'src/app/models/EpubBook';
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
+const progressFactor = 100000;		// The factor with which the progress is saved
 
 @Component({
 	selector: 'pocketlib-book-content',
@@ -16,6 +17,7 @@ const secondPageMinWidth = 1050;		// Show two pages on the window if the window 
 export class BookContentComponent{
 	book = new EpubBook();
 	chapters: BookChapter[] = [];
+	initialized: boolean = false;
 
 	viewerLeft: HTMLIFrameElement;
 	viewerRight: HTMLIFrameElement;
@@ -82,8 +84,14 @@ export class BookContentComponent{
 				chapter.filename = bookChapter.filePath.slice(index + 1);
 				this.chapters.push(chapter);
 			}
+
+			// Get the current chapter and progress of the book
+			let chapter = this.dataService.currentBook.chapter;
+			let progress = this.dataService.currentBook.progress;
+			this.currentChapter = chapter;
 			
-			await this.ShowPage();
+			this.initialized = true;
+			await this.ShowPage(null, null, progress);
 		}
 
 		// Bind the keydown and wheel events
@@ -137,7 +145,9 @@ export class BookContentComponent{
 			this.viewerRightWidth = 0;
       }
 
-		await this.ShowPage();
+		if(this.initialized){
+			await this.ShowPage();
+		}
 	}
 
 	async PrevPage(){
@@ -190,7 +200,7 @@ export class BookContentComponent{
 		await this.ShowPage();
 	}
 
-	async ShowPage(lastPage: boolean = false, elementId: string = null){
+	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
 		let viewerContentChanged: boolean = false;
@@ -294,6 +304,18 @@ export class BookContentComponent{
 					this.currentPage = page;
 				}
 			}
+		}else if(progress >= 0){
+			let lastPosition = chapter.pagePositions[chapter.pagePositions.length - 1];
+			let progressPercent = progress / progressFactor;
+			let progressPosition = lastPosition * progressPercent;
+
+			// Find the page of the position
+			let page = Utils.FindPageForPosition(progressPosition, chapter.pagePositions);
+			if(page != -1){
+				// If it shows two pages and the tag is on the second page, set the current page to the previous page
+				if(this.width > secondPageMinWidth && page % 2 == 1) page -= 1;
+				this.currentPage = page;
+			}
 		}
 
 		// Correct currentPage to the last page if it is too high
@@ -348,6 +370,19 @@ export class BookContentComponent{
 			$(this.viewerLeft.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 			$(this.viewerRight.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 		}
+
+		// Calculate the new progress
+		let currentPagePosition = chapter.pagePositions[this.currentPage];
+		let lastPagePosition = chapter.pagePositions[chapter.pagePositions.length - 1];
+      let newProgress = currentPagePosition / lastPagePosition;
+      if(isNaN(newProgress)){
+         newProgress = 0;
+		}else{
+			newProgress = Math.ceil(newProgress * progressFactor);
+		}
+
+      // Save the new progress
+		await this.dataService.currentBook.SetPosition(this.currentChapter, newProgress);
 	}
 
 	setFirstLastPage(){
