@@ -296,15 +296,15 @@ export class BookContentComponent{
 			}
 		}
 
+		// Correct currentPage to the last page if it is too high
+		if(this.currentPage > chapter.pagePositions.length - 1){
+			this.currentPage = chapter.pagePositions.length - 1;
+		}
+
 		// Load the current page
 		this.viewerLeft.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
 		if(this.width > secondPageMinWidth && chapter.pagePositions[this.currentPage + 1]){
 			this.viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
-		}
-
-		// Correct currentPage to the last page if it is too high
-		if(this.currentPage > chapter.pagePositions.length - 1){
-			this.currentPage = chapter.pagePositions.length - 1;
 		}
 
 		// Update the height of the curtains

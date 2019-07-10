@@ -4,7 +4,10 @@
 <div id="bottom-curtain-right" style="background-color: white; position: absolute; bottom: 0; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="bottomCurtainRightHeight"></div>
 
 <!-- Navigation buttons -->
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0" [style.height.px]="height" (click)="PrevPage()" *ngIf="!firstPage">
+<button mat-button class="book-toolbar-button" (click)="GoBack()">
+   <i class="material-icons book-toolbar-button-icon">arrow_back</i>
+</button>
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
 	<i class="material-icons" style="font-size: 30px">keyboard_arrow_left</i>
 </button>
 <button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0" [style.height.px]="height" (click)="NextPage()" *ngIf="!lastPage">
