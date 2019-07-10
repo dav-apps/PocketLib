@@ -7,15 +7,28 @@ export class Book{
 	public title: string;
 	public author: string;
    public cover: string;
-   public chapter: number = 0;
-   public position: number = 0;
+   public chapter: number = 0;		// The current chapter
+   public progress: number = 0;		// The progress in the chapter in percent * progressFactor
 
-   constructor(public file: Blob){}
+   constructor(
+		public file: Blob,
+		chapter: number = 0,
+		progress: number = 0
+	){
+		this.chapter = chapter;
+		this.progress = progress;
+	}
 	
 	public static async Create(file: Blob) : Promise<string>{
 		let book = new Book(file);
 		await book.Save();
 		return book.uuid;
+	}
+
+	public async SetPosition(chapter: number, progress: number){
+		this.chapter = chapter;
+		this.progress = progress;
+		await this.Save();
 	}
 
 	private async Save(){
@@ -31,7 +44,12 @@ export class Book{
 			}
 			
 			// Update the existing table object
-			// TODO Save future properties
+			let properties: {name: string, value: string}[] = [
+				{ name: environment.bookTableChapterKey, value: this.chapter.toString() },
+				{ name: environment.bookTableProgressKey, value: this.progress.toString() }
+			];
+
+			await tableObject.SetPropertyValues(properties);
 		}else{
 			// Create a new table object
 			tableObject = new TableObject();
@@ -79,9 +97,25 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null;
 	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null;
 
-   // Get the file from the book file table object
-   let book = new Book(bookFileTableObject.File);
-   book.uuid = bookTableObject.Uuid;
+	// Get the file of the book file table object
+	let file = bookFileTableObject.File;
+	
+	// Get the chapter
+	let chapter: number = 0;
+	let chapterString = bookTableObject.GetPropertyValue(environment.bookTableChapterKey);
+	if(chapterString){
+		chapter = Number.parseInt(chapterString);
+	}
+
+	// Get the progress
+	let progress: number = 0;
+	let progressString = bookTableObject.GetPropertyValue(environment.bookTableProgressKey);
+	if(progressString){
+		progress = Number.parseInt(progressString);
+	}
+
+   let book = new Book(file, chapter, progress);
+	book.uuid = bookTableObject.Uuid;
 	return book;
 }
 
