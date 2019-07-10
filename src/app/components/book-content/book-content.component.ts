@@ -86,8 +86,14 @@ export class BookContentComponent{
 			await this.ShowPage();
 		}
 
-		// Bind the keydown event
+		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
+		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+	}
+
+	@HostListener('window:resize')
+	onResize(){
+		this.setSize();
 	}
 
 	onKeyDown(keyCode: number){
@@ -104,9 +110,14 @@ export class BookContentComponent{
 		}
 	}
 
-	@HostListener('window:resize')
-	onResize(){
-		this.setSize();
+	onMouseWheel(wheelDelta: number){
+		if(wheelDelta > 0){
+			// Wheel up
+			this.ngZone.run(() => this.PrevPage());
+		}else{
+			// Wheel down
+			this.ngZone.run(() => this.NextPage());
+		}
 	}
 
 	async setSize(){
@@ -331,9 +342,11 @@ export class BookContentComponent{
 				Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
 			}
 
-			// Bind the keydown event to the viewer documents
+			// Bind the keydown and wheel events to the viewer documents
 			$(this.viewerLeft.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
 			$(this.viewerRight.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+			$(this.viewerLeft.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+			$(this.viewerRight.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 		}
 	}
 
