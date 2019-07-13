@@ -19,10 +19,10 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 				fontSize: '28px'
 			})),
 			transition('true => false', [
-				animate('0.2s ease-out')
+				animate('0.18s ease-in')
 			]),
 			transition('false => true', [
-				animate('0.2s ease-out')
+				animate('0.18s ease-out')
 			])
 		])
 	]
@@ -34,6 +34,7 @@ export class LibraryPageComponent{
 	contextMenuPositionY: number = 0;
 	selectedBook: Book;
 	addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
+	hoveredBookIndex: number = -1;	// The currently hovered book, for showing the large shadow
 
 	constructor(
 		private router: Router,
@@ -80,7 +81,7 @@ export class LibraryPageComponent{
 			this.contextMenuVisible = true;
 		}
 		return false;
-	}
+   }
 	
 	ShowDeleteBookModal(){
 		this.contextMenuVisible = false;

@@ -1,7 +1,8 @@
 <div class="container ms-motion-slideDownIn">
    <div class="row mt-5 d-flex justify-content-center">
       <!-- Card for adding new book -->
-      <div class="card cursor shadow m-2" style="width: 180px" 
+		<div class="card cursor m-2" style="width: 180px; transition: 0.12s" 
+				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
 				ngxFilePicker
 				accept="application/epub+zip"
 				(filePick)="filePick($event)"
@@ -12,11 +13,14 @@
          </div>
       </div>
 
-      <div class="card cursor shadow m-2"
-            style="width: 180px;" 
-            *ngFor="let book of dataService.books" 
+      <div class="card cursor m-2"
+            style="width: 180px; transition: 0.12s" 
+				*ngFor="let book of dataService.books; let i = index" 
+				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
             (click)="ShowBook(book)" 
-            (contextmenu)="onContextMenu($event, book)">
+				(contextmenu)="onContextMenu($event, book)"
+				(mouseover)="hoveredBookIndex = i"
+				(mouseout)="hoveredBookIndex = -1">
          <img [src]="book.cover ? book.cover : 'https://via.placeholder.com/160x250'" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
          <div class="card-body">
             <p class="card-text text-center" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
