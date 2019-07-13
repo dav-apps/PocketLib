@@ -31,6 +31,22 @@ export class Book{
 		await this.Save();
 	}
 
+	public async Delete(){
+		let tableObject = await GetTableObject(this.uuid);
+		if(!tableObject) return;
+
+		let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
+		let fileTableObject = await GetTableObject(fileUuid);
+
+		// Delete the file table object
+		if(fileTableObject){
+			await fileTableObject.Delete();
+		}
+
+		// Delete the book table object
+		await tableObject.Delete();
+	}
+
 	private async Save(){
 		let tableObject = await GetTableObject(this.uuid);
 		let fileTableObject: TableObject = null;

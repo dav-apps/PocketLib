@@ -4,6 +4,7 @@ import { ReadFile } from 'ngx-file-helpers';
 import { Book } from 'src/app/models/Book';
 import { DataService } from 'src/app/services/data-service';
 import { transition, trigger, state, style, animate } from '@angular/animations';
+import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
 
 @Component({
    selector: "pocketlib-library-page",
@@ -28,7 +29,8 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 	]
 })
 export class LibraryPageComponent{
-	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
+   @ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
+   @ViewChild(DeleteBookModalComponent, {static: true}) deleteBookModalComponent: DeleteBookModalComponent;
 	contextMenuVisible: boolean = false;
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
@@ -85,5 +87,11 @@ export class LibraryPageComponent{
 	
 	ShowDeleteBookModal(){
 		this.contextMenuVisible = false;
+		this.deleteBookModalComponent.Show(this.selectedBook);
+	}
+
+	async DeleteBook(){
+		await this.selectedBook.Delete();
+		await this.dataService.LoadAllBooks();
 	}
 }
