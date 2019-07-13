@@ -2,11 +2,13 @@
    <div class="row mt-5 d-flex justify-content-center">
       <!-- Card for adding new book -->
       <div class="card cursor shadow m-2" style="width: 180px" 
-            ngxFilePicker
-            (filePick)="filePick($event)"
-            accept="application/epub+zip">
+				ngxFilePicker
+				accept="application/epub+zip"
+				(filePick)="filePick($event)"
+				(mouseover)="addBookHover = true"
+				(mouseout)="addBookHover = false">
          <div class="card-body d-flex justify-content-center align-items-center">
-            <i class="ms-Icon ms-Icon--Add" aria-hidden="true" style="font-size: 22px"></i>
+            <i class="ms-Icon ms-Icon--Add" aria-hidden="true" style="font-size: 22px" [@addBookHover]="addBookHover ? 'true' : 'false'"></i>
          </div>
       </div>
 

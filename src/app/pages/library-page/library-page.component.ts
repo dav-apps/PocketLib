@@ -3,10 +3,29 @@ import { Router } from '@angular/router';
 import { ReadFile } from 'ngx-file-helpers';
 import { Book } from 'src/app/models/Book';
 import { DataService } from 'src/app/services/data-service';
+import { transition, trigger, state, style, animate } from '@angular/animations';
 
 @Component({
    selector: "pocketlib-library-page",
-   templateUrl: "./library-page.component.html"
+	templateUrl: "./library-page.component.html",
+	animations: [
+		trigger('addBookHover', [
+			state('false', style({
+				transform: 'rotateZ(0deg)',
+				fontSize: '22px'
+			})),
+			state('true', style({
+				transform: 'rotateZ(90deg)',
+				fontSize: '28px'
+			})),
+			transition('true => false', [
+				animate('0.2s ease-out')
+			]),
+			transition('false => true', [
+				animate('0.2s ease-out')
+			])
+		])
+	]
 })
 export class LibraryPageComponent{
 	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
@@ -14,6 +33,7 @@ export class LibraryPageComponent{
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
 	selectedBook: Book;
+	addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
 
 	constructor(
 		private router: Router,
@@ -61,7 +81,7 @@ export class LibraryPageComponent{
 		}
 		return false;
 	}
-
+	
 	ShowDeleteBookModal(){
 		this.contextMenuVisible = false;
 	}
