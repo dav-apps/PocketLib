@@ -17,6 +17,7 @@ import { AccountPageComponent } from './pages/account-page/account-page.componen
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { BookContentComponent } from './components/book-content/book-content.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
+import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
 
 @NgModule({
    declarations: [
@@ -26,7 +27,8 @@ import { LogoutModalComponent } from './components/logout-modal/logout-modal.com
       AccountPageComponent,
       SettingsPageComponent,
       BookContentComponent,
-      LogoutModalComponent
+      LogoutModalComponent,
+      DeleteBookModalComponent
   	],
   	imports: [
    	BrowserModule,
