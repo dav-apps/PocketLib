@@ -7,9 +7,9 @@ export const environment = {
    apiKey: "eUzs3PQZYweXvumcWvagRHjdUroGe5Mo7kN1inHm",
    baseUrl: "http://localhost:3001",
    version: "0.1",
-   appId: 5,
-   bookTableId: 10,
-   bookFileTableId: 11,
+   appId: 6,
+   bookTableId: 14,
+   bookFileTableId: 15,
    // Keys for Book table properties
    bookTableFileUuidKey: "file_uuid",
    bookTableChapterKey: "chapter",
