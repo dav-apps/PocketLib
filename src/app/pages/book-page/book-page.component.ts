@@ -11,7 +11,7 @@ export class BookPageComponent{
    selectedPortal: Portal<any>;
 
    constructor(
-		private dataService: DataService
+		public dataService: DataService
 	){}
 
    async ngOnInit(){

@@ -39,8 +39,8 @@ export class LibraryPageComponent{
 	hoveredBookIndex: number = -1;	// The currently hovered book, for showing the large shadow
 
 	constructor(
-		private router: Router,
-		private dataService: DataService
+		public router: Router,
+		public dataService: DataService
    ){
 		this.dataService.navbarVisible = true;
 		document.onclick = (event: MouseEvent) => {

@@ -13,7 +13,7 @@ export class AccountPageComponent{
    width: number = window.innerWidth;
 
    constructor(
-      private dataService: DataService
+      public dataService: DataService
    ){}
 
    @HostListener('window:resize')

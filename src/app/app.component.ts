@@ -13,9 +13,9 @@ export class AppComponent {
 	title = 'PocketLib';
 
    constructor(
-      private router: Router,
-      private activatedRoute: ActivatedRoute,
-      private dataService: DataService
+      public router: Router,
+      public activatedRoute: ActivatedRoute,
+      public dataService: DataService
    ){
       // Log the user in if there is a jwt in the url
       this.activatedRoute.queryParams.subscribe(async params => {
