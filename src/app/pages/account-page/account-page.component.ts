@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, HostListener } from "@angular/core";
 import { DataService } from 'src/app/services/data-service';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
@@ -9,12 +9,17 @@ import { LogoutModalComponent } from '../../components/logout-modal/logout-modal
    templateUrl: "./account-page.component.html"
 })
 export class AccountPageComponent{
-	@ViewChild(LogoutModalComponent, { static: false })
-	private logoutModalComponent: LogoutModalComponent;
+	@ViewChild(LogoutModalComponent, { static: false }) logoutModalComponent: LogoutModalComponent;
+   width: number = window.innerWidth;
 
    constructor(
       private dataService: DataService
    ){}
+
+   @HostListener('window:resize')
+   onResize(){
+      this.width = window.innerWidth;
+   }
 
    ShowLoginPage(){
       Dav.ShowLoginPage(environment.apiKey, environment.baseUrl);
