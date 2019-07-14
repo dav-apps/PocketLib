@@ -23,7 +23,7 @@
 				(contextmenu)="onContextMenu($event, book)"
 				(mouseover)="hoveredBookIndex = i"
 				(mouseout)="hoveredBookIndex = -1">
-         <img [src]="book.cover ? book.cover : 'https://via.placeholder.com/160x250'" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
+         <img [src]="book.cover ? book.cover : '/assets/placeholder.png'" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
          <div class="card-body">
             <p class="card-text text-center" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
          </div>
