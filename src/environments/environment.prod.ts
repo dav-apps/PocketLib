@@ -3,9 +3,9 @@ export const environment = {
    apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
    baseUrl: "https://pocketlib.dav-apps.tech",
    version: "0.1",
-   appId: 1,
-   bookTableId: 1,
-   bookFileTableId: 2,
+   appId: 6,
+   bookTableId: 14,
+   bookFileTableId: 15,
    // Keys for Book table properties
    bookTableFileUuidKey: "file_uuid",
    bookTableChapterKey: "chapter",
