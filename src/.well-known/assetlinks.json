@@ -1,0 +1,5 @@
+[{
+   "relation": ["delegate_permission/common.handle_all_urls"],
+   "target" : { "namespace": "android_app", "package_name": "app.dav.pocketlib",
+                "sha256_cert_fingerprints": ["2A:6C:4D:A5:68:A6:38:3E:CC:34:F9:7B:7E:DF:EE:09:73:F5:B5:2C:CF:80:86:7A:C8:7B:9D:E8:38:32:B9:D1"] }
+ }]
