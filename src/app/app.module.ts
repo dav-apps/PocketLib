@@ -18,6 +18,8 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
 import { BookContentComponent } from './components/book-content/book-content.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
    declarations: [
@@ -39,7 +41,8 @@ import { DeleteBookModalComponent } from './components/delete-book-modal/delete-
       MatButtonModule,
       MatCardModule,
       PortalModule,
-      NgbModule
+      NgbModule,
+      ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [
       DataService
