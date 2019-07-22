@@ -2,10 +2,12 @@ import { Injectable } from "@angular/core";
 import { DavUser, GetAllTableObjects } from 'dav-npm';
 import { Book, GetAllBooks, GetBook } from '../models/Book';
 import { environment } from 'src/environments/environment';
+import * as locales from 'src/locales/locales';
 
 @Injectable()
 export class DataService{
    user: DavUser;
+   locale: string = navigator.language;
    navbarVisible: boolean = true;
    books: Book[] = [];
    currentBook: Book = null;
@@ -40,5 +42,20 @@ export class DataService{
       if(!bookObject) return;
 
 		await this.ReloadBook(bookObject.Uuid);
+   }
+
+   GetLocale(){
+      let l = this.locale.toLowerCase();
+
+      if(l.includes("en")){            // en
+         if(l == "en-gb")              return locales.enGB;
+         else                          return locales.enUS;
+      }else if(l.includes("de")){      // de
+			if(l == "de-at")					return locales.deAT;
+			else if(l == "de-ch")			return locales.deCH;
+			else									return locales.deDE;
+		}
+		
+		return locales.enUS;
    }
 }
