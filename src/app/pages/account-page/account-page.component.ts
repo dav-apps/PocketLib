@@ -2,6 +2,7 @@ import { Component, ViewChild, HostListener } from "@angular/core";
 import { DataService } from 'src/app/services/data-service';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { enUS } from 'src/locales/locales';
 import { LogoutModalComponent } from '../../components/logout-modal/logout-modal.component';
 
 @Component({
@@ -9,12 +10,15 @@ import { LogoutModalComponent } from '../../components/logout-modal/logout-modal
    templateUrl: "./account-page.component.html"
 })
 export class AccountPageComponent{
+   locale = enUS.accountPage;
 	@ViewChild(LogoutModalComponent, { static: false }) logoutModalComponent: LogoutModalComponent;
    width: number = window.innerWidth;
 
    constructor(
       public dataService: DataService
-   ){}
+   ){
+      this.locale = this.dataService.GetLocale().accountPage;
+   }
 
    @HostListener('window:resize')
    onResize(){
