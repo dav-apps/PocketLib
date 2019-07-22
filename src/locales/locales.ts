@@ -1,7 +1,9 @@
 //#region en
 const enDefaults = {
 	settingsPage: {
-
+      title: "Settings",
+      privacy: "Privacy Policy",
+      github: "PocketLib on GitHub"
 	}
 }
 
@@ -13,7 +15,9 @@ export var enGB = enDefaults;
 //#region de
 const deDefaults = {
    settingsPage: {
-      
+      title: "Einstellungen",
+      privacy: "Datenschutzerklärung",
+      github: "PocketLib auf GitHub"
    }
 }
 
