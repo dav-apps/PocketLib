@@ -1,5 +1,9 @@
 //#region en
 const enDefaults = {
+   libraryPage: {
+      title: "Your Library",
+      bookContextMenuDelete: "Delete"
+   },
    accountPage: {
 		title: "Your Account",
 		text1: "Save your library and access it from anywhere",
@@ -19,6 +23,18 @@ const enDefaults = {
       title: "Settings",
       privacy: "Privacy Policy",
       github: "PocketLib on GitHub"
+	},
+	deleteBookModal: {
+		title: "Delete book",
+		description: "Are you sure you want to delete this book?",
+		delete: "Delete",
+		cancel: "Cancel"
+	},
+	logoutModal: {
+		title: "Log out",
+		description: "Are you sure you want to log out?",
+		logout: "Log out",
+		cancel: "Cancel"
 	}
 }
 
@@ -29,6 +45,10 @@ export var enGB = enDefaults;
 
 //#region de
 const deDefaults = {
+   libraryPage: {
+      title: "Deine Bibliothek",
+      bookContextMenuDelete: "Löschen"
+   },
    accountPage: {
 		title: "Dein Account",
 		text1: "Sichere deine Bibliothek und greife von überall darauf zu",
@@ -48,7 +68,19 @@ const deDefaults = {
       title: "Einstellungen",
       privacy: "Datenschutzerklärung",
       github: "PocketLib auf GitHub"
-   }
+	},
+	deleteBookModal: {
+		title: "Buch löschen",
+		description: "Bist du dir sicher, dass du dieses Buch löschen willst?",
+		delete: "Löschen",
+		cancel: "Abbrechen"
+	},
+	logoutModal: {
+		title: "Abmelden",
+		description: "Bist du dir sicher, dass du dich abmelden möchtest?",
+		logout: "Abmelden",
+		cancel: "Abbrechen"
+	}
 }
 
 export var deDE = deDefaults;

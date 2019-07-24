@@ -1,16 +1,16 @@
 <ng-template #deleteBookModal let-c="close" let-d="dismiss">
    <div class="modal-header">
-      <h4 class="modal-title">Delete book</h4>
+      <h4 class="modal-title">{{ locale.title }}</h4>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
          <span aria-hidden="true">&times;</span>
       </button>
    </div>
    <div class="modal-body">
-		<p>Are you sure you want to delete this book?</p>
-		<p>{{ book.title }}</p>
+		<p>{{ locale.description }}</p>
+		<p>{{ book.author }}: {{ book.title }}</p>
    </div>
    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="d()">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="c()">Delete</button>
+      <button type="button" class="btn btn-secondary" (click)="d()">{{ locale.cancel }}</button>
+      <button type="button" class="btn btn-danger" (click)="c()">{{ locale.delete }}</button>
    </div>
 </ng-template>

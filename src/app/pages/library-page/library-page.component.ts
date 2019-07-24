@@ -5,6 +5,7 @@ import { Book } from 'src/app/models/Book';
 import { DataService } from 'src/app/services/data-service';
 import { transition, trigger, state, style, animate } from '@angular/animations';
 import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
+import { enUS } from 'src/locales/locales';
 
 @Component({
    selector: "pocketlib-library-page",
@@ -29,6 +30,7 @@ import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/d
 	]
 })
 export class LibraryPageComponent{
+	locale = enUS.libraryPage;
    @ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
    @ViewChild(DeleteBookModalComponent, {static: true}) deleteBookModalComponent: DeleteBookModalComponent;
 	contextMenuVisible: boolean = false;
@@ -42,6 +44,7 @@ export class LibraryPageComponent{
 		public router: Router,
 		public dataService: DataService
    ){
+		this.locale = this.dataService.GetLocale().libraryPage;
 		this.dataService.navbarVisible = true;
 		document.onclick = (event: MouseEvent) => {
 			if(!this.contextMenuVisible) return;
