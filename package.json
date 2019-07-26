@@ -28,6 +28,7 @@
     "core-js": "^2.5.4",
     "dav-npm": "git+https://github.com/Dav2070/dav-npm.git#v0.5",
     "jquery": "^3.4.0",
+    "localforage": "^1.7.3",
     "ngx-file-helpers": "^2.0.0",
     "office-ui-fabric-core": "^10.1.0",
     "rxjs": "~6.5.2",

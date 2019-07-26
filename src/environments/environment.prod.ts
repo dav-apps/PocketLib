@@ -9,5 +9,12 @@ export const environment = {
    // Keys for Book table properties
    bookTableFileUuidKey: "file_uuid",
    bookTableChapterKey: "chapter",
-   bookTableProgressKey: "progress"
+   bookTableProgressKey: "progress",
+   // Settings keys
+   settingsThemeKey: "settings-theme",
+   // Other keys
+   themeKey: "theme",
+   lightThemeKey: "light",
+	darkThemeKey: "dark",
+	systemThemeKey: "system"
 };

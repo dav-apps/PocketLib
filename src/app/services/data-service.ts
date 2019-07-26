@@ -3,6 +3,7 @@ import { DavUser, GetAllTableObjects } from 'dav-npm';
 import { Book, GetAllBooks, GetBook } from '../models/Book';
 import { environment } from 'src/environments/environment';
 import * as locales from 'src/locales/locales';
+import * as localforage from 'localforage';
 
 @Injectable()
 export class DataService{
@@ -10,7 +11,9 @@ export class DataService{
    locale: string = navigator.language;
    navbarVisible: boolean = true;
    books: Book[] = [];
-   currentBook: Book = null;
+	currentBook: Book = null;
+	darkTheme: boolean = false;
+	windowsUiSettings = null;
 
    constructor(){
       this.user = new DavUser();
@@ -58,4 +61,57 @@ export class DataService{
 		
 		return locales.enUS;
    }
+
+	async ApplyTheme(theme?: string){
+		if(!theme){
+			// Get the theme from the settings
+			theme = await localforage.getItem(environment.settingsThemeKey);
+		}
+
+		switch(theme){
+			case environment.darkThemeKey:
+				this.darkTheme = true;
+				break;
+			case environment.systemThemeKey:
+				// Get the Windows theme
+				if(window["Windows"]){
+					if(this.windowsUiSettings == null){
+						this.windowsUiSettings = new window["Windows"].UI.ViewManagement.UISettings();
+					}
+
+					var color = this.windowsUiSettings.getColorValue(
+						window["Windows"].UI.ViewManagement.UIColorType.background
+					);
+
+					this.darkTheme = color.r == 0;
+
+					// Observe the system theme
+					this.windowsUiSettings.oncolorvalueschanged = () => {
+						this.ApplyTheme();
+					}
+
+					break;
+				}
+			default:
+				// Light theme
+				this.darkTheme = false;
+				break;
+		}
+
+		document.body.setAttribute(
+			environment.themeKey, 
+			this.darkTheme ? environment.darkThemeKey : environment.lightThemeKey
+		);
+	}
+	
+	//#region Settings
+	async SetTheme(value: string){
+		await localforage.setItem(environment.settingsThemeKey, value);
+	}
+
+	async GetTheme() : Promise<string>{
+		var value = await localforage.getItem(environment.settingsThemeKey) as string;
+		return value ? value : environment.settingsThemeDefault;
+	}
+	//#endregion
 }
