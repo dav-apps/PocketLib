@@ -31,6 +31,8 @@ export class AppComponent {
 	ngOnInit(){
       // Start loading the books
       this.dataService.LoadAllBooks();
+      this.SetTitleBarColor();
+      this.dataService.ApplyTheme();
 
 		let notificationOptions = {
 			icon: "",
@@ -62,6 +64,26 @@ export class AppComponent {
                            this.dataService.LoadAllBooks();
 								}
 							});
+   }
+   
+   SetTitleBarColor(){
+		if(window["Windows"] && window["Windows"].UI.ViewManagement){
+			// #007bff
+			var themeColor = {
+				r: 13,
+				g: 71,
+				b: 161,
+				a: 255
+         }
+
+			let titleBar = window["Windows"].UI.ViewManagement.ApplicationView.getForCurrentView().titleBar;
+			titleBar.foregroundColor = themeColor;
+			titleBar.backgroundColor = themeColor;
+			titleBar.buttonBackgroundColor = themeColor;
+			titleBar.buttonInactiveBackgroundColor = themeColor;
+			titleBar.inactiveForegroundColor = themeColor;
+			titleBar.inactiveBackgroundColor = themeColor;
+		}
 	}
 	
 	ShowAccountPage(){
