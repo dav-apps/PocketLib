@@ -1,5 +1,5 @@
-// Import the Angular Material theme
-@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+// Customize the bootstrap color
+$primary: #0d47a1;	// Blue 900
 
 // Theme colors
 :root{
@@ -31,6 +31,7 @@
 
 body{
 	background-color: var(--theme-color-primary);
+	font-family: 'Roboto', sans-serif;
 }
 
 .theme-background-color-primary{
@@ -64,21 +65,6 @@ body{
 
 .text-color{
 	color: var(--text-color);
-}
-
-// Customize the bootstrap styles
-//$primary: #2e7d32;		// Green 800
-//$primary: #283593;		// Indigo 800
-//$primary: #00796b;		// Teal 700
-//$primary: #bf360c;		// Deep orange 900
-$primary: #0d47a1;	// Blue 900
-
-// Import the bootstrap css
-@import "../node_modules/bootstrap/scss/bootstrap.scss";
-
-// Other global styles
-body{
-	font-family: 'Roboto', sans-serif;
 }
 
 .cursor:hover{
