@@ -1,5 +1,11 @@
 <div class="container d-flex flex-column ms-motion-slideUpIn">
-	<h1 class="text-center mt-3">{{ locale.title }}</h1>
+   <h1 class="text-center mt-3 text-color">{{ locale.title }}</h1>
+   
+   <div class="mx-auto">
+		<p class="text-color mt-4" style="font-size: 18px">Theme</p>
+		<input type="radio" name="theme" (click)="onThemeRadioButtonSelected(0)"> <span class="text-color">Light</span><br>
+      <input type="radio" name="theme" (click)="onThemeRadioButtonSelected(1)"> <span class="text-color">Dark</span>
+   </div>
 
 	<div class="mx-auto">
 		<!-- App information -->

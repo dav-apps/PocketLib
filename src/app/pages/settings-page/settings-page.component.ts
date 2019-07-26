@@ -16,4 +16,11 @@ export class SettingsPageComponent{
    ){
       this.locale = this.dataService.GetLocale().settingsPage;
    }
+
+   onThemeRadioButtonSelected(index: number){
+		let theme = index == 0 ? environment.lightThemeKey : environment.darkThemeKey;
+
+		this.dataService.SetTheme(theme);
+		this.dataService.ApplyTheme(theme);
+   }
 }
