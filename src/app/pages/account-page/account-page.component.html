@@ -1,20 +1,20 @@
 <div class="container mb-4 ms-motion-slideUpIn" *ngIf="!dataService.user.IsLoggedIn">
-	<h1 class="text-center mt-3">{{ locale.title }}</h1>
-	<h5 class="text-center mt-4">{{ locale.text1 }}</h5>
+	<h1 class="text-center mt-3 text-color">{{ locale.title }}</h1>
+	<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 	<div class="row mt-5">
 		<div class="col-6 col-md-4 offset-md-1 text-center">
-			<i class="material-icons" style="font-size: 60px">sync</i>
-			<p class="mt-4" style="font-size: 22px">{{ locale.text2 }}</p>
+			<i class="material-icons text-color" style="font-size: 60px">sync</i>
+			<p class="mt-4 text-color" style="font-size: 22px">{{ locale.text2 }}</p>
 		</div>
 
 		<div class="col-6 col-md-4 offset-md-2 text-center">
-			<i class="material-icons" style="font-size: 60px">lock</i>
-			<p class="mt-4" style="font-size: 22px">{{ locale.text3 }}</p>
+			<i class="material-icons text-color" style="font-size: 60px">lock</i>
+			<p class="mt-4 text-color" style="font-size: 22px">{{ locale.text3 }}</p>
 		</div>
 	</div>
 
-	<h3 class="text-center mt-5">{{ locale.tryItOut }}</h3>
+	<h3 class="text-center mt-5 text-color">{{ locale.tryItOut }}</h3>
 	<div class="d-flex justify-content-center mt-4">
 		<button type="button" class="btn btn-primary mr-2" (click)="ShowLoginPage()">{{ locale.login }}</button>
 		<button type="button" class="btn btn-primary ml-2" (click)="ShowSignupPage()">{{ locale.signup }}</button>
@@ -26,7 +26,7 @@
 </div>
 
 <div class="container mb-4 ms-motion-slideUpIn" *ngIf="dataService.user.IsLoggedIn">
-   <h1 class="text-center mt-3" style="margin-bottom: 30px">{{ locale.title }}</h1>
+   <h1 class="text-center mt-3 text-color" style="margin-bottom: 30px">{{ locale.title }}</h1>
    
    <div class="d-flex justify-content-center">
       <img class="rounded-circle"
