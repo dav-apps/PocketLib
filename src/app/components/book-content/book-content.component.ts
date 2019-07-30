@@ -29,10 +29,10 @@ export class BookContentComponent{
    paddingX: number = 0;
 	paddingTop: number = 60;
 	paddingBottom: number = 60;
-	bottomCurtainLeftHeight: number = 0;
-	bottomCurtainRightHeight: number = 0;
 	viewerLeftWidth: number = 500;
 	viewerRightWidth: number = 500;
+	viewerLeftHeight: number = 300;
+	viewerRightHeight: number = 300;
 
 	currentChapter: number = 0;
    currentPage: number = 0;
@@ -47,7 +47,7 @@ export class BookContentComponent{
 
 	//#region Variables for ShowPage
 	renderedChapter: number = 0;		// The currently rendered chapter, for determining if the chapter html should be rendered
-	//#endregion
+   //#endregion
 
 	navigationHistory: {chapter: number, page: number}[] = [];
 
@@ -333,23 +333,23 @@ export class BookContentComponent{
 			this.viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
 		}
 
-		// Update the height of the curtains
-		// height of curtain = height - difference between the position of the next page and the position of the current page
-		let newBottomCurtainLeftHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage]);
-		this.bottomCurtainLeftHeight = newBottomCurtainLeftHeight < 0 || isNaN(newBottomCurtainLeftHeight) ? 0 : newBottomCurtainLeftHeight;
+		// Update the height of the iframes
+		// height of iframe = difference between the position of the next page and the position of the current page
+      let newViewerLeftHeight = (chapter.pagePositions[this.currentPage + 1] - chapter.pagePositions[this.currentPage]);
+      this.viewerLeftHeight = (newViewerLeftHeight < 0 || isNaN(newViewerLeftHeight)) ? this.contentHeight - 8 : newViewerLeftHeight;
 
 		if(this.width > secondPageMinWidth){
 			if(this.currentPage == chapter.pagePositions.length - 1){
 				// The last page is shown on the left page
 				// Hide the right page
-				this.bottomCurtainRightHeight = this.contentHeight;
+				this.viewerRightHeight = 0;
 			}else if(this.currentPage == chapter.pagePositions.length - 2){
 				// Ths last page is shown on the right page
 				// Show the entire right page
-				this.bottomCurtainRightHeight = 0;
+				this.viewerRightHeight = this.contentHeight - 8;
 			}else{
-				let newBottomCurtainRightHeight = this.contentHeight - (chapter.pagePositions[this.currentPage + 2] - chapter.pagePositions[this.currentPage + 1]);
-				this.bottomCurtainRightHeight = newBottomCurtainRightHeight < 0 ? 0 : newBottomCurtainRightHeight;
+				let newViewerRightHeight = (chapter.pagePositions[this.currentPage + 2] - chapter.pagePositions[this.currentPage + 1]);
+				this.viewerRightHeight = (newViewerRightHeight < 0 || isNaN(newViewerRightHeight)) ? this.contentHeight - 8 : newViewerRightHeight;
 			}
 		}
 

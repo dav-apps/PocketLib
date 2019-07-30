@@ -1,7 +1,5 @@
-<iframe id="viewer-left" scrolling="no" style="border: none; position: absolute; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="contentHeight - 8"></iframe>
-<iframe id="viewer-right" scrolling="no" style="border: none; position: absolute; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="contentHeight - 8"></iframe>
-<div id="bottom-curtain-left" class="theme-background-color-primary" style="position: absolute; bottom: 0;" [style.width.px]="viewerLeftWidth" [style.height.px]="bottomCurtainLeftHeight"></div>
-<div id="bottom-curtain-right" class="theme-background-color-primary" style="position: absolute; bottom: 0; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="bottomCurtainRightHeight"></div>
+<iframe id="viewer-left" scrolling="no" style="border: none; position: absolute; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
+<iframe id="viewer-right" scrolling="no" style="border: none; position: absolute; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
 
 <!-- Navigation buttons -->
 <button mat-button class="book-toolbar-button" (click)="GoBack()">
