@@ -97,7 +97,11 @@ export class BookContentComponent{
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
 		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
-	}
+   }
+   
+   ngOnDestroy(){
+      $(document).unbind();
+   }
 
 	@HostListener('window:resize')
 	onResize(){
