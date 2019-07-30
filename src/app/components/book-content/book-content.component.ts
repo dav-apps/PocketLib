@@ -214,7 +214,7 @@ export class BookContentComponent{
 			}
 
 			let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
-			chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px`);
+         chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'};`);
 
 			// Adapt the image sizes to the page size
 			let imageTags = chapterHtml.getElementsByTagName("img");
