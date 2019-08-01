@@ -211,9 +211,10 @@ export class EpubChapter{
 
 	private async ReplaceFontFileUrlsWithContent(css: string) : Promise<string>{
 		// Replace the font file references with the content of them
-		let fontUrl = GetFirstUrlParameterFromCssString(css);
+		let completeFontUrl = GetFirstUrlParameterFromCssString(css);
+		let fontUrl = completeFontUrl ? completeFontUrl.replace("\"", "").replace("\"", "").replace("'", "").replace("'", "") : null;
 
-		while(fontUrl != null){
+		while(completeFontUrl != null){
 			// Get the correct url of the font file
          let fontFilePath = MergePaths(this.currentPath, fontUrl);
          let newUrl = "";
@@ -233,10 +234,10 @@ export class EpubChapter{
 			}
 
 			// Replace the url with the raw data
-			css = css.replace(fontUrl, newUrl)
+			css = css.replace(completeFontUrl, newUrl);
 
 			// Get the next url
-			fontUrl = GetFirstUrlParameterFromCssString(css);
+			completeFontUrl = GetFirstUrlParameterFromCssString(css);
 		}
 		return css;
 	}
@@ -358,7 +359,16 @@ function GetFileDirectory(filePath: string){
 }
 
 function GetParentDirectory(directoryPath: string){
-	return directoryPath.split('/').slice(0, -2).join('/') + '/'
+	// If the path is not root, remove the deepest directory (the last two parts of the directory parts array)
+	let directoryParts = directoryPath.split('/');
+
+	let removedNumberOfElements = 1;
+	if(directoryParts.length > 2){
+		removedNumberOfElements = 2;
+	}
+	directoryParts = directoryParts.slice(0, -removedNumberOfElements);
+
+	return directoryParts.join('/') + '/';
 }
 
 async function GetZipEntryTextContent(entry: any) : Promise<string>{
@@ -438,5 +448,5 @@ function GetFirstUrlParameterFromCssString(css: string) : string{
       }
    }
 
-   return css.slice(startIndex, endIndex)
+	return css.slice(startIndex, endIndex);
 }
