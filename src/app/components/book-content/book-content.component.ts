@@ -20,7 +20,9 @@ export class BookContentComponent{
 	initialized: boolean = false;
 
 	viewerLeft: HTMLIFrameElement;
-	viewerRight: HTMLIFrameElement;
+   viewerRight: HTMLIFrameElement;
+   viewerLeft2: HTMLIFrameElement;
+   viewerRight2: HTMLIFrameElement;
 	bottomCurtainLeft: HTMLDivElement;
 	bottomCurtainRight: HTMLDivElement;
 	width: number = 500;
@@ -33,12 +35,17 @@ export class BookContentComponent{
 	viewerRightWidth: number = 500;
 	viewerLeftHeight: number = 300;
 	viewerRightHeight: number = 300;
+	viewerPositionLeft: number = 0;
+	viewer2PositionLeft: number = 0;
+	viewerZIndex: number = 1;	// Either 1 or -1
+	viewer2ZIndex: number = -1;
 
 	currentChapter: number = 0;
    currentPage: number = 0;
    
    firstPage: boolean = false;
-   lastPage: boolean = false;
+	lastPage: boolean = false;
+	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
@@ -62,7 +69,9 @@ export class BookContentComponent{
 	async ngOnInit(){
 		// Initialize the html element variables
 		this.viewerLeft = document.getElementById("viewer-left") as HTMLIFrameElement;
-		this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
+      this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
+      this.viewerLeft2 = document.getElementById("viewer-left2") as HTMLIFrameElement;
+      this.viewerRight2 = document.getElementById("viewer-right2") as HTMLIFrameElement;
 		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
 		this.bottomCurtainRight = document.getElementById("bottom-curtain-right") as HTMLDivElement;
 		this.navigationHistory = [];
@@ -89,9 +98,10 @@ export class BookContentComponent{
 			let chapter = this.dataService.currentBook.chapter;
 			let progress = this.dataService.currentBook.progress;
 			this.currentChapter = chapter;
+			this.currentViewer = CurrentViewer.First;
 			
 			this.initialized = true;
-			await this.ShowPage(null, null, progress);
+			await this.ShowPage(null, null, progress, false);
 		}
 
 		// Bind the keydown and wheel events
@@ -204,86 +214,45 @@ export class BookContentComponent{
 		await this.ShowPage();
 	}
 
-	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1){
+	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1, slidePage: boolean = true){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
-		let viewerContentChanged: boolean = false;
 
-		if(chapter.windowWidth != window.innerWidth || chapter.windowHeight != window.innerHeight){
-			let chapterHtml: HTMLHtmlElement;
-			if(chapter.IsInitialized()){
-				chapterHtml = chapter.GetHtml();
-			}else{
-				chapterHtml = await this.book.chapters[this.currentChapter].GetChapterHtml();
-			}
+		let chapterHtml: HTMLHtmlElement;
+		if(chapter.IsInitialized()){
+			chapterHtml = chapter.GetHtml();
+		}else{
+			chapterHtml = await this.book.chapters[this.currentChapter].GetChapterHtml();
+		}
 
-			let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
-         chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'};`);
+		let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
+		chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'};`);
 
-			// Adapt the image sizes to the page size
-			let imageTags = chapterHtml.getElementsByTagName("img");
-			let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width;
-			pageWidth = pageWidth - 2 * this.paddingX;
+		// Adapt the image sizes to the page size
+		let imageTags = chapterHtml.getElementsByTagName("img");
+		let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width;
+		pageWidth = pageWidth - 2 * this.paddingX;
 
-			for(let i = 0; i < imageTags.length; i++){
-				Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth);
-			}
-			
-			await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
+		for(let i = 0; i < imageTags.length; i++){
+			Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth);
+		}
+		
+		await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 
-			let viewerLeftLoadPromise: Promise<any> = new Promise((resolve) => {
-            this.viewerLeft.onload = resolve;
-			});
+		// If first viewer is visible, render the html on the second viewer and move the second viewer above the first one
+		await this.RenderHtml(chapter.GetHtml().outerHTML, this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft);
+		
+		this.CreateCurrentChapterPages();
+		for(let position of this.pagePositions){
+			chapter.pagePositions.push(position);
+		}
 
-			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
-			await viewerLeftLoadPromise;
-			viewerContentChanged = true;
-			
-			this.CreateCurrentChapterPages();
-			for(let position of this.pagePositions){
-				chapter.pagePositions.push(position);
-			}
-
-			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
-				// Render the chapter on the second page
-				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
-					this.viewerRight.onload = resolve;
-				});
-
-				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
-				await viewerRightLoadPromise;
-				viewerContentChanged = true;
-			}else if(this.width > secondPageMinWidth){
-				// Clear the second page
-				this.viewerRight.srcdoc = "";
-				viewerContentChanged = true;
-			}
-
-			this.renderedChapter = this.currentChapter;
-		}else if(this.renderedChapter != this.currentChapter){
-			// Render the chapter
-			let viewerLeftLoadPromise: Promise<any> = new Promise((resolve) => {
-				this.viewerLeft.onload = resolve;
-			});
-
-			this.viewerLeft.srcdoc = chapter.GetHtml().outerHTML;
-			await viewerLeftLoadPromise;
-			viewerContentChanged = true;
-
-			if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
-				let viewerRightLoadPromise: Promise<any> = new Promise((resolve) => {
-					this.viewerRight.onload = resolve;
-				});
-
-				this.viewerRight.srcdoc = chapter.GetHtml().outerHTML;
-				await viewerRightLoadPromise;
-				viewerContentChanged = true;
-			}else if(this.width > secondPageMinWidth){
-				// Clear the second page
-				this.viewerRight.srcdoc = "";
-			}
-
-			this.renderedChapter = this.currentChapter;
+		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+			// Render the chapter on the second page
+			await this.RenderHtml(chapter.GetHtml().outerHTML, this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight);
+		}else if(this.width > secondPageMinWidth){
+			// Clear the second page
+			this.viewerRight.srcdoc = "";
 		}
 
 		if(lastPage && this.width > secondPageMinWidth){
@@ -328,9 +297,11 @@ export class BookContentComponent{
 		}
 
 		// Load the current page
-		this.viewerLeft.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
+		let viewerLeft = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
+		viewerLeft.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
 		if(this.width > secondPageMinWidth && chapter.pagePositions[this.currentPage + 1]){
-			this.viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
+			let viewerRight = this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight;
+			viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
 		}
 
 		// Update the height of the iframes
@@ -355,25 +326,25 @@ export class BookContentComponent{
 
 		this.setFirstLastPage();
 
-		if(viewerContentChanged){
-			// Adapt the links
-			let linkTags = this.viewerLeft.contentWindow.document.getElementsByTagName("a");
-			for(let i = 0; i < linkTags.length; i++){
-				Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
-			}
-
-			// Adapt the links
-			linkTags = this.viewerRight.contentWindow.document.getElementsByTagName("a");
-			for(let i = 0; i < linkTags.length; i++){
-				Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
-			}
-
-			// Bind the keydown and wheel events to the viewer documents
-			$(this.viewerLeft.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
-			$(this.viewerRight.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
-			$(this.viewerLeft.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
-			$(this.viewerRight.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		// Adapt the links of the left viewer
+		let leftViewer = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
+		let linkTags = leftViewer.contentWindow.document.getElementsByTagName("a");
+		for(let i = 0; i < linkTags.length; i++){
+			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
 		}
+
+		// Adapt the links of the right viewer
+		let rightViewer = this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight;
+		linkTags = rightViewer.contentWindow.document.getElementsByTagName("a");
+		for(let i = 0; i < linkTags.length; i++){
+			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
+		}
+
+		// Bind the keydown and wheel events to the viewer documents
+		$(leftViewer.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+		$(rightViewer.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+		$(leftViewer.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(rightViewer.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 
 		// Calculate the new progress
 		let currentPagePosition = chapter.pagePositions[this.currentPage];
@@ -387,6 +358,32 @@ export class BookContentComponent{
 
       // Save the new progress
 		await this.dataService.currentBook.SetPosition(this.currentChapter, newProgress);
+
+		if(false){
+			// Slide the hidden page into the view
+
+		}else{
+			// Just show the hidden viewer
+			this.viewerPositionLeft = 0;
+			this.viewer2PositionLeft = 0;
+
+			// Move the hidden viewer to the top
+			if(this.currentViewer == CurrentViewer.First){
+				this.viewerZIndex = -1;
+				this.viewer2ZIndex = 1;
+				this.currentViewer = CurrentViewer.Second;
+			}else{
+				this.viewerZIndex = 1;
+				this.viewer2ZIndex = -1;
+				this.currentViewer = CurrentViewer.First;
+			}
+		}
+	}
+
+	RenderHtml(html: string, viewer: HTMLIFrameElement) : Promise<any>{
+		let viewerLoadPromise: Promise<any> = new Promise(resolve => viewer.onload = resolve);
+		viewer.srcdoc = html;
+		return viewerLoadPromise;
 	}
 
 	setFirstLastPage(){
@@ -398,7 +395,8 @@ export class BookContentComponent{
 
 	CreateCurrentChapterPages(){
 		Utils.positions = [];
-		Utils.FindPositions(this.viewerLeft.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
+		let viewer = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
+		Utils.FindPositions(viewer.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
 		this.pagePositions = Utils.FindOptimalPagePositions(Utils.positions, this.pageHeight);
 	}
 
@@ -600,4 +598,9 @@ export class BookChapter{
 	GetHtml() : HTMLHtmlElement{
 		return this.html.cloneNode(true) as HTMLHtmlElement;
 	}
+}
+
+enum CurrentViewer{
+	First = 1,
+	Second = 2
 }

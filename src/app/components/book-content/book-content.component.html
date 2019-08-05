@@ -1,13 +1,33 @@
-<iframe id="viewer-left" scrolling="no" style="border: none; position: absolute; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
-<iframe id="viewer-right" scrolling="no" style="border: none; position: absolute; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
+<div style="position: absolute; background-color: green" 
+		class="d-flex" 
+		[style.left.px]="viewerPositionLeft" 
+		[style.z-index]="viewerZIndex"
+		[style.width.px]="width"
+		[style.height.px]="height">
+	<div style="width: 10px; height: 20px; background-color: red; position: absolute; right: 20px"></div>
+	<iframe id="viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
+	<iframe id="viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
+</div>
+
+<!-- style="position: absolute; left: 200px; z-index: -1" -->
+<div style="position: absolute; background-color: yellow" 
+		class="d-flex" 
+		[style.left.px]="viewer2PositionLeft" 
+		[style.z-index]="viewer2ZIndex"
+		[style.width.px]="width"
+		[style.height.px]="height">
+	<div style="width: 20px; height: 10px; background-color: blue; position: absolute; right: 20px"></div>
+	<iframe id="viewer-left2" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
+	<iframe id="viewer-right2" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
+</div>
 
 <!-- Navigation buttons -->
-<button mat-button class="book-toolbar-button" (click)="GoBack()">
+<button mat-button class="book-toolbar-button" (click)="GoBack()" style="z-index: 2">
    <i class="material-icons book-toolbar-button-icon text-color">arrow_back</i>
 </button>
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px; z-index: 2" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
 	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_left</i>
 </button>
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0" [style.height.px]="height" (click)="NextPage()" *ngIf="!lastPage">
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0; z-index: 2" [style.height.px]="height" (click)="NextPage()" *ngIf="!lastPage">
 	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_right</i>
 </button>
