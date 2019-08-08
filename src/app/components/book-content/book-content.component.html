@@ -21,13 +21,24 @@
 	<iframe id="viewer-right2" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
 </div>
 
+<div style="position: absolute; background-color: orange" 
+		class="d-flex" 
+		[style.left.px]="viewer3PositionLeft" 
+		[style.z-index]="viewer3ZIndex"
+		[style.width.px]="width"
+		[style.height.px]="height">
+	<div style="width: 20px; height: 10px; background-color: black; position: absolute; right: 20px"></div>
+	<iframe id="viewer-left3" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
+	<iframe id="viewer-right3" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
+</div>
+
 <!-- Navigation buttons -->
-<button mat-button class="book-toolbar-button" (click)="GoBack()" style="z-index: 2">
+<button mat-button class="book-toolbar-button" (click)="GoBack()" style="z-index: 1">
    <i class="material-icons book-toolbar-button-icon text-color">arrow_back</i>
 </button>
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px; z-index: 2" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px; z-index: 1" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
 	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_left</i>
 </button>
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0; z-index: 2" [style.height.px]="height" (click)="NextPage()" *ngIf="!lastPage">
+<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0; z-index: 1" [style.height.px]="height" (click)="NextPage()" *ngIf="!lastPage">
 	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_right</i>
 </button>

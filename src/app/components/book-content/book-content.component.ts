@@ -6,6 +6,9 @@ declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
 const progressFactor = 100000;		// The factor with which the progress is saved
+const currentViewerZIndex = -2;
+const nextPageViewerZIndex = -3;
+const previousPageViewerZIndex = -1;
 
 @Component({
 	selector: 'pocketlib-book-content',
@@ -22,7 +25,9 @@ export class BookContentComponent{
 	viewerLeft: HTMLIFrameElement;
    viewerRight: HTMLIFrameElement;
    viewerLeft2: HTMLIFrameElement;
-   viewerRight2: HTMLIFrameElement;
+	viewerRight2: HTMLIFrameElement;
+	viewerLeft3: HTMLIFrameElement;
+	viewerRight3: HTMLIFrameElement;
 	bottomCurtainLeft: HTMLDivElement;
 	bottomCurtainRight: HTMLDivElement;
 	width: number = 500;
@@ -37,8 +42,10 @@ export class BookContentComponent{
 	viewerRightHeight: number = 300;
 	viewerPositionLeft: number = 0;
 	viewer2PositionLeft: number = 0;
-	viewerZIndex: number = 1;	// Either 1 or -1
-	viewer2ZIndex: number = -1;
+	viewer3PositionLeft: number = 0;
+	viewerZIndex: number = -1;    // -1, -2 or -3
+   viewer2ZIndex: number = -2;
+   viewer3ZIndex: number = -3;
 
 	currentChapter: number = 0;
    currentPage: number = 0;
@@ -71,7 +78,9 @@ export class BookContentComponent{
 		this.viewerLeft = document.getElementById("viewer-left") as HTMLIFrameElement;
       this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
       this.viewerLeft2 = document.getElementById("viewer-left2") as HTMLIFrameElement;
-      this.viewerRight2 = document.getElementById("viewer-right2") as HTMLIFrameElement;
+		this.viewerRight2 = document.getElementById("viewer-right2") as HTMLIFrameElement;
+		this.viewerLeft3 = document.getElementById("viewer-left3") as HTMLIFrameElement;
+		this.viewerRight3 = document.getElementById("viewer-right3") as HTMLIFrameElement;
 		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
 		this.bottomCurtainRight = document.getElementById("bottom-curtain-right") as HTMLDivElement;
 		this.navigationHistory = [];
@@ -101,7 +110,8 @@ export class BookContentComponent{
 			this.currentViewer = CurrentViewer.First;
 			
 			this.initialized = true;
-			await this.ShowPage(null, null, progress, false);
+			//await this.ShowPage(null, null, progress, false, false);
+			await this.ShowPage(null, null, null, false, false);
 		}
 
 		// Bind the keydown and wheel events
@@ -188,7 +198,7 @@ export class BookContentComponent{
 			this.currentPage--;
 		}
 
-		await this.ShowPage(lastPage);
+		await this.ShowPage(lastPage, null, null, false, true);
 	}
 
 	async NextPage(){
@@ -211,10 +221,261 @@ export class BookContentComponent{
 			this.currentPage++;
 		}
 
-		await this.ShowPage();
+		await this.ShowPage(null, null, null, true, false);
 	}
 
-	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1, slidePage: boolean = true){
+	/**
+	 * The order of the viewers at the beginning:
+	 *  _____    _____----|
+	 * |     |  |     | 2.|
+	 * |  3. |  |  1. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 * When going to the next page, move the viewers clockwise (1 -> 3, 3 -> 2, 2 -> 1):
+	 * 
+	 *  _____    _____----|
+	 * |     |  |     | 3.|
+	 * |  1. |  |  2. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 * When going to the previous page, move the viewers counterclockwise (1 -> 2, 2 -> 3, 3 -> 1):
+	 * 
+	 *  _____    _____----|
+	 * |     |  |     | 1.|
+	 * |  2. |  |  3. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 * 
+	 * @param lastPage If true, the last page of the chapter will be rendered
+	 * @param elementId Finds the element with the id and jumps to the page with the element
+	 * @param progress If not -1, uses the progress to calculate the current page
+	 * @param slideForward If true, will go to the next page with animation
+	 * @param slideBack If true, will go to the previous page with animation
+	 * 						If slideBack and slideForward are both false, will navigate to the page without animation
+	 */
+	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1, slideForward: boolean = false, slideBack: boolean = false){
+		// slideForth && !slideBack ?
+			// Move 1 -> 3, 3 -> 2 and 2 -> 1
+			// viewer 2 is now the currently visible viewer
+			// Render the next page on viewer 3
+		// !slideForth && slideBack ?
+			// Move 1 -> 2, 2 -> 3 and 3 -> 1
+			// viewer 3 is now the currently visible viewer
+			// Render the previous page on viewer 2
+		// !slideForth && !slideBack ?
+			// Render the current page on viewer 2
+			// Move to the next page without animation
+			// Render the previous page on viewer 1 and the next page on viewer 3
+		
+		if(slideForward && !slideBack){
+			// Move the viewer positions
+			this.MoveViewersClockwise();
+
+			// Render the next page
+			await this.RenderNextPage();
+		}else if(!slideForward && slideBack){
+			// Move the viewer positions
+			this.MoveViewersCounterClockwise();
+
+			// Render the previous page
+			await this.RenderPreviousPage();
+		}else if(!slideForward && !slideBack){
+			// Render the current page on the next page viewer
+			await this.RenderCurrentPage(this.GetNextPageViewer(), this.GetNextPageViewer(true));
+
+			// Move the viewer positions
+			this.MoveViewersClockwise();
+
+			// Render the next page
+			await this.RenderNextPage();
+
+			// Render the previous page
+			await this.RenderPreviousPage();
+		}
+
+		let currentLeftViewer = this.GetCurrentViewer();
+		let currentRightViewer = this.GetCurrentViewer(true);
+		let currentChapter = this.chapters[this.currentChapter];
+
+		// Update the height of the left viewer
+		// height of iframe = difference between the position of the next page and the position of the current page
+		let newViewerLeftHeight = (currentChapter.pagePositions[this.currentPage + 1] - currentChapter.pagePositions[this.currentPage]);
+		this.viewerLeftHeight = (newViewerLeftHeight < 0 || isNaN(newViewerLeftHeight)) ? this.contentHeight - 8 : newViewerLeftHeight;
+
+		// Update the height of the right viewer
+		if(this.width > secondPageMinWidth){
+			if(this.currentPage == currentChapter.pagePositions.length - 1){
+				// The last page is shown on the left page
+				// Hide the right page
+				this.viewerRightHeight = 0;
+			}else if(this.currentPage == currentChapter.pagePositions.length - 2){
+				// Ths last page is shown on the right page
+				// Show the entire right page
+				this.viewerRightHeight = this.contentHeight - 8;
+			}else{
+				let newViewerRightHeight = (currentChapter.pagePositions[this.currentPage + 2] - currentChapter.pagePositions[this.currentPage + 1]);
+				this.viewerRightHeight = (newViewerRightHeight < 0 || isNaN(newViewerRightHeight)) ? this.contentHeight - 8 : newViewerRightHeight;
+			}
+		}
+
+		// Bind the keydown and wheel events to the viewer documents
+		$(currentLeftViewer.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+		$(currentRightViewer.contentDocument).keydown((e) => this.onKeyDown(e.keyCode));
+		$(currentLeftViewer.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(currentRightViewer.contentDocument).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+
+		// Adapt the links of the left viewer
+		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
+		for(let i = 0; i < linkTags.length; i++){
+			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
+		}
+
+		// Adapt the links of the right viewer
+		linkTags = currentRightViewer.contentWindow.document.getElementsByTagName("a");
+		for(let i = 0; i < linkTags.length; i++){
+			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
+		}
+
+		this.setFirstLastPage();
+	}
+
+	async RenderNextPage(){
+		let nextLeftViewer = this.GetNextPageViewer();
+		let nextRightViewer = this.GetNextPageViewer(true);
+
+		let nextPage = this.currentPage + 1;
+
+		let chapter = await this.GenerateChapterHtml(this.currentChapter);
+		if(!chapter) return;
+
+		// Render the chapter and generate chapter pages
+		await Utils.RenderHtml(chapter.GetHtml().outerHTML, nextLeftViewer);
+
+		this.CreateCurrentChapterPages(nextLeftViewer);
+		for(let position of this.pagePositions){
+			chapter.pagePositions.push(position);
+		}
+
+		// Check if the next chapter should be rendered
+		let renderNextChapter = nextPage >= chapter.pagePositions.length;
+		if(renderNextChapter && this.currentChapter >= this.chapters.length - 1) return;
+
+		if(renderNextChapter){
+			// Render the next chapter
+			nextPage = 0;
+			chapter = await this.GenerateChapterHtml(this.currentChapter + 1);
+			if(!chapter) return;
+
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, nextLeftViewer);
+
+			this.CreateCurrentChapterPages(nextLeftViewer);
+			for(let position of this.pagePositions){
+				chapter.pagePositions.push(position);
+			}
+		}else{
+			this.chapters[this.currentChapter] = chapter;
+		}
+
+		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+			// Render the chapter on the second page
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, nextRightViewer);
+		}else if(this.width > secondPageMinWidth){
+			// Clear the second page
+			nextRightViewer.srcdoc = "";
+		}
+
+		// Scroll the left viewer
+		nextLeftViewer.contentWindow.scrollTo(0, chapter.pagePositions[nextPage]);
+		if(this.width > secondPageMinWidth && chapter.pagePositions[nextPage + 1]){
+			// Scroll the right viewer
+			nextRightViewer.contentWindow.scrollTo(0, chapter.pagePositions[nextPage + 1]);
+		}
+	}
+
+	async RenderPreviousPage(){
+		let previousLeftViewer = this.GetPreviousPageViewer();
+		let previousRightViewer = this.GetPreviousPageViewer(true);
+
+		let previousPage = this.currentPage - 1;
+
+		let chapter = await this.GenerateChapterHtml(this.currentChapter);
+		if(!chapter) return;
+
+		// Render the chapter and generate chapter pages
+		await Utils.RenderHtml(chapter.GetHtml().outerHTML, previousLeftViewer);
+
+		this.CreateCurrentChapterPages(previousLeftViewer);
+		for(let position of this.pagePositions){
+			chapter.pagePositions.push(position);
+		}
+
+		// Check if the previous chapter should be rendered
+		let renderPreviousChapter = this.currentPage == 0;
+		if(renderPreviousChapter && this.currentChapter == 0) return;
+
+		if(renderPreviousChapter){
+			// Render the previous chapter
+			chapter = await this.GenerateChapterHtml(this.currentChapter - 1);
+			if(!chapter) return;
+
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, previousLeftViewer);
+
+			this.CreateCurrentChapterPages(previousLeftViewer);
+			for(let position of this.pagePositions){
+				chapter.pagePositions.push(position);
+			}
+
+			// Update previousPage after generating pagePositions of the previous chapter
+			previousPage = chapter.pagePositions.length - 1;
+		}else{
+			this.chapters[this.currentChapter] = chapter;
+		}
+
+		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+			// Render the chapter on the second page
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, previousRightViewer);
+		}else if(this.width > secondPageMinWidth){
+			// Clear the second page
+			previousRightViewer.srcdoc = "";
+		}
+
+		// Scroll the left viewer
+		previousLeftViewer.contentWindow.scrollTo(0, chapter.pagePositions[previousPage]);
+		if(this.width > secondPageMinWidth && chapter.pagePositions[previousPage + 1]){
+			// Scroll the right viewer
+			previousRightViewer.contentWindow.scrollTo(0, chapter.pagePositions[previousPage + 1]);
+		}
+	}
+
+	async RenderCurrentPage(leftViewer: HTMLIFrameElement, rightViewer: HTMLIFrameElement){
+		let chapter = await this.GenerateChapterHtml(this.currentChapter);
+		if(!chapter) return;
+
+		// Render the chapter
+		await Utils.RenderHtml(chapter.GetHtml().outerHTML, leftViewer);
+
+		this.CreateCurrentChapterPages(leftViewer);
+		for(let position of this.pagePositions){
+			chapter.pagePositions.push(position);
+		}
+
+		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+			// Render the chapter on the second page
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, rightViewer);
+		}else if(this.width > secondPageMinWidth){
+			// Clear the second page
+			rightViewer.srcdoc = "";
+		}
+
+		// Scroll the left viewer
+		leftViewer.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
+		if(this.width > secondPageMinWidth && chapter.pagePositions[this.currentPage + 1]){
+			// Scroll the right viewer
+			rightViewer.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
+		}
+	}
+
+	async ShowPage2(lastPage: boolean = false, elementId: string = null, progress: number = -1, slideBack: boolean = false, slideForth: boolean = false){
 		let chapter = this.chapters[this.currentChapter];
 		if(!chapter) return;
 
@@ -240,16 +501,16 @@ export class BookContentComponent{
 		await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 
 		// If first viewer is visible, render the html on the second viewer and move the second viewer above the first one
-		await this.RenderHtml(chapter.GetHtml().outerHTML, this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft);
+		await Utils.RenderHtml(chapter.GetHtml().outerHTML, this.GetCurrentViewer());
 		
-		this.CreateCurrentChapterPages();
+		this.CreateCurrentChapterPages(this.GetCurrentViewer());
 		for(let position of this.pagePositions){
 			chapter.pagePositions.push(position);
 		}
 
 		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
 			// Render the chapter on the second page
-			await this.RenderHtml(chapter.GetHtml().outerHTML, this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight);
+			await Utils.RenderHtml(chapter.GetHtml().outerHTML, this.GetCurrentViewer(true));
 		}else if(this.width > secondPageMinWidth){
 			// Clear the second page
 			this.viewerRight.srcdoc = "";
@@ -297,10 +558,10 @@ export class BookContentComponent{
 		}
 
 		// Load the current page
-		let viewerLeft = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
+		let viewerLeft = this.GetCurrentViewer();
 		viewerLeft.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage]);
 		if(this.width > secondPageMinWidth && chapter.pagePositions[this.currentPage + 1]){
-			let viewerRight = this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight;
+			let viewerRight = this.GetCurrentViewer(true);
 			viewerRight.contentWindow.scrollTo(0, chapter.pagePositions[this.currentPage + 1]);
 		}
 
@@ -327,14 +588,14 @@ export class BookContentComponent{
 		this.setFirstLastPage();
 
 		// Adapt the links of the left viewer
-		let leftViewer = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
+		let leftViewer = this.GetCurrentViewer();
 		let linkTags = leftViewer.contentWindow.document.getElementsByTagName("a");
 		for(let i = 0; i < linkTags.length; i++){
 			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
 		}
 
 		// Adapt the links of the right viewer
-		let rightViewer = this.currentViewer == CurrentViewer.First ? this.viewerRight2 : this.viewerRight;
+		let rightViewer = this.GetCurrentViewer();
 		linkTags = rightViewer.contentWindow.document.getElementsByTagName("a");
 		for(let i = 0; i < linkTags.length; i++){
 			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)));
@@ -380,12 +641,201 @@ export class BookContentComponent{
 		}
 	}
 
-	RenderHtml(html: string, viewer: HTMLIFrameElement) : Promise<any>{
-		let viewerLoadPromise: Promise<any> = new Promise(resolve => viewer.onload = resolve);
-		viewer.srcdoc = html;
-		return viewerLoadPromise;
+	/**
+	 * Initializes the given chapter and adapts it to the size of the window
+	 * @param chapterIndex The chapter at the position of this.chapters
+	 */
+	async GenerateChapterHtml(chapterIndex: number) : Promise<BookChapter>{
+		let chapter = this.chapters[chapterIndex];
+		if(!chapter) return;
+
+		let chapterHtml: HTMLHtmlElement = chapter.IsInitialized() ? chapter.GetHtml() : await this.book.chapters[chapterIndex].GetChapterHtml();
+		let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
+		chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'};`);
+
+		// Adapt the image sizes to the page size
+		let imageTags = chapterHtml.getElementsByTagName("img");
+		let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width;
+		pageWidth = pageWidth - 2 * this.paddingX;
+
+		for(let i = 0; i < imageTags.length; i++){
+			Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth);
+		}
+
+		await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
+		return chapter;
 	}
 
+	GetCurrentViewer(right: boolean = false) : HTMLIFrameElement{
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				return right ? this.viewerRight : this.viewerLeft;
+			case CurrentViewer.Second:
+				return right ? this.viewerRight2 : this.viewerLeft2;
+			case CurrentViewer.Third:
+				return right ? this.viewerRight3 : this.viewerLeft3;
+		}
+	}
+
+	GetNextPageViewer(right: boolean = false) : HTMLIFrameElement{
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				return right ? this.viewerRight2 : this.viewerLeft2;
+			case CurrentViewer.Second:
+				return right ? this.viewerRight3 : this.viewerLeft3;
+			case CurrentViewer.Third:
+				return right ? this.viewerRight : this.viewerLeft;
+		}
+	}
+
+	GetPreviousPageViewer(right: boolean = false) : HTMLIFrameElement{
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				return right ? this.viewerRight3 : this.viewerLeft3;
+			case CurrentViewer.Second:
+				return right ? this.viewerRight : this.viewerLeft;
+			case CurrentViewer.Third:
+				return right ? this.viewerRight2 : this.viewerLeft2;
+		}
+	}
+
+	SetZIndexOfCurrentViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewerZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewer2ZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewer3ZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetZIndexOfNextPageViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer2ZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewer3ZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewerZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetZIndexOfPreviousPageViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer3ZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewerZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewer2ZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetLeftOfCurrentViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewerPositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewer2PositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewer3PositionLeft = left;
+				break;
+		}
+	}
+
+	SetLeftOfNextPageViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer2PositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewer3PositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewerPositionLeft = left;
+				break;
+		}
+	}
+
+	SetLeftOfPreviousPageViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer3PositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewerPositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewer2PositionLeft = left;
+				break;
+		}
+	}
+
+	MoveViewersClockwise(){
+		// Set the position of the viewers
+		this.SetLeftOfCurrentViewer(-this.width);
+		this.SetLeftOfNextPageViewer(0);
+		this.SetLeftOfPreviousPageViewer(0);
+
+		// Set the z-index of the viewers
+		this.SetZIndexOfCurrentViewer(previousPageViewerZIndex);
+		this.SetZIndexOfNextPageViewer(currentViewerZIndex);
+		this.SetZIndexOfPreviousPageViewer(nextPageViewerZIndex);
+
+		// Update currentViewer
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.currentViewer = CurrentViewer.Second;
+				break;
+			case CurrentViewer.Second:
+				this.currentViewer = CurrentViewer.Third;
+				break;
+			case CurrentViewer.Third:
+				this.currentViewer = CurrentViewer.First;
+				break;
+		}
+	}
+
+	MoveViewersCounterClockwise(){
+		// Set the position of the viewers
+		this.SetLeftOfCurrentViewer(0);
+		this.SetLeftOfNextPageViewer(-this.width);
+		this.SetLeftOfPreviousPageViewer(0);
+
+		// Set the z-index of the viewers
+		this.SetZIndexOfCurrentViewer(nextPageViewerZIndex);
+		this.SetZIndexOfNextPageViewer(previousPageViewerZIndex);
+		this.SetZIndexOfPreviousPageViewer(currentViewerZIndex);
+
+		// Update currentViewer
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.currentViewer = CurrentViewer.Third;
+				break;
+			case CurrentViewer.Second:
+				this.currentViewer = CurrentViewer.First;
+				break;
+			case CurrentViewer.Third:
+				this.currentViewer = CurrentViewer.Second;
+				break;
+		}
+	}
+
+	/**
+	 * Updates the firstPage and lastPage properties for updating the UI
+	 */
 	setFirstLastPage(){
 		this.firstPage = this.currentChapter == 0 && this.currentPage == 0;
 		this.lastPage = 
@@ -393,9 +843,8 @@ export class BookContentComponent{
 			&& (this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1));
 	}
 
-	CreateCurrentChapterPages(){
+	CreateCurrentChapterPages(viewer: HTMLIFrameElement){
 		Utils.positions = [];
-		let viewer = this.currentViewer == CurrentViewer.First ? this.viewerLeft2 : this.viewerLeft;
 		Utils.FindPositions(viewer.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
 		this.pagePositions = Utils.FindOptimalPagePositions(Utils.positions, this.pageHeight);
 	}
@@ -573,6 +1022,12 @@ class Utils{
 			}
 		}
 	}
+
+	static RenderHtml(html: string, viewer: HTMLIFrameElement) : Promise<any>{
+		let viewerLoadPromise: Promise<any> = new Promise(resolve => viewer.onload = resolve);
+		viewer.srcdoc = html;
+		return viewerLoadPromise;
+	}
 }
 
 export class BookChapter{
@@ -602,5 +1057,6 @@ export class BookChapter{
 
 enum CurrentViewer{
 	First = 1,
-	Second = 2
+	Second = 2,
+	Third = 3
 }
