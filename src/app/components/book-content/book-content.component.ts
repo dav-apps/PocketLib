@@ -111,7 +111,7 @@ export class BookContentComponent{
 			
 			this.initialized = true;
 			//await this.ShowPage(null, null, progress, false, false);
-			await this.ShowPage(null, null, null, false, false);
+			await this.ShowPage(false, false, progress);
 		}
 
 		// Bind the keydown and wheel events
@@ -175,14 +175,11 @@ export class BookContentComponent{
 	}
 
 	async PrevPage(){
-		let lastPage = false;
-
 		if((this.width > secondPageMinWidth && this.currentPage <= 1)
 			|| (this.width <= secondPageMinWidth && this.currentPage <= 0)){
 			// Show the previous chapter
 			if(this.currentChapter <= 0) return;
 			this.currentChapter--;
-			lastPage = true;
 			let chapter = this.chapters[this.currentChapter];
 			
 			if(this.width > secondPageMinWidth && chapter.pagePositions.length >= 2){
@@ -198,7 +195,7 @@ export class BookContentComponent{
 			this.currentPage--;
 		}
 
-		await this.ShowPage(lastPage, null, null, false, true);
+		await this.ShowPage(false, true);
 	}
 
 	async NextPage(){
@@ -221,7 +218,7 @@ export class BookContentComponent{
 			this.currentPage++;
 		}
 
-		await this.ShowPage(null, null, null, true, false);
+		await this.ShowPage(true, false);
 	}
 
 	/**
@@ -245,15 +242,13 @@ export class BookContentComponent{
 	 * |  2. |  |  3. |   |
 	 * |_____|  |_____|---|
 	 * 
-	 * 
-	 * @param lastPage If true, the last page of the chapter will be rendered
-	 * @param elementId Finds the element with the id and jumps to the page with the element
-	 * @param progress If not -1, uses the progress to calculate the current page
 	 * @param slideForward If true, will go to the next page with animation
 	 * @param slideBack If true, will go to the previous page with animation
 	 * 						If slideBack and slideForward are both false, will navigate to the page without animation
+	 * @param progress If not -1, uses the progress to calculate the current page
+	 * @param elementId Finds the element with the id and jumps to the page with the element
 	 */
-	async ShowPage(lastPage: boolean = false, elementId: string = null, progress: number = -1, slideForward: boolean = false, slideBack: boolean = false){
+	async ShowPage(slideForward: boolean = false, slideBack: boolean = false, progress: number = -1, elementId: string = null){
 		// slideForth && !slideBack ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
@@ -281,7 +276,7 @@ export class BookContentComponent{
 			await this.RenderPreviousPage();
 		}else if(!slideForward && !slideBack){
 			// Render the current page on the next page viewer
-			await this.RenderCurrentPage(this.GetNextPageViewer(), this.GetNextPageViewer(true));
+			await this.RenderCurrentPage(this.GetNextPageViewer(), this.GetNextPageViewer(true), progress, elementId);
 
 			// Move the viewer positions
 			this.MoveViewersClockwise();
@@ -337,6 +332,22 @@ export class BookContentComponent{
 		}
 
 		this.setFirstLastPage();
+
+		if(progress == -1){
+			// Calculate the new progress
+			let currentPagePosition = currentChapter.pagePositions[this.currentPage];
+			let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
+			let newProgress = currentPagePosition / lastPagePosition;
+			
+			if(isNaN(newProgress)){
+				newProgress = 0;
+			}else{
+				newProgress = Math.ceil(newProgress * progressFactor);
+			}
+
+			// Save the new progress
+			await this.dataService.currentBook.SetPosition(this.currentChapter, newProgress);
+		}
 	}
 
 	async RenderNextPage(){
@@ -447,7 +458,7 @@ export class BookContentComponent{
 		}
 	}
 
-	async RenderCurrentPage(leftViewer: HTMLIFrameElement, rightViewer: HTMLIFrameElement){
+	async RenderCurrentPage(leftViewer: HTMLIFrameElement, rightViewer: HTMLIFrameElement, progress: number = -1, elementId: string = null){
 		let chapter = await this.GenerateChapterHtml(this.currentChapter);
 		if(!chapter) return;
 
@@ -465,6 +476,34 @@ export class BookContentComponent{
 		}else if(this.width > secondPageMinWidth){
 			// Clear the second page
 			rightViewer.srcdoc = "";
+		}
+
+		if(progress >= 0){
+			// Update the current page according to the progress
+			let lastPosition = chapter.pagePositions[chapter.pagePositions.length - 1];
+			let progressPercent = progress / progressFactor;
+			let progressPosition = lastPosition * progressPercent;
+
+			// Find the page of the position
+			let page = Utils.FindPageForPosition(progressPosition, chapter.pagePositions);
+			if(page != -1){
+				// If it shows two pages and the tag is on the second page, set the current page to the previous page
+				if(this.width > secondPageMinWidth && page % 2 == 1) page -= 1;
+				this.currentPage = page;
+			}
+		}else if(elementId){
+			// Find the position of the tag
+			let position = Utils.FindPositionById(leftViewer.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, elementId);
+
+			if(position != -1){
+				// Find the page of the position
+				let page = Utils.FindPageForPosition(position, chapter.pagePositions);
+				if(page != -1){
+					// If it shows two pages and the tag is on the second page, set the current page to the previous page
+					if(this.width > secondPageMinWidth && page % 2 == 1) page -= 1;
+					this.currentPage = page;
+				}
+			}
 		}
 
 		// Scroll the left viewer
@@ -892,7 +931,7 @@ export class BookContentComponent{
 		if(elementId){
 			// Navigate to the page of the chapter with the element with the id
 			let elementId = href.slice(href.lastIndexOf('#') + 1);
-			await this.ShowPage(false, elementId);
+			await this.ShowPage(false, false, -1, elementId);
 		}else{
 			// Navigate to the first page of the chapter
 			await this.ShowPage();
@@ -960,6 +999,8 @@ class Utils{
 	}
 	
 	static FindPageForPosition(position: number, pagePositions: number[]) : number{
+		if(position >= pagePositions[pagePositions.length - 1]) return pagePositions.length - 1;
+
 		for(let i = 0; i < pagePositions.length - 1; i++){
 			if(position >= pagePositions[i] && position < pagePositions[i + 1]){
 				return i;
