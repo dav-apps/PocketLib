@@ -181,12 +181,9 @@ export class BookContentComponent{
 			if(this.currentChapter <= 0) return;
 			this.currentChapter--;
 			let chapter = this.chapters[this.currentChapter];
-			
-			if(this.width > secondPageMinWidth && chapter.pagePositions.length >= 2){
-				this.currentPage = chapter.pagePositions.length - 2;
-			}else{
-				this.currentPage = chapter.pagePositions.length - 1;
-			}
+
+			this.currentPage = chapter.pagePositions.length - 1;
+			if(this.width > secondPageMinWidth && this.currentPage % 2 == 1) this.currentPage--;
 		}else if(this.width > secondPageMinWidth){
 			// Go to the second previous page
 			this.currentPage -= 2;
@@ -355,6 +352,7 @@ export class BookContentComponent{
 		let nextRightViewer = this.GetNextPageViewer(true);
 
 		let nextPage = this.currentPage + 1;
+		if(this.width > secondPageMinWidth) nextPage++;
 
 		let chapter = await this.GenerateChapterHtml(this.currentChapter);
 		if(!chapter) return;
@@ -387,7 +385,7 @@ export class BookContentComponent{
 			this.chapters[this.currentChapter] = chapter;
 		}
 
-		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+		if(this.width > secondPageMinWidth && nextPage < chapter.pagePositions.length - 1){
 			// Render the chapter on the second page
 			await Utils.RenderHtml(chapter.GetHtml().outerHTML, nextRightViewer);
 		}else if(this.width > secondPageMinWidth){
@@ -408,6 +406,7 @@ export class BookContentComponent{
 		let previousRightViewer = this.GetPreviousPageViewer(true);
 
 		let previousPage = this.currentPage - 1;
+		if(this.width > secondPageMinWidth) previousPage--;
 
 		let chapter = await this.GenerateChapterHtml(this.currentChapter);
 		if(!chapter) return;
@@ -438,11 +437,12 @@ export class BookContentComponent{
 
 			// Update previousPage after generating pagePositions of the previous chapter
 			previousPage = chapter.pagePositions.length - 1;
+			if(this.width > secondPageMinWidth && previousPage % 2 == 1) previousPage--;
 		}else{
 			this.chapters[this.currentChapter] = chapter;
 		}
 
-		if(this.width > secondPageMinWidth && this.currentPage < chapter.pagePositions.length - 1){
+		if(this.width > secondPageMinWidth && previousPage < chapter.pagePositions.length - 1){
 			// Render the chapter on the second page
 			await Utils.RenderHtml(chapter.GetHtml().outerHTML, previousRightViewer);
 		}else if(this.width > secondPageMinWidth){
