@@ -1,6 +1,8 @@
 // Customize the bootstrap color
 $primary: #0d47a1;	// Blue 900
 
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
 // Theme colors
 :root{
    --white: #FFFFFF;
