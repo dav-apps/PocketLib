@@ -58,13 +58,13 @@ export class BookContentComponent{
 	lastPage: boolean = false;		// If true, hides the next button
 	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
 	goingBack: boolean = false;	// If true, the viewer goes to the previous page
+	showPageRunning: boolean = false;	// If true, ShowPage is currently executing
+	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
 	pagePositions: number[] = [];
 	//#endregion
-
-	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
 
 	constructor(
 		private dataService: DataService,
@@ -175,6 +175,9 @@ export class BookContentComponent{
 	}
 
 	async PrevPage(){
+		if(this.showPageRunning) return;
+		this.showPageRunning = true;
+
 		this.goingBack = true;
 		if((this.width > secondPageMinWidth && this.currentPage <= 1)
 			|| (this.width <= secondPageMinWidth && this.currentPage <= 0)){
@@ -195,9 +198,13 @@ export class BookContentComponent{
 
 		await this.ShowPage(false, true);
 		this.goingBack = false;
+		this.showPageRunning = false;
 	}
 
 	async NextPage(){
+		if(this.showPageRunning) return;
+		this.showPageRunning = true;
+
 		// Return if this is the last chapter and the last page
 		if(this.currentChapter >= this.chapters.length - 1 
 			&& this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1)) return;
@@ -218,6 +225,7 @@ export class BookContentComponent{
 		}
 
 		await this.ShowPage(true, false);
+		this.showPageRunning = false;
 	}
 
 	/**
