@@ -1,32 +1,34 @@
-<div style="position: absolute; background-color: green" 
+<div style="position: absolute; background-color: green;" 
 		class="d-flex" 
 		[style.left.px]="viewerPositionLeft" 
 		[style.z-index]="viewerZIndex"
 		[style.width.px]="width"
-		[style.height.px]="height">
+		[style.height.px]="height"
+		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left 0.5s'">
 	<div style="width: 10px; height: 20px; background-color: red; position: absolute; right: 20px"></div>
 	<iframe id="viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
 	<iframe id="viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
 </div>
 
-<!-- style="position: absolute; left: 200px; z-index: -1" -->
-<div style="position: absolute; background-color: yellow" 
+<div style="position: absolute; background-color: yellow;" 
 		class="d-flex" 
 		[style.left.px]="viewer2PositionLeft" 
 		[style.z-index]="viewer2ZIndex"
 		[style.width.px]="width"
-		[style.height.px]="height">
+		[style.height.px]="height"
+		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left 0.5s'">
 	<div style="width: 20px; height: 10px; background-color: blue; position: absolute; right: 20px"></div>
 	<iframe id="viewer-left2" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewer2LeftHeight"></iframe>
 	<iframe id="viewer-right2" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewer2RightHeight"></iframe>
 </div>
 
-<div style="position: absolute; background-color: orange" 
+<div style="position: absolute; background-color: orange;" 
 		class="d-flex" 
 		[style.left.px]="viewer3PositionLeft" 
 		[style.z-index]="viewer3ZIndex"
 		[style.width.px]="width"
-		[style.height.px]="height">
+		[style.height.px]="height"
+		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left 0.5s'">
 	<div style="width: 20px; height: 10px; background-color: black; position: absolute; right: 20px"></div>
 	<iframe id="viewer-left3" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewer3LeftHeight"></iframe>
 	<iframe id="viewer-right3" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewer3RightHeight"></iframe>

@@ -55,8 +55,9 @@ export class BookContentComponent{
    currentPage: number = 0;		// The current page in the current chapter
    
    firstPage: boolean = false;	// If true, hides the previous button
-	lastPage: boolean = false;		// Ifr true, hides the next button
+	lastPage: boolean = false;		// If true, hides the next button
 	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
+	goingBack: boolean = false;	// If true, the viewer goes to the previous page
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
@@ -174,6 +175,7 @@ export class BookContentComponent{
 	}
 
 	async PrevPage(){
+		this.goingBack = true;
 		if((this.width > secondPageMinWidth && this.currentPage <= 1)
 			|| (this.width <= secondPageMinWidth && this.currentPage <= 0)){
 			// Show the previous chapter
@@ -192,6 +194,7 @@ export class BookContentComponent{
 		}
 
 		await this.ShowPage(false, true);
+		this.goingBack = false;
 	}
 
 	async NextPage(){
