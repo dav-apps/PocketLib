@@ -300,10 +300,11 @@ export class BookContentComponent{
 		let currentChapter = this.chapters[this.currentChapter];
 
 		// Bind the keydown and wheel events to the viewer documents
-		$(currentLeftViewer.contentDocument).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(currentRightViewer.contentDocument).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(currentLeftViewer.contentDocument).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
-		$(currentRightViewer.contentDocument).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(currentLeftViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
+		$(currentRightViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
+		$(currentLeftViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(currentRightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		currentLeftViewer.contentWindow.focus();
 
 		// Adapt the links of the left viewer
 		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
