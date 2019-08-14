@@ -102,6 +102,12 @@ export class DataService{
 			environment.themeKey, 
 			this.darkTheme ? environment.darkThemeKey : environment.lightThemeKey
 		);
+   }
+   
+   HideWindowsBackButton(){
+		if(window["Windows"]){
+			window["Windows"].UI.Core.SystemNavigationManager.getForCurrentView().appViewBackButtonVisibility = window["Windows"].UI.Core.AppViewBackButtonVisibility.collapsed;
+		}
 	}
 	
 	//#region Settings

@@ -4,7 +4,7 @@ import { NgxFileHelpersModule } from 'ngx-file-helpers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import {MatRadioModule} from '@angular/material/radio';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -39,7 +39,7 @@ import { environment } from '../environments/environment';
       BrowserAnimationsModule,
       MatToolbarModule,
       MatButtonModule,
-      MatCardModule,
+      MatRadioModule,
       PortalModule,
       NgbModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })

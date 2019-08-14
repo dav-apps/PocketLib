@@ -21,6 +21,10 @@ const enDefaults = {
    },
 	settingsPage: {
       title: "Settings",
+      theme: "Theme",
+      lightTheme: "Light",
+      darkTheme: "Dark",
+      systemTheme: "Use system setting",
       privacy: "Privacy Policy",
       github: "PocketLib on GitHub"
 	},
@@ -66,6 +70,10 @@ const deDefaults = {
    },
    settingsPage: {
       title: "Einstellungen",
+      theme: "Thema",
+      lightTheme: "Hell",
+      darkTheme: "Dunkel",
+      systemTheme: "Systemeinstellung verwenden",
       privacy: "Datenschutzerklärung",
       github: "PocketLib auf GitHub"
 	},
