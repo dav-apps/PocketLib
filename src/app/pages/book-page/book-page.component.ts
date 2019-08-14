@@ -15,6 +15,6 @@ export class BookPageComponent{
 	){}
 
    async ngOnInit(){
-     this.selectedPortal = new ComponentPortal(BookContentComponent)
+   	this.selectedPortal = new ComponentPortal(BookContentComponent)
 	}
 }
