@@ -26,7 +26,7 @@
     "@ng-bootstrap/ng-bootstrap": "^5.1.0",
     "bootstrap": "^4.3.1",
     "core-js": "^3.2.1",
-    "dav-npm": "git+https://github.com/Dav2070/dav-npm.git#v0.5.1",
+    "dav-npm": "git+https://github.com/dav-apps/dav-npm.git#v0.5.1",
     "jquery": "^3.4.0",
     "localforage": "^1.7.3",
     "ngx-file-helpers": "^2.0.0",

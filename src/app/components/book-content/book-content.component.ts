@@ -170,7 +170,7 @@ export class BookContentComponent{
       }
 
 		if(this.initialized){
-			await this.ShowPage();
+			await this.ShowPage(false, false);
 		}
 	}
 
