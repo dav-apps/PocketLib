@@ -12,6 +12,8 @@ export const environment = {
    bookTableProgressKey: "progress",
    // Settings keys
    settingsThemeKey: "settings-theme",
+   // Settings default
+   settingsThemeDefault: "system",
    // Other keys
    themeKey: "theme",
    lightThemeKey: "light",
