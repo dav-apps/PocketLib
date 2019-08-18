@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "webpack --config webpack.server.config.js --progress --color && ng build",
+    "build --prod": "webpack --config webpack.server.config.js --progress --color && ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
