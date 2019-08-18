@@ -27,11 +27,14 @@
     "bootstrap": "^4.3.1",
     "core-js": "^3.2.1",
     "dav-npm": "git+https://github.com/dav-apps/dav-npm.git#v0.5.1",
+    "express": "^4.17.1",
+    "http": "0.0.0",
     "jquery": "^3.4.0",
     "localforage": "^1.7.3",
     "ngx-file-helpers": "^2.0.0",
     "office-ui-fabric-core": "^10.1.0",
     "rxjs": "~6.5.2",
+    "socket.io": "^2.2.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.10.2"
   },
@@ -54,6 +57,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.5.3",
+    "webpack-cli": "^3.3.7"
   }
 }
