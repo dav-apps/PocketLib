@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "webpack --config webpack.server.config.js --progress --color && ng build",
-    "build --prod": "webpack --config webpack.server.config.js --progress --color && ng build --prod --aot",
+    "build-watch": "webpack --config webpack.server.config.js --progress --color && ng build --watch",
+    "build-prod": "webpack --config webpack.server.config.js --progress --color && ng build --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
