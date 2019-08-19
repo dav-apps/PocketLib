@@ -1,4 +1,6 @@
 import { Component, HostListener } from "@angular/core";
+import { DataService } from 'src/app/services/data-service';
+import { enUS } from 'src/locales/locales';
 
 const navbarHeight: number = 64;
 
@@ -10,10 +12,15 @@ const navbarHeight: number = 64;
 	]
 })
 export class DeveloperPageComponent{
+   locale = enUS.developerPage;
 	header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 
-	constructor(){}
+	constructor(
+      public dataService: DataService
+   ){
+      this.locale = this.dataService.GetLocale().developerPage;
+   }
 
 	ngOnInit(){
 		this.setSize();

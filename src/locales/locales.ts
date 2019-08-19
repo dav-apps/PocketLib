@@ -27,7 +27,13 @@ const enDefaults = {
       systemTheme: "Use system setting",
       privacy: "Privacy Policy",
       github: "PocketLib on GitHub"
-	},
+   },
+   developerPage: {
+      header1: "Build on PocketLib",
+      subheader1: "Integrate PocketLib into your app or Ebook-Reader",
+      viewDocs: "View documentation",
+      createApp: "Create your first app"
+   },
 	deleteBookModal: {
 		title: "Delete book",
 		description: "Are you sure you want to delete this book?",
@@ -77,6 +83,12 @@ const deDefaults = {
       privacy: "Datenschutzerklärung",
       github: "PocketLib auf GitHub"
 	},
+	developerPage: {
+      header1: "Baue auf PocketLib",
+      subheader1: "Integriere PocketLib in deine App oder deinen Ebook-Reader",
+      viewDocs: "Dokumentation ansehen",
+      createApp: "Erstelle deine erste App"
+   },
 	deleteBookModal: {
 		title: "Buch löschen",
 		description: "Bist du dir sicher, dass du dieses Buch löschen willst?",
