@@ -15,7 +15,8 @@ const navbarHeight: number = 64;
 export class DeveloperPageComponent{
    locale = enUS.developerPage;
 	header1Height: number = 600;
-	header1TextMarginTop: number = 200;
+   header1TextMarginTop: number = 200;
+   showApps: boolean = false;
 
 	constructor(
 		public dataService: DataService,
@@ -40,8 +41,9 @@ export class DeveloperPageComponent{
 
    createAppButtonClick(){
       if(!this.dataService.user.IsLoggedIn){
-			this.router.navigate(["/account"])
-			return;
+			this.router.navigate(["/account"]);
+      }else{
+         this.router.navigate(["/developer/apps/new"]);
       }
    }
 }

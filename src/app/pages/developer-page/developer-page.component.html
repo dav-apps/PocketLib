@@ -1,8 +1,12 @@
-<div id="dev-landing-header-1" class="container-fluid d-flex acrylic light" [style.height.px]="header1Height">
+<div id="dev-landing-header-1" class="container-fluid d-flex acrylic light" [style.height.px]="header1Height" *ngIf="!showApps">
    <div class="mx-auto text-center" style="display: inline-block;" [style.marginTop.px]="header1TextMarginTop">
       <h1 style="font-size: 46px">{{ locale.header1 }}</h1>
       <h4 class="mt-2">{{ locale.subheader1 }}</h4>
       <button mat-raised-button class="mt-4 mr-2" style="outline: none;" color="primary">{{ locale.viewDocs }}</button>
       <button mat-raised-button class="mt-4 ml-2" style="outline: none; background-color: white" (click)="createAppButtonClick()">{{ dataService.user.IsLoggedIn ? locale.createApp : locale.login }}</button>
    </div>
+</div>
+
+<div class="container" *ngIf="showApps">
+   <h1>Hello World</h1>
 </div>
