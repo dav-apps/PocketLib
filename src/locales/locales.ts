@@ -34,6 +34,11 @@ const enDefaults = {
       viewDocs: "View documentation",
       createApp: "Create your first app"
    },
+   authorPage: {
+      header1: "Publish on PocketLib",
+      subheader1: "Put your book into the PocketLib BookStore",
+      createProfile: "Create your profile"
+   },
 	deleteBookModal: {
 		title: "Delete book",
 		description: "Are you sure you want to delete this book?",
@@ -88,6 +93,11 @@ const deDefaults = {
       subheader1: "Integriere PocketLib in deine App oder deinen Ebook-Reader",
       viewDocs: "Dokumentation ansehen",
       createApp: "Erstelle deine erste App"
+   },
+   authorPage: {
+      header1: "Veröffentliche auf PocketLib",
+      subheader1: "Setze dein Buch in den PocketLib Bücherladen",
+      createProfile: "Erstelle dein Profil"
    },
 	deleteBookModal: {
 		title: "Buch löschen",

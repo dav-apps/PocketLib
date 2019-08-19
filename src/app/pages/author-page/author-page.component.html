@@ -1,1 +1,7 @@
-<h1>Hello World</h1>
+<div id="author-landing-header-1" class="container-fluid d-flex acrylic" [style.height.px]="header1Height">
+   <div class="mx-auto text-center" style="display: inline-block;" [style.marginTop.px]="header1TextMarginTop">
+      <h1 style="font-size: 46px; color: white;">{{ locale.header1 }}</h1>
+      <h4 class="mt-2" style="color: white;">{{ locale.subheader1 }}</h4>
+      <button mat-raised-button class="mt-4 mr-2" style="outline: none;" color="primary">{{ locale.createProfile }}</button>
+   </div>
+</div>
