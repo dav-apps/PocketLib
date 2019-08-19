@@ -3,6 +3,6 @@
       <h1 style="font-size: 46px">{{ locale.header1 }}</h1>
       <h4 class="mt-2">{{ locale.subheader1 }}</h4>
       <button mat-raised-button class="mt-4 mr-2" style="outline: none;" color="primary">{{ locale.viewDocs }}</button>
-      <button mat-raised-button class="mt-4 ml-2" style="outline: none; background-color: white">{{ locale.createApp }}</button>
+      <button mat-raised-button class="mt-4 ml-2" style="outline: none; background-color: white" (click)="createAppButtonClick()">{{ dataService.user.IsLoggedIn ? locale.createApp : locale.login }}</button>
    </div>
 </div>

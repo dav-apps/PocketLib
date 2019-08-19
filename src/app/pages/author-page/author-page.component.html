@@ -2,6 +2,6 @@
    <div class="mx-auto text-center" style="display: inline-block;" [style.marginTop.px]="header1TextMarginTop">
       <h1 style="font-size: 46px; color: white;">{{ locale.header1 }}</h1>
       <h4 class="mt-2" style="color: white;">{{ locale.subheader1 }}</h4>
-      <button mat-raised-button class="mt-4 mr-2" style="outline: none;" color="primary">{{ locale.createProfile }}</button>
+      <button mat-raised-button class="mt-4 mr-2" style="outline: none;" color="primary" (click)="createProfileButtonClick()">{{ dataService.user.IsLoggedIn ? locale.createProfile : locale.login }}</button>
    </div>
 </div>

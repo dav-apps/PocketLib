@@ -1,4 +1,5 @@
 import { Component, HostListener } from "@angular/core";
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
 
@@ -17,7 +18,8 @@ export class DeveloperPageComponent{
 	header1TextMarginTop: number = 200;
 
 	constructor(
-      public dataService: DataService
+		public dataService: DataService,
+		public router: Router
    ){
       this.locale = this.dataService.GetLocale().developerPage;
    }
@@ -34,5 +36,12 @@ export class DeveloperPageComponent{
    setSize(){
 		this.header1Height = window.innerHeight - navbarHeight;
 		this.header1TextMarginTop = this.header1Height * 0.36;
+   }
+
+   createAppButtonClick(){
+      if(!this.dataService.user.IsLoggedIn){
+			this.router.navigate(["/account"])
+			return;
+      }
    }
 }
