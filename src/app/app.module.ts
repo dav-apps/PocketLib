@@ -16,6 +16,7 @@ import { BookPageComponent } from './pages/book-page/book-page.component';
 import { AccountPageComponent } from './pages/account-page/account-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { DeveloperPageComponent } from './pages/developer-page/developer-page.component';
+import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { BookContentComponent } from './components/book-content/book-content.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
@@ -30,6 +31,7 @@ import { environment } from '../environments/environment';
       AccountPageComponent,
       SettingsPageComponent,
       DeveloperPageComponent,
+      AuthorPageComponent,
       BookContentComponent,
       LogoutModalComponent,
       DeleteBookModalComponent
