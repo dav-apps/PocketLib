@@ -6,10 +6,14 @@ export const environment = {
    appId: 6,
    bookTableId: 14,
    bookFileTableId: 15,
+   appTableId: 16,
    // Keys for Book table properties
    bookTableFileUuidKey: "file_uuid",
    bookTableChapterKey: "chapter",
    bookTableProgressKey: "progress",
+   // Keys for App table properties
+   appTableNameKey: "name",
+   appTableUrlKey: "url",
    // Settings keys
    settingsThemeKey: "settings-theme",
    // Settings default
