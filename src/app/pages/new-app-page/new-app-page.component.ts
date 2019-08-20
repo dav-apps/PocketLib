@@ -1,18 +1,18 @@
 import { Component } from "@angular/core";
-declare var io: any;
+import { Router } from '@angular/router';
+import { App } from 'src/app/models/App';
 
 @Component({
 	selector: "pocketlib-new-app-page",
 	templateUrl: "./new-app-page.component.html"
 })
 export class NewAppPageComponent{
-	socket: any = null;
 	name: string = "";
-	url: string = "";
-
-	ngOnInit(){
-		this.socket = io();
-	}
+   url: string = "";
+   
+   constructor(
+      public router: Router
+   ){}
 
 	nameChange(name: string){
 		this.name = name;
@@ -22,7 +22,8 @@ export class NewAppPageComponent{
 		this.url = url;
 	}
 
-	createButtonClick(){
-		this.socket.emit("message", "Hello World");
+	async createButtonClick(){
+      await App.Create(this.name, this.url);
+      this.router.navigate(["developer/apps"]);
 	}
 }
