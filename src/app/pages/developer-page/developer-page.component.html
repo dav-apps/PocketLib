@@ -1,4 +1,4 @@
-<div id="dev-landing-header-1" class="container-fluid d-flex acrylic light" [style.height.px]="header1Height" *ngIf="!showApps">
+<div id="dev-landing-header-1" class="container-fluid d-flex acrylic light" [style.height.px]="header1Height" *ngIf="apps.length == 0">
    <div class="mx-auto text-center" style="display: inline-block;" [style.marginTop.px]="header1TextMarginTop">
       <h1 style="font-size: 46px">{{ locale.header1 }}</h1>
       <h4 class="mt-2">{{ locale.subheader1 }}</h4>
@@ -7,6 +7,18 @@
    </div>
 </div>
 
-<div class="container" *ngIf="showApps">
-   <h1>Hello World</h1>
+<div class="container" *ngIf="apps.length > 0">
+   <h1 class="mt-3 mb-3">Your Apps</h1>
+
+   <div class="card mt-3 mb-3 cursor shadow-sm" style="max-width: 200px" *ngFor="let app of apps" (click)="appSelected(app)">
+      <div class="card-body text-center">
+         {{ app.name }}
+      </div>
+   </div>
+
+   <div class="card mt-3 mb-3 cursor shadow-sm" style="max-width: 200px" (click)="createApp()">
+      <div class="card-body text-center">
+         <i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
+      </div>
+   </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
+import { App, GetAllApps } from 'src/app/models/App';
 
 const navbarHeight: number = 64;
 
@@ -16,16 +17,17 @@ export class DeveloperPageComponent{
    locale = enUS.developerPage;
 	header1Height: number = 600;
    header1TextMarginTop: number = 200;
-   showApps: boolean = false;
+   apps: App[] = [];
 
 	constructor(
 		public dataService: DataService,
 		public router: Router
    ){
-      this.locale = this.dataService.GetLocale().developerPage;
+		this.locale = this.dataService.GetLocale().developerPage;
    }
 
-	ngOnInit(){
+	async ngOnInit(){
+		this.apps = await GetAllApps();
 		this.setSize();
 	}
 
@@ -35,8 +37,10 @@ export class DeveloperPageComponent{
    }
    
    setSize(){
-		this.header1Height = window.innerHeight - navbarHeight;
-		this.header1TextMarginTop = this.header1Height * 0.36;
+		if(this.apps.length > 0){
+			this.header1Height = window.innerHeight - navbarHeight;
+			this.header1TextMarginTop = this.header1Height * 0.36;
+		}
    }
 
    createAppButtonClick(){
@@ -45,5 +49,15 @@ export class DeveloperPageComponent{
       }else{
          this.router.navigate(["/developer/apps/new"]);
       }
+   }
+
+   appSelected(app: App){
+      // Navigate to the App Page
+      this.router.navigate(["developer/apps", app.uuid]);
+   }
+
+   createApp(){
+      // Navigate to the New App Page
+      this.router.navigate(["developer/apps/new"]);
    }
 }
