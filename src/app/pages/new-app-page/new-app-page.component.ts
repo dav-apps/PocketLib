@@ -24,6 +24,6 @@ export class NewAppPageComponent{
 
 	async createButtonClick(){
       await App.Create(this.name, this.url);
-      this.router.navigate(["developer/apps"]);
+      this.router.navigate(["developer"]);
 	}
 }
