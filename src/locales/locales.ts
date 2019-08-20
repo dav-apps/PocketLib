@@ -29,11 +29,12 @@ const enDefaults = {
       github: "PocketLib on GitHub"
    },
    developerPage: {
-      header1: "Build on PocketLib",
-      subheader1: "Integrate PocketLib into your app or Ebook-Reader",
+      landingHeader1: "Build on PocketLib",
+      landingSubheader1: "Integrate PocketLib into your app or Ebook-Reader",
       viewDocs: "View documentation",
       createApp: "Create your first app",
-      login: "Log in to create your first app"
+      login: "Log in to create your first app",
+      header: "Your Apps"
    },
    authorPage: {
       header1: "Publish on PocketLib",
@@ -91,11 +92,12 @@ const deDefaults = {
       github: "PocketLib auf GitHub"
 	},
 	developerPage: {
-      header1: "Baue auf PocketLib",
-      subheader1: "Integriere PocketLib in deine App oder deinen Ebook-Reader",
+      landingHeader1: "Baue auf PocketLib",
+      landingSubheader1: "Integriere PocketLib in deine App oder deinen Ebook-Reader",
       viewDocs: "Dokumentation ansehen",
       createApp: "Erstelle deine erste App",
-      login: "Melde dich an und erstelle deine erste App"
+		login: "Melde dich an und erstelle deine erste App",
+		header: "Deine Apps"
    },
    authorPage: {
       header1: "Veröffentliche auf PocketLib",

@@ -37,7 +37,7 @@ export class DeveloperPageComponent{
    }
    
    setSize(){
-		if(this.apps.length > 0){
+		if(this.apps.length == 0){
 			this.header1Height = window.innerHeight - navbarHeight;
 			this.header1TextMarginTop = this.header1Height * 0.36;
 		}
