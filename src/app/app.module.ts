@@ -21,6 +21,7 @@ import { DeveloperPageComponent } from './pages/developer-page/developer-page.co
 import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { BookContentComponent } from './components/book-content/book-content.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
@@ -38,6 +39,7 @@ import { environment } from '../environments/environment';
       AppPageComponent,
       NewAppPageComponent,
       AuthorPageComponent,
+      LoginPageComponent,
       BookContentComponent,
       LogoutModalComponent,
       DeleteBookModalComponent

@@ -8,6 +8,7 @@ import { DeveloperPageComponent } from './pages/developer-page/developer-page.co
 import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [
    { path: "developer/apps", redirectTo: "/developer", pathMatch: "full" },
    { path: "developer/apps/new", component: NewAppPageComponent },
    { path: "developer/apps/:uuid", component: AppPageComponent },
-   { path: "author", component: AuthorPageComponent }
+   { path: "author", component: AuthorPageComponent },
+   { path: "login", component: LoginPageComponent }
 ];
 
 @NgModule({
