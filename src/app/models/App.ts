@@ -7,8 +7,8 @@ export class App{
 	public url: string;
 
 	constructor(
-		name: string,
-		url: string
+		name: string = "",
+		url: string = ""
 	){
 		this.name = name;
 		this.url = url;
