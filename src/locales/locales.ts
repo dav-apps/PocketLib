@@ -37,8 +37,8 @@ const enDefaults = {
       header: "Your Apps"
    },
    authorPage: {
-      header1: "Publish on PocketLib",
-      subheader1: "Put your book into the PocketLib BookStore",
+      landingHeader1: "Publish on PocketLib",
+      landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
       login: "Log in to create your profile"
    },
@@ -100,8 +100,8 @@ const deDefaults = {
 		header: "Deine Apps"
    },
    authorPage: {
-      header1: "Veröffentliche auf PocketLib",
-      subheader1: "Setze dein Buch in den PocketLib Bücherladen",
+      landingHeader1: "Veröffentliche auf PocketLib",
+      landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
       login: "Melde dich an und erstelle dein Profil"
    },
