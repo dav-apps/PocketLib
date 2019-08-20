@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -48,6 +50,8 @@ import { environment } from '../environments/environment';
       MatToolbarModule,
       MatButtonModule,
       MatRadioModule,
+      MatInputModule,
+      MatFormFieldModule,
       PortalModule,
       NgbModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
