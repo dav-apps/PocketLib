@@ -41,7 +41,13 @@ const enDefaults = {
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
       login: "Log in to create your profile"
-   },
+	},
+	loginPage: {
+		header: "Log in to dav",
+		email: "Email",
+		password: "Password",
+		login: "Log in"
+	},
 	deleteBookModal: {
 		title: "Delete book",
 		description: "Are you sure you want to delete this book?",
@@ -104,7 +110,13 @@ const deDefaults = {
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
       login: "Melde dich an und erstelle dein Profil"
-   },
+	},
+	loginPage: {
+		header: "Mit dav anmelden",
+		email: "Email",
+		password: "Passwort",
+		login: "Anmelden"
+	},
 	deleteBookModal: {
 		title: "Buch löschen",
 		description: "Bist du dir sicher, dass du dieses Buch löschen willst?",

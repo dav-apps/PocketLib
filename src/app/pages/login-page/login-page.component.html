@@ -1,1 +1,31 @@
-<h1>Hello World</h1>
+<div class="container d-flex flex-column">
+	<img src="/assets/images/dav-logo.png" style="width: 60px" class="align-self-center mt-5" />
+
+	<h2 class="text-center mt-4 mb-4">{{ locale.header }}</h2>
+
+	<div class="d-flex flex-column">
+		<div class="row">
+			<div class="col-10 col-sm-6 col-md-5 mx-auto">
+				<fab-text-field 
+						[placeholder]="locale.email" 
+						[(value)]="email" 
+						[label]="locale.email"
+						type="email">
+				</fab-text-field>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-10 col-sm-6 col-md-5 mx-auto">
+				<fab-text-field 
+						[placeholder]="locale.password" 
+						[(value)]="password" 
+						[label]="locale.password"
+						type="password">
+				</fab-text-field>
+				<br>
+				<fab-primary-button [styles]="buttonStyles" (click)="loginButtonClick()">{{ locale.login }}</fab-primary-button>
+			</div>
+		</div>
+	</div>
+</div>

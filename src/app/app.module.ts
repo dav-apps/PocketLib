@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FabTextFieldModule } from '@angular-react/fabric';
+import { FabTextFieldModule, FabButtonModule } from '@angular-react/fabric';
 
 import { DataService } from './services/data-service';
 import { AppRoutingModule } from './app-routing.module';
@@ -57,7 +57,8 @@ import { environment } from '../environments/environment';
       MatFormFieldModule,
       PortalModule,
 		NgbModule,
-		FabTextFieldModule,
+      FabTextFieldModule,
+      FabButtonModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [
