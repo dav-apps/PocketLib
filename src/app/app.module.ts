@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { AngularReactBrowserModule } from '@angular-react/core';
 import { NgxFileHelpersModule } from 'ngx-file-helpers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FabTextFieldModule } from '@angular-react/fabric';
 
 import { DataService } from './services/data-service';
 import { AppRoutingModule } from './app-routing.module';
@@ -45,7 +46,7 @@ import { environment } from '../environments/environment';
       DeleteBookModalComponent
   	],
   	imports: [
-   	BrowserModule,
+   	AngularReactBrowserModule,
       AppRoutingModule,
       NgxFileHelpersModule,
       BrowserAnimationsModule,
@@ -55,7 +56,8 @@ import { environment } from '../environments/environment';
       MatInputModule,
       MatFormFieldModule,
       PortalModule,
-      NgbModule,
+		NgbModule,
+		FabTextFieldModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [
