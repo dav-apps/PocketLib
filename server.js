@@ -1,6 +1,8 @@
 var path = require('path');
 var express = require('express');
 
+var websocket = require('./server/websocket');
+
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
@@ -19,11 +21,7 @@ app.get('/', getRoot);
 app.get('/*', getUndefined);
 
 io.on('connection', (socket) => {
-	console.log("Connection established!");
-
-	socket.on('message', (message) => {
-		console.log(message);
-	});
+	websocket.init(socket);
 });
 
 http.listen(3001);

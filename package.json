@@ -28,6 +28,7 @@
     "@angular/router": "^8.0.2",
     "@angular/service-worker": "^8.0.2",
     "@ng-bootstrap/ng-bootstrap": "^5.1.0",
+    "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "core-js": "^3.2.1",
     "dav-npm": "git+https://github.com/dav-apps/dav-npm.git#v0.5.1",
