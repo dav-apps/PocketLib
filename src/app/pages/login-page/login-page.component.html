@@ -6,11 +6,13 @@
 	<div class="d-flex flex-column">
 		<div class="row">
 			<div class="col-10 col-sm-6 col-md-5 mx-auto">
+            <div class="mb-3" *ngIf="errorMessage.length > 0"><fab-message-bar [messageBarType]="messageBarType">{{ errorMessage }}</fab-message-bar></div>
 				<fab-text-field 
 						[placeholder]="locale.email" 
 						[(value)]="email" 
 						[label]="locale.email"
-						type="email">
+						type="email"
+						(keydown.enter)="loginButtonClick()">
 				</fab-text-field>
 			</div>
 		</div>
@@ -21,9 +23,10 @@
 						[placeholder]="locale.password" 
 						[(value)]="password" 
 						[label]="locale.password"
-						type="password">
+						type="password"
+						(keydown.enter)="loginButtonClick()">
 				</fab-text-field>
-				<br>
+            <br>
 				<fab-primary-button [styles]="buttonStyles" (click)="loginButtonClick()">{{ locale.login }}</fab-primary-button>
 			</div>
 		</div>

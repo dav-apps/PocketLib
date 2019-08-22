@@ -46,7 +46,9 @@ const enDefaults = {
 		header: "Log in to dav",
 		email: "Email",
 		password: "Password",
-		login: "Log in"
+		login: "Log in",
+		loginNormalError: "Login was not possible",
+      loginUnusualError: "An unusual error occured. Error code {0}"
 	},
 	deleteBookModal: {
 		title: "Delete book",
@@ -115,7 +117,9 @@ const deDefaults = {
 		header: "Mit dav anmelden",
 		email: "Email",
 		password: "Passwort",
-		login: "Anmelden"
+      login: "Anmelden",
+      loginNormalError: "Anmeldung fehlgeschlagen",
+      loginUnusualError: "Ein ungewöhnlicher Fehler ist aufgetreten. Fehlercode {0}"
 	},
 	deleteBookModal: {
 		title: "Buch löschen",
