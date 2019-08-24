@@ -34,3 +34,28 @@ exports.login = async function(message){
 	
 	websocket.emit(loginKey, responseMessage);
 }
+
+const getAppKey = "getApp";
+exports.getAppKey = getAppKey;
+
+exports.getApp = async function(message){
+   // Get the app from the PocketLib API
+   var responseMessage;
+   try{
+      var response = await axios({
+         method: 'get',
+         url: `${process.env.POCKETLIB_API_URL}/apps/${message.uuid}`,
+         headers: {
+            'Authorization': process.env.DAV_AUTH
+         }
+      });
+
+      responseMessage = response.data;
+		responseMessage.status = response.status;
+   }catch(e){
+      responseMessage = e.response.data;
+		responseMessage.status = e.response.status;
+   }
+
+   websocket.emit(getAppKey, responseMessage);
+}
