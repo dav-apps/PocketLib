@@ -41,7 +41,7 @@ export class AppComponent {
 
 		Dav.Initialize(environment.production ? Dav.DavEnvironment.Production : Dav.DavEnvironment.Development,
 							environment.appId,
-							[environment.bookFileTableId, environment.bookTableId],
+							[environment.bookFileTableId, environment.bookTableId, environment.appTableId],
 							[],
 							notificationOptions,
 							{
