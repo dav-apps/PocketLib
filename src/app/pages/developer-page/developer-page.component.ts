@@ -1,5 +1,6 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
+import { transition, trigger, state, style, animate } from '@angular/animations';
 import { DataService } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
 import { App, GetAllApps } from 'src/app/models/App';
@@ -11,6 +12,24 @@ const navbarHeight: number = 64;
 	templateUrl: "./developer-page.component.html",
 	styleUrls: [
 		'./developer-page.component.scss'
+	],
+	animations: [
+		trigger('addAppHover', [
+			state('false', style({
+				transform: 'rotateZ(0deg)',
+				fontSize: '18px'
+			})),
+			state('true', style({
+				transform: 'rotateZ(90deg)',
+				fontSize: '20px'
+			})),
+			transition('true => false', [
+				animate('0.18s ease-in')
+			]),
+			transition('false => true', [
+				animate('0.18s ease-out')
+			])
+		])
 	]
 })
 export class DeveloperPageComponent{
@@ -18,6 +37,8 @@ export class DeveloperPageComponent{
 	header1Height: number = 600;
    header1TextMarginTop: number = 200;
    apps: App[] = [];
+	hoveredAppIndex: number = -1;    // The currently hovered book, for showing the shadow
+	addAppHover: boolean = false;	// Indicator for if the mouse is over the add app card
 
 	constructor(
 		public dataService: DataService,

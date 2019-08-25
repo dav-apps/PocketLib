@@ -37,8 +37,8 @@ export class LibraryPageComponent{
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
 	selectedBook: Book;
-	addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
-	hoveredBookIndex: number = -1;	// The currently hovered book, for showing the large shadow
+   hoveredBookIndex: number = -1;	// The currently hovered book, for showing the shadow
+   addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
 
 	constructor(
 		public router: Router,
