@@ -1,4 +1,4 @@
-declare var zip: any;
+import * as JSZip from 'jszip';
 
 export class EpubBook{
    title: string;
@@ -7,56 +7,39 @@ export class EpubBook{
 	cover: EpubManifestItem;
 	coverSrc: string;
 	chapters: EpubChapter[] = [];
-	entries: any[] = [];
+	entries: { [key: string]: JSZip.JSZipObject }
    manifestItems: EpubManifestItem[] = [];
 
    async ReadEpubFile(zipFile: Blob){
-		zip.workerScriptsPath = "/assets/libraries/";
-		
 		this.chapters = [];
-		this.entries = [];
+		this.entries = {};
 		this.manifestItems = [];
-      
-      // Create a reader
-      var readZipPromise: Promise<any> = new Promise((resolve) => {
-         zip.createReader(new zip.BlobReader(zipFile), resolve);
-      });
-      var reader = await readZipPromise;
-   
-      // Get the entries with the reader
-      var getEntriesPromise: Promise<any[]> = new Promise((resolve) => {
-         reader.getEntries(resolve);
-      });
-		this.entries = await getEntriesPromise;
 
-      // Get the container file
-      let index = this.entries.findIndex(entry => entry.filename == "META-INF/container.xml");
-		
-		if(index == -1){
-			// The epub file is not valid
+		// Load the entries of the zip file
+		this.entries = (await JSZip.loadAsync(zipFile)).files;
+
+		// Get the container file
+		let containerEntry = this.entries["META-INF/container.xml"];
+		if(!containerEntry){
+			// The epub file is invalid
 			// TODO Show some error
 			return;
 		}
-
-		var containerEntry = this.entries[index];
    
-		// Get the content of the container
+		// Get the content of the container file
 		let opfFilePath = await GetOpfFilePath(containerEntry);
       let opfFileDirectory = GetFileDirectory(opfFilePath);
 		
-		// Get the opf file from the entries
-		index = this.entries.findIndex(entry => entry.filename == opfFilePath);
-		
-		if(index == -1){
-			// The epub file is not valid
+		// Get the opf file
+		let opfFileEntry = this.entries[opfFilePath];
+		if(!opfFileEntry){
+			// The epub file is invalid
 			// TODO Show some error
 			return;
 		}
 
-		let opfFileEntry = this.entries[index];
-
-		// Get the content of the container
-		let opfContent = await GetZipEntryTextContent(opfFileEntry);
+		// Get the content of the opf file
+		let opfContent = await opfFileEntry.async("text");
 
 		// Read the OPF file content
 		let parser = new DOMParser();
@@ -91,20 +74,15 @@ export class EpubBook{
             // Find the manifest item with id = metaTagContent
             let index = this.manifestItems.findIndex(item => item.id == metaTagContent);
             if(index !== -1){
-               this.cover = this.manifestItems[index];
+					this.cover = this.manifestItems[index];
 					
 					// Get the content of the cover file
-               index = this.entries.findIndex(entry => entry.filename == this.cover.href);
-					
-					if(index !== -1){
-						let coverBlob = await GetZipEntryBlobContent(this.entries[index]);
-						let coverByteContent = await GetBlobContent(coverBlob);
-						let base64ByteContent = btoa(coverByteContent);
+					let coverEntry = this.entries[this.cover.href];
+					let coverContent = await coverEntry.async("base64");
 
-						// Get the mime type
-						let mimeType = this.cover.mediaType;
-						this.coverSrc = `data:${mimeType};base64,${base64ByteContent}`;
-					}
+					// Get the mime type
+					let mimeType = this.cover.mediaType;
+					this.coverSrc = `data:${mimeType};base64,${coverContent}`;
             }
          }
       }
@@ -122,16 +100,12 @@ export class EpubBook{
 			if(index !== -1){
 				let itemPath = this.manifestItems[index].href;
 
-				// Get the entry with the filename
-				index = this.entries.findIndex(entry => entry.filename.includes(itemPath));
-				if(index == -1) continue;
+				// Find the entry with the filename
+				var key = Object.keys(this.entries).find(entry => entry.includes(itemPath));
+				if(!key) continue;
 
 				// Read the content of the entry
-				let entryContentPromise: Promise<string> = new Promise((resolve) => {
-					this.entries[index].getData(new zip.TextWriter(), resolve);
-				});
-				let entryContent = await entryContentPromise;
-
+				let entryContent = await this.entries[key].async("text");
 				this.chapters.push(new EpubChapter(this, idref, itemPath, entryContent));
 			}
 		}
@@ -202,8 +176,8 @@ export class EpubChapter{
 			let stylePath = MergePaths(this.currentPath, href);
 			
 			// Get the content of the file
-			let index = this.book.entries.findIndex(entry => entry.filename == stylePath);
-			return index !== -1 ? await GetZipEntryTextContent(this.book.entries[index]) : "";
+			let entry = this.book.entries[stylePath];
+			return entry ? await entry.async("text") : "";
 		}else{
 			return "";
 		}
@@ -219,18 +193,16 @@ export class EpubChapter{
          let fontFilePath = MergePaths(this.currentPath, fontUrl);
          let newUrl = "";
 
-			// Get the content of the file
-			let index = this.book.entries.findIndex(entry => entry.filename == fontFilePath);
-			if(index !== -1){
-				let fontFileBlob = await GetZipEntryBlobContent(this.book.entries[index]);
-				let fontFileContent = await GetBlobContent(fontFileBlob);
-				let base64FontFileContent = btoa(fontFileContent);
+			let entry = this.book.entries[fontFilePath];
+			if(entry){
+				// Get the content of the file
+				let fontFileContent = await entry.async("base64");
 
 				// Get the mime type from the manifest items
-            index = this.book.manifestItems.findIndex(item => item.href == fontFilePath)
+            let index = this.book.manifestItems.findIndex(item => item.href == fontFilePath)
             let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "application/x-font-ttf";
 
-            newUrl = `data:${mimeType};base64,${base64FontFileContent}`;
+            newUrl = `data:${mimeType};base64,${fontFileContent}`;
 			}
 
 			// Replace the url with the raw data
@@ -311,18 +283,16 @@ export class EpubChapter{
 		let imagePath = MergePaths(this.currentPath, src);
 	
 		// Get the image from the zip file entries
-		let index = this.book.entries.findIndex(entry => entry.filename == imagePath);
-		if(index !== -1){
+		let entry = this.book.entries[imagePath];
+		if(entry){
 			// Get the image content
-			let imageContent = await GetZipEntryBlobContent(this.book.entries[index]);
-			let byteContent = await GetBlobContent(imageContent);
-			let base64BytesContent = btoa(byteContent);
-	
+			let imageContent = await entry.async("base64");
+			
 			// Get the mime type from the manifest items
-			index = this.book.manifestItems.findIndex(item => item.href == imagePath);
+			let index = this.book.manifestItems.findIndex(item => item.href == imagePath);
 			let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
 	
-			return `data:${mimeType};base64,${base64BytesContent}`;
+			return `data:${mimeType};base64,${imageContent}`;
 		}
 		return "";
 	}
@@ -336,11 +306,8 @@ export class EpubManifestItem{
 	){}
 }
 
-async function GetOpfFilePath(containerEntry: any) : Promise<string>{
-	var containerContentPromise: Promise<string> = new Promise((resolve) => {
-		containerEntry.getData(new zip.TextWriter(), resolve);
-	});
-	let containerContent = await containerContentPromise;
+async function GetOpfFilePath(containerEntry: JSZip.JSZipObject) : Promise<string>{
+	let containerContent = await containerEntry.async("text");
 
 	let parser = new DOMParser();
 	let containerDoc = parser.parseFromString(containerContent, "text/xml");
@@ -369,30 +336,6 @@ function GetParentDirectory(directoryPath: string){
 	directoryParts = directoryParts.slice(0, -removedNumberOfElements);
 
 	return directoryParts.join('/') + '/';
-}
-
-async function GetZipEntryTextContent(entry: any) : Promise<string>{
-	var contentPromise: Promise<string> = new Promise((resolve) => {
-		entry.getData(new zip.TextWriter(), resolve);
-	});
-	return await contentPromise;
-}
-
-async function GetZipEntryBlobContent(entry: any) : Promise<Blob>{
-	var contentPromise: Promise<Blob> = new Promise((resolve) => {
-		entry.getData(new zip.BlobWriter(), resolve);
-	});
-	return await contentPromise;
-}
-
-async function GetBlobContent(blob: Blob) : Promise<string>{
-	let byteContentPromise: Promise<ProgressEvent> = new Promise((resolve) => {
-		let fileReader = new FileReader();
-		fileReader.onloadend = resolve;
-		fileReader.readAsBinaryString(blob);
-	});
-	let byteContent = await byteContentPromise;
-	return byteContent.currentTarget["result"];
 }
 
 function MergePaths(currentPath: string, source: string){
