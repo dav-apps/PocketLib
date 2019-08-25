@@ -73,6 +73,12 @@ body{
    cursor: pointer;
 }
 
+.icon-button:hover{
+	background-color: var(--hover-background-color);
+	color: var(--text-color);
+	border-color: var(--hover-background-color);
+}
+
 // Custom Acrylic styles
 $saturation: 80%;
 $blurring: 3px;
