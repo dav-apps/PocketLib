@@ -36,6 +36,12 @@ const enDefaults = {
       login: "Log in to create your first app",
       header: "Your Apps"
    },
+   newAppPage: {
+		title: "New app",
+		create: "Create",
+		name: "Name",
+		redirectUrl: "Redirect url"
+   },
    authorPage: {
       landingHeader1: "Publish on PocketLib",
       landingSubheader1: "Put your book into the PocketLib BookStore",
@@ -106,6 +112,12 @@ const deDefaults = {
       createApp: "Erstelle deine erste App",
 		login: "Melde dich an und erstelle deine erste App",
 		header: "Deine Apps"
+   },
+   newAppPage: {
+		title: "Neue App",
+		create: "Erstellen",
+		name: "Name",
+		redirectUrl: "Weiterleitungs-URL"
    },
    authorPage: {
       landingHeader1: "Veröffentliche auf PocketLib",
