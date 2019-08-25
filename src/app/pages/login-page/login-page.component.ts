@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
-import { IButtonStyles, MessageBarType, initializeIcons } from 'office-ui-fabric-react';
+import { IButtonStyles, MessageBarType } from 'office-ui-fabric-react';
 import { enUS } from 'src/locales/locales';
 declare var io: any;
 
@@ -34,9 +34,6 @@ export class LoginPageComponent{
    ){
 		this.dataService.navbarVisible = false;
 		this.locale = this.dataService.GetLocale().loginPage;
-
-		// Initialize the icons for the message bar
-      initializeIcons();
       
 		// Get the app uuid from the params
 		this.appUuid = this.activatedRoute.snapshot.queryParamMap.get('app_uuid');

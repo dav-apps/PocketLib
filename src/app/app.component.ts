@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import * as Dav from 'dav-npm';
+import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
+import * as Dav from 'dav-npm';
 
 @Component({
 	selector: 'app-root',
@@ -33,6 +34,7 @@ export class AppComponent {
       this.dataService.LoadAllBooks();
       this.SetTitleBarColor();
       this.dataService.ApplyTheme();
+      initializeIcons();
 
 		let notificationOptions = {
 			icon: "",
