@@ -1,7 +1,7 @@
 var path = require('path');
 var express = require('express');
 
-var websocket = require('./server/websocket');
+var websocket = require('./websocket');
 
 var app = express();
 var http = require('http').createServer(app);
