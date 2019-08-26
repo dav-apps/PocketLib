@@ -1,4 +1,4 @@
-var webpack = require('webpack');
+//var nodeExternals = require('webpack-node-externals');
 var path = require('path');
 var fs = require('fs');
 
@@ -9,14 +9,13 @@ fs.readdirSync('node_modules')
   	})
   	.forEach(function(mod) {
    	nodeModules[mod] = 'commonjs ' + mod;
-  	});
+     });
 
 module.exports = {
 	entry: { server: './server.js' },
 	resolve: { extensions: ['.js'] },
 	target: 'node',
 	mode: 'none',
-	externals: [/node_modules/],
 	output:  {
 		path: path.join(__dirname, 'dist'),
 		filename: 'server.js'

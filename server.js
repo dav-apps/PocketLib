@@ -24,4 +24,4 @@ io.on('connection', (socket) => {
 	websocket.init(socket);
 });
 
-http.listen(3001);
+http.listen(process.env.PORT || 3001);
