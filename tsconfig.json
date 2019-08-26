@@ -19,6 +19,11 @@
       "es2018",
       "dom"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+			"jszip": [
+				"node_modules/jszip/dist/jszip.min.js"
+			]
+    }
   }
 }
