@@ -75,7 +75,6 @@ export class BookContentComponent{
    touchStartY: number = 0;
    touchDiffX: number = 0;
    touchDiffY: number = 0;
-	swipeViewer: CurrentViewer;
 	//#endregion
 
 	constructor(
@@ -128,7 +127,17 @@ export class BookContentComponent{
 
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
-      $(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		
+		document.getElementById('viewer').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
    }
    
    ngOnDestroy(){
@@ -598,13 +607,10 @@ export class BookContentComponent{
 			this.touchStartY = touch.pageY;
 
 			this.viewerTransitionTime = 0;
-			this.swipeViewer = this.currentViewer;
-
 		}else if(event.type == touchMove){
-			// Calculate the difference between the first touch and the current touch positions
+			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
-
-			this.touchDiffX =  this.touchStartX - touch.pageX;
+			this.touchDiffX = this.touchStartX - touch.pageX;
 			this.touchDiffY = this.touchStartY - touch.pageY;
 
 			if(this.touchDiffX > 0){
@@ -612,17 +618,26 @@ export class BookContentComponent{
 				this.SetLeftOfCurrentViewer(-this.touchDiffX);
 			}else{
             // Swipe to the right; move the left viewer to the right
-				// TODO
+				this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
 			}
 		}else if(event.type == touchEnd){
 			this.viewerTransitionTime = 0.5;
 
-			// If the page was swiped wide enough, show the next page
-			if(this.touchDiffX > this.width * 0.15){
-				this.NextPage();
+			if(this.touchDiffX > 0){
+				// If the page was swiped wide enough, show the next page
+				if(this.touchDiffX > this.width * 0.15){
+					this.NextPage();
+				}else{
+					// Move the page back
+					this.SetLeftOfCurrentViewer(0);
+				}
 			}else{
-				// Move the page back
-				this.SetLeftOfCurrentViewer(0);
+				// If the page was swiped wide enough, show the previous page
+				if(-this.touchDiffX > this.width * 0.2){
+					this.PrevPage();
+				}else{
+					this.SetLeftOfPreviousViewer(-this.width);
+				}
 			}
 
 			this.touchStartX = 0;
