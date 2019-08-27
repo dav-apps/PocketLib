@@ -52,7 +52,8 @@ export class BookContentComponent{
 	viewer3PositionLeft: number = 0;
 	viewerZIndex: number = -1;    // -1, -2 or -3
    viewer2ZIndex: number = -2;
-   viewer3ZIndex: number = -3;
+	viewer3ZIndex: number = -3;
+	viewerTransitionTime: number = 0.5;
 
 	currentChapter: number = 0;	// The current chapter index in this.chapters
    currentPage: number = 0;		// The current page in the current chapter
@@ -67,6 +68,14 @@ export class BookContentComponent{
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
 	pagePositions: number[] = [];
+	//#endregion
+
+	//#region Variables for touch events
+	touchStartX: number = 0;
+   touchStartY: number = 0;
+   touchDiffX: number = 0;
+   touchDiffY: number = 0;
+	swipeViewer: CurrentViewer;
 	//#endregion
 
 	constructor(
@@ -309,12 +318,12 @@ export class BookContentComponent{
 		$(currentRightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
       currentLeftViewer.contentWindow.focus();
       
-      currentLeftViewer.contentWindow.addEventListener(touchStart, this.HandleTouch);
-		currentRightViewer.contentWindow.addEventListener(touchStart, this.HandleTouch);
-		currentLeftViewer.contentWindow.addEventListener(touchMove, this.HandleTouch);
-		currentRightViewer.contentWindow.addEventListener(touchMove, this.HandleTouch);
-		currentLeftViewer.contentWindow.addEventListener(touchEnd, this.HandleTouch);
-		currentRightViewer.contentWindow.addEventListener(touchEnd, this.HandleTouch);
+      currentLeftViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentRightViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentLeftViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentRightViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentLeftViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentRightViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
 
 		// Adapt the links of the left viewer
 		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
@@ -582,14 +591,44 @@ export class BookContentComponent{
    
    HandleTouch(event: TouchEvent){
 		if(event.touches.length > 1) return;
-		console.log(event);
 
 		if(event.type == touchStart){
-			console.log(touchStart)
+			let touch = event.touches.item(0);
+			this.touchStartX = touch.pageX;
+			this.touchStartY = touch.pageY;
+
+			this.viewerTransitionTime = 0;
+			this.swipeViewer = this.currentViewer;
+
 		}else if(event.type == touchMove){
-			console.log(touchMove)
+			// Calculate the difference between the first touch and the current touch positions
+			let touch = event.touches.item(0);
+
+			this.touchDiffX =  this.touchStartX - touch.pageX;
+			this.touchDiffY = this.touchStartY - touch.pageY;
+
+			if(this.touchDiffX > 0){
+				// Swipe to the left; move the current viewer to the left
+				this.SetLeftOfCurrentViewer(-this.touchDiffX);
+			}else{
+            // Swipe to the right; move the left viewer to the right
+				// TODO
+			}
 		}else if(event.type == touchEnd){
-			console.log(touchEnd)
+			this.viewerTransitionTime = 0.5;
+
+			// If the page was swiped wide enough, show the next page
+			if(this.touchDiffX > this.width * 0.15){
+				this.NextPage();
+			}else{
+				// Move the page back
+				this.SetLeftOfCurrentViewer(0);
+			}
+
+			this.touchStartX = 0;
+			this.touchStartY = 0;
+			this.touchDiffX = 0;
+			this.touchDiffY = 0;
 		}
 	}
 
@@ -700,6 +739,20 @@ export class BookContentComponent{
 				break;
 			case CurrentViewer.Third:
 				this.viewer2ZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetLeftOfViewer(viewer: ViewerPosition, left: number){
+		switch (viewer) {
+			case ViewerPosition.Current:
+				this.SetLeftOfCurrentViewer(left);
+				break;
+			case ViewerPosition.Next:
+				this.SetLeftOfNextViewer(left);
+				break;
+			case ViewerPosition.Previous:
+				this.SetLeftOfPreviousViewer(left);
 				break;
 		}
 	}

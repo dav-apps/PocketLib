@@ -5,7 +5,7 @@
 		[style.z-index]="viewerZIndex"
 		[style.width.px]="width"
 		[style.height.px]="height"
-		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left 0.5s'">
+		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'">
 	<iframe id="viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewerLeftHeight"></iframe>
 	<iframe id="viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewerRightHeight"></iframe>
 </div>
@@ -17,7 +17,7 @@
 		[style.z-index]="viewer2ZIndex"
 		[style.width.px]="width"
 		[style.height.px]="height"
-		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left 0.5s'">
+		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'">
 	<iframe id="viewer-left2" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewer2LeftHeight"></iframe>
 	<iframe id="viewer-right2" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewer2RightHeight"></iframe>
 </div>
@@ -29,7 +29,7 @@
 		[style.z-index]="viewer3ZIndex"
 		[style.width.px]="width"
 		[style.height.px]="height"
-		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left 0.5s'">
+		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'">
 	<iframe id="viewer-left3" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="viewerLeftWidth" [style.height.px]="viewer3LeftHeight"></iframe>
 	<iframe id="viewer-right3" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="viewerRightWidth" [style.height.px]="viewer3RightHeight"></iframe>
 </div>
