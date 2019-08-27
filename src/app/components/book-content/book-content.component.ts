@@ -9,6 +9,9 @@ const progressFactor = 100000;		// The factor with which the progress is saved
 const currentViewerZIndex = -2;
 const nextPageViewerZIndex = -3;
 const previousPageViewerZIndex = -1;
+const touchStart = "touchstart";
+const touchMove = "touchmove";
+const touchEnd = "touchend";
 
 @Component({
 	selector: 'pocketlib-book-content',
@@ -116,7 +119,7 @@ export class BookContentComponent{
 
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
-		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+      $(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
    }
    
    ngOnDestroy(){
@@ -304,7 +307,14 @@ export class BookContentComponent{
 		$(currentRightViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
 		$(currentLeftViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
 		$(currentRightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
-		currentLeftViewer.contentWindow.focus();
+      currentLeftViewer.contentWindow.focus();
+      
+      currentLeftViewer.contentWindow.addEventListener(touchStart, this.HandleTouch);
+		currentRightViewer.contentWindow.addEventListener(touchStart, this.HandleTouch);
+		currentLeftViewer.contentWindow.addEventListener(touchMove, this.HandleTouch);
+		currentRightViewer.contentWindow.addEventListener(touchMove, this.HandleTouch);
+		currentLeftViewer.contentWindow.addEventListener(touchEnd, this.HandleTouch);
+		currentRightViewer.contentWindow.addEventListener(touchEnd, this.HandleTouch);
 
 		// Adapt the links of the left viewer
 		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
@@ -567,6 +577,19 @@ export class BookContentComponent{
 				let newViewerRightHeight = (chapter.pagePositions[this.currentPage + 2] - chapter.pagePositions[this.currentPage + 1]);
 				this.SetHeightOfViewer(viewer, (newViewerRightHeight < 0 || isNaN(newViewerRightHeight)) ? this.contentHeight - 8 : newViewerRightHeight, true);
 			}
+		}
+   }
+   
+   HandleTouch(event: TouchEvent){
+		if(event.touches.length > 1) return;
+		console.log(event);
+
+		if(event.type == touchStart){
+			console.log(touchStart)
+		}else if(event.type == touchMove){
+			console.log(touchMove)
+		}else if(event.type == touchEnd){
+			console.log(touchEnd)
 		}
 	}
 
