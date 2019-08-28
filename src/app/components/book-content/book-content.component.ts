@@ -668,6 +668,26 @@ export class BookContentComponent{
 			Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth);
 		}
 
+		// Add spans to the texts
+		let textNodes = Utils.TextNodesUnder(chapterBody);
+		for(let textNode of textNodes){
+			// Wrap each word inside a span
+			let textNodeContent = textNode.textContent.trim();
+			if(textNodeContent.length == 0) continue;
+
+			let splittetText: string[] = textNodeContent.split(' ');
+			if(splittetText.length < 10) continue;
+
+			for(let text of splittetText){
+				// Create a new span Element
+				let span = document.createElement("span");
+				span.innerText = text + " ";
+				textNode.before(span);
+			}
+
+			textNode.parentElement.removeChild(textNode);
+		}
+
 		await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 		return chapter;
 	}
@@ -1008,7 +1028,7 @@ class Utils{
 				this.FindPositions(child);
 
 				let childPosition = child.getBoundingClientRect();
-				let yPos = childPosition.height + childPosition.top;
+				let yPos = childPosition.height + childPosition.top + 1;
 
 				if(this.positions.length == 0 || (this.positions.length > 0 && this.positions[this.positions.length - 1] != yPos)){
 					this.positions.push(yPos);
@@ -1125,6 +1145,14 @@ class Utils{
 		let viewerLoadPromise: Promise<any> = new Promise(resolve => viewer.onload = resolve);
 		viewer.srcdoc = html;
 		return viewerLoadPromise;
+	}
+
+	static TextNodesUnder(el){
+		var n;
+		var a: Text[] = []
+		var walk = document.createTreeWalker(el,NodeFilter.SHOW_TEXT, null, false);
+		while(n = walk.nextNode() as Text) a.push(n);
+		return a;
 	}
 }
 
