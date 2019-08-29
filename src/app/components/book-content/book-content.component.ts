@@ -89,7 +89,9 @@ export class BookContentComponent{
 	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
-	//#endregion
+   //#endregion
+   
+   showChaptersPanel: boolean = false;
 
 	constructor(
 		private dataService: DataService,
@@ -705,6 +707,14 @@ export class BookContentComponent{
 			this.bottomToolbarOpened = true;
 		}
 	}
+
+	OpenChaptersPanel(){
+      this.showChaptersPanel = true;
+
+      // Remove outline of the panel close button
+      let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
+      closeButton.setAttribute("style", "outline: none");
+   }
 
 	/**
 	 * Initializes the given chapter and adapts it to the size of the window

@@ -13,7 +13,8 @@ import {
    FabTextFieldModule, 
    FabButtonModule, 
    FabMessageBarModule,
-   FabIconModule 
+   FabIconModule,
+   FabPanelModule
 } from '@angular-react/fabric';
 
 import { DataService } from './services/data-service';
@@ -66,6 +67,7 @@ import { environment } from '../environments/environment';
       FabButtonModule,
       FabMessageBarModule,
       FabIconModule,
+      FabPanelModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [

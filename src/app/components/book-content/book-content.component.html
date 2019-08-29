@@ -41,7 +41,7 @@
 
 <div style="z-index: 2; float: right" *ngIf="!showBottomToolbar">
 	<button mat-button class="book-toolbar-button">
-		<i class="material-icons book-toolbar-button-icon text-color">toc</i>
+		<i class="material-icons book-toolbar-button-icon text-color" (click)="OpenChaptersPanel()">toc</i>
 	</button>
 	<button mat-button class="book-toolbar-button">
 		<i class="material-icons book-toolbar-button-icon text-color">bookmark_border</i>
@@ -71,7 +71,7 @@
 			<button mat-button class="book-toolbar-button" (click)="GoBack()">
 				<i class="material-icons book-toolbar-button-icon text-color">arrow_back</i>
 			</button>
-			<button mat-button class="book-toolbar-button">
+			<button mat-button class="book-toolbar-button" (click)="OpenChaptersPanel()">
 				<i class="material-icons book-toolbar-button-icon text-color">toc</i>
 			</button>
 			<button mat-button class="book-toolbar-button">
@@ -80,3 +80,12 @@
 		</div>
 	</div>
 </div>
+
+<fab-panel [isOpen]="showChaptersPanel" 
+            (onDismissed)="showChaptersPanel = false" 
+            isLightDismiss="true" 
+				(onLightDismissClick)="showChaptersPanel = false"
+				isHiddenOnDismiss="true"
+            headerText="Chapters">
+   
+</fab-panel>
