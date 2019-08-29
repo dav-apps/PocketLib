@@ -77,6 +77,8 @@ export class BookContentComponent{
    touchDiffY: number = 0;
 	//#endregion
 
+	bottomToolbarMarginBottom: number = 0;
+
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -96,7 +98,10 @@ export class BookContentComponent{
 		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
 		this.bottomCurtainRight = document.getElementById("bottom-curtain-right") as HTMLDivElement;
 		this.navigationHistory = [];
-		this.setSize();
+      this.setSize();
+      
+      // Disable scrolling
+      document.body.setAttribute('style', 'overflow: hidden');
 
 		if(this.dataService.currentBook){
 			// Load the ebook
@@ -142,6 +147,7 @@ export class BookContentComponent{
    
    ngOnDestroy(){
       $(document).unbind();
+      document.body.removeAttribute('style');
    }
 
 	@HostListener('window:resize')
