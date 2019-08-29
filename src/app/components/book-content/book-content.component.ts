@@ -78,6 +78,7 @@ export class BookContentComponent{
 	//#endregion
 
 	//#region Variables for the bottom toolbar
+	showBottomToolbar: boolean = false;
 	bottomToolbarOpened: boolean = false;
 	bottomToolbarMarginBottomOpened = 0;
 	bottomToolbarMarginBottomClosed = -40;
@@ -189,6 +190,8 @@ export class BookContentComponent{
 		this.contentHeight = this.height - this.paddingTop;
 		this.pageHeight = this.contentHeight - this.paddingBottom;
 		this.paddingX = Math.round(this.width * 0.1);
+
+		this.showBottomToolbar = this.width < 500;
       
       if(this.width > secondPageMinWidth){
          // Show both pages
