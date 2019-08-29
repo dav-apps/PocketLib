@@ -77,7 +77,11 @@ export class BookContentComponent{
    touchDiffY: number = 0;
 	//#endregion
 
-	bottomToolbarMarginBottom: number = 0;
+	//#region Variables for the bottom toolbar
+	bottomToolbarOpened: boolean = false;
+	bottomToolbarMarginBottomOpened = 0;
+	bottomToolbarMarginBottomClosed = -40;
+	//#endregion
 
 	constructor(
 		private dataService: DataService,
