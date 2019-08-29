@@ -12,6 +12,10 @@ const previousPageViewerZIndex = -1;
 const touchStart = "touchstart";
 const touchMove = "touchmove";
 const touchEnd = "touchend";
+const bottomToolbarMarginBottomOpened = 0;
+const bottomToolbarMarginBottomClosed = -40;
+const defaultViewerTransitionTime = 0.5;
+const defaultBottomToolbarTransitionTime = 0.2;
 
 @Component({
 	selector: 'pocketlib-book-content',
@@ -37,7 +41,7 @@ export class BookContentComponent{
 	height: number = 500;			// The height of the entire page
 	contentHeight: number = 500;	// The height of the iframe (height - 7 - paddingTop)
    paddingX: number = 0;
-	paddingTop: number = 60;
+	paddingTop: number = 80;
 	paddingBottom: number = 60;
 	viewerLeftWidth: number = 500;
 	viewerRightWidth: number = 500;		// The height of the viewers
@@ -53,7 +57,7 @@ export class BookContentComponent{
 	viewerZIndex: number = -1;    // -1, -2 or -3
    viewer2ZIndex: number = -2;
 	viewer3ZIndex: number = -3;
-	viewerTransitionTime: number = 0.5;
+	viewerTransitionTime: number = defaultViewerTransitionTime;
 
 	currentChapter: number = 0;	// The current chapter index in this.chapters
    currentPage: number = 0;		// The current page in the current chapter
@@ -71,17 +75,20 @@ export class BookContentComponent{
 	//#endregion
 
 	//#region Variables for touch events
+	swipeDirection: SwipeDirection = SwipeDirection.Horizontal;	// Whether the user swipes vertically or horizontally
+	swipeStart: boolean = false;
 	touchStartX: number = 0;
    touchStartY: number = 0;
    touchDiffX: number = 0;
-   touchDiffY: number = 0;
+	touchDiffY: number = 0;
+	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar when the swiping has started
 	//#endregion
 
 	//#region Variables for the bottom toolbar
 	showBottomToolbar: boolean = false;
-	bottomToolbarOpened: boolean = false;
-	bottomToolbarMarginBottomOpened = 0;
-	bottomToolbarMarginBottomClosed = -40;
+	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
+	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
+	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
 	//#endregion
 
 	constructor(
@@ -618,38 +625,65 @@ export class BookContentComponent{
 			let touch = event.touches.item(0);
 			this.touchStartX = touch.pageX;
 			this.touchStartY = touch.pageY;
+			this.swipeStart = true;
 
 			this.viewerTransitionTime = 0;
+			this.bottomToolbarTransitionTime = 0;
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
 			this.touchDiffX = this.touchStartX - touch.pageX;
 			this.touchDiffY = this.touchStartY - touch.pageY;
 
-			if(this.touchDiffX > 0){
-				// Swipe to the left; move the current viewer to the left
-				this.SetLeftOfCurrentViewer(-this.touchDiffX);
-			}else{
-            // Swipe to the right; move the left viewer to the right
-				this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
+			if(this.swipeStart){
+				// Check if the user is swiping up or down
+				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical;
+				this.touchStartBottomToolbarMarginBottom = this.bottomToolbarMarginBottom;
+
+				this.swipeStart = false;
+			}else if(this.swipeDirection == SwipeDirection.Horizontal){
+				// Move the pages
+				if(this.touchDiffX > 0){
+					// Swipe to the left; move the current viewer to the left
+					this.SetLeftOfCurrentViewer(-this.touchDiffX);
+				}else{
+					// Swipe to the right; move the left viewer to the right
+					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
+				}
+			}else if(this.swipeDirection == SwipeDirection.Vertical && this.showBottomToolbar){
+				// Update the margin bottom of the bottom toolbar
+				this.bottomToolbarMarginBottom = this.touchStartBottomToolbarMarginBottom + (this.touchDiffY / 2);
+
+				// Make sure the bottom toolbar does not move outside its area
+				if(this.bottomToolbarMarginBottom > bottomToolbarMarginBottomOpened){
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+					this.bottomToolbarOpened = true;
+				}else if(this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed){
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+					this.bottomToolbarOpened = false;
+				}
 			}
 		}else if(event.type == touchEnd){
-			this.viewerTransitionTime = 0.5;
+			// Reset the transition times
+			this.viewerTransitionTime = defaultViewerTransitionTime;
+			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
 
-			if(this.touchDiffX > 0){
-				// If the page was swiped wide enough, show the next page
-				if(this.touchDiffX > this.width * 0.15){
-					this.NextPage();
+			if(this.swipeDirection == SwipeDirection.Horizontal){
+				if(this.touchDiffX > 0){
+					// If the page was swiped wide enough, show the next page
+					if(this.touchDiffX > this.width * 0.15){
+						this.NextPage();
+					}else{
+						// Move the page back
+						this.SetLeftOfCurrentViewer(0);
+					}
 				}else{
-					// Move the page back
-					this.SetLeftOfCurrentViewer(0);
-				}
-			}else{
-				// If the page was swiped wide enough, show the previous page
-				if(-this.touchDiffX > this.width * 0.2){
-					this.PrevPage();
-				}else{
-					this.SetLeftOfPreviousViewer(-this.width);
+					// If the page was swiped wide enough, show the previous page
+					if(-this.touchDiffX > this.width * 0.2){
+						this.PrevPage();
+					}else{
+						this.SetLeftOfPreviousViewer(-this.width);
+					}
 				}
 			}
 
@@ -657,6 +691,18 @@ export class BookContentComponent{
 			this.touchStartY = 0;
 			this.touchDiffX = 0;
 			this.touchDiffY = 0;
+		}
+	}
+
+	OpenOrCloseBottomToolbar(){
+		if(this.bottomToolbarOpened){
+			// Close the bottom toolbar
+			this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+			this.bottomToolbarOpened = false;
+		}else{
+			// Open the bottom toolbar
+			this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+			this.bottomToolbarOpened = true;
 		}
 	}
 
@@ -1204,4 +1250,9 @@ enum ViewerPosition{
 	Current,
 	Next,
 	Previous
+}
+
+enum SwipeDirection{
+	Horizontal,
+	Vertical
 }
