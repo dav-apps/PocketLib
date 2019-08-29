@@ -8,7 +8,8 @@ export class EpubBook{
 	coverSrc: string;
 	chapters: EpubChapter[] = [];
 	entries: { [key: string]: JSZip.JSZipObject }
-   manifestItems: EpubManifestItem[] = [];
+	manifestItems: EpubManifestItem[] = [];
+	toc: EpubTocItem[] = [];
 
    async ReadEpubFile(zipFile: Blob){
 		this.chapters = [];
@@ -109,6 +110,28 @@ export class EpubBook{
 				this.chapters.push(new EpubChapter(this, idref, itemPath, entryContent));
 			}
 		}
+
+		// Get the toc file
+		let tocFilePath = "toc.ncx";
+		let tocDirectory = "";
+		
+		if(opfFilePath.includes('/')){
+			tocDirectory = opfFilePath.slice(0, opfFilePath.lastIndexOf('/')) + "/";
+			tocFilePath = tocDirectory + "toc.ncx";
+		}
+
+		let tocEntry = this.entries[tocFilePath];
+		if(!tocEntry){
+			// toc file does not exist
+			return;
+		}
+
+		// Get the content of the toc file
+		let tocContent = await tocEntry.async("text");
+
+		let tocDoc = parser.parseFromString(tocContent, "text/xml");
+		let navMap = tocDoc.getElementsByTagName("navMap")[0];
+		this.toc = GetTocItems(navMap, tocDirectory);
 	}
 }
 
@@ -306,6 +329,15 @@ export class EpubManifestItem{
 	){}
 }
 
+export class EpubTocItem{
+	constructor(
+		public id: string,
+		public title: string,
+		public href: string,
+		public items: EpubTocItem[]
+	){}
+}
+
 async function GetOpfFilePath(containerEntry: JSZip.JSZipObject) : Promise<string>{
 	let containerContent = await containerEntry.async("text");
 
@@ -392,4 +424,34 @@ function GetFirstUrlParameterFromCssString(css: string) : string{
    }
 
 	return css.slice(startIndex, endIndex);
+}
+
+function GetTocItems(parentElement: Element, tocDirectory: string) : EpubTocItem[]{
+	let navpoints = parentElement.getElementsByTagName("navPoint");
+	let tocItems: EpubTocItem[] = [];
+	
+	for(let i = 0; i < navpoints.length; i++){
+		tocItems.push(GetTocItem(navpoints.item(i), tocDirectory));
+	}
+
+	return tocItems;
+}
+
+function GetTocItem(navpoint: Element, tocDirectory: string) : EpubTocItem{
+	// Get the id
+	let id = navpoint.getAttribute('id');
+
+	// Get the title
+	let navlabel = navpoint.getElementsByTagName("navLabel")[0];
+	let text = navlabel.getElementsByTagName("text")[0];
+	let title = text.innerHTML;
+
+	// Get the href
+	let content = navpoint.getElementsByTagName("content")[0];
+	let href = MergePaths(tocDirectory, content.getAttribute("src"))
+
+	// Get nested items
+	let items = GetTocItems(navpoint, tocDirectory);
+
+	return new EpubTocItem(id, title, href, items);
 }
