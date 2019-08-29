@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTreeModule } from '@angular/material/tree';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { 
@@ -30,6 +31,7 @@ import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { BookContentComponent } from './components/book-content/book-content.component';
+import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -48,6 +50,7 @@ import { environment } from '../environments/environment';
       AuthorPageComponent,
       LoginPageComponent,
       BookContentComponent,
+      ChaptersTreeComponent,
       LogoutModalComponent,
       DeleteBookModalComponent
   	],
@@ -61,6 +64,7 @@ import { environment } from '../environments/environment';
       MatRadioModule,
       MatInputModule,
       MatFormFieldModule,
+      MatTreeModule,
       PortalModule,
 		NgbModule,
       FabTextFieldModule,
