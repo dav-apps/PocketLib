@@ -723,23 +723,32 @@ export class BookContentComponent{
 	OpenOrCloseBottomToolbar(){
 		if(this.bottomToolbarOpened){
 			// Close the bottom toolbar
-			this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
-			this.bottomToolbarOpened = false;
+			this.CloseBottomToolbar();
 		}else{
 			// Open the bottom toolbar
-			this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
-			this.bottomToolbarOpened = true;
+			this.OpenBottomToolbar();
 		}
 	}
 
-	OpenChaptersPanel(){
-      this.showChaptersPanel = true;
-
-      // Remove outline of the panel close button
-		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
-      closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
+	OpenBottomToolbar(){
+		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+		this.bottomToolbarOpened = true;
 	}
-	
+
+	CloseBottomToolbar(){
+		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+		this.bottomToolbarOpened = false;
+	}
+
+	OpenChaptersPanel(){
+		this.CloseBottomToolbar();
+		this.showChaptersPanel = true;
+
+		// Remove outline of the panel close button
+		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
+		closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
+	}
+
 	ChapterLinkClicked(link: string){
 		this.showChaptersPanel = false;
 		this.NavigateToLink(link);
