@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
+import { enUS } from 'src/locales/locales';
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -26,6 +27,7 @@ const defaultBottomToolbarTransitionTime = 0.2;
    ]
 })
 export class BookContentComponent{
+	locale = enUS.bookContent;
 	book = new EpubBook();
 	chapters: BookChapter[] = [];
 	initialized: boolean = false;
@@ -101,6 +103,7 @@ export class BookContentComponent{
 		private ngZone: NgZone
 	){
 		this.dataService.navbarVisible = false;
+		this.locale = this.dataService.GetLocale().bookContent;
 	}
 
 	async ngOnInit(){

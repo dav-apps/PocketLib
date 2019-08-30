@@ -86,6 +86,6 @@
             isLightDismiss="true" 
 				(onLightDismissClick)="showChaptersPanel = false"
 				isHiddenOnDismiss="true"
-            headerText="Table of contents">
+            [headerText]="locale.toc">
    <pocketlib-chapters-tree #chaptersTree></pocketlib-chapters-tree>
 </fab-panel>

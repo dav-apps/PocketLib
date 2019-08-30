@@ -67,7 +67,10 @@ const enDefaults = {
 		description: "Are you sure you want to log out?",
 		logout: "Log out",
 		cancel: "Cancel"
-	}
+   },
+   bookContent: {
+      toc: "Table of contents"
+   }
 }
 
 export var enUS = enDefaults;
@@ -144,7 +147,10 @@ const deDefaults = {
 		description: "Bist du dir sicher, dass du dich abmelden möchtest?",
 		logout: "Abmelden",
 		cancel: "Abbrechen"
-	}
+	},
+   bookContent: {
+      toc: "Inhaltsverzeichnis"
+   }
 }
 
 export var deDE = deDefaults;
