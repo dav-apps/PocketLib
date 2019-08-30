@@ -87,5 +87,5 @@
 				(onLightDismissClick)="showChaptersPanel = false"
 				isHiddenOnDismiss="true"
             [headerText]="locale.toc">
-   <pocketlib-chapters-tree #chaptersTree></pocketlib-chapters-tree>
+   <pocketlib-chapters-tree #chaptersTree (linkClick)="ChapterLinkClicked($event)"></pocketlib-chapters-tree>
 </fab-panel>

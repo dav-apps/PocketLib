@@ -93,9 +93,11 @@ export class BookContentComponent{
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
    //#endregion
-   
+	
+	//#region Variables for the chapters panel
    showChaptersPanel: boolean = false;
-   @ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent;
+	@ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent;
+	//#endregion
 
 	constructor(
 		private dataService: DataService,
@@ -177,6 +179,8 @@ export class BookContentComponent{
 	}
 
 	onKeyDown(keyCode: number){
+		if(this.showChaptersPanel) return;
+
 		switch (keyCode) {
 			case 8:		// Back key
 				this.ngZone.run(() => this.GoBack());
@@ -191,6 +195,8 @@ export class BookContentComponent{
 	}
 
 	onMouseWheel(wheelDelta: number){
+		if(this.showChaptersPanel) return;
+
 		if(wheelDelta > 0){
 			// Wheel up
 			this.ngZone.run(() => this.PrevPage());
@@ -248,7 +254,6 @@ export class BookContentComponent{
 
 		await this.ShowPage(false, true);
 		this.goingBack = false;
-		this.showPageRunning = false;
 	}
 
 	async NextPage(){
@@ -275,7 +280,6 @@ export class BookContentComponent{
 		}
 
 		await this.ShowPage(true, false);
-		this.showPageRunning = false;
 	}
 
 	/**
@@ -392,6 +396,8 @@ export class BookContentComponent{
 			// Save the new progress
 			await this.dataService.currentBook.SetPosition(this.currentChapter, newProgress);
 		}
+
+		this.showPageRunning = false;
 	}
 
 	async RenderNextPage(){
@@ -721,7 +727,12 @@ export class BookContentComponent{
       // Remove outline of the panel close button
       let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
       closeButton.setAttribute("style", "outline: none");
-   }
+	}
+	
+	ChapterLinkClicked(link: string){
+		this.showChaptersPanel = false;
+		this.NavigateToLink(link);
+	}
 
 	/**
 	 * Initializes the given chapter and adapts it to the size of the window

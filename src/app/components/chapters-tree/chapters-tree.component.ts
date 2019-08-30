@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { BehaviorSubject } from 'rxjs';
@@ -9,6 +9,7 @@ import { EpubTocItem } from 'src/app/models/EpubBook';
 	templateUrl: './chapters-tree.component.html'
 })
 export class ChaptersTreeComponent{
+	@Output() linkClick = new EventEmitter();
    dataSource: MatTreeNestedDataSource<ChapterNode>;
    treeControl: NestedTreeControl<ChapterNode>;
    dataChange: BehaviorSubject<ChapterNode[]> = new BehaviorSubject<ChapterNode[]>([]);
@@ -41,6 +42,11 @@ export class ChaptersTreeComponent{
 		}
 
 		return chapters;
+	}
+
+	LinkClicked(node: ChapterNode){
+		this.linkClick.emit(node.href);
+		return false;
 	}
 }
 
