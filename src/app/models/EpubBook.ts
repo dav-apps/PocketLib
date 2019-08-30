@@ -431,7 +431,10 @@ function GetTocItems(parentElement: Element, tocDirectory: string) : EpubTocItem
 	let tocItems: EpubTocItem[] = [];
 	
 	for(let i = 0; i < navpoints.length; i++){
-		tocItems.push(GetTocItem(navpoints.item(i), tocDirectory));
+		let item = navpoints.item(i);
+		if(item.parentElement == parentElement){
+			tocItems.push(GetTocItem(item, tocDirectory));
+		}
 	}
 
 	return tocItems;
