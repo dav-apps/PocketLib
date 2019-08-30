@@ -6,7 +6,10 @@ import { EpubTocItem } from 'src/app/models/EpubBook';
 
 @Component({
 	selector: 'pocketlib-chapters-tree',
-	templateUrl: './chapters-tree.component.html'
+	templateUrl: './chapters-tree.component.html',
+	styleUrls: [
+		'./chapters-tree.component.scss'
+	]
 })
 export class ChaptersTreeComponent{
 	@Output() linkClick = new EventEmitter();
