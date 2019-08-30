@@ -35,25 +35,38 @@
 </div>
 
 <!-- Top Toolbar -->
-<button mat-button class="book-toolbar-button" (click)="GoBack()" *ngIf="!showBottomToolbar">
-	<i class="material-icons book-toolbar-button-icon text-color">arrow_back</i>
+<button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()" *ngIf="!showBottomToolbar">
+	<i class="ms-Icon ms-Icon--ChromeBack" aria-hidden="true"></i>
 </button>
 
 <div style="z-index: 2; float: right" *ngIf="!showBottomToolbar">
 	<button mat-button class="book-toolbar-button">
-		<i class="material-icons book-toolbar-button-icon text-color" (click)="OpenChaptersPanel()">toc</i>
+		<i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
 	</button>
 	<button mat-button class="book-toolbar-button">
-		<i class="material-icons book-toolbar-button-icon text-color">bookmark_border</i>
+		<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+	</button>
+	<button mat-button class="book-toolbar-button" (click)="OpenChaptersPanel()">
+		<i class="ms-Icon ms-Icon--BulletedList" aria-hidden="true"></i>
 	</button>
 </div>
 
 <!-- Arrow buttons -->
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; left: 0; top: 40px; z-index: 2" [style.height.px]="height - 40" (click)="PrevPage()" *ngIf="!firstPage">
-	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_left</i>
+<button mat-button 
+		class="book-toolbar-button" 
+		style="position: absolute; width: 40px; left: 0; top: 40px; z-index: 2" 
+		[style.height.px]="height - 40" 
+		(click)="PrevPage()" 
+		*ngIf="!firstPage">
+	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
 </button>
-<button mat-button class="book-toolbar-button" style="position: absolute; width: 40px; right: 0; top: 40px; z-index: 2" [style.height.px]="height - 40" (click)="NextPage()" *ngIf="!lastPage">
-	<i class="material-icons text-color" style="font-size: 30px">keyboard_arrow_right</i>
+<button mat-button 
+		class="book-toolbar-button" 
+		style="position: absolute; width: 40px; right: 0; top: 40px; z-index: 2" 
+		[style.height.px]="height - 40" 
+		(click)="NextPage()" 
+		*ngIf="!lastPage">
+	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
 <div class="w-100 d-flex justify-content-center"
@@ -63,19 +76,22 @@
 		*ngIf="showBottomToolbar">
 	<div style="display: inline-block;">
 		<div class="d-flex justify-content-center">
-			<button mat-button class="book-toolbar-button" (click)="OpenOrCloseBottomToolbar()">
-				<i class="material-icons book-toolbar-button-icon text-color">{{ bottomToolbarOpened ? 'expand_more' : 'expand_less' }}</i>
+			<button mat-button class="book-toolbar-button" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
+				<i class="ms-Icon" [ngClass]="bottomToolbarOpened ? 'ms-Icon--ChevronDownMed' : 'ms-Icon--ChevronUpMed'" aria-hidden="true"></i>
 			</button>
 		</div>
 		<div>
-			<button mat-button class="book-toolbar-button" (click)="GoBack()">
-				<i class="material-icons book-toolbar-button-icon text-color">arrow_back</i>
+			<button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()">
+				<i class="ms-Icon ms-Icon--ChromeBack" aria-hidden="true"></i>
 			</button>
 			<button mat-button class="book-toolbar-button" (click)="OpenChaptersPanel()">
-				<i class="material-icons book-toolbar-button-icon text-color">toc</i>
+				<i class="ms-Icon ms-Icon--BulletedList" aria-hidden="true"></i>
 			</button>
 			<button mat-button class="book-toolbar-button">
-				<i class="material-icons book-toolbar-button-icon text-color">bookmark_border</i>
+				<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+			</button>
+			<button mat-button class="book-toolbar-button">
+				<i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
 			</button>
 		</div>
 	</div>
