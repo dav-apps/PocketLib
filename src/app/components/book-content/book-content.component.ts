@@ -1,7 +1,8 @@
-import { Component, HostListener, NgZone } from '@angular/core';
+import { Component, HostListener, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { EpubBook } from 'src/app/models/EpubBook';
+import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -92,6 +93,7 @@ export class BookContentComponent{
    //#endregion
    
    showChaptersPanel: boolean = false;
+   @ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent;
 
 	constructor(
 		private dataService: DataService,
@@ -141,7 +143,9 @@ export class BookContentComponent{
 			this.currentViewer = CurrentViewer.First;
 			
 			this.initialized = true;
-			await this.ShowPage(false, false, progress);
+         await this.ShowPage(false, false, progress);
+         
+         this.chapterTree.Init(this.book.toc);
 		}
 
 		// Bind the keydown and wheel events
