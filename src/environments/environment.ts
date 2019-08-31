@@ -12,6 +12,7 @@ export const environment = {
    bookFileTableId: 15,
    appTableId: 16,
    // Keys for Book table properties
+   bookTableTitleKey: "title",
    bookTableFileUuidKey: "file_uuid",
    bookTableChapterKey: "chapter",
    bookTableProgressKey: "progress",

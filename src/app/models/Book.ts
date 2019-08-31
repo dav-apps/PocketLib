@@ -2,9 +2,12 @@ import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { EpubBook } from './EpubBook';
 
+const epubType = "application/epub+zip";
+const pdfType = "application/pdf";
+
 export class Book{
    public uuid: string;
-	public title: string;
+	public title: string = "";
 	public author: string;
    public cover: string;
    public chapter: number = 0;		// The current chapter
@@ -12,15 +15,20 @@ export class Book{
 
    constructor(
 		public file: Blob,
+		title: string = "",
 		chapter: number = 0,
 		progress: number = 0
 	){
+		if(this.file.type == pdfType){
+			this.title = title;
+		}
+
 		this.chapter = chapter;
 		this.progress = progress;
 	}
 	
-	public static async Create(file: Blob) : Promise<string>{
-		let book = new Book(file);
+	public static async Create(file: Blob, title: string) : Promise<string>{
+      let book = new Book(file, title);
 		await book.Save();
 		return book.uuid;
 	}
@@ -51,6 +59,12 @@ export class Book{
 		let tableObject = await GetTableObject(this.uuid);
 		let fileTableObject: TableObject = null;
 
+		let properties: {name: string, value: string}[] = [
+			{ name: environment.bookTableTitleKey, value: this.title },
+			{ name: environment.bookTableChapterKey, value: this.chapter.toString() },
+			{ name: environment.bookTableProgressKey, value: this.progress.toString() }
+		];
+
 		if(tableObject){
 			// Check if the table object has a file table object
 			let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
@@ -60,17 +74,15 @@ export class Book{
 			}
 			
 			// Update the existing table object
-			let properties: {name: string, value: string}[] = [
-				{ name: environment.bookTableChapterKey, value: this.chapter.toString() },
-				{ name: environment.bookTableProgressKey, value: this.progress.toString() }
-			];
-
 			await tableObject.SetPropertyValues(properties);
 		}else{
 			// Create a new table object
 			tableObject = new TableObject();
 			tableObject.TableId = environment.bookTableId;
 			this.uuid = tableObject.Uuid;
+
+			// Set the properties of the new table object
+			await tableObject.SetPropertyValues(properties);
 		}
 
 		if(!fileTableObject){
@@ -78,7 +90,9 @@ export class Book{
 			fileTableObject = new TableObject();
 			fileTableObject.TableId = environment.bookFileTableId;
 			fileTableObject.IsFile = true;
-			await fileTableObject.SetFile(this.file, "epub");
+
+			let ext = this.file.type == pdfType ? "pdf" : "epub";
+			await fileTableObject.SetFile(this.file, ext);
 
 			// Save the uuid of the file table object in the table object
 			await tableObject.SetPropertyValue(environment.bookTableFileUuidKey, fileTableObject.Uuid);
@@ -115,6 +129,9 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 
 	// Get the file of the book file table object
 	let file = bookFileTableObject.File;
+
+	// Get the title
+	let title = bookTableObject.GetPropertyValue(environment.bookTableTitleKey);
 	
 	// Get the chapter
 	let chapter: number = 0;
@@ -130,20 +147,20 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 		progress = Number.parseInt(progressString);
 	}
 
-   let book = new Book(file, chapter, progress);
+   let book = new Book(file, title, chapter, progress);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }
 
-async function LoadBookDetails(book: Book) : Promise<Book>{
+async function LoadBookDetails(book: Book){
+	if(book.file.type != epubType) return;
+
 	let epubBook = new EpubBook();
 	await epubBook.ReadEpubFile(book.file);
 
 	book.title = epubBook.title;
 	book.author = epubBook.author;
 	book.cover = epubBook.coverSrc;
-
-	return book;
 }
 
 async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{

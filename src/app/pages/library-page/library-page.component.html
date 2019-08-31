@@ -6,7 +6,7 @@
 		<div class="card cursor m-2 theme-background-color-secondary" style="width: 180px; transition: 0.12s" 
 				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
 				ngxFilePicker
-				accept="application/epub+zip"
+				accept="application/epub+zip,application/pdf"
 				(filePick)="filePick($event)"
 				(mouseover)="addBookHover = true"
 				(mouseout)="addBookHover = false">
