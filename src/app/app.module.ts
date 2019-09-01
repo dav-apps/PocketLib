@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTreeModule } from '@angular/material/tree';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { 
    FabTextFieldModule, 
    FabButtonModule, 
@@ -69,6 +70,7 @@ import { environment } from '../environments/environment';
       MatTreeModule,
       PortalModule,
 		NgbModule,
+		PdfViewerModule,
       FabTextFieldModule,
       FabButtonModule,
       FabMessageBarModule,

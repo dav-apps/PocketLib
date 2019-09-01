@@ -16,9 +16,12 @@ export class BookPageComponent{
 
    constructor(
 		public dataService: DataService
-	){}
+	){
+      this.dataService.navbarVisible = false;
+   }
 
-   async ngOnInit(){
+   ngOnInit(){
+      // Select the correct rendering component, based on the mime type of the file
 		if(this.dataService.currentBook.file.type == epubType){
 			this.selectedPortal = new ComponentPortal(BookContentComponent)
 		}else if(this.dataService.currentBook.file.type == pdfType){

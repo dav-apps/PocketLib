@@ -115,7 +115,6 @@ export class BookContentComponent{
 		private router: Router,
 		private ngZone: NgZone
 	){
-		this.dataService.navbarVisible = false;
 		this.locale = this.dataService.GetLocale().bookContent;
 	}
 

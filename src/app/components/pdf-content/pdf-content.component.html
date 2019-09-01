@@ -1,1 +1,18 @@
-<h1>Hello World on Pdf Content Component!</h1>
+<pdf-viewer id="pdf-viewer"
+				class="mx-auto"
+				[src]="pdfContent"
+				[show-all]="false"
+				[page]="page"
+				[stick-to-page]="false"
+				[fit-to-page]="false"
+				[autoresize]="true"
+				[original-size]="false"
+				style="display: block;"
+				[style.width.px]="viewerWidth"
+				(after-load-complete)="PdfLoaded($event)"
+				(page-rendered)="PageRendered($event)"></pdf-viewer>
+
+<div style="position: absolute; top: 0">
+	<button (click)="Prev()">Prev</button>
+	<button (click)="Next()">Next</button>
+</div>
