@@ -19,6 +19,7 @@ export class PdfContentComponent{
 	isLoaded: boolean = false;
 	initialized: boolean = false;
 	goingBack: boolean = false;
+	showSecondPage: boolean = false;
 
 	viewerRatio: number = 0;
 	viewerWidth: number = 500;
@@ -53,6 +54,12 @@ export class PdfContentComponent{
 		this.pdfContent = (await readPromise).target["result"];
 
 		this.ShowPage(false, false, 1);
+
+		// Customize pdf-viewer styles
+		let containers = document.getElementsByClassName('ng2-pdf-viewer-container');
+		for(let i = 0; i < containers.length; i++){
+			containers.item(i).setAttribute("style", "overflow-x: hidden");
+		}
 	}
    
    @HostListener('window:resize')
@@ -64,6 +71,8 @@ export class PdfContentComponent{
       this.width = window.innerWidth;
 		this.height = window.innerHeight;
 		this.setViewerSize();
+
+		this.showSecondPage = this.viewerWidth * 2 < this.width;
 	}
 	
 	setViewerSize(){
@@ -183,9 +192,10 @@ export class PdfContentComponent{
 	UpdatePages(newPage: number){
 		this.currentPage = newPage;
 
+		let pageDiff = this.showSecondPage ? 2 : 1;
 		this.SetPageOfCurrentViewer(this.currentPage);
-		this.SetPageOfNextViewer(this.currentPage + 1);
-		this.SetPageOfPreviousViewer(this.currentPage - 1);
+		this.SetPageOfNextViewer(this.currentPage + pageDiff);
+		this.SetPageOfPreviousViewer(this.currentPage - pageDiff);
 	}
    
 	PdfLoaded(data: any){
@@ -214,14 +224,14 @@ export class PdfContentComponent{
 		if(this.currentPage == 1) return;
 
 		this.goingBack = true;
-		this.ShowPage(false, true, this.currentPage - 1);
+		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
    Next(){
 		if(this.currentPage == this.totalPages) return;
 
 		this.goingBack = false;
-		this.ShowPage(true, false, this.currentPage + 1);
+		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
 	}
 
 	SetPageOfCurrentViewer(page: number){
