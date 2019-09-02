@@ -52,7 +52,7 @@ export class PdfContentComponent{
 		});
 		this.pdfContent = (await readPromise).target["result"];
 
-		this.ShowPage(true, false, 1);
+		this.ShowPage(false, false, 1);
 	}
    
    @HostListener('window:resize')
@@ -110,9 +110,7 @@ export class PdfContentComponent{
 			// viewer 3 is now the currently visible viewer
 			// Update the page of viewer 2
 		// !slideForward && !slideBack ?
-			// Update the page of viewer 2
-			// Move to the next page
-			// Update the pages of viewer 3 and viewer 1
+			// Update the pages
 
 		if(slideForward && !slideBack){
 			// Move to the next viewer
@@ -124,6 +122,9 @@ export class PdfContentComponent{
 			// Move to the previous viewer
 			this.MoveViewersCounterClockwise();
 
+			// Update the pages
+			this.UpdatePages(newPage);
+		}else if(!slideForward && !slideBack){
 			// Update the pages
 			this.UpdatePages(newPage);
 		}
@@ -202,18 +203,23 @@ export class PdfContentComponent{
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
 		if(!this.initialized){
-			this.setViewerSize();
-			this.currentPage = 1;
 			this.initialized = true;
+
+			this.setViewerSize();
+			this.ShowPage(true, false, 1);
 		}
 	}
    
    Prev(){
+		if(this.currentPage == 1) return;
+
 		this.goingBack = true;
 		this.ShowPage(false, true, this.currentPage - 1);
    }
 
    Next(){
+		if(this.currentPage == this.totalPages) return;
+
 		this.goingBack = false;
 		this.ShowPage(true, false, this.currentPage + 1);
 	}
