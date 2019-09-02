@@ -38,10 +38,8 @@ export class BookContentComponent{
 	viewerRight2: HTMLIFrameElement;
 	viewerLeft3: HTMLIFrameElement;
 	viewerRight3: HTMLIFrameElement;
-	bottomCurtainLeft: HTMLDivElement;
-	bottomCurtainRight: HTMLDivElement;
-	width: number = 500;				// The width of the entire page
-	height: number = 500;			// The height of the entire page
+	width: number = 500;				// The width of the entire window
+	height: number = 500;			// The height of the entire window
 	contentHeight: number = 500;	// The height of the iframe (height - 7 - paddingTop)
    paddingX: number = 0;
 	paddingTop: number = 80;
@@ -126,8 +124,6 @@ export class BookContentComponent{
 		this.viewerRight2 = document.getElementById("viewer-right2") as HTMLIFrameElement;
 		this.viewerLeft3 = document.getElementById("viewer-left3") as HTMLIFrameElement;
 		this.viewerRight3 = document.getElementById("viewer-right3") as HTMLIFrameElement;
-		this.bottomCurtainLeft = document.getElementById("bottom-curtain-left") as HTMLDivElement;
-		this.bottomCurtainRight = document.getElementById("bottom-curtain-right") as HTMLDivElement;
 		this.navigationHistory = [];
       this.setSize();
       
@@ -320,15 +316,15 @@ export class BookContentComponent{
 	 * @param elementId Finds the element with the id and jumps to the page with the element
 	 */
 	async ShowPage(slideForward: boolean = false, slideBack: boolean = false, progress: number = -1, elementId: string = null){
-		// slideForth && !slideBack ?
+		// slideForward && !slideBack ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
 			// Render the next page on viewer 3
-		// !slideForth && slideBack ?
+		// !slideForward && slideBack ?
 			// Move 1 -> 2, 2 -> 3 and 3 -> 1
 			// viewer 3 is now the currently visible viewer
 			// Render the previous page on viewer 2
-		// !slideForth && !slideBack ?
+		// !slideForward && !slideBack ?
 			// Render the current page on viewer 2
 			// Move to the next page without animation
 			// Render the next page on viewer 3 and the previous page on viewer 1
