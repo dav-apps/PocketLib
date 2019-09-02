@@ -1,32 +1,58 @@
 import { Component, HostListener } from '@angular/core';
 import { DataService } from 'src/app/services/data-service';
 
+const currentViewerZIndex = -2;
+const nextPageViewerZIndex = -3;
+const previousPageViewerZIndex = -1;
+
 @Component({
 	selector: 'pocketlib-pdf-content',
 	templateUrl: './pdf-content.component.html'
 })
 export class PdfContentComponent{
 	pdfContent: Uint8Array = null;
-	page: number = 0;
+	currentPage: number = 0;
+	viewerPage: number = 0;
+	viewer2Page: number = 0;
+	viewer3Page: number = 0;
 	totalPages: number = 0;
 	isLoaded: boolean = false;
 	initialized: boolean = false;
-   width: number = 500;
-   height: number = 500;
-	viewerWidth: number = 500;
+	goingBack: boolean = false;
+
 	viewerRatio: number = 0;
+	viewerWidth: number = 500;
+   width: number = 500;			// The width of the entire window
+	height: number = 500;		// The height of the entire window
+	
+	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
+	viewerPositionLeft: number = 0;		// How much the viewer is moved to the right
+	viewer2PositionLeft: number = 0;
+	viewer3PositionLeft: number = 0;
+	viewerZIndex: number = 0;				// The z-index of the viewer; -1, -2 or -3
+	viewer2ZIndex: number = 0;
+	viewer3ZIndex: number = 0;
 
 	constructor(
 		private dataService: DataService
-	){
+	){}
+
+   async ngOnInit(){
+		this.setSize();
+
 		// Read the book blob as UInt8Array
 		var fileReader = new FileReader();
 		fileReader.onload = (event: ProgressEvent) => this.pdfContent = event.target["result"];
 		fileReader.readAsArrayBuffer(this.dataService.currentBook.file);
-   }
 
-   ngOnInit(){
-      this.setSize();
+		let readPromise: Promise<ProgressEvent> = new Promise(resolve => {
+			let fileReader = new FileReader();
+			fileReader.onload = resolve;
+			fileReader.readAsArrayBuffer(this.dataService.currentBook.file);
+		});
+		this.pdfContent = (await readPromise).target["result"];
+
+		this.ShowPage(true, false, 1);
 	}
    
    @HostListener('window:resize')
@@ -51,13 +77,122 @@ export class PdfContentComponent{
 			}
 		}
 	}
+
+	/**
+	 * The order of the viewers at the beginning:
+	 *  _____    _____----|
+	 * |     |  |     | 2.|
+	 * |  3. |  |  1. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 * When going to the next page, move the viewers clockwise (1 -> 3, 3 -> 2, 2 -> 1):
+	 * 
+	 *  _____    _____----|
+	 * |     |  |     | 3.|
+	 * |  1. |  |  2. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 * When going to the previous page, move the viewers counterclockwise (1 -> 2, 2 -> 3, 3 -> 1):
+	 * 
+	 *  _____    _____----|
+	 * |     |  |     | 1.|
+	 * |  2. |  |  3. |   |
+	 * |_____|  |_____|---|
+	 * 
+	 */
+	ShowPage(slideForward: boolean = false, slideBack: boolean = false, newPage: number){
+		// slideForward && !slideBack ?
+			// Move 1 -> 3, 3 -> 2 and 2 -> 1
+			// viewer 2 is now the currently visible viewer
+			// Update the page of viewer 3
+		// !slideForward && slideBack ?
+			// Move 1 -> 2, 2 -> 3 and 3 -> 1
+			// viewer 3 is now the currently visible viewer
+			// Update the page of viewer 2
+		// !slideForward && !slideBack ?
+			// Update the page of viewer 2
+			// Move to the next page
+			// Update the pages of viewer 3 and viewer 1
+
+		if(slideForward && !slideBack){
+			// Move to the next viewer
+			this.MoveViewersClockwise();
+
+			// Update the pages
+			this.UpdatePages(newPage);
+		}else if(!slideForward && slideBack){
+			// Move to the previous viewer
+			this.MoveViewersCounterClockwise();
+
+			// Update the pages
+			this.UpdatePages(newPage);
+		}
+	}
+
+	MoveViewersClockwise(){
+		// Set the position of the viewers
+		this.SetLeftOfCurrentViewer(-this.width);
+		this.SetLeftOfNextViewer(0);
+		this.SetLeftOfPreviousViewer(0);
+
+		// Set the z-index of the viewers
+		this.SetZIndexOfCurrentViewer(previousPageViewerZIndex);
+		this.SetZIndexOfNextViewer(currentViewerZIndex);
+		this.SetZIndexOfPreviousViewer(nextPageViewerZIndex);
+
+		// Update currentViewer
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.currentViewer = CurrentViewer.Second;
+				break;
+			case CurrentViewer.Second:
+				this.currentViewer = CurrentViewer.Third;
+				break;
+			case CurrentViewer.Third:
+				this.currentViewer = CurrentViewer.First;
+				break;
+		}
+	}
+
+	MoveViewersCounterClockwise(){
+		// Set the position of the viewers
+		this.SetLeftOfCurrentViewer(0);
+		this.SetLeftOfNextViewer(-this.width);
+		this.SetLeftOfPreviousViewer(0);
+
+		// Set the z-index of the viewers
+		this.SetZIndexOfCurrentViewer(nextPageViewerZIndex);
+		this.SetZIndexOfNextViewer(previousPageViewerZIndex);
+		this.SetZIndexOfPreviousViewer(currentViewerZIndex);
+
+		// Update currentViewer
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.currentViewer = CurrentViewer.Third;
+				break;
+			case CurrentViewer.Second:
+				this.currentViewer = CurrentViewer.First;
+				break;
+			case CurrentViewer.Third:
+				this.currentViewer = CurrentViewer.Second;
+				break;
+		}
+	}
+
+	UpdatePages(newPage: number){
+		this.currentPage = newPage;
+
+		this.SetPageOfCurrentViewer(this.currentPage);
+		this.SetPageOfNextViewer(this.currentPage + 1);
+		this.SetPageOfPreviousViewer(this.currentPage - 1);
+	}
    
 	PdfLoaded(data: any){
 		this.totalPages = data.numPages;
 	}
 	
 	PageRendered(e: CustomEvent){
-		let pdfViewer = document.getElementById("pdf-viewer");
+		let pdfViewer = document.getElementById("viewer-left");
 		let pdfViewerHeightString = getComputedStyle(pdfViewer).height;
 		let pdfViewerWidthString = getComputedStyle(pdfViewer).width;
 
@@ -68,16 +203,150 @@ export class PdfContentComponent{
 
 		if(!this.initialized){
 			this.setViewerSize();
-			this.page = 1;
+			this.currentPage = 1;
 			this.initialized = true;
 		}
 	}
    
    Prev(){
-      this.page--;
+		this.goingBack = true;
+		this.ShowPage(false, true, this.currentPage - 1);
    }
 
    Next(){
-      this.page++;
-   }
+		this.goingBack = false;
+		this.ShowPage(true, false, this.currentPage + 1);
+	}
+
+	SetPageOfCurrentViewer(page: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewerPage = page;
+				break;
+			case CurrentViewer.Second:
+				this.viewer2Page = page;
+				break;
+			case CurrentViewer.Third:
+				this.viewer3Page = page;
+				break;
+		}
+	}
+
+	SetPageOfNextViewer(page: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer2Page = page;
+				break;
+			case CurrentViewer.Second:
+				this.viewer3Page = page;
+				break;
+			case CurrentViewer.Third:
+				this.viewerPage = page;
+				break;
+		}
+	}
+
+	SetPageOfPreviousViewer(page: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer3Page = page;
+				break;
+			case CurrentViewer.Second:
+				this.viewerPage = page;
+				break;
+			case CurrentViewer.Third:
+				this.viewer2Page = page;
+				break;
+		}
+	}
+
+	SetZIndexOfCurrentViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewerZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewer2ZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewer3ZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetZIndexOfNextViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer2ZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewer3ZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewerZIndex = zIndex;
+				break;
+		}
+	}
+
+	SetZIndexOfPreviousViewer(zIndex: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer3ZIndex = zIndex;
+				break;
+			case CurrentViewer.Second:
+				this.viewerZIndex = zIndex;
+				break;
+			case CurrentViewer.Third:
+				this.viewer2ZIndex = zIndex;
+				break;
+		}
+	}
+	
+	SetLeftOfCurrentViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewerPositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewer2PositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewer3PositionLeft = left;
+				break;
+		}
+	}
+
+	SetLeftOfNextViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer2PositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewer3PositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewerPositionLeft = left;
+				break;
+		}
+	}
+
+	SetLeftOfPreviousViewer(left: number){
+		switch(this.currentViewer){
+			case CurrentViewer.First:
+				this.viewer3PositionLeft = left;
+				break;
+			case CurrentViewer.Second:
+				this.viewerPositionLeft = left;
+				break;
+			case CurrentViewer.Third:
+				this.viewer2PositionLeft = left;
+				break;
+		}
+	}
+}
+
+enum CurrentViewer{
+	First = 1,
+	Second = 2,
+	Third = 3
 }

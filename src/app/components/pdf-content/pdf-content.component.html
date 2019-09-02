@@ -1,18 +1,73 @@
-<pdf-viewer id="pdf-viewer"
-				class="mx-auto"
-				[src]="pdfContent"
-				[show-all]="false"
-				[page]="page"
-				[stick-to-page]="false"
-				[fit-to-page]="false"
-				[autoresize]="true"
-				[original-size]="false"
-				style="display: block;"
-				[style.width.px]="viewerWidth"
-				(after-load-complete)="PdfLoaded($event)"
-				(page-rendered)="PageRendered($event)"></pdf-viewer>
+<div id="viewer"
+		class="w-100"
+		style="position: absolute; background-color: white;"
+		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left 0.5s'"
+		[style.left.px]="viewerPositionLeft"
+		[style.z-index]="viewerZIndex">
+	<pdf-viewer 
+		id="viewer-left"
+		class="mx-auto"
+		[src]="pdfContent"
+		[show-all]="false"
+		[page]="viewerPage"
+		[stick-to-page]="false"
+		[fit-to-page]="false"
+		[autoresize]="true"
+		[original-size]="false"
+		style="display: block;"
+		[style.width.px]="viewerWidth"
+		(after-load-complete)="PdfLoaded($event)"
+		(page-rendered)="PageRendered($event)">
+	</pdf-viewer>
+</div>
+
+<div id="viewer2"
+		class="w-100"
+		style="position: absolute; background-color: white;"
+		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left 0.5s'"
+		[style.left.px]="viewer2PositionLeft"
+		[style.z-index]="viewer2ZIndex">
+	<pdf-viewer 
+		id="viewer-left2"
+		class="mx-auto"
+		[src]="pdfContent"
+		[show-all]="false"
+		[page]="viewer2Page"
+		[stick-to-page]="false"
+		[fit-to-page]="false"
+		[autoresize]="true"
+		[original-size]="false"
+		style="display: block;"
+		[style.width.px]="viewerWidth"
+		(after-load-complete)="PdfLoaded($event)"
+		(page-rendered)="PageRendered($event)">
+	</pdf-viewer>
+</div>
+
+<div id="viewer3"
+		class="w-100"
+		style="position: absolute; background-color: white;"
+		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left 0.5s'"
+		[style.left.px]="viewer3PositionLeft"
+		[style.z-index]="viewer3ZIndex">
+	<pdf-viewer 
+		id="viewer-left3"
+		class="mx-auto"
+		[src]="pdfContent"
+		[show-all]="false"
+		[page]="viewer3Page"
+		[stick-to-page]="false"
+		[fit-to-page]="false"
+		[autoresize]="true"
+		[original-size]="false"
+		style="display: block;"
+		[style.width.px]="viewerWidth"
+		(after-load-complete)="PdfLoaded($event)"
+		(page-rendered)="PageRendered($event)">
+	</pdf-viewer>
+</div>
 
 <div style="position: absolute; top: 0">
 	<button (click)="Prev()">Prev</button>
-	<button (click)="Next()">Next</button>
+   <button (click)="Next()">Next</button>
 </div>
