@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 
 const currentViewerZIndex = -2;
@@ -7,7 +8,10 @@ const previousPageViewerZIndex = -1;
 
 @Component({
 	selector: 'pocketlib-pdf-content',
-	templateUrl: './pdf-content.component.html'
+	templateUrl: './pdf-content.component.html',
+	styleUrls: [
+		"./pdf-content.component.scss"
+	]
 })
 export class PdfContentComponent{
 	pdfContent: Uint8Array = null;
@@ -35,25 +39,20 @@ export class PdfContentComponent{
 	viewer3ZIndex: number = 0;
 
 	constructor(
-		private dataService: DataService
+		private dataService: DataService,
+		private router: Router
 	){}
 
    async ngOnInit(){
 		this.setSize();
 
 		// Read the book blob as UInt8Array
-		var fileReader = new FileReader();
-		fileReader.onload = (event: ProgressEvent) => this.pdfContent = event.target["result"];
-		fileReader.readAsArrayBuffer(this.dataService.currentBook.file);
-
 		let readPromise: Promise<ProgressEvent> = new Promise(resolve => {
 			let fileReader = new FileReader();
 			fileReader.onload = resolve;
 			fileReader.readAsArrayBuffer(this.dataService.currentBook.file);
 		});
 		this.pdfContent = (await readPromise).target["result"];
-
-		this.ShowPage(false, false, 1);
 
 		// Customize pdf-viewer styles
 		let containers = document.getElementsByClassName('ng2-pdf-viewer-container');
@@ -73,17 +72,21 @@ export class PdfContentComponent{
 		this.setViewerSize();
 
 		this.showSecondPage = this.viewerWidth * 2 < this.width;
+
+		if(this.initialized){
+			this.ShowPage(false, false, this.currentPage);
+		}
 	}
 	
 	setViewerSize(){
-		if(this.viewerRatio > 0){
-			// width = height * viewerRadio
-			let newWidth = this.height * this.viewerRatio;
-			if(newWidth > this.width){
-				this.viewerWidth = this.width;
-			}else{
-				this.viewerWidth = newWidth - 10;
-			}
+		if(!this.initialized) return;
+
+		// width = height * viewerRadio
+		let newWidth = this.height * this.viewerRatio;
+		if(newWidth > this.width){
+			this.viewerWidth = this.width;
+		}else{
+			this.viewerWidth = newWidth - 10;
 		}
 	}
 
@@ -120,6 +123,7 @@ export class PdfContentComponent{
 			// Update the page of viewer 2
 		// !slideForward && !slideBack ?
 			// Update the pages
+			// Update the position and z-index of the viewers
 
 		if(slideForward && !slideBack){
 			// Move to the next viewer
@@ -136,6 +140,16 @@ export class PdfContentComponent{
 		}else if(!slideForward && !slideBack){
 			// Update the pages
 			this.UpdatePages(newPage);
+
+			// Update the positions of the viewers
+			this.SetLeftOfCurrentViewer(0);
+			this.SetLeftOfNextViewer(0);
+			this.SetLeftOfPreviousViewer(-this.width);
+
+			// Update the z-index of the viewers
+			this.SetZIndexOfCurrentViewer(currentViewerZIndex);
+			this.SetZIndexOfNextViewer(nextPageViewerZIndex);
+			this.SetZIndexOfPreviousViewer(previousPageViewerZIndex);
 		}
 	}
 
@@ -203,6 +217,9 @@ export class PdfContentComponent{
 	}
 	
 	PageRendered(e: CustomEvent){
+		if(this.initialized) return;
+		this.initialized = true;
+		
 		let pdfViewer = document.getElementById("viewer-left");
 		let pdfViewerHeightString = getComputedStyle(pdfViewer).height;
 		let pdfViewerWidthString = getComputedStyle(pdfViewer).width;
@@ -212,26 +229,26 @@ export class PdfContentComponent{
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
-		if(!this.initialized){
-			this.initialized = true;
-
-			this.setViewerSize();
-			this.ShowPage(true, false, 1);
-		}
+		this.ShowPage(false, false, 1);
+		this.setViewerSize();
 	}
    
    Prev(){
-		if(this.currentPage == 1) return;
+		if(this.currentPage <= 1) return;
 
 		this.goingBack = true;
 		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
    Next(){
-		if(this.currentPage == this.totalPages) return;
+		if(this.currentPage >= this.totalPages) return;
 
 		this.goingBack = false;
 		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
+	}
+
+	GoBack(){
+		this.router.navigate(["/"]);
 	}
 
 	SetPageOfCurrentViewer(page: number){
