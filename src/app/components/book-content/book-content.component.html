@@ -36,7 +36,7 @@
 
 <!-- Top Toolbar -->
 <button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()" *ngIf="!showBottomToolbar">
-	<i class="ms-Icon ms-Icon--ChromeBack" aria-hidden="true"></i>
+	<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
 </button>
 
 <div style="z-index: 2; float: right" *ngIf="!showBottomToolbar">
@@ -69,8 +69,9 @@
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
+<!-- Bottom toolbar -->
 <div class="w-100 d-flex justify-content-center"
-		style="z-index: 1; position: absolute; bottom: 0;"
+		style="z-index: 2; position: absolute; bottom: 0;"
 		[style.marginBottom.px]="bottomToolbarMarginBottom"
 		[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
 		*ngIf="showBottomToolbar">
@@ -82,7 +83,7 @@
 		</div>
 		<div>
 			<button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()">
-				<i class="ms-Icon ms-Icon--ChromeBack" aria-hidden="true"></i>
+				<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
 			</button>
 			<button mat-button class="book-toolbar-button" (click)="OpenChaptersPanel()">
 				<i class="ms-Icon ms-Icon--BulletedList" aria-hidden="true"></i>

@@ -10,6 +10,9 @@ const touchStart = "touchstart";
 const touchMove = "touchmove";
 const touchEnd = "touchend";
 const defaultViewerTransitionTime = 0.5;
+const defaultBottomToolbarTransitionTime = 0.2;
+const bottomToolbarMarginBottomOpened = 0;
+const bottomToolbarMarginBottomClosed = -40;
 
 @Component({
 	selector: 'pocketlib-pdf-content',
@@ -59,6 +62,7 @@ export class PdfContentComponent{
 	showBottomToolbar: boolean = false;		// Whether the bottom toolbar is visible
 	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
+	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
 	//#endregion
 
 	constructor(
@@ -376,6 +380,26 @@ export class PdfContentComponent{
 			this.touchDiffX = 0;
 			this.touchDiffY = 0;
 		}
+	}
+
+	OpenOrCloseBottomToolbar(){
+		if(this.bottomToolbarOpened){
+			// Close the bottom toolbar
+			this.CloseBottomToolbar();
+		}else{
+			// Open the bottom toolbar
+			this.OpenBottomToolbar();
+		}
+	}
+
+	OpenBottomToolbar(){
+		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+		this.bottomToolbarOpened = true;
+	}
+
+	CloseBottomToolbar(){
+		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+		this.bottomToolbarOpened = false;
 	}
 
 	SetPageOfCurrentViewer(page: number){
