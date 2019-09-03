@@ -24,6 +24,8 @@ export class PdfContentComponent{
 	initialized: boolean = false;
 	goingBack: boolean = false;
 	showSecondPage: boolean = false;
+	firstPage: boolean = false;	// If true, hides the previous button
+	lastPage: boolean = false;		// If true, hides the next button
 
 	viewerRatio: number = 0;
 	viewerWidth: number = 500;
@@ -210,6 +212,10 @@ export class PdfContentComponent{
 		this.SetPageOfCurrentViewer(this.currentPage);
 		this.SetPageOfNextViewer(this.currentPage + pageDiff);
 		this.SetPageOfPreviousViewer(this.currentPage - pageDiff);
+
+		// Update firstPage and lastPage
+		this.firstPage = this.currentPage <= 1;
+		this.lastPage = this.currentPage >= this.totalPages;
 	}
    
 	PdfLoaded(data: any){
@@ -234,14 +240,14 @@ export class PdfContentComponent{
 	}
    
    Prev(){
-		if(this.currentPage <= 1) return;
+		if(this.firstPage) return;
 
 		this.goingBack = true;
 		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
    Next(){
-		if(this.currentPage >= this.totalPages) return;
+		if(this.lastPage) return;
 
 		this.goingBack = false;
 		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));

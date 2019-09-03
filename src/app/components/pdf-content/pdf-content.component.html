@@ -111,7 +111,25 @@
 	</pdf-viewer>
 </div>
 
-<div style="position: absolute; top: 0">
-	<button (click)="Prev()">Prev</button>
-   <button (click)="Next()">Next</button>
-</div>
+<!-- Top Toolbar -->
+<button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()">
+	<i class="ms-Icon ms-Icon--ChromeBack" aria-hidden="true"></i>
+</button>
+
+<!-- Arrow buttons -->
+<button mat-button 
+		class="book-toolbar-button" 
+		style="position: absolute; width: 40px; left: 0; top: 40px;" 
+		[style.height.px]="height - 40" 
+		(click)="Prev()" 
+		*ngIf="!firstPage">
+	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+</button>
+<button mat-button 
+		class="book-toolbar-button" 
+		style="position: absolute; width: 40px; right: 0; top: 40px;" 
+		[style.height.px]="height - 40" 
+		(click)="Next()" 
+		*ngIf="!lastPage">
+	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
+</button>
