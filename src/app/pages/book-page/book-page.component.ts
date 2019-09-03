@@ -21,11 +21,18 @@ export class BookPageComponent{
    }
 
    ngOnInit(){
+      // Disable scrolling
+      document.body.setAttribute('style', 'overflow: hidden');
+
       // Select the correct rendering component, based on the mime type of the file
 		if(this.dataService.currentBook.file.type == epubType){
 			this.selectedPortal = new ComponentPortal(BookContentComponent)
 		}else if(this.dataService.currentBook.file.type == pdfType){
 			this.selectedPortal = new ComponentPortal(PdfContentComponent);
-		}
-	}
+      }
+   }
+   
+   ngOnDestroy(){
+      document.body.removeAttribute('style');
+   }
 }

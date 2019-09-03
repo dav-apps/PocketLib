@@ -55,6 +55,12 @@ export class PdfContentComponent{
 	touchDiffY: number = 0;
 	//#endregion
 
+	//#region Variables for the bottom toolbar
+	showBottomToolbar: boolean = false;		// Whether the bottom toolbar is visible
+	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
+	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
+	//#endregion
+
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -334,10 +340,10 @@ export class PdfContentComponent{
 				this.swipeStart = false;
 			}else if(this.swipeDirection == SwipeDirection.Horizontal){
 				// Move the pages
-				if(this.touchDiffX > 0){
+				if(this.touchDiffX > 0 && !this.lastPage){
 					// Swipe to the left; move the current viewer to the left
 					this.SetLeftOfCurrentViewer(-this.touchDiffX);
-				}else{
+				}else if(!this.firstPage){
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
 				}
@@ -347,7 +353,7 @@ export class PdfContentComponent{
 			this.viewerTransitionTime = defaultViewerTransitionTime;
 
 			if(this.swipeDirection == SwipeDirection.Horizontal){
-				if(this.touchDiffX > 0){
+				if(this.touchDiffX > 0 && !this.lastPage){
 					// If the page was swiped wide enough, show the next page
 					if(this.touchDiffX > this.width * 0.15){
 						this.NextPage();
@@ -355,7 +361,7 @@ export class PdfContentComponent{
 						// Move the page back
 						this.SetLeftOfCurrentViewer(0);
 					}
-				}else{
+				}else if(!this.firstPage){
 					// If the page was swiped wide enough, show the previous page
 					if(-this.touchDiffX > this.width * 0.2){
 						this.PrevPage();

@@ -86,7 +86,7 @@ export class BookContentComponent{
 	//#endregion
 
 	//#region Variables for the bottom toolbar
-	showBottomToolbar: boolean = false;
+	showBottomToolbar: boolean = false;       // Whether the bottom toolbar is visible
 	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
@@ -126,9 +126,6 @@ export class BookContentComponent{
 		this.viewerRight3 = document.getElementById("viewer-right3") as HTMLIFrameElement;
 		this.navigationHistory = [];
       this.setSize();
-      
-      // Disable scrolling
-      document.body.setAttribute('style', 'overflow: hidden');
 
 		if(this.dataService.currentBook){
 			// Load the ebook
@@ -176,7 +173,6 @@ export class BookContentComponent{
    
    ngOnDestroy(){
       $(document).unbind();
-      document.body.removeAttribute('style');
    }
 
 	@HostListener('window:resize')
@@ -664,10 +660,10 @@ export class BookContentComponent{
 				this.swipeStart = false;
 			}else if(this.swipeDirection == SwipeDirection.Horizontal){
 				// Move the pages
-				if(this.touchDiffX > 0){
+				if(this.touchDiffX > 0 && !this.lastPage){
 					// Swipe to the left; move the current viewer to the left
 					this.SetLeftOfCurrentViewer(-this.touchDiffX);
-				}else{
+				}else if(!this.firstPage){
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
 				}
@@ -690,7 +686,7 @@ export class BookContentComponent{
 			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
 
 			if(this.swipeDirection == SwipeDirection.Horizontal){
-				if(this.touchDiffX > 0){
+				if(this.touchDiffX > 0 && !this.lastPage){
 					// If the page was swiped wide enough, show the next page
 					if(this.touchDiffX > this.width * 0.15){
 						this.NextPage();
@@ -698,7 +694,7 @@ export class BookContentComponent{
 						// Move the page back
 						this.SetLeftOfCurrentViewer(0);
 					}
-				}else{
+				}else if(!this.firstPage){
 					// If the page was swiped wide enough, show the previous page
 					if(-this.touchDiffX > this.width * 0.2){
 						this.PrevPage();
