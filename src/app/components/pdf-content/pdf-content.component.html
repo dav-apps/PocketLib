@@ -1,7 +1,7 @@
 <div id="viewer"
 		class="w-100 d-flex"
 		style="position: absolute; background-color: white;"
-		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left 0.5s'"
+		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewerPositionLeft"
       [style.z-index]="viewerZIndex">
    
@@ -40,7 +40,7 @@
 <div id="viewer2"
 		class="w-100 d-flex"
 		style="position: absolute; background-color: white;"
-		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left 0.5s'"
+		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer2PositionLeft"
 		[style.z-index]="viewer2ZIndex">
 	
@@ -77,7 +77,7 @@
 <div id="viewer3"
 		class="w-100 d-flex"
 		style="position: absolute; background-color: white;"
-		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left 0.5s'"
+		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer3PositionLeft"
 		[style.z-index]="viewer3ZIndex">
 	

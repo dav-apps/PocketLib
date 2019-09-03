@@ -6,6 +6,10 @@ declare var $: any;
 const currentViewerZIndex = -2;
 const nextPageViewerZIndex = -3;
 const previousPageViewerZIndex = -1;
+const touchStart = "touchstart";
+const touchMove = "touchmove";
+const touchEnd = "touchend";
+const defaultViewerTransitionTime = 0.5;
 
 @Component({
 	selector: 'pocketlib-pdf-content',
@@ -40,6 +44,16 @@ export class PdfContentComponent{
 	viewerZIndex: number = 0;				// The z-index of the viewer; -1, -2 or -3
 	viewer2ZIndex: number = 0;
 	viewer3ZIndex: number = 0;
+	viewerTransitionTime: number = defaultViewerTransitionTime;
+
+	//#region Variables for touch events
+	swipeDirection: SwipeDirection = SwipeDirection.Horizontal;	// Whether the user swipes vertically or horizontally
+	swipeStart: boolean = false;
+	touchStartX: number = 0;
+	touchStartY: number = 0;
+	touchDiffX: number = 0;
+	touchDiffY: number = 0;
+	//#endregion
 
 	constructor(
 		private dataService: DataService,
@@ -67,12 +81,23 @@ export class PdfContentComponent{
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
 		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+
+		// Bind the touch events
+		document.getElementById('viewer').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer2').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById('viewer3').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
 	}
    
    @HostListener('window:resize')
 	onResize(){
 		this.setSize();
-   }
+	}
    
    setSize(){
       this.width = window.innerWidth;
@@ -287,6 +312,66 @@ export class PdfContentComponent{
 		}
 	}
 
+	HandleTouch(event: TouchEvent){
+		if(event.touches.length > 1) return;
+
+		if(event.type == touchStart){
+			let touch = event.touches.item(0);
+			this.touchStartX = touch.pageX;
+			this.touchStartY = touch.pageY;
+			this.swipeStart = true;
+
+			this.viewerTransitionTime = 0;
+		}else if(event.type == touchMove){
+			// Calculate the difference between the positions of the first touch and the current touch
+			let touch = event.touches.item(0);
+			this.touchDiffX = this.touchStartX - touch.pageX;
+			this.touchDiffY = this.touchStartY - touch.pageY;
+
+			if(this.swipeStart){
+				// Check if the user is swiping up or down
+				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical;
+				this.swipeStart = false;
+			}else if(this.swipeDirection == SwipeDirection.Horizontal){
+				// Move the pages
+				if(this.touchDiffX > 0){
+					// Swipe to the left; move the current viewer to the left
+					this.SetLeftOfCurrentViewer(-this.touchDiffX);
+				}else{
+					// Swipe to the right; move the left viewer to the right
+					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
+				}
+			}
+		}else if(event.type == touchEnd){
+			// Reset the transition times
+			this.viewerTransitionTime = defaultViewerTransitionTime;
+
+			if(this.swipeDirection == SwipeDirection.Horizontal){
+				if(this.touchDiffX > 0){
+					// If the page was swiped wide enough, show the next page
+					if(this.touchDiffX > this.width * 0.15){
+						this.NextPage();
+					}else{
+						// Move the page back
+						this.SetLeftOfCurrentViewer(0);
+					}
+				}else{
+					// If the page was swiped wide enough, show the previous page
+					if(-this.touchDiffX > this.width * 0.2){
+						this.PrevPage();
+					}else{
+						this.SetLeftOfPreviousViewer(-this.width);
+					}
+				}
+			}
+
+			this.touchStartX = 0;
+			this.touchStartY = 0;
+			this.touchDiffX = 0;
+			this.touchDiffY = 0;
+		}
+	}
+
 	SetPageOfCurrentViewer(page: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
@@ -418,4 +503,9 @@ enum CurrentViewer{
 	First = 1,
 	Second = 2,
 	Third = 3
+}
+
+enum SwipeDirection{
+	Horizontal,
+	Vertical
 }
