@@ -82,7 +82,7 @@ export class BookContentComponent{
    touchStartY: number = 0;
    touchDiffX: number = 0;
 	touchDiffY: number = 0;
-	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar when the swiping has started
+	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
 	//#endregion
 
 	//#region Variables for the bottom toolbar

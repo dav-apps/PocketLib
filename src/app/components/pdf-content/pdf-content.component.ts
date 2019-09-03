@@ -56,6 +56,7 @@ export class PdfContentComponent{
 	touchStartY: number = 0;
 	touchDiffX: number = 0;
 	touchDiffY: number = 0;
+	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
 	//#endregion
 
 	//#region Variables for the bottom toolbar
@@ -114,6 +115,7 @@ export class PdfContentComponent{
 		this.height = window.innerHeight;
 		this.setViewerSize();
 
+		this.showBottomToolbar = this.width < 500;
 		this.showSecondPage = this.viewerWidth * 2 < this.width;
 
 		if(this.initialized){
@@ -332,6 +334,7 @@ export class PdfContentComponent{
 			this.swipeStart = true;
 
 			this.viewerTransitionTime = 0;
+			this.bottomToolbarTransitionTime = 0;
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
@@ -341,6 +344,8 @@ export class PdfContentComponent{
 			if(this.swipeStart){
 				// Check if the user is swiping up or down
 				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical;
+				this.touchStartBottomToolbarMarginBottom = this.bottomToolbarMarginBottom;
+
 				this.swipeStart = false;
 			}else if(this.swipeDirection == SwipeDirection.Horizontal){
 				// Move the pages
@@ -351,10 +356,23 @@ export class PdfContentComponent{
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX);
 				}
+			}else if(this.swipeDirection == SwipeDirection.Vertical && this.showBottomToolbar){
+				// Update the margin bottom of the bottom toolbar
+				this.bottomToolbarMarginBottom = this.touchStartBottomToolbarMarginBottom + (this.touchDiffY / 2);
+
+				// Make sure the bottom toolbar does not move outside its area
+				if(this.bottomToolbarMarginBottom > bottomToolbarMarginBottomOpened){
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+					this.bottomToolbarOpened = true;
+				}else if(this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed){
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+					this.bottomToolbarOpened = false;
+				}
 			}
 		}else if(event.type == touchEnd){
 			// Reset the transition times
 			this.viewerTransitionTime = defaultViewerTransitionTime;
+			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
 
 			if(this.swipeDirection == SwipeDirection.Horizontal){
 				if(this.touchDiffX > 0 && !this.lastPage){
