@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
+declare var $: any;
 
 const currentViewerZIndex = -2;
 const nextPageViewerZIndex = -3;
@@ -16,9 +17,9 @@ const previousPageViewerZIndex = -1;
 export class PdfContentComponent{
 	pdfContent: Uint8Array = null;
 	currentPage: number = 0;
-	viewerPage: number = 0;
-	viewer2Page: number = 0;
-	viewer3Page: number = 0;
+	viewerPage: number;
+	viewer2Page: number;
+	viewer3Page: number;
 	totalPages: number = 0;
 	isLoaded: boolean = false;
 	initialized: boolean = false;
@@ -42,7 +43,8 @@ export class PdfContentComponent{
 
 	constructor(
 		private dataService: DataService,
-		private router: Router
+		private router: Router,
+		private ngZone: NgZone
 	){}
 
    async ngOnInit(){
@@ -61,6 +63,10 @@ export class PdfContentComponent{
 		for(let i = 0; i < containers.length; i++){
 			containers.item(i).setAttribute("style", "overflow-x: hidden");
 		}
+
+		// Bind the keydown and wheel events
+		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
+		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 	}
    
    @HostListener('window:resize')
@@ -218,6 +224,24 @@ export class PdfContentComponent{
 		this.lastPage = this.currentPage >= this.totalPages;
 	}
    
+   PrevPage(){
+		if(this.firstPage) return;
+
+		this.goingBack = true;
+		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
+   }
+
+   NextPage(){
+		if(this.lastPage) return;
+
+		this.goingBack = false;
+		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
+	}
+
+	GoBack(){
+		this.router.navigate(["/"]);
+	}
+
 	PdfLoaded(data: any){
 		this.totalPages = data.numPages;
 	}
@@ -238,23 +262,29 @@ export class PdfContentComponent{
 		this.ShowPage(false, false, 1);
 		this.setViewerSize();
 	}
-   
-   Prev(){
-		if(this.firstPage) return;
 
-		this.goingBack = true;
-		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
-   }
-
-   Next(){
-		if(this.lastPage) return;
-
-		this.goingBack = false;
-		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
+	onKeyDown(keyCode: number){
+		switch (keyCode) {
+			case 8:		// Back key
+				this.ngZone.run(() => this.GoBack());
+				break;
+			case 37:		// Left arrow key
+				this.ngZone.run(() => this.PrevPage());
+				break;
+			case 39:		// Right arrow key
+				this.ngZone.run(() => this.NextPage());
+				break;
+		}
 	}
 
-	GoBack(){
-		this.router.navigate(["/"]);
+	onMouseWheel(wheelDelta: number){
+		if(wheelDelta > 0){
+			// Wheel up
+			this.ngZone.run(() => this.PrevPage());
+		}else{
+			// Wheel down
+			this.ngZone.run(() => this.NextPage());
+		}
 	}
 
 	SetPageOfCurrentViewer(page: number){

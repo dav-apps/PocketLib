@@ -121,7 +121,7 @@
 		class="book-toolbar-button" 
 		style="position: absolute; width: 40px; left: 0; top: 40px;" 
 		[style.height.px]="height - 40" 
-		(click)="Prev()" 
+		(click)="PrevPage()" 
 		*ngIf="!firstPage">
 	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
 </button>
@@ -129,7 +129,7 @@
 		class="book-toolbar-button" 
 		style="position: absolute; width: 40px; right: 0; top: 40px;" 
 		[style.height.px]="height - 40" 
-		(click)="Next()" 
+		(click)="NextPage()" 
 		*ngIf="!lastPage">
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
