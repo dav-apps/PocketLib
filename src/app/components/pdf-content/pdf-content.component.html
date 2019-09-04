@@ -33,7 +33,7 @@
 		[original-size]="false"
       style="display: block;"
 		[style.width.px]="viewerWidth"
-		[style.display]="showSecondPage ? '' : 'none'">
+		[style.display]="(showSecondPage && (viewerPage + 1) <= totalPages) ? '' : 'none'">
    </pdf-viewer>
 </div>
 
@@ -70,7 +70,7 @@
 		[original-size]="false"
 		style="display: block;"
 		[style.width.px]="viewerWidth"
-		[style.display]="showSecondPage ? '' : 'none'">
+		[style.display]="(showSecondPage && (viewer2Page + 1) <= totalPages) ? '' : 'none'">
 	</pdf-viewer>
 </div>
 
@@ -107,7 +107,7 @@
 		[original-size]="false"
       style="display: block;"
 		[style.width.px]="viewerWidth"
-		[style.display]="showSecondPage ? '' : 'none'">
+		[style.display]="(showSecondPage && (viewer3Page + 1) <= totalPages) ? '' : 'none'">
 	</pdf-viewer>
 </div>
 
