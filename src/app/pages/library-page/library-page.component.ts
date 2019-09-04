@@ -74,8 +74,8 @@ export class LibraryPageComponent{
 		this.selectedBook = book;
 		
 		// Set the position of the context menu
-		this.contextMenuPositionX = event.clientX;
-		this.contextMenuPositionY = event.clientY;
+		this.contextMenuPositionX = event.pageX;
+		this.contextMenuPositionY = event.pageY;
 
 		if(this.contextMenuVisible){
 			this.contextMenuVisible = false;
