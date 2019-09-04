@@ -10,14 +10,14 @@ export class Book{
 	public title: string = "";
 	public author: string;
    public cover: string;
-   public chapter: number = 0;		// The current chapter
-   public progress: number = 0;		// The progress in the chapter in percent * progressFactor
+   public chapter: number = 0;		// The current chapter (epub) or 0 (pdf)
+   public progress: number = 1;		// The progress in the chapter in percent * progressFactor (epub) or page number (pdf)
 
    constructor(
 		public file: Blob,
 		title: string = "",
 		chapter: number = 0,
-		progress: number = 0
+		progress: number = 1
 	){
 		if(this.file.type == pdfType){
 			this.title = title;
@@ -36,6 +36,12 @@ export class Book{
 	public async SetPosition(chapter: number, progress: number){
 		this.chapter = chapter;
 		this.progress = progress;
+		await this.Save();
+	}
+
+	public async SetPage(page: number){
+		this.chapter = 0;
+		this.progress = page;
 		await this.Save();
 	}
 
@@ -61,9 +67,13 @@ export class Book{
 
 		let properties: {name: string, value: string}[] = [
 			{ name: environment.bookTableTitleKey, value: this.title },
-			{ name: environment.bookTableChapterKey, value: this.chapter.toString() },
 			{ name: environment.bookTableProgressKey, value: this.progress.toString() }
 		];
+
+		// Save the chapter only if it is not 0
+		if(this.chapter != 0){
+			properties.push({ name: environment.bookTableChapterKey, value: this.chapter.toString() });
+		}
 
 		if(tableObject){
 			// Check if the table object has a file table object

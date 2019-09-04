@@ -110,7 +110,7 @@ export class PdfContentComponent{
 		this.setSize();
 	}
    
-   setSize(){
+   async setSize(){
       this.width = window.innerWidth;
 		this.height = window.innerHeight;
 		this.setViewerSize();
@@ -119,7 +119,7 @@ export class PdfContentComponent{
 		this.showSecondPage = this.viewerWidth * 2 < this.width;
 
 		if(this.initialized){
-			this.ShowPage(false, false, this.currentPage);
+			await this.ShowPage(false, false, this.currentPage);
 		}
 	}
 	
@@ -157,7 +157,7 @@ export class PdfContentComponent{
 	 * |_____|  |_____|---|
 	 * 
 	 */
-	ShowPage(slideForward: boolean = false, slideBack: boolean = false, newPage: number){
+	async ShowPage(slideForward: boolean = false, slideBack: boolean = false, newPage: number){
 		// slideForward && !slideBack ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
@@ -195,7 +195,10 @@ export class PdfContentComponent{
 			this.SetZIndexOfCurrentViewer(currentViewerZIndex);
 			this.SetZIndexOfNextViewer(nextPageViewerZIndex);
 			this.SetZIndexOfPreviousViewer(previousPageViewerZIndex);
-		}
+      }
+      
+      // Save the new progress
+      await this.dataService.currentBook.SetPage(this.currentPage);
 	}
 
 	MoveViewersClockwise(){
@@ -261,18 +264,18 @@ export class PdfContentComponent{
 		this.lastPage = this.currentPage >= this.totalPages;
 	}
    
-   PrevPage(){
+   async PrevPage(){
 		if(this.firstPage) return;
 
 		this.goingBack = true;
-		this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
+		await this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
-   NextPage(){
+   async NextPage(){
 		if(this.lastPage) return;
 
 		this.goingBack = false;
-		this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
+		await this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
 	}
 
 	GoBack(){
@@ -296,7 +299,7 @@ export class PdfContentComponent{
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
-		this.ShowPage(false, false, 1);
+		this.ShowPage(false, false, this.dataService.currentBook.progress);
 		this.setViewerSize();
 	}
 
