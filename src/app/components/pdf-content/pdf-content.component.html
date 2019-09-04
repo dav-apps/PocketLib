@@ -32,8 +32,8 @@
       [autoresize]="true"
 		[original-size]="false"
       style="display: block;"
-      [style.width.px]="viewerWidth"
-		*ngIf="showSecondPage">
+		[style.width.px]="viewerWidth"
+		[style.display]="showSecondPage ? '' : 'none'">
    </pdf-viewer>
 </div>
 
@@ -70,7 +70,7 @@
 		[original-size]="false"
 		style="display: block;"
 		[style.width.px]="viewerWidth"
-		*ngIf="showSecondPage">
+		[style.display]="showSecondPage ? '' : 'none'">
 	</pdf-viewer>
 </div>
 
@@ -106,13 +106,13 @@
       [autoresize]="true"
 		[original-size]="false"
       style="display: block;"
-      [style.width.px]="viewerWidth"
-		*ngIf="showSecondPage">
+		[style.width.px]="viewerWidth"
+		[style.display]="showSecondPage ? '' : 'none'">
 	</pdf-viewer>
 </div>
 
 <!-- Top Toolbar -->
-<button mat-button class="book-toolbar-button" style="font-size: 16px" (click)="GoBack()" *ngIf="!showBottomToolbar">
+<button mat-button class="book-toolbar-button" style="font-size: 16px; background-color: white;" (click)="GoBack()" *ngIf="!showBottomToolbar">
 	<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
 </button>
 
