@@ -118,7 +118,7 @@ export class PdfContentComponent{
 		this.showBottomToolbar = this.width < 500;
 		this.showSecondPage = this.viewerWidth * 2 < this.width;
 
-		if(this.showSecondPage && this.currentPage % 2 == 0) this.currentPage--;
+		if(this.showSecondPage && this.currentPage > 0 && this.currentPage % 2 == 0) this.currentPage--;
 
 		if(this.initialized){
 			await this.ShowPage(false, false, this.currentPage);
@@ -301,11 +301,9 @@ export class PdfContentComponent{
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
-		let savedPage = this.dataService.currentBook.progress;
-		if(this.showSecondPage && savedPage % 2 == 0) savedPage--;
-
-		this.ShowPage(false, false, savedPage);
-		this.setViewerSize();
+		this.currentPage = this.dataService.currentBook.progress;
+		this.setSize();
+		this.ShowPage(false, false, this.dataService.currentBook.progress);
 	}
 
 	onKeyDown(keyCode: number){
