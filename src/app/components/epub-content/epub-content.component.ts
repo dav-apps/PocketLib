@@ -20,13 +20,13 @@ const defaultViewerTransitionTime = 0.5;
 const defaultBottomToolbarTransitionTime = 0.2;
 
 @Component({
-	selector: 'pocketlib-book-content',
-	templateUrl: './book-content.component.html',
+	selector: 'pocketlib-epub-content',
+	templateUrl: './epub-content.component.html',
 	styleUrls: [
-      './book-content.component.scss'
+      './epub-content.component.scss'
    ]
 })
-export class BookContentComponent{
+export class EpubContentComponent{
 	locale = enUS.bookContent;
 	book = new EpubBook();
 	chapters: BookChapter[] = [];

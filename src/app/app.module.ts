@@ -31,7 +31,7 @@ import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { BookContentComponent } from './components/book-content/book-content.component';
+import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
@@ -51,7 +51,7 @@ import { environment } from '../environments/environment';
       NewAppPageComponent,
       AuthorPageComponent,
       LoginPageComponent,
-      BookContentComponent,
+      EpubContentComponent,
       PdfContentComponent,
       ChaptersTreeComponent,
       LogoutModalComponent,
@@ -83,7 +83,7 @@ import { environment } from '../environments/environment';
    ],
    bootstrap: [AppComponent],
    entryComponents: [
-      BookContentComponent,
+      EpubContentComponent,
       PdfContentComponent
    ]
 })
