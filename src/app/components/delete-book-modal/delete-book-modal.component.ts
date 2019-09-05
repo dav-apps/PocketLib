@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Book } from 'src/app/models/Book';
+import { EpubBook } from 'src/app/models/EpubBook';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
 
@@ -11,7 +11,7 @@ import { DataService } from 'src/app/services/data-service';
 export class DeleteBookModalComponent{
    locale = enUS.deleteBookModal;
 	@Output() delete = new EventEmitter();
-	@Input() book: Book;
+	@Input() book: EpubBook;
 	@ViewChild('deleteBookModal', {static: true}) deleteBookModal: ElementRef;
 
 	constructor(
@@ -21,7 +21,7 @@ export class DeleteBookModalComponent{
       this.locale = this.dataService.GetLocale().deleteBookModal;
    }
 
-	Show(book?: Book){
+	Show(book?: EpubBook){
 		if(book){
 			this.book = book;
 		}

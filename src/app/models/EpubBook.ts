@@ -5,7 +5,7 @@ import { EpubReader } from './EpubReader';
 const epubType = "application/epub+zip";
 const pdfType = "application/pdf";
 
-export class Book{
+export class EpubBook{
    public uuid: string;
 	public title: string = "";
 	public author: string;
@@ -28,7 +28,7 @@ export class Book{
 	}
 	
 	public static async Create(file: Blob, title: string) : Promise<string>{
-      let book = new Book(file, title);
+      let book = new EpubBook(file, title);
 		await book.Save();
 		return book.uuid;
 	}
@@ -110,9 +110,9 @@ export class Book{
 	}
 }
 
-export async function GetAllBooks() : Promise<Book[]>{
+export async function GetAllBooks() : Promise<EpubBook[]>{
 	let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
-	let books: Book[] = [];
+	let books: EpubBook[] = [];
 
 	for(let tableObject of tableObjects){
 		let book = await GetBookByTableObject(tableObject);
@@ -123,7 +123,7 @@ export async function GetAllBooks() : Promise<Book[]>{
 	return books;
 }
 
-export async function GetBook(uuid: string) : Promise<Book>{
+export async function GetBook(uuid: string) : Promise<EpubBook>{
 	let tableObject = await GetTableObject(uuid);
 	if(!tableObject) return null;
 
@@ -133,7 +133,7 @@ export async function GetBook(uuid: string) : Promise<Book>{
 	return book;
 }
 
-function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : Book{
+function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : EpubBook{
 	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null;
 	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null;
 
@@ -157,12 +157,12 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 		progress = Number.parseInt(progressString);
 	}
 
-   let book = new Book(file, title, chapter, progress);
+   let book = new EpubBook(file, title, chapter, progress);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }
 
-async function LoadBookDetails(book: Book){
+async function LoadBookDetails(book: EpubBook){
 	if(book.file.type != epubType) return;
 
 	let epubReader = new EpubReader();
@@ -173,7 +173,7 @@ async function LoadBookDetails(book: Book){
 	book.cover = epubReader.coverSrc;
 }
 
-async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
+async function GetBookByTableObject(tableObject: TableObject) : Promise<EpubBook>{
 	// Get the book file
 	let fileTableObject = await GetBookFileOfBookTableObject(tableObject);
 	if(!fileTableObject) return null;

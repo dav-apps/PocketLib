@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { DavUser, GetAllTableObjects } from 'dav-npm';
-import { Book, GetAllBooks, GetBook } from '../models/Book';
+import { EpubBook, GetAllBooks, GetBook } from '../models/EpubBook';
 import { environment } from 'src/environments/environment';
 import * as locales from 'src/locales/locales';
 import * as localforage from 'localforage';
@@ -10,8 +10,8 @@ export class DataService{
    user: DavUser;
    locale: string = navigator.language;
    navbarVisible: boolean = true;
-   books: Book[] = [];
-	currentBook: Book = null;
+   books: EpubBook[] = [];
+	currentBook: EpubBook = null;
 	darkTheme: boolean = false;
 	windowsUiSettings = null;
 

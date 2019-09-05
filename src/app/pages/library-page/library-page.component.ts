@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { Router } from '@angular/router';
 import { ReadFile } from 'ngx-file-helpers';
-import { Book } from 'src/app/models/Book';
+import { EpubBook } from 'src/app/models/EpubBook';
 import { DataService } from 'src/app/services/data-service';
 import { transition, trigger, state, style, animate } from '@angular/animations';
 import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
@@ -36,7 +36,7 @@ export class LibraryPageComponent{
 	contextMenuVisible: boolean = false;
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
-	selectedBook: Book;
+	selectedBook: EpubBook;
    hoveredBookIndex: number = -1;	// The currently hovered book, for showing the shadow
    addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
 
@@ -61,16 +61,16 @@ export class LibraryPageComponent{
 
 	async filePick(file: ReadFile){
 		// Create a new book
-      await Book.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')));
+      await EpubBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')));
       await this.dataService.LoadAllBooks();
 	}
    
-   ShowBook(book: Book){
+   ShowBook(book: EpubBook){
 		this.dataService.currentBook = book;
 		this.router.navigate(["book"]);
    }
 
-   onContextMenu(event: MouseEvent, book: Book){
+   onContextMenu(event: MouseEvent, book: EpubBook){
 		this.selectedBook = book;
 		
 		// Set the position of the context menu
