@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { BehaviorSubject } from 'rxjs';
-import { EpubTocItem } from 'src/app/models/EpubBook';
+import { EpubTocItem } from 'src/app/models/EpubReader';
 
 @Component({
 	selector: 'pocketlib-chapters-tree',

@@ -1,6 +1,6 @@
 import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
-import { EpubBook } from './EpubBook';
+import { EpubReader } from './EpubReader';
 
 const epubType = "application/epub+zip";
 const pdfType = "application/pdf";
@@ -165,12 +165,12 @@ function ConvertTableObjectsToBook(bookTableObject: TableObject, bookFileTableOb
 async function LoadBookDetails(book: Book){
 	if(book.file.type != epubType) return;
 
-	let epubBook = new EpubBook();
-	await epubBook.ReadEpubFile(book.file);
+	let epubReader = new EpubReader();
+	await epubReader.ReadEpubFile(book.file);
 
-	book.title = epubBook.title;
-	book.author = epubBook.author;
-	book.cover = epubBook.coverSrc;
+	book.title = epubReader.title;
+	book.author = epubReader.author;
+	book.cover = epubReader.coverSrc;
 }
 
 async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{

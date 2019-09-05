@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 
-export class EpubBook{
+export class EpubReader{
    title: string;
    author: string;
    language: string;
@@ -139,7 +139,7 @@ export class EpubChapter{
    private currentPath: string;
 
    constructor(
-		public book: EpubBook,
+		public book: EpubReader,
       public id: string,
 		public filePath: string,
 		public htmlContent: string

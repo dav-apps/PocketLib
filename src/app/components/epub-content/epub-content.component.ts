@@ -1,7 +1,7 @@
 import { Component, HostListener, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
-import { EpubBook } from 'src/app/models/EpubBook';
+import { EpubReader } from 'src/app/models/EpubReader';
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
 import { enUS } from 'src/locales/locales';
 declare var $: any;
@@ -28,7 +28,7 @@ const defaultBottomToolbarTransitionTime = 0.2;
 })
 export class EpubContentComponent{
 	locale = enUS.bookContent;
-	book = new EpubBook();
+	book = new EpubReader();
 	chapters: BookChapter[] = [];
 	initialized: boolean = false;
 
