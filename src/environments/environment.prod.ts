@@ -7,11 +7,14 @@ export const environment = {
    bookTableId: 14,
    bookFileTableId: 15,
    appTableId: 16,
-   // Keys for Book table properties
-   bookTableTitleKey: "title",
+   // Shared keys for book table
    bookTableFileUuidKey: "file_uuid",
-   bookTableChapterKey: "chapter",
-   bookTableProgressKey: "progress",
+	// Keys for EpubBook
+	epubBookTableChapterKey: "chapter",
+	epubBookTableProgressKey: "progress",
+	// Keys for PdfBook
+	pdfBookTableTitleKey: "title",
+	pdfBookTablePageKey: "page",
    // Keys for App table properties
    appTableNameKey: "name",
    appTableUrlKey: "url",

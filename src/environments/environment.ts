@@ -8,14 +8,17 @@ export const environment = {
    baseUrl: "http://localhost:3001",
    version: "0.3",
    appId: 6,
-   bookTableId: 14,
+	bookTableId: 14,
    bookFileTableId: 15,
-   appTableId: 16,
-   // Keys for Book table properties
-   bookTableTitleKey: "title",
-   bookTableFileUuidKey: "file_uuid",
-   bookTableChapterKey: "chapter",
-   bookTableProgressKey: "progress",
+	appTableId: 16,
+	// Shared keys for book table
+	bookTableFileUuidKey: "file_uuid",
+   // Keys for EpubBook
+	epubBookTableChapterKey: "chapter",
+	epubBookTableProgressKey: "progress",
+	// Keys for PdfBook
+	pdfBookTableTitleKey: "title",
+	pdfBookTablePageKey: "page",
    // Keys for App table properties
    appTableNameKey: "name",
    appTableUrlKey: "url",
