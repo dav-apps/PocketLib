@@ -1,11 +1,14 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { Router } from '@angular/router';
-import { ReadFile } from 'ngx-file-helpers';
-import { EpubBook } from 'src/app/models/EpubBook';
-import { DataService } from 'src/app/services/data-service';
 import { transition, trigger, state, style, animate } from '@angular/animations';
-import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
+import { ReadFile } from 'ngx-file-helpers';
 import { enUS } from 'src/locales/locales';
+import { DataService } from 'src/app/services/data-service';
+import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
+import { EpubBook } from 'src/app/models/EpubBook';
+import { PdfBook } from 'src/app/models/PdfBook';
+
+const pdfType = "application/pdf";
 
 @Component({
    selector: "pocketlib-library-page",
@@ -61,7 +64,11 @@ export class LibraryPageComponent{
 
 	async filePick(file: ReadFile){
 		// Create a new book
-      await EpubBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')));
+		if(file.type == pdfType){
+			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')));
+		}else{
+			await EpubBook.Create(file.underlyingFile);
+		}
       await this.dataService.LoadAllBooks();
 	}
    

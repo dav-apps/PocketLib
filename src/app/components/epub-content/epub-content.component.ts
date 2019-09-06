@@ -1,9 +1,10 @@
 import { Component, HostListener, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
-import { EpubReader } from 'src/app/models/EpubReader';
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
 import { enUS } from 'src/locales/locales';
+import { EpubBook } from 'src/app/models/EpubBook';
+import { EpubReader } from 'src/app/models/EpubReader';
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -145,8 +146,8 @@ export class EpubContentComponent{
 			}
 
 			// Get the current chapter and progress of the book
-			let chapter = this.dataService.currentBook.chapter;
-			let progress = this.dataService.currentBook.progress;
+			let chapter = (this.dataService.currentBook as EpubBook).chapter;
+			let progress = (this.dataService.currentBook as EpubBook).progress;
 			this.currentChapter = chapter;
 			this.currentViewer = CurrentViewer.First;
 			
@@ -396,7 +397,7 @@ export class EpubContentComponent{
 			}
 
 			// Save the new progress
-			await this.dataService.currentBook.SetPosition(this.currentChapter, newProgress);
+			await (this.dataService.currentBook as EpubBook).SetPosition(this.currentChapter, newProgress);
 		}
 
 		this.showPageRunning = false;

@@ -1,17 +1,18 @@
 import { Injectable } from "@angular/core";
+import * as localforage from 'localforage';
 import { DavUser, GetAllTableObjects } from 'dav-npm';
-import { EpubBook, GetAllBooks, GetBook } from '../models/EpubBook';
 import { environment } from 'src/environments/environment';
 import * as locales from 'src/locales/locales';
-import * as localforage from 'localforage';
+import { Book } from '../models/Book';
+import { GetAllBooks, GetBook } from '../models/BookManager';
 
 @Injectable()
 export class DataService{
    user: DavUser;
    locale: string = navigator.language;
    navbarVisible: boolean = true;
-   books: EpubBook[] = [];
-	currentBook: EpubBook = null;
+   books: Book[] = [];
+	currentBook: Book = null;
 	darkTheme: boolean = false;
 	windowsUiSettings = null;
 

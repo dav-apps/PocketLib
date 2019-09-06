@@ -1,6 +1,7 @@
 import { Component, HostListener, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
+import { PdfBook } from 'src/app/models/PdfBook';
 declare var $: any;
 
 const currentViewerZIndex = -2;
@@ -200,7 +201,7 @@ export class PdfContentComponent{
       }
       
       // Save the new progress
-      await this.dataService.currentBook.SetPage(this.currentPage);
+      await (this.dataService.currentBook as PdfBook).SetPage(this.currentPage);
 	}
 
 	MoveViewersClockwise(){
@@ -301,9 +302,9 @@ export class PdfContentComponent{
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
-		this.currentPage = this.dataService.currentBook.progress;
+		this.currentPage = (this.dataService.currentBook as PdfBook).page;
 		this.setSize();
-		this.ShowPage(false, false, this.dataService.currentBook.progress);
+		this.ShowPage(false, false, (this.dataService.currentBook as PdfBook).page);
 	}
 
 	onKeyDown(keyCode: number){

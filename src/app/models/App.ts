@@ -1,5 +1,5 @@
 import { GetTableObject, TableObject, GetAllTableObjects } from 'dav-npm';
-import { environment } from "../../environments/environment";
+import { environment } from "src/environments/environment";
 
 export class App{
 	public uuid: string;
