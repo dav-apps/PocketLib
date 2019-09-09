@@ -18,7 +18,8 @@ export const environment = {
 	epubBookTableProgressKey: "progress",
 	// Keys for PdfBook
 	pdfBookTableTitleKey: "title",
-	pdfBookTablePageKey: "page",
+   pdfBookTablePageKey: "page",
+   pdfBookTableBookmarksKey: "bookmarks",
    // Keys for App table properties
    appTableNameKey: "name",
    appTableUrlKey: "url",

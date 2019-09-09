@@ -103,9 +103,19 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 	let pageString = bookTableObject.GetPropertyValue(environment.pdfBookTablePageKey);
 	if(pageString){
 		page = Number.parseInt(pageString);
+   }
+   
+   // Get the bookmarks
+   let bookmarks: number[] = [];
+	let bookmarksString = bookTableObject.GetPropertyValue(environment.pdfBookTableBookmarksKey);
+	if(bookmarksString){
+		for(let bookmark of bookmarksString.split(',')){
+			let page = +bookmark;
+			if(page > 0) bookmarks.push(page);
+		}
 	}
 
-	let book = new PdfBook(file, title, page);
+	let book = new PdfBook(file, title, page, bookmarks);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }
