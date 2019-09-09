@@ -24,6 +24,7 @@ const bottomToolbarMarginBottomClosed = -40;
 })
 export class PdfContentComponent{
 	pdfContent: Uint8Array = null;
+	currentBook: PdfBook;
 	currentPage: number = 0;
 	viewerPage: number;
 	viewer2Page: number;
@@ -67,6 +68,11 @@ export class PdfContentComponent{
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
 	//#endregion
 
+	//#region Variables for Booksmarks panel
+	currentPageBookmarked: boolean = false;
+	showBookmarksPanel: boolean = false;
+	//#endregion
+
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -74,6 +80,7 @@ export class PdfContentComponent{
 	){}
 
    async ngOnInit(){
+		this.currentBook = this.dataService.currentBook as PdfBook;
 		this.setSize();
 
 		// Read the book blob as UInt8Array
@@ -201,7 +208,14 @@ export class PdfContentComponent{
       }
       
       // Save the new progress
-      await (this.dataService.currentBook as PdfBook).SetPage(this.currentPage);
+		await this.currentBook.SetPage(this.currentPage);
+		
+		// Set currentPageBookmarked
+		if(this.showSecondPage){
+			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1);
+		}else{
+			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage);
+		}
 	}
 
 	MoveViewersClockwise(){
@@ -302,9 +316,9 @@ export class PdfContentComponent{
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight;
 
-		this.currentPage = (this.dataService.currentBook as PdfBook).page;
+		this.currentPage = this.currentBook.page;
 		this.setSize();
-		this.ShowPage(false, false, (this.dataService.currentBook as PdfBook).page);
+		this.ShowPage(false, false, this.currentBook.page);
 	}
 
 	onKeyDown(keyCode: number){
@@ -425,6 +439,26 @@ export class PdfContentComponent{
 	CloseBottomToolbar(){
 		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
 		this.bottomToolbarOpened = false;
+	}
+
+	async AddOrRemoveBookmark(){
+		let removeBookmark: boolean = false;
+
+		if(this.showSecondPage){
+			removeBookmark = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1);
+		}else{
+			removeBookmark = this.currentBook.bookmarks.includes(this.currentPage);
+		}
+		
+		if(removeBookmark && this.showSecondPage){
+			await this.currentBook.RemoveBookmarks(this.currentPage, this.currentPage + 1);
+		}else if(removeBookmark){
+			await this.currentBook.RemoveBookmark(this.currentPage);
+		}else{
+			this.currentBook.AddBookmark(this.currentPage);
+		}
+
+		this.currentPageBookmarked = !removeBookmark;
 	}
 
 	SetPageOfCurrentViewer(page: number){

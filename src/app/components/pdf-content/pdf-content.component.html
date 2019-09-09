@@ -141,10 +141,10 @@
    </button>
    
    <div style="float: right">
-      <button mat-button class="book-toolbar-button">
-         <i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
+      <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
+         <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
       </button>
-      <button mat-button class="book-toolbar-button" style="float: right;">
+      <button mat-button class="book-toolbar-button" style="float: right;" (click)="showBookmarksPanel = true">
          <i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
       </button>
    </div>
@@ -168,13 +168,22 @@
 			</button>
 
 			<div class="mx-auto">
-				<button mat-button class="book-toolbar-button">
+				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
-				<button mat-button class="book-toolbar-button">
-					<i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
+				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
+					<i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<fab-panel [isOpen]="showBookmarksPanel"
+            isLightDismiss="true"
+            (onDismissed)="showBookmarksPanel = false"
+            (onLightDismissClick)="showBookmarksPanel = false"
+            isHiddenOnDismiss="true"
+            headerText="Bookmarks">
+   <h1>Hello World</h1>
+</fab-panel>
