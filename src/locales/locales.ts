@@ -70,6 +70,11 @@ const enDefaults = {
    },
    bookContent: {
       toc: "Table of contents"
+   },
+   pdfContent: {
+		bookmarks: "Bookmarks",
+		page: "Page",
+		noBookmarks: "You have no bookmarks"
    }
 }
 
@@ -150,6 +155,11 @@ const deDefaults = {
 	},
    bookContent: {
       toc: "Inhaltsverzeichnis"
+	},
+	pdfContent: {
+		bookmarks: "Lesezeichen",
+		page: "Seite",
+		noBookmarks: "Du hast keine Lesezeichen"
    }
 }
 

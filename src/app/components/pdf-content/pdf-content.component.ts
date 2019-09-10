@@ -2,6 +2,7 @@ import { Component, HostListener, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { PdfBook } from 'src/app/models/PdfBook';
+import { enUS } from 'src/locales/locales';
 declare var $: any;
 
 const currentViewerZIndex = -2;
@@ -23,6 +24,7 @@ const bottomToolbarMarginBottomClosed = -40;
 	]
 })
 export class PdfContentComponent{
+	locale = enUS.pdfContent;
 	pdfContent: Uint8Array = null;
 	currentBook: PdfBook;
 	currentPage: number = 0;
@@ -77,7 +79,9 @@ export class PdfContentComponent{
 		private dataService: DataService,
 		private router: Router,
 		private ngZone: NgZone
-	){}
+	){
+		this.locale = this.dataService.GetLocale().pdfContent;
+	}
 
    async ngOnInit(){
 		this.currentBook = this.dataService.currentBook as PdfBook;
@@ -459,7 +463,14 @@ export class PdfContentComponent{
 		}
 
 		this.currentPageBookmarked = !removeBookmark;
-	}
+   }
+   
+   NavigateToPage(page: number){
+      this.showBookmarksPanel = false;
+      this.ShowPage(false, false, page);
+
+      return false;
+   }
 
 	SetPageOfCurrentViewer(page: number){
 		switch(this.currentViewer){
