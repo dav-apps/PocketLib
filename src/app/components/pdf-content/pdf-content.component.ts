@@ -133,7 +133,7 @@ export class PdfContentComponent{
 		if(this.showSecondPage && this.currentPage > 0 && this.currentPage % 2 == 0) this.currentPage--;
 
 		if(this.initialized){
-			await this.ShowPage(false, false, this.currentPage);
+			await this.ShowPage(NavigationDirection.None, this.currentPage);
 		}
 	}
 	
@@ -170,33 +170,35 @@ export class PdfContentComponent{
 	 * |  2. |  |  3. |   |
 	 * |_____|  |_____|---|
 	 * 
+	 * @param direction Specifies the direction of the navigation
+	 * @param newPage The page that is shown after the navigation
 	 */
-	async ShowPage(slideForward: boolean = false, slideBack: boolean = false, newPage: number){
-		// slideForward && !slideBack ?
+	async ShowPage(direction: NavigationDirection = NavigationDirection.None, newPage: number){
+		// direction == Forward ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
 			// Update the page of viewer 3
-		// !slideForward && slideBack ?
+		// direction == back ?
 			// Move 1 -> 2, 2 -> 3 and 3 -> 1
 			// viewer 3 is now the currently visible viewer
 			// Update the page of viewer 2
-		// !slideForward && !slideBack ?
+		// direction == None ?
 			// Update the pages
 			// Update the position and z-index of the viewers
 
-		if(slideForward && !slideBack){
+		if(direction == NavigationDirection.Forward){
 			// Move to the next viewer
 			this.MoveViewersClockwise();
 
 			// Update the pages
 			this.UpdatePages(newPage);
-		}else if(!slideForward && slideBack){
+		}else if(direction == NavigationDirection.Back){
 			// Move to the previous viewer
 			this.MoveViewersCounterClockwise();
 
 			// Update the pages
 			this.UpdatePages(newPage);
-		}else if(!slideForward && !slideBack){
+		}else{
 			// Update the pages
 			this.UpdatePages(newPage);
 
@@ -289,14 +291,14 @@ export class PdfContentComponent{
 		if(this.firstPage) return;
 
 		this.goingBack = true;
-		await this.ShowPage(false, true, this.currentPage - (this.showSecondPage ? 2 : 1));
+		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
    async NextPage(){
 		if(this.lastPage) return;
 
 		this.goingBack = false;
-		await this.ShowPage(true, false, this.currentPage + (this.showSecondPage ? 2 : 1));
+		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1));
 	}
 
 	GoBack(){
@@ -322,7 +324,7 @@ export class PdfContentComponent{
 
 		this.currentPage = this.currentBook.page;
 		this.setSize();
-		this.ShowPage(false, false, this.currentBook.page);
+		this.ShowPage(NavigationDirection.None, this.currentBook.page);
 	}
 
 	onKeyDown(keyCode: number){
@@ -467,7 +469,7 @@ export class PdfContentComponent{
    
    NavigateToPage(page: number){
       this.showBookmarksPanel = false;
-      this.ShowPage(false, false, page);
+      this.ShowPage(NavigationDirection.None, page);
 
       return false;
    }
@@ -608,4 +610,10 @@ enum CurrentViewer{
 enum SwipeDirection{
 	Horizontal,
 	Vertical
+}
+
+enum NavigationDirection{
+   Forward,
+   Back,
+   None
 }

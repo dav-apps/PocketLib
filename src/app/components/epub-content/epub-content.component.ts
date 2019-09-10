@@ -152,7 +152,7 @@ export class EpubContentComponent{
 			this.currentViewer = CurrentViewer.First;
 			
 			this.initialized = true;
-         await this.ShowPage(false, false, progress);
+         await this.ShowPage(NavigationDirection.None, progress);
          
          this.chapterTree.Init(this.book.toc);
 		}
@@ -229,7 +229,7 @@ export class EpubContentComponent{
       }
 
 		if(this.initialized){
-			await this.ShowPage(false, false);
+			await this.ShowPage(NavigationDirection.None);
 		}
 	}
 
@@ -255,7 +255,7 @@ export class EpubContentComponent{
 			this.currentPage--;
 		}
 
-		await this.ShowPage(false, true);
+		await this.ShowPage(NavigationDirection.Back);
 		this.goingBack = false;
 	}
 
@@ -282,7 +282,7 @@ export class EpubContentComponent{
 			this.currentPage++;
 		}
 
-		await this.ShowPage(true, false);
+		await this.ShowPage(NavigationDirection.Forward);
 	}
 
 	/**
@@ -306,39 +306,37 @@ export class EpubContentComponent{
 	 * |  2. |  |  3. |   |
 	 * |_____|  |_____|---|
 	 * 
-	 * @param slideForward If true, will go to the next page with animation
-	 * @param slideBack If true, will go to the previous page with animation
-	 * 						If slideBack and slideForward are both false, will navigate to the page without animation
+	 * @param direction Specifies the direction of the navigation
 	 * @param progress If not -1, uses the progress to calculate the current page
 	 * @param elementId Finds the element with the id and jumps to the page with the element
 	 */
-	async ShowPage(slideForward: boolean = false, slideBack: boolean = false, progress: number = -1, elementId: string = null){
-		// slideForward && !slideBack ?
+	async ShowPage(direction: NavigationDirection = NavigationDirection.None, progress: number = -1, elementId: string = null){
+		// direction == Forward ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
 			// Render the next page on viewer 3
-		// !slideForward && slideBack ?
+		// direction == Back ?
 			// Move 1 -> 2, 2 -> 3 and 3 -> 1
 			// viewer 3 is now the currently visible viewer
 			// Render the previous page on viewer 2
-		// !slideForward && !slideBack ?
+		// direction == None ?
 			// Render the current page on viewer 2
 			// Move to the next page without animation
 			// Render the next page on viewer 3 and the previous page on viewer 1
 		
-		if(slideForward && !slideBack){
+		if(direction == NavigationDirection.Forward){
 			// Move the viewer positions
 			this.MoveViewersClockwise();
 
 			// Render the next page
 			await this.RenderNextPage();
-		}else if(!slideForward && slideBack){
+		}else if(direction == NavigationDirection.Back){
 			// Move the viewer positions
 			this.MoveViewersCounterClockwise();
 
 			// Render the previous page
 			await this.RenderPreviousPage();
-		}else if(!slideForward && !slideBack){
+		}else{
 			// Render the current page on the next page viewer
 			await this.RenderCurrentPage(ViewerPosition.Next, progress, elementId);
 
@@ -1107,7 +1105,7 @@ export class EpubContentComponent{
 		if(elementId){
 			// Navigate to the page of the chapter with the element with the id
 			let elementId = href.slice(href.lastIndexOf('#') + 1);
-			await this.ShowPage(false, false, -1, elementId);
+			await this.ShowPage(NavigationDirection.None, -1, elementId);
 		}else{
 			// Navigate to the first page of the chapter
 			await this.ShowPage();
@@ -1295,4 +1293,10 @@ enum ViewerPosition{
 enum SwipeDirection{
 	Horizontal,
 	Vertical
+}
+
+enum NavigationDirection{
+   Forward,
+   Back,
+   None
 }
