@@ -69,6 +69,8 @@ export class EpubContentComponent{
 	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
 	goingBack: boolean = false;	// If true, the viewer goes to the previous page
 	showPageRunning: boolean = false;	// If true, ShowPage is currently executing
+	runNextPageAfterRender: boolean = false;	// If true, NextPage will be called another time
+	runPrevPageAfterRender: boolean = false;	// If true, PrevPage will be called another time
 	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
 
 	//#region Variables for finding the chapter page positions
@@ -234,7 +236,10 @@ export class EpubContentComponent{
 	}
 
 	async PrevPage(){
-		if(this.showPageRunning) return;
+		if(this.showPageRunning){
+			this.runPrevPageAfterRender = true;
+			return;
+		}
 		this.showPageRunning = true;
 
 		this.goingBack = true;
@@ -257,10 +262,21 @@ export class EpubContentComponent{
 
 		await this.ShowPage(NavigationDirection.Back);
 		this.goingBack = false;
+
+		if(this.runNextPageAfterRender){
+			this.runNextPageAfterRender = false;
+			this.NextPage();
+		}else if(this.runPrevPageAfterRender){
+			this.runPrevPageAfterRender = false;
+			this.PrevPage();
+		}
 	}
 
 	async NextPage(){
-		if(this.showPageRunning) return;
+		if(this.showPageRunning){
+			this.runNextPageAfterRender = true;
+			return;
+		}
 		this.showPageRunning = true;
 
 		// Return if this is the last chapter and the last page
@@ -283,6 +299,14 @@ export class EpubContentComponent{
 		}
 
 		await this.ShowPage(NavigationDirection.Forward);
+
+		if(this.runNextPageAfterRender){
+			this.runNextPageAfterRender = false;
+			this.NextPage();
+		}else if(this.runPrevPageAfterRender){
+			this.runPrevPageAfterRender = false;
+			this.PrevPage();
+		}
 	}
 
 	/**
@@ -326,13 +350,13 @@ export class EpubContentComponent{
 		
 		if(direction == NavigationDirection.Forward){
 			// Move the viewer positions
-			this.MoveViewersClockwise();
+			await this.MoveViewersClockwise();
 
 			// Render the next page
 			await this.RenderNextPage();
 		}else if(direction == NavigationDirection.Back){
 			// Move the viewer positions
-			this.MoveViewersCounterClockwise();
+			await this.MoveViewersCounterClockwise();
 
 			// Render the previous page
 			await this.RenderPreviousPage();
@@ -341,7 +365,7 @@ export class EpubContentComponent{
 			await this.RenderCurrentPage(ViewerPosition.Next, progress, elementId);
 
 			// Move the viewer positions
-			this.MoveViewersClockwise();
+			await this.MoveViewersClockwise();
 
 			// Render the next page
 			await this.RenderNextPage();
@@ -396,9 +420,9 @@ export class EpubContentComponent{
 
 			// Save the new progress
 			await (this.dataService.currentBook as EpubBook).SetPosition(this.currentChapter, newProgress);
-		}
 
-		this.showPageRunning = false;
+			this.showPageRunning = false;
+		}
 	}
 
 	async RenderNextPage(){
@@ -996,7 +1020,7 @@ export class EpubContentComponent{
 		}
 	}
 
-	MoveViewersClockwise(){
+	async MoveViewersClockwise() : Promise<void>{
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(-this.width);
 		this.SetLeftOfNextViewer(0);
@@ -1019,9 +1043,11 @@ export class EpubContentComponent{
 				this.currentViewer = CurrentViewer.First;
 				break;
 		}
+
+		return new Promise(resolve => setTimeout(resolve, this.viewerTransitionTime * 1000));
 	}
 
-	MoveViewersCounterClockwise(){
+	async MoveViewersCounterClockwise() : Promise<void>{
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(0);
 		this.SetLeftOfNextViewer(-this.width);
@@ -1044,6 +1070,8 @@ export class EpubContentComponent{
 				this.currentViewer = CurrentViewer.Second;
 				break;
 		}
+
+		return new Promise(resolve => setTimeout(resolve, this.viewerTransitionTime * 1000));
 	}
 
 	/**
