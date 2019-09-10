@@ -68,7 +68,7 @@ const enDefaults = {
 		logout: "Log out",
 		cancel: "Cancel"
    },
-   bookContent: {
+   epubContent: {
       toc: "Table of contents"
    },
    pdfContent: {
@@ -153,7 +153,7 @@ const deDefaults = {
 		logout: "Abmelden",
 		cancel: "Abbrechen"
 	},
-   bookContent: {
+   epubContent: {
       toc: "Inhaltsverzeichnis"
 	},
 	pdfContent: {

@@ -28,7 +28,7 @@ const defaultBottomToolbarTransitionTime = 0.2;
    ]
 })
 export class EpubContentComponent{
-	locale = enUS.bookContent;
+	locale = enUS.epubContent;
 	book = new EpubReader();
 	chapters: BookChapter[] = [];
 	initialized: boolean = false;
@@ -114,7 +114,7 @@ export class EpubContentComponent{
 		private router: Router,
 		private ngZone: NgZone
 	){
-		this.locale = this.dataService.GetLocale().bookContent;
+		this.locale = this.dataService.GetLocale().epubContent;
 	}
 
 	async ngOnInit(){
