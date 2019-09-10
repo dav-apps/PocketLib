@@ -755,7 +755,6 @@ export class EpubContentComponent{
 	}
 
 	OpenChaptersPanel(){
-		this.CloseBottomToolbar();
 		this.showChaptersPanel = true;
 
 		// Remove outline of the panel close button

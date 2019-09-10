@@ -182,8 +182,8 @@
 <fab-panel 
 	[isOpen]="showBookmarksPanel"
    isLightDismiss="true"
-   (onDismissed)="showBookmarksPanel = false"
-   (onLightDismissClick)="showBookmarksPanel = false"
+   (onDismissed)="showBookmarksPanel = false; CloseBottomToolbar()"
+   (onLightDismissClick)="showBookmarksPanel = false; CloseBottomToolbar()"
    isHiddenOnDismiss="true"
 	[headerText]="locale.bookmarks">
 

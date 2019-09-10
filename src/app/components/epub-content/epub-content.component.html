@@ -110,8 +110,8 @@
 
 <fab-panel [isOpen]="showChaptersPanel" 
             isLightDismiss="true" 
-            (onDismissed)="showChaptersPanel = false" 
-				(onLightDismissClick)="showChaptersPanel = false"
+            (onDismissed)="showChaptersPanel = false; CloseBottomToolbar()" 
+				(onLightDismissClick)="showChaptersPanel = false; CloseBottomToolbar()"
 				isHiddenOnDismiss="true"
             [headerText]="locale.toc"
             [styles]="chaptersPanelStyles">
