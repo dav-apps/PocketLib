@@ -4,6 +4,7 @@ import { Book } from './Book';
 import { EpubBook } from './EpubBook';
 import { PdfBook } from './PdfBook';
 import { EpubReader } from './EpubReader';
+import { EpubBookmark, GetEpubBookmark } from './EpubBookmark';
 
 const epubType = "application/epub+zip";
 const pdfType = "application/pdf";
@@ -35,7 +36,7 @@ async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
 
 	// Check the type of the file
 	if(fileTableObject.File.type == epubType){
-		let book = ConvertTableObjectsToEpubBook(tableObject, fileTableObject);
+		let book = await ConvertTableObjectsToEpubBook(tableObject, fileTableObject);
 		await LoadEpubBookDetails(book);
 		return book;
 	}else if(fileTableObject.File.type == pdfType){
@@ -62,7 +63,7 @@ async function LoadEpubBookDetails(book: EpubBook){
 	book.cover = epubReader.coverSrc;
 }
 
-export function ConvertTableObjectsToEpubBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : EpubBook{
+export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : Promise<EpubBook>{
 	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null;
 	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null;
 
@@ -83,7 +84,17 @@ export function ConvertTableObjectsToEpubBook(bookTableObject: TableObject, book
 		progress = Number.parseInt(progressString);
 	}
 
-	let book = new EpubBook(file, chapter, progress);
+	// Get the bookmarks
+	let bookmarks: EpubBookmark[] = [];
+	let bookmarksString = bookTableObject.GetPropertyValue(environment.epubBookTableBookmarksKey);
+	if(bookmarksString){
+		for(let uuid of bookmarksString.split(',')){
+			let bookmark = await GetEpubBookmark(uuid);
+			if(bookmark) bookmarks.push(bookmark);
+		}
+	}
+
+	let book = new EpubBook(file, chapter, progress, bookmarks);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }
