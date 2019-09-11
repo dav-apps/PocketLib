@@ -7,11 +7,13 @@ export const environment = {
    bookTableId: 14,
    bookFileTableId: 15,
    appTableId: 16,
+   epubBookmarkTableId: 17,
    // Shared keys for book table
    bookTableFileUuidKey: "file_uuid",
 	// Keys for EpubBook
 	epubBookTableChapterKey: "chapter",
-	epubBookTableProgressKey: "progress",
+   epubBookTableProgressKey: "progress",
+   epubBookTableBookmarksKey: "bookmarks",
 	// Keys for PdfBook
 	pdfBookTableTitleKey: "title",
    pdfBookTablePageKey: "page",
@@ -19,6 +21,11 @@ export const environment = {
    // Keys for App table properties
    appTableNameKey: "name",
    appTableUrlKey: "url",
+   // Keys for EpubBookmark
+   epubBookmarkBookKey: "book",
+	epubBookmarkNameKey: "name",
+	epubBookmarkChapterKey: "chapter",
+   epubBookmarkProgressKey: "progress",
    // Settings keys
    settingsThemeKey: "settings-theme",
    // Settings default
