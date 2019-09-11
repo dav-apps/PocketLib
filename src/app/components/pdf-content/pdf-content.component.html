@@ -144,7 +144,7 @@
       <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
          <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
       </button>
-      <button mat-button class="book-toolbar-button" style="float: right;" (click)="showBookmarksPanel = true">
+      <button mat-button class="book-toolbar-button" style="float: right;" (click)="OpenBookmarksPanel()">
          <i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
       </button>
    </div>
@@ -168,7 +168,7 @@
 			</button>
 
 			<div class="mx-auto">
-				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
+				<button mat-button class="book-toolbar-button" (click)="OpenBookmarksPanel()">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
 				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">

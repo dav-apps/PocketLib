@@ -445,7 +445,15 @@ export class PdfContentComponent{
 	CloseBottomToolbar(){
 		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
 		this.bottomToolbarOpened = false;
-	}
+   }
+   
+   OpenBookmarksPanel(){
+      this.showBookmarksPanel = true;
+
+      // Remove outline of the panel close button
+		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
+		closeButton.setAttribute("style", `outline: none`);
+   }
 
 	async AddOrRemoveBookmark(){
 		let removeBookmark: boolean = false;
