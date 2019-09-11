@@ -3,30 +3,29 @@
 	<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 	<div class="row mt-5">
-		<div class="col-6 col-md-4 offset-md-1 text-center">
-			<i class="material-icons text-color" style="font-size: 60px">sync</i>
-			<p class="mt-4 text-color" style="font-size: 22px">{{ locale.text2 }}</p>
+		<div class="col-6 col-md-4 offset-md-1 text-center text-color">
+			<i class="ms-Icon ms-Icon--Sync" style="font-size: 60px;" aria-hidden="true"></i>
+			<p class="mt-4" style="font-size: 22px">{{ locale.text2 }}</p>
 		</div>
 
-		<div class="col-6 col-md-4 offset-md-2 text-center">
-			<i class="material-icons text-color" style="font-size: 60px">lock</i>
-			<p class="mt-4 text-color" style="font-size: 22px">{{ locale.text3 }}</p>
+		<div class="col-6 col-md-4 offset-md-2 text-center text-color">
+			<i class="ms-Icon ms-Icon--Lock" style="font-size: 60px;" aria-hidden="true"></i>
+			<p class="mt-4" style="font-size: 22px">{{ locale.text3 }}</p>
 		</div>
 	</div>
 
-	<h3 class="text-center mt-5 text-color">{{ locale.tryItOut }}</h3>
-	<div class="d-flex justify-content-center mt-4">
+	<div class="d-flex justify-content-center mt-5">
+		<a href="https://dav-apps.tech" target="blank"><img [src]="dataService.darkTheme ? '/assets/images/dav-logo-text-white.png' : '/assets/images/dav-logo-text.png'" class="align-self-center" style="width: 130px" alt="dav Logo" /></a>
+	</div>
+
+	<div class="d-flex justify-content-center" style="margin-top: 40px">
 		<button type="button" class="btn btn-primary mr-2" (click)="ShowLoginPage()">{{ locale.login }}</button>
-		<button type="button" class="btn btn-primary ml-2" (click)="ShowSignupPage()">{{ locale.signup }}</button>
-	</div>
-
-	<div class="d-flex justify-content-center">
-		<a class="mt-4 text-color" href="https://dav-apps.tech" target="blank">{{ locale.linkText }}</a>
+		<button type="button" class="btn btn-secondary ml-2" (click)="ShowSignupPage()">{{ locale.signup }}</button>
 	</div>
 </div>
 
 <div class="container mb-4 ms-motion-slideUpIn" *ngIf="dataService.user.IsLoggedIn">
-   <h1 class="text-center mt-3 text-color" style="margin-bottom: 30px">{{ locale.title }}</h1>
+   <h1 class="text-center mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
    
    <div class="d-flex justify-content-center">
       <img class="rounded-circle"
