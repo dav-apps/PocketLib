@@ -64,7 +64,7 @@
 	</button>
 
 	<div style="float: right">
-		<button mat-button class="book-toolbar-button">
+		<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
 			<i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
 		</button>
 		<button mat-button class="book-toolbar-button">
@@ -100,7 +100,7 @@
 				<button mat-button class="book-toolbar-button">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
-				<button mat-button class="book-toolbar-button">
+				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
 					<i class="ms-Icon ms-Icon--AddBookmark" aria-hidden="true"></i>
 				</button>
 			</div>

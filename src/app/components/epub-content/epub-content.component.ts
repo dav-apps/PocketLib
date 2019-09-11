@@ -30,6 +30,7 @@ const defaultBottomToolbarTransitionTime = 0.2;
 export class EpubContentComponent{
 	locale = enUS.epubContent;
 	book = new EpubReader();
+	currentBook: EpubBook;
 	chapters: BookChapter[] = [];
 	initialized: boolean = false;
 
@@ -61,8 +62,9 @@ export class EpubContentComponent{
 	viewer3ZIndex: number = -3;
 	viewerTransitionTime: number = defaultViewerTransitionTime;
 
-	currentChapter: number = 0;	// The current chapter index in this.chapters
-   currentPage: number = 0;		// The current page in the current chapter
+	currentChapter: number = 0;			// The current chapter index in this.chapters
+	currentPage: number = 0;				// The current page in the current chapter
+	currentChapterTitle: string = "";	// The title of the current chapter
    
    firstPage: boolean = false;	// If true, hides the previous button
 	lastPage: boolean = false;		// If true, hides the next button
@@ -120,6 +122,8 @@ export class EpubContentComponent{
 	}
 
 	async ngOnInit(){
+		this.currentBook = this.dataService.currentBook as EpubBook;
+
 		// Initialize the html element variables
 		this.viewerLeft = document.getElementById("viewer-left") as HTMLIFrameElement;
       this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
@@ -148,8 +152,8 @@ export class EpubContentComponent{
 			}
 
 			// Get the current chapter and progress of the book
-			let chapter = (this.dataService.currentBook as EpubBook).chapter;
-			let progress = (this.dataService.currentBook as EpubBook).progress;
+			let chapter = this.currentBook.chapter;
+			let progress = this.currentBook.progress;
 			this.currentChapter = chapter;
 			this.currentViewer = CurrentViewer.First;
 			
@@ -405,6 +409,7 @@ export class EpubContentComponent{
 		}
 
 		this.setFirstLastPage();
+		this.LoadCurrentChapterTitle();
 
 		if(progress == -1){
 			// Calculate the new progress
@@ -419,10 +424,10 @@ export class EpubContentComponent{
 			}
 
 			// Save the new progress
-			await (this.dataService.currentBook as EpubBook).SetPosition(this.currentChapter, newProgress);
-
-			this.showPageRunning = false;
+			await this.currentBook.SetPosition(this.currentChapter, newProgress);
 		}
+
+		this.showPageRunning = false;
 	}
 
 	async RenderNextPage(){
@@ -760,6 +765,32 @@ export class EpubContentComponent{
 		// Remove outline of the panel close button
 		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
 		closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
+   }
+   
+   async AddOrRemoveBookmark(){
+		// Calculate the progress of the current page
+		let currentChapter = this.chapters[this.currentChapter];
+		let lastPage: boolean = currentChapter.pagePositions.length == this.currentPage - 1;
+
+		let currentPagePosition = currentChapter.pagePositions[this.currentPage];
+		let nextPagePosition = lastPage ? currentPagePosition : currentChapter.pagePositions[this.currentPage + 1];
+		let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
+
+		// Get the position of the current page in the middle
+		let currentNextPageDiff = lastPage ? 0 : ((nextPagePosition - currentPagePosition) / 2);
+		let pageMiddlePosition = currentNextPageDiff + currentPagePosition
+
+		// Calculate the progress from the middle position
+		let progress = pageMiddlePosition / lastPagePosition;
+		
+		if(isNaN(progress)){
+			progress = 0;
+		}else{
+			progress = Math.ceil(progress * progressFactor);
+		}
+
+		// Create the bookmark
+		await this.currentBook.AddBookmark(this.currentChapterTitle, this.currentChapter, progress);
 	}
 
 	ChapterLinkClicked(link: string){
@@ -773,7 +804,7 @@ export class EpubContentComponent{
 	 */
 	async GenerateChapterHtml(chapterIndex: number) : Promise<BookChapter>{
 		let chapter = this.chapters[chapterIndex];
-		if(!chapter) return;
+		if(!chapter) return null;
 
 		let chapterHtml: HTMLHtmlElement = chapter.IsInitialized() ? chapter.GetHtml() : await this.book.chapters[chapterIndex].GetChapterHtml();
 		let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
@@ -808,7 +839,7 @@ export class EpubContentComponent{
 			textNode.parentElement.removeChild(textNode);
 		}
 
-		await chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
+		chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
 		return chapter;
 	}
 
@@ -1087,6 +1118,28 @@ export class EpubContentComponent{
 		Utils.positions = [];
 		Utils.FindPositions(viewer.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement);
 		this.pagePositions = Utils.FindOptimalPagePositions(Utils.positions, this.pageHeight);
+	}
+
+	LoadCurrentChapterTitle(){
+		let chapterFilePath = this.book.chapters[this.currentChapter].filePath;
+
+		if(chapterFilePath.includes('#')){
+			// Remove the last part
+			chapterFilePath = chapterFilePath.slice(0, chapterFilePath.lastIndexOf('#'));
+		}
+
+		// Find the toc item with the same href
+		let tocItem = this.book.toc.find(item => {
+			let itemPath = item.href;
+
+			if(itemPath.includes('#')){
+				itemPath = itemPath.slice(0, itemPath.lastIndexOf('#'));
+			}
+
+			return itemPath == chapterFilePath;
+		});
+
+		if(tocItem) this.currentChapterTitle = tocItem.title;
 	}
 
 	GoBack(){
