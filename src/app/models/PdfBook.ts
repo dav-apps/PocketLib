@@ -1,5 +1,6 @@
+import { Property } from 'dav-npm';
 import { environment } from 'src/environments/environment';
-import { Book, Property } from './Book';
+import { Book } from './Book';
 
 const pdfExt = "pdf";
 

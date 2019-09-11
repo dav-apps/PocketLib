@@ -1,4 +1,4 @@
-import { GetTableObject, TableObject, GetAllTableObjects } from 'dav-npm';
+import { GetTableObject, TableObject, GetAllTableObjects, Property } from 'dav-npm';
 import { environment } from "src/environments/environment";
 
 export class App{
@@ -27,9 +27,10 @@ export class App{
 			// Create the table object
 			tableObject = new TableObject();
 			tableObject.TableId = environment.appTableId;
+			this.uuid = tableObject.Uuid;
 		}
 
-		let properties: {name: string, value: string}[] = [
+		let properties: Property[] = [
 			{ name: environment.appTableNameKey, value: this.name },
 			{ name: environment.appTableUrlKey, value: this.url }
 		];
