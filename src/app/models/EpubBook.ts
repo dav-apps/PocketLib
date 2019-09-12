@@ -39,10 +39,25 @@ export class EpubBook extends Book{
 		await this.Save();
    }
    
-   public async AddBookmark(name: string, chapter: number, progress: number){
+   public async AddBookmark(name: string, chapter: number, progress: number) : Promise<string>{
 		let bookmark = await EpubBookmark.Create(this.uuid, name, chapter, progress);
 		this.bookmarks.push(bookmark);
 		await this.Save();
+		return bookmark.uuid;
+   }
+
+   public async RemoveBookmark(uuid: string){
+      let i = this.bookmarks.findIndex(bookmark => bookmark.uuid == uuid);
+      if(i == -1) return;
+
+      // Delete the bookmark
+      this.bookmarks[i].Delete();
+
+      // Remove the bookmark from the bookmarks
+      this.bookmarks.splice(i, 1);
+
+      // Save the new bookmarks array
+      await this.Save();
    }
 
 	protected async Save(){

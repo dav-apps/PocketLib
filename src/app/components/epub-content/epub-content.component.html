@@ -65,7 +65,7 @@
 
 	<div style="float: right">
 		<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
-			<i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+			<i class="ms-Icon" [ngClass]="currentPageBookmark ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
 		</button>
 		<button mat-button class="book-toolbar-button" (click)="OpenBookmarksPanel()">
 			<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
@@ -101,7 +101,7 @@
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
 				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
-					<i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+					<i class="ms-Icon" [ngClass]="currentPageBookmark ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
 				</button>
 			</div>
 		</div>
@@ -132,7 +132,7 @@
 		<li class="list-group-item d-flex"
 			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
 			*ngFor="let bookmark of currentBook.bookmarks">
-			<a href="#" class="text-color">{{ bookmark.name }}</a>
+			<a href="#" class="text-color" (click)="NavigateToBookmark(bookmark)" [ngClass]="bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''">{{ bookmark.name }}</a>
 		</li>
 	</ul>
 

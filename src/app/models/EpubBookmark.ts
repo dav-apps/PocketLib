@@ -45,6 +45,13 @@ export class EpubBookmark{
 
 		await tableObject.SetPropertyValues(properties);
 	}
+
+	public async Delete(){
+		let tableObject = await GetTableObject(this.uuid);
+		if(!tableObject) return;
+
+		await tableObject.Delete();
+	}
 }
 
 export async function GetEpubBookmark(uuid: string) : Promise<EpubBookmark>{

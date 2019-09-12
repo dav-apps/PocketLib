@@ -4,6 +4,7 @@ import { DataService } from 'src/app/services/data-service';
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
 import { enUS } from 'src/locales/locales';
 import { EpubBook } from 'src/app/models/EpubBook';
+import { EpubBookmark } from 'src/app/models/EpubBookmark';
 import { EpubReader } from 'src/app/models/EpubReader';
 declare var $: any;
 
@@ -117,7 +118,7 @@ export class EpubContentComponent{
    //#endregion
    
 	//#region Variables for bookmarks
-	currentPageBookmarked: boolean = false;
+	currentPageBookmark: string = null;
 	showBookmarksPanel: boolean = false;
 	//#endregion
 
@@ -450,7 +451,7 @@ export class EpubContentComponent{
 		}
 
 		// Set currentPageBookmarked
-		this.currentPageBookmarked = false;
+		this.currentPageBookmark = null;
 
 		let currentPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage);
 		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + 1);
@@ -460,7 +461,7 @@ export class EpubContentComponent{
 			if(bookmark.chapter != this.currentChapter) continue;
 
 			if(bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress){
-				this.currentPageBookmarked = true;
+				this.currentPageBookmark = bookmark.uuid;
 				break;
 			}
 		}
@@ -814,29 +815,36 @@ export class EpubContentComponent{
 	}
    
    async AddOrRemoveBookmark(){
-		// Calculate the progress of the current page
-		let currentChapter = this.chapters[this.currentChapter];
-		let lastPage: boolean = currentChapter.pagePositions.length == this.currentPage - 1;
-
-		let currentPagePosition = currentChapter.pagePositions[this.currentPage];
-		let nextPagePosition = lastPage ? currentPagePosition : currentChapter.pagePositions[this.currentPage + 1];
-		let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
-
-		// Get the position of the current page in the middle
-		let currentNextPageDiff = lastPage ? 0 : ((nextPagePosition - currentPagePosition) / 2);
-		let pageMiddlePosition = currentNextPageDiff + currentPagePosition
-
-		// Calculate the progress from the middle position
-		let progress = pageMiddlePosition / lastPagePosition;
+		if(this.showPageRunning) return;
 		
-		if(isNaN(progress)){
-			progress = 0;
+		if(this.currentPageBookmark){
+			await this.currentBook.RemoveBookmark(this.currentPageBookmark);
+			this.currentPageBookmark = null;
 		}else{
-			progress = Math.ceil(progress * progressFactor);
-		}
+			// Calculate the progress of the current page
+			let currentChapter = this.chapters[this.currentChapter];
+			let lastPage: boolean = currentChapter.pagePositions.length == this.currentPage - 1;
 
-		// Create the bookmark
-		await this.currentBook.AddBookmark(this.currentChapterTitle, this.currentChapter, progress);
+			let currentPagePosition = currentChapter.pagePositions[this.currentPage];
+			let nextPagePosition = lastPage ? currentPagePosition : currentChapter.pagePositions[this.currentPage + 1];
+			let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
+
+			// Get the position of the current page in the middle
+			let currentNextPageDiff = lastPage ? 0 : ((nextPagePosition - currentPagePosition) / 2);
+			let pageMiddlePosition = currentNextPageDiff + currentPagePosition
+
+			// Calculate the progress from the middle position
+			let progress = pageMiddlePosition / lastPagePosition;
+			
+			if(isNaN(progress)){
+				progress = 0;
+			}else{
+				progress = Math.ceil(progress * progressFactor);
+			}
+
+			// Create the bookmark
+			this.currentPageBookmark = await this.currentBook.AddBookmark(this.currentChapterTitle, this.currentChapter, progress);
+		}
 	}
 
 	GetProgressOfCurrentChapterPage(page: number) : number{
@@ -1253,6 +1261,14 @@ export class EpubContentComponent{
 			// Navigate to the first page of the chapter
 			await this.ShowPage();
 		}
+	}
+
+	NavigateToBookmark(bookmark: EpubBookmark){
+		this.showBookmarksPanel = false;
+		this.currentChapter = bookmark.chapter;
+
+		this.ShowPage(NavigationDirection.None, bookmark.progress);
+		return false;
 	}
 }
 
