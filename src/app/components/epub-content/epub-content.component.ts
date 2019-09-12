@@ -19,6 +19,7 @@ const bottomToolbarMarginBottomOpened = 0;
 const bottomToolbarMarginBottomClosed = -40;
 const defaultViewerTransitionTime = 0.5;
 const defaultBottomToolbarTransitionTime = 0.2;
+const navigationToleranceTime = 200;
 
 @Component({
 	selector: 'pocketlib-epub-content',
@@ -74,6 +75,8 @@ export class EpubContentComponent{
 	runNextPageAfterRender: boolean = false;	// If true, NextPage will be called another time
 	runPrevPageAfterRender: boolean = false;	// If true, PrevPage will be called another time
 	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
+	nextPageTimerRunning: boolean = false;		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
+	prevPageTimerRunning: boolean = false;		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
@@ -246,9 +249,16 @@ export class EpubContentComponent{
 
 	async PrevPage(){
 		if(this.showPageRunning){
-			this.runPrevPageAfterRender = true;
+			this.runPrevPageAfterRender = !this.prevPageTimerRunning;
 			return;
 		}
+
+		// Start the timer
+		this.prevPageTimerRunning = true;
+		setTimeout(() => {
+			this.prevPageTimerRunning = false;
+		}, navigationToleranceTime);
+
 		this.showPageRunning = true;
 
 		this.goingBack = true;
@@ -283,9 +293,16 @@ export class EpubContentComponent{
 
 	async NextPage(){
 		if(this.showPageRunning){
-			this.runNextPageAfterRender = true;
+			this.runNextPageAfterRender = !this.nextPageTimerRunning;
 			return;
 		}
+
+		// Start the timer
+		this.nextPageTimerRunning = true;
+		setTimeout(() => {
+			this.nextPageTimerRunning = false;
+		}, navigationToleranceTime);
+
 		this.showPageRunning = true;
 
 		// Return if this is the last chapter and the last page
