@@ -100,7 +100,7 @@ export class EpubContentComponent{
 	//#region Variables for the chapters panel
    showChaptersPanel: boolean = false;
 	@ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent;
-	chaptersPanelStyles = {
+	panelStyles = {
 		main: {
 			backgroundColor: getComputedStyle(document.body).getPropertyValue("--theme-color-secondary")
 		},
@@ -111,6 +111,11 @@ export class EpubContentComponent{
 			backgroundColor: this.dataService.darkTheme ? "rgba(21, 32, 43, 0.4)" : "rgba(255, 255, 255, 0.4)"
 		}
 	}
+   //#endregion
+   
+	//#region Variables for bookmarks
+	currentPageBookmarked: boolean = false;
+	showBookmarksPanel: boolean = false;
 	//#endregion
 
 	constructor(
@@ -160,7 +165,7 @@ export class EpubContentComponent{
 			this.initialized = true;
          await this.ShowPage(NavigationDirection.None, progress);
          
-         this.chapterTree.Init(this.book.toc);
+			this.chapterTree.Init(this.book.toc);
 		}
 
 		// Bind the keydown and wheel events
@@ -425,6 +430,22 @@ export class EpubContentComponent{
 
 			// Save the new progress
 			await this.currentBook.SetPosition(this.currentChapter, newProgress);
+		}
+
+		// Set currentPageBookmarked
+		this.currentPageBookmarked = false;
+
+		let currentPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage);
+		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + 1);
+		if(nextPageProgress == -1) nextPageProgress = currentPageProgress;
+
+		for(let bookmark of this.currentBook.bookmarks){
+			if(bookmark.chapter != this.currentChapter) continue;
+
+			if(bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress){
+				this.currentPageBookmarked = true;
+				break;
+			}
 		}
 
 		this.showPageRunning = false;
@@ -765,7 +786,15 @@ export class EpubContentComponent{
 		// Remove outline of the panel close button
 		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
 		closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
-   }
+	}
+	
+	OpenBookmarksPanel(){
+		this.showBookmarksPanel = true;
+
+		// Remove outline of the panel close button
+		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
+		closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
+	}
    
    async AddOrRemoveBookmark(){
 		// Calculate the progress of the current page
@@ -791,6 +820,23 @@ export class EpubContentComponent{
 
 		// Create the bookmark
 		await this.currentBook.AddBookmark(this.currentChapterTitle, this.currentChapter, progress);
+	}
+
+	GetProgressOfCurrentChapterPage(page: number) : number{
+		let currentChapter = this.chapters[this.currentChapter];
+		if(page < 0 || page >= currentChapter.pagePositions.length) return -1;
+
+		let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
+		let pagePosition = currentChapter.pagePositions[page];
+		let pageProgress = pagePosition / lastPagePosition;
+
+		if(isNaN(pageProgress)){
+			pageProgress = 0;
+		}else{
+			pageProgress = Math.ceil(pageProgress * progressFactor);
+		}
+
+		return pageProgress;
 	}
 
 	ChapterLinkClicked(link: string){

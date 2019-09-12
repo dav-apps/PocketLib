@@ -46,6 +46,8 @@ export class EpubBook extends Book{
    }
 
 	protected async Save(){
+		this.SortBookmarks();
+
 		let bookmarkUuids: string[] = [];
 		this.bookmarks.forEach(bookmark => bookmarkUuids.push(bookmark.uuid));
 
@@ -56,5 +58,21 @@ export class EpubBook extends Book{
 		]
 
 		await super.Save(epubExt, properties);
-	}
+   }
+   
+   private SortBookmarks(){
+      this.bookmarks.sort((a: EpubBookmark, b: EpubBookmark) => {
+			if(a.chapter > b.chapter){
+				return 1;
+			}else if(a.chapter < b.chapter){
+				return -1;
+			}else if(a.progress > b.progress){
+				return 1;
+			}else if(a.progress < b.progress){
+				return -1;
+			}else{
+				return 0;
+			}
+		});
+   }
 }

@@ -67,12 +67,14 @@ const enDefaults = {
 		cancel: "Cancel"
    },
    epubContent: {
-      toc: "Table of contents"
+      toc: "Table of contents",
+      bookmarks: "Bookmarks",
+      noBookmarks: "You have no bookmarks"
    },
    pdfContent: {
-		bookmarks: "Bookmarks",
-		page: "Page",
-		noBookmarks: "You have no bookmarks"
+      bookmarks: "Bookmarks",
+      noBookmarks: "You have no bookmarks",
+		page: "Page"
    }
 }
 
@@ -150,12 +152,14 @@ const deDefaults = {
 		cancel: "Abbrechen"
 	},
    epubContent: {
-      toc: "Inhaltsverzeichnis"
+      toc: "Inhaltsverzeichnis",
+      bookmarks: "Lesezeichen",
+      noBookmarks: "Du hast keine Lesezeichen"
 	},
 	pdfContent: {
-		bookmarks: "Lesezeichen",
-		page: "Seite",
-		noBookmarks: "Du hast keine Lesezeichen"
+      bookmarks: "Lesezeichen",
+      noBookmarks: "Du hast keine Lesezeichen",
+		page: "Seite"
    }
 }
 
