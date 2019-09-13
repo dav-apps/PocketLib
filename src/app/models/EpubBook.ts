@@ -74,6 +74,15 @@ export class EpubBook extends Book{
 
 		await super.Save(epubExt, properties);
    }
+
+   public async Delete(){
+      // Delete each bookmark
+      for(let bookmark of this.bookmarks){
+         await bookmark.Delete();
+      }
+
+      await super.Delete();
+   }
    
    private SortBookmarks(){
       this.bookmarks.sort((a: EpubBookmark, b: EpubBookmark) => {
