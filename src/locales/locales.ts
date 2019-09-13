@@ -69,7 +69,8 @@ const enDefaults = {
    epubContent: {
       toc: "Table of contents",
       bookmarks: "Bookmarks",
-      noBookmarks: "You have no bookmarks"
+      noBookmarks: "You have no bookmarks",
+      untitledBookmark: "Untitled bookmark"
    },
    pdfContent: {
       bookmarks: "Bookmarks",
@@ -154,7 +155,8 @@ const deDefaults = {
    epubContent: {
       toc: "Inhaltsverzeichnis",
       bookmarks: "Lesezeichen",
-      noBookmarks: "Du hast keine Lesezeichen"
+      noBookmarks: "Du hast keine Lesezeichen",
+      untitledBookmark: "Unbenanntes Lesezeichen"
 	},
 	pdfContent: {
       bookmarks: "Lesezeichen",

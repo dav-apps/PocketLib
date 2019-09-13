@@ -453,14 +453,18 @@ export class EpubContentComponent{
 		// Set currentPageBookmarked
 		this.currentPageBookmark = null;
 
+		let lastPage: boolean = currentChapter.pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1) <= this.currentPage;
 		let currentPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage);
-		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + 1);
-		if(nextPageProgress == -1) nextPageProgress = currentPageProgress;
+		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + (this.width > secondPageMinWidth ? 2 : 1));
+		if(nextPageProgress == -1) nextPageProgress = 1 * progressFactor;
 
 		for(let bookmark of this.currentBook.bookmarks){
 			if(bookmark.chapter != this.currentChapter) continue;
 
-			if(bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress){
+			if(
+				(!lastPage && bookmark.progress > currentPageProgress && bookmark.progress < nextPageProgress) ||
+				(lastPage && bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress)
+				){
 				this.currentPageBookmark = bookmark.uuid;
 				break;
 			}
@@ -823,15 +827,20 @@ export class EpubContentComponent{
 		}else{
 			// Calculate the progress of the current page
 			let currentChapter = this.chapters[this.currentChapter];
-			let lastPage: boolean = currentChapter.pagePositions.length == this.currentPage - 1;
+			let lastPage: boolean = currentChapter.pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1) <= this.currentPage;
 
 			let currentPagePosition = currentChapter.pagePositions[this.currentPage];
 			let nextPagePosition = lastPage ? currentPagePosition : currentChapter.pagePositions[this.currentPage + 1];
 			let lastPagePosition = currentChapter.pagePositions[currentChapter.pagePositions.length - 1];
 
-			// Get the position of the current page in the middle
-			let currentNextPageDiff = lastPage ? 0 : ((nextPagePosition - currentPagePosition) / 2);
-			let pageMiddlePosition = currentNextPageDiff + currentPagePosition
+			let pageMiddlePosition: number;
+			if(this.width > secondPageMinWidth){
+				pageMiddlePosition = nextPagePosition;
+			}else{
+				// Get the position of the current page in the middle
+				let currentNextPageDiff = lastPage ? 0 : ((nextPagePosition - currentPagePosition) / 2);
+				pageMiddlePosition = currentNextPageDiff + currentPagePosition;
+			}
 
 			// Calculate the progress from the middle position
 			let progress = pageMiddlePosition / lastPagePosition;
@@ -1211,6 +1220,7 @@ export class EpubContentComponent{
 		});
 
 		if(tocItem) this.currentChapterTitle = tocItem.title;
+		else			this.currentChapterTitle = this.locale.untitledBookmark;
 	}
 
 	GoBack(){
