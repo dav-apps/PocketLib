@@ -432,7 +432,7 @@ export class EpubContentComponent{
 		}
 
 		this.setFirstLastPage();
-		this.LoadCurrentChapterTitle();
+      this.LoadCurrentChapterTitle();
 
 		if(progress == -1){
 			// Calculate the new progress
@@ -855,10 +855,14 @@ export class EpubContentComponent{
 				progress = 0;
 			}else{
 				progress = Math.ceil(progress * progressFactor);
-			}
+         }
+         
+         // Get the chapter title
+         let chapterTitle = this.currentChapterTitle;
+         if(!chapterTitle) chapterTitle = this.locale.untitledBookmark;
 
 			// Create the bookmark
-			this.currentPageBookmark = await this.currentBook.AddBookmark(this.currentChapterTitle, this.currentChapter, progress);
+			this.currentPageBookmark = await this.currentBook.AddBookmark(chapterTitle, this.currentChapter, progress);
 		}
 	}
 
@@ -1226,7 +1230,7 @@ export class EpubContentComponent{
 		});
 
 		if(tocItem) this.currentChapterTitle = tocItem.title;
-		else			this.currentChapterTitle = this.locale.untitledBookmark;
+		else			this.currentChapterTitle = null;
 	}
 
 	GoBack(){
