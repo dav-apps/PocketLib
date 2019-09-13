@@ -118,7 +118,7 @@
 		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 		[style.height.px]="showBottomToolbar ? height : height - 40" 
 		(click)="PrevPage()" 
-		*ngIf="!firstPage">
+		*ngIf="!firstPage && !showBottomToolbar">
 	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
 </button>
 <button mat-button 
@@ -127,7 +127,7 @@
 		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 		[style.height.px]="showBottomToolbar ? height : height - 40" 
 		(click)="NextPage()" 
-		*ngIf="!lastPage">
+		*ngIf="!lastPage && !showBottomToolbar">
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
