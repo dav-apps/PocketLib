@@ -817,6 +817,12 @@ export class EpubContentComponent{
 		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0];
 		closeButton.setAttribute("style", `outline: none; color: ${ this.dataService.darkTheme ? 'white' : 'black' }`);
 	}
+
+	ClosePanel(){
+		this.showChaptersPanel = false;
+		this.showBookmarksPanel = false;
+		this.CloseBottomToolbar();
+	}
    
    async AddOrRemoveBookmark(){
 		if(this.showPageRunning) return;
