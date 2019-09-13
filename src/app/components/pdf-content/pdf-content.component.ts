@@ -15,6 +15,8 @@ const defaultViewerTransitionTime = 0.5;
 const defaultBottomToolbarTransitionTime = 0.2;
 const bottomToolbarMarginBottomOpened = 0;
 const bottomToolbarMarginBottomClosed = -40;
+const navigationDoubleTapAreaWidth = 50;
+const doubleTapToleranceTime = 400;
 
 @Component({
 	selector: 'pocketlib-pdf-content',
@@ -54,13 +56,14 @@ export class PdfContentComponent{
 	viewerTransitionTime: number = defaultViewerTransitionTime;
 
 	//#region Variables for touch events
-	swipeDirection: SwipeDirection = SwipeDirection.Horizontal;	// Whether the user swipes vertically or horizontally
+	swipeDirection: SwipeDirection = SwipeDirection.None;	// Whether the user swipes vertically or horizontally
 	swipeStart: boolean = false;
 	touchStartX: number = 0;
 	touchStartY: number = 0;
 	touchDiffX: number = 0;
 	touchDiffY: number = 0;
 	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
+	doubleTapTimerRunning: boolean = false;
 	//#endregion
 
 	//#region Variables for the bottom toolbar
@@ -358,10 +361,36 @@ export class PdfContentComponent{
 			let touch = event.touches.item(0);
 			this.touchStartX = touch.pageX;
 			this.touchStartY = touch.pageY;
+			this.swipeDirection = SwipeDirection.None;
 			this.swipeStart = true;
 
 			this.viewerTransitionTime = 0;
 			this.bottomToolbarTransitionTime = 0;
+
+			// Double tap
+			if(this.width - navigationDoubleTapAreaWidth < touch.pageX || touch.pageX < navigationDoubleTapAreaWidth){
+				if(!this.doubleTapTimerRunning){
+					// Start the timer for double tap detection
+					this.doubleTapTimerRunning = true;
+
+					setTimeout(() => {
+						this.doubleTapTimerRunning = false;
+					}, doubleTapToleranceTime);
+				}else{
+					// Double tap occured, go to the previous or next page
+					this.doubleTapTimerRunning = false;
+
+					// Reset the transition viewer times
+					this.viewerTransitionTime = defaultViewerTransitionTime;
+					this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
+
+					if(this.width - navigationDoubleTapAreaWidth < touch.pageX){
+						this.NextPage();
+					}else if(touch.pageX < navigationDoubleTapAreaWidth){
+						this.PrevPage();
+					}
+				}
+			}
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
@@ -616,6 +645,7 @@ enum CurrentViewer{
 }
 
 enum SwipeDirection{
+	None,
 	Horizontal,
 	Vertical
 }

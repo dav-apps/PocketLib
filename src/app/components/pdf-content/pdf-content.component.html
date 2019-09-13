@@ -1,5 +1,5 @@
 <div id="viewer"
-		class="w-100 d-flex"
+		class="w-100 h-100 d-flex"
 		style="position: absolute; background-color: white;"
 		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewerPositionLeft"
@@ -38,7 +38,7 @@
 </div>
 
 <div id="viewer2"
-		class="w-100 d-flex"
+		class="w-100 h-100 d-flex"
 		style="position: absolute; background-color: white;"
 		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer2PositionLeft"
@@ -75,7 +75,7 @@
 </div>
 
 <div id="viewer3"
-		class="w-100 d-flex"
+		class="w-100 h-100 d-flex"
 		style="position: absolute; background-color: white;"
 		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer3PositionLeft"
