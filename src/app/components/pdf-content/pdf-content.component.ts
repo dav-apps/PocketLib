@@ -11,6 +11,10 @@ const previousPageViewerZIndex = -1;
 const touchStart = "touchstart";
 const touchMove = "touchmove";
 const touchEnd = "touchend";
+const click = "click";
+const viewerId = "viewer";
+const viewer2Id = "viewer2";
+const viewer3Id = "viewer3";
 const defaultViewerTransitionTime = 0.5;
 const defaultBottomToolbarTransitionTime = 0.2;
 const bottomToolbarMarginBottomOpened = 0;
@@ -109,15 +113,20 @@ export class PdfContentComponent{
 		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 
 		// Bind the touch events
-		document.getElementById('viewer').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+
+		// Bind the click event
+		document.getElementById(viewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		document.getElementById(viewer2Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		document.getElementById(viewer3Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
 	}
    
    @HostListener('window:resize')
@@ -366,31 +375,6 @@ export class PdfContentComponent{
 
 			this.viewerTransitionTime = 0;
 			this.bottomToolbarTransitionTime = 0;
-
-			// Double tap
-			if(this.width - navigationDoubleTapAreaWidth < touch.pageX || touch.pageX < navigationDoubleTapAreaWidth){
-				if(!this.doubleTapTimerRunning){
-					// Start the timer for double tap detection
-					this.doubleTapTimerRunning = true;
-
-					setTimeout(() => {
-						this.doubleTapTimerRunning = false;
-					}, doubleTapToleranceTime);
-				}else{
-					// Double tap occured, go to the previous or next page
-					this.doubleTapTimerRunning = false;
-
-					// Reset the transition viewer times
-					this.viewerTransitionTime = defaultViewerTransitionTime;
-					this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
-
-					if(this.width - navigationDoubleTapAreaWidth < touch.pageX){
-						this.NextPage();
-					}else if(touch.pageX < navigationDoubleTapAreaWidth){
-						this.PrevPage();
-					}
-				}
-			}
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
@@ -453,6 +437,36 @@ export class PdfContentComponent{
 			this.touchStartY = 0;
 			this.touchDiffX = 0;
 			this.touchDiffY = 0;
+		}
+	}
+
+	HandleClick(event: MouseEvent){
+		let clickedOnLeftEdge = event.pageX < navigationDoubleTapAreaWidth;
+		let clickedOnRightEdge = this.width - navigationDoubleTapAreaWidth < event.pageX;
+
+		// Double tap
+		if(clickedOnLeftEdge || clickedOnRightEdge){
+			if(!this.doubleTapTimerRunning){
+				// Start the timer for double tap detection
+				this.doubleTapTimerRunning = true;
+
+				setTimeout(() => {
+					this.doubleTapTimerRunning = false;
+				}, doubleTapToleranceTime);
+			}else{
+				// Double tap occured, go to the previous or next page
+				this.doubleTapTimerRunning = false;
+
+				// Reset the transition viewer times
+				this.viewerTransitionTime = defaultViewerTransitionTime;
+				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
+
+				if(clickedOnRightEdge){
+					this.NextPage();
+				}else if(clickedOnLeftEdge){
+					this.PrevPage();
+				}
+			}
 		}
 	}
 

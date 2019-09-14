@@ -16,6 +16,16 @@ const previousPageViewerZIndex = -1;
 const touchStart = "touchstart";
 const touchMove = "touchmove";
 const touchEnd = "touchend";
+const click = "click";
+const viewerId = "viewer";
+const viewer2Id = "viewer2";
+const viewer3Id = "viewer3";
+const viewerLeftId = "viewer-left";
+const viewerRightId = "viewer-right";
+const viewerLeft2Id = "viewer-left2";
+const viewerRight2Id = "viewer-right2";
+const viewerLeft3Id = "viewer-left3";
+const viewerRight3Id = "viewer-right3";
 const bottomToolbarMarginBottomOpened = 0;
 const bottomToolbarMarginBottomClosed = -40;
 const defaultViewerTransitionTime = 0.5;
@@ -137,12 +147,12 @@ export class EpubContentComponent{
 		this.currentBook = this.dataService.currentBook as EpubBook;
 
 		// Initialize the html element variables
-		this.viewerLeft = document.getElementById("viewer-left") as HTMLIFrameElement;
-      this.viewerRight = document.getElementById("viewer-right") as HTMLIFrameElement;
-      this.viewerLeft2 = document.getElementById("viewer-left2") as HTMLIFrameElement;
-		this.viewerRight2 = document.getElementById("viewer-right2") as HTMLIFrameElement;
-		this.viewerLeft3 = document.getElementById("viewer-left3") as HTMLIFrameElement;
-		this.viewerRight3 = document.getElementById("viewer-right3") as HTMLIFrameElement;
+		this.viewerLeft = document.getElementById(viewerLeftId) as HTMLIFrameElement;
+      this.viewerRight = document.getElementById(viewerRightId) as HTMLIFrameElement;
+      this.viewerLeft2 = document.getElementById(viewerLeft2Id) as HTMLIFrameElement;
+		this.viewerRight2 = document.getElementById(viewerRight2Id) as HTMLIFrameElement;
+		this.viewerLeft3 = document.getElementById(viewerLeft3Id) as HTMLIFrameElement;
+		this.viewerRight3 = document.getElementById(viewerRight3Id) as HTMLIFrameElement;
 		this.navigationHistory = [];
       this.setSize();
 
@@ -179,16 +189,21 @@ export class EpubContentComponent{
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
 		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
 		
-		document.getElementById('viewer').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer2').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById('viewer3').addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-   }
+		document.getElementById(viewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer2Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(viewer3Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+
+		// Bind the click event
+		document.getElementById(viewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		document.getElementById(viewer2Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		document.getElementById(viewer3Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+	}
    
    ngOnDestroy(){
       $(document).unbind();
@@ -421,6 +436,8 @@ export class EpubContentComponent{
 		currentRightViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
 		currentLeftViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
 		currentRightViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		currentLeftViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		currentRightViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
 
 		// Adapt the links of the left viewer
 		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
@@ -721,31 +738,6 @@ export class EpubContentComponent{
 
 			this.viewerTransitionTime = 0;
 			this.bottomToolbarTransitionTime = 0;
-
-			// Double tap
-			if(this.width - navigationDoubleTapAreaWidth < touch.pageX || touch.pageX < navigationDoubleTapAreaWidth){
-				if(!this.doubleTapTimerRunning){
-					// Start the timer for double tap detection
-					this.doubleTapTimerRunning = true;
-
-					setTimeout(() => {
-						this.doubleTapTimerRunning = false;
-					}, doubleTapToleranceTime);
-				}else{
-					// Double tap occured, go to the previous or next page
-					this.doubleTapTimerRunning = false;
-
-					// Reset the transition viewer times
-					this.viewerTransitionTime = defaultViewerTransitionTime;
-					this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
-
-					if(this.width - navigationDoubleTapAreaWidth < touch.pageX){
-						this.NextPage();
-					}else if(touch.pageX < navigationDoubleTapAreaWidth){
-						this.PrevPage();
-					}
-				}
-			}
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
@@ -808,6 +800,36 @@ export class EpubContentComponent{
 			this.touchStartY = 0;
 			this.touchDiffX = 0;
 			this.touchDiffY = 0;
+		}
+	}
+
+	HandleClick(event: MouseEvent){
+		let clickedOnLeftEdge = event.pageX < navigationDoubleTapAreaWidth;
+		let clickedOnRightEdge = this.width - navigationDoubleTapAreaWidth < event.pageX;
+
+		// Double tap
+		if(clickedOnLeftEdge || clickedOnRightEdge){
+			if(!this.doubleTapTimerRunning){
+				// Start the timer for double tap detection
+				this.doubleTapTimerRunning = true;
+
+				setTimeout(() => {
+					this.doubleTapTimerRunning = false;
+				}, doubleTapToleranceTime);
+			}else{
+				// Double tap occured, go to the previous or next page
+				this.doubleTapTimerRunning = false;
+
+				// Reset the transition viewer times
+				this.viewerTransitionTime = defaultViewerTransitionTime;
+				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
+
+				if(clickedOnRightEdge){
+					this.NextPage();
+				}else if(clickedOnLeftEdge){
+					this.PrevPage();
+				}
+			}
 		}
 	}
 
