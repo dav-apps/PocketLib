@@ -21,8 +21,9 @@ export class PdfBook extends Book{
       this.bookmarks = bookmarks;
 	}
 
-	public static async Create(file: Blob, title: string) : Promise<string>{
-		let book = new PdfBook(file, title);
+	public static async Create(file: File, title: string) : Promise<string>{
+		// Convert the file to a blob
+		let book = new PdfBook(new Blob([file], {type: file.type}), title);
 		await book.Save();
 		return book.uuid;
 	}

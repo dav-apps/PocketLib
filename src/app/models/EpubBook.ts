@@ -27,8 +27,9 @@ export class EpubBook extends Book{
       this.bookmarks = bookmarks;
 	}
 
-	public static async Create(file: Blob) : Promise<string>{
-		let book = new EpubBook(file);
+	public static async Create(file: File) : Promise<string>{
+		// Convert the file to a blob
+		let book = new EpubBook(new Blob([file], {type: file.type}));
 		await book.Save();
 		return book.uuid;
 	}
