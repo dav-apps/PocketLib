@@ -179,6 +179,14 @@
 	</div>
 </div>
 
+<!-- Page indicators -->
+<div style="z-index: 3; position: absolute; bottom: 0; left: 0" *ngIf="showSecondPage">
+   <p class="font-weight-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage }}</p>
+</div>
+<div style="z-index: 3; position: absolute; bottom: 0; right: 0" *ngIf="!showSecondPage || (!lastPage && showSecondPage)">
+   <p class="font-weight-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage + (showSecondPage ? 1 : 0) }}</p>
+</div>
+
 <fab-panel 
 	[isOpen]="showBookmarksPanel"
    isLightDismiss="true"
