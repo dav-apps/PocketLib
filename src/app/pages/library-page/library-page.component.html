@@ -38,6 +38,10 @@
 		[style.left.px]="contextMenuPositionX" 
 		[style.top.px]="contextMenuPositionY">
 
+   <div class="dropdown-item d-flex cursor" style="padding-left: 10px; padding-right: 10px" (click)="ShowRenameBookModal()" *ngIf="showRenameBookOption">
+      <i class="ms-Icon ms-Icon--Edit text-color" aria-hidden="true" style="font-size: 16px; margin-right: 10px; margin-top: 2px"></i>
+      <span class="text-color" style="margin-top: 3px; margin-bottom: 2px">{{ locale.bookContextMenuRename }}</span>
+   </div>   
 	<div class="dropdown-item d-flex cursor" style="padding-left: 10px; padding-right: 10px" (click)="ShowDeleteBookModal()">
 		<i class="ms-Icon ms-Icon--Delete text-color" aria-hidden="true" style="font-size: 16px; margin-right: 10px; margin-top: 2px"></i>
 		<span class="text-color" style="margin-top: 3px; margin-bottom: 2px">{{ locale.bookContextMenuDelete }}</span>

@@ -244,7 +244,7 @@ export class EpubContentComponent{
 
 	async setSize(){
 		this.width = window.outerWidth;
-		this.height = window.outerHeight;
+		this.height = window.innerHeight;
 		this.contentHeight = this.height - this.paddingTop;
 		this.pageHeight = this.contentHeight - this.paddingBottom;
 		this.paddingX = Math.round(this.width * 0.1);

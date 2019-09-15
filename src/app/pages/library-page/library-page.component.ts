@@ -5,6 +5,7 @@ import { ReadFile } from 'ngx-file-helpers';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
 import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
+import { Book } from 'src/app/models/Book';
 import { EpubBook } from 'src/app/models/EpubBook';
 import { PdfBook } from 'src/app/models/PdfBook';
 
@@ -39,7 +40,8 @@ export class LibraryPageComponent{
 	contextMenuVisible: boolean = false;
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
-	selectedBook: EpubBook;
+	selectedBook: Book;
+	showRenameBookOption: boolean = false;		// If the option in the context menu to rename the book is visible. Only for PdfBook
    hoveredBookIndex: number = -1;	// The currently hovered book, for showing the shadow
    addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
 
@@ -77,8 +79,9 @@ export class LibraryPageComponent{
 		this.router.navigate(["book"]);
    }
 
-   onContextMenu(event: MouseEvent, book: EpubBook){
+   onContextMenu(event: MouseEvent, book: Book){
 		this.selectedBook = book;
+		this.showRenameBookOption = book instanceof PdfBook;
 		
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX;
@@ -93,7 +96,12 @@ export class LibraryPageComponent{
 			this.contextMenuVisible = true;
 		}
 		return false;
-   }
+	}
+	
+	ShowRenameBookModal(){
+		this.contextMenuVisible = false;
+		// TODO Show rename book modal
+	}
 	
 	ShowDeleteBookModal(){
 		this.contextMenuVisible = false;

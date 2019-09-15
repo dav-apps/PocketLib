@@ -136,7 +136,7 @@ export class PdfContentComponent{
    
    async setSize(){
 		this.width = window.outerWidth;
-		this.height = window.outerHeight;
+		this.height = window.innerHeight;
 		this.setViewerSize();
 
 		this.showBottomToolbar = this.width < 500;

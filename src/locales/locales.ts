@@ -2,7 +2,8 @@
 const enDefaults = {
    libraryPage: {
       title: "Your Library",
-      bookContextMenuDelete: "Delete"
+      bookContextMenuDelete: "Delete",
+      bookContextMenuRename: "Rename"
    },
    accountPage: {
 		title: "Your Account",
@@ -88,7 +89,8 @@ export var enGB = enDefaults;
 const deDefaults = {
    libraryPage: {
       title: "Deine Bibliothek",
-      bookContextMenuDelete: "Löschen"
+      bookContextMenuDelete: "Löschen",
+      bookContextMenuRename: "Umbenennen"
    },
    accountPage: {
 		title: "Dein Account",
