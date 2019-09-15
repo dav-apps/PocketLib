@@ -34,8 +34,9 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
-import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
+import { RenameBookModalComponent } from './components/rename-book-modal/rename-book-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
+import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
@@ -54,8 +55,9 @@ import { environment } from '../environments/environment';
       EpubContentComponent,
       PdfContentComponent,
       ChaptersTreeComponent,
-      LogoutModalComponent,
-      DeleteBookModalComponent
+      RenameBookModalComponent,
+      DeleteBookModalComponent,
+		LogoutModalComponent
   	],
   	imports: [
    	AngularReactBrowserModule,

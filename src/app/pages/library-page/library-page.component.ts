@@ -4,6 +4,7 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 import { ReadFile } from 'ngx-file-helpers';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
+import { RenameBookModalComponent } from 'src/app/components/rename-book-modal/rename-book-modal.component';
 import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
 import { Book } from 'src/app/models/Book';
 import { EpubBook } from 'src/app/models/EpubBook';
@@ -35,8 +36,9 @@ const pdfType = "application/pdf";
 })
 export class LibraryPageComponent{
 	locale = enUS.libraryPage;
-   @ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
-   @ViewChild(DeleteBookModalComponent, {static: true}) deleteBookModalComponent: DeleteBookModalComponent;
+	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
+	@ViewChild(RenameBookModalComponent, {static: true}) renameBookModalComponent: RenameBookModalComponent;
+	@ViewChild(DeleteBookModalComponent, {static: true}) deleteBookModalComponent: DeleteBookModalComponent;
 	contextMenuVisible: boolean = false;
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
@@ -100,13 +102,17 @@ export class LibraryPageComponent{
 	
 	ShowRenameBookModal(){
 		this.contextMenuVisible = false;
-		// TODO Show rename book modal
+      this.renameBookModalComponent.Show(this.selectedBook as PdfBook);
 	}
 	
 	ShowDeleteBookModal(){
 		this.contextMenuVisible = false;
 		this.deleteBookModalComponent.Show(this.selectedBook);
-	}
+   }
+   
+   RenameBook(newTitle: string){
+		console.log(newTitle)
+   }
 
 	async DeleteBook(){
 		await this.selectedBook.Delete();

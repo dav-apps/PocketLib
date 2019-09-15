@@ -54,6 +54,11 @@ const enDefaults = {
 		login: "Log in",
 		loginNormalError: "Login was not possible",
       loginUnusualError: "An unusual error occured. Error code {0}"
+   },
+   renameBookModal: {
+      title: "Rename book",
+      save: "Save",
+      cancel: "Cancel"
 	},
 	deleteBookModal: {
 		title: "Delete book",
@@ -141,6 +146,11 @@ const deDefaults = {
       login: "Anmelden",
       loginNormalError: "Anmeldung fehlgeschlagen",
       loginUnusualError: "Ein ungewöhnlicher Fehler ist aufgetreten. Fehlercode {0}"
+   },
+   renameBookModal: {
+      title: "Buch umbenennen",
+      save: "Speichern",
+      cancel: "Abbrechen"
 	},
 	deleteBookModal: {
 		title: "Buch löschen",
