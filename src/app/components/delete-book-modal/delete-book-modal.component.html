@@ -7,7 +7,7 @@
    </div>
    <div class="modal-body theme-background-color-primary text-color">
 		<p>{{ locale.description }}</p>
-		<p>{{ book.author }}: {{ book.title }}</p>
+		<p><span *ngIf="showAuthor">{{ book.author }}: </span>{{ book.title }}</p>
    </div>
    <div class="modal-footer theme-background-color-primary" [ngClass]="dataService.darkTheme ? 'border-dark' : ''">
       <button type="button" class="btn btn-secondary" (click)="d()">{{ locale.cancel }}</button>

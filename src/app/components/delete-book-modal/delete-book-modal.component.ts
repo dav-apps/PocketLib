@@ -1,8 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Book } from 'src/app/models/Book';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
+import { Book } from 'src/app/models/Book';
+import { EpubBook } from 'src/app/models/EpubBook';
 
 @Component({
 	selector: 'pocketlib-delete-book-modal',
@@ -10,9 +11,10 @@ import { DataService } from 'src/app/services/data-service';
 })
 export class DeleteBookModalComponent{
    locale = enUS.deleteBookModal;
-	@Output() delete = new EventEmitter();
-	@Input() book: Book;
-	@ViewChild('deleteBookModal', {static: true}) deleteBookModal: ElementRef;
+   @Input() book: Book;
+   @Output() delete = new EventEmitter();
+   @ViewChild('deleteBookModal', {static: true}) deleteBookModal: ElementRef;
+   showAuthor: boolean = false;
 
 	constructor(
       private dataService: DataService,
@@ -22,9 +24,8 @@ export class DeleteBookModalComponent{
    }
 
 	Show(book?: Book){
-		if(book){
-			this.book = book;
-		}
+      if(book) this.book = book;
+      this.showAuthor = this.book instanceof EpubBook;
 
 		this.modalService.open(this.deleteBookModal).result.then(() => {
 			this.delete.emit();
