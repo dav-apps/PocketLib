@@ -6,10 +6,15 @@
       </button>
 	</div>
 	<div class="modal-body theme-background-color-primary text-color">
-		
+		<fab-text-field 
+				[placeholder]="locale.bookTitle"
+				[(value)]="title"
+				[label]="locale.title"
+				(keydown.enter)="Save()">
+		</fab-text-field>
 	</div>
 	<div class="modal-footer theme-background-color-primary" [ngClass]="dataService.darkTheme ? 'border-dark' : ''">
       <button type="button" class="btn btn-secondary" (click)="d()">{{ locale.cancel }}</button>
-      <button type="button" class="btn btn-primary" (click)="c()">{{ locale.save }}</button>
+      <button type="button" class="btn btn-primary" (click)="c()" [disabled]="title.length < minTitleLength">{{ locale.save }}</button>
    </div>
 </ng-template>

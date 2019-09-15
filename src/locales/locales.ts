@@ -57,6 +57,7 @@ const enDefaults = {
    },
    renameBookModal: {
       title: "Rename book",
+      bookTitle: "Title",
       save: "Save",
       cancel: "Cancel"
 	},
@@ -149,6 +150,7 @@ const deDefaults = {
    },
    renameBookModal: {
       title: "Buch umbenennen",
+      bookTitle: "Titel",
       save: "Speichern",
       cancel: "Abbrechen"
 	},

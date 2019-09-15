@@ -26,7 +26,12 @@ export class PdfBook extends Book{
 		let book = new PdfBook(new Blob([file], {type: file.type}), title);
 		await book.Save();
 		return book.uuid;
-	}
+   }
+   
+   public async SetTitle(title: string){
+      this.title = title;
+      await this.Save();
+   }
 
 	public async SetPage(page: number){
 		this.page = page;

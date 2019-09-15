@@ -110,8 +110,8 @@ export class LibraryPageComponent{
 		this.deleteBookModalComponent.Show(this.selectedBook);
    }
    
-   RenameBook(newTitle: string){
-		console.log(newTitle)
+   async RenameBook(newTitle: string){
+      await (this.selectedBook as PdfBook).SetTitle(newTitle);
    }
 
 	async DeleteBook(){
