@@ -1,13 +1,13 @@
 <div id="viewer"
 		class="w-100 h-100 d-flex"
-		style="position: absolute; background-color: white;"
+		style="position: absolute; background-color: white; overflow: hidden"
 		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewerPositionLeft"
       [style.z-index]="viewerZIndex">
    
 	<pdf-viewer 
 		id="viewer-left"
-		class="mx-auto"
+		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="viewerPage"
@@ -23,7 +23,7 @@
    
    <pdf-viewer
 		id="viewer-right"
-		class="mx-auto"
+		class="m-auto"
       [src]="pdfContent"
       [show-all]="false"
       [page]="viewerPage + 1"
@@ -39,14 +39,14 @@
 
 <div id="viewer2"
 		class="w-100 h-100 d-flex"
-		style="position: absolute; background-color: white;"
+		style="position: absolute; background-color: white; overflow: hidden"
 		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer2PositionLeft"
 		[style.z-index]="viewer2ZIndex">
 	
 	<pdf-viewer 
 		id="viewer-left2"
-		class="mx-auto"
+		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="viewer2Page"
@@ -60,7 +60,7 @@
 
 	<pdf-viewer
 		id="viewer-right2"
-		class="mx-auto"
+		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="viewer2Page + 1"
@@ -76,14 +76,14 @@
 
 <div id="viewer3"
 		class="w-100 h-100 d-flex"
-		style="position: absolute; background-color: white;"
+		style="position: absolute; background-color: white; overflow: hidden"
 		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer3PositionLeft"
 		[style.z-index]="viewer3ZIndex">
 	
 	<pdf-viewer 
 		id="viewer-left3"
-		class="mx-auto"
+		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="viewer3Page"
@@ -97,7 +97,7 @@
 
 	<pdf-viewer
 		id="viewer-right3"
-		class="mx-auto"
+		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="viewer3Page + 1"
@@ -140,7 +140,10 @@
 		<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
    </button>
    
-   <div style="float: right">
+	<div style="float: right">
+		<button mat-button class="book-toolbar-button" id="zoomButtonTopToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
+         <i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
+      </button>
       <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
          <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
       </button>
@@ -168,6 +171,9 @@
 			</button>
 
 			<div class="mx-auto">
+				<button mat-button class="book-toolbar-button" id="zoomButtonBottomToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
+					<i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
+				</button>
 				<button mat-button class="book-toolbar-button" (click)="OpenBookmarksPanel()">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
@@ -205,3 +211,21 @@
 
 	<p class="font-weight-light" [style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">{{ locale.noBookmarks }}</p>
 </fab-panel>
+
+<fab-callout
+		[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"
+		[hidden]="!zoomCalloutVisible"
+		(onDismiss)="zoomCalloutVisible = false">
+	
+	<div class="m-3">
+		<fab-slider
+				[min]="100"
+				[max]="200"
+            [step]="10"
+            (onChanged)="ZoomChanged($event)"
+				[valueFormat]="FormatZoomValue"
+				[styles]="sliderStyles">
+
+		</fab-slider>
+	</div>
+</fab-callout>

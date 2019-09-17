@@ -82,6 +82,15 @@ export class PdfContentComponent{
 	showBookmarksPanel: boolean = false;
 	//#endregion
 
+	//#region Variables for zoom
+	zoomCalloutVisible: boolean = false;
+	sliderStyles = {
+		container: {
+			width: 200
+		}
+	}
+	//#endregion
+
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -523,6 +532,27 @@ export class PdfContentComponent{
       this.ShowPage(NavigationDirection.None, page);
 
       return false;
+	}
+	
+	ZoomChanged(event: {value: number}){
+		this.UpdateZoom(event.value / 100);
+   }
+
+	UpdateZoom(zoom: number){
+		// Set the transform scale of the first divs of the pdf-viewers
+		let pdfViewer = document.getElementsByTagName('pdf-viewer');
+		
+		for(let i = 0; i < pdfViewer.length; i++){
+			let viewer = pdfViewer.item(i);
+			let viewerDiv = viewer.getElementsByTagName('div')[0];
+			if(!viewerDiv) continue;
+
+			viewerDiv.setAttribute('style', `overflow: hidden; transform: scale(${zoom});`);
+		}
+	}
+
+	FormatZoomValue(value: number){
+		return `${value} %`;
    }
 
 	SetPageOfCurrentViewer(page: number){
