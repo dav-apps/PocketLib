@@ -8,17 +8,20 @@ export class PdfBook extends Book{
 	public title: string;
    public page: number;
    public bookmarks: number[];
+   public zoom: number;
 
 	constructor(
 		file: Blob,
 		title: string = "",
       page: number = 1,
-      bookmarks: number[] = []
+		bookmarks: number[] = [],
+		zoom: number = 1
 	){
 		super(file);
 		this.title = title;
       this.page = page;
-      this.bookmarks = bookmarks;
+		this.bookmarks = bookmarks;
+		this.zoom = zoom;
 	}
 
 	public static async Create(file: File, title: string) : Promise<string>{
@@ -79,13 +82,19 @@ export class PdfBook extends Book{
 		}
 
 		if(bookmarkRemoved) await this.Save();
-   }
+	}
+	
+	public async SetZoom(zoom: number){
+		this.zoom = zoom;
+		await this.Save();
+	}
 
 	protected async Save(){
 		let properties: Property[] = [
 			{ name: environment.pdfBookTableTitleKey, value: this.title },
 			{ name: environment.pdfBookTablePageKey, value: this.page.toString() },
-			{ name: environment.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') }
+			{ name: environment.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
+			{ name: environment.pdfBookTableZoomKey, value: this.zoom.toString() }
       ]
 
 		await super.Save(pdfExt, properties);

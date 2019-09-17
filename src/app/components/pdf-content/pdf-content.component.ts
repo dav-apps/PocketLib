@@ -111,11 +111,8 @@ export class PdfContentComponent{
 		});
 		this.pdfContent = (await readPromise).target["result"];
 
-		// Customize pdf-viewer styles
-		let containers = document.getElementsByClassName('ng2-pdf-viewer-container');
-		for(let i = 0; i < containers.length; i++){
-			containers.item(i).setAttribute("style", "overflow-x: hidden");
-		}
+		// Set the zoom
+		this.UpdateZoom(this.currentBook.zoom);
 
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
@@ -549,6 +546,9 @@ export class PdfContentComponent{
 
 			viewerDiv.setAttribute('style', `overflow: hidden; transform: scale(${zoom});`);
 		}
+
+		// Update the zoom in the database
+		this.currentBook.SetZoom(zoom);
 	}
 
 	FormatZoomValue(value: number){

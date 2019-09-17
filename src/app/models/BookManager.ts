@@ -124,9 +124,16 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 			let page = +bookmark;
 			if(page > 0) bookmarks.push(page);
 		}
-	}
+   }
+   
+   // Get the zoom
+   let zoom: number = 1;
+   let zoomString = bookTableObject.GetPropertyValue(environment.pdfBookTableZoomKey);
+   if(zoomString){
+      zoom = +zoomString;
+   }
 
-	let book = new PdfBook(file, title, page, bookmarks);
+	let book = new PdfBook(file, title, page, bookmarks, zoom);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }

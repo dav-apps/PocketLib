@@ -221,7 +221,8 @@
 		<fab-slider
 				[min]="100"
 				[max]="200"
-            [step]="10"
+				[step]="10"
+				[value]="currentBook.zoom * 100"
             (onChanged)="ZoomChanged($event)"
 				[valueFormat]="FormatZoomValue"
 				[styles]="sliderStyles">

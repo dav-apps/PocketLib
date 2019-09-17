@@ -18,6 +18,7 @@ export const environment = {
 	pdfBookTableTitleKey: "title",
    pdfBookTablePageKey: "page",
    pdfBookTableBookmarksKey: "bookmarks",
+   pdfBookTableZoomKey: "zoom",
    // Keys for App table properties
    appTableNameKey: "name",
    appTableUrlKey: "url",
