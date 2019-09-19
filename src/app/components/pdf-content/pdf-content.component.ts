@@ -374,8 +374,8 @@ export class PdfContentComponent{
 
 		if(event.type == touchStart){
 			let touch = event.touches.item(0);
-			this.touchStartX = touch.pageX;
-			this.touchStartY = touch.pageY;
+			this.touchStartX = touch.screenX;
+			this.touchStartY = touch.screenY;
 			this.swipeDirection = SwipeDirection.None;
 			this.swipeStart = true;
 
@@ -384,8 +384,8 @@ export class PdfContentComponent{
 		}else if(event.type == touchMove){
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0);
-			this.touchDiffX = this.touchStartX - touch.pageX;
-			this.touchDiffY = this.touchStartY - touch.pageY;
+			this.touchDiffX = this.touchStartX - touch.screenX;
+			this.touchDiffY = this.touchStartY - touch.screenY;
 
 			if(this.swipeStart){
 				// Check if the user is swiping up or down
@@ -437,7 +437,15 @@ export class PdfContentComponent{
 						this.SetLeftOfPreviousViewer(-this.width);
 					}
 				}
-			}
+			}else if(this.swipeDirection == SwipeDirection.Vertical){
+            if(this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed / 2){
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed;
+					this.bottomToolbarOpened = false;
+				}else{
+					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened;
+					this.bottomToolbarOpened = true;
+				}
+         }
 
 			this.touchStartX = 0;
 			this.touchStartY = 0;
