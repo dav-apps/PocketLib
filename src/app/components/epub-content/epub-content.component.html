@@ -55,7 +55,7 @@
 </button>
 
 <!-- Top Toolbar -->
-<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar">
+<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar && initialized">
 	<button mat-button class="book-toolbar-button text-color" 
 			style="font-size: 16px" 
 			(click)="GoBack()" 
@@ -81,7 +81,7 @@
 		style="z-index: 2; position: absolute; bottom: 0;"
 		[style.marginBottom.px]="bottomToolbarMarginBottom"
 		[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
-		*ngIf="showBottomToolbar">
+		*ngIf="showBottomToolbar && initialized">
 	<div class="w-100" style="display: inline-block;">
 		<div class="d-flex justify-content-center">
 			<button mat-button class="book-toolbar-button text-color" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">

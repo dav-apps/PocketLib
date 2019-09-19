@@ -141,10 +141,11 @@ export class EpubContentComponent{
 		private ngZone: NgZone
 	){
 		this.locale = this.dataService.GetLocale().epubContent;
+		this.setSize();
 	}
 
 	async ngOnInit(){
-		this.currentBook = this.dataService.currentBook as EpubBook;
+      this.currentBook = this.dataService.currentBook as EpubBook;
 
 		// Initialize the html element variables
 		this.viewerLeft = document.getElementById(viewerLeftId) as HTMLIFrameElement;
@@ -154,7 +155,6 @@ export class EpubContentComponent{
 		this.viewerLeft3 = document.getElementById(viewerLeft3Id) as HTMLIFrameElement;
 		this.viewerRight3 = document.getElementById(viewerRight3Id) as HTMLIFrameElement;
 		this.navigationHistory = [];
-      this.setSize();
 
 		if(this.dataService.currentBook){
 			// Load the ebook
