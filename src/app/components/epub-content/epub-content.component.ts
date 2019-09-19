@@ -99,6 +99,7 @@ export class EpubContentComponent{
 	//#region Variables for touch events
 	swipeDirection: SwipeDirection = SwipeDirection.None;	// Whether the user swipes vertically or horizontally
 	swipeStart: boolean = false;
+	showPageRunningWhenSwipeStarted: boolean = false;		// Is set at the beginning of a touch. If true, showPage was running and the touch will be completely ignored
 	touchStartX: number = 0;
    touchStartY: number = 0;
    touchDiffX: number = 0;
@@ -397,11 +398,17 @@ export class EpubContentComponent{
 			// Move the viewer positions
 			await this.MoveViewersClockwise();
 
+			// Set the event listeners to the curent page
+			this.SetEventListeners(ViewerPosition.Current);
+
 			// Render the next page
 			await this.RenderNextPage();
 		}else if(direction == NavigationDirection.Back){
 			// Move the viewer positions
 			await this.MoveViewersCounterClockwise();
+
+			// Set the event listeners to the curent page
+			this.SetEventListeners(ViewerPosition.Current);
 
 			// Render the previous page
 			await this.RenderPreviousPage();
@@ -412,6 +419,9 @@ export class EpubContentComponent{
 			// Move the viewer positions
 			await this.MoveViewersClockwise();
 
+			// Set the event listeners to the curent page
+			this.SetEventListeners(ViewerPosition.Current);
+
 			// Render the next page
 			await this.RenderNextPage();
 
@@ -421,23 +431,6 @@ export class EpubContentComponent{
 
 		let currentLeftViewer = this.GetCurrentViewer();
 		let currentRightViewer = this.GetCurrentViewer(true);
-		let currentChapter = this.chapters[this.currentChapter];
-
-		// Bind the keydown and wheel events to the viewer documents
-		$(currentLeftViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(currentRightViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(currentLeftViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
-		$(currentRightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
-      currentLeftViewer.contentWindow.focus();
-      
-      currentLeftViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentRightViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentLeftViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentRightViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentLeftViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentRightViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		currentLeftViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
-		currentRightViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
 
 		// Adapt the links of the left viewer
 		let linkTags = currentLeftViewer.contentWindow.document.getElementsByTagName("a");
@@ -452,7 +445,8 @@ export class EpubContentComponent{
 		}
 
 		this.setFirstLastPage();
-      this.LoadCurrentChapterTitle();
+		this.LoadCurrentChapterTitle();
+		let currentChapter = this.chapters[this.currentChapter];
 
 		if(progress == -1){
 			// Calculate the new progress
@@ -735,6 +729,7 @@ export class EpubContentComponent{
 			this.touchStartY = touch.screenY;
 			this.swipeDirection = SwipeDirection.None;
 			this.swipeStart = true;
+			this.showPageRunningWhenSwipeStarted = this.showPageRunning;
 
 			this.viewerTransitionTime = 0;
 			this.bottomToolbarTransitionTime = 0;
@@ -751,6 +746,9 @@ export class EpubContentComponent{
 
 				this.swipeStart = false;
 			}else if(this.swipeDirection == SwipeDirection.Horizontal){
+				// Disable horizontal swiping until the next and previous pages are fully rendered
+				if(this.showPageRunningWhenSwipeStarted) return;
+				
 				// Move the pages
 				if(this.touchDiffX > 0 && !this.lastPage){
 					// Swipe to the left; move the current viewer to the left
@@ -778,6 +776,9 @@ export class EpubContentComponent{
 			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
 
 			if(this.swipeDirection == SwipeDirection.Horizontal){
+				// Disable horizontal swiping until the next and previous pages are fully rendered
+				if(this.showPageRunningWhenSwipeStarted) return;
+
 				if(this.touchDiffX > 0 && !this.lastPage){
 					// If the page was swiped wide enough, show the next page
 					if(this.touchDiffX > this.width * 0.15){
@@ -1251,6 +1252,28 @@ export class EpubContentComponent{
 		}
 
 		return new Promise(resolve => setTimeout(resolve, this.viewerTransitionTime * 1000));
+	}
+
+	SetEventListeners(position: ViewerPosition){
+		let leftViewer = this.GetViewer(position);
+		let rightViewer = this.GetViewer(position, true);
+
+		// Bind the keydown and wheel events to the viewers
+		$(leftViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
+		$(rightViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
+		$(leftViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(rightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		leftViewer.contentWindow.focus();
+
+		// Bind the touch and click events to the viewers
+      leftViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		rightViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		leftViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		rightViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		leftViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		rightViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		leftViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		rightViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
 	}
 
 	/**
