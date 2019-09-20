@@ -33,6 +33,7 @@ import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
 import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
@@ -54,6 +55,7 @@ import { environment } from '../environments/environment';
       NewAppPageComponent,
       AuthorPageComponent,
       LoginPageComponent,
+      LoadingPageComponent,
       EpubContentComponent,
       PdfContentComponent,
       ChaptersTreeComponent,

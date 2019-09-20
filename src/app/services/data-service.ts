@@ -5,16 +5,19 @@ import { environment } from 'src/environments/environment';
 import * as locales from 'src/locales/locales';
 import { Book } from '../models/Book';
 import { GetAllBooks, GetBook } from '../models/BookManager';
+import { Settings } from '../models/Settings';
 
 @Injectable()
 export class DataService{
    user: DavUser;
    locale: string = navigator.language;
    navbarVisible: boolean = true;
-   books: Book[] = [];
+	books: Book[] = [];
 	currentBook: Book = null;
 	darkTheme: boolean = false;
-	windowsUiSettings = null;
+   windowsUiSettings = null;
+   settings: Settings;
+   settingsLoadCallbacks: Function[] = [];   // All functions in this array are called when the settings are loaded
 
    constructor(){
       this.user = new DavUser();

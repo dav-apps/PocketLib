@@ -78,6 +78,7 @@ export class LibraryPageComponent{
    
    ShowBook(book: EpubBook){
 		this.dataService.currentBook = book;
+		this.dataService.settings.SetCurrentBook(book.uuid);
 		this.router.navigate(["book"]);
    }
 
