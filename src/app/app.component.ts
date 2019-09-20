@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
+import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
-import * as Dav from 'dav-npm';
 
 @Component({
 	selector: 'app-root',
@@ -26,15 +26,12 @@ export class AppComponent {
                window.location.href = "/";
             }
          }
-      });
+		});
    }
 
 	ngOnInit(){
-      // Start loading the books
-      this.dataService.LoadAllBooks();
-      this.SetTitleBarColor();
-      this.dataService.ApplyTheme();
-      initializeIcons();
+		this.SetTitleBarColor();
+		initializeIcons();
 
 		let notificationOptions = {
 			icon: "",
@@ -43,8 +40,9 @@ export class AppComponent {
 
 		Dav.Initialize(environment.production ? Dav.DavEnvironment.Production : Dav.DavEnvironment.Development,
 							environment.appId,
-							[environment.bookFileTableId, environment.bookTableId, environment.appTableId],
-							[],
+							[environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
+                     [],
+                     true,
 							notificationOptions,
 							{
 								UpdateAllOfTable: (tableId: number) => {
@@ -66,6 +64,10 @@ export class AppComponent {
                            this.dataService.LoadAllBooks();
 								}
 							});
+
+      // Load the books
+      this.dataService.LoadAllBooks();
+      this.dataService.ApplyTheme();
    }
    
    SetTitleBarColor(){
