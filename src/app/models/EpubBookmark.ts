@@ -37,10 +37,10 @@ export class EpubBookmark{
 		}
 
 		let properties: Property[] = [
-			{ name: environment.epubBookmarkBookKey, value: this.book },
-			{ name: environment.epubBookmarkNameKey, value: this.name },
-			{ name: environment.epubBookmarkChapterKey, value: this.chapter.toString() },
-			{ name: environment.epubBookmarkProgressKey, value: this.progress.toString() }
+			{ name: environment.epubBookmarkTableBookKey, value: this.book },
+			{ name: environment.epubBookmarkTableNameKey, value: this.name },
+			{ name: environment.epubBookmarkTableChapterKey, value: this.chapter.toString() },
+			{ name: environment.epubBookmarkTableProgressKey, value: this.progress.toString() }
 		]
 
 		await tableObject.SetPropertyValues(properties);
@@ -63,21 +63,21 @@ function ConvertTableObjectToEpubBookmark(tableObject: TableObject){
 	if(!tableObject || tableObject.TableId != environment.epubBookmarkTableId) return null;
 
 	// book
-	let book = tableObject.GetPropertyValue(environment.epubBookmarkBookKey);
+	let book = tableObject.GetPropertyValue(environment.epubBookmarkTableBookKey);
 
 	// name
-	let name = tableObject.GetPropertyValue(environment.epubBookmarkNameKey);
+	let name = tableObject.GetPropertyValue(environment.epubBookmarkTableNameKey);
 
 	// chapter
 	let chapter: number = 0;
-	let chapterString = tableObject.GetPropertyValue(environment.epubBookmarkChapterKey);
+	let chapterString = tableObject.GetPropertyValue(environment.epubBookmarkTableChapterKey);
 	if(chapterString){
 		chapter = +chapterString;
 	}
 
 	// progress
 	let progress: number = 0;
-	let progressString = tableObject.GetPropertyValue(environment.epubBookmarkProgressKey);
+	let progressString = tableObject.GetPropertyValue(environment.epubBookmarkTableProgressKey);
 	if(progressString){
 		progress = +progressString;
 	}
