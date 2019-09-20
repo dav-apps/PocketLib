@@ -13,7 +13,7 @@ export class SettingsPageComponent{
 	version: string = environment.version;
 	themeKeys: string[] = [environment.lightThemeKey, environment.darkThemeKey, environment.systemThemeKey]
    selectedTheme: string;
-   openLastReadBook: boolean = environment.settingsOpenLastReadBookDefault;
+   openLastReadBook: boolean = false;
 	isWindows: boolean = false;
 
 	constructor(
@@ -29,7 +29,10 @@ export class SettingsPageComponent{
 		this.selectedTheme = await this.dataService.GetTheme();
 		if(!this.isWindows && this.selectedTheme == environment.systemThemeKey){
 			this.selectedTheme = environment.lightThemeKey;
-		}
+      }
+      
+      // Set the openLastReadBook toggle
+      this.openLastReadBook = await this.dataService.GetOpenLastReadBook();
 
 		// Increase the font size of the toggle label
 		let labels = document.getElementsByClassName('ms-Toggle-label');

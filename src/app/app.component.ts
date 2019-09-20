@@ -70,7 +70,7 @@ export class AppComponent {
 		for(let callback of this.dataService.settingsLoadCallbacks) callback();
 		this.dataService.settingsLoadCallbacks = [];
 
-		if(this.router.url == "/"){
+      if(await this.dataService.GetOpenLastReadBook() && this.router.url == "/"){
 			this.router.navigate(['loading'], {skipLocationChange: true});
 		}
 		

@@ -130,7 +130,7 @@ export class DataService{
 
    async GetOpenLastReadBook() : Promise<boolean>{
       var value = await localforage.getItem(environment.settingsOpenLastReadBookKey) as boolean;
-      return value ? value : environment.settingsOpenLastReadBookDefault;
+      return value != null ? value : environment.settingsOpenLastReadBookDefault;
    }
 	//#endregion
 }
