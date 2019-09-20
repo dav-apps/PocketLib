@@ -8,6 +8,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -75,6 +76,7 @@ import { environment } from '../environments/environment';
       MatInputModule,
       MatFormFieldModule,
       MatTreeModule,
+      MatProgressSpinnerModule,
       PortalModule,
 		NgbModule,
 		PdfViewerModule,

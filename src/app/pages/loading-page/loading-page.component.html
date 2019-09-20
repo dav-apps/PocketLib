@@ -1,1 +1,15 @@
-<h3>Loading...</h3>
+<div 
+	id="loading-background"
+	class="d-flex justify-content-center"
+	style="background-color: var(--primary); color: white"
+   [style.height.px]="height">
+   <div style="display: inline-block" class="m-auto text-center">
+		<img src="/assets/images/pocketlib-logo.png" width="108" style="margin-bottom: 38px" />
+
+		<mat-progress-spinner 
+				class="mx-auto"
+				mode="indeterminate" 
+				diameter="30">
+		</mat-progress-spinner>
+	</div>
+</div>
