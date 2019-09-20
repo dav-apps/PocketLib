@@ -122,6 +122,15 @@ export class DataService{
 	async GetTheme() : Promise<string>{
 		var value = await localforage.getItem(environment.settingsThemeKey) as string;
 		return value ? value : environment.settingsThemeDefault;
-	}
+   }
+   
+   async SetOpenLastReadBook(value: boolean){
+      await localforage.setItem(environment.settingsOpenLastReadBookKey, value);
+   }
+
+   async GetOpenLastReadBook() : Promise<boolean>{
+      var value = await localforage.getItem(environment.settingsOpenLastReadBookKey) as boolean;
+      return value ? value : environment.settingsOpenLastReadBookDefault;
+   }
 	//#endregion
 }

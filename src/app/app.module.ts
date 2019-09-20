@@ -18,7 +18,8 @@ import {
    FabIconModule,
    FabPanelModule,
    FabCalloutModule,
-   FabSliderModule
+   FabSliderModule,
+   FabToggleModule
 } from '@angular-react/fabric';
 
 import { DataService } from './services/data-service';
@@ -83,7 +84,8 @@ import { environment } from '../environments/environment';
       FabIconModule,
       FabPanelModule,
       FabCalloutModule,
-      FabSliderModule,
+		FabSliderModule,
+		FabToggleModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [

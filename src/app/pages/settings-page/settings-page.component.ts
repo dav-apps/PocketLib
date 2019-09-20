@@ -6,13 +6,14 @@ import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
    selector: "pocketlib-settings-page",
-   templateUrl: "./settings-page.component.html"
+	templateUrl: "./settings-page.component.html"
 })
 export class SettingsPageComponent{
    locale = enUS.settingsPage;
 	version: string = environment.version;
 	themeKeys: string[] = [environment.lightThemeKey, environment.darkThemeKey, environment.systemThemeKey]
-	selectedTheme: string;
+   selectedTheme: string;
+   openLastReadBook: boolean = environment.settingsOpenLastReadBookDefault;
 	isWindows: boolean = false;
 
 	constructor(
@@ -24,16 +25,25 @@ export class SettingsPageComponent{
 	}
 	
 	async ngOnInit(){
-		// Set the correct theme radio button
+		// Select the correct theme radio button
 		this.selectedTheme = await this.dataService.GetTheme();
 		if(!this.isWindows && this.selectedTheme == environment.systemThemeKey){
 			this.selectedTheme = environment.lightThemeKey;
 		}
+
+		// Increase the font size of the toggle label
+		let labels = document.getElementsByClassName('ms-Toggle-label');
+		if(labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px');
 	}
 	
 	onThemeRadioButtonSelected(event: MatRadioChange){
 		this.selectedTheme = event.value;
 		this.dataService.SetTheme(event.value);
 		this.dataService.ApplyTheme(event.value);
+	}
+
+	onOpenLastReadBookToggleChange(event: {checked: boolean}){
+		this.openLastReadBook = event.checked;
+		this.dataService.SetOpenLastReadBook(event.checked);
 	}
 }

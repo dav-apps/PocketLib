@@ -24,6 +24,7 @@ const enDefaults = {
       lightTheme: "Light",
       darkTheme: "Dark",
       systemTheme: "Use system setting",
+      openLastReadBook: "Open the last read book at startup",
       privacy: "Privacy Policy",
       github: "PocketLib on GitHub"
    },
@@ -117,6 +118,7 @@ const deDefaults = {
       lightTheme: "Hell",
       darkTheme: "Dunkel",
       systemTheme: "Systemeinstellung verwenden",
+      openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten",
       privacy: "Datenschutzerklärung",
       github: "PocketLib auf GitHub"
 	},

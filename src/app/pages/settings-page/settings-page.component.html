@@ -1,9 +1,19 @@
 <div class="container d-flex flex-column ms-motion-slideUpIn">
    <h1 class="text-center mt-3 text-color">{{ locale.title }}</h1>
    
-   <div class="mx-auto" style="max-width: 170px">
+   <div class="mx-auto mt-4" style="max-width: 240px">
+      <!-- Open last read book -->
+		<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
+		
+		<fab-toggle 
+				[(checked)]="openLastReadBook"
+				(onChange)="onOpenLastReadBookToggleChange($event)">
+		</fab-toggle>
+   </div>
+
+   <div class="mx-auto mt-4" style="max-width: 170px">
 		<!-- Theme -->
-		<p class="text-color mt-4" style="font-size: 20px">{{ locale.theme }}</p>
+		<p class="text-color" style="font-size: 20px">{{ locale.theme }}</p>
 		<mat-radio-group class="d-flex flex-column text-color" 
 								[color]="dataService.darkTheme ? 'accent' : 'primary'" 
 								[value]="selectedTheme" 

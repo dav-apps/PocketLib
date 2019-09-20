@@ -31,9 +31,11 @@ export const environment = {
    // Keys for Settings table
    settingsTableCurrentBookKey: "current_book",
    // Settings keys
-   settingsThemeKey: "settings-theme",
+	settingsThemeKey: "settings-theme",
+	settingsOpenLastReadBookKey: "settings-openLastReadBook",
    // Settings default
-   settingsThemeDefault: "system",
+	settingsThemeDefault: "system",
+	settingsOpenLastReadBookDefault: true,
    // Other keys
    themeKey: "theme",
    lightThemeKey: "light",
