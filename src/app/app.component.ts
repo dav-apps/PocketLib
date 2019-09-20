@@ -4,6 +4,7 @@ import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import * as Dav from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
+import { GetSettings } from 'src/app/models/Settings';
 
 @Component({
 	selector: 'app-root',
@@ -11,8 +12,6 @@ import { DataService } from 'src/app/services/data-service';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	title = 'PocketLib';
-
    constructor(
       public router: Router,
       public activatedRoute: ActivatedRoute,
@@ -29,7 +28,8 @@ export class AppComponent {
 		});
    }
 
-	ngOnInit(){
+	async ngOnInit(){
+		this.dataService.ApplyTheme();
 		this.SetTitleBarColor();
 		initializeIcons();
 
@@ -64,10 +64,18 @@ export class AppComponent {
                            this.dataService.LoadAllBooks();
 								}
 							});
+	
+		// Get the settings and call the callbacks when the settings were loaded
+		this.dataService.settings = await GetSettings();
+		for(let callback of this.dataService.settingsLoadCallbacks) callback();
+		this.dataService.settingsLoadCallbacks = [];
 
-      // Load the books
+		if(this.router.url == "/"){
+			this.router.navigate(['loading'], {skipLocationChange: true});
+		}
+		
+		// Load the books
       this.dataService.LoadAllBooks();
-      this.dataService.ApplyTheme();
    }
    
    SetTitleBarColor(){
