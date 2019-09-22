@@ -18,9 +18,18 @@ export class DataService{
    windowsUiSettings = null;
    settings: Settings;
    settingsLoadCallbacks: Function[] = [];   // All functions in this array are called when the settings are loaded
+	settingsSyncedCallbacks: Function[] = []; // All functions in this array are called when the settings are synced with the server
+   syncFinished: boolean = false;
+   userLoaded: boolean = false;
+   userLoadCallbacks: Function[] = [];    // All functions in this array are called when the user is loaded
 
    constructor(){
-      this.user = new DavUser();
+      this.user = new DavUser(() => {
+         // Set userLoaded to true and call callbacks
+         this.userLoaded = true;
+         for(let callback of this.userLoadCallbacks) callback();
+         this.userLoadCallbacks = [];
+      });
    }
 
    async LoadAllBooks(){

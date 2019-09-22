@@ -18,16 +18,13 @@ export class LoadingPageComponent{
 	}
 
 	ngOnInit(){
-      this.setSize();
-
-		// Check if the settings were loaded
-		if(this.dataService.settings){
-			this.LoadCurrentBook();
+		this.setSize();
+		
+		if(!this.dataService.userLoaded){
+			// Wait for the user to be loaded
+			this.dataService.userLoadCallbacks.push(() => this.LoadSettings());
 		}else{
-			// Wait for the settings callback
-			this.dataService.settingsLoadCallbacks.push(() => {
-				this.LoadCurrentBook();
-			})
+			this.LoadSettings();
 		}
    }
 
@@ -47,7 +44,22 @@ export class LoadingPageComponent{
    
    setSize(){
       this.height = window.innerHeight;
-   }
+	}
+	
+	LoadSettings(){
+		// Check if the settings were loaded
+		if(this.dataService.settings && !this.dataService.user.IsLoggedIn){
+			this.LoadCurrentBook();
+      }else if(this.dataService.user.IsLoggedIn && !this.dataService.syncFinished){
+         // Wait for the settings sync callback
+         this.dataService.settingsSyncedCallbacks.push(() => this.LoadCurrentBook());
+		}else if(!this.dataService.user.IsLoggedIn){
+         // Wait for the settings callback
+			this.dataService.settingsLoadCallbacks.push(() => this.LoadCurrentBook());
+      }else{
+			this.LoadCurrentBook();
+		}
+	}
 
 	async LoadCurrentBook(){
 		// Load the current book

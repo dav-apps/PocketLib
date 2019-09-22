@@ -45,8 +45,17 @@ export class AppComponent {
                      true,
 							notificationOptions,
 							{
-								UpdateAllOfTable: (tableId: number) => {
-									
+								UpdateAllOfTable: async (tableId: number, changed: boolean) => {
+									if(tableId == environment.settingsTableId){
+										// Reload the settings if it has changed
+										if(changed){
+											this.dataService.settings = await GetSettings();
+										}
+
+										// Call the callbacks for settings synced
+										for(let callback of this.dataService.settingsSyncedCallbacks) callback();
+										this.dataService.settingsSyncedCallbacks = [];
+									}
 								},
 								UpdateTableObject: (tableObject: Dav.TableObject, fileDownloaded: boolean = false) => {
 									if(tableObject.TableId == environment.bookTableId){
@@ -61,7 +70,13 @@ export class AppComponent {
                            
 								},
 								SyncFinished: () => {
-                           this.dataService.LoadAllBooks();
+									this.dataService.syncFinished = true;
+
+									// Call settings synced callbacks
+									for(let callback of this.dataService.settingsSyncedCallbacks) callback();
+									this.dataService.settingsSyncedCallbacks = [];
+
+									this.dataService.LoadAllBooks();
 								}
 							});
 	
