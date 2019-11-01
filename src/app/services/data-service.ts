@@ -17,8 +17,10 @@ export class DataService{
 	darkTheme: boolean = false;
    windowsUiSettings = null;
    settings: Settings;
-   settingsLoadCallbacks: Function[] = [];   // All functions in this array are called when the settings are loaded
-	settingsSyncedCallbacks: Function[] = []; // All functions in this array are called when the settings are synced with the server
+	settingsLoadPromise: Promise<Settings> = new Promise(resolve => this.settingsLoadPromiseResolve = resolve);
+	settingsLoadPromiseResolve: Function;
+	settingsSyncPromise: Promise<Settings> = new Promise(resolve => this.settingsSyncPromiseResolve = resolve);
+	settingsSyncPromiseResolve: Function;
    syncFinished: boolean = false;
 	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
 	userPromiseResolve: Function;

@@ -23,7 +23,7 @@ export class LoadingPageComponent{
 		// Wait for the user to be loaded
 		await this.dataService.userPromise;
 		
-		this.LoadSettings();
+		await this.LoadSettings();
    }
 
    ngAfterViewInit(){
@@ -44,19 +44,15 @@ export class LoadingPageComponent{
       this.height = window.innerHeight;
 	}
 	
-	LoadSettings(){
-		// Check if the settings were loaded
-		if(this.dataService.settings && !this.dataService.user.IsLoggedIn){
-			this.LoadCurrentBook();
-      }else if(this.dataService.user.IsLoggedIn && !this.dataService.syncFinished){
-         // Wait for the settings sync callback
-         this.dataService.settingsSyncedCallbacks.push(() => this.LoadCurrentBook());
-		}else if(!this.dataService.user.IsLoggedIn){
-         // Wait for the settings callback
-			this.dataService.settingsLoadCallbacks.push(() => this.LoadCurrentBook());
-      }else{
-			this.LoadCurrentBook();
-		}
+	async LoadSettings(){
+		// Wait for the settings to be loaded
+		await this.dataService.settingsLoadPromise;
+
+		// Wait for the settings to be synced if the user is logged in
+		if(this.dataService.user.IsLoggedIn) await this.dataService.settingsSyncPromise;
+
+		// Show the book
+		this.LoadCurrentBook();
 	}
 
 	async LoadCurrentBook(){

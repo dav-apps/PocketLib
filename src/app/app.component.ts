@@ -52,9 +52,8 @@ export class AppComponent {
 											this.dataService.settings = await GetSettings();
 										}
 
-										// Call the callbacks for settings synced
-										for(let callback of this.dataService.settingsSyncedCallbacks) callback();
-										this.dataService.settingsSyncedCallbacks = [];
+										// Resolve the settings synced promise
+										this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
 									}
 								},
 								UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => {
@@ -73,18 +72,18 @@ export class AppComponent {
 								SyncFinished: () => {
 									this.dataService.syncFinished = true;
 
-									// Call settings synced callbacks
-									for(let callback of this.dataService.settingsSyncedCallbacks) callback();
-									this.dataService.settingsSyncedCallbacks = [];
-
+									// Resolve the settings synced promise
+									this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
+									
 									this.dataService.LoadAllBooks();
 								}
 							});
-	
-		// Get the settings and call the callbacks when the settings were loaded
+
+		// Get the settings
 		this.dataService.settings = await GetSettings();
-		for(let callback of this.dataService.settingsLoadCallbacks) callback();
-		this.dataService.settingsLoadCallbacks = [];
+
+		// Resolve the settings load promise
+		this.dataService.settingsLoadPromiseResolve(this.dataService.settings);
 
       if(await this.dataService.GetOpenLastReadBook() && this.router.url == "/"){
 			this.router.navigate(['loading'], {skipLocationChange: true});
