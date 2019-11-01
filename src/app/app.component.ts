@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import * as Dav from 'dav-npm';
+import { Init, DavEnvironment, TableObject } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
 import { GetSettings } from 'src/app/models/Settings';
@@ -38,7 +38,7 @@ export class AppComponent {
 			badge: ""
       }
 
-		Dav.Initialize(environment.production ? Dav.DavEnvironment.Production : Dav.DavEnvironment.Development,
+		Init(environment.production ? DavEnvironment.Production : DavEnvironment.Development,
 							environment.appId,
 							[environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
                      [],
@@ -57,7 +57,7 @@ export class AppComponent {
 										this.dataService.settingsSyncedCallbacks = [];
 									}
 								},
-								UpdateTableObject: (tableObject: Dav.TableObject, fileDownloaded: boolean = false) => {
+								UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => {
 									if(tableObject.TableId == environment.bookTableId){
 										// Reload the book
 										this.dataService.ReloadBook(tableObject.Uuid);
@@ -66,9 +66,10 @@ export class AppComponent {
 										this.dataService.ReloadBookByFile(tableObject.Uuid);
 									}
 								},
-								DeleteTableObject: (tableObject: Dav.TableObject) => {
+								DeleteTableObject: (tableObject: TableObject) => {
                            
 								},
+								UserDownloadFinished: () => {},
 								SyncFinished: () => {
 									this.dataService.syncFinished = true;
 
