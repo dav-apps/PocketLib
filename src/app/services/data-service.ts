@@ -20,16 +20,11 @@ export class DataService{
    settingsLoadCallbacks: Function[] = [];   // All functions in this array are called when the settings are loaded
 	settingsSyncedCallbacks: Function[] = []; // All functions in this array are called when the settings are synced with the server
    syncFinished: boolean = false;
-   userLoaded: boolean = false;
-   userLoadCallbacks: Function[] = [];    // All functions in this array are called when the user is loaded
+	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
+	userPromiseResolve: Function;
 
    constructor(){
-      this.user = new DavUser(() => {
-         // Set userLoaded to true and call callbacks
-         this.userLoaded = true;
-         for(let callback of this.userLoadCallbacks) callback();
-         this.userLoadCallbacks = [];
-      });
+		this.user = new DavUser(() => this.userPromiseResolve(this.user));
    }
 
    async LoadAllBooks(){

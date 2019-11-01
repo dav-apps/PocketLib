@@ -17,15 +17,13 @@ export class LoadingPageComponent{
       this.dataService.navbarVisible = false;
 	}
 
-	ngOnInit(){
+	async ngOnInit(){
 		this.setSize();
+
+		// Wait for the user to be loaded
+		await this.dataService.userPromise;
 		
-		if(!this.dataService.userLoaded){
-			// Wait for the user to be loaded
-			this.dataService.userLoadCallbacks.push(() => this.LoadSettings());
-		}else{
-			this.LoadSettings();
-		}
+		this.LoadSettings();
    }
 
    ngAfterViewInit(){
