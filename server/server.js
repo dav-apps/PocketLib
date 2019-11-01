@@ -1,5 +1,6 @@
 var path = require('path');
 var express = require('express');
+require('dotenv').config();
 
 var websocket = require('./websocket');
 
