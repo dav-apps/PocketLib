@@ -1,14 +1,14 @@
-var websocket = require('../websocket');
-var axios = require('axios');
+import * as websocket from '../websocket';
+import * as axios from 'axios';
 
-const loginKey = "login";
-exports.loginKey = loginKey;
+export const loginKey = "login";
+export const getAppKey = "getApp";
 
-exports.login = async function(message){
+export async function login(message: {email: string, password: string}){
 	// Create a session on the PocketLib API
 	var responseMessage;
    try{
-      var response = await axios({
+      var response = await axios.default({
          method: 'post',
          url: `${process.env.POCKETLIB_API_URL}/session`,
          headers: {
@@ -35,14 +35,11 @@ exports.login = async function(message){
 	websocket.emit(loginKey, responseMessage);
 }
 
-const getAppKey = "getApp";
-exports.getAppKey = getAppKey;
-
-exports.getApp = async function(message){
+export async function getApp(message: {uuid: string}){
    // Get the app from the PocketLib API
    var responseMessage;
    try{
-      var response = await axios({
+      var response = await axios.default({
          method: 'get',
          url: `${process.env.POCKETLIB_API_URL}/apps/${message.uuid}`,
          headers: {
