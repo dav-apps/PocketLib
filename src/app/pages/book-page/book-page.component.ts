@@ -33,9 +33,9 @@ export class BookPageComponent{
       // Disable scrolling
 		document.body.setAttribute('style', 'overflow: hidden');
 
-      if(!this.dataService.currentBook && this.dataService.settings.currentBook){
+      if(!this.dataService.currentBook && this.dataService.settings.book){
          // Get the current book from the settings
-         this.dataService.currentBook = await GetBook(this.dataService.settings.currentBook);
+         this.dataService.currentBook = await GetBook(this.dataService.settings.book);
       }
 
       // Select the correct rendering component, based on the mime type of the file

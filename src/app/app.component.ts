@@ -38,46 +38,48 @@ export class AppComponent {
 			badge: ""
       }
 
-		Init(environment.production ? DavEnvironment.Production : DavEnvironment.Development,
-							environment.appId,
-							[environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
-                     [],
-                     true,
-							notificationOptions,
-							{
-								UpdateAllOfTable: async (tableId: number, changed: boolean) => {
-									if(tableId == environment.settingsTableId){
-										// Reload the settings if it has changed
-										if(changed){
-											this.dataService.settings = await GetSettings();
-										}
+		Init(
+			environment.production ? DavEnvironment.Production : DavEnvironment.Development,
+			environment.appId,
+			[environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
+			[],
+			true,
+			notificationOptions,
+			{
+				UpdateAllOfTable: async (tableId: number, changed: boolean) => {
+					if(tableId == environment.settingsTableId){
+						// Reload the settings if it has changed
+						if(changed){
+							this.dataService.settings = await GetSettings();
+						}
 
-										// Resolve the settings synced promise
-										this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
-									}
-								},
-								UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => {
-									if(tableObject.TableId == environment.bookTableId){
-										// Reload the book
-										this.dataService.ReloadBook(tableObject.Uuid);
-									}else if(tableObject.TableId == environment.bookFileTableId && fileDownloaded){
-										// Find the book with that file uuid and reload it
-										this.dataService.ReloadBookByFile(tableObject.Uuid);
-									}
-								},
-								DeleteTableObject: (tableObject: TableObject) => {
-                           
-								},
-								UserDownloadFinished: () => {},
-								SyncFinished: () => {
-									this.dataService.syncFinished = true;
+						// Resolve the settings synced promise
+						this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
+					}
+				},
+				UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => {
+					if(tableObject.TableId == environment.bookTableId){
+						// Reload the book
+						this.dataService.ReloadBook(tableObject.Uuid);
+					}else if(tableObject.TableId == environment.bookFileTableId && fileDownloaded){
+						// Find the book with that file uuid and reload it
+						this.dataService.ReloadBookByFile(tableObject.Uuid);
+					}
+				},
+				DeleteTableObject: (tableObject: TableObject) => {
+					
+				},
+				UserDownloadFinished: () => {},
+				SyncFinished: () => {
+					this.dataService.syncFinished = true;
 
-									// Resolve the settings synced promise
-									this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
-									
-									this.dataService.LoadAllBooks();
-								}
-							});
+					// Resolve the settings synced promise
+					this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
+					
+					this.dataService.LoadAllBooks();
+				}
+			}
+		);
 
 		// Get the settings
 		this.dataService.settings = await GetSettings();

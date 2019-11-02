@@ -51,7 +51,27 @@ export class LoadingPageComponent{
 		await this.dataService.settingsLoadPromise;
 
 		// Wait for the settings to be synced if the user is logged in
-		if(this.dataService.user.IsLoggedIn) await this.dataService.settingsSyncPromise;
+		if(this.dataService.user.IsLoggedIn){
+			await new Promise(resolve => {
+				let resolved: boolean = false;
+	
+				// Wait for the settings to be synced
+				this.dataService.settingsSyncPromise.then(() => {
+					if(!resolved){
+						resolved = true;
+						resolve();
+					}
+				});
+	
+				// Wait for max 5 seconds
+				setTimeout(() => {
+					if(!resolved){
+						resolved = true;
+						resolve();
+					}
+				}, 5000);
+			});
+		}
 
 		// Show the book
 		this.LoadCurrentBook();
