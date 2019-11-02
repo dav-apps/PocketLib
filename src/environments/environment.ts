@@ -33,7 +33,9 @@ export const environment = {
    epubBookmarkTableChapterKey: "chapter",
    epubBookmarkTableProgressKey: "progress",
    // Keys for Settings table
-   settingsTableCurrentBookKey: "current_book",
+	settingsTableBookKey: "book",
+	settingsTableChapterKey: "chapter",
+	settingsTableProgressKey: "progress",
    // Settings keys
    settingsThemeKey: "settings-theme",
    settingsOpenLastReadBookKey: "settings-openLastReadBook",

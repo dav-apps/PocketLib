@@ -3,16 +3,35 @@ import { environment } from "src/environments/environment";
 
 export class Settings{
 	public uuid: string;
-	public currentBook: string;	// The uuid of the current book
+	public book: string;			// The uuid of the current book
+	public chapter: number;		// The chapter of the current book
+	public progress: number;	// The progress or the page of the current book
 
 	constructor(
-		currentBook: string = ""
+		book: string = "",
+		chapter: number = 0,
+		progress: number = 0
 	){
-		this.currentBook = currentBook;
+		this.book = book;
+		this.chapter = chapter;
+		this.progress = progress;
 	}
 	
-	public async SetCurrentBook(currentBook: string){
-		this.currentBook = currentBook;
+	public async SetBook(book: string, chapter?: number, progress?: number){
+		this.book = book;
+		if(chapter) this.chapter = chapter;
+		if(progress) this.progress = progress;
+		await this.Save();
+	}
+
+	public async SetPosition(chapter: number, progress: number){
+		this.chapter = chapter;
+		this.progress = progress;
+		await this.Save();
+	}
+
+	public async SetProgress(progress: number){
+		this.progress = progress;
 		await this.Save();
 	}
 
@@ -27,7 +46,9 @@ export class Settings{
 		}
 
 		let properties: Property[] = [
-			{ name: environment.settingsTableCurrentBookKey, value: this.currentBook }
+			{ name: environment.settingsTableBookKey, value: this.book },
+			{ name: environment.settingsTableChapterKey, value: this.chapter.toString() },
+			{ name: environment.settingsTableProgressKey, value: this.progress.toString() }
 		]
 
 		await tableObject.SetPropertyValues(properties);
@@ -74,10 +95,24 @@ async function GetAllSettings() : Promise<Settings[]>{
 function ConvertTableObjectToSettings(tableObject: TableObject) : Settings{
 	if(!tableObject || tableObject.TableId != environment.settingsTableId) return null;
 
-	// currentBook
-	let currentBook: string = tableObject.GetPropertyValue(environment.settingsTableCurrentBookKey);
+	// book
+	let book: string = tableObject.GetPropertyValue(environment.settingsTableBookKey);
 
-	let settings = new Settings(currentBook);
+	// chapter
+	let chapter: number = 0;
+	let chapterString: string = tableObject.GetPropertyValue(environment.settingsTableChapterKey);
+	if(chapterString){
+		chapter = +chapterString;
+	}
+
+	// progress
+	let progress: number = 0;
+	let progressString: string = tableObject.GetPropertyValue(environment.settingsTableProgressKey);
+	if(progressString){
+		progress = +progressString;
+	}
+
+	let settings = new Settings(book, chapter, progress);
 	settings.uuid = tableObject.Uuid;
 	return settings;
 }
