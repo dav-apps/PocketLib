@@ -1,33 +1,48 @@
-<div class="container d-flex flex-column">
-	<img src="/assets/images/dav-logo.png" style="width: 60px" class="align-self-center mt-5" />
+<div class="container d-flex flex-column ms-motion-slideUpIn" style="margin-top: 100px; margin-bottom: 100px;">
+	<img src="/assets/images/dav-logo.png" width="60" height="60" class="align-self-center" />
 
-	<h2 class="text-center mt-4 mb-4">{{ locale.header }}</h2>
+	<h2 class="text-center font-weight-light my-4">{{ locale.title }}</h2>
 
 	<div class="d-flex flex-column">
+		<!-- Email -->
 		<div class="row">
 			<div class="col-10 col-sm-6 col-md-5 mx-auto">
-            <div class="mb-3" *ngIf="errorMessage.length > 0"><fab-message-bar [messageBarType]="messageBarType">{{ errorMessage }}</fab-message-bar></div>
+				<!-- Error messages -->
+            <div class="mb-3" *ngIf="errorMessage.length > 0">
+					<fab-message-bar [messageBarType]="messageBarType">{{ errorMessage }}</fab-message-bar>
+				</div>
+
 				<fab-text-field 
-						[placeholder]="locale.email" 
+						id="email-text-field"
 						[(value)]="email" 
-						[label]="locale.email"
+						[label]="locale.emailTextfieldLabel"
+						[placeholder]="locale.emailTextfieldPlaceholder" 
 						type="email"
-						(keydown.enter)="loginButtonClick()">
+						autocomplete="email"
+						(keydown.enter)="Login()">
 				</fab-text-field>
 			</div>
 		</div>
 		<br>
+		<!-- Password -->
 		<div class="row">
 			<div class="col-10 col-sm-6 col-md-5 mx-auto">
 				<fab-text-field 
-						[placeholder]="locale.password" 
+						id="password-text-field"
 						[(value)]="password" 
-						[label]="locale.password"
+						[label]="locale.passwordTextfieldLabel"
+						[placeholder]="locale.passwordTextfieldPlaceholder" 
 						type="password"
-						(keydown.enter)="loginButtonClick()">
+						autocomplete="current-password"
+						(keydown.enter)="Login()">
 				</fab-text-field>
-            <br>
-				<fab-primary-button [styles]="buttonStyles" (click)="loginButtonClick()">{{ locale.login }}</fab-primary-button>
+
+				<div class="d-flex flex-row">
+					<div class="d-flex">
+						<fab-primary-button (click)="Login()" [styles]="loginButtonStyles" [disabled]="loginLoading">{{ locale.login }}</fab-primary-button>
+						<div style="margin-top: 32px; margin-left: 14px" *ngIf="loginLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

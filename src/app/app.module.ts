@@ -24,7 +24,8 @@ import {
    FabPanelModule,
    FabCalloutModule,
    FabSliderModule,
-   FabToggleModule
+	FabToggleModule,
+	FabSpinnerModule
 } from '@angular-react/fabric';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -98,6 +99,7 @@ import { LoadingPageComponent } from './pages/loading-page/loading-page.componen
       FabCalloutModule,
 		FabSliderModule,
 		FabToggleModule,
+		FabSpinnerModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [

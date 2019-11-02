@@ -49,12 +49,20 @@ const enDefaults = {
       login: "Log in to create your profile"
 	},
 	loginPage: {
-		header: "Log in to dav",
-		email: "Email",
-		password: "Password",
+		title: "Log in to dav",
+		emailTextfieldLabel: "Email",
+		emailTextfieldPlaceholder: "Your email address",
+		passwordTextfieldLabel: "Password",
+		passwordTextfieldPlaceholder: "Your password",
 		login: "Log in",
-		loginNormalError: "Login was not possible",
-      loginUnusualError: "An unusual error occured. Error code {0}"
+		deviceInfoUnknown: "Unknown",
+		errors: {
+			loginFailed: "Login failed",
+			emailMissing: "Please enter your email",
+			passwordMissing: "Please enter your password",
+			unexpectedErrorShort: "Unexpected error ({0})",
+			unexpectedErrorLong: "An unexpected error occured. Please try it again."
+		}
    },
    renameBookModal: {
       title: "Rename book",
@@ -143,12 +151,20 @@ const deDefaults = {
       login: "Melde dich an und erstelle dein Profil"
 	},
 	loginPage: {
-		header: "Mit dav anmelden",
-		email: "Email",
-		password: "Passwort",
-      login: "Anmelden",
-      loginNormalError: "Anmeldung fehlgeschlagen",
-      loginUnusualError: "Ein ungewöhnlicher Fehler ist aufgetreten. Fehlercode {0}"
+		title: "Mit dav anmelden",
+		emailTextfieldLabel: "Email",
+		emailTextfieldPlaceholder: "Deine Email-Adresse",
+		passwordTextfieldLabel: "Passwort",
+		passwordTextfieldPlaceholder: "Dein Passwort",
+		login: "Anmelden",
+		deviceInfoUnknown: "Unbekannt",
+      errors: {
+			loginFailed: "Anmeldung fehlgeschlagen",
+			emailMissing: "Bitte gib deine Email-Adresse ein",
+			passwordMissing: "Bitte gib dein Passwort ein",
+			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
+			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+		}
    },
    renameBookModal: {
       title: "Buch umbenennen",

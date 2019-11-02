@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataService } from 'src/app/services/data-service';
+import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
-import { IButtonStyles, MessageBarType } from 'office-ui-fabric-react';
+import { IButtonStyles, MessageBarType, SpinnerSize } from 'office-ui-fabric-react';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -18,10 +18,12 @@ export class LoginPageComponent{
    errorMessage: string = "";
 	appUuid: string = "";
 	redirectUrl: string = "";
+	loginLoading: boolean = false;
+	spinnerSize: SpinnerSize = SpinnerSize.small;
 	messageBarType: MessageBarType = MessageBarType.error;
-	buttonStyles: IButtonStyles = {
-		rootFocused: {
-			outline: "none"
+	loginButtonStyles: IButtonStyles = {
+		root: {
+			marginTop: 24
 		}
 	}
 
@@ -47,6 +49,14 @@ export class LoginPageComponent{
 		this.websocketService.Emit(WebsocketCallbackType.GetApp, {uuid: this.appUuid});
 	}
 
+	ngAfterViewInit(){
+		// Set the autocomplete attribute of the input elements
+		setTimeout(() => {
+			SetTextFieldAutocomplete('email-text-field', 'email', true);
+			SetTextFieldAutocomplete('password-text-field', 'current-password');
+		}, 1);
+	}
+
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
 			this.loginSubscriptionKey,
@@ -54,23 +64,35 @@ export class LoginPageComponent{
 		)
 	}
 
+	Login(){
+		this.errorMessage = "";
+		this.loginLoading = true;
+
+		this.websocketService.Emit(WebsocketCallbackType.Login, {
+			email: this.email,
+			password: this.password
+		});
+	}
+
 	LoginResponse(response: any){
 		if(!response.status) return;
 
-         if(response.status == 200){
-				// Remove errors
-				this.errorMessage = "";
+		if(response.status == 200){
+			// TODO: Log the event
 
-				// Redirect the user back to the app
-				let jwt = response.jwt;
-				window.location.href = `${this.redirectUrl}?jwt=${jwt}`;
-         }else{
-				// Show the error message
-				this.errorMessage = this.getErrorMessage(response.errors[0][0]);
+			// Redirect the user to the redirect url
+			let jwt = response.jwt;
+			window.location.href = `${this.redirectUrl}?jwt=${jwt}`;
+		}else{
+			// Show the error message
+			this.errorMessage = this.GetLoginErrorMessage(response.errors[0][0]);
 
-				// Clear the password field
-				this.password = "";
-         }
+			// Clear the password field
+			this.password = "";
+
+			// Hide the spinner
+			this.loginLoading = false;
+		}
 	}
 
 	GetAppResponse(response: any){
@@ -85,20 +107,11 @@ export class LoginPageComponent{
 		}
 	}
 
-	getErrorMessage(code: number){
+	GetLoginErrorMessage(code: number){
 		if(code == 1201 || code == 2801){
-			return this.locale.loginNormalError;
+			return this.locale.errors.loginFailed;
 		}else{
-			return this.locale.loginUnusualError.replace("{0}", code.toString());
+			return this.locale.errors.unexpectedErrorLong.replace("{0}", code.toString());
 		}
-	}
-
-	loginButtonClick(){
-		if(this.email.length < 2 || this.password.length < 2) return;
-
-		this.websocketService.Emit(WebsocketCallbackType.Login, {
-			email: this.email,
-			password: this.password
-		});
 	}
 }
