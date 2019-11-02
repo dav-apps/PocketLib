@@ -76,9 +76,16 @@ export class LibraryPageComponent{
       await this.dataService.LoadAllBooks();
 	}
    
-   ShowBook(book: EpubBook){
+   async ShowBook(book: EpubBook){
 		this.dataService.currentBook = book;
-		this.dataService.settings.SetCurrentBook(book.uuid);
+
+		// Update the settings with the position of the current book
+		if(this.dataService.currentBook instanceof EpubBook){
+			await this.dataService.settings.SetBook(book.uuid, this.dataService.currentBook.chapter, this.dataService.currentBook.progress);
+		}else if(this.dataService.currentBook instanceof PdfBook){
+			await this.dataService.settings.SetBook(book.uuid, null, this.dataService.currentBook.page);
+		}
+
 		this.router.navigate(["book"]);
    }
 

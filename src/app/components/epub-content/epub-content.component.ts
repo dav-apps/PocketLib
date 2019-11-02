@@ -462,6 +462,7 @@ export class EpubContentComponent{
 
 			// Save the new progress
 			await this.currentBook.SetPosition(this.currentChapter, newProgress);
+			await this.dataService.settings.SetPosition(this.currentChapter, newProgress);
 		}
 
 		// Set currentPageBookmarked

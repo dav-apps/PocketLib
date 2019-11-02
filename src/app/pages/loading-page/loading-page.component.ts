@@ -2,6 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 import { GetBook } from 'src/app/models/BookManager';
+import { EpubBook } from 'src/app/models/EpubBook';
+import { PdfBook } from 'src/app/models/PdfBook';
 
 @Component({
 	selector: 'pocketlib-loading-page',
@@ -57,7 +59,15 @@ export class LoadingPageComponent{
 
 	async LoadCurrentBook(){
 		// Load the current book
-		this.dataService.currentBook = await GetBook(this.dataService.settings.currentBook);
+		this.dataService.currentBook = await GetBook(this.dataService.settings.book);
+
+		// Load the progress of the current book
+		if(this.dataService.currentBook instanceof EpubBook){
+			this.dataService.currentBook.chapter = this.dataService.settings.chapter;
+			this.dataService.currentBook.progress = this.dataService.settings.progress;
+		}else if(this.dataService.currentBook instanceof PdfBook){
+			this.dataService.currentBook.page = this.dataService.settings.progress;
+		}
 
 		if(this.dataService.currentBook){
 			// Go to the book page to show the current book
