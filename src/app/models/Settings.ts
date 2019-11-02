@@ -23,18 +23,7 @@ export class Settings{
 		if(progress) this.progress = progress;
 		await this.Save();
 	}
-
-	public async SetPosition(chapter: number, progress: number){
-		this.chapter = chapter;
-		this.progress = progress;
-		await this.Save();
-	}
-
-	public async SetProgress(progress: number){
-		this.progress = progress;
-		await this.Save();
-	}
-
+	
 	private async Save(){
 		let tableObject = await GetTableObject(this.uuid);
 

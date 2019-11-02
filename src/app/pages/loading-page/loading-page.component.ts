@@ -63,13 +63,13 @@ export class LoadingPageComponent{
 					}
 				});
 	
-				// Wait for max 5 seconds
+				// Wait for max 8 seconds
 				setTimeout(() => {
 					if(!resolved){
 						resolved = true;
 						resolve();
 					}
-				}, 5000);
+				}, 8000);
 			});
 		}
 

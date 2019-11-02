@@ -233,7 +233,7 @@ export class PdfContentComponent{
       
       // Save the new progress
 		await this.currentBook.SetPage(this.currentPage);
-		await this.dataService.settings.SetProgress(this.currentPage);
+		await this.dataService.settings.SetBook(this.currentBook.uuid, null, this.currentPage);
 		
 		// Set currentPageBookmarked
 		if(this.showSecondPage){
