@@ -371,7 +371,7 @@ export class PdfContentComponent{
 	}
 
 	HandleTouch(event: TouchEvent){
-		if(event.touches.length > 1) return;
+		if(event.touches.length > 1 || window["visualViewport"].scale > 1.001) return;
 
 		if(event.type == touchStart){
 			let touch = event.touches.item(0);
