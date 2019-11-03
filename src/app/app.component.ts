@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { Init, DavEnvironment, TableObject } from 'dav-npm';
-import { environment } from 'src/environments/environment';
+import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
 import { DataService } from 'src/app/services/data-service';
 import { GetSettings } from 'src/app/models/Settings';
+import { environment } from 'src/environments/environment';
+
+const visitEventName = "visit";
 
 @Component({
 	selector: 'app-root',
@@ -92,7 +94,10 @@ export class AppComponent {
 		}
 		
 		// Load the books
-      this.dataService.LoadAllBooks();
+		this.dataService.LoadAllBooks();
+		
+		// Log the visit
+		Log(environment.apiKey, visitEventName);
    }
    
    SetTitleBarColor(){

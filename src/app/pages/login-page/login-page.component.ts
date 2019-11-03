@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { IButtonStyles, MessageBarType, SpinnerSize } from 'office-ui-fabric-react';
+import { Log } from 'dav-npm';
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
-import { IButtonStyles, MessageBarType, SpinnerSize } from 'office-ui-fabric-react';
+import { environment } from 'src/environments/environment';
 import { enUS } from 'src/locales/locales';
+
+const loginEventName = "login";
 
 @Component({
 	selector: "pocketlib-login-page",
@@ -74,11 +78,12 @@ export class LoginPageComponent{
 		});
 	}
 
-	LoginResponse(response: any){
+	async LoginResponse(response: any){
 		if(!response.status) return;
 
 		if(response.status == 200){
-			// TODO: Log the event
+			// Log the event
+			await Log(environment.apiKey, loginEventName);
 
 			// Redirect the user to the redirect url
 			let jwt = response.jwt;
