@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import * as localforage from 'localforage';
 import { DavUser, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 import * as locales from 'src/locales/locales';
 import { Book } from '../models/Book';
 import { GetAllBooks, GetBook } from '../models/BookManager';
@@ -51,7 +52,7 @@ export class DataService{
    async ReloadBookByFile(uuid: string){
       // Find the book with the file uuid
       let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
-      let bookObject = tableObjects.find(obj => obj.GetPropertyValue(environment.bookTableFileUuidKey) == uuid);
+      let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileUuidKey) == uuid);
       if(!bookObject) return;
 
 		await this.ReloadBook(bookObject.Uuid);
@@ -75,14 +76,14 @@ export class DataService{
 	async ApplyTheme(theme?: string){
 		if(!theme){
 			// Get the theme from the settings
-			theme = await localforage.getItem(environment.settingsThemeKey);
+			theme = await localforage.getItem(keys.settingsThemeKey);
 		}
 
 		switch(theme){
-			case environment.darkThemeKey:
+			case keys.darkThemeKey:
 				this.darkTheme = true;
 				break;
-			case environment.systemThemeKey:
+			case keys.systemThemeKey:
 				// Get the Windows theme
 				if(window["Windows"]){
 					if(this.windowsUiSettings == null){
@@ -109,9 +110,9 @@ export class DataService{
 		}
 
 		document.body.setAttribute(
-			environment.themeKey, 
-			this.darkTheme ? environment.darkThemeKey : environment.lightThemeKey
-		);
+			keys.themeKey, 
+			this.darkTheme ? keys.darkThemeKey : keys.lightThemeKey
+		)
    }
    
    HideWindowsBackButton(){
@@ -121,22 +122,30 @@ export class DataService{
 	}
 	
 	//#region Settings
+	async SetSJWT(value: string){
+		await localforage.setItem(keys.settingsSJWTKey, value);
+	}
+
+	async GetSJWT() : Promise<string>{
+		return await localforage.getItem(keys.settingsSJWTKey) as string;
+	}
+
 	async SetTheme(value: string){
-		await localforage.setItem(environment.settingsThemeKey, value);
+		await localforage.setItem(keys.settingsThemeKey, value);
 	}
 
 	async GetTheme() : Promise<string>{
-		var value = await localforage.getItem(environment.settingsThemeKey) as string;
-		return value ? value : environment.settingsThemeDefault;
+		var value = await localforage.getItem(keys.settingsThemeKey) as string;
+		return value ? value : keys.settingsThemeDefault;
    }
    
    async SetOpenLastReadBook(value: boolean){
-      await localforage.setItem(environment.settingsOpenLastReadBookKey, value);
+      await localforage.setItem(keys.settingsOpenLastReadBookKey, value);
    }
 
    async GetOpenLastReadBook() : Promise<boolean>{
-      var value = await localforage.getItem(environment.settingsOpenLastReadBookKey) as boolean;
-      return value != null ? value : environment.settingsOpenLastReadBookDefault;
+      var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean;
+      return value != null ? value : keys.settingsOpenLastReadBookDefault;
    }
 	//#endregion
 }

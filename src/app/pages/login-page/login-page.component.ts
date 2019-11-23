@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IButtonStyles, MessageBarType, SpinnerSize } from 'office-ui-fabric-react';
 import { Log } from 'dav-npm';
-import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { environment } from 'src/environments/environment';
 import { enUS } from 'src/locales/locales';
+import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service';
+import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 
 const loginEventName = "login";
 
@@ -42,15 +42,13 @@ export class LoginPageComponent{
       
 		// Get the app uuid from the params
 		this.appUuid = this.activatedRoute.snapshot.queryParamMap.get('app_uuid');
-		if(!this.appUuid){
-			this.router.navigate(["/"]);
-			return;
-		}
 
 		this.loginSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.Login, (response: any) => this.LoginResponse(response));
 		this.getAppSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetApp, (response: any) => this.GetAppResponse(response));
 
-		this.websocketService.Emit(WebsocketCallbackType.GetApp, {uuid: this.appUuid});
+		if(this.appUuid){
+			this.websocketService.Emit(WebsocketCallbackType.GetApp, {uuid: this.appUuid});
+		}
 	}
 
 	ngAfterViewInit(){
@@ -85,12 +83,21 @@ export class LoginPageComponent{
 			// Log the event
 			await Log(environment.apiKey, loginEventName);
 
-			// Redirect the user to the redirect url
-			let jwt = response.jwt;
-			window.location.href = `${this.redirectUrl}?jwt=${jwt}`;
+			if(this.appUuid){
+				// Redirect the user to the redirect url
+				let jwt = response.jwt;
+				window.location.href = `${this.redirectUrl}?jwt=${jwt}`;
+			}else{
+				// Save the jwt and sjwt and redirect to the start page
+				this.dataService.SetSJWT(response.jwt);
+				
+				if(await this.dataService.user.Login(response.sjwt)){
+					this.router.navigate(['/']);
+            }
+			}
 		}else{
 			// Show the error message
-			this.errorMessage = this.GetLoginErrorMessage(response.errors[0][0]);
+			this.errorMessage = this.GetLoginErrorMessage(response.errors[0]["code"]);
 
 			// Clear the password field
 			this.password = "";
@@ -102,12 +109,12 @@ export class LoginPageComponent{
 
 	GetAppResponse(response: any){
 		if(!response.status) return;
-			
+		
 		if(response.status == 200){
 			// Set the redirect url
 			this.redirectUrl = response.url;
 		}else{
-			// There was an error. Navigate to the root path
+			// There was an error. Navigate to the start page
 			this.router.navigate(["/"]);
 		}
 	}
