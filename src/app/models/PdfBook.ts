@@ -1,5 +1,5 @@
 import { Property } from 'dav-npm';
-import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 import { Book } from './Book';
 
 const pdfExt = "pdf";
@@ -91,10 +91,10 @@ export class PdfBook extends Book{
 
 	protected async Save(){
 		let properties: Property[] = [
-			{ name: environment.pdfBookTableTitleKey, value: this.title },
-			{ name: environment.pdfBookTablePageKey, value: this.page.toString() },
-			{ name: environment.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
-			{ name: environment.pdfBookTableZoomKey, value: this.zoom.toString() }
+			{ name: keys.pdfBookTableTitleKey, value: this.title },
+			{ name: keys.pdfBookTablePageKey, value: this.page.toString() },
+			{ name: keys.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
+			{ name: keys.pdfBookTableZoomKey, value: this.zoom.toString() }
       ]
 
 		await super.Save(pdfExt, properties);

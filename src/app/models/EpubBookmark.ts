@@ -1,5 +1,6 @@
 import { TableObject, GetTableObject, Property } from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 
 export class EpubBookmark{
 	public uuid: string;
@@ -37,10 +38,10 @@ export class EpubBookmark{
 		}
 
 		let properties: Property[] = [
-			{ name: environment.epubBookmarkTableBookKey, value: this.book },
-			{ name: environment.epubBookmarkTableNameKey, value: this.name },
-			{ name: environment.epubBookmarkTableChapterKey, value: this.chapter.toString() },
-			{ name: environment.epubBookmarkTableProgressKey, value: this.progress.toString() }
+			{ name: keys.epubBookmarkTableBookKey, value: this.book },
+			{ name: keys.epubBookmarkTableNameKey, value: this.name },
+			{ name: keys.epubBookmarkTableChapterKey, value: this.chapter.toString() },
+			{ name: keys.epubBookmarkTableProgressKey, value: this.progress.toString() }
 		]
 
 		await tableObject.SetPropertyValues(properties);
@@ -63,21 +64,21 @@ function ConvertTableObjectToEpubBookmark(tableObject: TableObject){
 	if(!tableObject || tableObject.TableId != environment.epubBookmarkTableId) return null;
 
 	// book
-	let book = tableObject.GetPropertyValue(environment.epubBookmarkTableBookKey);
+	let book = tableObject.GetPropertyValue(keys.epubBookmarkTableBookKey);
 
 	// name
-	let name = tableObject.GetPropertyValue(environment.epubBookmarkTableNameKey);
+	let name = tableObject.GetPropertyValue(keys.epubBookmarkTableNameKey);
 
 	// chapter
 	let chapter: number = 0;
-	let chapterString = tableObject.GetPropertyValue(environment.epubBookmarkTableChapterKey);
+	let chapterString = tableObject.GetPropertyValue(keys.epubBookmarkTableChapterKey);
 	if(chapterString){
 		chapter = +chapterString;
 	}
 
 	// progress
 	let progress: number = 0;
-	let progressString = tableObject.GetPropertyValue(environment.epubBookmarkTableProgressKey);
+	let progressString = tableObject.GetPropertyValue(keys.epubBookmarkTableProgressKey);
 	if(progressString){
 		progress = +progressString;
 	}

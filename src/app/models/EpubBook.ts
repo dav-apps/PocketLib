@@ -1,5 +1,5 @@
 import { Property } from 'dav-npm';
-import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 import { Book } from './Book';
 import { EpubBookmark } from './EpubBookmark';
 
@@ -68,9 +68,9 @@ export class EpubBook extends Book{
 		this.bookmarks.forEach(bookmark => bookmarkUuids.push(bookmark.uuid));
 
 		let properties: Property[] = [
-			{ name: environment.epubBookTableChapterKey, value: this.chapter.toString() },
-			{ name: environment.epubBookTableProgressKey, value: this.progress.toString() },
-			{ name: environment.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
+			{ name: keys.epubBookTableChapterKey, value: this.chapter.toString() },
+			{ name: keys.epubBookTableProgressKey, value: this.progress.toString() },
+			{ name: keys.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
 		]
 
 		await super.Save(epubExt, properties);

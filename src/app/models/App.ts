@@ -1,5 +1,6 @@
 import { GetTableObject, TableObject, GetAllTableObjects, Property } from 'dav-npm';
-import { environment } from "src/environments/environment";
+import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 
 export class App{
 	public uuid: string;
@@ -31,8 +32,8 @@ export class App{
 		}
 
 		let properties: Property[] = [
-			{ name: environment.appTableNameKey, value: this.name },
-			{ name: environment.appTableUrlKey, value: this.url }
+			{ name: keys.appTableNameKey, value: this.name },
+			{ name: keys.appTableUrlKey, value: this.url }
 		];
 
 		await tableObject.SetPropertyValues(properties);
@@ -63,10 +64,10 @@ export function ConvertTableObjectToApp(tableObject: TableObject) : App{
 	if(!tableObject || tableObject.TableId != environment.appTableId) return null;
 
 	// name
-	let name: string = tableObject.GetPropertyValue(environment.appTableNameKey);
+	let name: string = tableObject.GetPropertyValue(keys.appTableNameKey);
 
 	// url
-	let url: string = tableObject.GetPropertyValue(environment.appTableUrlKey);
+	let url: string = tableObject.GetPropertyValue(keys.appTableUrlKey);
 
 	let app = new App(name, url);
 	app.uuid = tableObject.Uuid;

@@ -1,5 +1,6 @@
 import { TableObject, Property, GetTableObject, GetAllTableObjects } from 'dav-npm';
-import { environment } from "src/environments/environment";
+import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 
 export class Settings{
 	public uuid: string;
@@ -35,9 +36,9 @@ export class Settings{
 		}
 
 		let properties: Property[] = [
-			{ name: environment.settingsTableBookKey, value: this.book },
-			{ name: environment.settingsTableChapterKey, value: this.chapter.toString() },
-			{ name: environment.settingsTableProgressKey, value: this.progress.toString() }
+			{ name: keys.settingsTableBookKey, value: this.book },
+			{ name: keys.settingsTableChapterKey, value: this.chapter.toString() },
+			{ name: keys.settingsTableProgressKey, value: this.progress.toString() }
 		]
 
 		await tableObject.SetPropertyValues(properties);
@@ -85,18 +86,18 @@ function ConvertTableObjectToSettings(tableObject: TableObject) : Settings{
 	if(!tableObject || tableObject.TableId != environment.settingsTableId) return null;
 
 	// book
-	let book: string = tableObject.GetPropertyValue(environment.settingsTableBookKey);
+	let book: string = tableObject.GetPropertyValue(keys.settingsTableBookKey);
 
 	// chapter
 	let chapter: number = 0;
-	let chapterString: string = tableObject.GetPropertyValue(environment.settingsTableChapterKey);
+	let chapterString: string = tableObject.GetPropertyValue(keys.settingsTableChapterKey);
 	if(chapterString){
 		chapter = +chapterString;
 	}
 
 	// progress
 	let progress: number = 0;
-	let progressString: string = tableObject.GetPropertyValue(environment.settingsTableProgressKey);
+	let progressString: string = tableObject.GetPropertyValue(keys.settingsTableProgressKey);
 	if(progressString){
 		progress = +progressString;
 	}

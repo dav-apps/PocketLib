@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { environment } from 'src/environments/environment';
+import { Component } from '@angular/core';
+import { keys } from 'src/environments/keys';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -10,8 +10,8 @@ import { MatRadioChange } from '@angular/material/radio';
 })
 export class SettingsPageComponent{
    locale = enUS.settingsPage;
-	version: string = environment.version;
-	themeKeys: string[] = [environment.lightThemeKey, environment.darkThemeKey, environment.systemThemeKey]
+	version: string = keys.version;
+	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
    selectedTheme: string;
    openLastReadBook: boolean = false;
 	isWindows: boolean = false;
@@ -27,8 +27,8 @@ export class SettingsPageComponent{
 	async ngOnInit(){
 		// Select the correct theme radio button
 		this.selectedTheme = await this.dataService.GetTheme();
-		if(!this.isWindows && this.selectedTheme == environment.systemThemeKey){
-			this.selectedTheme = environment.lightThemeKey;
+		if(!this.isWindows && this.selectedTheme == keys.systemThemeKey){
+			this.selectedTheme = keys.lightThemeKey;
       }
       
       // Set the openLastReadBook toggle

@@ -1,5 +1,6 @@
 import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
+import { keys } from 'src/environments/keys';
 import { Book } from './Book';
 import { EpubBook } from './EpubBook';
 import { PdfBook } from './PdfBook';
@@ -45,7 +46,7 @@ async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
 }
 
 async function GetBookFileOfBookTableObject(tableObject: TableObject) : Promise<TableObject>{
-	let fileUuid = tableObject.GetPropertyValue(environment.bookTableFileUuidKey);
+	let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileUuidKey);
 	if(!fileUuid) return null;
 
 	let fileTableObject = await GetTableObject(fileUuid);
@@ -72,21 +73,21 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 
 	// Get the chapter
 	let chapter: number = 0;
-	let chapterString = bookTableObject.GetPropertyValue(environment.epubBookTableChapterKey);
+	let chapterString = bookTableObject.GetPropertyValue(keys.epubBookTableChapterKey);
 	if(chapterString){
 		chapter = Number.parseInt(chapterString);
 	}
 
 	// Get the progress
 	let progress: number = 0;
-	let progressString = bookTableObject.GetPropertyValue(environment.epubBookTableProgressKey);
+	let progressString = bookTableObject.GetPropertyValue(keys.epubBookTableProgressKey);
 	if(progressString){
 		progress = Number.parseInt(progressString);
 	}
 
 	// Get the bookmarks
 	let bookmarks: EpubBookmark[] = [];
-	let bookmarksString = bookTableObject.GetPropertyValue(environment.epubBookTableBookmarksKey);
+	let bookmarksString = bookTableObject.GetPropertyValue(keys.epubBookTableBookmarksKey);
 	if(bookmarksString){
 		for(let uuid of bookmarksString.split(',')){
 			let bookmark = await GetEpubBookmark(uuid);
@@ -107,18 +108,18 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 	let file = bookFileTableObject.File;
 
 	// Get the title
-	let title = bookTableObject.GetPropertyValue(environment.pdfBookTableTitleKey);
+	let title = bookTableObject.GetPropertyValue(keys.pdfBookTableTitleKey);
 
 	// Get the page
 	let page: number = 1;
-	let pageString = bookTableObject.GetPropertyValue(environment.pdfBookTablePageKey);
+	let pageString = bookTableObject.GetPropertyValue(keys.pdfBookTablePageKey);
 	if(pageString){
 		page = Number.parseInt(pageString);
    }
    
    // Get the bookmarks
    let bookmarks: number[] = [];
-	let bookmarksString = bookTableObject.GetPropertyValue(environment.pdfBookTableBookmarksKey);
+	let bookmarksString = bookTableObject.GetPropertyValue(keys.pdfBookTableBookmarksKey);
 	if(bookmarksString){
 		for(let bookmark of bookmarksString.split(',')){
 			let page = +bookmark;
@@ -128,7 +129,7 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
    
    // Get the zoom
    let zoom: number = 1;
-   let zoomString = bookTableObject.GetPropertyValue(environment.pdfBookTableZoomKey);
+   let zoomString = bookTableObject.GetPropertyValue(keys.pdfBookTableZoomKey);
    if(zoomString){
       zoom = +zoomString;
    }
