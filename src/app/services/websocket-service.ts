@@ -56,12 +56,16 @@ interface WebsocketSubscription{
 
 export enum WebsocketCallbackType{
 	Login = 1,
-	GetApp = 2
+	GetApp = 2,
+	CreateAuthor = 3,
+	GetAuthorOfUser = 4
 }
 
 export const Callbacks = {
 	login: WebsocketCallbackType.Login,
-	getApp: WebsocketCallbackType.GetApp
+	getApp: WebsocketCallbackType.GetApp,
+	createAuthor: WebsocketCallbackType.CreateAuthor,
+	getAuthorOfUser: WebsocketCallbackType.GetAuthorOfUser
 }
 
 function getKeyByValue(object: any, value: any) {

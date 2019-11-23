@@ -27,9 +27,15 @@ export async function login(message: {email: string, password: string}){
 		
 		responseMessage = response.data;
 		responseMessage.status = response.status;
-   }catch(e){
-		responseMessage = e.response.data;
-		responseMessage.status = e.response.status;
+   }catch(error){
+		if(error.response){
+			// Api error
+			responseMessage = error.response.data;
+			responseMessage.status = error.response.status;
+		}else{
+			// Javascript error
+			responseMessage = {};
+		}
 	}
 	
 	websocket.emit(loginKey, responseMessage);
