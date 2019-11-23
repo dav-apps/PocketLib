@@ -39,9 +39,12 @@ export class AuthorPageComponent{
    }
 
    createProfileButtonClick(){
-		if(!this.dataService.user.IsLoggedIn){
+		if(this.dataService.user.IsLoggedIn){
+			// Redirect to the Author setup page
+			this.router.navigate(['/author/setup']);
+      }else{
+			// Redirect to the Account page
 			this.router.navigate(["/account"])
-			return;
-      }
+		}
    }
 }

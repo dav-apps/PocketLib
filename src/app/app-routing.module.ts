@@ -8,6 +8,7 @@ import { DeveloperPageComponent } from './pages/developer-page/developer-page.co
 import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
+import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
 
@@ -20,7 +21,8 @@ const routes: Routes = [
    { path: "developer/apps", redirectTo: "/developer", pathMatch: "full" },
    { path: "developer/apps/new", component: NewAppPageComponent },
    { path: "developer/apps/:uuid", component: AppPageComponent },
-   { path: "author", component: AuthorPageComponent },
+	{ path: "author", component: AuthorPageComponent },
+	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent }
 ];
