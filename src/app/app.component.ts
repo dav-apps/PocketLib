@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
-import { DataService } from 'src/app/services/data-service';
-import { GetSettings } from 'src/app/models/Settings';
 import { environment } from 'src/environments/environment';
+import { DataService } from 'src/app/services/data-service';
+import { WebsocketService, WebsocketCallbackType } from './services/websocket-service';
+import { GetSettings } from 'src/app/models/Settings';
 
 const visitEventName = "visit";
 
@@ -13,11 +14,14 @@ const visitEventName = "visit";
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent{
+	getAuthorOfUserSubscriptionKey: number
+
    constructor(
+		public dataService: DataService,
+		public websocketService: WebsocketService,
       public router: Router,
-      public activatedRoute: ActivatedRoute,
-      public dataService: DataService
+      public activatedRoute: ActivatedRoute
    ){
       // Log the user in if there is a jwt in the url
       this.activatedRoute.queryParams.subscribe(async params => {
@@ -28,7 +32,9 @@ export class AppComponent {
             }
          }
 		});
-   }
+
+		this.getAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthorOfUser, (response: {status: number, data: any}) => this.GetAuthorOfUserResponse(response));
+	}
 
 	async ngOnInit(){
 		this.dataService.ApplyTheme();
@@ -98,7 +104,23 @@ export class AppComponent {
 		
 		// Log the visit
 		Log(environment.apiKey, visitEventName);
-   }
+
+		// Load the author
+		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: await this.dataService.GetSJWT()});
+	}
+	
+	ngOnDestroy(){
+		this.websocketService.Unsubscribe(this.getAuthorOfUserSubscriptionKey);
+	}
+
+	GetAuthorOfUserResponse(response: {status: number, data: any}){
+		if(response.status == 200){
+			this.dataService.userAuthor = response.data;
+		}else{
+			this.dataService.userAuthor = null;
+		}
+		this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
+	}
    
    SetTitleBarColor(){
 		if(window["Windows"] && window["Windows"].UI.ViewManagement){

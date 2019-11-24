@@ -25,6 +25,9 @@ export class DataService{
    syncFinished: boolean = false;
 	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
 	userPromiseResolve: Function;
+	userAuthor: {firstName: string, lastName: string, bio: string} = null;
+	userAuthorPromise: Promise<{firstName: string, lastName: string, bio: string}> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
+	userAuthorPromiseResolve: Function;
 
    constructor(){
 		this.user = new DavUser(() => this.userPromiseResolve(this.user));

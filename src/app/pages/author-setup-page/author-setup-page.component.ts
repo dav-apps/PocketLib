@@ -9,7 +9,6 @@ import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websoc
 })
 export class AuthorSetupPageComponent{
 	createAuthorSubscriptionKey: number;
-	getAuthorOfUserSubscriptionKey: number;
 	firstName: string = "";
 	lastName: string = "";
 	bio: string = "";
@@ -19,19 +18,18 @@ export class AuthorSetupPageComponent{
 		public websocketService: WebsocketService,
 		private router: Router
 	){
-		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: any) => this.CreateAuthorResponse(response));
-		this.getAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthorOfUser, (response: any) => this.GetAuthorOfUserResponse(response));
+		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: {status: number, data: any}) => this.CreateAuthorResponse(response));
 	}
 
 	async ngOnInit(){
-		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: await this.dataService.GetSJWT()});
+		// Redirect back to the author page if the user is already an author
+		if(await this.dataService.userAuthorPromise){
+			this.router.navigate(['/author']);
+		}
 	}
 
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(
-			this.createAuthorSubscriptionKey,
-			this.getAuthorOfUserSubscriptionKey
-		)
+		this.websocketService.Unsubscribe(this.createAuthorSubscriptionKey);
 	}
 
 	async Submit(){
@@ -47,18 +45,16 @@ export class AuthorSetupPageComponent{
 		this.bio = "";
 	}
 
-	CreateAuthorResponse(response: any){
+	CreateAuthorResponse(response: {status: number, data: any}){
 		if(response.status == 201){
+			// Set the author in DataService
+			this.dataService.userAuthor = response.data;
+			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
+
 			// Redirect to the author page
-			this.router.navigate(['/author'])
+			this.router.navigate(['/author']);
 		}else{
 			// TODO: Show errors
-		}
-	}
-
-	GetAuthorOfUserResponse(response: any){
-		if(response.status == 200){
-			this.router.navigate(['/author'])
 		}
 	}
 }
