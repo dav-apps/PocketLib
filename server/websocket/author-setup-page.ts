@@ -10,7 +10,7 @@ export async function createAuthor(message: {
 	lastName: string,
 	bio: string
 }){
-	var responseMessage;
+	var result: {status: number, data: any} = {status: -1, data: {}};
 	try{
 		var response = await axios.default({
 			method: 'post',
@@ -26,18 +26,25 @@ export async function createAuthor(message: {
 			}
 		});
 
-		responseMessage = response.data;
-		responseMessage.status = response.status;
+		result.status = response.status;
+		result.data = response.data;
 	}catch(error){
-		responseMessage = error.response.data;
-		responseMessage.status = error.response.status;
+		if(error.response){
+			// Api error
+			result.status = error.response.status;
+			result.data = error.response.data;
+		}else{
+			// Javascript error
+			result.status = -1;
+			result.data = {};
+		}
 	}
 
-	websocket.emit(createAuthorKey, responseMessage);
+	websocket.emit(createAuthorKey, result);
 }
 
 export async function getAuthorOfUser(message: {jwt: string}){
-	var responseMessage;
+	var result: {status: number, data: any} = {status: -1, data: {}};
 	try{
 		var response = await axios.default({
 			method: 'get',
@@ -47,12 +54,15 @@ export async function getAuthorOfUser(message: {jwt: string}){
 			}
 		});
 
-		responseMessage = response.data;
-		responseMessage.status = response.status;
+		result.status = response.status;
+		result.data = response.data;
 	}catch(error){
-		responseMessage = error.response.data;
-		responseMessage.status = error.response.status;
+		if(error.response){
+			// Api error
+			result.status = error.response.status;
+			result.data = error.response.data;
+		}
 	}
 
-	websocket.emit(getAuthorOfUserKey, responseMessage);
+	websocket.emit(getAuthorOfUserKey, result);
 }

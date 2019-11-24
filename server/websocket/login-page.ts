@@ -6,7 +6,7 @@ export const getAppKey = "getApp";
 
 export async function login(message: {email: string, password: string}){
 	// Create a session on the PocketLib API
-	var responseMessage;
+	var result: {status: number, data: any} = {status: -1, data: {}};
    try{
       var response = await axios.default({
          method: 'post',
@@ -25,25 +25,26 @@ export async function login(message: {email: string, password: string}){
          }
 		});
 		
-		responseMessage = response.data;
-		responseMessage.status = response.status;
+		result.status = response.status;
+		result.data = response.data;
    }catch(error){
 		if(error.response){
 			// Api error
-			responseMessage = error.response.data;
-			responseMessage.status = error.response.status;
+			result.status = error.response.status;
+			result.data = error.response.data;
 		}else{
 			// Javascript error
-			responseMessage = {};
+			result.status = -1;
+			result.data = {};
 		}
 	}
 	
-	websocket.emit(loginKey, responseMessage);
+	websocket.emit(loginKey, result);
 }
 
 export async function getApp(message: {uuid: string}){
    // Get the app from the PocketLib API
-   var responseMessage;
+   var result: {status: number, data: any} = {status: -1, data: {}};
    try{
       var response = await axios.default({
          method: 'get',
@@ -53,12 +54,19 @@ export async function getApp(message: {uuid: string}){
          }
       });
 
-      responseMessage = response.data;
-		responseMessage.status = response.status;
-   }catch(e){
-      responseMessage = e.response.data;
-		responseMessage.status = e.response.status;
+		result.status = response.status;
+		result.data = response.data;
+   }catch(error){
+		if(error.response){
+			// Api error
+			result.status = error.response.status;
+			result.data = error.response.data;
+		}else{
+			// Javascript error
+			result.status = -1;
+			result.data = {};
+		}
    }
 
-   websocket.emit(getAppKey, responseMessage);
+   websocket.emit(getAppKey, result);
 }
