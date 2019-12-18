@@ -146,6 +146,10 @@ export class AppComponent{
 			titleBar.inactiveBackgroundColor = themeColor;
 		}
 	}
+
+	ShowAuthorPage(){
+		this.router.navigate(["author"])
+	}
 	
 	ShowAccountPage(){
 		this.router.navigate(["account"])
