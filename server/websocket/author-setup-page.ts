@@ -1,10 +1,10 @@
 import * as websocket from '../websocket';
 import * as axios from 'axios';
 
-export const createAuthorKey = "createAuthor";
+export const setAuthorOfUserKey = "setAuthorOfUser";
 export const getAuthorOfUserKey = "getAuthorOfUser";
 
-export async function createAuthor(message: {
+export async function setAuthorOfUser(message: {
 	jwt: string,
 	firstName: string,
 	lastName: string,
@@ -13,11 +13,11 @@ export async function createAuthor(message: {
 	var result: {status: number, data: any} = {status: -1, data: {}};
 	try{
 		var response = await axios.default({
-			method: 'post',
+			method: 'put',
 			url: `${process.env.POCKETLIB_API_URL}/author`,
 			headers: {
 				Authorization: message.jwt,
-				ContentType: 'application/json'
+				'Content-Type': 'application/json'
 			},
 			data: {
 				first_name: message.firstName,
@@ -40,7 +40,7 @@ export async function createAuthor(message: {
 		}
 	}
 
-	websocket.emit(createAuthorKey, result);
+	websocket.emit(setAuthorOfUserKey, result);
 }
 
 export async function getAuthorOfUser(message: {jwt: string}){
