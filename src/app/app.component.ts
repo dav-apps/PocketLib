@@ -106,7 +106,8 @@ export class AppComponent{
 		Log(environment.apiKey, visitEventName);
 
 		// Load the author
-		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: await this.dataService.GetSJWT()});
+		await this.dataService.userPromise;
+		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: this.dataService.user.JWT});
 	}
 	
 	ngOnDestroy(){
@@ -115,7 +116,11 @@ export class AppComponent{
 
 	GetAuthorOfUserResponse(response: {status: number, data: any}){
 		if(response.status == 200){
-			this.dataService.userAuthor = response.data;
+			this.dataService.userAuthor = {
+				firstName: response.data.first_name,
+				lastName: response.data.last_name,
+				bio: response.data.bio
+			}
 		}else{
 			this.dataService.userAuthor = null;
 		}

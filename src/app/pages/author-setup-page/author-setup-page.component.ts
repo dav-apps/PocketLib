@@ -8,7 +8,7 @@ import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websoc
 	templateUrl: './author-setup-page.component.html'
 })
 export class AuthorSetupPageComponent{
-	createAuthorSubscriptionKey: number;
+	setAuthorOfUserSubscriptionKey: number;
 	firstName: string = "";
 	lastName: string = "";
 	bio: string = "";
@@ -18,7 +18,7 @@ export class AuthorSetupPageComponent{
 		public websocketService: WebsocketService,
 		private router: Router
 	){
-		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: {status: number, data: any}) => this.CreateAuthorResponse(response));
+		this.setAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetAuthorOfUser, (response: {status: number, data: any}) => this.SetAuthorOfUserResponse(response));
 	}
 
 	async ngOnInit(){
@@ -29,12 +29,12 @@ export class AuthorSetupPageComponent{
 	}
 
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.createAuthorSubscriptionKey);
+		this.websocketService.Unsubscribe(this.setAuthorOfUserSubscriptionKey);
 	}
 
 	async Submit(){
-		this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
-			jwt: await this.dataService.GetSJWT(),
+		this.websocketService.Emit(WebsocketCallbackType.SetAuthorOfUser, {
+			jwt: this.dataService.user.JWT,
 			firstName: this.firstName,
 			lastName: this.lastName,
 			bio: this.bio
@@ -45,10 +45,12 @@ export class AuthorSetupPageComponent{
 		this.bio = "";
 	}
 
-	CreateAuthorResponse(response: {status: number, data: any}){
-		if(response.status == 201){
+	SetAuthorOfUserResponse(response: {status: number, data: any}){
+		if(response.status == 200){
 			// Set the author in DataService
-			this.dataService.userAuthor = response.data;
+			this.dataService.userAuthor.firstName = response.data.first_name;
+			this.dataService.userAuthor.lastName = response.data.last_name;
+			this.dataService.userAuthor.bio = response.data.bio;
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
 
 			// Redirect to the author page
