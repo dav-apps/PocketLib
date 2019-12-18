@@ -125,14 +125,6 @@ export class DataService{
 	}
 	
 	//#region Settings
-	async SetSJWT(value: string){
-		await localforage.setItem(keys.settingsSJWTKey, value);
-	}
-
-	async GetSJWT() : Promise<string>{
-		return await localforage.getItem(keys.settingsSJWTKey) as string;
-	}
-
 	async SetTheme(value: string){
 		await localforage.setItem(keys.settingsThemeKey, value);
 	}

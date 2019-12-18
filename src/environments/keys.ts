@@ -24,7 +24,6 @@ export const keys = {
 	settingsTableChapterKey: "chapter",
 	settingsTableProgressKey: "progress",
 	// Settings keys
-	settingsSJWTKey: "sjwt",
 	settingsThemeKey: "settings-theme",
 	settingsOpenLastReadBookKey: "settings-openLastReadBook",
 	// Settings default

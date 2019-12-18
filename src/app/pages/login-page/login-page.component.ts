@@ -88,10 +88,8 @@ export class LoginPageComponent{
 				let jwt = response.jwt;
 				window.location.href = `${this.redirectUrl}?jwt=${jwt}`;
 			}else{
-				// Save the jwt and sjwt and redirect to the start page
-				this.dataService.SetSJWT(response.jwt);
-				
-				if(await this.dataService.user.Login(response.sjwt)){
+				// Login the user and redirect to the start page
+				if(await this.dataService.user.Login(response.jwt)){
 					this.router.navigate(['/']);
             }
 			}
