@@ -48,6 +48,28 @@ const enDefaults = {
       createProfile: "Create your profile",
       login: "Log in to create your profile"
 	},
+	authorSetupPage: {
+		title: "Create your author profile",
+		save: "Save",
+		firstNameTextfieldLabel: "First name",
+		firstNameTextfieldPlaceholder: "Your first name",
+		lastNameTextfieldLabel: "Last name",
+		lastNameTextfieldPlaceholder: "Your last name",
+		bioTextfieldLabel: "Bio",
+		bioTextfieldPlaceholder: "A short description of your person",
+		errors: {
+			firstNameMissing: "Please provide your first name",
+			lastNameMissing: "Please provide your last name",
+			bioMissing: "Please provide a bio",
+			firstNameTooShort: "The first name is too short",
+			lastNameTooShort: "The last name is too short",
+			bioTooShort: "The bio is too short",
+			firstNameTooLong: "The first name is too long",
+			lastNameTooLong: "The last name is too long",
+			bioTooLong: "The bio is too long",
+			unexpectedError: "An unexpected error occured. Please try again."
+		}
+	},
 	loginPage: {
 		title: "Log in to dav",
 		emailTextfieldLabel: "Email",
@@ -149,6 +171,28 @@ const deDefaults = {
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
       login: "Melde dich an und erstelle dein Profil"
+	},
+	authorSetupPage: {
+		title: "Erstelle dein Autoren-Profil",
+		save: "Speichern",
+		firstNameTextfieldLabel: "Vorname",
+		firstNameTextfieldPlaceholder: "Dein Vorname",
+		lastNameTextfieldLabel: "Nachname",
+		lastNameTextfieldPlaceholder: "Dein Nachname",
+		bioTextfieldLabel: "Bio",
+		bioTextfieldPlaceholder: "Eine kurze Beschreibung deiner Person",
+		errors: {
+			firstNameMissing: "Bitte gib deinen Vornamen an",
+			lastNameMissing: "Bitte gib deinen Nachnamen an",
+			bioMissing: "Bitte gib eine Bio an",
+			firstNameTooShort: "Der Vorname ist zu kurz",
+			lastNameTooShort: "Der Nachname ist zu kurz",
+			bioTooShort: "Die Bio ist zu kurz",
+			firstNameTooLong: "Der Vorname ist zu lang",
+			lastNameTooLong: "Der Nachname ist zu lang",
+			bioTooLong: "Die Bio ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+		}
 	},
 	loginPage: {
 		title: "Mit dav anmelden",
