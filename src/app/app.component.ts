@@ -150,6 +150,10 @@ export class AppComponent{
 	ShowAuthorPage(){
 		this.router.navigate(["author"])
 	}
+
+	ShowBookstorePage(){
+		this.router.navigate(["bookstore"])
+	}
 	
 	ShowAccountPage(){
 		this.router.navigate(["account"])

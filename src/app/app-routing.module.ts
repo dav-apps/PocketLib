@@ -11,6 +11,7 @@ import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
+import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -24,7 +25,8 @@ const routes: Routes = [
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "login", component: LoginPageComponent },
-	{ path: "loading", component: LoadingPageComponent }
+	{ path: "loading", component: LoadingPageComponent },
+	{ path: "bookstore", component: BookstorePageComponent }
 ];
 
 @NgModule({

@@ -11,6 +11,9 @@
 		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" *ngIf="dataService.userAuthor" (click)="ShowAuthorPage()">
 			<i class="material-icons" style="margin-top: 6px; font-size: 25px">account_box</i>
 		</div>
+		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowBookstorePage()">
+			<i class="material-icons" style="margin-top: 6px; font-size: 25px">menu_book</i>
+		</div>
 		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowAccountPage()">
          <i class="material-icons" style="margin-top: 6px; font-size: 25px" *ngIf="!dataService.user.IsLoggedIn">account_circle</i>
          <img *ngIf="dataService.user.IsLoggedIn" 

@@ -54,6 +54,7 @@ import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
+import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.component';
 
 @NgModule({
    declarations: [
@@ -76,7 +77,8 @@ import { LoadingPageComponent } from './pages/loading-page/loading-page.componen
 		AuthorPageComponent,
 		AuthorSetupPageComponent,
       LoginPageComponent,
-      LoadingPageComponent
+		LoadingPageComponent,
+		BookstorePageComponent
   	],
   	imports: [
    	AngularReactBrowserModule,
