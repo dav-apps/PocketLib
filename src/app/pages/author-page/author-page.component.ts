@@ -44,11 +44,11 @@ export class AuthorPageComponent{
 			this.router.navigate(['/author/setup']);
       }else{
 			// Redirect to the Account page
-			this.router.navigate(["/account"])
+			this.router.navigate(["/account"]);
 		}
 	}
 	
 	ShowBook(uuid: string){
-		
+		this.router.navigate(["author", "book", uuid]);
 	}
 }
