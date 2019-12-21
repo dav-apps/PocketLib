@@ -46,5 +46,9 @@ export class AuthorPageComponent{
 			// Redirect to the Account page
 			this.router.navigate(["/account"])
 		}
-   }
+	}
+	
+	ShowBook(uuid: string){
+		
+	}
 }

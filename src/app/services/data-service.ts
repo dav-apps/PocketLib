@@ -25,7 +25,7 @@ export class DataService{
    syncFinished: boolean = false;
 	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
 	userPromiseResolve: Function;
-	userAuthor: {firstName: string, lastName: string, bio: string} = null;
+	userAuthor: {firstName: string, lastName: string, bio: string, books: {uuid: string, title: string}[]} = null;
 	userAuthorPromise: Promise<{firstName: string, lastName: string, bio: string}> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
 	userAuthorPromiseResolve: Function;
 

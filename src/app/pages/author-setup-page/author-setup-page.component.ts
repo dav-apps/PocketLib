@@ -64,7 +64,8 @@ export class AuthorSetupPageComponent{
 			this.dataService.userAuthor = {
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
-				bio: response.data.bio
+				bio: response.data.bio,
+				books: []
 			}
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
 

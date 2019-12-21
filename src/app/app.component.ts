@@ -119,7 +119,8 @@ export class AppComponent{
 			this.dataService.userAuthor = {
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
-				bio: response.data.bio
+				bio: response.data.bio,
+				books: response.data.books
 			}
 		}else{
 			this.dataService.userAuthor = null;

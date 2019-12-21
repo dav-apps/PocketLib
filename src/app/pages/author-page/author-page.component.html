@@ -6,6 +6,17 @@
    </div>
 </div>
 
-<div class="container ms-motion-slideUpIn" *ngIf="dataService.userAuthor">
-	<h1 class="text-center mt-3">Hi, {{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h1>
+<div class="container ms-motion-slideUpIn text-center" *ngIf="dataService.userAuthor">
+	<div style="display: inline-block">
+		<h1 class="text-center mt-3 mb-4">Hi, {{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h1>
+
+		<div 
+			class="card mt-3 cursor shadow-sm" 
+			*ngFor="let book of dataService.userAuthor.books"
+			(click)="ShowBook(book.uuid)">
+			<div class="card-body text-center">
+				{{ book.title }}
+			</div>
+		</div>
+	</div>
 </div>
