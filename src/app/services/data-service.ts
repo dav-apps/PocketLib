@@ -145,6 +145,11 @@ export class DataService{
 	//#endregion
 }
 
+export interface ApiResponse{
+	status: number;
+	data: any;
+}
+
 export function FindElement(currentElement: Element, tagName: string) : Element{
 	if(currentElement.tagName.toLowerCase() == tagName) return currentElement;
 

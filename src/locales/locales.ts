@@ -46,7 +46,20 @@ const enDefaults = {
       landingHeader1: "Publish on PocketLib",
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
-      login: "Log in to create your profile"
+		login: "Log in to create your profile",
+		createBookDialog: {
+			title: "Create book",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The title of your book",
+			errors: {
+				titleMissing: "Please provide a title",
+				titleTooShort: "The title is too short",
+				titleTooLong: "The title is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
+		cancel: "Cancel",
+		save: "Save"
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
@@ -170,7 +183,20 @@ const deDefaults = {
       landingHeader1: "Veröffentliche auf PocketLib",
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
-      login: "Melde dich an und erstelle dein Profil"
+		login: "Melde dich an und erstelle dein Profil",
+		createBookDialog: {
+			title: "Buch erstellen",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Der Titel deines Buches",
+			errors: {
+				titleMissing: "Bitte gib einen Titel an",
+				titleTooShort: "Der Titel ist zu kurz",
+				titleTooLong: "Der Titel ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
+		cancel: "Abbrechen",
+		save: "Speichern"
 	},
 	authorSetupPage: {
 		title: "Erstelle dein Autoren-Profil",

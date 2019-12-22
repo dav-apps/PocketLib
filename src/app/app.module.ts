@@ -25,7 +25,8 @@ import {
    FabCalloutModule,
    FabSliderModule,
 	FabToggleModule,
-	FabSpinnerModule
+	FabSpinnerModule,
+	FabDialogModule
 } from '@angular-react/fabric';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -106,6 +107,7 @@ import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.co
 		FabSliderModule,
 		FabToggleModule,
 		FabSpinnerModule,
+		FabDialogModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [

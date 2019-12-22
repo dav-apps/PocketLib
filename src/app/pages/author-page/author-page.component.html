@@ -10,6 +10,14 @@
 	<div style="display: inline-block">
 		<h1 class="text-center mt-3 mb-4">Hi, {{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h1>
 
+		<div
+			class="card mt-3 cursor shadow-sm"
+			(click)="ShowCreateBookDialog()">
+			<div class="card-body text-center">
+				<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
+			</div>
+		</div>
+
 		<div 
 			class="card mt-3 cursor shadow-sm" 
 			*ngFor="let book of dataService.userAuthor.books"
@@ -20,3 +28,24 @@
 		</div>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!createBookDialogVisible"
+	[dialogContentProps]="createBookDialogContentProps"
+	(onDismiss)="createBookDialogVisible = false">
+
+	<!-- Title -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="createBookDialogTitle"
+			[label]="locale.createBookDialog.titleTextfieldLabel"
+			[placeholder]="locale.createBookDialog.titleTextfieldPlaceholder"
+			[errorMessage]="createBookDialogTitleError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="createBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateBook()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

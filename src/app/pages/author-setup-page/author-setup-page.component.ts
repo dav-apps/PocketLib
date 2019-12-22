@@ -74,15 +74,15 @@ export class AuthorSetupPageComponent{
 		}else{
 			for(let error of response.data.errors){
 				switch (error.code) {
-					case 2103:
+					case 2102:
 						// Missing field: first_name
 						this.firstNameError = this.locale.errors.firstNameMissing;
 						break;
-					case 2104:
+					case 2103:
 						// Missing field: last_name
 						this.lastNameError = this.locale.errors.lastNameMissing;
 						break;
-					case 2105:
+					case 2104:
 						// Missing field: bio
 						this.bioError = this.locale.errors.bioMissing;
 						break;
