@@ -1,24 +1,17 @@
 import * as websocket from '../websocket';
 import * as axios from 'axios';
 
-export const createStoreBookKey = "createStoreBook";
+export const getStoreBookKey = "getStoreBook";
 
-export async function createStoreBook(message: {
-	jwt: string,
-	title: string	
-}){
+export async function getStoreBook(message: {jwt: string, uuid: string}){
 	var result: {status: number, data: any} = {status: -1, data: {}};
 
 	try{
 		var response = await axios.default({
-			method: 'post',
-			url: `${process.env.POCKETLIB_API_URL}/store/book`,
+			method: 'get',
+			url: `${process.env.POCKETLIB_API_URL}/store/book/${message.uuid}`,
 			headers: {
-				Authorization: message.jwt,
-				'Content-Type': 'application/json'
-			},
-			data: {
-				title: message.title
+				Authorization: message.jwt
 			}
 		});
 
@@ -32,5 +25,5 @@ export async function createStoreBook(message: {
 		}
 	}
 
-	websocket.emit(createStoreBookKey, result);
+	websocket.emit(getStoreBookKey, result);
 }

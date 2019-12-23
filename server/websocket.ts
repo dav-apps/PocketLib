@@ -1,6 +1,7 @@
 import * as loginPage from './websocket/login-page';
 import * as authorSetupPage from './websocket/author-setup-page';
 import * as authorPage from './websocket/author-page';
+import * as authorBookPage from './websocket/author-book-page';
 
 var socket = null;
 
@@ -11,6 +12,7 @@ export function init(s: any){
 	socket.on(authorSetupPage.setAuthorOfUserKey, authorSetupPage.setAuthorOfUser);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
 	socket.on(authorPage.createStoreBookKey, authorPage.createStoreBook);
+	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
 }
 
 export function emit(key: string, message: any){
