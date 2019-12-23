@@ -1,3 +1,13 @@
 <div class="container ms-motion-slideUpIn">
-	<h1 class="text-center mt-3 mb-4">Hello World</h1>
+	<div class="d-flex justify-content-center">
+		<div class="d-flex my-3">
+			<button type="button" 
+						class="btn mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+						style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;"
+						(click)="GoBack()">
+				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
+			</button>
+			<h2 class="text-left font-weight-light mt-2 ml-3 text-color">{{ book.title }}</h2>
+		</div>
+	</div>
 </div>
