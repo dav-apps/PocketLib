@@ -8,6 +8,34 @@
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
 			<h2 class="text-left font-weight-light mt-2 ml-3 text-color">{{ book.title }}</h2>
+
+			<button type="button" 
+					class="btn ml-3 my-auto text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					style="height: 35px; padding: 3px 6px; font-size: 18px" 
+					(click)="ShowEditTitleModal()">
+				<fab-icon iconName="Edit"></fab-icon>
+			</button>
 		</div>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!editTitleDialogVisible"
+	[dialogContentProps]="editTitleDialogContentProps"
+	(onDismiss)="editTitleDialogVisible = false">
+
+	<!-- Title -->
+	<div class="mb-4">
+		<fab-text-field 
+			[(value)]="editTitleDialogTitle"
+			[label]="locale.editTitleDialog.titleTextfieldLabel"
+			[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
+			[errorMessage]="editTitleDialogTitleError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

@@ -83,6 +83,20 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured. Please try again."
 		}
 	},
+	authorBookPage: {
+		editTitleDialog: {
+			title: "Edit title",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The title of your book",
+			errors: {
+				titleTooShort: "The title is too short",
+				titleTooLong: "The title is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
+		cancel: "Cancel",
+		save: "Save"
+	},
 	loginPage: {
 		title: "Log in to dav",
 		emailTextfieldLabel: "Email",
@@ -219,6 +233,20 @@ const deDefaults = {
 			bioTooLong: "Die Bio ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
+	},
+	authorBookPage: {
+		editTitleDialog: {
+			title: "Titel bearbeiten",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Der Titel deines Buches",
+			errors: {
+				titleTooShort: "Der Titel ist zu kurz",
+				titleTooLong: "Der Titel ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
+		cancel: "Abbrechen",
+		save: "Speichern"
 	},
 	loginPage: {
 		title: "Mit dav anmelden",
