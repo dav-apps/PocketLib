@@ -13,6 +13,7 @@ export function init(s: any){
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
 	socket.on(authorPage.createStoreBookKey, authorPage.createStoreBook);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
+	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 }
 
 export function emit(key: string, message: any){
