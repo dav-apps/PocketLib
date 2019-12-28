@@ -87,15 +87,21 @@ const enDefaults = {
 		editTitleDialog: {
 			title: "Edit title",
 			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The title of your book",
-			errors: {
-				titleTooShort: "The title is too short",
-				titleTooLong: "The title is too long",
-				unexpectedError: "An unexpected error occured"
-			}
+			titleTextfieldPlaceholder: "The title of your book"
 		},
+		description: "Description",
+		descriptionTextfieldPlaceholder: "A short description of your book",
+		noDescription: "No description provided",
+		edit: "Edit",
 		cancel: "Cancel",
-		save: "Save"
+		save: "Save",
+		errors: {
+			titleTooShort: "The title is too short",
+			titleTooLong: "The title is too long",
+			descriptionTooShort: "The description is too short",
+			descriptionTooLong: "The description is too long",
+			unexpectedError: "An unexpected error occured"
+		}
 	},
 	loginPage: {
 		title: "Log in to dav",
@@ -238,15 +244,21 @@ const deDefaults = {
 		editTitleDialog: {
 			title: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Der Titel deines Buches",
-			errors: {
-				titleTooShort: "Der Titel ist zu kurz",
-				titleTooLong: "Der Titel ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
-			}
+			titleTextfieldPlaceholder: "Der Titel deines Buches"
 		},
+		description: "Beschreibung",
+		descriptionTextfieldPlaceholder: "Eine kurze Beschreibung deines Buches",
+		noDescription: "Keine Beschreibung angegeben",
+		edit: "Bearbeiten",
 		cancel: "Abbrechen",
-		save: "Speichern"
+		save: "Speichern",
+		errors: {
+			titleTooShort: "Der Titel ist zu kurz",
+			titleTooLong: "Der Titel ist zu lang",
+			descriptionTooShort: "Die Beschreibung ist zu kurz",
+			descriptionTooLong: "Die Beschreibung ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+		}
 	},
 	loginPage: {
 		title: "Mit dav anmelden",

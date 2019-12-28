@@ -18,6 +18,9 @@ export class AuthorBookPageComponent{
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
+	editDescription: boolean = false;
+	newDescription: string = "";
+	newDescriptionError: string = "";
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -31,6 +34,13 @@ export class AuthorBookPageComponent{
 	}
 	editTitleDialogContentProps: IDialogContentProps = {
 		title: this.locale.editTitleDialog.title
+	}
+	descriptionTextfieldStyles = {
+		root: {
+			width: "300px",
+			marginTop: "3px",
+			marginBottom: "16px"
+		}
 	}
 	
 	constructor(
@@ -87,6 +97,23 @@ export class AuthorBookPageComponent{
 		});
 	}
 
+	EditDescription(){
+		if(this.editDescription){
+			this.newDescriptionError = "";
+
+			//	Save the new description on the server
+			this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				description: this.newDescription
+			});
+		}else{
+			this.newDescription = this.book.description ? this.book.description : "";
+			this.newDescriptionError = "";
+			this.editDescription = true;
+		}
+	}
+
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.title = response.data.title;
@@ -98,30 +125,55 @@ export class AuthorBookPageComponent{
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Update the local book
-			this.book.title = response.data.title;
+		if(this.editDescription){
+			// The description was updated
+			if(response.status == 200){
+				this.book.description = response.data.description;
+				this.editDescription = false;
+			}else{
+				let errorCode = response.data.errors[0].code;
 
-			// Update the book in DataService
-			let authorBook = this.dataService.userAuthor.books.find(book => book.uuid == this.uuid);
-			if(authorBook) authorBook.title = response.data.title;
-
-			this.editTitleDialogVisible = false;
+				switch(errorCode){
+					case 2305: 
+						// Field too short: description
+						this.newDescriptionError = this.locale.errors.descriptionTooShort;
+						break;
+					case 2405:
+						// Field too long: description
+						this.newDescriptionError = this.locale.errors.descriptionTooLong;
+						break;
+					default:
+						this.newDescriptionError = this.locale.errors.unexpectedError;
+						break;
+				}
+			}
 		}else{
-			let errorCode = response.data.errors[0].code;
-
-			switch(errorCode){
-				case 2304:
-					// Field too short: title
-					this.editTitleDialogTitleError = this.locale.editTitleDialog.errors.titleTooShort;
-					break;
-				case 2404:
-					// Field too long: title
-					this.editTitleDialogTitleError = this.locale.editTitleDialog.errors.titleTooLong;
-					break;
-				default:
-					this.editTitleDialogTitleError = this.locale.editTitleDialog.errors.unexpectedError;
-					break;
+			// The title was updated
+			if(response.status == 200){
+				// Update the local book
+				this.book.title = response.data.title;
+	
+				// Update the book in DataService
+				let authorBook = this.dataService.userAuthor.books.find(book => book.uuid == this.uuid);
+				if(authorBook) authorBook.title = response.data.title;
+	
+				this.editTitleDialogVisible = false;
+			}else{
+				let errorCode = response.data.errors[0].code;
+	
+				switch(errorCode){
+					case 2304:
+						// Field too short: title
+						this.editTitleDialogTitleError = this.locale.errors.titleTooShort;
+						break;
+					case 2404:
+						// Field too long: title
+						this.editTitleDialogTitleError = this.locale.errors.titleTooLong;
+						break;
+					default:
+						this.editTitleDialogTitleError = this.locale.errors.unexpectedError;
+						break;
+				}
 			}
 		}
 	}
