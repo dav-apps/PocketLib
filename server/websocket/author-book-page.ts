@@ -33,7 +33,8 @@ export async function updateStoreBook(message: {
 	jwt: string, 
 	uuid: string,
 	title?: string,
-	description?: string
+	description?: string,
+	language?: string
 }){
 	var result: {status: number, data: any} = {status: -1, data: {}};
 
@@ -47,7 +48,8 @@ export async function updateStoreBook(message: {
 			},
 			data: {
 				title: message.title,
-				description: message.description
+				description: message.description,
+				language: message.language
 			}
 		});
 

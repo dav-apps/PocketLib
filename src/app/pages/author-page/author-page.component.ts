@@ -86,7 +86,8 @@ export class AuthorPageComponent{
 
 		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
 			jwt: this.dataService.user.JWT,
-			title: this.createBookDialogTitle
+			title: this.createBookDialogTitle,
+			language: this.dataService.locale.startsWith("de") ? "de" : "en"
 		});
 	}
 

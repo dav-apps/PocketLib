@@ -5,7 +5,8 @@ export const createStoreBookKey = "createStoreBook";
 
 export async function createStoreBook(message: {
 	jwt: string,
-	title: string	
+	title: string,
+	language: string
 }){
 	var result: {status: number, data: any} = {status: -1, data: {}};
 
@@ -18,7 +19,8 @@ export async function createStoreBook(message: {
 				'Content-Type': 'application/json'
 			},
 			data: {
-				title: message.title
+				title: message.title,
+				language: message.language
 			}
 		});
 

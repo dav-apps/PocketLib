@@ -22,6 +22,7 @@ export class AuthorBookPageComponent{
 	newDescription: string = "";
 	newDescriptionError: string = "";
 	languageSelectedKey: string = "en";
+	updateLanguage: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -55,9 +56,6 @@ export class AuthorBookPageComponent{
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
-
-		// Set the language dropdown
-		this.languageSelectedKey = this.dataService.locale.startsWith("de") ? "de" : "en";
 	}
 
 	async ngOnInit(){
@@ -120,13 +118,20 @@ export class AuthorBookPageComponent{
 	}
 
 	SetLanguage(e: {event: MouseEvent, option: {key: string, text: string}}){
-		this.languageSelectedKey = e.option.key;
+		this.updateLanguage = true;
+
+		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			language: e.option.key
+		});
 	}
 
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
+			this.languageSelectedKey = response.data.language;
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(['author']);
@@ -155,6 +160,12 @@ export class AuthorBookPageComponent{
 						this.newDescriptionError = this.locale.errors.unexpectedError;
 						break;
 				}
+			}
+		}else if(this.updateLanguage){
+			this.updateLanguage = false;
+
+			if(response.status == 200){
+				this.languageSelectedKey = response.data.language;
 			}
 		}else{
 			// The title was updated
