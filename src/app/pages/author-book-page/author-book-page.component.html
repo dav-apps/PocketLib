@@ -21,7 +21,7 @@
 	<div class="mt-3 d-flex">
 		<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.description }}: </p>
 
-		<div>
+		<div style="width: 80%">
 			<p style="margin-top: 3px" *ngIf="book.description && !editDescription">{{ book.description }}</p>
 			<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 
@@ -37,6 +37,19 @@
 			
 			<fab-primary-button (click)="EditDescription()">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
 			<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription">{{ locale.cancel }}</fab-default-button>
+		</div>
+	</div>
+
+	<div class="mt-3 d-flex">
+		<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.language }}: </p>
+
+		<div>
+			<fab-dropdown [selectedKey]="languageSelectedKey" (onChange)="SetLanguage($event)">
+				<options>
+					<fab-dropdown-option optionKey="en" [text]="locale.languages.en"></fab-dropdown-option>
+					<fab-dropdown-option optionKey="de" [text]="locale.languages.de"></fab-dropdown-option>
+				</options>
+			</fab-dropdown>
 		</div>
 	</div>
 </div>

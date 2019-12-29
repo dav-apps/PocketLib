@@ -21,6 +21,7 @@ export class AuthorBookPageComponent{
 	editDescription: boolean = false;
 	newDescription: string = "";
 	newDescriptionError: string = "";
+	languageSelectedKey: string = "en";
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -37,7 +38,6 @@ export class AuthorBookPageComponent{
 	}
 	descriptionTextfieldStyles = {
 		root: {
-			width: "300px",
 			marginTop: "3px",
 			marginBottom: "16px"
 		}
@@ -52,7 +52,12 @@ export class AuthorBookPageComponent{
 		this.locale = this.dataService.GetLocale().authorBookPage;
 		this.getStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBook, (response: ApiResponse) => this.GetStoreBookResponse(response));
 		this.updateStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateStoreBook, (response: ApiResponse) => this.UpdateStoreBookResponse(response));
+
+		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
+
+		// Set the language dropdown
+		this.languageSelectedKey = this.dataService.locale.startsWith("de") ? "de" : "en";
 	}
 
 	async ngOnInit(){
@@ -112,6 +117,10 @@ export class AuthorBookPageComponent{
 			this.newDescriptionError = "";
 			this.editDescription = true;
 		}
+	}
+
+	SetLanguage(e: {event: MouseEvent, option: {key: string, text: string}}){
+		this.languageSelectedKey = e.option.key;
 	}
 
 	GetStoreBookResponse(response: ApiResponse){

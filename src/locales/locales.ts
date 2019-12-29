@@ -92,6 +92,11 @@ const enDefaults = {
 		description: "Description",
 		descriptionTextfieldPlaceholder: "A short description of your book",
 		noDescription: "No description provided",
+		language: "Language",
+		languages: {
+			en: "English",
+			de: "German"
+		},
 		edit: "Edit",
 		cancel: "Cancel",
 		save: "Save",
@@ -249,6 +254,11 @@ const deDefaults = {
 		description: "Beschreibung",
 		descriptionTextfieldPlaceholder: "Eine kurze Beschreibung deines Buches",
 		noDescription: "Keine Beschreibung angegeben",
+		language: "Sprache",
+		languages: {
+			en: "Englisch",
+			de: "Deutsch"
+		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
 		save: "Speichern",
