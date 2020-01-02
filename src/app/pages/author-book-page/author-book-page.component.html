@@ -19,6 +19,24 @@
 	</div>
 
 	<div class="mt-3 d-flex">
+		<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.cover }}: </p>
+
+		<div>
+			<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+			<div class="mb-3" *ngIf="coverContent">
+				<img [src]="coverContent" />
+			</div>
+
+			<fab-primary-button 
+				ngxFilePicker
+				accept="image/png,image/jpeg"
+				(filePick)="CoverUpload($event)">
+				{{ locale.uploadCover }}
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<div class="mt-3 d-flex">
 		<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.description }}: </p>
 
 		<div style="width: 80%">

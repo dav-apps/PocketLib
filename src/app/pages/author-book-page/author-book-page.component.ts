@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { ReadFile } from 'ngx-file-helpers';
 import { DataService, ApiResponse } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -13,6 +14,8 @@ export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
 	getStoreBookSubscriptionKey: number;
 	updateStoreBookSubscriptionKey: number;
+	getStoreBookCoverSubscriptionKey: number;
+	setStoreBookCoverSubscriptionKey: number;
 	uuid: string;
 	book: {title: string, description: string} = {title: "", description: ""}
 	editTitleDialogVisible: boolean = false;
@@ -23,6 +26,7 @@ export class AuthorBookPageComponent{
 	newDescriptionError: string = "";
 	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
+	coverContent: string = null;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -53,6 +57,8 @@ export class AuthorBookPageComponent{
 		this.locale = this.dataService.GetLocale().authorBookPage;
 		this.getStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBook, (response: ApiResponse) => this.GetStoreBookResponse(response));
 		this.updateStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateStoreBook, (response: ApiResponse) => this.UpdateStoreBookResponse(response));
+		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
+		this.setStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookCover, (response: ApiResponse) => this.SetStoreBookCoverResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -63,7 +69,7 @@ export class AuthorBookPageComponent{
 		await this.dataService.userPromise;
 
 		// Redirect back to the author page if the user is not an author
-		if((await this.dataService.userAuthorPromise) == null){
+		if(!this.dataService.userAuthor && !(await this.dataService.userAuthorPromise)){
 			this.router.navigate(['author']);
 		}
 
@@ -76,7 +82,9 @@ export class AuthorBookPageComponent{
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
 			this.getStoreBookSubscriptionKey,
-			this.updateStoreBookSubscriptionKey
+			this.updateStoreBookSubscriptionKey,
+			this.getStoreBookCoverSubscriptionKey,
+			this.setStoreBookCoverSubscriptionKey
 		)
 	}
 
@@ -127,11 +135,62 @@ export class AuthorBookPageComponent{
 		});
 	}
 
+	async CoverUpload(file: ReadFile){
+		// Get the content of the image file
+		let reader = new FileReader();
+
+		let readPromise: Promise<string> = new Promise((resolve) => {
+			reader.addEventListener('loadend', (e) => {
+				resolve(e.srcElement["result"]);
+			});
+		});
+
+		reader.readAsBinaryString(new Blob([file.underlyingFile]));
+		let imageContent = await readPromise;
+
+		let image = new Image();
+		let imageHeight = 0;
+		let imageWidth = 0;
+
+		let imageLoadPromise: Promise<null> = new Promise((resolve) => {
+			image.onload = () => {
+				imageHeight = image.height;
+				imageWidth = image.width;
+				resolve();
+			}
+		});
+
+		let base64 = btoa(imageContent)
+		let type = file.type;
+		let imageSrc = `data:${type};base64,${base64}`;
+
+		image.src = imageSrc;
+		await imageLoadPromise;
+
+		// TODO: Validate the image dimensions
+
+		// Upload the image
+		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			type,
+			file: imageContent
+		});
+	}
+
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
 			this.languageSelectedKey = response.data.language;
+
+			if(response.data.cover){
+				// Download the cover
+				this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {
+					jwt: this.dataService.user.JWT,
+					uuid: this.uuid
+				});
+			}
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(['author']);
@@ -196,5 +255,17 @@ export class AuthorBookPageComponent{
 				}
 			}
 		}
+	}
+
+	GetStoreBookCoverResponse(response: ApiResponse){
+		if(response.status == 200){
+			let type = response.headers['content-type'];
+			let base64 = btoa(response.data);
+			this.coverContent = `data:${type};base64,${base64}`;
+		}
+	}
+
+	SetStoreBookCoverResponse(response: ApiResponse){
+		
 	}
 }

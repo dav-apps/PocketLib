@@ -97,6 +97,9 @@ const enDefaults = {
 			en: "English",
 			de: "German"
 		},
+		cover: "Cover",
+		noCover: "No cover provided",
+		uploadCover: "Upload cover",
 		edit: "Edit",
 		cancel: "Cancel",
 		save: "Save",
@@ -259,6 +262,9 @@ const deDefaults = {
 			en: "Englisch",
 			de: "Deutsch"
 		},
+		cover: "Cover",
+		noCover: "Kein Cover angegeben",
+		uploadCover: "Cover hochladen",
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
 		save: "Speichern",
