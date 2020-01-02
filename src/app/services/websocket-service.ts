@@ -61,7 +61,9 @@ export enum WebsocketCallbackType{
 	GetAuthorOfUser = 4,
 	CreateStoreBook = 5,
 	GetStoreBook = 6,
-	UpdateStoreBook = 7
+	UpdateStoreBook = 7,
+	GetStoreBookCover = 8,
+	SetStoreBookCover = 9
 }
 
 export const Callbacks = {
@@ -71,7 +73,9 @@ export const Callbacks = {
 	getAuthorOfUser: WebsocketCallbackType.GetAuthorOfUser,
 	createStoreBook: WebsocketCallbackType.CreateStoreBook,
 	getStoreBook: WebsocketCallbackType.GetStoreBook,
-	updateStoreBook: WebsocketCallbackType.UpdateStoreBook
+	updateStoreBook: WebsocketCallbackType.UpdateStoreBook,
+	getStoreBookCover: WebsocketCallbackType.GetStoreBookCover,
+	setStoreBookCover: WebsocketCallbackType.SetStoreBookCover
 }
 
 function getKeyByValue(object: any, value: any) {

@@ -147,6 +147,7 @@ export class DataService{
 
 export interface ApiResponse{
 	status: number;
+	headers: any;
 	data: any;
 }
 
