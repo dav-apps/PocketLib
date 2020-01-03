@@ -16,6 +16,7 @@ export function init(s: any){
 	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
 	socket.on(authorBookPage.setStoreBookCoverKey, authorBookPage.setStoreBookCover);
+	socket.on(authorBookPage.setStoreBookFileKey, authorBookPage.setStoreBookFile);
 }
 
 export function emit(key: string, message: any){
