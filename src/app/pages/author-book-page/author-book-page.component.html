@@ -7,7 +7,7 @@
 						(click)="GoBack()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
-			<h2 class="text-left font-weight-light mt-2 ml-3 text-color">{{ book.title }}</h2>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ book.title }}</h2>
 
 			<button type="button" 
 					class="btn ml-3 my-auto text-color theme-background-color-primary theme-border-color-primary icon-button" 
@@ -44,26 +44,22 @@
 				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
 	
-			<div class="row" style="grid-column: 2; grid-row: 2;">
-				<div class="col-10">
-					<div style="width: 80%">
-						<p style="margin-top: 3px" *ngIf="book.description && !editDescription">{{ book.description }}</p>
-						<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
-			
-						<fab-text-field 
-							[styles]="descriptionTextfieldStyles"
-							[(value)]="newDescription"
-							[placeholder]="locale.descriptionTextfieldPlaceholder"
-							[errorMessage]="newDescriptionError"
-							multiline="true"
-							autoAdjustHeight="true"
-							*ngIf="editDescription">
-						</fab-text-field>
-						
-						<fab-primary-button (click)="EditDescription()">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
-						<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription">{{ locale.cancel }}</fab-default-button>
-					</div>
-				</div>
+			<div style="grid-column: 2; grid-row: 2; min-width: 300px">
+				<p style="margin-top: 3px" *ngIf="book.description && !editDescription">{{ book.description }}</p>
+				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+	
+				<fab-text-field 
+					[styles]="descriptionTextfieldStyles"
+					[(value)]="newDescription"
+					[placeholder]="locale.descriptionTextfieldPlaceholder"
+					[errorMessage]="newDescriptionError"
+					multiline="true"
+					autoAdjustHeight="true"
+					*ngIf="editDescription">
+				</fab-text-field>
+				
+				<fab-primary-button (click)="EditDescription()">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
+				<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription">{{ locale.cancel }}</fab-default-button>
 			</div>
 	
 			<!-- Language -->
@@ -78,6 +74,23 @@
 						<fab-dropdown-option optionKey="de" [text]="locale.languages.de"></fab-dropdown-option>
 					</options>
 				</fab-dropdown>
+			</div>
+
+			<!-- Book file -->
+			<div style="grid-column: 1; grid-row: 4;">
+				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.bookFile }}: </p>
+			</div>
+
+			<div style="grid-column: 2; grid-row: 4;">
+				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
+				<p class="font-weight-light" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
+
+				<fab-primary-button
+					ngxFilePicker
+					accept="application/epub+zip,application/pdf"
+					(filePick)="BookFileUpload($event)">
+					{{ locale.uploadBookFile }}
+				</fab-primary-button>
 			</div>
 		</div>
 	</div>

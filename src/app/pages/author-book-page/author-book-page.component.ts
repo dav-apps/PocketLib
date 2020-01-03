@@ -16,6 +16,7 @@ export class AuthorBookPageComponent{
 	updateStoreBookSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
 	setStoreBookCoverSubscriptionKey: number;
+	setStoreBookFileSubscriptionKey: number;
 	uuid: string;
 	book: {title: string, description: string} = {title: "", description: ""}
 	editTitleDialogVisible: boolean = false;
@@ -27,6 +28,7 @@ export class AuthorBookPageComponent{
 	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
 	coverContent: string = null;
+	bookFileUploaded: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -44,7 +46,8 @@ export class AuthorBookPageComponent{
 	descriptionTextfieldStyles = {
 		root: {
 			marginTop: "3px",
-			marginBottom: "16px"
+			marginBottom: "16px",
+			minWidth: "300px"
 		}
 	}
 	
@@ -59,6 +62,7 @@ export class AuthorBookPageComponent{
 		this.updateStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateStoreBook, (response: ApiResponse) => this.UpdateStoreBookResponse(response));
 		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
 		this.setStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookCover, (response: ApiResponse) => this.SetStoreBookCoverResponse(response));
+		this.setStoreBookFileSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookFile, (response: ApiResponse) => this.SetStoreBookFileResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -84,7 +88,8 @@ export class AuthorBookPageComponent{
 			this.getStoreBookSubscriptionKey,
 			this.updateStoreBookSubscriptionKey,
 			this.getStoreBookCoverSubscriptionKey,
-			this.setStoreBookCoverSubscriptionKey
+			this.setStoreBookCoverSubscriptionKey,
+			this.setStoreBookFileSubscriptionKey
 		)
 	}
 
@@ -178,6 +183,27 @@ export class AuthorBookPageComponent{
 		});
 	}
 
+	async BookFileUpload(file: ReadFile){
+		let reader = new FileReader();
+
+		let readPromise: Promise<string> = new Promise((resolve) => {
+			reader.addEventListener('loadend', (e) => {
+				resolve(e.srcElement["result"]);
+			});
+		});
+
+		reader.readAsBinaryString(new Blob([file.underlyingFile]));
+		let fileContent = await readPromise;
+
+		// Upload the file
+		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookFile, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			type: file.type,
+			file: fileContent
+		});
+	}
+
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.title = response.data.title;
@@ -191,6 +217,8 @@ export class AuthorBookPageComponent{
 					uuid: this.uuid
 				});
 			}
+
+			this.bookFileUploaded = response.data.file;
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(['author']);
@@ -267,5 +295,9 @@ export class AuthorBookPageComponent{
 
 	SetStoreBookCoverResponse(response: ApiResponse){
 		
+	}
+
+	SetStoreBookFileResponse(response: ApiResponse){
+		this.bookFileUploaded = response.status == 200;
 	}
 }
