@@ -9,7 +9,7 @@ export function init(s: any){
 	socket = s;
 	socket.on(loginPage.loginKey, loginPage.login);
 	socket.on(loginPage.getAppKey, loginPage.getApp);
-	socket.on(authorSetupPage.setAuthorOfUserKey, authorSetupPage.setAuthorOfUser);
+	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
 	socket.on(authorPage.createStoreBookKey, authorPage.createStoreBook);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);

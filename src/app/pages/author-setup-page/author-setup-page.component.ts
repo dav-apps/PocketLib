@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageBarType } from 'office-ui-fabric-react';
-import { DataService } from 'src/app/services/data-service';
+import { DataService, ApiResponse } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -11,14 +11,12 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorSetupPageComponent{
 	locale = enUS.authorSetupPage;
-	setAuthorOfUserSubscriptionKey: number;
+	createAuthorSubscriptionKey: number;
 	firstName: string = "";
 	lastName: string = "";
-	bio: string = "";
 	generalError: string = "";
 	firstNameError: string = "";
 	lastNameError: string = "";
-	bioError: string = "";
 	messageBarType: MessageBarType = MessageBarType.error;
 
 	constructor(
@@ -27,7 +25,7 @@ export class AuthorSetupPageComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorSetupPage;
-		this.setAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetAuthorOfUser, (response: {status: number, data: any}) => this.SetAuthorOfUserResponse(response));
+		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: ApiResponse) => this.CreateAuthorResponse(response));
 	}
 
 	async ngOnInit(){
@@ -38,33 +36,30 @@ export class AuthorSetupPageComponent{
 	}
 
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.setAuthorOfUserSubscriptionKey);
+		this.websocketService.Unsubscribe(this.createAuthorSubscriptionKey);
 	}
 
 	async Submit(){
-		this.websocketService.Emit(WebsocketCallbackType.SetAuthorOfUser, {
+		this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
 			jwt: this.dataService.user.JWT,
 			firstName: this.firstName,
-			lastName: this.lastName,
-			bio: this.bio
+			lastName: this.lastName
 		});
 
 		this.firstName = "";
 		this.lastName = "";
-		this.bio = "";
+		this.generalError = "";
 		this.firstNameError = "";
 		this.lastNameError = "";
-		this.bioError = "";
-		this.generalError = "";
 	}
 
-	SetAuthorOfUserResponse(response: {status: number, data: any}){
-		if(response.status == 200){
+	CreateAuthorResponse(response: ApiResponse){
+		if(response.status == 201){
 			// Set the author in DataService
 			this.dataService.userAuthor = {
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
-				bio: response.data.bio,
+				bio: null,
 				books: []
 			}
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
@@ -82,10 +77,6 @@ export class AuthorSetupPageComponent{
 						// Missing field: last_name
 						this.lastNameError = this.locale.errors.lastNameMissing;
 						break;
-					case 2104:
-						// Missing field: bio
-						this.bioError = this.locale.errors.bioMissing;
-						break;
 					case 2301:
 						// Field too short: first_name
 						this.firstNameError = this.locale.errors.firstNameTooShort;
@@ -94,10 +85,6 @@ export class AuthorSetupPageComponent{
 						// Field too short: last_name
 						this.lastNameError = this.locale.errors.lastNameTooShort;
 						break;
-					case 2303:
-						// Field too short: bio
-						this.bioError = this.locale.errors.bioTooShort;
-						break;
 					case 2401:
 						// Field too long: first_name
 						this.firstNameError = this.locale.errors.firstNameTooLong;
@@ -105,10 +92,6 @@ export class AuthorSetupPageComponent{
 					case 2402:
 						// Field too long: last_name
 						this.lastNameError = this.locale.errors.lastNameTooLong;
-						break;
-					case 2403:
-						// Field too long: bio
-						this.bioError = this.locale.errors.bioTooLong;
 						break;
 					default:
 						// Unexpected error
