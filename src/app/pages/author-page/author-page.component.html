@@ -6,25 +6,32 @@
    </div>
 </div>
 
-<div class="container ms-motion-slideUpIn text-center" *ngIf="dataService.userAuthor">
-	<div style="display: inline-block">
-		<h1 class="text-center mt-3 mb-4">Hi, <a style="color: black" [routerLink]="['profile']">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</a></h1>
+<div class="container ms-motion-slideUpIn" *ngIf="dataService.userAuthor">
+	<div class="row">
+		<div class="col-6 text-center pt-5">
+			<img class="rounded-circle" style="width: 40%" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
+			<h4 class="mt-4">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h4>
 
-		<div
-			class="card mt-3 cursor shadow-sm"
-			(click)="ShowCreateBookDialog()">
-			<div class="card-body text-center">
-				<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
+			<p class="mt-3" *ngIf="dataService.userAuthor.bio && !editBio">{{ dataService.userAuthor.bio }}</p>
+			<p class="mt-3 font-weight-light font-italic" *ngIf="!dataService.userAuthor.bio && !editBio">{{ locale.noBio }}</p>
+
+			<div class="mx-auto my-3" style="width: 80%" *ngIf="editBio">
+				<fab-text-field
+					[styles]="bioTextfieldStyles"
+					[(value)]="newBio"
+					[placeholder]="locale.bioTextfieldPlaceholder"
+					[errorMessage]="newBioError"
+					multiline="true"
+					autoAdjustHeight="true">
+				</fab-text-field>
 			</div>
+
+			<fab-primary-button (click)="EditBio()">{{ editBio ? locale.save : locale.edit }}</fab-primary-button>
+			<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editBio = false" *ngIf="editBio">{{ locale.cancel }}</fab-default-button>
 		</div>
-
-		<div 
-			class="card mt-3 cursor shadow-sm" 
-			*ngFor="let book of dataService.userAuthor.books"
-			(click)="ShowBook(book.uuid)">
-			<div class="card-body text-center">
-				{{ book.title }}
-			</div>
+	
+		<div class="col-4 text-center pt-5">
+			
 		</div>
 	</div>
 </div>

@@ -47,6 +47,8 @@ const enDefaults = {
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
+		noBio: "No biography provided",
+		bioTextfieldPlaceholder: "Your biography",
 		createBookDialog: {
 			title: "Create book",
 			titleTextfieldLabel: "Title",
@@ -58,8 +60,14 @@ const enDefaults = {
 				unexpectedError: "An unexpected error occured"
 			}
 		},
+		edit: "Edit",
 		cancel: "Cancel",
-		save: "Save"
+		save: "Save",
+		errors: {
+			bioTooShort: "Your biography is too short",
+			bioTooLong: "Your biography is too long",
+			unexpectedError: "An unexpected error occured. Please try again."
+		}
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
@@ -211,6 +219,8 @@ const deDefaults = {
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an und erstelle dein Profil",
+		noBio: "Keine Biographie angegeben",
+		bioTextfieldPlaceholder: "Deine Biographie",
 		createBookDialog: {
 			title: "Buch erstellen",
 			titleTextfieldLabel: "Titel",
@@ -222,8 +232,14 @@ const deDefaults = {
 				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 			}
 		},
+		edit: "Bearbeiten",
 		cancel: "Abbrechen",
-		save: "Speichern"
+		save: "Speichern",
+		errors: {
+			bioTooShort: "Deine Biographie ist zu kurz",
+			bioTooLong: "Deine Biographie ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+		}
 	},
 	authorSetupPage: {
 		title: "Erstelle dein Autoren-Profil",

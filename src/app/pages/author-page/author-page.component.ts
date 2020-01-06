@@ -17,11 +17,15 @@ const navbarHeight: number = 64;
 export class AuthorPageComponent{
 	locale = enUS.authorPage;
 	createStoreBookSubscriptionKey: number;
+	updateAuthorOfUserSubscriptionKey: number;
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 	createBookDialogVisible: boolean = false;
 	createBookDialogTitle: string = "";
 	createBookDialogTitleError: string = "";
+	editBio: boolean = false;
+	newBio: string = "";
+	newBioError: string = "";
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -31,6 +35,11 @@ export class AuthorPageComponent{
 	createBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.createBookDialog.title
 	}
+	bioTextfieldStyles = {
+		root: {
+			marginTop: "10px"
+		}
+	}
 
    constructor(
 		public dataService: DataService,
@@ -39,6 +48,7 @@ export class AuthorPageComponent{
    ){
 		this.locale = this.dataService.GetLocale().authorPage;
 		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
+		this.updateAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateAuthorOfUser, (response: ApiResponse) => this.UpdateAuthorOfUserResponse(response));
    }
    
    ngOnInit(){
@@ -46,7 +56,10 @@ export class AuthorPageComponent{
 	}
 	
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.createStoreBookSubscriptionKey);
+		this.websocketService.Unsubscribe(
+			this.createStoreBookSubscriptionKey,
+			this.updateAuthorOfUserSubscriptionKey
+		)
 	}
 
    @HostListener('window:resize')
@@ -91,6 +104,22 @@ export class AuthorPageComponent{
 		});
 	}
 
+	EditBio(){
+		if(this.editBio){
+			this.newBioError = "";
+
+			// Save the new bio on the server
+			this.websocketService.Emit(WebsocketCallbackType.UpdateAuthorOfUser, {
+				jwt: this.dataService.user.JWT,
+				bio: this.newBio
+			});
+		}else{
+			this.newBio = this.dataService.userAuthor.bio ? this.dataService.userAuthor.bio : "";
+			this.newBioError = "";
+			this.editBio = true;
+		}
+	}
+
 	CreateStoreBookResponse(response: ApiResponse){
 		if(response.status == 201){
 			// Add the new book to the books in DataService
@@ -120,6 +149,30 @@ export class AuthorPageComponent{
 						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
 						break;
 				}
+			}
+		}
+	}
+
+	UpdateAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			this.dataService.userAuthor.bio = response.data.bio;
+			this.editBio = false;
+		}else{
+			let errorCode = response.data.errors[0].code;
+
+			switch(errorCode){
+				case 2303:
+					// Field too short: bio
+					this.newBioError = this.locale.errors.bioTooShort;
+					break;
+				case 2403:
+					// Field too long: bio
+					this.newBioError = this.locale.errors.bioTooLong;
+					break;
+				default:
+					// Unexpected error
+					this.newBioError = this.locale.errors.unexpectedError;
+					break;
 			}
 		}
 	}
