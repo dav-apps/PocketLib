@@ -13,7 +13,7 @@ import { AuthorBookPageComponent } from './pages/author-book-page/author-book-pa
 import { AuthorProfilePageComponent } from './pages/author-profile-page/author-profile-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
-import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.component';
+import { StorePageComponent } from './pages/store-page/store-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -30,7 +30,7 @@ const routes: Routes = [
 	{ path: "author/profile", component: AuthorProfilePageComponent },
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
-	{ path: "bookstore", component: BookstorePageComponent }
+	{ path: "store", component: StorePageComponent }
 ]
 
 @NgModule({

@@ -58,7 +58,7 @@ import { AuthorBookPageComponent } from './pages/author-book-page/author-book-pa
 import { AuthorProfilePageComponent } from './pages/author-profile-page/author-profile-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
-import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.component';
+import { StorePageComponent } from './pages/store-page/store-page.component';
 
 @NgModule({
    declarations: [
@@ -84,7 +84,7 @@ import { BookstorePageComponent } from './pages/bookstore-page/bookstore-page.co
 		AuthorProfilePageComponent,
       LoginPageComponent,
 		LoadingPageComponent,
-		BookstorePageComponent
+		StorePageComponent
   	],
   	imports: [
    	AngularReactBrowserModule,
