@@ -12,6 +12,7 @@ export function init(s: any){
 	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
 	socket.on(authorPage.createStoreBookKey, authorPage.createStoreBook);
+	socket.on(authorPage.updateAuthorOfUserKey, authorPage.updateAuthorOfUser);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
 	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
