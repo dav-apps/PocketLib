@@ -8,7 +8,7 @@
 
 <div class="container ms-motion-slideUpIn text-center" *ngIf="dataService.userAuthor">
 	<div style="display: inline-block">
-		<h1 class="text-center mt-3 mb-4">Hi, {{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h1>
+		<h1 class="text-center mt-3 mb-4">Hi, <a style="color: black" [routerLink]="['profile']">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</a></h1>
 
 		<div
 			class="card mt-3 cursor shadow-sm"
