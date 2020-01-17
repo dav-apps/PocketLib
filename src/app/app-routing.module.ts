@@ -9,6 +9,7 @@ import { AppPageComponent } from './pages/app-page/app-page.component';
 import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
+import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component';
 import { AuthorBookPageComponent } from './pages/author-book-page/author-book-page.component';
 import { AuthorProfilePageComponent } from './pages/author-profile-page/author-profile-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
@@ -26,6 +27,7 @@ const routes: Routes = [
    { path: "developer/apps/:uuid", component: AppPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/setup", component: AuthorSetupPageComponent },
+	{ path: "author/collection/:uuid", component: AuthorCollectionPageComponent },
 	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
 	{ path: "author/profile", component: AuthorProfilePageComponent },
 	{ path: "login", component: LoginPageComponent },
