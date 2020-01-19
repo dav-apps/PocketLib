@@ -105,7 +105,7 @@ const enDefaults = {
 			de: "German"
 		},
 		cover: "Cover",
-		noCover: "No cover provided",
+		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
 		bookFile: "Book file",
 		noBookFile: "No book file uploaded",
@@ -281,7 +281,7 @@ const deDefaults = {
 			de: "Deutsch"
 		},
 		cover: "Cover",
-		noCover: "Kein Cover angegeben",
+		noCover: "Kein Cover hochgeladen",
 		uploadCover: "Cover hochladen",
 		bookFile: "Buch-Datei",
 		noBookFile: "Keine Buch-Datei hochgeladen",

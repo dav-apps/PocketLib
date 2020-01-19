@@ -18,7 +18,7 @@ export class AuthorBookPageComponent{
 	setStoreBookCoverSubscriptionKey: number;
 	setStoreBookFileSubscriptionKey: number;
 	uuid: string;
-	book: {title: string, description: string} = {title: "", description: ""}
+	book: {collection: string, title: string, description: string} = {collection: "", title: "", description: ""}
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
@@ -94,7 +94,7 @@ export class AuthorBookPageComponent{
 	}
 
 	GoBack(){
-		this.router.navigate(["author"]);
+		this.router.navigate(["author", "collection", this.book.collection]);
 	}
 
 	ShowEditTitleModal(){
@@ -206,6 +206,7 @@ export class AuthorBookPageComponent{
 
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
+			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
 			this.languageSelectedKey = response.data.language;
@@ -257,13 +258,7 @@ export class AuthorBookPageComponent{
 		}else{
 			// The title was updated
 			if(response.status == 200){
-				// Update the local book
 				this.book.title = response.data.title;
-	
-				// Update the book in DataService
-				let authorBook = this.dataService.userAuthor.books.find(book => book.uuid == this.uuid);
-				if(authorBook) authorBook.title = response.data.title;
-	
 				this.editTitleDialogVisible = false;
 			}else{
 				let errorCode = response.data.errors[0].code;
