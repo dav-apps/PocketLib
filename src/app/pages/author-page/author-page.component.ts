@@ -1,7 +1,7 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { DataService, ApiResponse } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindNameWithAppropriateLanguage } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -59,28 +59,8 @@ export class AuthorPageComponent{
 
 		// Get the appropriate language of each collection
 		for(let collection of this.dataService.userAuthor.collections){
-			if(collection.names.length == 0)continue;
-
-			if(collection.names.length == 1){
-				this.collections.push({uuid: collection.uuid, name: collection.names[0].name});
-			}else{
-				// Get the name with the language of the browser
-				let lang = this.dataService.locale.slice(0, 2);
-				let name = collection.names.find(collectionName => collectionName.language == lang);
-
-				if(name){
-					this.collections.push({uuid: collection.uuid, name: name.name});
-				}else{
-					// Get the name of the default language
-					if(lang != "en"){
-						name = collection.names.find(collectionName => collectionName.language == "en");
-
-						if(name){
-							this.collections.push({uuid: collection.uuid, name: name.name});
-						}
-					}
-				}
-			}
+			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
+			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
 		}
 	}
 	

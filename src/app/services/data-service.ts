@@ -25,7 +25,7 @@ export class DataService{
    syncFinished: boolean = false;
 	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
 	userPromiseResolve: Function;
-	userAuthor: {firstName: string, lastName: string, bio: string, books: {uuid: string, title: string}[]} = null;
+	userAuthor: {firstName: string, lastName: string, bio: string, collections: {uuid: string, names: {name: string, language: string}[]}[]} = null;
 	userAuthorPromise: Promise<{firstName: string, lastName: string, bio: string}> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
 	userAuthorPromiseResolve: Function;
 
@@ -175,4 +175,20 @@ export function SetTextFieldAutocomplete(textFieldId: string, autocomplete: stri
 		// Set the autocomplete attribute
 		input.setAttribute("autocomplete", autocomplete);
 	}
+}
+
+export function FindNameWithAppropriateLanguage(targetLanguage: string, names: {name: string, language: string}[]) : number{
+	if(names.length == 0) return -1;
+	if(names.length == 1) return 0;
+
+	// Try to get the name of the target language
+	let i = names.findIndex(n => n.language == targetLanguage);
+	if(i != -1) return i;
+
+	// Try to get the name of the default language
+	i = names.findIndex(n => n.language == "en");
+	if(i != -1) return i;
+
+	// Return the first name
+	return 0;
 }

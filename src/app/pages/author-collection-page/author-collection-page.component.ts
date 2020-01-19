@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles } from 'office-ui-fabric-react';
-import { DataService, ApiResponse } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindNameWithAppropriateLanguage } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -13,6 +13,7 @@ export class AuthorCollectionPageComponent{
 	locale = enUS.authorCollectionPage;
 	getStoreBookCollectionSubscriptionKey: number;
 	uuid: string;
+	collectionName: string = "";
 	collection: {
 		uuid: string,
 		names: {name: string, language: string}[],
@@ -73,6 +74,10 @@ export class AuthorCollectionPageComponent{
 	GetStoreBookCollectionResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.collection = response.data;
+
+			// Get the appropriate collection name
+			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+			if(i != -1) this.collectionName = this.collection.names[i].name;
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(["author"]);
