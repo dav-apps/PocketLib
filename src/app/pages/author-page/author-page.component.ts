@@ -26,6 +26,7 @@ export class AuthorPageComponent{
 	editBio: boolean = false;
 	newBio: string = "";
 	newBioError: string = "";
+	collections: {uuid: string, name: string}[] = [];
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -51,8 +52,36 @@ export class AuthorPageComponent{
 		this.updateAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateAuthorOfUser, (response: ApiResponse) => this.UpdateAuthorOfUserResponse(response));
    }
    
-   ngOnInit(){
-      this.setSize();
+   async ngOnInit(){
+		this.setSize();
+		
+		await this.dataService.userAuthorPromise;
+
+		// Get the appropriate language of each collection
+		for(let collection of this.dataService.userAuthor.collections){
+			if(collection.names.length == 0)continue;
+
+			if(collection.names.length == 1){
+				this.collections.push({uuid: collection.uuid, name: collection.names[0].name});
+			}else{
+				// Get the name with the language of the browser
+				let lang = this.dataService.locale.slice(0, 2);
+				let name = collection.names.find(collectionName => collectionName.language == lang);
+
+				if(name){
+					this.collections.push({uuid: collection.uuid, name: name.name});
+				}else{
+					// Get the name of the default language
+					if(lang != "en"){
+						name = collection.names.find(collectionName => collectionName.language == "en");
+
+						if(name){
+							this.collections.push({uuid: collection.uuid, name: name.name});
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	ngOnDestroy(){
@@ -94,6 +123,10 @@ export class AuthorPageComponent{
 		this.createBookDialogVisible = true;
 	}
 
+	ShowCollection(uuid: string){
+		this.router.navigate(["author", "collection", uuid]);
+	}
+
 	CreateBook(){
 		this.createBookDialogTitleError = "";
 
@@ -123,7 +156,7 @@ export class AuthorPageComponent{
 	CreateStoreBookResponse(response: ApiResponse){
 		if(response.status == 201){
 			// Add the new book to the books in DataService
-			this.dataService.userAuthor.books.push({uuid: response.data.uuid, title: response.data.title});
+			//this.dataService.userAuthor.books.push({uuid: response.data.uuid, title: response.data.title});
 			this.createBookDialogVisible = false;
 
 			// Redirect to AuthorAppPage
