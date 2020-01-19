@@ -2,6 +2,7 @@ import * as loginPage from './websocket/login-page';
 import * as authorSetupPage from './websocket/author-setup-page';
 import * as authorPage from './websocket/author-page';
 import * as authorBookPage from './websocket/author-book-page';
+import * as authorCollectionPage from './websocket/author-collection-page';
 
 var socket = null;
 
@@ -18,6 +19,7 @@ export function init(s: any){
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
 	socket.on(authorBookPage.setStoreBookCoverKey, authorBookPage.setStoreBookCover);
 	socket.on(authorBookPage.setStoreBookFileKey, authorBookPage.setStoreBookFile);
+	socket.on(authorCollectionPage.getStoreBookCollectionKey, authorCollectionPage.getStoreBookCollection);
 }
 
 export function emit(key: string, message: any){
