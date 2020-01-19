@@ -24,9 +24,10 @@ export class AuthorCollectionPageComponent{
 			language: string,
 			status: string,
 			cover: boolean,
-			file: boolean
+			file: boolean,
+			coverContent: string
 		}[]
-	}
+	} = {uuid: "", names: [], books: []};
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -71,6 +72,10 @@ export class AuthorCollectionPageComponent{
 		this.router.navigate(["author"]);
 	}
 
+	ShowBook(uuid: string){
+		this.router.navigate(["author", "book", uuid]);
+	}
+
 	GetStoreBookCollectionResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.collection = response.data;
@@ -78,6 +83,16 @@ export class AuthorCollectionPageComponent{
 			// Get the appropriate collection name
 			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
 			if(i != -1) this.collectionName = this.collection.names[i].name;
+
+			for(let book of this.collection.books){
+				// Set the cover
+				book.coverContent = '/assets/images/placeholder.png';
+
+				// Cut the description
+				if(book.description.length > 170){
+					book.description = book.description.slice(0, 169) + "...";
+				}
+			}
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(["author"]);

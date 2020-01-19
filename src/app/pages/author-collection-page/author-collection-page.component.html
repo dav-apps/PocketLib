@@ -1,5 +1,5 @@
 <div class="container ms-motion-slideUpIn">
-	<div class="d-flex justify-content-center">
+	<div class="d-flex justify-content-center mb-4">
 		<div class="d-flex my-3">
 			<button type="button" 
 						class="btn mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
@@ -10,12 +10,28 @@
 			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ collectionName }}</h2>
 
 			<button type="button" 
-					class="btn ml-3 my-auto text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 					style="height: 35px; padding: 3px 6px; font-size: 18px">
 				<fab-icon iconName="Edit"></fab-icon>
 			</button>
 		</div>
 	</div>
 
-	
+	<div 
+		class="card mb-3 mx-auto shadow-sm cursor" 
+		style="max-width: 500px" 
+		*ngFor="let book of collection.books"
+		(click)="ShowBook(book.uuid)">
+		<div class="row no-gutters">
+			<div class="col-4">
+				<img [src]="book.coverContent">
+			</div>
+			<div class="col-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ book.title }}</h5>
+					<p class="card-text">{{ book.description }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
