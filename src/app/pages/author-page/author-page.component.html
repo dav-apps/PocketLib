@@ -8,8 +8,8 @@
 
 <div class="container ms-motion-slideUpIn" *ngIf="dataService.userAuthor">
 	<div class="row">
-		<div class="col-4 text-center pt-5">
-			<img class="rounded-circle shadow" style="width: 50%" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
+		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
+			<img class="rounded-circle shadow" [style.width.px]="profileImageWidth" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
 			<h4 class="mt-4">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h4>
 
 			<p class="mt-3" *ngIf="dataService.userAuthor.bio && !editBio">{{ dataService.userAuthor.bio }}</p>
@@ -30,8 +30,8 @@
 			<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editBio = false" *ngIf="editBio">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
-		<div class="col-8 text-center pt-5">
-			<h4 class="mb-3">{{ locale.yourCollections }}</h4>
+		<div class="col-12 col-md-8 col-xl-9 text-center pt-5">
+			<h4 class="mt-md-5 mb-3 mb-md-4">{{ locale.yourCollections }}</h4>
 
 			<div class="list-group" style="display: inline-block">
 				<p class="list-group-item cursor" (click)="ShowCollection(collection.uuid)" *ngFor="let collection of collections">{{ collection.name }}</p>

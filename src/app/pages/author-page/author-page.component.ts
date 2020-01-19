@@ -20,6 +20,7 @@ export class AuthorPageComponent{
 	updateAuthorOfUserSubscriptionKey: number;
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
+	profileImageWidth: number = 200;
 	createBookDialogVisible: boolean = false;
 	createBookDialogTitle: string = "";
 	createBookDialogTitleError: string = "";
@@ -79,6 +80,14 @@ export class AuthorPageComponent{
    setSize(){
 		this.header1Height = window.innerHeight - navbarHeight;
 		this.header1TextMarginTop = this.header1Height * 0.36;
+		
+		if(window.innerWidth < 768){
+			this.profileImageWidth = 110;
+		}else if(window.innerWidth < 1200){
+			this.profileImageWidth = 120;
+		}else{
+			this.profileImageWidth = 130;
+		}
    }
 
    createProfileButtonClick(){
