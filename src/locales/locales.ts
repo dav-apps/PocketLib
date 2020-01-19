@@ -49,6 +49,7 @@ const enDefaults = {
 		login: "Log in to create your profile",
 		noBio: "No biography provided",
 		bioTextfieldPlaceholder: "Your biography",
+		yourCollections: "Your collections",
 		createBookDialog: {
 			title: "Create book",
 			titleTextfieldLabel: "Title",
@@ -85,6 +86,9 @@ const enDefaults = {
 			lastNameTooLong: "The last name is too long",
 			unexpectedError: "An unexpected error occured. Please try again."
 		}
+	},
+	authorCollectionPage: {
+
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -221,6 +225,7 @@ const deDefaults = {
 		login: "Melde dich an und erstelle dein Profil",
 		noBio: "Keine Biographie angegeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
+		yourCollections: "Deine Sammlungen",
 		createBookDialog: {
 			title: "Buch erstellen",
 			titleTextfieldLabel: "Titel",
@@ -257,6 +262,9 @@ const deDefaults = {
 			lastNameTooLong: "Der Nachname ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
+	},
+	authorCollectionPage: {
+		
 	},
 	authorBookPage: {
 		editTitleDialog: {
