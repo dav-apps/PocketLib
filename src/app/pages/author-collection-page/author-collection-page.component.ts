@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles } from 'office-ui-fabric-react';
-import { DataService, ApiResponse, FindNameWithAppropriateLanguage } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -12,6 +12,7 @@ import { enUS } from 'src/locales/locales';
 export class AuthorCollectionPageComponent{
 	locale = enUS.authorCollectionPage;
 	getStoreBookCollectionSubscriptionKey: number;
+	getStoreBookCoverSubscriptionKey: number;
 	uuid: string;
 	collectionName: string = "";
 	collection: {
@@ -28,6 +29,8 @@ export class AuthorCollectionPageComponent{
 			coverContent: string
 		}[]
 	} = {uuid: "", names: [], books: []};
+	currentCoverDownload: string = "";
+	coverDownloadPromiseResolve: Function;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -43,6 +46,7 @@ export class AuthorCollectionPageComponent{
 	){
 		this.locale = this.dataService.GetLocale().authorCollectionPage;
 		this.getStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCollection, (response: ApiResponse) => this.GetStoreBookCollectionResponse(response));
+		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -76,26 +80,57 @@ export class AuthorCollectionPageComponent{
 		this.router.navigate(["author", "book", uuid]);
 	}
 
-	GetStoreBookCollectionResponse(response: ApiResponse){
+	async GetStoreBookCollectionResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.collection = response.data;
 
 			// Get the appropriate collection name
 			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
 			if(i != -1) this.collectionName = this.collection.names[i].name;
+			let coverDownloads: string[] = [];
 
 			for(let book of this.collection.books){
-				// Set the cover
+				// Set the default cover
 				book.coverContent = '/assets/images/placeholder.png';
+
+				if(book.cover){
+					// Add the cover to the downloads
+					coverDownloads.push(book.uuid);
+				}
 
 				// Cut the description
 				if(book.description.length > 170){
 					book.description = book.description.slice(0, 169) + "...";
 				}
 			}
+
+			// Download the covers
+			for(let uuid of coverDownloads){
+				let coverDownloadPromise: Promise<ApiResponse> = new Promise((resolve) => {
+					this.coverDownloadPromiseResolve = resolve;
+				});
+
+				// Start the cover download
+				this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {jwt: this.dataService.user.JWT, uuid});
+
+				// Wait for the download to finish
+				let coverResponse = await coverDownloadPromise;
+				
+				if(coverResponse.status == 200){
+					// Find the book with the uuid
+					let i = this.collection.books.findIndex(book => book.uuid == uuid);
+					if(i != -1){
+						this.collection.books[i].coverContent = GetContentAsInlineSource(coverResponse.data, coverResponse.headers['content-type']);
+					}
+				}
+			}
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(["author"]);
 		}
+	}
+
+	GetStoreBookCoverResponse(response: ApiResponse){
+		this.coverDownloadPromiseResolve(response);
 	}
 }
