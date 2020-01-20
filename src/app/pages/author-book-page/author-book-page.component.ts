@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse } from 'src/app/services/data-service';
+import { DataService, ApiResponse, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -27,7 +27,8 @@ export class AuthorBookPageComponent{
 	newDescriptionError: string = "";
 	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
-	coverContent: string = null;
+	coverContent: string;
+	uploadedCoverContent: string;
 	bookFileUploaded: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
@@ -165,9 +166,7 @@ export class AuthorBookPageComponent{
 			}
 		});
 
-		let base64 = btoa(imageContent)
-		let type = file.type;
-		let imageSrc = `data:${type};base64,${base64}`;
+		let imageSrc = GetContentAsInlineSource(imageContent, file.type);
 
 		image.src = imageSrc;
 		await imageLoadPromise;
@@ -178,9 +177,11 @@ export class AuthorBookPageComponent{
 		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
-			type,
+			type: file.type,
 			file: imageContent
 		});
+
+		this.uploadedCoverContent = imageSrc;
 	}
 
 	async BookFileUpload(file: ReadFile){
@@ -282,14 +283,16 @@ export class AuthorBookPageComponent{
 
 	GetStoreBookCoverResponse(response: ApiResponse){
 		if(response.status == 200){
-			let type = response.headers['content-type'];
-			let base64 = btoa(response.data);
-			this.coverContent = `data:${type};base64,${base64}`;
+			this.coverContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
 		}
 	}
 
 	SetStoreBookCoverResponse(response: ApiResponse){
-		
+		if(response.status == 200){
+			// Show the cover
+			this.coverContent = this.uploadedCoverContent;
+			this.uploadedCoverContent = null;
+		}
 	}
 
 	SetStoreBookFileResponse(response: ApiResponse){

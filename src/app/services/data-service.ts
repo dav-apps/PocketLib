@@ -192,3 +192,7 @@ export function FindNameWithAppropriateLanguage(targetLanguage: string, names: {
 	// Return the first name
 	return 0;
 }
+
+export function GetContentAsInlineSource(content: string, contentType: string) : string{
+	return `data:${contentType};base64,${btoa(content)}`;
+}

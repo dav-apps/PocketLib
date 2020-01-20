@@ -28,7 +28,7 @@
 			<div style="grid-column: 2; grid-row: 1;">
 				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
-					<img [src]="coverContent" />
+					<img [src]="coverContent" height="200" />
 				</div>
 	
 				<fab-primary-button 
