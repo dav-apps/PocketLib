@@ -78,6 +78,7 @@ export class AuthorBookPageComponent{
 			this.router.navigate(['author']);
 		}
 
+		// Get the store book
 		this.websocketService.Emit(WebsocketCallbackType.GetStoreBook, {
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid

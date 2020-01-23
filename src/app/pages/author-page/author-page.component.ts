@@ -2,7 +2,7 @@ import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, FindNameWithAppropriateLanguage } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -20,6 +20,7 @@ export class AuthorPageComponent{
 	createStoreBookSubscriptionKey: number;
 	updateAuthorOfUserSubscriptionKey: number;
 	setProfileImageOfAuthorOfUserKey: number;
+	getProfileImageOfAuthorOfUserKey: number;
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 	profileImageWidth: number = 200;
@@ -30,6 +31,8 @@ export class AuthorPageComponent{
 	newBio: string = "";
 	newBioError: string = "";
 	collections: {uuid: string, name: string}[] = [];
+	profileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
+	uploadedProfileImageContent: string;
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -54,6 +57,7 @@ export class AuthorPageComponent{
 		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
 		this.updateAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateAuthorOfUser, (response: ApiResponse) => this.UpdateAuthorOfUserResponse(response));
 		this.setProfileImageOfAuthorOfUserKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
+		this.getProfileImageOfAuthorOfUserKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
    }
    
    async ngOnInit(){
@@ -66,12 +70,19 @@ export class AuthorPageComponent{
 			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
 			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
 		}
+
+		// Download the profile image
+		this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
+			jwt: this.dataService.user.JWT
+		});
 	}
 	
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
 			this.createStoreBookSubscriptionKey,
-			this.updateAuthorOfUserSubscriptionKey
+			this.updateAuthorOfUserSubscriptionKey,
+			this.setProfileImageOfAuthorOfUserKey,
+			this.getProfileImageOfAuthorOfUserKey
 		)
 	}
 
@@ -164,6 +175,8 @@ export class AuthorPageComponent{
 			type: file.type,
 			file: imageContent
 		});
+
+		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
 	}
 
 	CreateStoreBookResponse(response: ApiResponse){
@@ -224,6 +237,17 @@ export class AuthorPageComponent{
 	}
 
 	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		console.log(response);
+		if(response.status == 200){
+			// Show the uploaded profile image
+			this.profileImageContent = this.uploadedProfileImageContent;
+			this.uploadedProfileImageContent = null;
+		}
+	}
+
+	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the profile image
+			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
 	}
 }

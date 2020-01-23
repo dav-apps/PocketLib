@@ -9,7 +9,7 @@
 <div class="container ms-motion-slideUpIn" *ngIf="dataService.userAuthor">
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
-			<img class="rounded-circle shadow mb-3" [style.width.px]="profileImageWidth" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
+			<img class="rounded-circle shadow mb-3" [style.width.px]="profileImageWidth" [src]="profileImageContent">
 			<fab-primary-button 
 				ngxFilePicker
 				accept="image/png,image/jpeg"
