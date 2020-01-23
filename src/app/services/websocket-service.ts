@@ -62,12 +62,13 @@ export enum WebsocketCallbackType{
 	CreateStoreBook = 5,
 	UpdateAuthorOfUser = 6,
 	SetProfileImageOfAuthorOfUser = 7,
-	GetStoreBook = 8,
-	UpdateStoreBook = 9,
-	GetStoreBookCover = 10,
-	SetStoreBookCover = 11,
-	SetStoreBookFile = 12,
-	GetStoreBookCollection = 13
+	GetProfileImageOfAuthorOfUser = 8,
+	GetStoreBook = 9,
+	UpdateStoreBook = 10,
+	GetStoreBookCover = 11,
+	SetStoreBookCover = 12,
+	SetStoreBookFile = 13,
+	GetStoreBookCollection = 14
 }
 
 export const Callbacks = {
@@ -78,6 +79,7 @@ export const Callbacks = {
 	createStoreBook: WebsocketCallbackType.CreateStoreBook,
 	updateAuthorOfUser: WebsocketCallbackType.UpdateAuthorOfUser,
 	setProfileImageOfAuthorOfUser: WebsocketCallbackType.SetProfileImageOfAuthorOfUser,
+	getProfileImageOfAuthorOfUser: WebsocketCallbackType.GetProfileImageOfAuthorOfUser,
 	getStoreBook: WebsocketCallbackType.GetStoreBook,
 	updateStoreBook: WebsocketCallbackType.UpdateStoreBook,
 	getStoreBookCover: WebsocketCallbackType.GetStoreBookCover,

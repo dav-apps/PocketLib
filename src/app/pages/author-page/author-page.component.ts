@@ -161,7 +161,6 @@ export class AuthorPageComponent{
 		// Upload the image
 		this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
 			jwt: this.dataService.user.JWT,
-			uuid: this.dataService.userAuthor.uuid,
 			type: file.type,
 			file: imageContent
 		});
