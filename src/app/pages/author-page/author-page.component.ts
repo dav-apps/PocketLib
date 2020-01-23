@@ -1,6 +1,7 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { ReadFile } from 'ngx-file-helpers';
 import { DataService, ApiResponse, FindNameWithAppropriateLanguage } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -18,6 +19,7 @@ export class AuthorPageComponent{
 	locale = enUS.authorPage;
 	createStoreBookSubscriptionKey: number;
 	updateAuthorOfUserSubscriptionKey: number;
+	setProfileImageOfAuthorOfUserKey: number;
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 	profileImageWidth: number = 200;
@@ -51,6 +53,7 @@ export class AuthorPageComponent{
 		this.locale = this.dataService.GetLocale().authorPage;
 		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
 		this.updateAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateAuthorOfUser, (response: ApiResponse) => this.UpdateAuthorOfUserResponse(response));
+		this.setProfileImageOfAuthorOfUserKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
    }
    
    async ngOnInit(){
@@ -142,6 +145,28 @@ export class AuthorPageComponent{
 		}
 	}
 
+	async UploadProfileImage(file: ReadFile){
+		// Get the content of the image file
+		let reader = new FileReader();
+
+		let readPromise: Promise<string> = new Promise((resolve) => {
+			reader.addEventListener('loadend', (e) => {
+				resolve(e.srcElement["result"]);
+			});
+		});
+
+		reader.readAsBinaryString(new Blob([file.underlyingFile]));
+		let imageContent = await readPromise;
+
+		// Upload the image
+		this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.dataService.userAuthor.uuid,
+			type: file.type,
+			file: imageContent
+		});
+	}
+
 	CreateStoreBookResponse(response: ApiResponse){
 		if(response.status == 201){
 			// Add the new book to the books in DataService
@@ -197,5 +222,9 @@ export class AuthorPageComponent{
 					break;
 			}
 		}
+	}
+
+	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+		console.log(response);
 	}
 }

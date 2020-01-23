@@ -117,10 +117,11 @@ export class AppComponent{
 	GetAuthorOfUserResponse(response: {status: number, data: any}){
 		if(response.status == 200){
 			this.dataService.userAuthor = {
+				uuid: response.data.uuid,
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
 				bio: response.data.bio,
-				books: response.data.books
+				collections: response.data.collections
 			}
 		}else{
 			this.dataService.userAuthor = null;

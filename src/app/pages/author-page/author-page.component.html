@@ -9,8 +9,15 @@
 <div class="container ms-motion-slideUpIn" *ngIf="dataService.userAuthor">
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
-			<img class="rounded-circle shadow" [style.width.px]="profileImageWidth" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
-			<h4 class="mt-4">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h4>
+			<img class="rounded-circle shadow mb-3" [style.width.px]="profileImageWidth" src="https://davapps.blob.core.windows.net/avatars-dev/default.png">
+			<fab-primary-button 
+				ngxFilePicker
+				accept="image/png,image/jpeg"
+				(filePick)="UploadProfileImage($event)">
+				{{ locale.uploadProfileImage }}
+			</fab-primary-button>
+
+			<h4 class="mt-3">{{ dataService.userAuthor.firstName }} {{ dataService.userAuthor.lastName }}</h4>
 
 			<p class="mt-3" *ngIf="dataService.userAuthor.bio && !editBio">{{ dataService.userAuthor.bio }}</p>
 			<p class="mt-3 font-weight-light font-italic" *ngIf="!dataService.userAuthor.bio && !editBio">{{ locale.noBio }}</p>

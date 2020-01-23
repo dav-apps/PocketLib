@@ -50,6 +50,7 @@ const enDefaults = {
 		noBio: "No biography provided",
 		bioTextfieldPlaceholder: "Your biography",
 		yourCollections: "Your collections",
+		uploadProfileImage: "Upload profile image",
 		createBookDialog: {
 			title: "Create book",
 			titleTextfieldLabel: "Title",
@@ -226,6 +227,7 @@ const deDefaults = {
 		noBio: "Keine Biographie angegeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
 		yourCollections: "Deine Sammlungen",
+		uploadProfileImage: "Profilbild hochladen",
 		createBookDialog: {
 			title: "Buch erstellen",
 			titleTextfieldLabel: "Titel",

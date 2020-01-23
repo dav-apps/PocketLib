@@ -57,10 +57,11 @@ export class AuthorSetupPageComponent{
 		if(response.status == 201){
 			// Set the author in DataService
 			this.dataService.userAuthor = {
+				uuid: response.data.uuid,
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
 				bio: null,
-				books: []
+				collections: []
 			}
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
 
