@@ -11,7 +11,8 @@
 
 			<button type="button" 
 					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
-					style="height: 35px; padding: 3px 6px; font-size: 18px">
+					style="height: 35px; padding: 3px 6px; font-size: 18px"
+					(click)="ShowCollectionNamesDialog()">
 				<fab-icon iconName="Edit"></fab-icon>
 			</button>
 		</div>
@@ -35,3 +36,17 @@
 		</div>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!collectionNamesDialogVisible"
+	[dialogContentProps]="collectionNamesDialogContentProps"
+	minWidth="350px"
+	(onDismiss)="collectionNamesDialogVisible = false">
+	
+	<!-- Names -->
+	<pocketlib-edit-collection-names [collectionNames]="collectionNames"></pocketlib-edit-collection-names>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="collectionNamesDialogVisible = false">{{ locale.close }}</fab-default-button>
+	</fab-dialog-footer>
+</fab-dialog>

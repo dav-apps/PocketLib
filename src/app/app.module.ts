@@ -43,6 +43,7 @@ import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.
 import { RenameBookModalComponent } from './components/rename-book-modal/rename-book-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
+import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -71,6 +72,7 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
 		RenameBookModalComponent,
 		DeleteBookModalComponent,
 		LogoutModalComponent,
+		EditCollectionNamesComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,

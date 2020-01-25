@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles } from 'office-ui-fabric-react';
+import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -31,11 +31,16 @@ export class AuthorCollectionPageComponent{
 	} = {uuid: "", names: [], books: []};
 	currentCoverDownload: string = "";
 	coverDownloadPromiseResolve: Function;
+	collectionNamesDialogVisible: boolean = false;
+	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
          fontSize: 18
 		}
+	}
+	collectionNamesDialogContentProps: IDialogContentProps = {
+		title: this.locale.collectionNamesDialog.title
 	}
 
 	constructor(
@@ -78,6 +83,34 @@ export class AuthorCollectionPageComponent{
 
 	ShowBook(uuid: string){
 		this.router.navigate(["author", "book", uuid]);
+	}
+
+	ShowCollectionNamesDialog(){
+		// Set the collection names
+		this.collectionNames = [];
+		for(let collectionName of this.collection.names){
+			this.collectionNames.push({
+				name: collectionName.name, 
+				language: collectionName.language, 
+				fullLanguage: collectionName.language == "de" ? this.locale.languages.de : this.locale.languages.en,
+				edit: false
+			});
+		}
+
+		this.collectionNamesDialogContentProps.title = this.locale.collectionNamesDialog.title;
+		this.collectionNamesDialogVisible = true;
+
+		// Show the text fields for the different languages on the dialog
+		setTimeout(() => {
+			let namesContainer = document.getElementById('names-text-fields-container');
+			let namesTemplate = document.getElementById('names-text-fields-template');
+
+			console.log(namesTemplate.children)
+			for(let i = 0; i < namesTemplate.children.length; i++){
+				let child = namesTemplate.children.item(i);
+				namesContainer.append(child);
+			}
+		}, 100);
 	}
 
 	async GetStoreBookCollectionResponse(response: ApiResponse){
