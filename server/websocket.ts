@@ -22,6 +22,7 @@ export function init(s: any){
 	socket.on(authorBookPage.setStoreBookCoverKey, authorBookPage.setStoreBookCover);
 	socket.on(authorBookPage.setStoreBookFileKey, authorBookPage.setStoreBookFile);
 	socket.on(authorCollectionPage.getStoreBookCollectionKey, authorCollectionPage.getStoreBookCollection);
+	socket.on(authorCollectionPage.setStoreBookCollectionNameKey, authorCollectionPage.setStoreBookCollectionName);
 }
 
 export function emit(key: string, message: any){
