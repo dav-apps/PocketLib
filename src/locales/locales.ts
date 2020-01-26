@@ -89,7 +89,14 @@ const enDefaults = {
 		}
 	},
 	authorCollectionPage: {
-
+		languages: {
+			en: "English",
+			de: "German"
+		},
+		collectionNamesDialog: {
+			title: "Collection name"
+		},
+		close: "Close"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -138,7 +145,15 @@ const enDefaults = {
 			unexpectedErrorShort: "Unexpected error ({0})",
 			unexpectedErrorLong: "An unexpected error occured. Please try it again."
 		}
-   },
+	},
+	editCollectionNames: {
+		nameTextfieldPlaceholder: "The name of your collection in {0}",
+		errors: {
+			nameTooShort: "The name is too short",
+			nameTooLong: "The name is too long",
+			unexpectedError: "An unexpected error occured. Please try it again later."
+		}
+	},
    renameBookModal: {
       title: "Rename book",
       bookTitle: "Title",
@@ -266,7 +281,14 @@ const deDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		
+		languages: {
+			en: "Englisch",
+			de: "Deutsch"
+		},
+		collectionNamesDialog: {
+			title: "Name der Sammlung"
+		},
+		close: "Schließen"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -315,7 +337,15 @@ const deDefaults = {
 			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
 			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
-   },
+	},
+	editCollectionNames: {
+		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
+		errors: {
+			nameTooShort: "Der Name ist zu kurz",
+			nameTooLong: "Der Name ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+		}
+	},
    renameBookModal: {
       title: "Buch umbenennen",
       bookTitle: "Titel",

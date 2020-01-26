@@ -1,15 +1,16 @@
-<div class="mb-4" style="font-size: 16px" *ngFor="let collectionName of collectionNames">
+<div class="mb-3" style="font-size: 16px" *ngFor="let collectionName of collectionNames">
 	<p class="mb-1 font-weight-light">{{ collectionName.fullLanguage }}: </p>
 
 	<div class="d-flex">
 		<div style="width: 80%" *ngIf="!collectionName.edit">
-			<p style="height: 30px; line-height: 30px">{{ collectionName.name }}</p>
+			<p class="mb-0" style="line-height: 30px">{{ collectionName.name }}</p>
 		</div>
 
 		<div style="width: 80%" *ngIf="collectionName.edit">
 			<fab-text-field
 				[(value)]="collectionName.name"
-				[placeholder]="'The name of your collection in ' + collectionName.language">
+				[placeholder]="locale.nameTextfieldPlaceholder.replace('{0}', collectionName.fullLanguage)"
+				[errorMessage]="collectionName.errorMessage">
 			</fab-text-field>
 		</div>
 
@@ -17,7 +18,7 @@
 			type="button" 
 			class="btn btn-sm ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
-			(click)="collectionName.edit = !collectionName.edit">
+			(click)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
 			<fab-icon [iconName]="collectionName.edit ? 'Save' : 'Edit'"></fab-icon>
 		</button>
 	</div>

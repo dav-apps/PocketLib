@@ -14,7 +14,7 @@ export class AuthorCollectionPageComponent{
 	getStoreBookCollectionSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
 	uuid: string;
-	collectionName: string = "";
+	collectionName: {name: string, language: string} = {name: "", language: ""};
 	collection: {
 		uuid: string,
 		names: {name: string, language: string}[],
@@ -74,7 +74,10 @@ export class AuthorCollectionPageComponent{
 	}
 
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.getStoreBookCollectionSubscriptionKey);
+		this.websocketService.Unsubscribe(
+			this.getStoreBookCollectionSubscriptionKey,
+			this.getStoreBookCoverSubscriptionKey
+		)
 	}
 
 	GoBack(){
@@ -86,7 +89,7 @@ export class AuthorCollectionPageComponent{
 	}
 
 	ShowCollectionNamesDialog(){
-		// Set the collection names
+		// Update the collection names for the EditCollectionNames component
 		this.collectionNames = [];
 		for(let collectionName of this.collection.names){
 			this.collectionNames.push({
@@ -99,18 +102,17 @@ export class AuthorCollectionPageComponent{
 
 		this.collectionNamesDialogContentProps.title = this.locale.collectionNamesDialog.title;
 		this.collectionNamesDialogVisible = true;
+	}
 
-		// Show the text fields for the different languages on the dialog
-		setTimeout(() => {
-			let namesContainer = document.getElementById('names-text-fields-container');
-			let namesTemplate = document.getElementById('names-text-fields-template');
-
-			console.log(namesTemplate.children)
-			for(let i = 0; i < namesTemplate.children.length; i++){
-				let child = namesTemplate.children.item(i);
-				namesContainer.append(child);
-			}
-		}, 100);
+	UpdateCollectionName(collectionName: {name: string, language: string}){
+		if(this.collectionName.language == collectionName.language){
+			// Update the title
+			this.collectionName.name = collectionName.name;
+		}else{
+			// Update the name in the collection
+			let i = this.collection.names.findIndex(name => name.language == collectionName.language);
+			if(i != -1) this.collection.names[i].name = collectionName.name;
+		}
 	}
 
 	async GetStoreBookCollectionResponse(response: ApiResponse){
@@ -119,7 +121,7 @@ export class AuthorCollectionPageComponent{
 
 			// Get the appropriate collection name
 			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
-			if(i != -1) this.collectionName = this.collection.names[i].name;
+			if(i != -1) this.collectionName = this.collection.names[i];
 			let coverDownloads: string[] = [];
 
 			for(let book of this.collection.books){

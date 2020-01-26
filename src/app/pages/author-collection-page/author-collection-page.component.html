@@ -7,7 +7,7 @@
 						(click)="GoBack()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
-			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ collectionName }}</h2>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ collectionName.name }}</h2>
 
 			<button type="button" 
 					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
@@ -44,7 +44,7 @@
 	(onDismiss)="collectionNamesDialogVisible = false">
 	
 	<!-- Names -->
-	<pocketlib-edit-collection-names [collectionNames]="collectionNames"></pocketlib-edit-collection-names>
+	<pocketlib-edit-collection-names [uuid]="uuid" [collectionNames]="collectionNames" (update)="UpdateCollectionName($event)"></pocketlib-edit-collection-names>
 
 	<fab-dialog-footer>
 		<fab-default-button (click)="collectionNamesDialogVisible = false">{{ locale.close }}</fab-default-button>
