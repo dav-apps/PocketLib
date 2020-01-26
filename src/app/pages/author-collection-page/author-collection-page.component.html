@@ -44,9 +44,17 @@
 	(onDismiss)="collectionNamesDialogVisible = false">
 	
 	<!-- Names -->
-	<pocketlib-edit-collection-names [uuid]="uuid" [collectionNames]="collectionNames" (update)="UpdateCollectionName($event)"></pocketlib-edit-collection-names>
+	<pocketlib-edit-collection-names 
+		[collectionNames]="collectionNames" 
+		[supportedLanguages]="supportedLanguages"
+		[uuid]="uuid" 
+		(update)="UpdateCollectionName($event)"
+		(showAddLanguageButton)="showAddLanguageButton = true"
+		(hideAddLanguageButton)="showAddLanguageButton = false">
+	</pocketlib-edit-collection-names>
 
 	<fab-dialog-footer>
+		<div style="float: left" *ngIf="showAddLanguageButton" (click)="AddLanguage()"><fab-default-button>Hinzufügen</fab-default-button></div>
 		<fab-default-button (click)="collectionNamesDialogVisible = false">{{ locale.close }}</fab-default-button>
 	</fab-dialog-footer>
 </fab-dialog>

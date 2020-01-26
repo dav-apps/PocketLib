@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { IIconStyles, IDialogContentProps, IModalProps } from 'office-ui-fabric-react';
+import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
 import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -13,6 +14,8 @@ export class AuthorCollectionPageComponent{
 	locale = enUS.authorCollectionPage;
 	getStoreBookCollectionSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
+	@ViewChild(EditCollectionNamesComponent, {static: true})
+	private editCollectionNamesComponent: EditCollectionNamesComponent;
 	uuid: string;
 	collectionName: {name: string, language: string} = {name: "", language: ""};
 	collection: {
@@ -33,6 +36,8 @@ export class AuthorCollectionPageComponent{
 	coverDownloadPromiseResolve: Function;
 	collectionNamesDialogVisible: boolean = false;
 	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
+	supportedLanguages: {language: string, fullLanguage: string}[] = [];
+	showAddLanguageButton: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -55,6 +60,12 @@ export class AuthorCollectionPageComponent{
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
+
+		// Set the supported languages
+		this.supportedLanguages.push(
+			{language: "en", fullLanguage: this.locale.languages.en},
+			{language: "de", fullLanguage: this.locale.languages.de}
+		)
 	}
 
 	async ngOnInit(){
@@ -102,6 +113,10 @@ export class AuthorCollectionPageComponent{
 
 		this.collectionNamesDialogContentProps.title = this.locale.collectionNamesDialog.title;
 		this.collectionNamesDialogVisible = true;
+
+		setTimeout(() => {
+			this.editCollectionNamesComponent.Init();
+		}, 1);
 	}
 
 	UpdateCollectionName(collectionName: {name: string, language: string}){
@@ -109,10 +124,23 @@ export class AuthorCollectionPageComponent{
 			// Update the title
 			this.collectionName.name = collectionName.name;
 		}else{
-			// Update the name in the collection
 			let i = this.collection.names.findIndex(name => name.language == collectionName.language);
-			if(i != -1) this.collection.names[i].name = collectionName.name;
+			if(i == -1){
+				// Add the name to the collection
+				this.collection.names.push(collectionName);
+
+				// Set the title of the name for the current language was just added
+				let j = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+				if(j != -1) this.collectionName = this.collection.names[j];
+			}else{
+				// Update the name in the collection
+				this.collection.names[i].name = collectionName.name;
+			}
 		}
+	}
+
+	AddLanguage(){
+		this.editCollectionNamesComponent.AddLanguage();
 	}
 
 	async GetStoreBookCollectionResponse(response: ApiResponse){

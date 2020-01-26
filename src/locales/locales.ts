@@ -96,6 +96,7 @@ const enDefaults = {
 		collectionNamesDialog: {
 			title: "Collection name"
 		},
+		add: "Add",
 		close: "Close"
 	},
 	authorBookPage: {
@@ -148,6 +149,8 @@ const enDefaults = {
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
+		addLanguageDropdownLabel: "Add language",
+		selectLanguage: "Select a language",
 		errors: {
 			nameTooShort: "The name is too short",
 			nameTooLong: "The name is too long",
@@ -288,6 +291,7 @@ const deDefaults = {
 		collectionNamesDialog: {
 			title: "Name der Sammlung"
 		},
+		add: "Hinzufügen",
 		close: "Schließen"
 	},
 	authorBookPage: {
@@ -340,6 +344,8 @@ const deDefaults = {
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
+		addLanguageDropdownLabel: "Sprache hinzufügen",
+		selectLanguage: "Wähle eine Sprache",
 		errors: {
 			nameTooShort: "Der Name ist zu kurz",
 			nameTooLong: "Der Name ist zu lang",

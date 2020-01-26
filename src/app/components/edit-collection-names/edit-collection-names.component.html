@@ -23,3 +23,12 @@
 		</button>
 	</div>
 </div>
+
+<div *ngIf="addLanguageOptions.length > 1">
+	<fab-dropdown
+		[label]="locale.addLanguageDropdownLabel"
+		[selectedKey]="addLanguageSelectedKey"
+		[options]="addLanguageOptions"
+		(onChange)="AddLanguageDropdownChange($event)">
+	</fab-dropdown>
+</div>
