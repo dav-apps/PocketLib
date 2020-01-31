@@ -59,17 +59,17 @@ export enum WebsocketCallbackType{
 	GetApp = 2,
 	CreateAuthor = 3,
 	GetAuthorOfUser = 4,
-	CreateStoreBook = 5,
-	UpdateAuthorOfUser = 6,
 	SetProfileImageOfAuthorOfUser = 7,
 	GetProfileImageOfAuthorOfUser = 8,
-	GetStoreBook = 9,
-	UpdateStoreBook = 10,
-	GetStoreBookCover = 11,
-	SetStoreBookCover = 12,
-	SetStoreBookFile = 13,
-	GetStoreBookCollection = 14,
-	SetStoreBookCollectionName = 15
+	SetBioOfAuthorOfUser = 9,
+	GetStoreBook = 10,
+	UpdateStoreBook = 11,
+	GetStoreBookCover = 12,
+	SetStoreBookCover = 13,
+	SetStoreBookFile = 14,
+	GetStoreBookCollection = 15,
+	SetStoreBookCollectionName = 16,
+	CreateStoreBook = 17
 }
 
 export const Callbacks = {
@@ -77,17 +77,17 @@ export const Callbacks = {
 	getApp: WebsocketCallbackType.GetApp,
 	createAuthor: WebsocketCallbackType.CreateAuthor,
 	getAuthorOfUser: WebsocketCallbackType.GetAuthorOfUser,
-	createStoreBook: WebsocketCallbackType.CreateStoreBook,
-	updateAuthorOfUser: WebsocketCallbackType.UpdateAuthorOfUser,
 	setProfileImageOfAuthorOfUser: WebsocketCallbackType.SetProfileImageOfAuthorOfUser,
 	getProfileImageOfAuthorOfUser: WebsocketCallbackType.GetProfileImageOfAuthorOfUser,
+	setBioOfAuthorOfUser: WebsocketCallbackType.SetBioOfAuthorOfUser,
 	getStoreBook: WebsocketCallbackType.GetStoreBook,
 	updateStoreBook: WebsocketCallbackType.UpdateStoreBook,
 	getStoreBookCover: WebsocketCallbackType.GetStoreBookCover,
 	setStoreBookCover: WebsocketCallbackType.SetStoreBookCover,
 	setStoreBookFile: WebsocketCallbackType.SetStoreBookFile,
 	getStoreBookCollection: WebsocketCallbackType.GetStoreBookCollection,
-	setStoreBookCollectionName: WebsocketCallbackType.SetStoreBookCollectionName
+	setStoreBookCollectionName: WebsocketCallbackType.SetStoreBookCollectionName,
+	createStoreBook: WebsocketCallbackType.CreateStoreBook
 }
 
 function getKeyByValue(object: any, value: any) {

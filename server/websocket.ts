@@ -12,10 +12,9 @@ export function init(s: any){
 	socket.on(loginPage.getAppKey, loginPage.getApp);
 	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
-	socket.on(authorPage.createStoreBookKey, authorPage.createStoreBook);
-	socket.on(authorPage.updateAuthorOfUserKey, authorPage.updateAuthorOfUser);
 	socket.on(authorPage.setProfileImageOfAuthorOfUserKey, authorPage.setProfileImageOfAuthorOfUser);
 	socket.on(authorPage.getProfileImageOfAuthorOfUserKey, authorPage.getProfileImageOfAuthorOfUser);
+	socket.on(authorPage.setBioOfAuthorOfUserKey, authorPage.setBioOfAuthorOfUser);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
 	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
@@ -23,6 +22,7 @@ export function init(s: any){
 	socket.on(authorBookPage.setStoreBookFileKey, authorBookPage.setStoreBookFile);
 	socket.on(authorCollectionPage.getStoreBookCollectionKey, authorCollectionPage.getStoreBookCollection);
 	socket.on(authorCollectionPage.setStoreBookCollectionNameKey, authorCollectionPage.setStoreBookCollectionName);
+	socket.on(authorCollectionPage.createStoreBookKey, authorCollectionPage.createStoreBook);
 }
 
 export function emit(key: string, message: any){
