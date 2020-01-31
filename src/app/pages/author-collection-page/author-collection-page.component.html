@@ -18,6 +18,15 @@
 		</div>
 	</div>
 
+	<div
+		class="card mb-3 mx-auto shadow-sm cursor"
+		style="width: 200px"
+		(click)="ShowCreateBookDialog()">
+		<div class="card-body d-flex justify-content-center align-items-center">
+			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 22px"></i>
+		</div>
+	</div>
+
 	<div 
 		class="card mb-3 mx-auto shadow-sm cursor" 
 		style="max-width: 500px" 
@@ -38,6 +47,27 @@
 </div>
 
 <fab-dialog
+	[hidden]="!createBookDialogVisible"
+	[dialogContentProps]="createBookDialogContentProps"
+	(onDismiss)="createBookDialogVisible = false">
+
+	<!-- Title -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="createBookDialogTitle"
+			[label]="locale.createBookDialog.titleTextfieldLabel"
+			[placeholder]="locale.createBookDialog.titleTextfieldPlaceholder"
+			[errorMessage]="createBookDialogTitleError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="createBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateBook()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
 	[hidden]="!collectionNamesDialogVisible"
 	[dialogContentProps]="collectionNamesDialogContentProps"
 	minWidth="350px"
@@ -46,7 +76,7 @@
 	<!-- Names -->
 	<pocketlib-edit-collection-names 
 		[collectionNames]="collectionNames" 
-		[supportedLanguages]="supportedLanguages"
+		[supportedLanguages]="dataService.supportedLanguages"
 		[uuid]="uuid" 
 		(update)="UpdateCollectionName($event)"
 		(showAddLanguageButton)="showAddLanguageButton = true"

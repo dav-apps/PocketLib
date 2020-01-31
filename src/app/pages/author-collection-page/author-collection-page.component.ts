@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles, IDialogContentProps, IModalProps } from 'office-ui-fabric-react';
+import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
 import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
@@ -14,6 +14,7 @@ export class AuthorCollectionPageComponent{
 	locale = enUS.authorCollectionPage;
 	getStoreBookCollectionSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
+	createStoreBookSubscriptionKey: number;
 	@ViewChild(EditCollectionNamesComponent, {static: true})
 	private editCollectionNamesComponent: EditCollectionNamesComponent;
 	uuid: string;
@@ -32,11 +33,12 @@ export class AuthorCollectionPageComponent{
 			coverContent: string
 		}[]
 	} = {uuid: "", names: [], books: []};
-	currentCoverDownload: string = "";
 	coverDownloadPromiseResolve: Function;
+	createBookDialogVisible: boolean = false;
+	createBookDialogTitle: string = "";
+	createBookDialogTitleError: string = "";
 	collectionNamesDialogVisible: boolean = false;
 	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
-	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 	showAddLanguageButton: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
@@ -44,12 +46,20 @@ export class AuthorCollectionPageComponent{
          fontSize: 18
 		}
 	}
+	dialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10
+		}
+	}
+	createBookDialogContentProps: IDialogContentProps = {
+		title: this.locale.createBookDialog.title
+	}
 	collectionNamesDialogContentProps: IDialogContentProps = {
 		title: this.locale.collectionNamesDialog.title
 	}
 
 	constructor(
-		private dataService: DataService,
+		public dataService: DataService,
 		private websocketService: WebsocketService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -57,15 +67,10 @@ export class AuthorCollectionPageComponent{
 		this.locale = this.dataService.GetLocale().authorCollectionPage;
 		this.getStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCollection, (response: ApiResponse) => this.GetStoreBookCollectionResponse(response));
 		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
+		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
-
-		// Set the supported languages
-		this.supportedLanguages.push(
-			{language: "en", fullLanguage: this.locale.languages.en},
-			{language: "de", fullLanguage: this.locale.languages.de}
-		)
 	}
 
 	async ngOnInit(){
@@ -87,7 +92,8 @@ export class AuthorCollectionPageComponent{
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
 			this.getStoreBookCollectionSubscriptionKey,
-			this.getStoreBookCoverSubscriptionKey
+			this.getStoreBookCoverSubscriptionKey,
+			this.createStoreBookSubscriptionKey
 		)
 	}
 
@@ -97,6 +103,25 @@ export class AuthorCollectionPageComponent{
 
 	ShowBook(uuid: string){
 		this.router.navigate(["author", "book", uuid]);
+	}
+
+	ShowCreateBookDialog(){
+		this.createBookDialogTitle = "";
+		this.createBookDialogTitleError = "";
+
+		this.createBookDialogContentProps.title = this.locale.createBookDialog.title;
+		this.createBookDialogVisible = true;
+	}
+
+	CreateBook(){
+		this.createBookDialogTitleError = "";
+
+		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
+			jwt: this.dataService.user.JWT,
+			collection: this.uuid,
+			title: this.createBookDialogTitle,
+			language: this.dataService.locale.startsWith("de") ? "de" : "en"
+		});
 	}
 
 	ShowCollectionNamesDialog(){
@@ -162,7 +187,7 @@ export class AuthorCollectionPageComponent{
 				}
 
 				// Cut the description
-				if(book.description.length > 170){
+				if(book.description && book.description.length > 170){
 					book.description = book.description.slice(0, 169) + "...";
 				}
 			}
@@ -195,5 +220,39 @@ export class AuthorCollectionPageComponent{
 
 	GetStoreBookCoverResponse(response: ApiResponse){
 		this.coverDownloadPromiseResolve(response);
+	}
+
+	CreateStoreBookResponse(response: ApiResponse){
+		if(response.status == 201){
+			// Add the new book to the books in DataService
+			//this.dataService.userAuthor.books.push({uuid: response.data.uuid, title: response.data.title});
+			this.createBookDialogVisible = false;
+
+			// Redirect to AuthorAppPage
+			this.router.navigate(["author", "book", response.data.uuid]);
+		}else{
+			console.log(response.data)
+			let errors = response.data.errors;
+
+			for(let error of errors){
+				switch(error.code){
+					case 2105:
+						// Title missing
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleMissing;
+					case 2304:
+						// Title too short
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooShort;
+						break;
+					case 2404:
+						// Title too long
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooLong;
+						break;
+					default:
+						// Unexpected error
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
+						break;
+				}
+			}
+		}
 	}
 }

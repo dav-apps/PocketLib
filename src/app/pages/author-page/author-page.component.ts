@@ -1,6 +1,6 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from '@angular/router';
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { IButtonStyles, IDialogContentProps, IDropdownOption, DropdownMenuItemType } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
@@ -17,17 +17,15 @@ const navbarHeight: number = 64;
 })
 export class AuthorPageComponent{
 	locale = enUS.authorPage;
-	createStoreBookSubscriptionKey: number;
-	updateAuthorOfUserSubscriptionKey: number;
-	setProfileImageOfAuthorOfUserKey: number;
-	getProfileImageOfAuthorOfUserKey: number;
+	setProfileImageOfAuthorOfUserSubscriptionKey: number;
+	getProfileImageOfAuthorOfUserSubscriptionKey: number;
+	setBioOfAuthorOfUserSubscriptionKey: number;
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 	profileImageWidth: number = 200;
-	createBookDialogVisible: boolean = false;
-	createBookDialogTitle: string = "";
-	createBookDialogTitleError: string = "";
-	editBio: boolean = false;
+	bioLanguageDropdownSelectedIndex: number = 0;
+	bioLanguageDropdownOptions: IDropdownOption[] = [];
+	bioMode: BioMode = BioMode.None;
 	newBio: string = "";
 	newBioError: string = "";
 	collections: {uuid: string, name: string}[] = [];
@@ -38,9 +36,6 @@ export class AuthorPageComponent{
 		root: {
 			marginLeft: 10
 		}
-	}
-	createBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.createBookDialog.title
 	}
 	bioTextfieldStyles = {
 		root: {
@@ -54,10 +49,9 @@ export class AuthorPageComponent{
       private router: Router
    ){
 		this.locale = this.dataService.GetLocale().authorPage;
-		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
-		this.updateAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateAuthorOfUser, (response: ApiResponse) => this.UpdateAuthorOfUserResponse(response));
-		this.setProfileImageOfAuthorOfUserKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
-		this.getProfileImageOfAuthorOfUserKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
+		this.setProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
+		this.getProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
+		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
    }
    
    async ngOnInit(){
@@ -75,14 +69,15 @@ export class AuthorPageComponent{
 		this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
 			jwt: this.dataService.user.JWT
 		});
+
+		this.SetupBioLanguageDropdown();
 	}
 	
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
-			this.createStoreBookSubscriptionKey,
-			this.updateAuthorOfUserSubscriptionKey,
-			this.setProfileImageOfAuthorOfUserKey,
-			this.getProfileImageOfAuthorOfUserKey
+			this.setProfileImageOfAuthorOfUserSubscriptionKey,
+			this.getProfileImageOfAuthorOfUserSubscriptionKey,
+			this.setBioOfAuthorOfUserSubscriptionKey
 		)
 	}
 
@@ -102,7 +97,89 @@ export class AuthorPageComponent{
 		}else{
 			this.profileImageWidth = 130;
 		}
-   }
+	}
+	
+	SetupBioLanguageDropdown(){
+		// Prepare the Bio language dropdown
+		this.bioLanguageDropdownOptions = [];
+		let i = 0;
+
+		for(let lang of this.dataService.userAuthor.bios){
+			this.bioLanguageDropdownOptions.push({
+				key: i,
+				text: this.dataService.GetFullLanguage(lang.language),
+				data: {
+					language: lang.language,
+					added: true
+				}
+			});
+
+			i++;
+		}
+
+		if(this.bioLanguageDropdownOptions.length == 0){
+			this.bioMode = BioMode.None;
+
+			// Add default item
+			this.bioLanguageDropdownOptions.push({
+				key: 0,
+				text: this.locale.addYourBio
+			});
+
+			i++;
+
+			// Add each supported language
+			for(let supportedLanguage of this.dataService.supportedLanguages){
+				this.bioLanguageDropdownOptions.push({
+					key: i,
+					text: supportedLanguage.fullLanguage,
+					data: {
+						language: supportedLanguage.language,
+						added: false
+					}
+				});
+
+				i++;
+			}
+		}else{
+			// Add a divider and all possible languages to add
+			let newOptions: IDropdownOption[] = [{
+				key: "header",
+				text: this.locale.additionalLanguages,
+				itemType: DropdownMenuItemType.Header
+			}];
+
+			for(let supportedLanguage of this.dataService.supportedLanguages){
+				// Check if there is a bio with the supported language
+				let index = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == supportedLanguage.language);
+
+				if(index == -1){
+					// There is no bio in that language
+					// Add an option to add that language
+					newOptions.push({
+						key: i,
+						text: supportedLanguage.fullLanguage,
+						data: {
+							language: supportedLanguage.language,
+							added: false
+						}
+					});
+
+					i++;
+				}
+			}
+
+			if(newOptions.length > 1){
+				for(let option of newOptions){
+					this.bioLanguageDropdownOptions.push(option);
+				}
+			}
+
+			// Select and show the first language
+			this.bioLanguageDropdownSelectedIndex = 0;
+			this.bioMode = BioMode.Normal;
+		}
+	}
 
    createProfileButtonClick(){
 		if(this.dataService.user.IsLoggedIn){
@@ -113,46 +190,44 @@ export class AuthorPageComponent{
 			this.router.navigate(["/account"]);
 		}
 	}
-	
-	ShowBook(uuid: string){
-		this.router.navigate(["author", "book", uuid]);
-	}
-
-	ShowCreateBookDialog(){
-		this.createBookDialogTitle = "";
-		this.createBookDialogTitleError = "";
-
-		this.createBookDialogContentProps.title = this.locale.createBookDialog.title;
-		this.createBookDialogVisible = true;
-	}
 
 	ShowCollection(uuid: string){
 		this.router.navigate(["author", "collection", uuid]);
 	}
 
-	CreateBook(){
-		this.createBookDialogTitleError = "";
-
-		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			title: this.createBookDialogTitle,
-			language: this.dataService.locale.startsWith("de") ? "de" : "en"
-		});
-	}
-
 	EditBio(){
-		if(this.editBio){
+		if(this.bioMode == BioMode.New || this.bioMode == BioMode.NormalEdit){
 			this.newBioError = "";
 
 			// Save the new bio on the server
-			this.websocketService.Emit(WebsocketCallbackType.UpdateAuthorOfUser, {
+			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.dataService.userAuthor.bios.length > 0 ? 1 : 0)];
+
+			this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
 				jwt: this.dataService.user.JWT,
+				language: selectedOption.data.language,
 				bio: this.newBio
 			});
 		}else{
-			this.newBio = this.dataService.userAuthor.bio ? this.dataService.userAuthor.bio : "";
+			this.newBio = this.dataService.userAuthor.bios[this.bioLanguageDropdownSelectedIndex].bio;
 			this.newBioError = "";
-			this.editBio = true;
+			this.bioMode = BioMode.NormalEdit;
+		}
+	}
+
+	CancelEditBio(){
+		this.bioMode = 2;
+		this.newBio = "";
+		this.newBioError = "";
+	}
+
+	BioLanguageDropdownChange(e: {event: MouseEvent, option: {key: number, text: string, data: any}, index: number}){
+		this.bioLanguageDropdownSelectedIndex = e.option.key;
+		this.newBioError = "";
+
+		if(!e.option.data){
+			this.bioMode = BioMode.None;
+		}else{
+			this.bioMode = e.option.data.added ? BioMode.Normal : BioMode.New;
 		}
 	}
 
@@ -179,43 +254,49 @@ export class AuthorPageComponent{
 		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
 	}
 
-	CreateStoreBookResponse(response: ApiResponse){
-		if(response.status == 201){
-			// Add the new book to the books in DataService
-			//this.dataService.userAuthor.books.push({uuid: response.data.uuid, title: response.data.title});
-			this.createBookDialogVisible = false;
-
-			// Redirect to AuthorAppPage
-			this.router.navigate(["author", "book", response.data.uuid]);
-		}else{
-			let errors = response.data.errors;
-
-			for(let error of errors){
-				switch(error.code){
-					case 2105:
-						// Title missing
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleMissing;
-					case 2304:
-						// Title too short
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooShort;
-						break;
-					case 2404:
-						// Title too long
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooLong;
-						break;
-					default:
-						// Unexpected error
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
-						break;
-				}
-			}
+	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the uploaded profile image
+			this.profileImageContent = this.uploadedProfileImageContent;
+			this.uploadedProfileImageContent = null;
 		}
 	}
 
-	UpdateAuthorOfUserResponse(response: ApiResponse){
+	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
 		if(response.status == 200){
-			this.dataService.userAuthor.bio = response.data.bio;
-			this.editBio = false;
+			// Show the profile image
+			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
+	}
+
+	SetBioOfAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			if(this.bioMode == BioMode.New){
+				// Add the new bio to the bios
+				this.dataService.userAuthor.bios.push(response.data);
+
+				// Update the dropdown
+				this.bioMode = BioMode.Normal;
+				this.newBio = "";
+				this.newBioError = "";
+				this.SetupBioLanguageDropdown();
+
+				// Show the bio in the language that was just added
+				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == response.data.language);
+				if(i != -1){
+					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i].key as number;
+				}
+			}else{
+				// Find and update the edited bio
+				let i = this.dataService.userAuthor.bios.findIndex(bio => bio.language == response.data.language);
+				if(i != -1){
+					this.dataService.userAuthor.bios[i].bio = response.data.bio;
+				}
+
+				this.newBio = "";
+				this.newBioError = "";
+				this.bioMode = BioMode.Normal;
+			}
 		}else{
 			let errorCode = response.data.errors[0].code;
 
@@ -235,19 +316,11 @@ export class AuthorPageComponent{
 			}
 		}
 	}
+}
 
-	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the uploaded profile image
-			this.profileImageContent = this.uploadedProfileImageContent;
-			this.uploadedProfileImageContent = null;
-		}
-	}
-
-	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the profile image
-			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
-		}
-	}
+enum BioMode{
+	None = 0,		// If the author has no bios and has not selected to add a bio, show nothing
+	New = 1,			// If the author has selected a language to add, show the input for creating a bio
+	Normal = 2,		// If the author has one or more bios, show the selected bio
+	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
 }

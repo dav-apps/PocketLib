@@ -25,12 +25,21 @@ export class DataService{
    syncFinished: boolean = false;
 	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
 	userPromiseResolve: Function;
-	userAuthor: {uuid: string, firstName: string, lastName: string, bio: string, collections: {uuid: string, names: {name: string, language: string}[]}[]} = null;
-	userAuthorPromise: Promise<{firstName: string, lastName: string, bio: string}> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
+	userAuthor: Author = null;
+	userAuthorPromise: Promise<Author> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
 	userAuthorPromiseResolve: Function;
+	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 
    constructor(){
 		this.user = new DavUser(() => this.userPromiseResolve(this.user));
+
+		// Set the supported languages
+		let languages = this.GetLocale().misc.languages;
+		
+		this.supportedLanguages.push(
+			{language: "en", fullLanguage: languages.en},
+			{language: "de", fullLanguage: languages.de}
+		)
    }
 
    async LoadAllBooks(){
@@ -59,7 +68,18 @@ export class DataService{
       if(!bookObject) return;
 
 		await this.ReloadBook(bookObject.Uuid);
-   }
+	}
+	
+	GetFullLanguage(language: string) : string{
+		let languagesLocale = this.GetLocale().misc.languages;
+	
+		switch(language){
+			case "en":
+				return languagesLocale.en;
+			case "de":
+				return languagesLocale.de;
+		}
+	}
 
    GetLocale(){
       let l = this.locale.toLowerCase();
@@ -149,6 +169,14 @@ export interface ApiResponse{
 	status: number;
 	headers: any;
 	data: any;
+}
+
+export interface Author{
+	uuid: string;
+	firstName: string;
+	lastName: string;
+	bios: {bio: string, language: string}[];
+	collections: {uuid: string, names: {name: string, language: string}[]}[];
 }
 
 export function FindElement(currentElement: Element, tagName: string) : Element{

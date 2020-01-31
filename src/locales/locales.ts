@@ -47,21 +47,12 @@ const enDefaults = {
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
+		addYourBio: "Add your biography",
 		noBio: "No biography provided",
 		bioTextfieldPlaceholder: "Your biography",
 		yourCollections: "Your collections",
 		uploadProfileImage: "Upload profile image",
-		createBookDialog: {
-			title: "Create book",
-			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The title of your book",
-			errors: {
-				titleMissing: "Please provide a title",
-				titleTooShort: "The title is too short",
-				titleTooLong: "The title is too long",
-				unexpectedError: "An unexpected error occured"
-			}
-		},
+		additionalLanguages: "Additional languages",
 		edit: "Edit",
 		cancel: "Cancel",
 		save: "Save",
@@ -93,11 +84,24 @@ const enDefaults = {
 			en: "English",
 			de: "German"
 		},
+		createBookDialog: {
+			title: "Create book",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The title of your book",
+			errors: {
+				titleMissing: "Please provide a title",
+				titleTooShort: "The title is too short",
+				titleTooLong: "The title is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
 		collectionNamesDialog: {
 			title: "Collection name"
 		},
 		add: "Add",
-		close: "Close"
+		close: "Close",
+		cancel: "Cancel",
+		save: "Save"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -185,7 +189,13 @@ const enDefaults = {
       bookmarks: "Bookmarks",
       noBookmarks: "You have no bookmarks",
 		page: "Page"
-   }
+	},
+	misc: {
+		languages: {
+			en: "English",
+			de: "German"
+		}
+	}
 }
 
 export var enUS = enDefaults;
@@ -242,21 +252,12 @@ const deDefaults = {
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an und erstelle dein Profil",
+		addYourBio: "Biographie angeben",
 		noBio: "Keine Biographie angegeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
 		yourCollections: "Deine Sammlungen",
 		uploadProfileImage: "Profilbild hochladen",
-		createBookDialog: {
-			title: "Buch erstellen",
-			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Der Titel deines Buches",
-			errors: {
-				titleMissing: "Bitte gib einen Titel an",
-				titleTooShort: "Der Titel ist zu kurz",
-				titleTooLong: "Der Titel ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
-			}
-		},
+		additionalLanguages: "Weitere Sprachen",
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
 		save: "Speichern",
@@ -288,11 +289,24 @@ const deDefaults = {
 			en: "Englisch",
 			de: "Deutsch"
 		},
+		createBookDialog: {
+			title: "Buch erstellen",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Der Titel deines Buches",
+			errors: {
+				titleMissing: "Bitte gib einen Titel an",
+				titleTooShort: "Der Titel ist zu kurz",
+				titleTooLong: "Der Titel ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
 		collectionNamesDialog: {
 			title: "Name der Sammlung"
 		},
 		add: "Hinzufügen",
-		close: "Schließen"
+		close: "Schließen",
+		cancel: "Abbrechen",
+		save: "Speichern"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -380,7 +394,13 @@ const deDefaults = {
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
 		page: "Seite"
-   }
+	},
+	misc: {
+		languages: {
+			en: "Englisch",
+			de: "Deutsch"
+		}
+	}
 }
 
 export var deDE = deDefaults;
