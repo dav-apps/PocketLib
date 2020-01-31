@@ -37,13 +37,13 @@ import { WebsocketService } from './services/websocket-service';
 
 // Components
 import { AppComponent } from './app.component';
-import { EpubContentComponent } from './components/epub-content/epub-content.component';
-import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
+import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component';
 import { RenameBookModalComponent } from './components/rename-book-modal/rename-book-modal.component';
 import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
-import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component';
+import { EpubContentComponent } from './components/epub-content/epub-content.component';
+import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -66,13 +66,13 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
    declarations: [
 		// Components
 		AppComponent,
-		EpubContentComponent,
-		PdfContentComponent,
 		ChaptersTreeComponent,
+		EditCollectionNamesComponent,
 		RenameBookModalComponent,
 		DeleteBookModalComponent,
 		LogoutModalComponent,
-		EditCollectionNamesComponent,
+		EpubContentComponent,
+		PdfContentComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,

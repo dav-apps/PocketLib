@@ -60,7 +60,7 @@ export class AuthorSetupPageComponent{
 				uuid: response.data.uuid,
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
-				bio: null,
+				bios: [],
 				collections: []
 			}
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);

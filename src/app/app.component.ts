@@ -120,7 +120,7 @@ export class AppComponent{
 				uuid: response.data.uuid,
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
-				bio: response.data.bio,
+				bios: response.data.bios,
 				collections: response.data.collections
 			}
 		}else{
