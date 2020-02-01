@@ -13,6 +13,7 @@ export function init(s: any){
 	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
 	socket.on(authorProfileComponent.setBioOfAuthorOfUserKey, authorProfileComponent.setBioOfAuthorOfUser);
+	socket.on(authorProfileComponent.setBioOfAuthorKey, authorProfileComponent.setBioOfAuthor);
 	socket.on(authorProfileComponent.setProfileImageOfAuthorOfUserKey, authorProfileComponent.setProfileImageOfAuthorOfUser);
 	socket.on(authorProfileComponent.getProfileImageOfAuthorOfUserKey, authorProfileComponent.getProfileImageOfAuthorOfUser);
 	socket.on(authorProfileComponent.setProfileImageOfAuthorKey, authorProfileComponent.setProfileImageOfAuthor);
