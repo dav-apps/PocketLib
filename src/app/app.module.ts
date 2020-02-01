@@ -44,6 +44,7 @@ import { DeleteBookModalComponent } from './components/delete-book-modal/delete-
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
+import { AuthorProfileComponent } from './components/author-profile/author-profile.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -73,6 +74,7 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
 		LogoutModalComponent,
 		EpubContentComponent,
 		PdfContentComponent,
+		AuthorProfileComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,
