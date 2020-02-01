@@ -11,7 +11,6 @@ import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component';
 import { AuthorBookPageComponent } from './pages/author-book-page/author-book-page.component';
-import { AuthorProfilePageComponent } from './pages/author-profile-page/author-profile-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
 import { StorePageComponent } from './pages/store-page/store-page.component';
@@ -30,7 +29,6 @@ const routes: Routes = [
 	{ path: "author/:uuid", component: AuthorPageComponent },
 	{ path: "author/collection/:uuid", component: AuthorCollectionPageComponent },
 	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
-	{ path: "author/profile", component: AuthorProfilePageComponent },
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
 	{ path: "store", component: StorePageComponent }
