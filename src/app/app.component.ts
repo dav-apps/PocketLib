@@ -116,17 +116,35 @@ export class AppComponent{
 
 	GetAuthorOfUserResponse(response: {status: number, data: any}){
 		if(response.status == 200){
-			this.dataService.userAuthor = {
-				uuid: response.data.uuid,
-				firstName: response.data.first_name,
-				lastName: response.data.last_name,
-				bios: response.data.bios,
-				collections: response.data.collections
+			if(response.data.authors){
+				this.dataService.userIsAdmin = true;
+				this.dataService.adminAuthors = [];
+
+				for(let author of response.data.authors){
+					this.dataService.adminAuthors.push({
+						uuid: author.uuid,
+						firstName: author.first_name,
+						lastName: author.last_name,
+						bios: author.bios,
+						collections: author.collections
+					});
+				}
+			}else{
+				this.dataService.userAuthor = {
+					uuid: response.data.uuid,
+					firstName: response.data.first_name,
+					lastName: response.data.last_name,
+					bios: response.data.bios,
+					collections: response.data.collections
+				}
 			}
 		}else{
 			this.dataService.userAuthor = null;
+			this.dataService.adminAuthors = [];
 		}
+
 		this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
+		this.dataService.adminAuthorsPromiseResolve(this.dataService.adminAuthors);
 	}
    
    SetTitleBarColor(){

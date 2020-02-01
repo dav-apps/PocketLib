@@ -28,6 +28,10 @@ export class DataService{
 	userAuthor: Author = null;
 	userAuthorPromise: Promise<Author> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
 	userAuthorPromiseResolve: Function;
+	adminAuthors: Author[] = [];
+	adminAuthorsPromise: Promise<Author[]> = new Promise(resolve => this.adminAuthorsPromiseResolve = resolve);
+	adminAuthorsPromiseResolve: Function;
+	userIsAdmin: boolean = false;
 	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 
    constructor(){
