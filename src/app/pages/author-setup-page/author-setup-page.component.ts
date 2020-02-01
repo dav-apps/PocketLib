@@ -61,7 +61,8 @@ export class AuthorSetupPageComponent{
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
 				bios: [],
-				collections: []
+				collections: [],
+				profileImage: false
 			}
 			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
 

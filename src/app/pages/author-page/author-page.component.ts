@@ -1,7 +1,6 @@
 import { Component, HostListener } from "@angular/core";
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
-import { WebsocketService } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
 const navbarHeight: number = 64;
@@ -21,7 +20,6 @@ export class AuthorPageComponent{
 
    constructor(
 		public dataService: DataService,
-		public websocketService: WebsocketService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
    ){

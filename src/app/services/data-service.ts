@@ -181,6 +181,7 @@ export interface Author{
 	lastName: string;
 	bios: {bio: string, language: string}[];
 	collections: {uuid: string, names: {name: string, language: string}[]}[];
+	profileImage: boolean;
 }
 
 export function FindElement(currentElement: Element, tagName: string) : Element{

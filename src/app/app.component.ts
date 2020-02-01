@@ -126,7 +126,8 @@ export class AppComponent{
 						firstName: author.first_name,
 						lastName: author.last_name,
 						bios: author.bios,
-						collections: author.collections
+						collections: author.collections,
+						profileImage: author.profile_image
 					});
 				}
 			}else{
@@ -135,7 +136,8 @@ export class AppComponent{
 					firstName: response.data.first_name,
 					lastName: response.data.last_name,
 					bios: response.data.bios,
-					collections: response.data.collections
+					collections: response.data.collections,
+					profileImage: response.data.profile_image
 				}
 			}
 		}else{

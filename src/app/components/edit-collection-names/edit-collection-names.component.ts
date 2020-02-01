@@ -13,7 +13,7 @@ export class EditCollectionNamesComponent{
 	setStoreBookCollectionNameSubscriptionKey: number;
 	@Input() collectionNames: CollectionName[] = [];
 	@Input() supportedLanguages: {language: string, fullLanguage: string}[] = [];
-	@Input() uuid;
+	@Input() uuid: string;
 	@Output() update = new EventEmitter();
 	@Output() showAddLanguageButton = new EventEmitter();
 	@Output() hideAddLanguageButton = new EventEmitter();
