@@ -1,6 +1,6 @@
 import * as loginPage from './websocket/login-page';
 import * as authorSetupPage from './websocket/author-setup-page';
-import * as authorPage from './websocket/author-page';
+import * as authorProfileComponent from './websocket/author-profile-component';
 import * as authorBookPage from './websocket/author-book-page';
 import * as authorCollectionPage from './websocket/author-collection-page';
 
@@ -12,9 +12,11 @@ export function init(s: any){
 	socket.on(loginPage.getAppKey, loginPage.getApp);
 	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
-	socket.on(authorPage.setProfileImageOfAuthorOfUserKey, authorPage.setProfileImageOfAuthorOfUser);
-	socket.on(authorPage.getProfileImageOfAuthorOfUserKey, authorPage.getProfileImageOfAuthorOfUser);
-	socket.on(authorPage.setBioOfAuthorOfUserKey, authorPage.setBioOfAuthorOfUser);
+	socket.on(authorProfileComponent.setBioOfAuthorOfUserKey, authorProfileComponent.setBioOfAuthorOfUser);
+	socket.on(authorProfileComponent.setProfileImageOfAuthorOfUserKey, authorProfileComponent.setProfileImageOfAuthorOfUser);
+	socket.on(authorProfileComponent.getProfileImageOfAuthorOfUserKey, authorProfileComponent.getProfileImageOfAuthorOfUser);
+	socket.on(authorProfileComponent.setProfileImageOfAuthorKey, authorProfileComponent.setProfileImageOfAuthor);
+	socket.on(authorProfileComponent.getProfileImageOfAuthorKey, authorProfileComponent.getProfileImageOfAuthor);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
 	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
