@@ -1,8 +1,8 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -12,10 +12,16 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorProfileComponent{
 	locale = enUS.authorPage;
+	setBioOfAuthorOfUserSubscriptionKey: number;
+	setBioOfAuthorSubscriptionKey: number;
 	setProfileImageOfAuthorOfUserSubscriptionKey: number;
 	getProfileImageOfAuthorOfUserSubscriptionKey: number;
-	setBioOfAuthorOfUserSubscriptionKey: number;
-	
+	setProfileImageOfAuthorSubscriptionKey: number;
+	getProfileImageOfAuthorSubscriptionKey: number;
+
+	@Input() uuid: string;
+	authorMode: AuthorMode = AuthorMode.Normal;
+	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	profileImageWidth: number = 200;
 	bioLanguageDropdownSelectedIndex: number = 0;
 	bioLanguageDropdownOptions: IDropdownOption[] = [];
@@ -43,35 +49,68 @@ export class AuthorProfileComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorPage;
+		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
+		this.setBioOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthor, (response: ApiResponse) => this.SetBioOfAuthorResponse(response));
 		this.setProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
 		this.getProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
-		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
+		this.setProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthor, (response: ApiResponse) => this.SetProfileImageOfAuthorResponse(response));
+		this.getProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthor, (response: ApiResponse) => this.GetProfileImageOfAuthorResponse(response));
 	}
 
 	async ngOnInit(){
 		this.setSize();
+		await this.dataService.userAuthorPromise;
+
+		// Find the correct author mode
+		if(!this.uuid){
+			this.authorMode = AuthorMode.AuthorOfUser;
+		}else if(
+			this.dataService.userIsAdmin && 
+			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)){
+			this.authorMode = AuthorMode.AuthorOfAdmin;
+		}
+
+		if(this.authorMode == AuthorMode.AuthorOfAdmin){
+			// Get the author from the admin authors
+			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
+		}else if(this.authorMode == AuthorMode.AuthorOfUser){
+			this.author = this.dataService.userAuthor;
+		}else{
+			// Get the author from the server
+			// TODO
+		}
 
 		// Get the appropriate language of each collection
-		for(let collection of this.dataService.userAuthor.collections){
+		for(let collection of this.author.collections){
 			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
 			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
 		}
 
-		await this.dataService.userAuthorPromise;
-
 		// Download the profile image
-		this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
-			jwt: this.dataService.user.JWT
-		});
+		if(this.author.profileImage){
+			if(this.authorMode == AuthorMode.AuthorOfUser){
+				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
+					jwt: this.dataService.user.JWT
+				});
+			}else{
+				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
+					jwt: this.dataService.user.JWT,
+					uuid: this.uuid
+				});
+			}
+		}
 
 		this.SetupBioLanguageDropdown();
 	}
 
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(
+			this.setBioOfAuthorOfUserSubscriptionKey,
+			this.setBioOfAuthorSubscriptionKey,
 			this.setProfileImageOfAuthorOfUserSubscriptionKey,
 			this.getProfileImageOfAuthorOfUserSubscriptionKey,
-			this.setBioOfAuthorOfUserSubscriptionKey
+			this.setProfileImageOfAuthorSubscriptionKey,
+			this.getProfileImageOfAuthorSubscriptionKey
 		)
 	}
 
@@ -95,11 +134,13 @@ export class AuthorProfileComponent{
 	}
 
 	SetupBioLanguageDropdown(){
+		if(this.authorMode == AuthorMode.Normal) return;
+
 		// Prepare the Bio language dropdown
 		this.bioLanguageDropdownOptions = [];
 		let i = 0;
 
-		for(let lang of this.dataService.userAuthor.bios){
+		for(let lang of this.author.bios){
 			this.bioLanguageDropdownOptions.push({
 				key: i,
 				text: this.dataService.GetFullLanguage(lang.language),
@@ -181,15 +222,24 @@ export class AuthorProfileComponent{
 			this.newBioError = "";
 
 			// Save the new bio on the server
-			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.dataService.userAuthor.bios.length > 0 ? 1 : 0)];
+			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
 
-			this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
-				jwt: this.dataService.user.JWT,
-				language: selectedOption.data.language,
-				bio: this.newBio
-			});
+			if(this.authorMode == AuthorMode.AuthorOfUser){
+				this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
+					jwt: this.dataService.user.JWT,
+					language: selectedOption.data.language,
+					bio: this.newBio
+				});
+			}else{
+				this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthor, {
+					jwt: this.dataService.user.JWT,
+					uuid: this.uuid,
+					language: selectedOption.data.language,
+					bio: this.newBio
+				});
+			}
 		}else{
-			this.newBio = this.dataService.userAuthor.bios[this.bioLanguageDropdownSelectedIndex].bio;
+			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio;
 			this.newBioError = "";
 			this.bioMode = BioMode.NormalEdit;
 		}
@@ -226,35 +276,29 @@ export class AuthorProfileComponent{
 		let imageContent = await readPromise;
 
 		// Upload the image
-		this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
-			jwt: this.dataService.user.JWT,
-			type: file.type,
-			file: imageContent
-		});
+		if(this.authorMode == AuthorMode.AuthorOfUser){
+			this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
+				jwt: this.dataService.user.JWT,
+				type: file.type,
+				file: imageContent
+			});
+		}else{
+			this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthor, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				type: file.type,
+				file: imageContent
+			});
+		}
 
 		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
 	}
 
-	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the uploaded profile image
-			this.profileImageContent = this.uploadedProfileImageContent;
-			this.uploadedProfileImageContent = null;
-		}
-	}
-
-	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the profile image
-			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
-		}
-	}
-
-	SetBioOfAuthorOfUserResponse(response: ApiResponse){
+	ProcessSetBioResponse(response: ApiResponse){
 		if(response.status == 200){
 			if(this.bioMode == BioMode.New){
 				// Add the new bio to the bios
-				this.dataService.userAuthor.bios.push(response.data);
+				this.author.bios.push(response.data);
 
 				// Update the dropdown
 				this.bioMode = BioMode.Normal;
@@ -269,9 +313,9 @@ export class AuthorProfileComponent{
 				}
 			}else{
 				// Find and update the edited bio
-				let i = this.dataService.userAuthor.bios.findIndex(bio => bio.language == response.data.language);
+				let i = this.author.bios.findIndex(bio => bio.language == response.data.language);
 				if(i != -1){
-					this.dataService.userAuthor.bios[i].bio = response.data.bio;
+					this.author.bios[i].bio = response.data.bio;
 				}
 
 				this.newBio = "";
@@ -297,6 +341,46 @@ export class AuthorProfileComponent{
 			}
 		}
 	}
+
+	SetBioOfAuthorOfUserResponse(response: ApiResponse){
+		this.ProcessSetBioResponse(response);
+	}
+
+	SetBioOfAuthorResponse(response: ApiResponse){
+		this.ProcessSetBioResponse(response);
+	}
+
+	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the uploaded profile image
+			this.profileImageContent = this.uploadedProfileImageContent;
+			this.uploadedProfileImageContent = null;
+			this.author.profileImage = true;
+		}
+	}
+
+	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the profile image
+			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
+	}
+
+	SetProfileImageOfAuthorResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the uploaded profile image
+			this.profileImageContent = this.uploadedProfileImageContent;
+			this.uploadedProfileImageContent = null;
+			this.author.profileImage = true;
+		}
+	}
+
+	GetProfileImageOfAuthorResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Show the profile image
+			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
+	}
 }
 
 enum BioMode{
@@ -304,4 +388,10 @@ enum BioMode{
 	New = 1,			// If the author has selected a language to add, show the input for creating a bio
 	Normal = 2,		// If the author has one or more bios, show the selected bio
 	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
+}
+
+enum AuthorMode{
+	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
+	AuthorOfUser = 1,	// If the author belongs to the user
+	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
 }

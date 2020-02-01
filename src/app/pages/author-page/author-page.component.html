@@ -6,9 +6,12 @@
    </div>
 </div>
 
-<pocketlib-author-profile *ngIf="dataService.userAuthor"></pocketlib-author-profile>
+<pocketlib-author-profile 
+	*ngIf="dataService.userAuthor || (dataService.userIsAdmin && uuid)"
+	[uuid]="uuid">
+</pocketlib-author-profile>
 
-<div class="container text-center" *ngIf="dataService.userIsAdmin">
+<div class="container text-center" *ngIf="dataService.userIsAdmin && !uuid">
 	<h1 class="font-weight-light mt-3 mb-4">Your Authors</h1>
 
 	<div class="list-group" style="display: inline-block">
