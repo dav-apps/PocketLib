@@ -1,4 +1,4 @@
-<div id="author-landing-header-1" class="container-fluid d-flex acrylic" [style.height.px]="header1Height" *ngIf="!dataService.userAuthor">
+<div id="author-landing-header-1" class="container-fluid d-flex acrylic" [style.height.px]="header1Height" *ngIf="!dataService.userAuthor && dataService.adminAuthors.length == 0">
    <div class="mx-auto text-center" style="display: inline-block;" [style.marginTop.px]="header1TextMarginTop">
       <h1 style="font-size: 46px; color: white;">{{ locale.landingHeader1 }}</h1>
       <h4 class="mt-2" style="color: white;">{{ locale.landingSubheader1 }}</h4>
@@ -7,3 +7,21 @@
 </div>
 
 <pocketlib-author-profile *ngIf="dataService.userAuthor"></pocketlib-author-profile>
+
+<div class="container text-center" *ngIf="dataService.userIsAdmin">
+	<h1 class="font-weight-light mt-3 mb-4">Your Authors</h1>
+
+	<div class="list-group" style="display: inline-block">
+		<p class="list-group-item cursor">
+			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
+		</p>
+
+		<p 
+			class="list-group-item cursor" 
+			style="font-size: 18px"
+			(click)="ShowAuthor(author.uuid)"
+			*ngFor="let author of dataService.adminAuthors">
+			{{ author.firstName }} {{ author.lastName }}
+		</p>
+	</div>
+</div>

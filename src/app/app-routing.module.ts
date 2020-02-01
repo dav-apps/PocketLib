@@ -27,6 +27,7 @@ const routes: Routes = [
    { path: "developer/apps/:uuid", component: AppPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/setup", component: AuthorSetupPageComponent },
+	{ path: "author/:uuid", component: AuthorPageComponent },
 	{ path: "author/collection/:uuid", component: AuthorCollectionPageComponent },
 	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
 	{ path: "author/profile", component: AuthorProfilePageComponent },
