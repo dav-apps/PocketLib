@@ -15,12 +15,14 @@ export class AuthorCollectionPageComponent{
 	getStoreBookCollectionSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
 	createStoreBookSubscriptionKey: number;
+
 	@ViewChild(EditCollectionNamesComponent, {static: true})
 	private editCollectionNamesComponent: EditCollectionNamesComponent;
 	uuid: string;
 	collectionName: {name: string, language: string} = {name: "", language: ""};
 	collection: {
 		uuid: string,
+		author: string,
 		names: {name: string, language: string}[],
 		books: {
 			uuid: string,
@@ -32,7 +34,7 @@ export class AuthorCollectionPageComponent{
 			file: boolean,
 			coverContent: string
 		}[]
-	} = {uuid: "", names: [], books: []};
+	} = {uuid: "", author: "", names: [], books: []};
 	coverDownloadPromiseResolve: Function;
 	createBookDialogVisible: boolean = false;
 	createBookDialogTitle: string = "";
@@ -76,9 +78,11 @@ export class AuthorCollectionPageComponent{
 	async ngOnInit(){
 		// Wait for the user to be loaded
 		await this.dataService.userPromise;
+		await this.dataService.userAuthorPromise;
+		await this.dataService.adminAuthorsPromise;
 
-		// Redirect back to the author page if the user is not an author
-		if(!this.dataService.userAuthor && !(await this.dataService.userAuthorPromise)){
+		// Redirect back to the author page if the user is not an author or an admin
+		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
 			this.router.navigate(['author']);
 		}
 
@@ -98,7 +102,11 @@ export class AuthorCollectionPageComponent{
 	}
 
 	GoBack(){
-		this.router.navigate(["author"]);
+		if(this.dataService.userIsAdmin){
+			this.router.navigate(["author", this.collection.author]);
+		}else{
+			this.router.navigate(["author"]);
+		}
 	}
 
 	ShowBook(uuid: string){
@@ -231,7 +239,6 @@ export class AuthorCollectionPageComponent{
 			// Redirect to AuthorAppPage
 			this.router.navigate(["author", "book", response.data.uuid]);
 		}else{
-			console.log(response.data)
 			let errors = response.data.errors;
 
 			for(let error of errors){

@@ -17,6 +17,7 @@ export class AuthorBookPageComponent{
 	getStoreBookCoverSubscriptionKey: number;
 	setStoreBookCoverSubscriptionKey: number;
 	setStoreBookFileSubscriptionKey: number;
+
 	uuid: string;
 	book: {collection: string, title: string, description: string} = {collection: "", title: "", description: ""}
 	editTitleDialogVisible: boolean = false;
@@ -72,9 +73,11 @@ export class AuthorBookPageComponent{
 	async ngOnInit(){
 		// Wait for the user to be loaded
 		await this.dataService.userPromise;
+		await this.dataService.userAuthorPromise;
+		await this.dataService.adminAuthorsPromise;
 
 		// Redirect back to the author page if the user is not an author
-		if(!this.dataService.userAuthor && !(await this.dataService.userAuthorPromise)){
+		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
 			this.router.navigate(['author']);
 		}
 
