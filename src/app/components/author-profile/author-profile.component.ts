@@ -12,6 +12,7 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorProfileComponent{
 	locale = enUS.authorProfile;
+	getAuthorSubscriptionKey: number;
 	setBioOfAuthorOfUserSubscriptionKey: number;
 	setBioOfAuthorSubscriptionKey: number;
 	setProfileImageOfAuthorOfUserSubscriptionKey: number;
@@ -49,6 +50,7 @@ export class AuthorProfileComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorProfile;
+		this.getAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthor, (response: ApiResponse) => this.GetAuthorResponse(response));
 		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
 		this.setBioOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthor, (response: ApiResponse) => this.SetBioOfAuthorResponse(response));
 		this.setProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
@@ -73,11 +75,13 @@ export class AuthorProfileComponent{
 		if(this.authorMode == AuthorMode.AuthorOfAdmin){
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
+			this.SelectDefaultBio();
 		}else if(this.authorMode == AuthorMode.AuthorOfUser){
 			this.author = this.dataService.userAuthor;
+			this.SelectDefaultBio();
 		}else{
 			// Get the author from the server
-			// TODO
+			this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid});
 		}
 
 		// Get the appropriate language of each collection
@@ -127,6 +131,10 @@ export class AuthorProfileComponent{
 		}else{
 			this.profileImageWidth = 130;
 		}
+	}
+
+	SelectDefaultBio(){
+		
 	}
 
 	ShowCollection(uuid: string){
@@ -339,6 +347,21 @@ export class AuthorProfileComponent{
 					this.newBioError = this.locale.errors.unexpectedError;
 					break;
 			}
+		}
+	}
+
+	GetAuthorResponse(response: ApiResponse){
+		if(response.status == 200){
+			this.author = {
+				uuid: response.data.uuid,
+				firstName: response.data.first_name,
+				lastName: response.data.last_name,
+				bios: response.data.bios,
+				collections: response.data.collections,
+				profileImage: response.data.profile_image
+			}
+
+			this.SelectDefaultBio();
 		}
 	}
 

@@ -14,6 +14,7 @@ import { AuthorBookPageComponent } from './pages/author-book-page/author-book-pa
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
 import { StorePageComponent } from './pages/store-page/store-page.component';
+import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -31,7 +32,8 @@ const routes: Routes = [
 	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
-	{ path: "store", component: StorePageComponent }
+	{ path: "store", component: StorePageComponent },
+	{ path: "store/author/:uuid", component: StoreAuthorPageComponent }
 ]
 
 @NgModule({

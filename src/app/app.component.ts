@@ -173,8 +173,8 @@ export class AppComponent{
 		this.router.navigate(["author"])
 	}
 
-	ShowBookstorePage(){
-		this.router.navigate(["bookstore"])
+	ShowStorePage(){
+		this.router.navigate(["store"])
 	}
 	
 	ShowAccountPage(){
