@@ -1,6 +1,6 @@
 import * as loginPage from './websocket/login-page';
 import * as authorSetupPage from './websocket/author-setup-page';
-import * as authorProfileComponent from './websocket/author-profile-component';
+import * as authorProfile from './websocket/author-profile';
 import * as authorBookPage from './websocket/author-book-page';
 import * as authorCollectionPage from './websocket/author-collection-page';
 
@@ -12,12 +12,13 @@ export function init(s: any){
 	socket.on(loginPage.getAppKey, loginPage.getApp);
 	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
 	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
-	socket.on(authorProfileComponent.setBioOfAuthorOfUserKey, authorProfileComponent.setBioOfAuthorOfUser);
-	socket.on(authorProfileComponent.setBioOfAuthorKey, authorProfileComponent.setBioOfAuthor);
-	socket.on(authorProfileComponent.setProfileImageOfAuthorOfUserKey, authorProfileComponent.setProfileImageOfAuthorOfUser);
-	socket.on(authorProfileComponent.getProfileImageOfAuthorOfUserKey, authorProfileComponent.getProfileImageOfAuthorOfUser);
-	socket.on(authorProfileComponent.setProfileImageOfAuthorKey, authorProfileComponent.setProfileImageOfAuthor);
-	socket.on(authorProfileComponent.getProfileImageOfAuthorKey, authorProfileComponent.getProfileImageOfAuthor);
+	socket.on(authorProfile.getAuthorKey, authorProfile.getAuthor);
+	socket.on(authorProfile.setBioOfAuthorOfUserKey, authorProfile.setBioOfAuthorOfUser);
+	socket.on(authorProfile.setBioOfAuthorKey, authorProfile.setBioOfAuthor);
+	socket.on(authorProfile.setProfileImageOfAuthorOfUserKey, authorProfile.setProfileImageOfAuthorOfUser);
+	socket.on(authorProfile.getProfileImageOfAuthorOfUserKey, authorProfile.getProfileImageOfAuthorOfUser);
+	socket.on(authorProfile.setProfileImageOfAuthorKey, authorProfile.setProfileImageOfAuthor);
+	socket.on(authorProfile.getProfileImageOfAuthorKey, authorProfile.getProfileImageOfAuthor);
 	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
 	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
 	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
