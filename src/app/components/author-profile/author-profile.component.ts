@@ -11,7 +11,7 @@ import { enUS } from 'src/locales/locales';
 	templateUrl: './author-profile.component.html'
 })
 export class AuthorProfileComponent{
-	locale = enUS.authorPage;
+	locale = enUS.authorProfile;
 	setBioOfAuthorOfUserSubscriptionKey: number;
 	setBioOfAuthorSubscriptionKey: number;
 	setProfileImageOfAuthorOfUserSubscriptionKey: number;
@@ -48,7 +48,7 @@ export class AuthorProfileComponent{
 		private websocketService: WebsocketService,
 		private router: Router
 	){
-		this.locale = this.dataService.GetLocale().authorPage;
+		this.locale = this.dataService.GetLocale().authorProfile;
 		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
 		this.setBioOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthor, (response: ApiResponse) => this.SetBioOfAuthorResponse(response));
 		this.setProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));

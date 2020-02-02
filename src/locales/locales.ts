@@ -47,20 +47,7 @@ const enDefaults = {
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
-		addYourBio: "Add your biography",
-		noBio: "No biography provided",
-		bioTextfieldPlaceholder: "Your biography",
-		yourCollections: "Your collections",
-		uploadProfileImage: "Upload profile image",
-		additionalLanguages: "Additional languages",
-		edit: "Edit",
-		cancel: "Cancel",
-		save: "Save",
-		errors: {
-			bioTooShort: "Your biography is too short",
-			bioTooLong: "Your biography is too long",
-			unexpectedError: "An unexpected error occured. Please try again."
-		}
+		yourAuthors: "Your authors"
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
@@ -190,6 +177,22 @@ const enDefaults = {
       noBookmarks: "You have no bookmarks",
 		page: "Page"
 	},
+	authorProfile: {
+		yourCollections: "Your collections",
+		uploadProfileImage: "Upload profile image",
+		addYourBio: "Add your biography",
+		bioTextfieldPlaceholder: "Your biography",
+		noBio: "No biography provided",
+		additionalLanguages: "Additional languages",
+		errors: {
+			bioTooShort: "Your biography is too short",
+			bioTooLong: "Your biography is too long",
+			unexpectedError: "An unexpected error occured. Please try again."
+		},
+		edit: "Edit",
+		cancel: "Cancel",
+		save: "Save"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -251,21 +254,8 @@ const deDefaults = {
       landingHeader1: "Veröffentliche auf PocketLib",
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
-		login: "Melde dich an und erstelle dein Profil",
-		addYourBio: "Biographie angeben",
-		noBio: "Keine Biographie angegeben",
-		bioTextfieldPlaceholder: "Deine Biographie",
-		yourCollections: "Deine Sammlungen",
-		uploadProfileImage: "Profilbild hochladen",
-		additionalLanguages: "Weitere Sprachen",
-		edit: "Bearbeiten",
-		cancel: "Abbrechen",
-		save: "Speichern",
-		errors: {
-			bioTooShort: "Deine Biographie ist zu kurz",
-			bioTooLong: "Deine Biographie ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
-		}
+		login: "Melde dich an, um dein Profil zu erstellen",
+		yourAuthors: "Deine Autoren"
 	},
 	authorSetupPage: {
 		title: "Erstelle dein Autoren-Profil",
@@ -394,6 +384,22 @@ const deDefaults = {
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
 		page: "Seite"
+	},
+	authorProfile: {
+		yourCollections: "Deine Sammlungen",
+		uploadProfileImage: "Profilbild hochladen",
+		addYourBio: "Biographie angeben",
+		bioTextfieldPlaceholder: "Deine Biographie",
+		noBio: "Keine Biographie angegeben",
+		additionalLanguages: "Weitere Sprachen",
+		errors: {
+			bioTooShort: "Deine Biographie ist zu kurz",
+			bioTooLong: "Deine Biographie ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+		},
+		edit: "Bearbeiten",
+		cancel: "Abbrechen",
+		save: "Speichern"
 	},
 	misc: {
 		languages: {
