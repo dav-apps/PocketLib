@@ -11,8 +11,8 @@
 	[uuid]="uuid">
 </pocketlib-author-profile>
 
-<div class="container text-center" *ngIf="dataService.userIsAdmin && !uuid">
-	<h1 class="font-weight-light mt-3 mb-4">Your Authors</h1>
+<div class="container text-center ms-motion-slideUpIn" *ngIf="dataService.userIsAdmin && !uuid">
+	<h1 class="font-weight-light mt-3 mb-4">{{ locale.yourAuthors }}</h1>
 
 	<div class="list-group" style="display: inline-block">
 		<p class="list-group-item cursor">
