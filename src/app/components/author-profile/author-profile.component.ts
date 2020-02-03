@@ -88,6 +88,8 @@ export class AuthorProfileComponent{
 			this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid});
 		}
 
+		await this.getAuthorPromise;
+
 		// Get the appropriate language of each collection
 		for(let collection of this.author.collections){
 			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
@@ -95,8 +97,6 @@ export class AuthorProfileComponent{
 		}
 
 		// Download the profile image
-		await this.getAuthorPromise;
-
 		if(this.author.profileImage){
 			if(this.authorMode == AuthorMode.AuthorOfUser){
 				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
