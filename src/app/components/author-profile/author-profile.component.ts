@@ -32,6 +32,8 @@ export class AuthorProfileComponent{
 	collections: {uuid: string, name: string}[] = [];
 	profileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
 	uploadedProfileImageContent: string;
+	getAuthorPromise: Promise<null> = new Promise((resolve) => this.getAuthorPromiseResolve = resolve);
+	getAuthorPromiseResolve: Function;
 
 	bioTextfieldStyles = {
 		root: {
@@ -76,9 +78,11 @@ export class AuthorProfileComponent{
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
 			this.SelectDefaultBio();
+			this.getAuthorPromiseResolve();
 		}else if(this.authorMode == AuthorMode.AuthorOfUser){
 			this.author = this.dataService.userAuthor;
 			this.SelectDefaultBio();
+			this.getAuthorPromiseResolve();
 		}else{
 			// Get the author from the server
 			this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid});
@@ -91,6 +95,8 @@ export class AuthorProfileComponent{
 		}
 
 		// Download the profile image
+		await this.getAuthorPromise;
+
 		if(this.author.profileImage){
 			if(this.authorMode == AuthorMode.AuthorOfUser){
 				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
@@ -363,6 +369,8 @@ export class AuthorProfileComponent{
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
 		}
+
+		this.getAuthorPromiseResolve();
 	}
 
 	SetBioOfAuthorOfUserResponse(response: ApiResponse){

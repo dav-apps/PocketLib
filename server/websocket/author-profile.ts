@@ -199,7 +199,6 @@ export async function setProfileImageOfAuthor(message: {
 }
 
 export async function getProfileImageOfAuthor(message: {
-	jwt: string,
 	uuid: string
 }){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
@@ -207,10 +206,7 @@ export async function getProfileImageOfAuthor(message: {
 	try{
 		var response = await axios.default({
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/author/${message.uuid}/profile_image`,
-			headers: {
-				Authorization: message.jwt
-			}
+			url: `${process.env.POCKETLIB_API_URL}/author/${message.uuid}/profile_image`
 		});
 
 		result.status = response.status;
