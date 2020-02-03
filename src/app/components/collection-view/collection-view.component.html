@@ -1,0 +1,90 @@
+<div class="container ms-motion-slideUpIn">
+	<div class="d-flex justify-content-center mb-4">
+		<div class="d-flex my-3">
+			<button type="button" 
+						class="btn mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+						style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;"
+						(click)="GoBack()">
+				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
+			</button>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ collectionName.name }}</h2>
+
+			<button type="button" 
+					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					style="height: 35px; padding: 3px 6px; font-size: 18px"
+					(click)="ShowCollectionNamesDialog()">
+				<fab-icon iconName="Edit"></fab-icon>
+			</button>
+		</div>
+	</div>
+
+	<div
+		class="card mb-3 mx-auto shadow-sm cursor"
+		style="width: 200px"
+		(click)="ShowCreateBookDialog()">
+		<div class="card-body d-flex justify-content-center align-items-center">
+			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 22px"></i>
+		</div>
+	</div>
+
+	<div 
+		class="card mb-3 mx-auto shadow-sm cursor" 
+		style="max-width: 500px" 
+		*ngFor="let book of collection.books"
+		(click)="ShowBook(book.uuid)">
+		<div class="row no-gutters">
+			<div class="col-4">
+				<img [src]="book.coverContent" style="max-width: 160px;">
+			</div>
+			<div class="col-8">
+				<div class="card-body">
+					<h5 class="card-title">{{ book.title }}</h5>
+					<p class="card-text">{{ book.description }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<fab-dialog
+	[hidden]="!createBookDialogVisible"
+	[dialogContentProps]="createBookDialogContentProps"
+	(onDismiss)="createBookDialogVisible = false">
+
+	<!-- Title -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="createBookDialogTitle"
+			[label]="locale.createBookDialog.titleTextfieldLabel"
+			[placeholder]="locale.createBookDialog.titleTextfieldPlaceholder"
+			[errorMessage]="createBookDialogTitleError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="createBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateBook()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
+	[hidden]="!collectionNamesDialogVisible"
+	[dialogContentProps]="collectionNamesDialogContentProps"
+	minWidth="350px"
+	(onDismiss)="collectionNamesDialogVisible = false">
+	
+	<!-- Names -->
+	<pocketlib-edit-collection-names 
+		[collectionNames]="collectionNames" 
+		[supportedLanguages]="dataService.supportedLanguages"
+		[uuid]="uuid" 
+		(update)="UpdateCollectionName($event)"
+		(showAddLanguageButton)="showAddLanguageButton = true"
+		(hideAddLanguageButton)="showAddLanguageButton = false">
+	</pocketlib-edit-collection-names>
+
+	<fab-dialog-footer>
+		<div style="float: left" *ngIf="showAddLanguageButton" (click)="AddLanguage()"><fab-default-button>Hinzufügen</fab-default-button></div>
+		<fab-default-button (click)="collectionNamesDialogVisible = false">{{ locale.close }}</fab-default-button>
+	</fab-dialog-footer>
+</fab-dialog>

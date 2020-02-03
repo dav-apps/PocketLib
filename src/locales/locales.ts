@@ -67,28 +67,7 @@ const enDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		languages: {
-			en: "English",
-			de: "German"
-		},
-		createBookDialog: {
-			title: "Create book",
-			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The title of your book",
-			errors: {
-				titleMissing: "Please provide a title",
-				titleTooShort: "The title is too short",
-				titleTooLong: "The title is too long",
-				unexpectedError: "An unexpected error occured"
-			}
-		},
-		collectionNamesDialog: {
-			title: "Collection name"
-		},
-		add: "Add",
-		close: "Close",
-		cancel: "Cancel",
-		save: "Save"
+		
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -193,6 +172,26 @@ const enDefaults = {
 		cancel: "Cancel",
 		save: "Save"
 	},
+	collectionView: {
+		createBookDialog: {
+			title: "Create book",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The title of your book",
+			errors: {
+				titleMissing: "Please provide a title",
+				titleTooShort: "The title is too short",
+				titleTooLong: "The title is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
+		collectionNamesDialog: {
+			title: "Collection name"
+		},
+		add: "Add",
+		close: "Close",
+		cancel: "Cancel",
+		save: "Save"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -275,28 +274,7 @@ const deDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		languages: {
-			en: "Englisch",
-			de: "Deutsch"
-		},
-		createBookDialog: {
-			title: "Buch erstellen",
-			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Der Titel deines Buches",
-			errors: {
-				titleMissing: "Bitte gib einen Titel an",
-				titleTooShort: "Der Titel ist zu kurz",
-				titleTooLong: "Der Titel ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
-			}
-		},
-		collectionNamesDialog: {
-			title: "Name der Sammlung"
-		},
-		add: "Hinzufügen",
-		close: "Schließen",
-		cancel: "Abbrechen",
-		save: "Speichern"
+		
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -398,6 +376,26 @@ const deDefaults = {
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		},
 		edit: "Bearbeiten",
+		cancel: "Abbrechen",
+		save: "Speichern"
+	},
+	collectionView: {
+		createBookDialog: {
+			title: "Buch erstellen",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Der Titel deines Buches",
+			errors: {
+				titleMissing: "Bitte gib einen Titel an",
+				titleTooShort: "Der Titel ist zu kurz",
+				titleTooLong: "Der Titel ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
+		collectionNamesDialog: {
+			title: "Name der Sammlung"
+		},
+		add: "Hinzufügen",
+		close: "Schließen",
 		cancel: "Abbrechen",
 		save: "Speichern"
 	},
