@@ -38,8 +38,8 @@
 				</fab-text-field>
 			</div>
 
-			<fab-primary-button (click)="EditBio()" *ngIf="bioMode != 0">{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}</fab-primary-button>
-			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" *ngIf="bioMode == 3">{{ locale.cancel }}</fab-default-button>
+			<fab-primary-button (click)="EditBio()" *ngIf="authorMode != 0 && bioMode != 0">{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}</fab-primary-button>
+			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
 		<div class="col-12 col-md-8 col-xl-9 text-center pt-5">

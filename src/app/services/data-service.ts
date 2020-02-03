@@ -210,16 +210,16 @@ export function SetTextFieldAutocomplete(textFieldId: string, autocomplete: stri
 	}
 }
 
-export function FindNameWithAppropriateLanguage(targetLanguage: string, names: {name: string, language: string}[]) : number{
-	if(names.length == 0) return -1;
-	if(names.length == 1) return 0;
+export function FindAppropriateLanguage(targetLanguage: string, objects: {language: string}[]) : number{
+	if(objects.length == 0) return -1;
+	if(objects.length == 1) return 0;
 
 	// Try to get the name of the target language
-	let i = names.findIndex(n => n.language == targetLanguage);
+	let i = objects.findIndex(n => n.language == targetLanguage);
 	if(i != -1) return i;
 
 	// Try to get the name of the default language
-	i = names.findIndex(n => n.language == "en");
+	i = objects.findIndex(n => n.language == "en");
 	if(i != -1) return i;
 
 	// Return the first name

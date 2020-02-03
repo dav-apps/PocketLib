@@ -2,7 +2,7 @@ import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindAppropriateLanguage, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -86,7 +86,7 @@ export class AuthorProfileComponent{
 
 		// Get the appropriate language of each collection
 		for(let collection of this.author.collections){
-			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
+			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
 			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
 		}
 
@@ -134,7 +134,7 @@ export class AuthorProfileComponent{
 	}
 
 	SelectDefaultBio(){
-		
+		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.author.bios);
 	}
 
 	ShowCollection(uuid: string){
@@ -220,7 +220,6 @@ export class AuthorProfileComponent{
 			}
 
 			// Select and show the first language
-			this.bioLanguageDropdownSelectedIndex = 0;
 			this.bioMode = BioMode.Normal;
 		}
 	}
@@ -361,6 +360,7 @@ export class AuthorProfileComponent{
 				profileImage: response.data.profile_image
 			}
 
+			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
 		}
 	}

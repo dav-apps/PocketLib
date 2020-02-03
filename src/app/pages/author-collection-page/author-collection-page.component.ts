@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
-import { DataService, ApiResponse, FindNameWithAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
+import { DataService, ApiResponse, FindAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -163,7 +163,7 @@ export class AuthorCollectionPageComponent{
 				this.collection.names.push(collectionName);
 
 				// Set the title of the name for the current language was just added
-				let j = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+				let j = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
 				if(j != -1) this.collectionName = this.collection.names[j];
 			}else{
 				// Update the name in the collection
@@ -181,7 +181,7 @@ export class AuthorCollectionPageComponent{
 			this.collection = response.data;
 
 			// Get the appropriate collection name
-			let i = FindNameWithAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
 			if(i != -1) this.collectionName = this.collection.names[i];
 			let coverDownloads: string[] = [];
 
