@@ -1,8 +1,10 @@
 import * as websocket from '../websocket';
 import * as axios from 'axios';
 
-export const loginKey = "login";
-export const getAppKey = "getApp";
+export const sockets = {
+	login,
+	getApp
+}
 
 export async function login(message: {email: string, password: string}){
 	// Create a session on the PocketLib API
@@ -39,7 +41,7 @@ export async function login(message: {email: string, password: string}){
 		}
 	}
 	
-	websocket.emit(loginKey, result);
+	websocket.emit(login.name, result);
 }
 
 export async function getApp(message: {uuid: string}){
@@ -68,5 +70,5 @@ export async function getApp(message: {uuid: string}){
 		}
    }
 
-   websocket.emit(getAppKey, result);
+   websocket.emit(getApp.name, result);
 }

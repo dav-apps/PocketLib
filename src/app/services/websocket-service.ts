@@ -55,25 +55,34 @@ interface WebsocketSubscription{
 }
 
 export enum WebsocketCallbackType{
-	Login = 1,
-	GetApp = 2,
-	CreateAuthor = 3,
-	GetAuthorOfUser = 4,
-	GetAuthor = 5,
-	SetBioOfAuthorOfUser = 6,
-	SetBioOfAuthor = 7,
-	SetProfileImageOfAuthorOfUser = 8,
-	GetProfileImageOfAuthorOfUser = 9,
-	SetProfileImageOfAuthor = 10,
-	GetProfileImageOfAuthor = 11,
-	GetStoreBook = 12,
-	UpdateStoreBook = 13,
-	GetStoreBookCover = 14,
+	// Author
+	CreateAuthor = 1,
+	GetAuthorOfUser = 2,
+	GetAuthor = 3,
+	// AuthorBio
+	SetBioOfAuthorOfUser = 4,
+	SetBioOfAuthor = 5,
+	// AuthorProfileImage
+	SetProfileImageOfAuthorOfUser = 6,
+	GetProfileImageOfAuthorOfUser = 7,
+	SetProfileImageOfAuthor = 8,
+	GetProfileImageOfAuthor = 9,
+	// StoreBookCollection
+	GetStoreBookCollection = 10,
+	// StoreBookCollectionName
+	SetStoreBookCollectionName = 11,
+	// StoreBook
+	CreateStoreBook = 12,
+	GetStoreBook = 13,
+	UpdateStoreBook = 14,
+	// StoreBookCover
 	SetStoreBookCover = 15,
-	SetStoreBookFile = 16,
-	GetStoreBookCollection = 17,
-	SetStoreBookCollectionName = 18,
-	CreateStoreBook = 19
+	GetStoreBookCover = 16,
+	// StoreBookFile
+	SetStoreBookFile = 17,
+	// Misc
+	Login = 18,
+	GetApp = 19
 }
 
 export const Callbacks = {

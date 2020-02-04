@@ -1,32 +1,26 @@
-import * as loginPage from './websocket/login-page';
-import * as authorSetupPage from './websocket/author-setup-page';
-import * as authorProfile from './websocket/author-profile';
-import * as authorBookPage from './websocket/author-book-page';
-import * as authorCollectionPage from './websocket/author-collection-page';
+import * as author from './websocket/author';
+import * as authorBio from './websocket/author-bio';
+import * as authorProfileImage from './websocket/author-profile-image';
+import * as storeBookCollection from './websocket/store-book-collection';
+import * as storeBookCollectionName from './websocket/store-book-collection-name';
+import * as storeBook from './websocket/store-book';
+import * as storeBookCover from './websocket/store-book-cover';
+import * as storeBookFile from './websocket/store-book-file';
+import * as misc from './websocket/misc';
 
 var socket = null;
 
 export function init(s: any){
 	socket = s;
-	socket.on(loginPage.loginKey, loginPage.login);
-	socket.on(loginPage.getAppKey, loginPage.getApp);
-	socket.on(authorSetupPage.createAuthorKey, authorSetupPage.createAuthor);
-	socket.on(authorSetupPage.getAuthorOfUserKey, authorSetupPage.getAuthorOfUser);
-	socket.on(authorProfile.getAuthorKey, authorProfile.getAuthor);
-	socket.on(authorProfile.setBioOfAuthorOfUserKey, authorProfile.setBioOfAuthorOfUser);
-	socket.on(authorProfile.setBioOfAuthorKey, authorProfile.setBioOfAuthor);
-	socket.on(authorProfile.setProfileImageOfAuthorOfUserKey, authorProfile.setProfileImageOfAuthorOfUser);
-	socket.on(authorProfile.getProfileImageOfAuthorOfUserKey, authorProfile.getProfileImageOfAuthorOfUser);
-	socket.on(authorProfile.setProfileImageOfAuthorKey, authorProfile.setProfileImageOfAuthor);
-	socket.on(authorProfile.getProfileImageOfAuthorKey, authorProfile.getProfileImageOfAuthor);
-	socket.on(authorBookPage.getStoreBookKey, authorBookPage.getStoreBook);
-	socket.on(authorBookPage.updateStoreBookKey, authorBookPage.updateStoreBook);
-	socket.on(authorBookPage.getStoreBookCoverKey, authorBookPage.getStoreBookCover);
-	socket.on(authorBookPage.setStoreBookCoverKey, authorBookPage.setStoreBookCover);
-	socket.on(authorBookPage.setStoreBookFileKey, authorBookPage.setStoreBookFile);
-	socket.on(authorCollectionPage.getStoreBookCollectionKey, authorCollectionPage.getStoreBookCollection);
-	socket.on(authorCollectionPage.setStoreBookCollectionNameKey, authorCollectionPage.setStoreBookCollectionName);
-	socket.on(authorCollectionPage.createStoreBookKey, authorCollectionPage.createStoreBook);
+	for(let name in author.sockets) socket.on(name, author.sockets[name]);
+	for(let name in authorBio.sockets) socket.on(name, authorBio.sockets[name]);
+	for(let name in authorProfileImage.sockets) socket.on(name, authorProfileImage.sockets[name]);
+	for(let name in storeBookCollection.sockets) socket.on(name, storeBookCollection.sockets[name]);
+	for(let name in storeBookCollectionName.sockets) socket.on(name, storeBookCollectionName.sockets[name]);
+	for(let name in storeBook.sockets) socket.on(name, storeBook.sockets[name]);
+	for(let name in storeBookCover.sockets) socket.on(name, storeBookCover.sockets[name]);
+	for(let name in storeBookFile.sockets) socket.on(name, storeBookFile.sockets[name]);
+	for(let name in misc.sockets) socket.on(name, misc.sockets[name]);
 }
 
 export function emit(key: string, message: any){
