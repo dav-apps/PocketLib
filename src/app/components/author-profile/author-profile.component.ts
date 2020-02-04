@@ -2,7 +2,14 @@ import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, FindAppropriateLanguage, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
+import {
+	DataService,
+	ApiResponse,
+	FindAppropriateLanguage,
+	GetContentAsInlineSource,
+	Author,
+	AuthorMode
+} from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -65,7 +72,7 @@ export class AuthorProfileComponent{
 		this.setSize();
 		await this.dataService.userAuthorPromise;
 
-		// Find the correct author mode
+		// Determine the author mode
 		if(!this.uuid){
 			this.authorMode = AuthorMode.AuthorOfUser;
 		}else if(
@@ -419,10 +426,4 @@ enum BioMode{
 	New = 1,			// If the author has selected a language to add, show the input for creating a bio
 	Normal = 2,		// If the author has one or more bios, show the selected bio
 	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
-}
-
-enum AuthorMode{
-	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
-	AuthorOfUser = 1,	// If the author belongs to the user
-	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
 }

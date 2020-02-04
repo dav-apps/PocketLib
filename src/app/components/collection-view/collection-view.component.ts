@@ -3,7 +3,13 @@ import { Router } from '@angular/router';
 import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
-import { DataService, ApiResponse, FindAppropriateLanguage, GetContentAsInlineSource } from 'src/app/services/data-service';
+import {
+	DataService,
+	ApiResponse,
+	FindAppropriateLanguage,
+	GetContentAsInlineSource,
+	AuthorMode
+} from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -19,6 +25,7 @@ export class CollectionViewComponent{
 	@ViewChild(EditCollectionNamesComponent, {static: true})
 	private editCollectionNamesComponent: EditCollectionNamesComponent;
 	@Input() uuid: string;
+	authorMode: AuthorMode = AuthorMode.Normal;
 	collectionName: {name: string, language: string} = {name: "", language: ""};
 	collection: {
 		uuid: string,
@@ -42,6 +49,8 @@ export class CollectionViewComponent{
 	collectionNamesDialogVisible: boolean = false;
 	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
 	showAddLanguageButton: boolean = false;
+	getCollectionPromise: Promise<null> = new Promise((resolve) => this.getCollectionPromiseResolve = resolve);
+	getCollectionPromiseResolve: Function;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -77,16 +86,26 @@ export class CollectionViewComponent{
 		await this.dataService.userAuthorPromise;
 		await this.dataService.adminAuthorsPromise;
 
-		// Redirect back to the author page if the user is not an author or an admin
-		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
-			this.router.navigate(['author']);
-		}
-
 		// Get the collection
 		this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid
 		});
+
+		await this.getCollectionPromise;
+
+		// Determine the author mode
+		if(
+			this.dataService.userIsAdmin &&
+			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.collection.author) != -1)
+		){
+			this.authorMode = AuthorMode.AuthorOfAdmin;
+		}else if(
+			this.dataService.userAuthor &&
+			this.collection.author == this.dataService.userAuthor.uuid
+		){
+			this.authorMode = AuthorMode.AuthorOfUser;
+		}
 	}
 
 	ngOnDestroy(){
@@ -218,6 +237,8 @@ export class CollectionViewComponent{
 					}
 				}
 			}
+
+			this.getCollectionPromiseResolve();
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(["author"]);

@@ -184,6 +184,12 @@ export interface Author{
 	profileImage: boolean;
 }
 
+export enum AuthorMode{
+	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
+	AuthorOfUser = 1,	// If the author belongs to the user
+	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
+}
+
 export function FindElement(currentElement: Element, tagName: string) : Element{
 	if(currentElement.tagName.toLowerCase() == tagName) return currentElement;
 
