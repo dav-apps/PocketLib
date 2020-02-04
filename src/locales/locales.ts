@@ -187,6 +187,7 @@ const enDefaults = {
 		collectionNamesDialog: {
 			title: "Collection name"
 		},
+		noBooks: "This collection contains no books",
 		add: "Add",
 		close: "Close",
 		cancel: "Cancel",
@@ -394,6 +395,7 @@ const deDefaults = {
 		collectionNamesDialog: {
 			title: "Name der Sammlung"
 		},
+		noBooks: "Diese Sammlung enthält keine Bücher",
 		add: "Hinzufügen",
 		close: "Schließen",
 		cancel: "Abbrechen",

@@ -12,16 +12,25 @@
 			<button type="button" 
 					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 					style="height: 35px; padding: 3px 6px; font-size: 18px"
-					(click)="ShowCollectionNamesDialog()">
+					(click)="ShowCollectionNamesDialog()"
+					*ngIf="authorMode != 0">
 				<fab-icon iconName="Edit"></fab-icon>
 			</button>
 		</div>
 	</div>
 
+	<p
+		class="font-weight-light text-center mt-3 text-color"
+		style="font-size: 18px; font-family: 'Segoe UI'"
+		*ngIf="authorMode == 0 && collection.books.length == 0">
+		{{ locale.noBooks }}
+	</p>
+
 	<div
 		class="card mb-3 mx-auto shadow-sm cursor"
 		style="width: 200px"
-		(click)="ShowCreateBookDialog()">
+		(click)="ShowCreateBookDialog()"
+		*ngIf="authorMode != 0">
 		<div class="card-body d-flex justify-content-center align-items-center">
 			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 22px"></i>
 		</div>
