@@ -34,7 +34,8 @@
 				<fab-primary-button 
 					ngxFilePicker
 					accept="image/png,image/jpeg"
-					(filePick)="CoverUpload($event)">
+					(filePick)="CoverUpload($event)"
+					*ngIf="book.status == 0 || book.status == 1">
 					{{ locale.uploadCover }}
 				</fab-primary-button>
 			</div>
@@ -68,7 +69,7 @@
 			</div>
 	
 			<div class="d-flex" style="grid-column: 2; grid-row: 3">
-				<fab-dropdown [selectedKey]="languageSelectedKey" (onChange)="SetLanguage($event)">
+				<fab-dropdown [selectedKey]="languageSelectedKey" [disabled]="book.status == 2 || book.status == 3" (onChange)="SetLanguage($event)">
 					<options>
 						<fab-dropdown-option optionKey="en" [text]="locale.languages.en"></fab-dropdown-option>
 						<fab-dropdown-option optionKey="de" [text]="locale.languages.de"></fab-dropdown-option>
@@ -88,9 +89,32 @@
 				<fab-primary-button
 					ngxFilePicker
 					accept="application/epub+zip,application/pdf"
-					(filePick)="BookFileUpload($event)">
+					(filePick)="BookFileUpload($event)"
+					*ngIf="book.status == 0 || book.status == 1">
 					{{ locale.uploadBookFile }}
 				</fab-primary-button>
+			</div>
+
+			<!-- Status -->
+			<div style="grid-column: 1; grid-row: 5;">
+				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.status }}: </p>
+			</div>
+
+			<div style="grid-column: 2; grid-row: 5;">
+				<div *ngIf="book.status == 0 || book.status == 3">
+					<p>{{ locale.unpublished }}</p>
+					<fab-primary-button (click)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
+				</div>
+
+				<div *ngIf="book.status == 1">
+					<p>{{ locale.inReview }}</p>
+					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+				</div>
+
+				<div *ngIf="book.status == 2">
+					<p>{{	locale.published }}</p>
+					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+				</div>
 			</div>
 		</div>
 	</div>

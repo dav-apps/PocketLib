@@ -19,7 +19,7 @@ export class AuthorBookPageComponent{
 	setStoreBookFileSubscriptionKey: number;
 
 	uuid: string;
-	book: {collection: string, title: string, description: string} = {collection: "", title: "", description: ""}
+	book: {collection: string, title: string, description: string, status: BookStatus} = {collection: "", title: "", description: "", status: BookStatus.Unpublished}
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
@@ -31,6 +31,7 @@ export class AuthorBookPageComponent{
 	coverContent: string;
 	uploadedCoverContent: string;
 	bookFileUploaded: boolean = false;
+	publishingOrUnpublishing: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -209,11 +210,23 @@ export class AuthorBookPageComponent{
 		});
 	}
 
+	PublishOrUnpublishBook(published: boolean){
+		this.publishingOrUnpublishing = true;
+
+		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			published: published
+		});
+	}
+
 	GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
+			this.book.status = this.GetBookStatusByString(response.data.status);
+			
 			this.languageSelectedKey = response.data.language;
 
 			if(response.data.cover){
@@ -260,6 +273,12 @@ export class AuthorBookPageComponent{
 			if(response.status == 200){
 				this.languageSelectedKey = response.data.language;
 			}
+		}else if(this.publishingOrUnpublishing){
+			this.publishingOrUnpublishing = false;
+			
+			if(response.status == 200){
+				this.book.status = this.GetBookStatusByString(response.data.status);
+			}
 		}else{
 			// The title was updated
 			if(response.status == 200){
@@ -302,4 +321,24 @@ export class AuthorBookPageComponent{
 	SetStoreBookFileResponse(response: ApiResponse){
 		this.bookFileUploaded = response.status == 200;
 	}
+
+	GetBookStatusByString(status: string) : BookStatus{
+		switch(status){
+			case "published":
+				return BookStatus.Published;
+			case "review":
+				return BookStatus.Review;
+			case "hidden":
+				return BookStatus.Hidden;
+			default:
+				return BookStatus.Unpublished;
+		}
+	}
+}
+
+enum BookStatus{
+	Unpublished = 0,
+	Review = 1,
+	Published = 2,
+	Hidden = 3
 }
