@@ -27,7 +27,7 @@
 	</p>
 
 	<div
-		class="card mb-3 mx-auto shadow-sm cursor"
+		class="card mb-3 mx-auto shadow-sm cursor theme-background-color-secondary"
 		style="width: 200px"
 		(click)="ShowCreateBookDialog()"
 		*ngIf="authorMode != 0">
@@ -37,7 +37,7 @@
 	</div>
 
 	<div 
-		class="card mb-3 mx-auto shadow-sm cursor" 
+		class="card mb-3 mx-auto shadow-sm cursor theme-background-color-secondary text-color" 
 		style="max-width: 500px" 
 		*ngFor="let book of collection.books"
 		(click)="ShowBook(book.uuid)">

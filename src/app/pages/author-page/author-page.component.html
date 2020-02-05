@@ -12,15 +12,15 @@
 </pocketlib-author-profile>
 
 <div class="container text-center ms-motion-slideUpIn" *ngIf="dataService.userIsAdmin && !uuid">
-	<h1 class="font-weight-light mt-3 mb-4">{{ locale.yourAuthors }}</h1>
+	<h1 class="font-weight-light mt-3 mb-4 text-color">{{ locale.yourAuthors }}</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor">
+		<p class="list-group-item cursor theme-background-color-secondary">
 			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
 		</p>
 
 		<p 
-			class="list-group-item cursor" 
+			class="list-group-item cursor theme-background-color-secondary text-color" 
 			style="font-size: 18px"
 			(click)="ShowAuthor(author.uuid)"
 			*ngFor="let author of dataService.adminAuthors">

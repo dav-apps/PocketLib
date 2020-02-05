@@ -204,7 +204,7 @@ export class CollectionViewComponent{
 
 			for(let book of this.collection.books){
 				// Set the default cover
-				book.coverContent = '/assets/images/placeholder.png';
+				book.coverContent = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
 
 				if(book.cover){
 					// Add the cover to the downloads

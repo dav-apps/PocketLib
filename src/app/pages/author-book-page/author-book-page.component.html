@@ -22,11 +22,11 @@
 		<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
 			<!-- Cover -->
 			<div style="grid-column: 1; grid-row: 1;">
-				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.cover }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
 			</div>
 	
 			<div style="grid-column: 2; grid-row: 1;">
-				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
 					<img [src]="coverContent" height="200" />
 				</div>
@@ -42,12 +42,12 @@
 	
 			<!-- Description -->
 			<div style="grid-column: 1; grid-row: 2;">
-				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.description }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
 	
 			<div style="grid-column: 2; grid-row: 2; min-width: 300px">
-				<p style="margin-top: 3px" *ngIf="book.description && !editDescription">{{ book.description }}</p>
-				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+				<p class="text-color" style="margin-top: 3px" *ngIf="book.description && !editDescription">{{ book.description }}</p>
+				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 	
 				<fab-text-field 
 					[styles]="descriptionTextfieldStyles"
@@ -65,7 +65,7 @@
 	
 			<!-- Language -->
 			<div style="grid-column: 1; grid-row: 3;">
-				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.language }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
 			</div>
 	
 			<div class="d-flex" style="grid-column: 2; grid-row: 3">
@@ -79,12 +79,12 @@
 
 			<!-- Book file -->
 			<div style="grid-column: 1; grid-row: 4;">
-				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.bookFile }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
 			<div style="grid-column: 2; grid-row: 4;">
-				<p class="font-weight-light font-italic" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
-				<p class="font-weight-light" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
+				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
+				<p class="font-weight-light text-color" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
 
 				<fab-primary-button
 					ngxFilePicker
@@ -97,22 +97,22 @@
 
 			<!-- Status -->
 			<div style="grid-column: 1; grid-row: 5;">
-				<p class="mr-3 font-weight-light" style="font-size: 19px">{{ locale.status }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
 			<div style="grid-column: 2; grid-row: 5;">
 				<div *ngIf="book.status == 0 || book.status == 3">
-					<p>{{ locale.unpublished }}</p>
+					<p class="text-color">{{ locale.unpublished }}</p>
 					<fab-primary-button (click)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
 				</div>
 
 				<div *ngIf="book.status == 1">
-					<p>{{ locale.inReview }}</p>
+					<p class="text-color">{{ locale.inReview }}</p>
 					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
 				</div>
 
 				<div *ngIf="book.status == 2">
-					<p>{{	locale.published }}</p>
+					<p class="text-color">{{ locale.published }}</p>
 					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
 				</div>
 			</div>
