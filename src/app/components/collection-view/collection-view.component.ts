@@ -251,8 +251,6 @@ export class CollectionViewComponent{
 
 	CreateStoreBookResponse(response: ApiResponse){
 		if(response.status == 201){
-			// Add the new book to the books in DataService
-			//this.dataService.userAuthor.books.push({uuid: response.data.uuid, title: response.data.title});
 			this.createBookDialogVisible = false;
 
 			// Redirect to AuthorAppPage

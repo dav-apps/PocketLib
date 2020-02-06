@@ -15,7 +15,7 @@
 	<h1 class="font-weight-light mt-3 mb-4 text-color">{{ locale.yourAuthors }}</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor theme-background-color-secondary">
+		<p class="list-group-item cursor theme-background-color-secondary" (click)="ShowCreateAuthorDialog()">
 			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
 		</p>
 
@@ -28,3 +28,34 @@
 		</p>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!createAuthorDialogVisible"
+	[dialogContentProps]="createAuthorDialogContentProps"
+	(onDismiss)="createAuthorDialogVisible = false">
+
+	<!-- First name -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="createAuthorDialogFirstName"
+			[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
+			[placeholder]="locale.createAuthorDialog.firstNameTextfieldPlaceholder"
+			[errorMessage]="createAuthorDialogFirstNameError">
+		</fab-text-field>
+	</div>
+
+	<!-- Last name -->
+	<div class="mb-4">
+		<fab-text-field
+		 [(value)]="createAuthorDialogLastName"
+		 [label]="locale.createAuthorDialog.lastNameTextfieldLabel"
+		 [placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
+		 [errorMessage]="createAuthorDialogLastNameError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="createAuthorDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateAuthor()">{{ locale.create }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

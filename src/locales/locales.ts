@@ -47,7 +47,23 @@ const enDefaults = {
       landingSubheader1: "Put your book into the PocketLib BookStore",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
-		yourAuthors: "Your authors"
+		yourAuthors: "Your authors",
+		createAuthorDialog: {
+			title: "Create author",
+			firstNameTextfieldLabel: "First name",
+			firstNameTextfieldPlaceholder: "The first name of the author",
+			lastNameTextfieldLabel: "Last name",
+			lastNameTextfieldPlaceholder: "The last name of the author",
+			errors: {
+				firstNameTooShort: "The first name is too short",
+				lastNameTooShort: "The last name is too short",
+				firstNameTooLong: "The first name is too long",
+				lastNameTooLong: "The last name is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
+		cancel: "Cancel",
+		create: "Create"
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
@@ -261,7 +277,23 @@ const deDefaults = {
       landingSubheader1: "Setze dein Buch in den PocketLib Bücherladen",
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
-		yourAuthors: "Deine Autoren"
+		yourAuthors: "Deine Autoren",
+		createAuthorDialog: {
+			title: "Autor erstellen",
+			firstNameTextfieldLabel: "Vorname",
+			firstNameTextfieldPlaceholder: "Der Vorname des Autors",
+			lastNameTextfieldLabel: "Nachname",
+			lastNameTextfieldPlaceholder: "Der Nachname des Autors",
+			errors: {
+				firstNameTooShort: "Der Vorname ist zu kurz",
+				lastNameTooShort: "Der Nachname ist zu kurz",
+				firstNameTooLong: "Der Vorname ist zu lang",
+				lastNameTooLong: "Der Nachname ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
+		cancel: "Abbrechen",
+		create: "Erstellen"
 	},
 	authorSetupPage: {
 		title: "Erstelle dein Autoren-Profil",
