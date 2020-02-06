@@ -16,6 +16,7 @@ import { LoadingPageComponent } from './pages/loading-page/loading-page.componen
 import { StorePageComponent } from './pages/store-page/store-page.component';
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
 import { StoreCollectionPageComponent } from './pages/store-collection-page/store-collection-page.component';
+import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -35,7 +36,8 @@ const routes: Routes = [
 	{ path: "loading", component: LoadingPageComponent },
 	{ path: "store", component: StorePageComponent },
 	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
-	{ path: "store/collection/:uuid", component: StoreCollectionPageComponent }
+	{ path: "store/collection/:uuid", component: StoreCollectionPageComponent },
+	{ path: "store/book/:uuid", component: StoreBookPageComponent }
 ]
 
 @NgModule({

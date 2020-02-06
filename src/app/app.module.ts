@@ -64,6 +64,7 @@ import { LoadingPageComponent } from './pages/loading-page/loading-page.componen
 import { StorePageComponent } from './pages/store-page/store-page.component';
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
 import { StoreCollectionPageComponent } from './pages/store-collection-page/store-collection-page.component';
+import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.component';
 
 @NgModule({
    declarations: [
@@ -94,7 +95,8 @@ import { StoreCollectionPageComponent } from './pages/store-collection-page/stor
 		LoadingPageComponent,
 		StorePageComponent,
 		StoreAuthorPageComponent,
-		StoreCollectionPageComponent
+		StoreCollectionPageComponent,
+		StoreBookPageComponent
   	],
   	imports: [
    	AngularReactBrowserModule,
