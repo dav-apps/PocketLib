@@ -46,6 +46,10 @@
 			<h3 class="font-weight-light mt-md-5 mb-3 mb-md-4 text-color">{{ locale.yourCollections }}</h3>
 
 			<div class="list-group" style="display: inline-block">
+				<p class="list-group-item cursor theme-background-color-secondary" (click)="ShowCreateCollectionDialog()" *ngIf="authorMode != 0">
+					<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
+				</p>
+
 				<p 
 					class="list-group-item cursor theme-background-color-secondary text-color" 
 					style="font-size: 18px"
@@ -55,3 +59,24 @@
 		</div>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!createCollectionDialogVisible"
+	[dialogContentProps]="createCollectionDialogContentProps"
+	(onDismiss)="createCollectionDialogVisible = false">
+
+	<!-- Name -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="createCollectionDialogName"
+			[label]="locale.createCollectionDialog.nameTextfieldLabel"
+			[placeholder]="locale.createCollectionDialog.nameTextfieldPlaceholder"
+			[errorMessage]="createCollectionDialogNameError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="createCollectionDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="cancelButtonStyles" (click)="CreateCollection()">{{ locale.create }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

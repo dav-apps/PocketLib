@@ -1,6 +1,6 @@
 import { Component, HostListener, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { IDropdownOption, DropdownMenuItemType, IButtonStyles } from 'office-ui-fabric-react';
+import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import {
 	DataService,
@@ -26,6 +26,7 @@ export class AuthorProfileComponent{
 	getProfileImageOfAuthorOfUserSubscriptionKey: number;
 	setProfileImageOfAuthorSubscriptionKey: number;
 	getProfileImageOfAuthorSubscriptionKey: number;
+	createStoreBookCollectionSubscriptionKey: number;
 
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
@@ -41,6 +42,9 @@ export class AuthorProfileComponent{
 	uploadedProfileImageContent: string;
 	getAuthorPromise: Promise<null> = new Promise((resolve) => this.getAuthorPromiseResolve = resolve);
 	getAuthorPromiseResolve: Function;
+	createCollectionDialogVisible: boolean = false;
+	createCollectionDialogName: string = "";
+	createCollectionDialogNameError: string = "";
 
 	bioTextfieldStyles = {
 		root: {
@@ -51,6 +55,9 @@ export class AuthorProfileComponent{
 		root: {
 			marginLeft: 10
 		}
+	}
+	createCollectionDialogContentProps: IDialogContentProps = {
+		title: this.locale.createCollectionDialog.title
 	}
 
 	constructor(
@@ -66,6 +73,7 @@ export class AuthorProfileComponent{
 		this.getProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
 		this.setProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthor, (response: ApiResponse) => this.SetProfileImageOfAuthorResponse(response));
 		this.getProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthor, (response: ApiResponse) => this.GetProfileImageOfAuthorResponse(response));
+		this.createStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBookCollection, (response: ApiResponse) => this.CreateStoreBookCollectionResponse(response));
 	}
 
 	async ngOnInit(){
@@ -314,6 +322,25 @@ export class AuthorProfileComponent{
 		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
 	}
 
+	ShowCreateCollectionDialog(){
+		this.createCollectionDialogName = "";
+		this.createCollectionDialogNameError = "";
+
+		this.createCollectionDialogContentProps.title = this.locale.createCollectionDialog.title;
+		this.createCollectionDialogVisible = true;
+	}
+
+	CreateCollection(){
+		this.createCollectionDialogNameError = "";
+
+		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBookCollection, {
+			jwt: this.dataService.user.JWT,
+			author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
+			name: this.createCollectionDialogName,
+			language: this.dataService.locale.slice(0, 2)
+		});
+	}
+
 	ProcessSetBioResponse(response: ApiResponse){
 		if(response.status == 200){
 			if(this.bioMode == BioMode.New){
@@ -417,6 +444,31 @@ export class AuthorProfileComponent{
 		if(response.status == 200){
 			// Show the profile image
 			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
+	}
+
+	CreateStoreBookCollectionResponse(response: ApiResponse){
+		if(response.status == 201){
+			// Add the collection to the author in DataService
+			this.author.collections.push(response.data)
+			this.collections.push({uuid: response.data.uuid, name: response.data.names[0].name});
+			
+			// Redirect to the collection page
+			this.router.navigate(['author', 'collection', response.data.uuid]);
+		}else{
+			let errorCode = response.data.errors[0].code;
+
+			switch(errorCode){
+				case 2307:	// Name too short
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooShort;
+					break;
+				case 2407:	// Name too long
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooLong;
+					break;
+				default:		// Unexpected error
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.unexpectedError;
+					break;
+			}
 		}
 	}
 }

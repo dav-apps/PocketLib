@@ -185,6 +185,16 @@ const enDefaults = {
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
 		additionalLanguages: "Additional languages",
+		createCollectionDialog: {
+			title: "Create collection",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "The name of the collection",
+			errors: {
+				nameTooShort: "The name is too short",
+				nameTooLong: "The name is too long",
+				unexpectedError: "An unexpected error occured"
+			}
+		},
 		errors: {
 			bioTooShort: "Your biography is too short",
 			bioTooLong: "Your biography is too long",
@@ -192,7 +202,8 @@ const enDefaults = {
 		},
 		edit: "Edit",
 		cancel: "Cancel",
-		save: "Save"
+		save: "Save",
+		create: "Create"
 	},
 	collectionView: {
 		createBookDialog: {
@@ -415,6 +426,16 @@ const deDefaults = {
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
 		additionalLanguages: "Weitere Sprachen",
+		createCollectionDialog: {
+			title: "Sammlung erstellen",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Der Name der Sammlung",
+			errors: {
+				nameTooShort: "Der Name ist zu kurz",
+				nameTooLong: "Der Name ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
 		errors: {
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
@@ -422,7 +443,8 @@ const deDefaults = {
 		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
-		save: "Speichern"
+		save: "Speichern",
+		create: "Erstellen"
 	},
 	collectionView: {
 		createBookDialog: {
