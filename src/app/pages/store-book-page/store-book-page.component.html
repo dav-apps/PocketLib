@@ -1,1 +1,21 @@
-<h1>Hello World</h1>
+<div class="container ms-motion-slideUpIn">
+	<div class="row mt-4">
+		<div class="col-4">
+			<img [src]="coverContent" style="height: 270px; object-fit: cover;" />
+		</div>
+	
+		<div class="col-8">
+			<div class="d-flex my-3">
+				<button
+					type="button" 
+					class="btn mt-1 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;">
+					<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
+				</button>
+				<h2 class="text-center font-weight-light mt-1 ml-3 text-color">{{ book.title }}</h2>
+			</div>
+
+			<p style="white-space: pre-wrap">{{ book.description }}</p>
+		</div>
+	</div>
+</div>

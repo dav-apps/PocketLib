@@ -139,6 +139,9 @@ const enDefaults = {
 			unexpectedErrorLong: "An unexpected error occured. Please try it again."
 		}
 	},
+	storeBookPage: {
+
+	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
 		addLanguageDropdownLabel: "Add language",
@@ -379,6 +382,9 @@ const deDefaults = {
 			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
 			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
+	},
+	storeBookPage: {
+		
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
