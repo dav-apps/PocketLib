@@ -1,10 +1,17 @@
 <mat-toolbar class="bg-primary mat-elevation-z10" [style.display]="dataService.navbarVisible ? '' : 'none'">
    <mat-toolbar-row>
-		<a routerLink="/" 
+		<button mat-icon-button (click)="dataService.sideNavOpened = !dataService.sideNavOpened" *ngIf="showsStore">
+			<i class="material-icons" style="font-size: 25px; color: white">menu</i>
+		</button>
+
+		<a 
+			routerLink="/" 
 			routerLinkActive="active" 
 			[routerLinkActiveOptions]="{exact: true}" 
 			class="nav-link"
-			style="color: white; font-size: 22px">PocketLib</a>
+			style="color: white; font-size: 22px">
+			{{ showsStore ? 'PocketLib Store' : 'PocketLib' }}
+		</a>
 
 		<span style="flex: 1 1 auto"></span>
 

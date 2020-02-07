@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
 import { environment } from 'src/environments/environment';
@@ -15,7 +15,8 @@ const visitEventName = "visit";
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent{
-	getAuthorOfUserSubscriptionKey: number
+	getAuthorOfUserSubscriptionKey: number;
+	showsStore: boolean = false;
 
    constructor(
 		public dataService: DataService,
@@ -31,6 +32,12 @@ export class AppComponent{
                window.location.href = "/";
             }
          }
+		});
+
+		this.router.events.subscribe(event => {
+			if(event instanceof NavigationEnd){
+				this.showsStore = event.url.startsWith('/store');
+			}
 		});
 
 		this.getAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthorOfUser, (response: {status: number, data: any}) => this.GetAuthorOfUserResponse(response));

@@ -33,6 +33,7 @@ export class DataService{
 	adminAuthorsPromiseResolve: Function;
 	userIsAdmin: boolean = false;
 	supportedLanguages: {language: string, fullLanguage: string}[] = [];
+	sideNavOpened: boolean = false;
 
    constructor(){
 		this.user = new DavUser(() => this.userPromiseResolve(this.user));
@@ -190,6 +191,13 @@ export enum AuthorMode{
 	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
 }
 
+export enum BookStatus{
+	Unpublished = 0,
+	Review = 1,
+	Published = 2,
+	Hidden = 3
+}
+
 export function FindElement(currentElement: Element, tagName: string) : Element{
 	if(currentElement.tagName.toLowerCase() == tagName) return currentElement;
 
@@ -234,4 +242,17 @@ export function FindAppropriateLanguage(targetLanguage: string, objects: {langua
 
 export function GetContentAsInlineSource(content: string, contentType: string) : string{
 	return `data:${contentType};base64,${btoa(content)}`;
+}
+
+export function GetBookStatusByString(status: string) : BookStatus{
+	switch(status){
+		case "published":
+			return BookStatus.Published;
+		case "review":
+			return BookStatus.Review;
+		case "hidden":
+			return BookStatus.Hidden;
+		default:
+			return BookStatus.Unpublished;
+	}
 }

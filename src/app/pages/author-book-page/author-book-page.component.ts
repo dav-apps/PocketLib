@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, GetContentAsInlineSource } from 'src/app/services/data-service';
+import { DataService, ApiResponse, GetContentAsInlineSource, BookStatus, GetBookStatusByString } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -225,7 +225,7 @@ export class AuthorBookPageComponent{
 			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
-			this.book.status = this.GetBookStatusByString(response.data.status);
+			this.book.status = GetBookStatusByString(response.data.status);
 			
 			this.languageSelectedKey = response.data.language;
 
@@ -277,7 +277,7 @@ export class AuthorBookPageComponent{
 			this.publishingOrUnpublishing = false;
 			
 			if(response.status == 200){
-				this.book.status = this.GetBookStatusByString(response.data.status);
+				this.book.status = GetBookStatusByString(response.data.status);
 			}
 		}else{
 			// The title was updated
@@ -321,24 +321,4 @@ export class AuthorBookPageComponent{
 	SetStoreBookFileResponse(response: ApiResponse){
 		this.bookFileUploaded = response.status == 200;
 	}
-
-	GetBookStatusByString(status: string) : BookStatus{
-		switch(status){
-			case "published":
-				return BookStatus.Published;
-			case "review":
-				return BookStatus.Review;
-			case "hidden":
-				return BookStatus.Hidden;
-			default:
-				return BookStatus.Unpublished;
-		}
-	}
-}
-
-enum BookStatus{
-	Unpublished = 0,
-	Review = 1,
-	Published = 2,
-	Hidden = 3
 }

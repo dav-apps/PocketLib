@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -109,7 +110,8 @@ import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.
       MatInputModule,
       MatFormFieldModule,
       MatTreeModule,
-      MatProgressSpinnerModule,
+		MatProgressSpinnerModule,
+		MatSidenavModule,
       PortalModule,
 		NgbModule,
 		PdfViewerModule,

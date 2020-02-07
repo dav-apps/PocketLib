@@ -1,1 +1,9 @@
-<h1>Hello World</h1>
+<mat-drawer-container autosize style="background-color: inherit; color: inherit">
+	<mat-drawer #sideNav [mode]="sideNavHidden ? 'over' : 'side'" [(opened)]="dataService.sideNavOpened">
+		<p>Hello World</p>
+	</mat-drawer>
+
+	<div>
+		
+	</div>
+</mat-drawer-container>
