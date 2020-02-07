@@ -34,6 +34,7 @@ export class DataService{
 	userIsAdmin: boolean = false;
 	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 	sideNavOpened: boolean = false;
+	contentHeight: number = 200;
 
    constructor(){
 		this.user = new DavUser(() => this.userPromiseResolve(this.user));

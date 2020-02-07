@@ -34,10 +34,11 @@ const routes: Routes = [
 	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
-	{ path: "store", component: StorePageComponent },
-	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
-	{ path: "store/collection/:uuid", component: StoreCollectionPageComponent },
-	{ path: "store/book/:uuid", component: StoreBookPageComponent }
+	{ path: "store", component: StorePageComponent, children: [
+		{ path: "author/:uuid", component: StoreAuthorPageComponent },
+		{ path: "collection/:uuid", component: StoreCollectionPageComponent },
+		{ path: "book/:uuid", component: StoreBookPageComponent }
+	]}
 ]
 
 @NgModule({

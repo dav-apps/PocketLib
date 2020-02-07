@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
@@ -116,9 +116,23 @@ export class AppComponent{
 		await this.dataService.userPromise;
 		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: this.dataService.user.JWT});
 	}
+
+	ngAfterViewInit(){
+		this.setSize();
+	}
 	
 	ngOnDestroy(){
 		this.websocketService.Unsubscribe(this.getAuthorOfUserSubscriptionKey);
+	}
+
+	@HostListener('window:resize')
+	onResize(){
+		this.setSize();
+	}
+
+	setSize(){
+		let navbarHeight = document.getElementById('navbar').clientHeight;
+		this.dataService.contentHeight = window.innerHeight - navbarHeight;
 	}
 
 	GetAuthorOfUserResponse(response: {status: number, data: any}){
