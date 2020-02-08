@@ -1,18 +1,24 @@
 <div class="container ms-motion-slideUpIn">
-	<div class="row mt-4">
-		<div class="col-4">
-			<img [src]="coverContent" style="height: 270px; object-fit: cover;" />
+	<div class="row mt-5">
+		<div class="col-4 mt-2">
+			<img [src]="coverContent" class="shadow" style="height: 270px; object-fit: cover;" />
+
+			<!-- Author profile image and name -->
+			<div class="d-flex mt-4">
+				<img [src]="authorProfileImageContent" class="rounded-circle shadow-sm cursor" style="width: 30px; height: 30px" (click)="NavigateToAuthor()" />
+				<p class="font-weight-light my-auto cursor" style="font-size: 18px; margin-left: 13px" (click)="NavigateToAuthor()">{{ author.firstName }} {{ author.lastName }}</p>
+			</div>
 		</div>
 	
 		<div class="col-8">
-			<div class="d-flex my-3">
+			<div class="d-flex">
 				<button
 					type="button" 
-					class="btn mt-1 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					class="btn text-color theme-background-color-primary theme-border-color-primary icon-button" 
 					style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;">
 					<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 				</button>
-				<h2 class="text-center font-weight-light mt-1 ml-3 text-color">{{ book.title }}</h2>
+				<h2 class="text-center font-weight-light ml-3 text-color">{{ book.title }}</h2>
 			</div>
 
 			<p style="white-space: pre-wrap">{{ book.description }}</p>

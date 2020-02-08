@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles } from 'office-ui-fabric-react';
-import { DataService, ApiResponse, BookStatus, GetBookStatusByString, GetContentAsInlineSource } from 'src/app/services/data-service';
+import { DataService, ApiResponse, BookStatus, GetBookStatusByString, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -11,12 +11,17 @@ import { enUS } from 'src/locales/locales';
 })
 export class StoreBookPageComponent{
 	locale = enUS.storeBookPage;
+	getAuthorSubscriptionKey: number;
+	getProfileImageOfAuthorSubscriptionKey: number;
+	getStoreBookCollectionSubscriptionKey: number;
 	getStoreBookSubscriptionKey: number;
 	getStoreBookCoverSubscriptionKey: number;
 
 	uuid: string;
-	book: {collection: string, title: string, description: string, status: BookStatus} = {collection: "", title: "", description: "", status: BookStatus.Unpublished}
+	book: {collection: string, title: string, description: string, status: BookStatus} = {collection: "", title: "", description: "", status: BookStatus.Unpublished};
+	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
+	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -27,9 +32,13 @@ export class StoreBookPageComponent{
 	constructor(
 		private dataService: DataService,
 		private websocketService: WebsocketService,
+		private router: Router,
 		private activatedRoute: ActivatedRoute
 	){
 		this.locale = this.dataService.GetLocale().storeBookPage;
+		this.getAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthor, (response: ApiResponse) => this.GetAuthorResponse(response));
+		this.getProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthor, (response: ApiResponse) => this.GetProfileImageOfAuthorResponse(response));
+		this.getStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCollection, (response: ApiResponse) => this.GetStoreBookCollectionResponse(response));
 		this.getStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBook, (response: ApiResponse) => this.GetStoreBookResponse(response));
 		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
 
@@ -54,7 +63,50 @@ export class StoreBookPageComponent{
 	}
 
 	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.getStoreBookSubscriptionKey);
+		this.websocketService.Unsubscribe(
+			this.getAuthorSubscriptionKey,
+			this.getProfileImageOfAuthorSubscriptionKey,
+			this.getStoreBookCollectionSubscriptionKey,
+			this.getStoreBookSubscriptionKey,
+			this.getStoreBookCoverSubscriptionKey
+		)
+	}
+
+	NavigateToAuthor(){
+		this.router.navigate(['store', 'author', this.author.uuid]);
+	}
+
+	GetAuthorResponse(response: ApiResponse){
+		if(response.status == 200){
+			this.author.uuid = response.data.uuid;
+			this.author.firstName = response.data.first_name;
+			this.author.lastName = response.data.last_name;
+			this.author.bios = response.data.bios;
+			this.author.collections = response.data.collections;
+			this.author.profileImage = response.data.profile_image;
+
+			// Get the profile image of the author
+			this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.author.uuid
+			});
+		}
+	}
+
+	GetProfileImageOfAuthorResponse(response: ApiResponse){
+		if(response.status == 200){
+			this.authorProfileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+		}
+	}
+
+	GetStoreBookCollectionResponse(response: ApiResponse){
+		if(response.status == 200){
+			// Get the author
+			this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {
+				jwt: this.dataService.user.JWT,
+				uuid: response.data.author
+			});
+		}
 	}
 
 	GetStoreBookResponse(response: ApiResponse){
@@ -63,6 +115,12 @@ export class StoreBookPageComponent{
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
 			this.book.status = GetBookStatusByString(response.data.status);
+
+			// Get the collection
+			this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
+				jwt: this.dataService.user.JWT,
+				uuid: response.data.collection
+			});
 		}
 	}
 
