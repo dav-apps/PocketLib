@@ -91,17 +91,20 @@ const enDefaults = {
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The title of your book"
 		},
-		description: "Description",
-		descriptionTextfieldPlaceholder: "A short description of your book",
-		noDescription: "No description provided",
-		language: "Language",
-		languages: {
-			en: "English",
-			de: "German"
+		editPriceDialog: {
+			title: "Preis bearbeiten",
+			priceTextfieldLabel: "Price (cent in €)",
+			priceTextfieldPlaceholder: "Price of your book in Euro"
 		},
 		cover: "Cover",
 		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
+		description: "Description",
+		descriptionTextfieldPlaceholder: "A short description of your book",
+		noDescription: "No description provided",
+		language: "Language",
+		price: "Price",
+		free: "Free",
 		bookFile: "Book file",
 		noBookFile: "No book file uploaded",
 		uploadBookFile: "Upload book file",
@@ -120,6 +123,7 @@ const enDefaults = {
 			titleTooLong: "The title is too long",
 			descriptionTooShort: "The description is too short",
 			descriptionTooLong: "The description is too long",
+			priceInvalid: "The price is invalid",
 			unexpectedError: "An unexpected error occured"
 		}
 	},
@@ -335,17 +339,20 @@ const deDefaults = {
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Der Titel deines Buches"
 		},
-		description: "Beschreibung",
-		descriptionTextfieldPlaceholder: "Eine kurze Beschreibung deines Buches",
-		noDescription: "Keine Beschreibung angegeben",
-		language: "Sprache",
-		languages: {
-			en: "Englisch",
-			de: "Deutsch"
+		editPriceDialog: {
+			title: "Preis bearbeiten",
+			priceTextfieldLabel: "Preis (Cent in €)",
+			priceTextfieldPlaceholder: "Preis deines Buches in Euro"
 		},
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
 		uploadCover: "Cover hochladen",
+		description: "Beschreibung",
+		descriptionTextfieldPlaceholder: "Eine kurze Beschreibung deines Buches",
+		noDescription: "Keine Beschreibung angegeben",
+		language: "Sprache",
+		price: "Preis",
+		free: "Kostenlos",
 		bookFile: "Buch-Datei",
 		noBookFile: "Keine Buch-Datei hochgeladen",
 		uploadBookFile: "Buch-Datei hochladen",
@@ -364,6 +371,7 @@ const deDefaults = {
 			titleTooLong: "Der Titel ist zu lang",
 			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
+			priceInvalid: "Der Preis ist ungültig",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		}
 	},

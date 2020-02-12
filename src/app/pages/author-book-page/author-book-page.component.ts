@@ -19,19 +19,23 @@ export class AuthorBookPageComponent{
 	setStoreBookFileSubscriptionKey: number;
 
 	uuid: string;
-	book: {collection: string, title: string, description: string, status: BookStatus} = {collection: "", title: "", description: "", status: BookStatus.Unpublished}
+	book: {collection: string, title: string, description: string, price: number, status: BookStatus} = {collection: "", title: "", description: "", price: 0, status: BookStatus.Unpublished}
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
 	editDescription: boolean = false;
 	newDescription: string = "";
 	newDescriptionError: string = "";
+	languages = enUS.misc.languages;
 	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
 	coverContent: string;
 	uploadedCoverContent: string;
 	bookFileUploaded: boolean = false;
 	publishingOrUnpublishing: boolean = false;
+	editPriceDialogVisible: boolean = false;
+	editPriceDialogPrice: string = "0";
+	editPriceDialogPriceError: string = "";
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -46,6 +50,9 @@ export class AuthorBookPageComponent{
 	editTitleDialogContentProps: IDialogContentProps = {
 		title: this.locale.editTitleDialog.title
 	}
+	editPriceDialogContentProps: IDialogContentProps = {
+		title: this.locale.editPriceDialog.title
+	}
 	descriptionTextfieldStyles = {
 		root: {
 			marginTop: "3px",
@@ -53,7 +60,7 @@ export class AuthorBookPageComponent{
 			minWidth: "300px"
 		}
 	}
-	
+
 	constructor(
 		private dataService: DataService,
 		private websocketService: WebsocketService,
@@ -61,6 +68,7 @@ export class AuthorBookPageComponent{
       private activatedRoute: ActivatedRoute
 	){
 		this.locale = this.dataService.GetLocale().authorBookPage;
+		this.languages = this.dataService.GetLocale().misc.languages;
 		this.getStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBook, (response: ApiResponse) => this.GetStoreBookResponse(response));
 		this.updateStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateStoreBook, (response: ApiResponse) => this.UpdateStoreBookResponse(response));
 		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
@@ -111,11 +119,27 @@ export class AuthorBookPageComponent{
 		this.editTitleDialogVisible = true;
 	}
 
+	ShowEditPriceDialog(){
+		this.editPriceDialogPrice = this.book.price.toString();
+		this.editPriceDialogPriceError = "";
+
+		this.editPriceDialogContentProps.title = this.locale.editPriceDialog.title;
+		this.editPriceDialogVisible = true;
+	}
+
 	UpdateTitle(){
 		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			title: this.editTitleDialogTitle
+		});
+	}
+
+	UpdatePrice(){
+		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			price: parseInt(this.editPriceDialogPrice)
 		});
 	}
 
@@ -225,6 +249,7 @@ export class AuthorBookPageComponent{
 			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
+			this.book.price = response.data.price;
 			this.book.status = GetBookStatusByString(response.data.status);
 			
 			this.languageSelectedKey = response.data.language;
@@ -272,6 +297,23 @@ export class AuthorBookPageComponent{
 
 			if(response.status == 200){
 				this.languageSelectedKey = response.data.language;
+			}
+		}else if(this.editPriceDialogVisible){
+			// The price was updated
+			if(response.status == 200){
+				this.book.price = response.data.price;
+				this.editPriceDialogVisible = false;
+			}else{
+				let errorCode = response.data.errors[0].code;
+
+				switch(errorCode){
+					case 2501:	// Price invalid
+						this.editPriceDialogPriceError = this.locale.errors.priceInvalid;
+						break;
+					default:		// Unexpected error
+						this.editPriceDialogPriceError = this.locale.errors.unexpectedError;
+						break;
+				}
 			}
 		}else if(this.publishingOrUnpublishing){
 			this.publishingOrUnpublishing = false;

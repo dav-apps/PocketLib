@@ -71,18 +71,36 @@
 			<div class="d-flex" style="grid-column: 2; grid-row: 3">
 				<fab-dropdown [selectedKey]="languageSelectedKey" [disabled]="book.status == 2 || book.status == 3" (onChange)="SetLanguage($event)">
 					<options>
-						<fab-dropdown-option optionKey="en" [text]="locale.languages.en"></fab-dropdown-option>
-						<fab-dropdown-option optionKey="de" [text]="locale.languages.de"></fab-dropdown-option>
+						<fab-dropdown-option optionKey="en" [text]="languages.en"></fab-dropdown-option>
+						<fab-dropdown-option optionKey="de" [text]="languages.de"></fab-dropdown-option>
 					</options>
 				</fab-dropdown>
 			</div>
 
+			<!-- Price -->
+			<div style="grid-column: 1; grid-row: 4">
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
+			</div>
+
+			<div style="grid-column: 2; grid-row: 4" class="d-flex">
+				<p style="margin-top: 6px">{{ book.price == 0 ? locale.free : (book.price / 100).toFixed(2) + " €" }}</p>
+
+				<button
+					type="button"
+					class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
+					style="height: 32px; padding: 3px 6px; font-size: 16px"
+					(click)="ShowEditPriceDialog()"
+					*ngIf="book.status == 0 || book.status == 1">
+					<fab-icon iconName="Edit"></fab-icon>
+				</button>
+			</div>
+
 			<!-- Book file -->
-			<div style="grid-column: 1; grid-row: 4;">
+			<div style="grid-column: 1; grid-row: 5;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 4;">
+			<div style="grid-column: 2; grid-row: 5;">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
 
@@ -96,24 +114,24 @@
 			</div>
 
 			<!-- Status -->
-			<div style="grid-column: 1; grid-row: 5;">
+			<div style="grid-column: 1; grid-row: 6;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 5;">
+			<div style="grid-column: 2; grid-row: 6;">
 				<div *ngIf="book.status == 0 || book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
-					<fab-primary-button (click)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
+					<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
 				</div>
 
 				<div *ngIf="book.status == 1">
 					<p class="text-color">{{ locale.inReview }}</p>
-					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+					<fab-primary-button (onClick)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
 				</div>
 
 				<div *ngIf="book.status == 2">
 					<p class="text-color">{{ locale.published }}</p>
-					<fab-primary-button (click)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+					<fab-primary-button (onClick)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
 				</div>
 			</div>
 		</div>
@@ -138,5 +156,29 @@
 	<fab-dialog-footer>
 		<fab-default-button (click)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
 		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
+	[hidden]="!editPriceDialogVisible"
+	[dialogContentProps]="editPriceDialogContentProps"
+	(onDismiss)="editPriceDialogVisible = false">
+
+	<!-- Price -->
+	<div class="mb-4">
+		<fab-text-field
+			type="number"
+			min="0"
+			max="100000"
+			[(value)]="editPriceDialogPrice"
+			[label]="locale.editPriceDialog.priceTextfieldLabel"
+			[placeholder]="locale.editPriceDialog.priceTextfieldPlaceholder"
+			[errorMessage]="editPriceDialogPriceError">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (click)="editPriceDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="UpdatePrice()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>

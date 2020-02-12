@@ -74,6 +74,7 @@ export async function updateStoreBook(message: {
 	title?: string,
 	description?: string,
 	language?: string,
+	price?: number,
 	published?: boolean
 }){
 	var result: {status: number, data: any} = {status: -1, data: {}};
@@ -90,6 +91,7 @@ export async function updateStoreBook(message: {
 				title: message.title,
 				description: message.description,
 				language: message.language,
+				price: message.price,
 				published: message.published
 			}
 		});
