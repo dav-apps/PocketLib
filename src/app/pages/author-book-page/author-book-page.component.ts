@@ -12,12 +12,6 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
-	getStoreBookSubscriptionKey: number;
-	updateStoreBookSubscriptionKey: number;
-	getStoreBookCoverSubscriptionKey: number;
-	setStoreBookCoverSubscriptionKey: number;
-	setStoreBookFileSubscriptionKey: number;
-
 	uuid: string;
 	book: {collection: string, title: string, description: string, price: number, status: BookStatus} = {collection: "", title: "", description: "", price: 0, status: BookStatus.Unpublished}
 	editTitleDialogVisible: boolean = false;
@@ -69,11 +63,6 @@ export class AuthorBookPageComponent{
 	){
 		this.locale = this.dataService.GetLocale().authorBookPage;
 		this.languages = this.dataService.GetLocale().misc.languages;
-		this.getStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBook, (response: ApiResponse) => this.GetStoreBookResponse(response));
-		this.updateStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.UpdateStoreBook, (response: ApiResponse) => this.UpdateStoreBookResponse(response));
-		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
-		this.setStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookCover, (response: ApiResponse) => this.SetStoreBookCoverResponse(response));
-		this.setStoreBookFileSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookFile, (response: ApiResponse) => this.SetStoreBookFileResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -91,19 +80,11 @@ export class AuthorBookPageComponent{
 		}
 
 		// Get the store book
-		this.websocketService.Emit(WebsocketCallbackType.GetStoreBook, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid
-		});
-	}
-
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(
-			this.getStoreBookSubscriptionKey,
-			this.updateStoreBookSubscriptionKey,
-			this.getStoreBookCoverSubscriptionKey,
-			this.setStoreBookCoverSubscriptionKey,
-			this.setStoreBookFileSubscriptionKey
+		this.GetStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.GetStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid
+			})
 		)
 	}
 
@@ -127,32 +108,38 @@ export class AuthorBookPageComponent{
 		this.editPriceDialogVisible = true;
 	}
 
-	UpdateTitle(){
-		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			title: this.editTitleDialogTitle
-		});
+	async UpdateTitle(){
+		this.UpdateStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				title: this.editTitleDialogTitle
+			})
+		)
 	}
 
-	UpdatePrice(){
-		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			price: parseInt(this.editPriceDialogPrice)
-		});
+	async UpdatePrice(){
+		this.UpdateStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				price: parseInt(this.editPriceDialogPrice)
+			})
+		)
 	}
 
-	EditDescription(){
+	async EditDescription(){
 		if(this.editDescription){
 			this.newDescriptionError = "";
 
 			//	Save the new description on the server
-			this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				description: this.newDescription
-			});
+			this.UpdateStoreBookResponse(
+				await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+					jwt: this.dataService.user.JWT,
+					uuid: this.uuid,
+					description: this.newDescription
+				})
+			)
 		}else{
 			this.newDescription = this.book.description ? this.book.description : "";
 			this.newDescriptionError = "";
@@ -160,14 +147,16 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	SetLanguage(e: {event: MouseEvent, option: {key: string, text: string}}){
+	async SetLanguage(e: {event: MouseEvent, option: {key: string, text: string}}){
 		this.updateLanguage = true;
 
-		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			language: e.option.key
-		});
+		this.UpdateStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				language: e.option.key
+			})
+		)
 	}
 
 	async CoverUpload(file: ReadFile){
@@ -203,12 +192,14 @@ export class AuthorBookPageComponent{
 		// TODO: Validate the image dimensions
 
 		// Upload the image
-		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			type: file.type,
-			file: imageContent
-		});
+		this.SetStoreBookCoverResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				type: file.type,
+				file: imageContent
+			})
+		)
 
 		this.uploadedCoverContent = imageSrc;
 	}
@@ -226,25 +217,29 @@ export class AuthorBookPageComponent{
 		let fileContent = await readPromise;
 
 		// Upload the file
-		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookFile, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			type: file.type,
-			file: fileContent
-		});
+		this.SetStoreBookFileResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookFile, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				type: file.type,
+				file: fileContent
+			})
+		)
 	}
 
-	PublishOrUnpublishBook(published: boolean){
+	async PublishOrUnpublishBook(published: boolean){
 		this.publishingOrUnpublishing = true;
 
-		this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			published: published
-		});
+		this.UpdateStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				published: published
+			})
+		)
 	}
 
-	GetStoreBookResponse(response: ApiResponse){
+	async GetStoreBookResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
@@ -256,10 +251,12 @@ export class AuthorBookPageComponent{
 
 			if(response.data.cover){
 				// Download the cover
-				this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {
-					jwt: this.dataService.user.JWT,
-					uuid: this.uuid
-				});
+				this.GetStoreBookCoverResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {
+						jwt: this.dataService.user.JWT,
+						uuid: this.uuid
+					})
+				)
 			}
 
 			this.bookFileUploaded = response.data.file;

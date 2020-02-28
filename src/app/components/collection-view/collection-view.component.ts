@@ -18,10 +18,6 @@ import { enUS } from 'src/locales/locales';
 })
 export class CollectionViewComponent{
 	locale = enUS.collectionView;
-	getStoreBookCollectionSubscriptionKey: number;
-	getStoreBookCoverSubscriptionKey: number;
-	createStoreBookSubscriptionKey: number;
-
 	@ViewChild(EditCollectionNamesComponent, {static: true})
 	private editCollectionNamesComponent: EditCollectionNamesComponent;
 	@Input() uuid: string;
@@ -75,9 +71,6 @@ export class CollectionViewComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().collectionView;
-		this.getStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCollection, (response: ApiResponse) => this.GetStoreBookCollectionResponse(response));
-		this.getStoreBookCoverSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetStoreBookCover, (response: ApiResponse) => this.GetStoreBookCoverResponse(response));
-		this.createStoreBookSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBook, (response: ApiResponse) => this.CreateStoreBookResponse(response));
 	}
 
 	async ngOnInit(){
@@ -87,10 +80,12 @@ export class CollectionViewComponent{
 		await this.dataService.adminAuthorsPromise;
 
 		// Get the collection
-		this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid
-		});
+		this.GetStoreBookCollectionResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid
+			})
+		)
 
 		await this.getCollectionPromise;
 
@@ -106,14 +101,6 @@ export class CollectionViewComponent{
 		){
 			this.authorMode = AuthorMode.AuthorOfUser;
 		}
-	}
-
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(
-			this.getStoreBookCollectionSubscriptionKey,
-			this.getStoreBookCoverSubscriptionKey,
-			this.createStoreBookSubscriptionKey
-		)
 	}
 
 	GoBack(){
@@ -136,15 +123,17 @@ export class CollectionViewComponent{
 		this.createBookDialogVisible = true;
 	}
 
-	CreateBook(){
+	async CreateBook(){
 		this.createBookDialogTitleError = "";
 
-		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
-			jwt: this.dataService.user.JWT,
-			collection: this.uuid,
-			title: this.createBookDialogTitle,
-			language: this.dataService.locale.startsWith("de") ? "de" : "en"
-		});
+		this.CreateStoreBookResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
+				jwt: this.dataService.user.JWT,
+				collection: this.uuid,
+				title: this.createBookDialogTitle,
+				language: this.dataService.locale.startsWith("de") ? "de" : "en"
+			})
+		)
 	}
 
 	ShowCollectionNamesDialog(){
@@ -224,7 +213,9 @@ export class CollectionViewComponent{
 				});
 
 				// Start the cover download
-				this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {jwt: this.dataService.user.JWT, uuid});
+				this.GetStoreBookCoverResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {jwt: this.dataService.user.JWT, uuid})
+				)
 
 				// Wait for the download to finish
 				let coverResponse = await coverDownloadPromise;

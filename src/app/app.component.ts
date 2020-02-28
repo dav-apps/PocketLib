@@ -15,7 +15,6 @@ const visitEventName = "visit";
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent{
-	getAuthorOfUserSubscriptionKey: number;
 	showsStore: boolean = false;
 
    constructor(
@@ -39,8 +38,6 @@ export class AppComponent{
 				this.showsStore = event.url.startsWith('/store');
 			}
 		});
-
-		this.getAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthorOfUser, (response: {status: number, data: any}) => this.GetAuthorOfUserResponse(response));
 	}
 
 	async ngOnInit(){
@@ -114,15 +111,13 @@ export class AppComponent{
 
 		// Load the author
 		await this.dataService.userPromise;
-		this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: this.dataService.user.JWT});
+		this.GetAuthorOfUserResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: this.dataService.user.JWT})
+		)
 	}
 
 	ngAfterViewInit(){
 		this.setSize();
-	}
-	
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.getAuthorOfUserSubscriptionKey);
 	}
 
 	@HostListener('window:resize')

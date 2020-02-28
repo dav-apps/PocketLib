@@ -5,85 +5,75 @@ declare var io: any;
 export class WebsocketService{
 	private socket: any;
 	private subscriptions: WebsocketSubscription[] = [];
-	private counter: number = 0;
 
 	constructor(){
 		this.socket = io();
 		
 		for(let key of Object.keys(Callbacks)){
 			this.socket.on(key, (message: any) => {
-				for(let subscription of this.subscriptions){
-					if(subscription.type == +Callbacks[key]) subscription.callback(message);
+				let i = this.subscriptions.findIndex(s => s.type == Callbacks[key]);
+				if(i != -1){
+					this.subscriptions[i].resolve(message);
+					this.subscriptions.splice(i, 1);
 				}
 			});
 		}
 	}
 
-	Subscribe(type: WebsocketCallbackType, callback: Function) : number{
-		let key = this.counter++;
+	async Emit(type: WebsocketCallbackType, message: any){
+		let key = getKeyByValue(Callbacks, type);
+		if(!key) return;
 
-		this.subscriptions.push({
-			key,
-			type,
-			callback
+		let r: Function;
+		let socketPromise: Promise<any> = new Promise((resolve: Function) => {
+			r = resolve;
 		});
 
-		return key;
-	}
+		this.subscriptions.push({
+			type,
+			resolve: r
+		});
 
-	Unsubscribe(...keys: number[]){
-		for(let key of keys){
-			let i = this.subscriptions.findIndex(c => c.key == key);
-
-			if(i !== -1){
-				this.subscriptions.splice(i, 1);
-			}
-		}
-	}
-
-	Emit(type: WebsocketCallbackType, message: any){
-		let key = getKeyByValue(Callbacks, type);
-
-		if(key) this.socket.emit(key, message);
+		this.socket.emit(key, message);
+		return await socketPromise;
 	}
 }
 
 interface WebsocketSubscription{
-	key: number;
 	type: WebsocketCallbackType;
-	callback: Function;
+	resolve: Function;
 }
 
 export enum WebsocketCallbackType{
 	// Author
-	CreateAuthor = 1,
-	GetAuthorOfUser = 2,
-	GetAuthor = 3,
+	CreateAuthor,
+	GetAuthorOfUser,
+	GetAuthor,
 	// AuthorBio
-	SetBioOfAuthorOfUser = 4,
-	SetBioOfAuthor = 5,
+	SetBioOfAuthorOfUser,
+	SetBioOfAuthor,
 	// AuthorProfileImage
-	SetProfileImageOfAuthorOfUser = 6,
-	GetProfileImageOfAuthorOfUser = 7,
-	SetProfileImageOfAuthor = 8,
-	GetProfileImageOfAuthor = 9,
+	SetProfileImageOfAuthorOfUser,
+	GetProfileImageOfAuthorOfUser,
+	SetProfileImageOfAuthor,
+	GetProfileImageOfAuthor,
 	// StoreBookCollection
-	CreateStoreBookCollection = 10,
-	GetStoreBookCollection = 11,
+	CreateStoreBookCollection,
+	GetStoreBookCollection,
 	// StoreBookCollectionName
-	SetStoreBookCollectionName = 12,
+	SetStoreBookCollectionName,
 	// StoreBook
-	CreateStoreBook = 13,
-	GetStoreBook = 14,
-	UpdateStoreBook = 15,
+	CreateStoreBook,
+	GetStoreBook,
+	UpdateStoreBook,
 	// StoreBookCover
-	SetStoreBookCover = 16,
-	GetStoreBookCover = 17,
+	SetStoreBookCover,
+	GetStoreBookCover,
 	// StoreBookFile
-	SetStoreBookFile = 18,
+	SetStoreBookFile,
 	// Misc
-	Login = 19,
-	GetApp = 20
+	Login,
+	GetApp
 }
 
 export const Callbacks = {

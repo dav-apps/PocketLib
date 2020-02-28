@@ -10,7 +10,6 @@ import { enUS } from 'src/locales/locales';
 })
 export class EditCollectionNamesComponent{
 	locale = enUS.editCollectionNames;
-	setStoreBookCollectionNameSubscriptionKey: number;
 	@Input() collectionNames: CollectionName[] = [];
 	@Input() supportedLanguages: {language: string, fullLanguage: string}[] = [];
 	@Input() uuid: string;
@@ -26,11 +25,6 @@ export class EditCollectionNamesComponent{
 		private websocketService: WebsocketService
 	){
 		this.locale = this.dataService.GetLocale().editCollectionNames;
-		this.setStoreBookCollectionNameSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetStoreBookCollectionName, (response: ApiResponse) => this.SetStoreBookCollectionNameResponse(response));
-	}
-
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.setStoreBookCollectionNameSubscriptionKey);
 	}
 
 	Init(){
@@ -76,12 +70,14 @@ export class EditCollectionNamesComponent{
 		});
 
 		// Update the collection name on the server
-		this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCollectionName, {
-			jwt: this.dataService.user.JWT,
-			uuid: this.uuid,
-			language: collectionName.language,
-			name: collectionName.name
-		});
+		this.SetStoreBookCollectionNameResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCollectionName, {
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				language: collectionName.language,
+				name: collectionName.name
+			})
+		)
 
 		// Wait for the response
 		let setCollectionNameResponse = await setCollectionNamePromise;

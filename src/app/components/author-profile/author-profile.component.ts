@@ -19,15 +19,6 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorProfileComponent{
 	locale = enUS.authorProfile;
-	getAuthorSubscriptionKey: number;
-	setBioOfAuthorOfUserSubscriptionKey: number;
-	setBioOfAuthorSubscriptionKey: number;
-	setProfileImageOfAuthorOfUserSubscriptionKey: number;
-	getProfileImageOfAuthorOfUserSubscriptionKey: number;
-	setProfileImageOfAuthorSubscriptionKey: number;
-	getProfileImageOfAuthorSubscriptionKey: number;
-	createStoreBookCollectionSubscriptionKey: number;
-
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
@@ -66,14 +57,6 @@ export class AuthorProfileComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorProfile;
-		this.getAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetAuthor, (response: ApiResponse) => this.GetAuthorResponse(response));
-		this.setBioOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthorOfUser, (response: ApiResponse) => this.SetBioOfAuthorOfUserResponse(response));
-		this.setBioOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetBioOfAuthor, (response: ApiResponse) => this.SetBioOfAuthorResponse(response));
-		this.setProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.SetProfileImageOfAuthorOfUserResponse(response));
-		this.getProfileImageOfAuthorOfUserSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, (response: ApiResponse) => this.GetProfileImageOfAuthorOfUserResponse(response));
-		this.setProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.SetProfileImageOfAuthor, (response: ApiResponse) => this.SetProfileImageOfAuthorResponse(response));
-		this.getProfileImageOfAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetProfileImageOfAuthor, (response: ApiResponse) => this.GetProfileImageOfAuthorResponse(response));
-		this.createStoreBookCollectionSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateStoreBookCollection, (response: ApiResponse) => this.CreateStoreBookCollectionResponse(response));
 	}
 
 	async ngOnInit(){
@@ -100,7 +83,9 @@ export class AuthorProfileComponent{
 			this.getAuthorPromiseResolve();
 		}else{
 			// Get the author from the server
-			this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid});
+			this.GetAuthorResponse(
+				await this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid})
+			)
 		}
 
 		await this.getAuthorPromise;
@@ -114,29 +99,22 @@ export class AuthorProfileComponent{
 		// Download the profile image
 		if(this.author.profileImage){
 			if(this.authorMode == AuthorMode.AuthorOfUser){
-				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
-					jwt: this.dataService.user.JWT
-				});
+				this.GetProfileImageOfAuthorOfUserResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
+						jwt: this.dataService.user.JWT
+					})
+				)
 			}else{
-				this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
-					jwt: this.dataService.user.JWT,
-					uuid: this.uuid
-				});
+				this.GetProfileImageOfAuthorResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
+						jwt: this.dataService.user.JWT,
+						uuid: this.uuid
+					})
+				)
 			}
 		}
 
 		this.SetupBioLanguageDropdown();
-	}
-
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(
-			this.setBioOfAuthorOfUserSubscriptionKey,
-			this.setBioOfAuthorSubscriptionKey,
-			this.setProfileImageOfAuthorOfUserSubscriptionKey,
-			this.getProfileImageOfAuthorOfUserSubscriptionKey,
-			this.setProfileImageOfAuthorSubscriptionKey,
-			this.getProfileImageOfAuthorSubscriptionKey
-		)
 	}
 
 	@HostListener('window:resize')
@@ -245,7 +223,7 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	EditBio(){
+	async EditBio(){
 		if(this.bioMode == BioMode.New || this.bioMode == BioMode.NormalEdit){
 			this.newBioError = "";
 
@@ -253,18 +231,22 @@ export class AuthorProfileComponent{
 			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
 
 			if(this.authorMode == AuthorMode.AuthorOfUser){
-				this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
-					jwt: this.dataService.user.JWT,
-					language: selectedOption.data.language,
-					bio: this.newBio
-				});
+				this.SetBioOfAuthorOfUserResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
+						jwt: this.dataService.user.JWT,
+						language: selectedOption.data.language,
+						bio: this.newBio
+					})
+				)
 			}else{
-				this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthor, {
-					jwt: this.dataService.user.JWT,
-					uuid: this.uuid,
-					language: selectedOption.data.language,
-					bio: this.newBio
-				});
+				this.SetBioOfAuthorResponse(
+					await this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthor, {
+						jwt: this.dataService.user.JWT,
+						uuid: this.uuid,
+						language: selectedOption.data.language,
+						bio: this.newBio
+					})
+				)
 			}
 		}else{
 			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio;
@@ -305,18 +287,22 @@ export class AuthorProfileComponent{
 
 		// Upload the image
 		if(this.authorMode == AuthorMode.AuthorOfUser){
-			this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
-				jwt: this.dataService.user.JWT,
-				type: file.type,
-				file: imageContent
-			});
+			this.SetProfileImageOfAuthorOfUserResponse(
+				await this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
+					jwt: this.dataService.user.JWT,
+					type: file.type,
+					file: imageContent
+				})
+			)
 		}else{
-			this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthor, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				type: file.type,
-				file: imageContent
-			});
+			this.SetProfileImageOfAuthorResponse(
+				await this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthor, {
+					jwt: this.dataService.user.JWT,
+					uuid: this.uuid,
+					type: file.type,
+					file: imageContent
+				})
+			)
 		}
 
 		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
@@ -330,15 +316,17 @@ export class AuthorProfileComponent{
 		this.createCollectionDialogVisible = true;
 	}
 
-	CreateCollection(){
+	async CreateCollection(){
 		this.createCollectionDialogNameError = "";
 
-		this.websocketService.Emit(WebsocketCallbackType.CreateStoreBookCollection, {
-			jwt: this.dataService.user.JWT,
-			author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
-			name: this.createCollectionDialogName,
-			language: this.dataService.locale.slice(0, 2)
-		});
+		this.CreateStoreBookCollectionResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.CreateStoreBookCollection, {
+				jwt: this.dataService.user.JWT,
+				author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
+				name: this.createCollectionDialogName,
+				language: this.dataService.locale.slice(0, 2)
+			})
+		)
 	}
 
 	ProcessSetBioResponse(response: ApiResponse){

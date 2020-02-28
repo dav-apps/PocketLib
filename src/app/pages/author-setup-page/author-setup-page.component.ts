@@ -11,7 +11,6 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorSetupPageComponent{
 	locale = enUS.authorSetupPage;
-	createAuthorSubscriptionKey: number;
 	firstName: string = "";
 	lastName: string = "";
 	generalError: string = "";
@@ -25,7 +24,6 @@ export class AuthorSetupPageComponent{
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorSetupPage;
-		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: ApiResponse) => this.CreateAuthorResponse(response));
 	}
 
 	async ngOnInit(){
@@ -35,16 +33,14 @@ export class AuthorSetupPageComponent{
 		}
 	}
 
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.createAuthorSubscriptionKey);
-	}
-
 	async Submit(){
-		this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
-			jwt: this.dataService.user.JWT,
-			firstName: this.firstName,
-			lastName: this.lastName
-		});
+		this.CreateAuthorResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
+				jwt: this.dataService.user.JWT,
+				firstName: this.firstName,
+				lastName: this.lastName
+			})
+		)
 
 		this.firstName = "";
 		this.lastName = "";

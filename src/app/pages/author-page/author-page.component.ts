@@ -16,8 +16,6 @@ const navbarHeight: number = 64;
 })
 export class AuthorPageComponent{
 	locale = enUS.authorPage;
-	createAuthorSubscriptionKey: number;
-
    header1Height: number = 600;
 	header1TextMarginTop: number = 200;
 	uuid: string;
@@ -43,7 +41,6 @@ export class AuthorPageComponent{
 		private activatedRoute: ActivatedRoute
    ){
 		this.locale = this.dataService.GetLocale().authorPage;
-		this.createAuthorSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.CreateAuthor, (response: ApiResponse) => this.CreateAuthorResponse(response));
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -51,10 +48,6 @@ export class AuthorPageComponent{
    
    ngOnInit(){
 		this.setSize();
-	}
-
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(this.createAuthorSubscriptionKey);
 	}
 
    @HostListener('window:resize')
@@ -91,15 +84,17 @@ export class AuthorPageComponent{
 		this.createAuthorDialogVisible = true;
 	}
 
-	CreateAuthor(){
+	async CreateAuthor(){
 		this.createAuthorDialogFirstNameError = "";
 		this.createAuthorDialogLastNameError = "";
 
-		this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
-			jwt: this.dataService.user.JWT,
-			firstName: this.createAuthorDialogFirstName,
-			lastName: this.createAuthorDialogLastName
-		});
+		this.CreateAuthorResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
+				jwt: this.dataService.user.JWT,
+				firstName: this.createAuthorDialogFirstName,
+				lastName: this.createAuthorDialogLastName
+			})
+		)
 	}
 
 	CreateAuthorResponse(response: ApiResponse){

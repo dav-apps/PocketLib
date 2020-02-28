@@ -15,8 +15,6 @@ const loginEventName = "login";
 })
 export class LoginPageComponent{
 	locale = enUS.loginPage;
-	loginSubscriptionKey: number;
-	getAppSubscriptionKey: number;
 	email: string = "";
    password: string = "";
    errorMessage: string = "";
@@ -39,15 +37,16 @@ export class LoginPageComponent{
    ){
 		this.dataService.navbarVisible = false;
 		this.locale = this.dataService.GetLocale().loginPage;
-      
+	}
+
+	async ngOnInit(){
 		// Get the app uuid from the params
 		this.appUuid = this.activatedRoute.snapshot.queryParamMap.get('app_uuid');
 
-		this.loginSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.Login, (response: any) => this.LoginResponse(response));
-		this.getAppSubscriptionKey = this.websocketService.Subscribe(WebsocketCallbackType.GetApp, (response: any) => this.GetAppResponse(response));
-
 		if(this.appUuid){
-			this.websocketService.Emit(WebsocketCallbackType.GetApp, {uuid: this.appUuid});
+			this.GetAppResponse(
+				await this.websocketService.Emit(WebsocketCallbackType.GetApp, {uuid: this.appUuid})
+			)
 		}
 	}
 
@@ -59,21 +58,16 @@ export class LoginPageComponent{
 		}, 1);
 	}
 
-	ngOnDestroy(){
-		this.websocketService.Unsubscribe(
-			this.loginSubscriptionKey,
-			this.getAppSubscriptionKey
-		)
-	}
-
-	Login(){
+	async Login(){
 		this.errorMessage = "";
 		this.loginLoading = true;
 
-		this.websocketService.Emit(WebsocketCallbackType.Login, {
-			email: this.email,
-			password: this.password
-		});
+		this.LoginResponse(
+			await this.websocketService.Emit(WebsocketCallbackType.Login, {
+				email: this.email,
+				password: this.password
+			})
+		)
 	}
 
 	async LoginResponse(response: any){
