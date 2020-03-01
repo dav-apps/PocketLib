@@ -71,6 +71,8 @@ export enum WebsocketCallbackType{
 	GetStoreBookCover,
 	// StoreBookFile
 	SetStoreBookFile,
+	// Book
+	CreateBook,
 	// Misc
 	Login,
 	GetApp
@@ -95,6 +97,7 @@ export const Callbacks = {
 	setStoreBookCover: WebsocketCallbackType.SetStoreBookCover,
 	getStoreBookCover: WebsocketCallbackType.GetStoreBookCover,
 	setStoreBookFile: WebsocketCallbackType.SetStoreBookFile,
+	createBook: WebsocketCallbackType.CreateBook,
 	login: WebsocketCallbackType.Login,
 	getApp: WebsocketCallbackType.GetApp
 }

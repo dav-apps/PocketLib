@@ -6,6 +6,7 @@ import * as storeBookCollectionName from './websocket/store-book-collection-name
 import * as storeBook from './websocket/store-book';
 import * as storeBookCover from './websocket/store-book-cover';
 import * as storeBookFile from './websocket/store-book-file';
+import * as book from './websocket/book';
 import * as misc from './websocket/misc';
 
 var socket = null;
@@ -20,6 +21,7 @@ export function init(s: any){
 	for(let name in storeBook.sockets) socket.on(name, storeBook.sockets[name]);
 	for(let name in storeBookCover.sockets) socket.on(name, storeBookCover.sockets[name]);
 	for(let name in storeBookFile.sockets) socket.on(name, storeBookFile.sockets[name]);
+	for(let name in book.sockets) socket.on(name, book.sockets[name]);
 	for(let name in misc.sockets) socket.on(name, misc.sockets[name]);
 }
 
