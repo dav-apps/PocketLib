@@ -30,7 +30,6 @@ export class AuthorProfileComponent{
 	newBioError: string = "";
 	collections: {uuid: string, name: string}[] = [];
 	profileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
-	uploadedProfileImageContent: string;
 	getAuthorPromise: Promise<null> = new Promise((resolve) => this.getAuthorPromiseResolve = resolve);
 	getAuthorPromiseResolve: Function;
 	createCollectionDialogVisible: boolean = false;
@@ -96,6 +95,8 @@ export class AuthorProfileComponent{
 			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
 		}
 
+		this.SetupBioLanguageDropdown();
+
 		// Download the profile image
 		if(this.author.profileImage){
 			if(this.authorMode == AuthorMode.AuthorOfUser){
@@ -113,8 +114,6 @@ export class AuthorProfileComponent{
 				)
 			}
 		}
-
-		this.SetupBioLanguageDropdown();
 	}
 
 	@HostListener('window:resize')
@@ -274,16 +273,16 @@ export class AuthorProfileComponent{
 
 	async UploadProfileImage(file: ReadFile){
 		// Get the content of the image file
-		let reader = new FileReader();
-
 		let readPromise: Promise<string> = new Promise((resolve) => {
-			reader.addEventListener('loadend', (e) => {
-				resolve(e.srcElement["result"]);
+			let reader = new FileReader();
+			reader.addEventListener('loadend', () => {
+				resolve(reader.result as string);
 			});
+			reader.readAsBinaryString(new Blob([file.underlyingFile]));
 		});
 
-		reader.readAsBinaryString(new Blob([file.underlyingFile]));
 		let imageContent = await readPromise;
+		this.profileImageContent = file.content;
 
 		// Upload the image
 		if(this.authorMode == AuthorMode.AuthorOfUser){
@@ -304,8 +303,6 @@ export class AuthorProfileComponent{
 				})
 			)
 		}
-
-		this.uploadedProfileImageContent = GetContentAsInlineSource(imageContent, file.type);
 	}
 
 	ShowCreateCollectionDialog(){
@@ -406,8 +403,6 @@ export class AuthorProfileComponent{
 	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
 		if(response.status == 200){
 			// Show the uploaded profile image
-			this.profileImageContent = this.uploadedProfileImageContent;
-			this.uploadedProfileImageContent = null;
 			this.author.profileImage = true;
 		}
 	}
@@ -422,8 +417,6 @@ export class AuthorProfileComponent{
 	SetProfileImageOfAuthorResponse(response: ApiResponse){
 		if(response.status == 200){
 			// Show the uploaded profile image
-			this.profileImageContent = this.uploadedProfileImageContent;
-			this.uploadedProfileImageContent = null;
 			this.author.profileImage = true;
 		}
 	}

@@ -24,7 +24,6 @@ export class AuthorBookPageComponent{
 	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
 	coverContent: string;
-	uploadedCoverContent: string;
 	bookFileUploaded: boolean = false;
 	publishingOrUnpublishing: boolean = false;
 	editPriceDialogVisible: boolean = false;
@@ -161,15 +160,14 @@ export class AuthorBookPageComponent{
 
 	async CoverUpload(file: ReadFile){
 		// Get the content of the image file
-		let reader = new FileReader();
-
-		let readPromise: Promise<string> = new Promise((resolve) => {
-			reader.addEventListener('loadend', (e) => {
-				resolve(e.srcElement["result"]);
+		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
+			let reader = new FileReader();
+			reader.addEventListener('loadend', () => {
+				resolve(reader.result as ArrayBuffer);
 			});
+			reader.readAsBinaryString(new Blob([file.underlyingFile]));
 		});
 
-		reader.readAsBinaryString(new Blob([file.underlyingFile]));
 		let imageContent = await readPromise;
 
 		let image = new Image();
@@ -184,36 +182,30 @@ export class AuthorBookPageComponent{
 			}
 		});
 
-		let imageSrc = GetContentAsInlineSource(imageContent, file.type);
-
-		image.src = imageSrc;
+		image.src = file.content;
 		await imageLoadPromise;
 
 		// TODO: Validate the image dimensions
+		this.coverContent = file.content;
 
 		// Upload the image
-		this.SetStoreBookCoverResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				type: file.type,
-				file: imageContent
-			})
-		)
-
-		this.uploadedCoverContent = imageSrc;
+		await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			type: file.type,
+			file: imageContent
+		})
 	}
 
 	async BookFileUpload(file: ReadFile){
-		let reader = new FileReader();
-
-		let readPromise: Promise<string> = new Promise((resolve) => {
-			reader.addEventListener('loadend', (e) => {
-				resolve(e.srcElement["result"]);
+		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
+			let reader = new FileReader();
+			reader.addEventListener('loadend', () => {
+				resolve(reader.result as ArrayBuffer);
 			});
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
 		});
 
-		reader.readAsBinaryString(new Blob([file.underlyingFile]));
 		let fileContent = await readPromise;
 
 		// Upload the file
@@ -346,14 +338,6 @@ export class AuthorBookPageComponent{
 	GetStoreBookCoverResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.coverContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
-		}
-	}
-
-	SetStoreBookCoverResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the cover
-			this.coverContent = this.uploadedCoverContent;
-			this.uploadedCoverContent = null;
 		}
 	}
 
