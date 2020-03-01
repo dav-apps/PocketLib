@@ -144,7 +144,7 @@ const enDefaults = {
 		}
 	},
 	storeBookPage: {
-
+		addToLibrary: "Add to your library"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
@@ -392,7 +392,7 @@ const deDefaults = {
 		}
 	},
 	storeBookPage: {
-		
+		addToLibrary: "Zur Bibliothek hinzufügen"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",

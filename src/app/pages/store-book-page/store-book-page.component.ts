@@ -16,6 +16,7 @@ export class StoreBookPageComponent{
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
 	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
+	addToLibraryButtonDisabled: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -57,6 +58,17 @@ export class StoreBookPageComponent{
 
 	NavigateToAuthor(){
 		this.router.navigate(['store', 'author', this.author.uuid]);
+	}
+
+	async AddToLibrary(){
+		let response: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.CreateBook, {
+			jwt: this.dataService.user.JWT,
+			storeBook: this.uuid
+		});
+
+		if(response.status == 201){
+			this.addToLibraryButtonDisabled = true;
+		}
 	}
 
 	async GetAuthorResponse(response: ApiResponse){
