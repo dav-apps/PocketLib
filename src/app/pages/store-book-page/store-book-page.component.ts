@@ -12,7 +12,7 @@ import { enUS } from 'src/locales/locales';
 export class StoreBookPageComponent{
 	locale = enUS.storeBookPage;
 	uuid: string;
-	book: {collection: string, title: string, description: string, status: BookStatus} = {collection: "", title: "", description: "", status: BookStatus.Unpublished};
+	book: {collection: string, title: string, description: string, status: BookStatus, inLibrary: boolean} = {collection: "", title: "", description: "", status: BookStatus.Unpublished, inLibrary: false};
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
 	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
@@ -114,6 +114,9 @@ export class StoreBookPageComponent{
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
 			this.book.status = GetBookStatusByString(response.data.status);
+			this.book.inLibrary = response.data.in_library;
+
+			this.addToLibraryButtonDisabled = this.book.inLibrary;
 
 			// Get the collection
 			this.GetStoreBookCollectionResponse(
