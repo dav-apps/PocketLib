@@ -11,7 +11,7 @@ import { Settings } from '../models/Settings';
 @Injectable()
 export class DataService{
    user: DavUser;
-   locale: string = navigator.language;
+	locale: string = navigator.language;
    navbarVisible: boolean = true;
 	books: Book[] = [];
 	currentBook: Book = null;
@@ -37,7 +37,10 @@ export class DataService{
 	contentHeight: number = 200;
 
    constructor(){
-		this.user = new DavUser(() => this.userPromiseResolve(this.user));
+		this.user = new DavUser(() => {
+			this.userIsAdmin = environment.admins.includes(this.user.Id);
+			this.userPromiseResolve(this.user);
+		});
 
 		// Set the supported languages
 		let languages = this.GetLocale().misc.languages;

@@ -7,5 +7,6 @@ export const environment = {
    bookFileTableId: 15,
    appTableId: 16,
    epubBookmarkTableId: 17,
-   settingsTableId: 18
+	settingsTableId: 18,
+	admins: [1]
 };

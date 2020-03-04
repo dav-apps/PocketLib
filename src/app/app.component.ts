@@ -133,7 +133,6 @@ export class AppComponent{
 	GetAuthorOfUserResponse(response: {status: number, data: any}){
 		if(response.status == 200){
 			if(response.data.authors){
-				this.dataService.userIsAdmin = true;
 				this.dataService.adminAuthors = [];
 
 				for(let author of response.data.authors){
