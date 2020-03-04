@@ -17,7 +17,16 @@ const enDefaults = {
 		storageUsed: "{0} GB of {1} GB used",
 		planFree: "Free",
 		planPlus: "Plus",
-		planPro: "Pro"
+		planPro: "Pro",
+		upgradeTitle: "Change your plan to make PocketLib even better",
+		selectPlan: "Select",
+		upgradeProCard: {
+			plan: "dav Pro",
+			price: "10 € per month",
+			feature1: "Get access to all books in the PocketLib Store",
+			feature2: "Support the authors of the books you read",
+			feature3: "Help us with the development of new apps and features"
+		}
    },
 	settingsPage: {
       title: "Settings",
@@ -273,7 +282,16 @@ const deDefaults = {
 		storageUsed: "{0} GB von {1} GB verwendet",
 		planFree: "Free",
 		planPlus: "Plus",
-		planPro: "Pro"
+		planPro: "Pro",
+		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
+		selectPlan: "Auswählen",
+		upgradeProCard: {
+			plan: "dav Pro",
+			price: "10 € pro Monat",
+			feature1: "Greife auf alle Bücher im PocketLib Store zu",
+			feature2: "Unterstütze die Autoren der Bücher, die du liest",
+			feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen"
+		}
    },
    settingsPage: {
       title: "Einstellungen",

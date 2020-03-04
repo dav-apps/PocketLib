@@ -47,7 +47,11 @@ export class AccountPageComponent{
 
    ShowLogoutModal(){
       this.logoutModalComponent.Show();
-   }
+	}
+	
+	ShowPlansAccountPage(){
+		window.open("https://dav-apps.tech/login?redirect=user%23plans%0A", 'blank');
+	}
 
    Logout(){
       this.dataService.user.Logout().then(() => {

@@ -39,12 +39,14 @@
    <h1 class="text-center font-weight-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
    
    <div class="d-flex justify-content-center">
-      <img class="rounded-circle shadow"
-            [src]="dataService.user.Avatar"
-            [height]="width > 420 ? 150 : 130" [width]="width > 420 ? 150 : 130" />
+		<img
+			class="rounded-circle shadow"
+      	[src]="dataService.user.Avatar"
+			[height]="width > 420 ? 150 : 130"
+			[width]="width > 420 ? 150 : 130" />
 
       <div style="width: 200px;" [style.marginLeft.px]="width > 400 ? 40 : 20">
-         <h4 class="text-color mb-0">{{ dataService.user.Username }}</h4>
+         <h4 class="text-color mb-0"><a class="text-color" href="https://dav-apps.tech/login?redirect=user" target="blank">{{ dataService.user.Username }}</a></h4>
 			<p class="text-muted mb-1">
 				{{ dataService.user.Plan == 0 ? locale.planFree : (dataService.user.Plan == 1 ? locale.planPlus : locale.planPro ) }}
          </p>
@@ -57,6 +59,26 @@
 
          <button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="ShowLogoutModal()">{{ locale.logout }}</button>
       </div>
+	</div>
+
+	<div class="text-color" style="margin-top: 90px" *ngIf="dataService.user.Plan < 2">
+		<h4 class="text-center font-weight-light">{{ locale.upgradeTitle }}</h4>
+
+		<div class="card text-center shadow mx-auto theme-background-color-secondary" style="width: 300px; margin-top: 35px">
+			<div class="card-body">
+				<h4 class="card-title">{{ locale.upgradeProCard.plan }}</h4>
+				<h6 class="card-subtitle text-muted">{{ locale.upgradeProCard.price }}</h6>
+			</div>
+
+			<ul class="list-group">
+            <li class="list-group-item border-left-0 border-right-0 theme-background-color-secondary">{{ locale.upgradeProCard.feature1 }}</li>
+				<li class="list-group-item border-left-0 border-right-0 theme-background-color-secondary">{{ locale.upgradeProCard.feature2 }}</li>
+				<li class="list-group-item border-left-0 border-right-0 theme-background-color-secondary">{{ locale.upgradeProCard.feature3 }}</li>
+				<li class="list-group-item border-left-0 border-right-0 theme-background-color-secondary">
+					<button type="button" class="btn btn-primary" (click)="ShowPlansAccountPage()">{{ locale.selectPlan }}</button>
+				</li>
+			</ul>
+		</div>
 	</div>
 	
 	<pocketlib-logout-modal (logout)="Logout()"></pocketlib-logout-modal>
