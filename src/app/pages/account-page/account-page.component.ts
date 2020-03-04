@@ -12,18 +12,30 @@ import { LogoutModalComponent } from '../../components/logout-modal/logout-modal
 export class AccountPageComponent{
    locale = enUS.accountPage;
 	@ViewChild(LogoutModalComponent, { static: false }) logoutModalComponent: LogoutModalComponent;
-   width: number = window.innerWidth;
+	width: number = window.innerWidth;
+	textMaxWidth: number = 240;
+	textFontSize: number = 21;
 
    constructor(
       public dataService: DataService
    ){
       this.locale = this.dataService.GetLocale().accountPage;
-   }
+	}
+	
+	ngOnInit(){
+		this.setSize();
+	}
 
    @HostListener('window:resize')
    onResize(){
-      this.width = window.innerWidth;
-   }
+      this.setSize();
+	}
+	
+	setSize(){
+		this.width = window.innerWidth;
+		this.textMaxWidth = this.width > 767 ? 240 : null;
+		this.textFontSize = this.width > 550 ? 21 : 19;
+	}
 
    ShowLoginPage(){
       Dav.ShowLoginPage(environment.apiKey, environment.baseUrl);

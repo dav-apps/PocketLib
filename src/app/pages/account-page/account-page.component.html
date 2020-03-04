@@ -3,14 +3,25 @@
 	<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 	<div class="row mt-5">
-		<div class="col-6 col-md-4 offset-md-1 text-center text-color">
-			<i class="ms-Icon ms-Icon--Sync" style="font-size: 60px;" aria-hidden="true"></i>
-			<p class="mt-4" [style.fontSize.px]="width > 550 ? 21 : 19">{{ locale.text2 }}</p>
+		<div class="col-6 col-md-4 text-center text-color">
+			<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
+				<i class="ms-Icon ms-Icon--Sync" style="font-size: 60px" aria-hidden="true"></i>
+				<p class="mt-4" [style.fontSize.px]="textFontSize">{{ locale.text2 }}</p>
+			</div>
 		</div>
 
-		<div class="col-6 col-md-4 offset-md-2 text-center text-color">
-			<i class="ms-Icon ms-Icon--Lock" style="font-size: 60px;" aria-hidden="true"></i>
-			<p class="mt-4" [style.fontSize.px]="width > 550 ? 21 : 19">{{ locale.text3 }}</p>
+		<div class="col-6 col-md-4 text-center text-color">
+			<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
+				<i class="ms-Icon ms-Icon--Shop" style="font-size: 60px" aria-hidden="true"></i>
+				<p class="mt-4" [style.fontSize.px]="textFontSize">{{ locale.text3 }}</p>
+			</div>
+		</div>
+
+		<div class="col-12 col-md-4 text-center text-color">
+			<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
+				<i class="ms-Icon ms-Icon--Lock" style="font-size: 60px" aria-hidden="true"></i>
+				<p class="mt-4" [style.fontSize.px]="textFontSize">{{ locale.text4 }}</p>
+			</div>
 		</div>
 	</div>
 
