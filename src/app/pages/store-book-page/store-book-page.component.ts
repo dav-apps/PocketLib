@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IIconStyles } from 'office-ui-fabric-react';
+import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { DataService, ApiResponse, BookStatus, GetBookStatusByString, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -18,11 +18,20 @@ export class StoreBookPageComponent{
 	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
 	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
 	addToLibraryButtonDisabled: boolean = false;
+	davPlusRequiredDialogVisible: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
          fontSize: 18
 		}
+	}
+	dialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10
+		}
+	}
+	davPlusRequiredDialogContentProps: IDialogContentProps = {
+		title: this.locale.davProRequiredDialog.title
 	}
 
 	constructor(
@@ -63,6 +72,25 @@ export class StoreBookPageComponent{
 	}
 
 	async AddToLibrary(){
+		// Check if the user can add the book to the library
+		let isAuthorOfBook = false;
+		if(this.dataService.userAuthor){
+			// Try to find the book in the books of the author
+			isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1;
+		}
+
+		if(
+			!this.dataService.userIsAdmin && 
+			!isAuthorOfBook &&
+			this.dataService.user.Plan != 2
+		){
+			// Show dav Pro dialog
+			this.davPlusRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title;
+			this.davPlusRequiredDialogVisible = true;
+			return;
+		}
+
+		// Add the StoreBook to the library of the user
 		let response: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.CreateBook, {
 			jwt: this.dataService.user.JWT,
 			storeBook: this.uuid
@@ -74,6 +102,10 @@ export class StoreBookPageComponent{
 			// Show Snackbar
 			this.snackBar.open(this.locale.snackbarMessageAdded, null, {duration: 5000});
 		}
+	}
+
+	NavigateToAccountPage(){
+		this.router.navigate(['account']);
 	}
 
 	async GetAuthorResponse(response: ApiResponse){

@@ -145,7 +145,13 @@ const enDefaults = {
 	},
 	storeBookPage: {
 		addToLibrary: "Add to your library",
-		snackbarMessageAdded: "The book was added to your library"
+		snackbarMessageAdded: "The book was added to your library",
+		davProRequiredDialog: {
+			title: "dav Pro required",
+			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month.",
+			learnMore: "Learn more",
+			back: "Back"
+		}
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
@@ -394,7 +400,13 @@ const deDefaults = {
 	},
 	storeBookPage: {
 		addToLibrary: "Zur Bibliothek hinzufügen",
-		snackbarMessageAdded: "Das Buch wurde zu deiner Bibliothek hinzugefügt"
+		snackbarMessageAdded: "Das Buch wurde zu deiner Bibliothek hinzugefügt",
+		davProRequiredDialog: {
+			title: "dav Pro benötigt",
+			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen.",
+			learnMore: "Mehr erfahren",
+			back: "Zurück"
+		}
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
