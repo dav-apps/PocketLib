@@ -144,7 +144,8 @@ const enDefaults = {
 		}
 	},
 	storeBookPage: {
-		addToLibrary: "Add to your library"
+		addToLibrary: "Add to your library",
+		snackbarMessageAdded: "The book was added to your library"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
@@ -392,7 +393,8 @@ const deDefaults = {
 		}
 	},
 	storeBookPage: {
-		addToLibrary: "Zur Bibliothek hinzufügen"
+		addToLibrary: "Zur Bibliothek hinzufügen",
+		snackbarMessageAdded: "Das Buch wurde zu deiner Bibliothek hinzugefügt"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",

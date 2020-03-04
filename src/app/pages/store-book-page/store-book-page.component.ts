@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { IIconStyles } from 'office-ui-fabric-react';
 import { DataService, ApiResponse, BookStatus, GetBookStatusByString, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
@@ -27,6 +28,7 @@ export class StoreBookPageComponent{
 	constructor(
 		private dataService: DataService,
 		private websocketService: WebsocketService,
+		private snackBar: MatSnackBar,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	){
@@ -68,6 +70,9 @@ export class StoreBookPageComponent{
 
 		if(response.status == 201){
 			this.addToLibraryButtonDisabled = true;
+
+			// Show Snackbar
+			this.snackBar.open(this.locale.snackbarMessageAdded, null, {duration: 5000});
 		}
 	}
 
