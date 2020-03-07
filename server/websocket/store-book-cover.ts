@@ -41,19 +41,24 @@ export async function setStoreBookCover(message: {
 }
 
 export async function getStoreBookCover(message: {
-	jwt: string,
+	jwt?: string,
 	uuid: string
 }){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
 
 	try{
-		var response = await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/store/book/${message.uuid}/cover`,
-			headers: {
+			url: `${process.env.POCKETLIB_API_URL}/store/book/${message.uuid}/cover`
+		}
+
+		if(message.jwt){
+			options.headers = {
 				Authorization: message.jwt
 			}
-		});
+		}
+
+		var response = await axios.default(options);
 
 		result.status = response.status;
 		result.headers = response.headers;

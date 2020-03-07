@@ -41,17 +41,22 @@ export async function setProfileImageOfAuthorOfUser(message: {
 	websocket.emit(setProfileImageOfAuthorOfUser.name, result);
 }
 
-export async function getProfileImageOfAuthorOfUser(message: {jwt: string}){
+export async function getProfileImageOfAuthorOfUser(message: {jwt?: string}){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
 
 	try{
-		var response = await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/author/profile_image`,
-			headers: {
+			url: `${process.env.POCKETLIB_API_URL}/author/profile_image`
+		}
+
+		if(message.jwt){
+			options.headers = {
 				Authorization: message.jwt
 			}
-		});
+		}
+
+		var response = await axios.default(options);
 
 		result.status = response.status;
 		result.headers = response.headers;

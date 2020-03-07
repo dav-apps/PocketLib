@@ -43,17 +43,22 @@ export async function createStoreBook(message: {
 	websocket.emit(createStoreBook.name, result);
 }
 
-export async function getStoreBook(message: {jwt: string, uuid: string}){
+export async function getStoreBook(message: {jwt?: string, uuid: string}){
 	var result: {status: number, data: any} = {status: -1, data: {}};
 
 	try{
-		var response = await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/store/book/${message.uuid}`,
-			headers: {
+			url: `${process.env.POCKETLIB_API_URL}/store/book/${message.uuid}`
+		}
+
+		if(message.jwt){
+			options.headers = {
 				Authorization: message.jwt
 			}
-		});
+		}
+
+		var response = await axios.default(options);
 
 		result.status = response.status;
 		result.data = response.data;
