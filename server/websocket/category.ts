@@ -5,16 +5,13 @@ export const sockets = {
 	getCategories
 }
 
-export async function getCategories(message: {jwt: string}){
+export async function getCategories(){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
 
 	try{
 		var response = await axios.default({
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/store/categories`,
-			headers: {
-				Authorization: message.jwt
-			}
+			url: `${process.env.POCKETLIB_API_URL}/store/categories`
 		});
 
 		result.status = response.status;

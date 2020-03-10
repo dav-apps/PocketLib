@@ -23,8 +23,7 @@ export class StorePageComponent{
 		this.setSize();
 
 		// Get the categories
-		await this.dataService.userPromise;
-		let getCategoriesResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetCategories, {jwt: this.dataService.user.JWT});
+		let getCategoriesResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetCategories, {});
 
 		// Get the names in the appropriate language
 		for(let category of getCategoriesResponse.data.categories){
