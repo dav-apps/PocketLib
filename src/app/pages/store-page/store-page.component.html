@@ -1,6 +1,9 @@
 <mat-drawer-container autosize style="background-color: inherit; color: inherit" [style.minHeight.px]="dataService.contentHeight">
-	<mat-drawer [mode]="sideNavHidden ? 'over' : 'side'" [(opened)]="dataService.sideNavOpened">
-		<p>Hello World</p>
+	<mat-drawer class="shadow-sm" [mode]="sideNavHidden ? 'over' : 'side'" [(opened)]="dataService.sideNavOpened">
+		<mat-nav-list>
+			<h3 matSubheader>{{ locale.categories }}</h3>
+			<mat-list-item *ngFor="let category of categories" (click)="ShowCategory(category.key)">{{ category.name }}</mat-list-item>
+		</mat-nav-list>
 	</mat-drawer>
 
 	<router-outlet></router-outlet>

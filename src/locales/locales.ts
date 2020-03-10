@@ -153,6 +153,9 @@ const enDefaults = {
 			unexpectedErrorLong: "An unexpected error occured. Please try it again."
 		}
 	},
+	storePage: {
+		categories: "Categories"
+	},
 	storeBookPage: {
 		addToLibrary: "Add to your library",
 		snackbarMessageAdded: "The book was added to your library",
@@ -417,6 +420,9 @@ const deDefaults = {
 			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
 			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
+	},
+	storePage: {
+		categories: "Kategorien"
 	},
 	storeBookPage: {
 		addToLibrary: "Zur Bibliothek hinzufügen",
