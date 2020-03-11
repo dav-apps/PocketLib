@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService, ApiResponse, FindAppropriateLanguage } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -14,7 +15,8 @@ export class StorePageComponent{
 	
 	constructor(
 		public dataService: DataService,
-		private websocketService: WebsocketService
+		private websocketService: WebsocketService,
+		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().storePage;
 	}
@@ -51,6 +53,6 @@ export class StorePageComponent{
 	}
 
 	ShowCategory(key: string){
-		
+		this.router.navigate(["store", "books", key]);
 	}
 }

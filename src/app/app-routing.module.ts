@@ -17,6 +17,7 @@ import { StorePageComponent } from './pages/store-page/store-page.component';
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
 import { StoreCollectionPageComponent } from './pages/store-collection-page/store-collection-page.component';
 import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.component';
+import { StoreBooksPageComponent } from './pages/store-books-page/store-books-page.component';
 
 const routes: Routes = [
    { path: "", component: LibraryPageComponent },
@@ -37,7 +38,8 @@ const routes: Routes = [
 	{ path: "store", component: StorePageComponent, children: [
 		{ path: "author/:uuid", component: StoreAuthorPageComponent },
 		{ path: "collection/:uuid", component: StoreCollectionPageComponent },
-		{ path: "book/:uuid", component: StoreBookPageComponent }
+		{ path: "book/:uuid", component: StoreBookPageComponent },
+		{ path: "books/:key", component: StoreBooksPageComponent }
 	]}
 ]
 
