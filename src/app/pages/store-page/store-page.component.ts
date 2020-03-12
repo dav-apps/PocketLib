@@ -11,7 +11,6 @@ import { enUS } from 'src/locales/locales';
 export class StorePageComponent{
 	locale = enUS.storePage;
 	sideNavHidden: boolean = false;
-	categories: {key: string, name: string, language: string}[] = [];
 	
 	constructor(
 		public dataService: DataService,
@@ -24,19 +23,23 @@ export class StorePageComponent{
 	async ngOnInit(){
 		this.setSize();
 
-		// Get the categories
-		let getCategoriesResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetCategories, {});
+		if(this.dataService.categories.length == 0){
+			// Get the categories
+			let getCategoriesResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetCategories, {});
 
-		// Get the names in the appropriate language
-		for(let category of getCategoriesResponse.data.categories){
-			let currentLanguageIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), category.names);
-			let currentLanguage = category.names[currentLanguageIndex];
-			
-			this.categories.push({
-				key: category.key,
-				name: currentLanguage.name,
-				language: currentLanguage.language
-			});
+			// Get the names in the appropriate language
+			for(let category of getCategoriesResponse.data.categories){
+				let currentLanguageIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), category.names);
+				let currentLanguage = category.names[currentLanguageIndex];
+				
+				this.dataService.categories.push({
+					key: category.key,
+					name: currentLanguage.name,
+					language: currentLanguage.language
+				});
+			}
+
+			this.dataService.categoriesPromiseResolve();
 		}
 	}
 

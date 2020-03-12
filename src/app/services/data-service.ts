@@ -36,6 +36,9 @@ export class DataService{
 	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 	sideNavOpened: boolean = false;
 	contentHeight: number = 200;
+	categories: Category[] = [];
+	categoriesPromise: Promise<null> = new Promise(resolve => this.categoriesPromiseResolve = resolve);
+	categoriesPromiseResolve: Function;
 
    constructor(){
 		this.user = new DavUser(() => {
@@ -188,6 +191,12 @@ export interface Author{
 	bios: {bio: string, language: string}[];
 	collections: {uuid: string, names: {name: string, language: string}[]}[];
 	profileImage: boolean;
+}
+
+export interface Category{
+	key: string;
+	name: string;
+	language: string;
 }
 
 export enum AuthorMode{

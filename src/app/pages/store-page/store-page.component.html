@@ -8,7 +8,7 @@
 			</h3>
 			<mat-list-item
 				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-				*ngFor="let category of categories"
+				*ngFor="let category of dataService.categories"
 				(click)="ShowCategory(category.key)">
 				{{ category.name }}
 			</mat-list-item>
