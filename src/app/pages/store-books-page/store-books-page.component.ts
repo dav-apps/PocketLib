@@ -15,6 +15,7 @@ export class StoreBooksPageComponent{
 		cover: boolean,
 		coverContent: string
 	}[] = [];
+	hoveredBookIndex: number = -1;
 	
 	constructor(
 		public dataService: DataService,
