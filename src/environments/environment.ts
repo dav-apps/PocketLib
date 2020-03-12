@@ -5,7 +5,8 @@
 export const environment = {
    production: false,
    apiKey: "eUzs3PQZYweXvumcWvagRHjdUroGe5Mo7kN1inHm",
-   baseUrl: "http://localhost:3001",
+	baseUrl: "http://localhost:3001",
+	apiBaseUrl: "http://localhost:3111/v1",
    appId: 6,
 	bookTableId: 14,
    bookFileTableId: 15,

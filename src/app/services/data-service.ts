@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import * as localforage from 'localforage';
+import * as axios from 'axios';
 import { DavUser, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { keys } from 'src/environments/keys';
@@ -259,4 +260,80 @@ export function GetBookStatusByString(status: string) : BookStatus{
 		default:
 			return BookStatus.Unpublished;
 	}
+}
+
+export async function DownloadStoreBookCoverAsBase64(uuid: string, jwt: string){
+	let cover = await DownloadStoreBookCover(uuid, jwt);
+	if(!cover) return null;
+
+	return await GetBlobAsBase64(cover);
+}
+
+export async function DownloadProfileImageOfAuthorAsBase64(uuid: string, jwt: string){
+	let profileImage = await DownloadProfileImageOfAuthor(uuid, jwt);
+	if(!profileImage) return null;
+
+	return await GetBlobAsBase64(profileImage);
+}
+
+export async function DownloadProfileImageOfAuthorOfUserAsBase64(jwt: string){
+	let profileImage = await DownloadProfileImageOfAuthorOfUser(jwt);
+	if(!profileImage) return null;
+
+	return await GetBlobAsBase64(profileImage);
+}
+
+export async function DownloadStoreBookCover(uuid: string, jwt: string) : Promise<Blob>{
+	try{
+		return (await axios.default({
+			method: 'get',
+			url: `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`,
+			headers: {
+				Authorization: jwt
+			},
+			responseType: 'blob'
+		})).data as Blob;
+	}catch(error){
+		return null;
+	}
+}
+
+export async function DownloadProfileImageOfAuthor(uuid: string, jwt: string) : Promise<Blob>{
+	try{
+		return (await axios.default({
+			method: 'get',
+			url: `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`,
+			headers: {
+				Authorization: jwt,
+			},
+			responseType: 'blob'
+		})).data as Blob;
+	}catch(error){
+		return null;
+	}
+}
+
+export async function DownloadProfileImageOfAuthorOfUser(jwt: string) : Promise<Blob>{
+	try{
+		return (await axios.default({
+			method: 'get',
+			url: `${environment.apiBaseUrl}/api/1/call/author/profile_image`,
+			headers: {
+				Authorization: jwt
+			},
+			responseType: 'blob'
+		})).data as Blob;
+	}catch(error){
+		return null;
+	}
+}
+
+export async function GetBlobAsBase64(blob: Blob) : Promise<string>{
+	return new Promise(resolve => {
+		let reader = new FileReader();
+		reader.addEventListener('loadend', () => {
+			resolve(reader.result as string);
+		});
+		reader.readAsDataURL(blob);
+	});
 }
