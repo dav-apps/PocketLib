@@ -2,7 +2,15 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { DataService, ApiResponse, BookStatus, GetBookStatusByString, GetContentAsInlineSource, Author } from 'src/app/services/data-service';
+import {
+	DataService,
+	ApiResponse,
+	BookStatus,
+	GetBookStatusByString,
+	DownloadStoreBookCoverAsBase64,
+	DownloadProfileImageOfAuthorAsBase64,
+	Author
+} from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -59,12 +67,7 @@ export class StoreBookPageComponent{
 		)
 
 		// Get the store book cover
-		this.GetStoreBookCoverResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid
-			})
-		)
+		this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
 	}
 
 	NavigateToAuthor(){
@@ -118,18 +121,7 @@ export class StoreBookPageComponent{
 			this.author.profileImage = response.data.profile_image;
 
 			// Get the profile image of the author
-			this.GetProfileImageOfAuthorResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
-					jwt: this.dataService.user.JWT,
-					uuid: this.author.uuid
-				})
-			)
-		}
-	}
-
-	GetProfileImageOfAuthorResponse(response: ApiResponse){
-		if(response.status == 200){
-			this.authorProfileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
+			this.authorProfileImageContent = await DownloadProfileImageOfAuthorAsBase64(this.author.uuid, this.dataService.user.JWT);
 		}
 	}
 
@@ -162,12 +154,6 @@ export class StoreBookPageComponent{
 					uuid: response.data.collection
 				})
 			)
-		}
-	}
-
-	GetStoreBookCoverResponse(response: ApiResponse){
-		if(response.status == 200){
-			this.coverContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
 		}
 	}
 }

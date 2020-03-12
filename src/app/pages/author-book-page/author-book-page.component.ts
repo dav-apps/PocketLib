@@ -2,7 +2,13 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { DataService, ApiResponse, GetContentAsInlineSource, BookStatus, GetBookStatusByString } from 'src/app/services/data-service';
+import {
+	DataService,
+	ApiResponse,
+	BookStatus,
+	GetBookStatusByString,
+	DownloadStoreBookCoverAsBase64
+} from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -165,7 +171,7 @@ export class AuthorBookPageComponent{
 			reader.addEventListener('loadend', () => {
 				resolve(reader.result as ArrayBuffer);
 			});
-			reader.readAsBinaryString(new Blob([file.underlyingFile]));
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
 		});
 
 		let imageContent = await readPromise;
@@ -243,12 +249,7 @@ export class AuthorBookPageComponent{
 
 			if(response.data.cover){
 				// Download the cover
-				this.GetStoreBookCoverResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {
-						jwt: this.dataService.user.JWT,
-						uuid: this.uuid
-					})
-				)
+				this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
 			}
 
 			this.bookFileUploaded = response.data.file;
@@ -332,12 +333,6 @@ export class AuthorBookPageComponent{
 						break;
 				}
 			}
-		}
-	}
-
-	GetStoreBookCoverResponse(response: ApiResponse){
-		if(response.status == 200){
-			this.coverContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
 		}
 	}
 

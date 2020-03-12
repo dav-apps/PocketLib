@@ -7,7 +7,7 @@ import {
 	DataService,
 	ApiResponse,
 	FindAppropriateLanguage,
-	GetContentAsInlineSource,
+	DownloadStoreBookCoverAsBase64,
 	AuthorMode
 } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
@@ -189,17 +189,8 @@ export class CollectionViewComponent{
 			// Get the appropriate collection name
 			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
 			if(i != -1) this.collectionName = this.collection.names[i];
-			let coverDownloads: string[] = [];
 
 			for(let book of this.collection.books){
-				// Set the default cover
-				book.coverContent = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
-
-				if(book.cover){
-					// Add the cover to the downloads
-					coverDownloads.push(book.uuid);
-				}
-
 				// Cut the description
 				if(book.description && book.description.length > 170){
 					book.description = book.description.slice(0, 169) + "...";
@@ -207,26 +198,9 @@ export class CollectionViewComponent{
 			}
 
 			// Download the covers
-			for(let uuid of coverDownloads){
-				let coverDownloadPromise: Promise<ApiResponse> = new Promise((resolve) => {
-					this.coverDownloadPromiseResolve = resolve;
-				});
-
-				// Start the cover download
-				this.GetStoreBookCoverResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCover, {jwt: this.dataService.user.JWT, uuid})
-				)
-
-				// Wait for the download to finish
-				let coverResponse = await coverDownloadPromise;
-				
-				if(coverResponse.status == 200){
-					// Find the book with the uuid
-					let i = this.collection.books.findIndex(book => book.uuid == uuid);
-					if(i != -1){
-						this.collection.books[i].coverContent = GetContentAsInlineSource(coverResponse.data, coverResponse.headers['content-type']);
-					}
-				}
+			for(let book of this.collection.books){
+				if(!book.cover) continue;
+				book.coverContent = await DownloadStoreBookCoverAsBase64(book.uuid, this.dataService.user.JWT);
 			}
 
 			this.getCollectionPromiseResolve();

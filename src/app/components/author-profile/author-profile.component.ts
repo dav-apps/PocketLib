@@ -6,7 +6,8 @@ import {
 	DataService,
 	ApiResponse,
 	FindAppropriateLanguage,
-	GetContentAsInlineSource,
+	DownloadProfileImageOfAuthorAsBase64,
+	DownloadProfileImageOfAuthorOfUserAsBase64,
 	Author,
 	AuthorMode
 } from 'src/app/services/data-service';
@@ -100,18 +101,11 @@ export class AuthorProfileComponent{
 		// Download the profile image
 		if(this.author.profileImage){
 			if(this.authorMode == AuthorMode.AuthorOfUser){
-				this.GetProfileImageOfAuthorOfUserResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthorOfUser, {
-						jwt: this.dataService.user.JWT
-					})
-				)
+				let profileImageContent = await DownloadProfileImageOfAuthorOfUserAsBase64(this.dataService.user.JWT);
+				if(profileImageContent) this.profileImageContent = profileImageContent;
 			}else{
-				this.GetProfileImageOfAuthorResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.GetProfileImageOfAuthor, {
-						jwt: this.dataService.user.JWT,
-						uuid: this.uuid
-					})
-				)
+				let profileImageContent = await DownloadProfileImageOfAuthorAsBase64(this.uuid, this.dataService.user.JWT);
+				if(profileImageContent) this.profileImageContent = profileImageContent;
 			}
 		}
 	}
@@ -273,12 +267,12 @@ export class AuthorProfileComponent{
 
 	async UploadProfileImage(file: ReadFile){
 		// Get the content of the image file
-		let readPromise: Promise<string> = new Promise((resolve) => {
+		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
 			let reader = new FileReader();
 			reader.addEventListener('loadend', () => {
-				resolve(reader.result as string);
+				resolve(reader.result as ArrayBuffer);
 			});
-			reader.readAsBinaryString(new Blob([file.underlyingFile]));
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
 		});
 
 		let imageContent = await readPromise;
@@ -407,24 +401,10 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	GetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the profile image
-			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
-		}
-	}
-
 	SetProfileImageOfAuthorResponse(response: ApiResponse){
 		if(response.status == 200){
 			// Show the uploaded profile image
 			this.author.profileImage = true;
-		}
-	}
-
-	GetProfileImageOfAuthorResponse(response: ApiResponse){
-		if(response.status == 200){
-			// Show the profile image
-			this.profileImageContent = GetContentAsInlineSource(response.data, response.headers['content-type']);
 		}
 	}
 
