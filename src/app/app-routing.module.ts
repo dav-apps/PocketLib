@@ -14,6 +14,7 @@ import { AuthorBookPageComponent } from './pages/author-book-page/author-book-pa
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component';
 import { StorePageComponent } from './pages/store-page/store-page.component';
+import { StoreStartPageComponent } from './pages/store-start-page/store-start-page.component';
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
 import { StoreCollectionPageComponent } from './pages/store-collection-page/store-collection-page.component';
 import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
 	{ path: "login", component: LoginPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
 	{ path: "store", component: StorePageComponent, children: [
+		{ path: "", component: StoreStartPageComponent },
 		{ path: "author/:uuid", component: StoreAuthorPageComponent },
 		{ path: "collection/:uuid", component: StoreCollectionPageComponent },
 		{ path: "book/:uuid", component: StoreBookPageComponent },
