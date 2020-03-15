@@ -5,6 +5,7 @@ export const sockets = {
 	createStoreBook,
 	getStoreBook,
 	getStoreBooksByCategory,
+	getLatestStoreBooks,
 	updateStoreBook
 }
 
@@ -74,13 +75,16 @@ export async function getStoreBook(message: {jwt?: string, uuid: string}){
 	websocket.emit(getStoreBook.name, result);
 }
 
-export async function getStoreBooksByCategory(message: {key: string}){
+export async function getStoreBooksByCategory(message: {key: string, language: string}){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
 
 	try{
 		let response = await axios.default({
 			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/store/books/${message.key}`
+			url: `${process.env.POCKETLIB_API_URL}/store/books/category/${message.key}`,
+			params: {
+				language: message.language
+			}
 		});
 
 		result.status = response.status;
@@ -96,6 +100,33 @@ export async function getStoreBooksByCategory(message: {key: string}){
 	}
 
 	websocket.emit(getStoreBooksByCategory.name, result);
+}
+
+export async function getLatestStoreBooks(message: {language: string}){
+	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
+
+	try{
+		let response = await axios.default({
+			method: 'get',
+			url: `${process.env.POCKETLIB_API_URL}/store/books/latest`,
+			params: {
+				language: message.language
+			}
+		});
+
+		result.status = response.status;
+		result.headers = response.headers;
+		result.data = response.data;
+	}catch(error){
+		if(error.response){
+			// Api error
+			result.status = error.response.status;
+			result.headers = error.response.headers;
+			result.data = error.response.data;
+		}
+	}
+
+	websocket.emit(getLatestStoreBooks.name, result);
 }
 
 export async function updateStoreBook(message: {
