@@ -49,6 +49,7 @@ export enum WebsocketCallbackType{
 	CreateAuthor,
 	GetAuthorOfUser,
 	GetAuthor,
+	GetLatestAuthors,
 	// AuthorBio
 	SetBioOfAuthorOfUser,
 	SetBioOfAuthor,
@@ -86,6 +87,7 @@ export const Callbacks = {
 	createAuthor: WebsocketCallbackType.CreateAuthor,
 	getAuthorOfUser: WebsocketCallbackType.GetAuthorOfUser,
 	getAuthor: WebsocketCallbackType.GetAuthor,
+	getLatestAuthors: WebsocketCallbackType.GetLatestAuthors,
 	setBioOfAuthorOfUser: WebsocketCallbackType.SetBioOfAuthorOfUser,
 	setBioOfAuthor: WebsocketCallbackType.SetBioOfAuthor,
 	setProfileImageOfAuthorOfUser: WebsocketCallbackType.SetProfileImageOfAuthorOfUser,

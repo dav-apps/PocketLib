@@ -4,7 +4,8 @@ import * as axios from 'axios';
 export const sockets = {
 	createAuthor,
 	getAuthorOfUser,
-	getAuthor
+	getAuthor,
+	getLatestAuthors
 }
 
 export async function createAuthor(message: {
@@ -93,4 +94,28 @@ export async function getAuthor(message: {uuid: string}){
 	}
 
 	websocket.emit(getAuthor.name, result);
+}
+
+export async function getLatestAuthors(){
+	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
+
+	try{
+		var response = await axios.default({
+			method: 'get',
+			url: `${process.env.POCKETLIB_API_URL}/authors/latest`
+		});
+
+		result.status = response.status;
+		result.headers = response.headers;
+		result.data = response.data;
+	}catch(error){
+		if(error.response){
+			// Api error
+			result.status = error.response.status;
+			result.headers = error.response.headers;
+			result.data = error.response.data;
+		}
+	}
+
+	websocket.emit(getLatestAuthors.name, result);
 }
