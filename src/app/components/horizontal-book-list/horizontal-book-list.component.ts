@@ -30,6 +30,7 @@ export class HorizontalBookListComponent{
 		// Get the latest store books
 		this.books = [];
 		let response = await this.websocketService.Emit(WebsocketCallbackType.GetLatestStoreBooks, {language: this.dataService.locale.slice(0, 2)});
+		if(response.status != 200) return;
 		
 		for(let storeBook of response.data.books){
 			let book = {

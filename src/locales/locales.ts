@@ -256,6 +256,9 @@ const enDefaults = {
 	horizontalBookList: {
 		recentlyPublished: "Recently published books"
 	},
+	horizontalAuthorList: {
+		newAuthors: "New authors"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -526,6 +529,9 @@ const deDefaults = {
 	},
 	horizontalBookList: {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher"
+	},
+	horizontalAuthorList: {
+		newAuthors: "Neue Autoren"
 	},
 	misc: {
 		languages: {

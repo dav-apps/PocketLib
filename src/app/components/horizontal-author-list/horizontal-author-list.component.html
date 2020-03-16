@@ -1,1 +1,17 @@
-<h1>Hello World</h1>
+<div class="mt-3">
+	<h4 class="ml-3 font-weight-light">{{ locale.newAuthors }}</h4>
+
+	<div class="horizontal-store-list" style="height: 150px; overflow-x: scroll; overflow-y: hidden">
+		<div class="mb-3 pl-4" style="width: max-content">
+			<img
+				[src]="author.profileImageContent"
+				class="rounded-circle cursor mx-2 my-3"
+				[ngClass]="hoveredAuthorIndex == i ? 'shadow' : 'shadow-sm'"
+				style="width: 100px; height: 100px; transition: 0.12s;"
+				*ngFor="let author of authors; let i = index"
+				(click)="NavigateToAuthor(author.uuid)"
+				(mouseover)="hoveredAuthorIndex = i"
+				(mouseout)="hoveredAuthorIndex = -1" />
+		</div>
+	</div>
+</div>
