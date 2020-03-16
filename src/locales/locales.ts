@@ -253,6 +253,9 @@ const enDefaults = {
 		cancel: "Cancel",
 		save: "Save"
 	},
+	horizontalBookList: {
+		recentlyPublished: "Recently published books"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -520,6 +523,9 @@ const deDefaults = {
 		close: "Schließen",
 		cancel: "Abbrechen",
 		save: "Speichern"
+	},
+	horizontalBookList: {
+		recentlyPublished: "Kürzlich veröffentlichte Bücher"
 	},
 	misc: {
 		languages: {

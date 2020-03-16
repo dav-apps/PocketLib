@@ -79,6 +79,16 @@ body{
 	border-color: var(--hover-background-color);
 }
 
+.horizontal-store-list::-webkit-scrollbar{
+	height: 5px;
+	background-color: white;
+}
+
+.horizontal-store-list::-webkit-scrollbar-thumb{
+	background-color: #eaeaea;
+	border-radius: 10px;
+}
+
 // Custom Acrylic styles
 $saturation: 80%;
 $blurring: 3px;

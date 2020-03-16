@@ -49,7 +49,7 @@ import { EpubContentComponent } from './components/epub-content/epub-content.com
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { AuthorProfileComponent } from './components/author-profile/author-profile.component';
 import { CollectionViewComponent } from './components/collection-view/collection-view.component';
-import { VerticalStoreListComponent } from './components/vertical-store-list/vertical-store-list.component';
+import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -85,7 +85,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		PdfContentComponent,
 		AuthorProfileComponent,
 		CollectionViewComponent,
-		VerticalStoreListComponent,
+		HorizontalBookListComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,
