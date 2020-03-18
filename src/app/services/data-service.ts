@@ -271,14 +271,14 @@ export function GetBookStatusByString(status: string) : BookStatus{
 	}
 }
 
-export async function DownloadStoreBookCoverAsBase64(uuid: string, jwt: string){
+export async function DownloadStoreBookCoverAsBase64(uuid: string, jwt?: string){
 	let cover = await DownloadStoreBookCover(uuid, jwt);
 	if(!cover) return null;
 
 	return await GetBlobAsBase64(cover);
 }
 
-export async function DownloadProfileImageOfAuthorAsBase64(uuid: string, jwt: string){
+export async function DownloadProfileImageOfAuthorAsBase64(uuid: string, jwt?: string){
 	let profileImage = await DownloadProfileImageOfAuthor(uuid, jwt);
 	if(!profileImage) return null;
 
@@ -292,31 +292,41 @@ export async function DownloadProfileImageOfAuthorOfUserAsBase64(jwt: string){
 	return await GetBlobAsBase64(profileImage);
 }
 
-export async function DownloadStoreBookCover(uuid: string, jwt: string) : Promise<Blob>{
+export async function DownloadStoreBookCover(uuid: string, jwt?: string) : Promise<Blob>{
 	try{
-		return (await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
 			url: `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`,
-			headers: {
-				Authorization: jwt
-			},
 			responseType: 'blob'
-		})).data as Blob;
+		}
+
+		if(jwt){
+			options.headers = {
+				Authorization: jwt
+			}
+		}
+
+		return (await axios.default(options)).data as Blob;
 	}catch(error){
 		return null;
 	}
 }
 
-export async function DownloadProfileImageOfAuthor(uuid: string, jwt: string) : Promise<Blob>{
+export async function DownloadProfileImageOfAuthor(uuid: string, jwt?: string) : Promise<Blob>{
 	try{
-		return (await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
 			url: `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`,
-			headers: {
-				Authorization: jwt,
-			},
 			responseType: 'blob'
-		})).data as Blob;
+		}
+
+		if(jwt){
+			options.headers = {
+				Authorization: jwt
+			}
+		}
+
+		return (await axios.default(options)).data as Blob;
 	}catch(error){
 		return null;
 	}
