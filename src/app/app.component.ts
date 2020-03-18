@@ -1,10 +1,11 @@
 import { Component, HostListener } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from './services/websocket-service';
+import { RoutingService } from './services/routing-service';
 import { GetSettings } from 'src/app/models/Settings';
 
 const visitEventName = "visit";
@@ -15,30 +16,12 @@ const visitEventName = "visit";
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent{
-	showsStore: boolean = false;
-
    constructor(
 		public dataService: DataService,
-		public websocketService: WebsocketService,
-      public router: Router,
-      public activatedRoute: ActivatedRoute
-   ){
-      // Log the user in if there is a jwt in the url
-      this.activatedRoute.queryParams.subscribe(async params => {
-         if(params["jwt"]){
-            // Login with the jwt
-            if(await this.dataService.user.Login(params["jwt"])){
-               window.location.href = "/";
-            }
-         }
-		});
-
-		this.router.events.subscribe(event => {
-			if(event instanceof NavigationEnd){
-				this.showsStore = event.url.startsWith('/store');
-			}
-		});
-	}
+		private websocketService: WebsocketService,
+		public routingService: RoutingService,
+      private router: Router
+   ){}
 
 	async ngOnInit(){
 		this.dataService.ApplyTheme();
