@@ -12,6 +12,7 @@ import {
 	Author
 } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
+import { RoutingService } from 'src/app/services/routing-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -46,6 +47,7 @@ export class StoreBookPageComponent{
 	constructor(
 		public dataService: DataService,
 		private websocketService: WebsocketService,
+		private routingService: RoutingService,
 		private snackBar: MatSnackBar,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -69,6 +71,10 @@ export class StoreBookPageComponent{
 
 		// Get the store book cover
 		this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
+	}
+
+	GoBack(){
+		this.routingService.NavigateBack("/store");
 	}
 
 	NavigateToAuthor(){
