@@ -22,6 +22,7 @@ export class StoreBookPageComponent{
 	locale = enUS.storeBookPage;
 	uuid: string;
 	book: {collection: string, title: string, description: string, status: BookStatus, inLibrary: boolean} = {collection: "", title: "", description: "", status: BookStatus.Unpublished, inLibrary: false};
+	bookStatus: string = "";
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
 	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
@@ -43,7 +44,7 @@ export class StoreBookPageComponent{
 	}
 
 	constructor(
-		private dataService: DataService,
+		public dataService: DataService,
 		private websocketService: WebsocketService,
 		private snackBar: MatSnackBar,
 		private router: Router,
@@ -111,6 +112,11 @@ export class StoreBookPageComponent{
 		this.router.navigate(['account']);
 	}
 
+	async PublishStoreBook(){
+		let response = await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {jwt: this.dataService.user.JWT, uuid: this.uuid, status: "published"});
+		if(response.status == 200) this.book.status = BookStatus.Published;
+	}
+
 	async GetAuthorResponse(response: ApiResponse){
 		if(response.status == 200){
 			this.author.uuid = response.data.uuid;
@@ -146,6 +152,18 @@ export class StoreBookPageComponent{
 			this.book.inLibrary = response.data.in_library;
 
 			this.addToLibraryButtonDisabled = this.book.inLibrary;
+			
+			switch(this.book.status){
+				case BookStatus.Unpublished:
+					this.bookStatus = this.locale.unpublished;
+					break;
+				case BookStatus.Review:
+					this.bookStatus = this.locale.review;
+					break;
+				case BookStatus.Hidden:
+					this.bookStatus = this.locale.hidden;
+					break;
+			}
 
 			// Get the collection
 			this.GetStoreBookCollectionResponse(

@@ -160,6 +160,10 @@ const enDefaults = {
 	storeBookPage: {
 		addToLibrary: "Add to your library",
 		snackbarMessageAdded: "The book was added to your library",
+		unpublished: "Unpublished",
+		review: "In review",
+		hidden: "Hidden",
+		publish: "Publish",
 		davProRequiredDialog: {
 			title: "dav Pro required",
 			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month.",
@@ -435,6 +439,10 @@ const deDefaults = {
 	storeBookPage: {
 		addToLibrary: "Zur Bibliothek hinzufügen",
 		snackbarMessageAdded: "Das Buch wurde zu deiner Bibliothek hinzugefügt",
+		unpublished: "Nicht veröffentlicht",
+		review: "In Überprüfung",
+		hidden: "Versteckt",
+		publish: "Veröffentlichen",
 		davProRequiredDialog: {
 			title: "dav Pro benötigt",
 			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen.",
