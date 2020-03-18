@@ -58,6 +58,7 @@ const enDefaults = {
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
 		yourAuthors: "Your authors",
+		booksInReview: "Books in review",
 		createAuthorDialog: {
 			title: "Create author",
 			firstNameTextfieldLabel: "First name",
@@ -332,6 +333,7 @@ const deDefaults = {
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
 		yourAuthors: "Deine Autoren",
+		booksInReview: "Bücher in Überprüfung",
 		createAuthorDialog: {
 			title: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",

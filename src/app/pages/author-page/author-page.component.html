@@ -15,7 +15,9 @@
 	<h1 class="font-weight-light mt-3 mb-4 text-color">{{ locale.yourAuthors }}</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor theme-background-color-secondary" (click)="ShowCreateAuthorDialog()">
+		<p
+			class="list-group-item cursor theme-background-color-secondary"
+			(click)="ShowCreateAuthorDialog()">
 			<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
 		</p>
 
@@ -25,6 +27,18 @@
 			(click)="ShowAuthor(author.uuid)"
 			*ngFor="let author of dataService.adminAuthors">
 			{{ author.firstName }} {{ author.lastName }}
+		</p>
+	</div>
+
+	<h2 class="mt-5 mb-4 font-weight-light text-color">{{ locale.booksInReview }}</h2>
+
+	<div class="list-group" style="display: inline-block">
+		<p
+			class="list-group-item cursor theme-background-color-secondary"
+			style="font-size: 18px"
+			(click)="ShowBook(book.uuid)"
+			*ngFor="let book of booksInReview">
+			{{ book.title }}
 		</p>
 	</div>
 </div>

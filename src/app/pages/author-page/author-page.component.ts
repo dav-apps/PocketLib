@@ -24,6 +24,10 @@ export class AuthorPageComponent{
 	createAuthorDialogLastName: string = "";
 	createAuthorDialogFirstNameError: string = "";
 	createAuthorDialogLastNameError: string = "";
+	booksInReview: {
+		uuid: string,
+		title: string
+	}[] = [];
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -46,8 +50,25 @@ export class AuthorPageComponent{
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
    }
    
-   ngOnInit(){
+   async ngOnInit(){
 		this.setSize();
+
+		await this.dataService.userPromise;
+		if(this.dataService.userIsAdmin && !this.uuid){
+			// Get the books in review
+			let response = await this.websocketService.Emit(WebsocketCallbackType.GetStoreBooksInReview, {jwt: this.dataService.user.JWT});
+
+			if(response.status == 200){
+				this.booksInReview = [];
+
+				for(let book of response.data.books){
+					this.booksInReview.push({
+						uuid: book.uuid,
+						title: book.title
+					});
+				}
+			}
+		}
 	}
 
    @HostListener('window:resize')
@@ -82,6 +103,10 @@ export class AuthorPageComponent{
 
 		this.createAuthorDialogContentProps.title = this.locale.createAuthorDialog.title;
 		this.createAuthorDialogVisible = true;
+	}
+
+	ShowBook(uuid: string){
+		this.router.navigate(["store", "book", uuid]);
 	}
 
 	async CreateAuthor(){
