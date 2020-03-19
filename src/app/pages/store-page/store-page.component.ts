@@ -55,6 +55,10 @@ export class StorePageComponent{
 		else this.dataService.sideNavOpened = false;
 	}
 
+	ShowStartPage(){
+		this.router.navigate(["store"]);
+	}
+
 	ShowCategory(key: string){
 		this.router.navigate(["store", "books", key]);
 	}

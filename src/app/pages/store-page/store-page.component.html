@@ -1,6 +1,13 @@
 <mat-drawer-container autosize style="background-color: inherit; color: inherit" [style.minHeight.px]="dataService.contentHeight">
 	<mat-drawer class="shadow-sm theme-background-color-secondary" [mode]="sideNavHidden ? 'over' : 'side'" [(opened)]="dataService.sideNavOpened">
 		<mat-nav-list>
+			<mat-list-item
+				class="mb-2"
+				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
+				(click)="ShowStartPage()">
+				{{ locale.startPage }}
+			</mat-list-item>
+
 			<h3
 				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.54)' : 'rgba(0,0,0,0,.54)'"
 				matSubheader>

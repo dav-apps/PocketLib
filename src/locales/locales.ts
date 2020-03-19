@@ -155,6 +155,7 @@ const enDefaults = {
 		}
 	},
 	storePage: {
+		startPage: "Start page",
 		categories: "Categories"
 	},
 	storeBookPage: {
@@ -434,6 +435,7 @@ const deDefaults = {
 		}
 	},
 	storePage: {
+		startPage: "Startseite",
 		categories: "Kategorien"
 	},
 	storeBookPage: {
