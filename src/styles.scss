@@ -11,15 +11,18 @@ $primary: #0d47a1;	// Blue 900
 	--light-theme-color-secondary: #FFFFFF;
 	--light-theme-color-tertiary: #FFFFFF;
 	--light-theme-hover-background-color: #f8f9fa;
+	--light-theme-scrollbar-color: #eaeaea;
 	--dark-theme-color-primary: #15202b;
 	--dark-theme-color-secondary: #1c2938;
 	--dark-theme-color-tertiary: #3d4753;
 	--dark-theme-hover-background-color: #232e3c;
+	--dark-theme-scrollbar-color: #303644;
 
 	--theme-color-primary: var(--light-theme-color-primary);				// Main background color
 	--theme-color-secondary: var(--light-theme-color-secondary);		// Background color for specific elements
 	--theme-color-tertiary: var(--light-theme-color-tertiary);			// Background color for dropdown menus
 	--hover-background-color: var(--light-theme-hover-background-color);
+	--scrollbar-color: var(--light-theme-scrollbar-color);
 	--text-color: var(--black);
 }
 
@@ -28,6 +31,7 @@ $primary: #0d47a1;	// Blue 900
 	--theme-color-secondary: var(--dark-theme-color-secondary);
 	--theme-color-tertiary: var(--dark-theme-color-tertiary);
 	--hover-background-color: var(--dark-theme-hover-background-color);
+	--scrollbar-color: var(--dark-theme-scrollbar-color);
 	--text-color: var(--white);
 }
 
@@ -80,12 +84,12 @@ body{
 }
 
 .horizontal-store-list::-webkit-scrollbar{
+	background-color: var(--theme-color-primary);
 	height: 5px;
-	background-color: white;
 }
 
 .horizontal-store-list::-webkit-scrollbar-thumb{
-	background-color: #eaeaea;
+	background-color: var(--scrollbar-color);
 	border-radius: 10px;
 }
 
