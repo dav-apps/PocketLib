@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
@@ -29,6 +29,7 @@ export class StoreBookPageComponent{
 	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
 	addToLibraryButtonDisabled: boolean = false;
 	davPlusRequiredDialogVisible: boolean = false;
+	showMobileLayout: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -59,6 +60,7 @@ export class StoreBookPageComponent{
 	}
 
 	async ngOnInit(){
+		this.setSize();
 		await this.dataService.userPromise;
 
 		// Get the store book
@@ -71,6 +73,15 @@ export class StoreBookPageComponent{
 
 		// Get the store book cover
 		this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
+	}
+
+	@HostListener('window:resize')
+	onResize(){
+		this.setSize();
+	}
+
+	setSize(){
+		this.showMobileLayout = window.outerWidth < 768;
 	}
 
 	GoBack(){
