@@ -4,9 +4,6 @@ import { LibraryPageComponent } from './pages/library-page/library-page.componen
 import { BookPageComponent } from './pages/book-page/book-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { AccountPageComponent } from './pages/account-page/account-page.component';
-import { DeveloperPageComponent } from './pages/developer-page/developer-page.component';
-import { AppPageComponent } from './pages/app-page/app-page.component';
-import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component';
@@ -24,10 +21,6 @@ const routes: Routes = [
    { path: "book", component: BookPageComponent },
 	{ path: "account", component: AccountPageComponent },
    { path: "settings", component: SettingsPageComponent },
-   { path: "developer", component: DeveloperPageComponent },
-   { path: "developer/apps", redirectTo: "/developer", pathMatch: "full" },
-   { path: "developer/apps/new", component: NewAppPageComponent },
-   { path: "developer/apps/:uuid", component: AppPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },

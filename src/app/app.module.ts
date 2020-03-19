@@ -58,9 +58,6 @@ import { LibraryPageComponent } from './pages/library-page/library-page.componen
 import { BookPageComponent } from './pages/book-page/book-page.component';
 import { AccountPageComponent } from './pages/account-page/account-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
-import { DeveloperPageComponent } from './pages/developer-page/developer-page.component';
-import { AppPageComponent } from './pages/app-page/app-page.component';
-import { NewAppPageComponent } from './pages/new-app-page/new-app-page.component';
 import { AuthorPageComponent } from './pages/author-page/author-page.component';
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component';
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component';
@@ -93,9 +90,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
       BookPageComponent,
       AccountPageComponent,
       SettingsPageComponent,
-      DeveloperPageComponent,
-      AppPageComponent,
-      NewAppPageComponent,
 		AuthorPageComponent,
 		AuthorSetupPageComponent,
 		AuthorCollectionPageComponent,
