@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/services/data-service';
 
 @Component({
@@ -11,7 +11,6 @@ export class StoreAuthorPageComponent{
 
 	constructor(
 		public dataService: DataService,
-		private router: Router,
 		private activatedRoute: ActivatedRoute
 	){
 		// Get the uuid from the url
