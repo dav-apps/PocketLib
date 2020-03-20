@@ -271,88 +271,10 @@ export function GetBookStatusByString(status: string) : BookStatus{
 	}
 }
 
-export async function DownloadStoreBookCoverAsBase64(uuid: string, jwt?: string){
-	let cover = await DownloadStoreBookCover(uuid, jwt);
-	if(!cover) return null;
-
-	return await GetBlobAsBase64(cover);
+export function GetAuthorProfileImageLink(uuid: string){
+	return `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`;
 }
 
-export async function DownloadProfileImageOfAuthorAsBase64(uuid: string, jwt?: string){
-	let profileImage = await DownloadProfileImageOfAuthor(uuid, jwt);
-	if(!profileImage) return null;
-
-	return await GetBlobAsBase64(profileImage);
-}
-
-export async function DownloadProfileImageOfAuthorOfUserAsBase64(jwt: string){
-	let profileImage = await DownloadProfileImageOfAuthorOfUser(jwt);
-	if(!profileImage) return null;
-
-	return await GetBlobAsBase64(profileImage);
-}
-
-export async function DownloadStoreBookCover(uuid: string, jwt?: string) : Promise<Blob>{
-	try{
-		let options: axios.AxiosRequestConfig = {
-			method: 'get',
-			url: `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`,
-			responseType: 'blob'
-		}
-
-		if(jwt){
-			options.headers = {
-				Authorization: jwt
-			}
-		}
-
-		return (await axios.default(options)).data as Blob;
-	}catch(error){
-		return null;
-	}
-}
-
-export async function DownloadProfileImageOfAuthor(uuid: string, jwt?: string) : Promise<Blob>{
-	try{
-		let options: axios.AxiosRequestConfig = {
-			method: 'get',
-			url: `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`,
-			responseType: 'blob'
-		}
-
-		if(jwt){
-			options.headers = {
-				Authorization: jwt
-			}
-		}
-
-		return (await axios.default(options)).data as Blob;
-	}catch(error){
-		return null;
-	}
-}
-
-export async function DownloadProfileImageOfAuthorOfUser(jwt: string) : Promise<Blob>{
-	try{
-		return (await axios.default({
-			method: 'get',
-			url: `${environment.apiBaseUrl}/api/1/call/author/profile_image`,
-			headers: {
-				Authorization: jwt
-			},
-			responseType: 'blob'
-		})).data as Blob;
-	}catch(error){
-		return null;
-	}
-}
-
-export async function GetBlobAsBase64(blob: Blob) : Promise<string>{
-	return new Promise(resolve => {
-		let reader = new FileReader();
-		reader.addEventListener('loadend', () => {
-			resolve(reader.result as string);
-		});
-		reader.readAsDataURL(blob);
-	});
+export function GetStoreBookCoverLink(uuid: string){
+	return `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`;
 }

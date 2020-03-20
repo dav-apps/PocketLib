@@ -7,7 +7,7 @@ import {
 	DataService,
 	ApiResponse,
 	FindAppropriateLanguage,
-	DownloadStoreBookCoverAsBase64,
+	GetStoreBookCoverLink,
 	AuthorMode
 } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
@@ -38,7 +38,6 @@ export class CollectionViewComponent{
 			coverContent: string
 		}[]
 	} = {uuid: "", author: "", names: [], books: []};
-	coverDownloadPromiseResolve: Function;
 	createBookDialogVisible: boolean = false;
 	createBookDialogTitle: string = "";
 	createBookDialogTitleError: string = "";
@@ -195,12 +194,10 @@ export class CollectionViewComponent{
 				if(book.description && book.description.length > 170){
 					book.description = book.description.slice(0, 169) + "...";
 				}
-			}
 
-			// Download the covers
-			for(let book of this.collection.books){
-				if(!book.cover) continue;
-				book.coverContent = await DownloadStoreBookCoverAsBase64(book.uuid, this.dataService.user.JWT);
+				if(book.cover){
+					book.coverContent = GetStoreBookCoverLink(book.uuid);
+				}
 			}
 
 			this.getCollectionPromiseResolve();
@@ -208,10 +205,6 @@ export class CollectionViewComponent{
 			// Redirect back to the author page
 			this.router.navigate(["author"]);
 		}
-	}
-
-	GetStoreBookCoverResponse(response: ApiResponse){
-		this.coverDownloadPromiseResolve(response);
 	}
 
 	CreateStoreBookResponse(response: ApiResponse){

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, DownloadStoreBookCoverAsBase64 } from 'src/app/services/data-service';
+import { DataService, GetStoreBookCoverLink } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -33,19 +33,12 @@ export class HorizontalBookListComponent{
 		if(response.status != 200) return;
 		
 		for(let storeBook of response.data.books){
-			let book = {
+			this.books.push({
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				cover: storeBook.cover,
-				coverContent: null
-			}
-			this.books.push(book);
-		}
-
-		// Download the covers
-		for(let book of this.books){
-			if(!book.cover) continue;
-			book.coverContent = await DownloadStoreBookCoverAsBase64(book.uuid, this.dataService.user.JWT);
+				coverContent: GetStoreBookCoverLink(storeBook.uuid)
+			});
 		}
 	}
 

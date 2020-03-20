@@ -6,8 +6,7 @@ import {
 	DataService,
 	ApiResponse,
 	FindAppropriateLanguage,
-	DownloadProfileImageOfAuthorAsBase64,
-	DownloadProfileImageOfAuthorOfUserAsBase64,
+	GetAuthorProfileImageLink,
 	Author,
 	AuthorMode
 } from 'src/app/services/data-service';
@@ -90,6 +89,11 @@ export class AuthorProfileComponent{
 
 		await this.getAuthorPromise;
 
+		if(this.author.profileImage){
+			// Set the author profile image link
+			this.profileImageContent = GetAuthorProfileImageLink(this.author.uuid);
+		}
+
 		// Get the appropriate language of each collection
 		for(let collection of this.author.collections){
 			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
@@ -97,17 +101,6 @@ export class AuthorProfileComponent{
 		}
 
 		this.SetupBioLanguageDropdown();
-
-		// Download the profile image
-		if(this.author.profileImage){
-			if(this.authorMode == AuthorMode.AuthorOfUser){
-				let profileImageContent = await DownloadProfileImageOfAuthorOfUserAsBase64(this.dataService.user.JWT);
-				if(profileImageContent) this.profileImageContent = profileImageContent;
-			}else{
-				let profileImageContent = await DownloadProfileImageOfAuthorAsBase64(this.uuid, this.dataService.user.JWT);
-				if(profileImageContent) this.profileImageContent = profileImageContent;
-			}
-		}
 	}
 
 	@HostListener('window:resize')

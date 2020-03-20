@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, DownloadProfileImageOfAuthorAsBase64 } from 'src/app/services/data-service';
+import { DataService, GetAuthorProfileImageLink } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -39,14 +39,8 @@ export class HorizontalAuthorListComponent{
 				firstName: author.first_name,
 				lastName: author.last_name,
 				profileImage: author.profile_image,
-				profileImageContent: null
+				profileImageContent: GetAuthorProfileImageLink(author.uuid)
 			});
-		}
-
-		// Download the profile images
-		for(let author of this.authors){
-			if(!author.profileImage) continue;
-			author.profileImageContent = await DownloadProfileImageOfAuthorAsBase64(author.uuid, this.dataService.user.JWT);
 		}
 	}
 

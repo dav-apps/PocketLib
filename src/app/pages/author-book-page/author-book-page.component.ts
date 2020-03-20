@@ -7,7 +7,7 @@ import {
 	ApiResponse,
 	BookStatus,
 	GetBookStatusByString,
-	DownloadStoreBookCoverAsBase64
+	GetStoreBookCoverLink
 } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
@@ -248,8 +248,7 @@ export class AuthorBookPageComponent{
 			this.languageSelectedKey = response.data.language;
 
 			if(response.data.cover){
-				// Download the cover
-				this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
+				this.coverContent = GetStoreBookCoverLink(this.uuid);
 			}
 
 			this.bookFileUploaded = response.data.file;

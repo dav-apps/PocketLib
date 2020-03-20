@@ -7,8 +7,8 @@ import {
 	ApiResponse,
 	BookStatus,
 	GetBookStatusByString,
-	DownloadStoreBookCoverAsBase64,
-	DownloadProfileImageOfAuthorAsBase64,
+	GetAuthorProfileImageLink,
+	GetStoreBookCoverLink,
 	Author
 } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
@@ -72,7 +72,7 @@ export class StoreBookPageComponent{
 		)
 
 		// Get the store book cover
-		this.coverContent = await DownloadStoreBookCoverAsBase64(this.uuid, this.dataService.user.JWT);
+		this.coverContent = GetStoreBookCoverLink(this.uuid);
 	}
 
 	@HostListener('window:resize')
@@ -142,9 +142,7 @@ export class StoreBookPageComponent{
 			this.author.bios = response.data.bios;
 			this.author.collections = response.data.collections;
 			this.author.profileImage = response.data.profile_image;
-
-			// Get the profile image of the author
-			this.authorProfileImageContent = await DownloadProfileImageOfAuthorAsBase64(this.author.uuid, this.dataService.user.JWT);
+			this.authorProfileImageContent = GetAuthorProfileImageLink(this.author.uuid);
 		}
 	}
 

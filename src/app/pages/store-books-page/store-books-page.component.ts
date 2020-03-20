@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataService, ApiResponse, Category, DownloadStoreBookCoverAsBase64 } from 'src/app/services/data-service';
+import { DataService, ApiResponse, Category, GetStoreBookCoverLink } from 'src/app/services/data-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'store-books-page',
@@ -39,19 +40,12 @@ export class StoreBooksPageComponent{
 		let getStoreBooksByCategoryResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetStoreBooksByCategory, {key, language: this.dataService.locale.slice(0, 2)});
 
 		for(let storeBook of getStoreBooksByCategoryResponse.data.books){
-			let book = {
+			this.books.push({
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				cover: storeBook.cover,
-				coverContent: null
-			}
-			this.books.push(book);
-		}
-
-		// Download the covers
-		for(let book of this.books){
-			if(!book.cover) continue;
-			book.coverContent = await DownloadStoreBookCoverAsBase64(book.uuid, this.dataService.user.JWT);
+				coverContent: GetStoreBookCoverLink(storeBook.uuid)
+			});
 		}
 	}
 
