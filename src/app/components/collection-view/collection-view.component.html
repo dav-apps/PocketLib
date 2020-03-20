@@ -43,7 +43,7 @@
 		(click)="ShowBook(book.uuid)">
 		<div class="row no-gutters">
 			<div class="col-4">
-				<img [src]="book.coverContent ? book.coverContent : (dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png')" style="max-width: 160px;">
+				<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="max-width: 160px;">
 			</div>
 			<div class="col-8">
 				<div class="card-body">

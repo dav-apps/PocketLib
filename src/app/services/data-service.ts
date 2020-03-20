@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import * as localforage from 'localforage';
-import * as axios from 'axios';
 import { DavUser, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
 import { keys } from 'src/environments/keys';
@@ -8,6 +7,10 @@ import * as locales from 'src/locales/locales';
 import { Book } from '../models/Book';
 import { GetAllBooks, GetBook } from '../models/BookManager';
 import { Settings } from '../models/Settings';
+
+const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png";
+const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png";
+const defaultAvatarUrl = "https://davapps.blob.core.windows.net/avatars/default.png";
 
 @Injectable()
 export class DataService{
@@ -17,6 +20,8 @@ export class DataService{
 	books: Book[] = [];
 	currentBook: Book = null;
 	darkTheme: boolean = false;
+	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
+	defaultAvatar: string = defaultAvatarUrl;
    windowsUiSettings = null;
    settings: Settings;
 	settingsLoadPromise: Promise<Settings> = new Promise(resolve => this.settingsLoadPromiseResolve = resolve);
@@ -149,6 +154,8 @@ export class DataService{
 			keys.themeKey, 
 			this.darkTheme ? keys.darkThemeKey : keys.lightThemeKey
 		)
+
+		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
    }
    
    HideWindowsBackButton(){

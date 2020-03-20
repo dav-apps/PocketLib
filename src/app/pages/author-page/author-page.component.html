@@ -12,6 +12,7 @@
 </pocketlib-author-profile>
 
 <div class="container text-center ms-motion-slideUpIn" *ngIf="dataService.userIsAdmin && !uuid">
+	<!-- List of authors -->
 	<h1 class="font-weight-light mt-3 mb-4 text-color">{{ locale.yourAuthors }}</h1>
 
 	<div class="list-group" style="display: inline-block">
@@ -30,11 +31,12 @@
 		</p>
 	</div>
 
+	<!-- List of books in review -->
 	<h2 class="mt-5 mb-4 font-weight-light text-color">{{ locale.booksInReview }}</h2>
 
 	<div class="list-group" style="display: inline-block">
 		<p
-			class="list-group-item cursor theme-background-color-secondary"
+			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
 			(click)="ShowBook(book.uuid)"
 			*ngFor="let book of booksInReview">

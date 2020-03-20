@@ -3,7 +3,7 @@
 		<div class="col-4 mt-2 d-flex">
 			<div class="mx-auto">
 				<!-- Cover -->
-				<img [src]="coverContent" class="shadow" style="height: 270px; object-fit: cover;" />
+				<img [src]="coverContent ? coverContent : dataService.defaultStoreBookCover" class="shadow" style="height: 270px; object-fit: cover;" />
 
 				<!-- Author profile image and name -->
 				<div class="d-flex mt-3">
@@ -22,7 +22,7 @@
 
 				<!-- Status and Publish button (only for admins) -->
 				<div *ngIf="dataService.userIsAdmin && book.status != 2">
-					<p class="mt-3 mb-2">{{ bookStatus }}</p>
+					<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
 					<fab-primary-button
 						*ngIf="book.status == 1"
@@ -71,7 +71,7 @@
 		<div class="d-flex">
 			<div class="mx-auto">
 				<!-- Cover -->
-				<img [src]="coverContent" class="shadow" style="height: 270px; object-fit: cover;" />
+				<img [src]="coverContent ? coverContent : dataService.defaultStoreBookCover" class="shadow" style="height: 270px; object-fit: cover;" />
 
 				<!-- Author profile image and name -->
 				<div class="d-flex mt-3">
@@ -90,7 +90,7 @@
 
 				<!-- Status and Publish button (only for admins) -->
 				<div *ngIf="dataService.userIsAdmin && book.status != 2">
-					<p class="mt-3 mb-2">{{ bookStatus }}</p>
+					<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
 					<fab-primary-button
 						*ngIf="book.status == 1"

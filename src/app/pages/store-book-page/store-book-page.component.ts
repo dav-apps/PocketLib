@@ -25,8 +25,8 @@ export class StoreBookPageComponent{
 	book: {collection: string, title: string, description: string, status: BookStatus, inLibrary: boolean} = {collection: "", title: "", description: "", status: BookStatus.Unpublished, inLibrary: false};
 	bookStatus: string = "";
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
-	coverContent: string = this.dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png';
-	authorProfileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
+	coverContent: string;
+	authorProfileImageContent: string = this.dataService.defaultAvatar;
 	addToLibraryButtonDisabled: boolean = false;
 	davPlusRequiredDialogVisible: boolean = false;
 	showMobileLayout: boolean = false;
@@ -142,7 +142,7 @@ export class StoreBookPageComponent{
 			this.author.bios = response.data.bios;
 			this.author.collections = response.data.collections;
 			this.author.profileImage = response.data.profile_image;
-			this.authorProfileImageContent = GetAuthorProfileImageLink(this.author.uuid);
+			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultAvatar;
 		}
 	}
 

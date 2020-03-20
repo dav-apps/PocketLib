@@ -29,7 +29,7 @@ export class AuthorProfileComponent{
 	newBio: string = "";
 	newBioError: string = "";
 	collections: {uuid: string, name: string}[] = [];
-	profileImageContent: string = "https://davapps.blob.core.windows.net/avatars-dev/default.png";
+	profileImageContent: string = this.dataService.defaultAvatar;
 	getAuthorPromise: Promise<null> = new Promise((resolve) => this.getAuthorPromiseResolve = resolve);
 	getAuthorPromiseResolve: Function;
 	createCollectionDialogVisible: boolean = false;

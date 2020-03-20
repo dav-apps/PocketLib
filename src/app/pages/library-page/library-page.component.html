@@ -23,7 +23,7 @@
 				(contextmenu)="onContextMenu($event, book)"
 				(mouseover)="hoveredBookIndex = i"
 				(mouseout)="hoveredBookIndex = -1">
-         <img [src]="book.cover ? book.cover : (dataService.darkTheme ? '/assets/images/placeholder-dark.png' : '/assets/images/placeholder.png')" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
+         <img [src]="book.cover ? book.cover : dataService.defaultStoreBookCover" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
          <div class="card-body">
             <p class="card-text text-center text-color" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
          </div>
