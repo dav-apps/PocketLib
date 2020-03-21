@@ -1,4 +1,4 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
@@ -7,6 +7,7 @@ import {
 	ApiResponse,
 	FindAppropriateLanguage,
 	GetAuthorProfileImageLink,
+	GetStoreBookCoverLink,
 	Author,
 	AuthorMode
 } from 'src/app/services/data-service';
@@ -22,6 +23,7 @@ export class AuthorProfileComponent{
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
+	books: {uuid: string, title: string, description: string, language: string, coverContent: string}[] = [];
 	profileImageWidth: number = 200;
 	bioLanguageDropdownSelectedIndex: number = 0;
 	bioLanguageDropdownOptions: IDropdownOption[] = [];
@@ -35,6 +37,8 @@ export class AuthorProfileComponent{
 	createCollectionDialogVisible: boolean = false;
 	createCollectionDialogName: string = "";
 	createCollectionDialogNameError: string = "";
+	hoveredBookIndex: number = -1;
+	bookTitleFontSize: number = 20;
 
 	bioTextfieldStyles = {
 		root: {
@@ -83,7 +87,7 @@ export class AuthorProfileComponent{
 		}else{
 			// Get the author from the server
 			this.GetAuthorResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid})
+				await this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid, books: true, language: this.dataService.locale.slice(0, 2)})
 			)
 		}
 
@@ -103,11 +107,16 @@ export class AuthorProfileComponent{
 		this.SetupBioLanguageDropdown();
 	}
 
+	ngAfterViewInit(){
+		this.UpdateFontSize();
+	}
+
 	@HostListener('window:resize')
 	onResize(){
 		this.setSize();
+		this.UpdateFontSize();
 	}
-	
+
 	setSize(){
 		if(window.innerWidth < 768){
 			this.profileImageWidth = 110;
@@ -118,12 +127,34 @@ export class AuthorProfileComponent{
 		}
 	}
 
+	UpdateFontSize(){
+		let bookListItems = document.getElementsByClassName('book-list-item');
+		if(bookListItems.length == 0) return;
+
+		let bookItemStyles = getComputedStyle(bookListItems.item(0));
+		let bookItemWidth = +bookItemStyles.width.replace('px', '');
+
+		if(bookItemWidth <= 360){
+			this.bookTitleFontSize = 17;
+		}else if(bookItemWidth <= 400){
+			this.bookTitleFontSize = 18;
+		}else if(bookItemWidth <= 470){
+			this.bookTitleFontSize = 19;
+		}else{
+			this.bookTitleFontSize = 20;
+		}
+	}
+
 	SelectDefaultBio(){
 		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.author.bios);
 	}
 
-	ShowCollection(uuid: string){
+	NavigateToCollection(uuid: string){
 		this.router.navigate(["author", "collection", uuid]);
+	}
+
+	NavigateToStoreBook(uuid: string){
+		this.router.navigate(["store", "book", uuid]);
 	}
 
 	SetupBioLanguageDropdown(){
@@ -368,8 +399,18 @@ export class AuthorProfileComponent{
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
 				bios: response.data.bios,
-				collections: response.data.collections,
+				collections: [],
 				profileImage: response.data.profile_image
+			}
+
+			for(let book of response.data.books){
+				this.books.push({
+					uuid: book.uuid,
+					title: book.title,
+					description: book.description,
+					language: book.language,
+					coverContent: GetStoreBookCoverLink(book.uuid)
+				});
 			}
 
 			this.bioMode = BioMode.Normal;

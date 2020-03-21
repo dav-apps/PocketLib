@@ -42,7 +42,8 @@
 			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
-		<div class="col-12 col-md-8 col-xl-9 text-center pt-5">
+		<div class="col-12 col-md-8 col-xl-9 text-center pt-5" *ngIf="authorMode != 0">
+			<!-- List of collections -->
 			<h3 class="font-weight-light mt-md-5 mb-3 mb-md-4 text-color">{{ locale.yourCollections }}</h3>
 
 			<div class="list-group" style="display: inline-block">
@@ -53,8 +54,36 @@
 				<p 
 					class="list-group-item cursor theme-background-color-secondary text-color" 
 					style="font-size: 18px"
-					(click)="ShowCollection(collection.uuid)" 
+					(click)="NavigateToCollection(collection.uuid)" 
 					*ngFor="let collection of collections">{{ collection.name }}</p>
+			</div>
+		</div>
+
+		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode == 0">
+			<!-- List of books -->
+			<div
+				class="card my-4 cursor book-list-item theme-background-color-secondary"
+				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
+				style="transition: 0.12s"
+				*ngFor="let book of books; let i = index"
+				(click)="NavigateToStoreBook(book.uuid)"
+				(mouseover)="hoveredBookIndex = i"
+				(mouseout)="hoveredBookIndex = -1">
+				<div class="row no-gutters">
+					<div class="col-4">
+						<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="width: 100px" />
+					</div>
+
+					<div class="col-8 my-auto">
+						<div class="card-body">
+							<h5
+								[style.fontSize.px]="bookTitleFontSize"
+								class="card-title my-auto text-color">
+								{{ book.title }}
+							</h5>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
