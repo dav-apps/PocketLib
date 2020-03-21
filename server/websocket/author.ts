@@ -72,14 +72,27 @@ export async function getAuthorOfUser(message: {jwt: string}){
 	websocket.emit(getAuthorOfUser.name, result);
 }
 
-export async function getAuthor(message: {uuid: string}){
+export async function getAuthor(message: {
+	uuid: string,
+	books?: boolean,
+	language?: string
+}){
 	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
 
 	try{
-		var response = await axios.default({
+		let options: axios.AxiosRequestConfig = {
 			method: 'get',
 			url: `${process.env.POCKETLIB_API_URL}/author/${message.uuid}`
-		});
+		}
+
+		if(message.books){
+			options.params = {
+				books: true,
+				language: message.language ? message.language : "en"
+			}
+		}
+
+		var response = await axios.default(options);
 
 		result.status = response.status;
 		result.headers = response.headers;
