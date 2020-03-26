@@ -78,10 +78,8 @@ export enum WebsocketCallbackType{
 	// Book
 	CreateBook,
 	// Category
-	GetCategories,
+	GetCategories
 	// Misc
-	Login,
-	GetApp
 }
 
 export const Callbacks = {
@@ -108,9 +106,7 @@ export const Callbacks = {
 	getStoreBookCover: WebsocketCallbackType.GetStoreBookCover,
 	setStoreBookFile: WebsocketCallbackType.SetStoreBookFile,
 	createBook: WebsocketCallbackType.CreateBook,
-	getCategories: WebsocketCallbackType.GetCategories,
-	login: WebsocketCallbackType.Login,
-	getApp: WebsocketCallbackType.GetApp
+	getCategories: WebsocketCallbackType.GetCategories
 }
 
 function getKeyByValue(object: any, value: any) {
