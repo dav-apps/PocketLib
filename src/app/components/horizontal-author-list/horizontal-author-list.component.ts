@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiResponse } from 'dav-npm';
 import { DataService, GetAuthorProfileImageLink } from 'src/app/services/data-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
+import { ApiService } from 'src/app/services/api-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -21,7 +22,7 @@ export class HorizontalAuthorListComponent{
 	
 	constructor(
 		public dataService: DataService,
-		private websocketService: WebsocketService,
+		private apiService: ApiService,
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().horizontalAuthorList;
@@ -30,7 +31,7 @@ export class HorizontalAuthorListComponent{
 	async ngOnInit(){
 		// Get the latest authors
 		this.authors = [];
-		let response = await this.websocketService.Emit(WebsocketCallbackType.GetLatestAuthors, {});
+		let response: ApiResponse<any> = await this.apiService.GetLatestAuthors();
 		if(response.status != 200) return;
 
 		for(let author of response.data.authors){

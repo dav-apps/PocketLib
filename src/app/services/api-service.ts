@@ -110,5 +110,31 @@ export class ApiService{
 
 		return result;
 	}
+
+	async GetLatestAuthors() : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			var response = await axios.default({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/authors/latest`
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
 	//#endregion
 }

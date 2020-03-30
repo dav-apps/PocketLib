@@ -1,4 +1,3 @@
-import * as author from './websocket/author';
 import * as authorBio from './websocket/author-bio';
 import * as authorProfileImage from './websocket/author-profile-image';
 import * as storeBookCollection from './websocket/store-book-collection';
@@ -14,7 +13,6 @@ var socket = null;
 
 export function init(s: any){
 	socket = s;
-	for(let name in author.sockets) socket.on(name, author.sockets[name]);
 	for(let name in authorBio.sockets) socket.on(name, authorBio.sockets[name]);
 	for(let name in authorProfileImage.sockets) socket.on(name, authorProfileImage.sockets[name]);
 	for(let name in storeBookCollection.sockets) socket.on(name, storeBookCollection.sockets[name]);
