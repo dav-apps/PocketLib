@@ -1,12 +1,12 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
-import { environment } from 'src/environments/environment';
+import { Init, DavEnvironment, TableObject, Log, ApiResponse } from 'dav-npm';
 import { DataService } from 'src/app/services/data-service';
-import { WebsocketService, WebsocketCallbackType } from './services/websocket-service';
+import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from './services/routing-service';
 import { GetSettings } from 'src/app/models/Settings';
+import { environment } from 'src/environments/environment';
 
 const visitEventName = "visit";
 
@@ -18,7 +18,7 @@ const visitEventName = "visit";
 export class AppComponent{
    constructor(
 		public dataService: DataService,
-		private websocketService: WebsocketService,
+		private apiService: ApiService,
 		public routingService: RoutingService,
       private router: Router
    ){}
@@ -74,7 +74,7 @@ export class AppComponent{
 					this.dataService.LoadAllBooks();
 				}
 			}
-		);
+		)
 
 		// Get the settings
 		this.dataService.settings = await GetSettings();
@@ -93,10 +93,7 @@ export class AppComponent{
 		Log(environment.apiKey, visitEventName);
 
 		// Load the author
-		await this.dataService.userPromise;
-		this.GetAuthorOfUserResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.GetAuthorOfUser, {jwt: this.dataService.user.JWT})
-		)
+		await this.LoadAuthorOfUser();
 	}
 
 	ngAfterViewInit(){
@@ -113,7 +110,10 @@ export class AppComponent{
 		this.dataService.contentHeight = window.innerHeight - navbarHeight;
 	}
 
-	GetAuthorOfUserResponse(response: {status: number, data: any}){
+	async LoadAuthorOfUser(){
+		await this.dataService.userPromise;
+		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser(this.dataService.user.JWT);
+
 		if(response.status == 200){
 			if(response.data.authors){
 				this.dataService.adminAuthors = [];
