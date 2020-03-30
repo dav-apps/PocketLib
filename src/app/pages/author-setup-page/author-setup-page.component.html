@@ -1,31 +1,42 @@
 <div class="container d-flex flex-column ms-motion-slideUpIn">
-	<h2 class="text-center font-weight-light mt-3">{{ locale.title }}</h2>
+	<h2 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h2>
 
 	<div class="mt-2 mx-auto" *ngIf="generalError.length > 0" style="min-width: 200px; max-width: 300px">
 		<fab-message-bar [messageBarType]="messageBarType">{{ generalError }}</fab-message-bar>
 	</div>
 
 	<div class="mx-auto" style="width: 300px">
-		<div class="mt-3">
+		<div class="form-group mt-3">
+			<label
+				class="col-form-label text-color"
+				style="font-size: 15px">
+				{{ locale.firstNameTextfieldLabel }}
+			</label>
+
 			<fab-text-field
 				[(value)]="firstName"
-				[label]="locale.firstNameTextfieldLabel"
 				[placeholder]="locale.firstNameTextfieldPlaceholder"
 				[errorMessage]="firstNameError">
 			</fab-text-field>
 		</div>
 	
-		<div class="mt-3">
+		<div class="form-group mt-3">
+			<label
+				class="col-form-label text-color"
+				style="font-size: 15px">
+				{{ locale.lastNameTextfieldLabel }}
+			</label>
+
 			<fab-text-field
 				[(value)]="lastName"
-				[label]="locale.lastNameTextfieldLabel"
 				[placeholder]="locale.lastNameTextfieldPlaceholder"
-				[errorMessage]="lastNameError">
+				[errorMessage]="lastNameError"
+				(keydown.enter)="Submit()">
 			</fab-text-field>
 		</div>
 	
 		<div class="mt-3">
-			<fab-default-button (click)="Submit()">{{ locale.save }}</fab-default-button>
+			<fab-primary-button (click)="Submit()">{{ locale.create }}</fab-primary-button>
 		</div>
 	</div>
 </div>

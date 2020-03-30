@@ -66,12 +66,13 @@
 		 [(value)]="createAuthorDialogLastName"
 		 [label]="locale.createAuthorDialog.lastNameTextfieldLabel"
 		 [placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
-		 [errorMessage]="createAuthorDialogLastNameError">
+		 [errorMessage]="createAuthorDialogLastNameError"
+		 (keydown.enter)="CreateAuthor()">
 		</fab-text-field>
 	</div>
 
 	<fab-dialog-footer>
-		<fab-default-button (click)="createAuthorDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateAuthor()">{{ locale.create }}</fab-primary-button>
+		<fab-default-button (onClick)="createAuthorDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="CreateAuthor()">{{ locale.create }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>

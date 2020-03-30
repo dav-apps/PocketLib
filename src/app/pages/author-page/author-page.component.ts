@@ -1,7 +1,9 @@
 import { Component, HostListener } from "@angular/core";
 import { Router, ActivatedRoute } from '@angular/router';
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { DataService, ApiResponse } from 'src/app/services/data-service';
+import { ApiResponse } from 'dav-npm';
+import { DataService } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -40,6 +42,7 @@ export class AuthorPageComponent{
 
    constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private websocketService: WebsocketService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -113,16 +116,12 @@ export class AuthorPageComponent{
 		this.createAuthorDialogFirstNameError = "";
 		this.createAuthorDialogLastNameError = "";
 
-		this.CreateAuthorResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.CreateAuthor, {
-				jwt: this.dataService.user.JWT,
-				firstName: this.createAuthorDialogFirstName,
-				lastName: this.createAuthorDialogLastName
-			})
+		let response: ApiResponse<any> = await this.apiService.CreateAuthor(
+			this.dataService.user.JWT,
+			this.createAuthorDialogFirstName,
+			this.createAuthorDialogLastName
 		)
-	}
 
-	CreateAuthorResponse(response: ApiResponse){
 		if(response.status == 201){
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push({
@@ -139,20 +138,24 @@ export class AuthorPageComponent{
 			// Redirect to the author page of the new author
 			this.router.navigate(['author', response.data.uuid]);
 		}else{
-			let errors = response.data.errors;
-
-			for(let error of errors){
+			for(let error of response.data.errors){
 				switch(error.code){
-					case 2301:	// First name too short
+					case 2102:	// Missing field: first_name
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing;
+						break;
+					case 2103:	// Missing field: last_name
+						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing;
+						break;
+					case 2301:	// Field too short: first_name
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort;
 						break;
-					case 2302:	// Last name too short
+					case 2302:	// Field too short: last_name
 						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort;
 						break;
-					case 2401:	// First name too long
+					case 2401:	// Field too long: first_name
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong;
 						break;
-					case 2402:	// Last name too long
+					case 2402:	// Field too long: last_name
 						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong;
 						break;
 					default:		// Unexpected error

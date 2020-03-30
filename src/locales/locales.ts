@@ -66,11 +66,13 @@ const enDefaults = {
 			lastNameTextfieldLabel: "Last name",
 			lastNameTextfieldPlaceholder: "The last name of the author",
 			errors: {
+				firstNameMissing: "Please provide the first name",
+				lastNameMissing: "Please provide the last name",
 				firstNameTooShort: "The first name is too short",
 				lastNameTooShort: "The last name is too short",
 				firstNameTooLong: "The first name is too long",
 				lastNameTooLong: "The last name is too long",
-				unexpectedError: "An unexpected error occured"
+				unexpectedError: "An unexpected error occured. Please try again later."
 			}
 		},
 		cancel: "Cancel",
@@ -78,7 +80,7 @@ const enDefaults = {
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
-		save: "Save",
+		create: "create",
 		firstNameTextfieldLabel: "First name",
 		firstNameTextfieldPlaceholder: "Your first name",
 		lastNameTextfieldLabel: "Last name",
@@ -90,7 +92,7 @@ const enDefaults = {
 			lastNameTooShort: "The last name is too short",
 			firstNameTooLong: "The first name is too long",
 			lastNameTooLong: "The last name is too long",
-			unexpectedError: "An unexpected error occured. Please try again."
+			unexpectedError: "An unexpected error occured. Please try again later."
 		}
 	},
 	authorCollectionPage: {
@@ -352,11 +354,13 @@ const deDefaults = {
 			lastNameTextfieldLabel: "Nachname",
 			lastNameTextfieldPlaceholder: "Der Nachname des Autors",
 			errors: {
+				firstNameMissing: "Bitte gib einen Vornamen ein",
+				lastNameMissing: "Bitte gib einen Nachnamen ein",
 				firstNameTooShort: "Der Vorname ist zu kurz",
 				lastNameTooShort: "Der Nachname ist zu kurz",
 				firstNameTooLong: "Der Vorname ist zu lang",
 				lastNameTooLong: "Der Nachname ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		cancel: "Abbrechen",
@@ -364,19 +368,19 @@ const deDefaults = {
 	},
 	authorSetupPage: {
 		title: "Erstelle dein Autoren-Profil",
-		save: "Speichern",
+		create: "Erstellen",
 		firstNameTextfieldLabel: "Vorname",
 		firstNameTextfieldPlaceholder: "Dein Vorname",
 		lastNameTextfieldLabel: "Nachname",
 		lastNameTextfieldPlaceholder: "Dein Nachname",
 		errors: {
-			firstNameMissing: "Bitte gib deinen Vornamen an",
-			lastNameMissing: "Bitte gib deinen Nachnamen an",
+			firstNameMissing: "Bitte gib deinen Vornamen ein",
+			lastNameMissing: "Bitte gib deinen Nachnamen ein",
 			firstNameTooShort: "Der Vorname ist zu kurz",
 			lastNameTooShort: "Der Nachname ist zu kurz",
 			firstNameTooLong: "Der Vorname ist zu lang",
 			lastNameTooLong: "Der Nachname ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
 	},
 	authorCollectionPage: {
