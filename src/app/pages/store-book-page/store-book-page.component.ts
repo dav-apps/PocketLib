@@ -11,6 +11,7 @@ import {
 	GetStoreBookCoverLink,
 	Author
 } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { environment } from 'src/environments/environment';
@@ -61,6 +62,7 @@ export class StoreBookPageComponent{
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private websocketService: WebsocketService,
 		private routingService: RoutingService,
 		private snackBar: MatSnackBar,
@@ -173,10 +175,7 @@ export class StoreBookPageComponent{
 	}
 
 	async GetAuthor(uuid: string){
-		let response: ApiResponse<any> = await this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {
-			jwt: this.dataService.user.JWT,
-			uuid
-		})
+		let response: ApiResponse<any> = await this.apiService.GetAuthor(uuid);
 
 		if(response.status == 200){
 			this.author.uuid = response.data.uuid;

@@ -45,7 +45,7 @@ export class ApiService{
 		return result;
 	}
 
-	async GetAuthorOfUser(jwt: string){
+	async GetAuthorOfUser(jwt: string) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
@@ -55,6 +55,43 @@ export class ApiService{
 				headers: {
 					Authorization: jwt
 				}
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+
+	async GetAuthor(
+		uuid: string,
+		books?: boolean,
+		language?: string
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let params = {};
+			if(books){
+				params["books"] = true;
+				params["language"] = language || "en";
+			}
+
+			let response = await axios.default({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}`,
+				params
 			});
 
 			result.status = response.status;

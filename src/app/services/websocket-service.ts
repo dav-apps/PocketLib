@@ -46,7 +46,6 @@ interface WebsocketSubscription{
 
 export enum WebsocketCallbackType{
 	// Author
-	GetAuthor,
 	GetLatestAuthors,
 	// AuthorBio
 	SetBioOfAuthorOfUser,
@@ -81,7 +80,6 @@ export enum WebsocketCallbackType{
 }
 
 export const Callbacks = {
-	getAuthor: WebsocketCallbackType.GetAuthor,
 	getLatestAuthors: WebsocketCallbackType.GetLatestAuthors,
 	setBioOfAuthorOfUser: WebsocketCallbackType.SetBioOfAuthorOfUser,
 	setBioOfAuthor: WebsocketCallbackType.SetBioOfAuthor,

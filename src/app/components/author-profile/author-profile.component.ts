@@ -2,15 +2,16 @@ import { Component, Input, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
+import { ApiResponse } from 'dav-npm';
 import {
 	DataService,
-	ApiResponse,
 	FindAppropriateLanguage,
 	GetAuthorProfileImageLink,
 	GetStoreBookCoverLink,
 	Author,
 	AuthorMode
 } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -32,8 +33,6 @@ export class AuthorProfileComponent{
 	newBioError: string = "";
 	collections: {uuid: string, name: string}[] = [];
 	profileImageContent: string = this.dataService.defaultAvatar;
-	getAuthorPromise: Promise<null> = new Promise((resolve) => this.getAuthorPromiseResolve = resolve);
-	getAuthorPromiseResolve: Function;
 	createCollectionDialogVisible: boolean = false;
 	createCollectionDialogName: string = "";
 	createCollectionDialogNameError: string = "";
@@ -56,6 +55,7 @@ export class AuthorProfileComponent{
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private websocketService: WebsocketService,
 		private router: Router
 	){
@@ -79,19 +79,13 @@ export class AuthorProfileComponent{
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
 			this.SelectDefaultBio();
-			this.getAuthorPromiseResolve();
 		}else if(this.authorMode == AuthorMode.AuthorOfUser){
 			this.author = this.dataService.userAuthor;
 			this.SelectDefaultBio();
-			this.getAuthorPromiseResolve();
 		}else{
 			// Get the author from the server
-			this.GetAuthorResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.GetAuthor, {uuid: this.uuid, books: true, language: this.dataService.locale.slice(0, 2)})
-			)
+			await this.LoadAuthor();
 		}
-
-		await this.getAuthorPromise;
 
 		if(this.author.profileImage){
 			// Set the author profile image link
@@ -344,7 +338,7 @@ export class AuthorProfileComponent{
 		)
 	}
 
-	ProcessSetBioResponse(response: ApiResponse){
+	ProcessSetBioResponse(response: ApiResponse<any>){
 		if(response.status == 200){
 			if(this.bioMode == BioMode.New){
 				// Add the new bio to the bios
@@ -392,7 +386,9 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	GetAuthorResponse(response: ApiResponse){
+	async LoadAuthor(){
+		let response: ApiResponse<any> = await this.apiService.GetAuthor(this.uuid, true, this.dataService.locale.slice(0, 2));
+
 		if(response.status == 200){
 			this.author = {
 				uuid: response.data.uuid,
@@ -416,33 +412,31 @@ export class AuthorProfileComponent{
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
 		}
-
-		this.getAuthorPromiseResolve();
 	}
 
-	SetBioOfAuthorOfUserResponse(response: ApiResponse){
+	SetBioOfAuthorOfUserResponse(response: ApiResponse<any>){
 		this.ProcessSetBioResponse(response);
 	}
 
-	SetBioOfAuthorResponse(response: ApiResponse){
+	SetBioOfAuthorResponse(response: ApiResponse<any>){
 		this.ProcessSetBioResponse(response);
 	}
 
-	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse){
+	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse<any>){
 		if(response.status == 200){
 			// Show the uploaded profile image
 			this.author.profileImage = true;
 		}
 	}
 
-	SetProfileImageOfAuthorResponse(response: ApiResponse){
+	SetProfileImageOfAuthorResponse(response: ApiResponse<any>){
 		if(response.status == 200){
 			// Show the uploaded profile image
 			this.author.profileImage = true;
 		}
 	}
 
-	CreateStoreBookCollectionResponse(response: ApiResponse){
+	CreateStoreBookCollectionResponse(response: ApiResponse<any>){
 		if(response.status == 201){
 			// Add the collection to the author in DataService
 			this.author.collections.push(response.data)
