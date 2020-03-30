@@ -242,22 +242,18 @@ export class AuthorProfileComponent{
 			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
 
 			if(this.authorMode == AuthorMode.AuthorOfUser){
-				this.SetBioOfAuthorOfUserResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthorOfUser, {
-						jwt: this.dataService.user.JWT,
-						language: selectedOption.data.language,
-						bio: this.newBio
-					})
-				)
+				this.ProcessSetBioResponse(await this.apiService.SetBioOfAuthorOfUser(
+					this.dataService.user.JWT,
+					selectedOption.data.language,
+					this.newBio
+				))
 			}else{
-				this.SetBioOfAuthorResponse(
-					await this.websocketService.Emit(WebsocketCallbackType.SetBioOfAuthor, {
-						jwt: this.dataService.user.JWT,
-						uuid: this.uuid,
-						language: selectedOption.data.language,
-						bio: this.newBio
-					})
-				)
+				this.ProcessSetBioResponse(await this.apiService.SetBioOfAuthor(
+					this.dataService.user.JWT,
+					this.uuid,
+					selectedOption.data.language,
+					this.newBio
+				))
 			}
 		}else{
 			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio;
@@ -412,14 +408,6 @@ export class AuthorProfileComponent{
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
 		}
-	}
-
-	SetBioOfAuthorOfUserResponse(response: ApiResponse<any>){
-		this.ProcessSetBioResponse(response);
-	}
-
-	SetBioOfAuthorResponse(response: ApiResponse<any>){
-		this.ProcessSetBioResponse(response);
 	}
 
 	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse<any>){

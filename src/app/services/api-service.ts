@@ -137,4 +137,83 @@ export class ApiService{
 		return result;
 	}
 	//#endregion
+
+	//#region AuthorBio
+	async SetBioOfAuthorOfUser(
+		jwt: string,
+		language: string,
+		bio: string
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let data = {};
+			if(bio) data["bio"] = bio;
+
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author/bio/${language}`,
+				headers: {
+					Authorization: jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+
+	async SetBioOfAuthor(
+		jwt: string,
+		uuid: string,
+		language: string,
+		bio: string
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let data = {};
+			if(bio) data["bio"] = bio;
+
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/bio/${language}`,
+				headers: {
+					Authorization: jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+	//#endregion
 }
