@@ -7,6 +7,7 @@ export const environment = {
    apiKey: "eUzs3PQZYweXvumcWvagRHjdUroGe5Mo7kN1inHm",
 	baseUrl: "http://localhost:3001",
 	apiBaseUrl: "http://localhost:3111/v1",
+	pocketlibApiBaseUrl: "http://localhost:3111/v1/api/1/call",
 	websiteBaseUrl: "http://localhost:3000",
    appId: 6,
 	bookTableId: 14,
