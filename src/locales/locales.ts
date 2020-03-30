@@ -165,12 +165,18 @@ const enDefaults = {
 		review: "In review",
 		hidden: "Hidden",
 		publish: "Publish",
+		free: "Free",
 		davProRequiredDialog: {
 			title: "dav Pro required",
 			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month.",
-			learnMore: "Learn more",
-			back: "Back"
-		}
+			learnMore: "Learn more"
+		},
+		buyBookDialog: {
+			title: "Buy book",
+			description: "When you buy this book, you can access it regardless of you plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>70 % of the price goes directly to the author.",
+			continue: "Continue"
+		},
+		back: "Back"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
@@ -445,12 +451,18 @@ const deDefaults = {
 		review: "In Überprüfung",
 		hidden: "Versteckt",
 		publish: "Veröffentlichen",
+		free: "Kostenlos",
 		davProRequiredDialog: {
 			title: "dav Pro benötigt",
 			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen.",
-			learnMore: "Mehr erfahren",
-			back: "Zurück"
-		}
+			learnMore: "Mehr erfahren"
+		},
+		buyBookDialog: {
+			title: "Buch kaufen",
+			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>70 % des Preises geht direkt an den Autor.",
+			continue: "Weiter"
+		},
+		back: "Zurück"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",

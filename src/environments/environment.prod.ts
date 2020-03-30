@@ -3,6 +3,7 @@ export const environment = {
    apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	baseUrl: "https://pocketlib.dav-apps.tech",
 	apiBaseUrl: "https://dav-backend.herokuapp.com/v1",
+	websiteBaseUrl: "https://dav-apps.tech",
    appId: 6,
    bookTableId: 14,
    bookFileTableId: 15,
