@@ -10,7 +10,8 @@
 			<fab-text-field
 				[(value)]="collectionName.name"
 				[placeholder]="locale.nameTextfieldPlaceholder.replace('{0}', collectionName.fullLanguage)"
-				[errorMessage]="collectionName.errorMessage">
+				[errorMessage]="collectionName.errorMessage"
+				(keydown.enter)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
 			</fab-text-field>
 		</div>
 

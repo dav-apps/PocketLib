@@ -185,6 +185,7 @@ const enDefaults = {
 		addLanguageDropdownLabel: "Add language",
 		selectLanguage: "Select a language",
 		errors: {
+			nameMissing: "Please enter a name",
 			nameTooShort: "The name is too short",
 			nameTooLong: "The name is too long",
 			unexpectedError: "An unexpected error occured. Please try it again later."
@@ -474,6 +475,7 @@ const deDefaults = {
 		addLanguageDropdownLabel: "Sprache hinzufügen",
 		selectLanguage: "Wähle eine Sprache",
 		errors: {
+			nameMissing: "Bitte gib einen Namen ein",
 			nameTooShort: "Der Name ist zu kurz",
 			nameTooLong: "Der Name ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."

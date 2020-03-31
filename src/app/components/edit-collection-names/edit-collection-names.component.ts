@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IDropdownOption } from 'office-ui-fabric-react';
-import { DataService, ApiResponse } from 'src/app/services/data-service';
+import { ApiResponse } from 'dav-npm';
+import { DataService } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -16,13 +18,12 @@ export class EditCollectionNamesComponent{
 	@Output() update = new EventEmitter();
 	@Output() showAddLanguageButton = new EventEmitter();
 	@Output() hideAddLanguageButton = new EventEmitter();
-	setCollectionNamePromiseResolve: Function;
 	addLanguageSelectedKey: string = "default";
 	addLanguageOptions: IDropdownOption[] = [];
 
 	constructor(
 		private dataService: DataService,
-		private websocketService: WebsocketService
+		private apiService: ApiService
 	){
 		this.locale = this.dataService.GetLocale().editCollectionNames;
 	}
@@ -65,38 +66,30 @@ export class EditCollectionNamesComponent{
 
 	async UpdateName(collectionName: CollectionName){
 		collectionName.errorMessage = "";
-		let setCollectionNamePromise: Promise<ApiResponse> = new Promise((resolve) => {
-			this.setCollectionNamePromiseResolve = resolve;
-		});
 
 		// Update the collection name on the server
-		this.SetStoreBookCollectionNameResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCollectionName, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				language: collectionName.language,
-				name: collectionName.name
-			})
+		let setCollectionNameResponse: ApiResponse<any> = await this.apiService.SetStoreBookCollectionName(
+			this.dataService.user.JWT,
+			this.uuid,
+			collectionName.language,
+			collectionName.name
 		)
-
-		// Wait for the response
-		let setCollectionNameResponse = await setCollectionNamePromise;
 
 		if(setCollectionNameResponse.status == 200){
 			collectionName.edit = false;
 			this.update.emit(setCollectionNameResponse.data);
 		}else{
 			switch(setCollectionNameResponse.data.errors[0].code){
-				case 2307:
-					// Field too short: name
+				case 2108:	// Missing field: name
+					collectionName.errorMessage = this.locale.errors.nameMissing;
+					break;
+				case 2307:	// Field too short: name
 					collectionName.errorMessage = this.locale.errors.nameTooShort;
 					break;
-				case 2407:
-					// Field too long: name
+				case 2407:	// Field too long: name
 					collectionName.errorMessage = this.locale.errors.nameTooLong;
 					break;
-				default:
-					// Unexpected error
+				default:		// Unexpected error
 					collectionName.errorMessage = this.locale.errors.unexpectedError;
 					break;
 			}
@@ -106,10 +99,6 @@ export class EditCollectionNamesComponent{
 	AddLanguageDropdownChange(e: {event: MouseEvent, option: {key: string, text: string}}){
 		this.addLanguageSelectedKey = e.option.key;
 		this.addLanguageSelectedKey == "default" ? this.hideAddLanguageButton.emit() : this.showAddLanguageButton.emit();
-	}
-
-	SetStoreBookCollectionNameResponse(response: ApiResponse){
-		this.setCollectionNamePromiseResolve(response);
 	}
 }
 

@@ -45,8 +45,6 @@ export class CollectionViewComponent{
 	collectionNamesDialogVisible: boolean = false;
 	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
 	showAddLanguageButton: boolean = false;
-	getCollectionPromise: Promise<null> = new Promise((resolve) => this.getCollectionPromiseResolve = resolve);
-	getCollectionPromiseResolve: Function;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
