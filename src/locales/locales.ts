@@ -66,8 +66,8 @@ const enDefaults = {
 			lastNameTextfieldLabel: "Last name",
 			lastNameTextfieldPlaceholder: "The last name of the author",
 			errors: {
-				firstNameMissing: "Please provide the first name",
-				lastNameMissing: "Please provide the last name",
+				firstNameMissing: "Please enter the first name",
+				lastNameMissing: "Please enter the last name",
 				firstNameTooShort: "The first name is too short",
 				lastNameTooShort: "The last name is too short",
 				firstNameTooLong: "The first name is too long",
@@ -86,8 +86,8 @@ const enDefaults = {
 		lastNameTextfieldLabel: "Last name",
 		lastNameTextfieldPlaceholder: "Your last name",
 		errors: {
-			firstNameMissing: "Please provide your first name",
-			lastNameMissing: "Please provide your last name",
+			firstNameMissing: "Please enter your first name",
+			lastNameMissing: "Please enter your last name",
 			firstNameTooShort: "The first name is too short",
 			lastNameTooShort: "The last name is too short",
 			firstNameTooLong: "The first name is too long",
@@ -231,6 +231,7 @@ const enDefaults = {
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "The name of the collection",
 			errors: {
+				nameMissing: "Please enter a name",
 				nameTooShort: "The name is too short",
 				nameTooLong: "The name is too long",
 				unexpectedError: "An unexpected error occured"
@@ -519,6 +520,7 @@ const deDefaults = {
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Der Name der Sammlung",
 			errors: {
+				nameMissing: "Bitte gib einen Namen ein",
 				nameTooShort: "Der Name ist zu kurz",
 				nameTooLong: "Der Name ist zu lang",
 				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"

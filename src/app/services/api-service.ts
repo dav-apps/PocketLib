@@ -289,4 +289,47 @@ export class ApiService{
 		return result;
 	}
 	//#endregion
+
+	//#region StoreBookCollection
+	async CreateStoreBookCollection(
+		jwt: string,
+		name: string,
+		language: string,
+		author?: string
+	){
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let data = {};
+			if(name) data["name"] = name;
+			if(language) data["language"] = language;
+			if(author) data["author"] = author;
+
+			let response = await axios.default({
+				method: 'post',
+				url: `${environment.pocketlibApiBaseUrl}/store/collection`,
+				headers: {
+					Authorization: jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+	//#endregion
 }

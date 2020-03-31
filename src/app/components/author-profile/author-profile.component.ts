@@ -12,7 +12,6 @@ import {
 	AuthorMode
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -56,7 +55,6 @@ export class AuthorProfileComponent{
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private websocketService: WebsocketService,
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().authorProfile;
@@ -327,14 +325,38 @@ export class AuthorProfileComponent{
 	async CreateCollection(){
 		this.createCollectionDialogNameError = "";
 
-		this.CreateStoreBookCollectionResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.CreateStoreBookCollection, {
-				jwt: this.dataService.user.JWT,
-				author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
-				name: this.createCollectionDialogName,
-				language: this.dataService.locale.slice(0, 2)
-			})
+		let response: ApiResponse<any> = await this.apiService.CreateStoreBookCollection(
+			this.dataService.user.JWT,
+			this.createCollectionDialogName,
+			this.dataService.locale.slice(0, 2),
+			this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null
 		)
+
+		if(response.status == 201){
+			// Add the collection to the author in DataService
+			this.author.collections.push(response.data)
+			this.collections.push({uuid: response.data.uuid, name: response.data.names[0].name});
+			
+			// Redirect to the collection page
+			this.router.navigate(['author', 'collection', response.data.uuid]);
+		}else{
+			let errorCode = response.data.errors[0].code;
+
+			switch(errorCode){
+				case 2108:	// Missing field: name
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameMissing;
+					break;
+				case 2307:	// Field too short: name
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooShort;
+					break;
+				case 2407:	// Field too long: name
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooLong;
+					break;
+				default:		// Unexpected error
+					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.unexpectedError;
+					break;
+			}
+		}
 	}
 
 	ProcessSetBioResponse(response: ApiResponse<any>){
@@ -410,31 +432,6 @@ export class AuthorProfileComponent{
 
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
-		}
-	}
-
-	CreateStoreBookCollectionResponse(response: ApiResponse<any>){
-		if(response.status == 201){
-			// Add the collection to the author in DataService
-			this.author.collections.push(response.data)
-			this.collections.push({uuid: response.data.uuid, name: response.data.names[0].name});
-			
-			// Redirect to the collection page
-			this.router.navigate(['author', 'collection', response.data.uuid]);
-		}else{
-			let errorCode = response.data.errors[0].code;
-
-			switch(errorCode){
-				case 2307:	// Name too short
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooShort;
-					break;
-				case 2407:	// Name too long
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooLong;
-					break;
-				default:		// Unexpected error
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.unexpectedError;
-					break;
-			}
 		}
 	}
 }

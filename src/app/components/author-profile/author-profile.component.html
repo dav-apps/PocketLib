@@ -100,12 +100,13 @@
 			[(value)]="createCollectionDialogName"
 			[label]="locale.createCollectionDialog.nameTextfieldLabel"
 			[placeholder]="locale.createCollectionDialog.nameTextfieldPlaceholder"
-			[errorMessage]="createCollectionDialogNameError">
+			[errorMessage]="createCollectionDialogNameError"
+			(keydown.enter)="CreateCollection()">
 		</fab-text-field>
 	</div>
 
 	<fab-dialog-footer>
-		<fab-default-button (click)="createCollectionDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="cancelButtonStyles" (click)="CreateCollection()">{{ locale.create }}</fab-primary-button>
+		<fab-default-button (onClick)="createCollectionDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="cancelButtonStyles" (onClick)="CreateCollection()">{{ locale.create }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
