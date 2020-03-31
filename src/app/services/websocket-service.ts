@@ -45,9 +45,6 @@ interface WebsocketSubscription{
 }
 
 export enum WebsocketCallbackType{
-	// AuthorProfileImage
-	GetProfileImageOfAuthorOfUser,
-	GetProfileImageOfAuthor,
 	// StoreBookCollection
 	CreateStoreBookCollection,
 	GetStoreBookCollection,
@@ -73,8 +70,6 @@ export enum WebsocketCallbackType{
 }
 
 export const Callbacks = {
-	getProfileImageOfAuthorOfUser: WebsocketCallbackType.GetProfileImageOfAuthorOfUser,
-	getProfileImageOfAuthor: WebsocketCallbackType.GetProfileImageOfAuthor,
 	createStoreBookCollection: WebsocketCallbackType.CreateStoreBookCollection,
 	getStoreBookCollection: WebsocketCallbackType.GetStoreBookCollection,
 	setStoreBookCollectionName: WebsocketCallbackType.SetStoreBookCollectionName,
