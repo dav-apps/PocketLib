@@ -1,15 +1,16 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
+import { ApiResponse } from 'dav-npm';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import {
 	DataService,
-	ApiResponse,
 	FindAppropriateLanguage,
 	GetStoreBookCoverLink,
 	AuthorMode
 } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -66,6 +67,7 @@ export class CollectionViewComponent{
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private websocketService: WebsocketService,
 		private router: Router
 	){
@@ -79,14 +81,33 @@ export class CollectionViewComponent{
 		await this.dataService.adminAuthorsPromise;
 
 		// Get the collection
-		this.GetStoreBookCollectionResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid
-			})
+		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection(
+			this.uuid,
+			this.dataService.user.JWT
 		)
 
-		await this.getCollectionPromise;
+		if(getCollectionResponse.status == 200){
+			this.collection = getCollectionResponse.data;
+
+			// Get the appropriate collection name
+			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+			if(i != -1) this.collectionName = this.collection.names[i];
+
+			for(let book of this.collection.books){
+				// Cut the description
+				if(book.description && book.description.length > 170){
+					book.description = book.description.slice(0, 169) + "...";
+				}
+
+				if(book.cover){
+					book.coverContent = GetStoreBookCoverLink(book.uuid);
+				}
+			}
+		}else{
+			// Redirect back to the author page
+			this.router.navigate(["author"]);
+			return;
+		}
 
 		// Determine the author mode
 		if(
@@ -181,33 +202,7 @@ export class CollectionViewComponent{
 		this.editCollectionNamesComponent.AddLanguage();
 	}
 
-	async GetStoreBookCollectionResponse(response: ApiResponse){
-		if(response.status == 200){
-			this.collection = response.data;
-
-			// Get the appropriate collection name
-			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
-			if(i != -1) this.collectionName = this.collection.names[i];
-
-			for(let book of this.collection.books){
-				// Cut the description
-				if(book.description && book.description.length > 170){
-					book.description = book.description.slice(0, 169) + "...";
-				}
-
-				if(book.cover){
-					book.coverContent = GetStoreBookCoverLink(book.uuid);
-				}
-			}
-
-			this.getCollectionPromiseResolve();
-		}else{
-			// Redirect back to the author page
-			this.router.navigate(["author"]);
-		}
-	}
-
-	CreateStoreBookResponse(response: ApiResponse){
+	CreateStoreBookResponse(response: ApiResponse<any>){
 		if(response.status == 201){
 			this.createBookDialogVisible = false;
 

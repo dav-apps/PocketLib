@@ -162,10 +162,10 @@ export class StoreBookPageComponent{
 	}
 
 	async GetStoreBookCollection(uuid: string) : Promise<string>{
-		let response: ApiResponse<any> = await this.websocketService.Emit(WebsocketCallbackType.GetStoreBookCollection, {
-			jwt: this.dataService.user.JWT,
-			uuid
-		})
+		let response: ApiResponse<any> = await this.apiService.GetStoreBookCollection(
+			uuid,
+			this.dataService.user.JWT
+		)
 
 		if(response.status == 200){
 			return response.data.author;
