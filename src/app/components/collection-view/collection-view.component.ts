@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import { ApiResponse } from 'dav-npm';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import {
 	DataService,
 	FindAppropriateLanguage,
@@ -66,7 +65,6 @@ export class CollectionViewComponent{
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private websocketService: WebsocketService,
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().collectionView;
@@ -144,14 +142,40 @@ export class CollectionViewComponent{
 	async CreateBook(){
 		this.createBookDialogTitleError = "";
 
-		this.CreateStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.CreateStoreBook, {
-				jwt: this.dataService.user.JWT,
-				collection: this.uuid,
-				title: this.createBookDialogTitle,
-				language: this.dataService.locale.startsWith("de") ? "de" : "en"
-			})
+		let response: ApiResponse<any> = await this.apiService.CreateStoreBook(
+			this.dataService.user.JWT,
+			this.uuid,
+			this.createBookDialogTitle,
+			this.dataService.locale.startsWith("de") ? "de" : "en"
 		)
+
+		if(response.status == 201){
+			this.createBookDialogVisible = false;
+
+			// Redirect to AuthorAppPage
+			this.router.navigate(["author", "book", response.data.uuid]);
+		}else{
+			for(let error of response.data.errors){
+				switch(error.code){
+					case 2105:
+						// Title missing
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleMissing;
+						break;
+					case 2304:
+						// Title too short
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooShort;
+						break;
+					case 2404:
+						// Title too long
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooLong;
+						break;
+					default:
+						// Unexpected error
+						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
+						break;
+				}
+			}
+		}
 	}
 
 	ShowCollectionNamesDialog(){
@@ -198,36 +222,5 @@ export class CollectionViewComponent{
 
 	AddLanguage(){
 		this.editCollectionNamesComponent.AddLanguage();
-	}
-
-	CreateStoreBookResponse(response: ApiResponse<any>){
-		if(response.status == 201){
-			this.createBookDialogVisible = false;
-
-			// Redirect to AuthorAppPage
-			this.router.navigate(["author", "book", response.data.uuid]);
-		}else{
-			let errors = response.data.errors;
-
-			for(let error of errors){
-				switch(error.code){
-					case 2105:
-						// Title missing
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleMissing;
-					case 2304:
-						// Title too short
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooShort;
-						break;
-					case 2404:
-						// Title too long
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooLong;
-						break;
-					default:
-						// Unexpected error
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
-						break;
-				}
-			}
-		}
 	}
 }

@@ -254,7 +254,7 @@ const enDefaults = {
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The title of your book",
 			errors: {
-				titleMissing: "Please provide a title",
+				titleMissing: "Please enter a title",
 				titleTooShort: "The title is too short",
 				titleTooLong: "The title is too long",
 				unexpectedError: "An unexpected error occured"

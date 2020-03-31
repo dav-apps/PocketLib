@@ -66,13 +66,14 @@
 			[(value)]="createBookDialogTitle"
 			[label]="locale.createBookDialog.titleTextfieldLabel"
 			[placeholder]="locale.createBookDialog.titleTextfieldPlaceholder"
-			[errorMessage]="createBookDialogTitleError">
+			[errorMessage]="createBookDialogTitleError"
+			(keydown.enter)="CreateBook()">
 		</fab-text-field>
 	</div>
 
 	<fab-dialog-footer>
-		<fab-default-button (click)="createBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="CreateBook()">{{ locale.save }}</fab-primary-button>
+		<fab-default-button (onClick)="createBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="CreateBook()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
 
