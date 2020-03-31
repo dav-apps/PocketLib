@@ -293,23 +293,26 @@ export class AuthorProfileComponent{
 		this.profileImageContent = file.content;
 
 		// Upload the image
+		let response: ApiResponse<any>;
+
 		if(this.authorMode == AuthorMode.AuthorOfUser){
-			this.SetProfileImageOfAuthorOfUserResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthorOfUser, {
-					jwt: this.dataService.user.JWT,
-					type: file.type,
-					file: imageContent
-				})
+			response = await this.apiService.SetProfileImageOfAuthorOfUser(
+				this.dataService.user.JWT,
+				file.type,
+				imageContent
 			)
 		}else{
-			this.SetProfileImageOfAuthorResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.SetProfileImageOfAuthor, {
-					jwt: this.dataService.user.JWT,
-					uuid: this.uuid,
-					type: file.type,
-					file: imageContent
-				})
+			response = await this.apiService.SetProfileImageOfAuthor(
+				this.dataService.user.JWT,
+				this.uuid,
+				file.type,
+				imageContent
 			)
+		}
+
+		if(response.status == 200){
+			// Show the uploaded profile image
+			this.author.profileImage = true;
 		}
 	}
 
@@ -407,20 +410,6 @@ export class AuthorProfileComponent{
 
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
-		}
-	}
-
-	SetProfileImageOfAuthorOfUserResponse(response: ApiResponse<any>){
-		if(response.status == 200){
-			// Show the uploaded profile image
-			this.author.profileImage = true;
-		}
-	}
-
-	SetProfileImageOfAuthorResponse(response: ApiResponse<any>){
-		if(response.status == 200){
-			// Show the uploaded profile image
-			this.author.profileImage = true;
 		}
 	}
 

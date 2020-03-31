@@ -216,4 +216,77 @@ export class ApiService{
 		return result;
 	}
 	//#endregion
+
+	//#region AuthorProfileImage
+	async SetProfileImageOfAuthorOfUser(
+		jwt: string,
+		type: string,
+		file: any
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author/profile_image`,
+				headers: {
+					Authorization: jwt,
+					'Content-Type': type
+				},
+				data: file
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+
+	async SetProfileImageOfAuthor(
+		jwt: string,
+		uuid: string,
+		type: string,
+		file: any
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`,
+				headers: {
+					Authorization: jwt,
+					'Content-Type': type
+				},
+				data: file
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
+	//#endregion
 }
