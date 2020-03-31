@@ -452,5 +452,42 @@ export class ApiService{
 
 		return result;
 	}
+
+	async GetStoreBook(
+		uuid: string,
+		jwt?: string
+	) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let options: axios.AxiosRequestConfig = {
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${uuid}`
+			}
+
+			if(jwt){
+				options.headers = {
+					Authorization: jwt
+				}
+			}
+
+			let response = await axios.default(options);
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
 	//#endregion
 }

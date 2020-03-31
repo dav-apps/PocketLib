@@ -46,7 +46,6 @@ interface WebsocketSubscription{
 
 export enum WebsocketCallbackType{
 	// StoreBook
-	GetStoreBook,
 	GetStoreBooksByCategory,
 	GetLatestStoreBooks,
 	GetStoreBooksInReview,
@@ -64,7 +63,6 @@ export enum WebsocketCallbackType{
 }
 
 export const Callbacks = {
-	getStoreBook: WebsocketCallbackType.GetStoreBook,
 	getStoreBooksByCategory: WebsocketCallbackType.GetStoreBooksByCategory,
 	getLatestStoreBooks: WebsocketCallbackType.GetLatestStoreBooks,
 	getStoreBooksInReview: WebsocketCallbackType.GetStoreBooksInReview,

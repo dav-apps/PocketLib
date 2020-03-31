@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
+import { ApiResponse } from 'dav-npm';
 import {
 	DataService,
-	ApiResponse,
 	BookStatus,
 	GetBookStatusByString,
 	GetStoreBookCoverLink
 } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
@@ -62,6 +63,7 @@ export class AuthorBookPageComponent{
 
 	constructor(
 		private dataService: DataService,
+		private apiService: ApiService,
 		private websocketService: WebsocketService,
 		private router: Router,
       private activatedRoute: ActivatedRoute
@@ -85,12 +87,29 @@ export class AuthorBookPageComponent{
 		}
 
 		// Get the store book
-		this.GetStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.GetStoreBook, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid
-			})
+		let response: ApiResponse<any> = await this.apiService.GetStoreBook(
+			this.uuid,
+			this.dataService.user.JWT
 		)
+
+		if(response.status == 200){
+			this.book.collection = response.data.collection;
+			this.book.title = response.data.title;
+			this.book.description = response.data.description;
+			this.book.price = response.data.price;
+			this.book.status = GetBookStatusByString(response.data.status);
+			
+			this.languageSelectedKey = response.data.language;
+
+			if(response.data.cover){
+				this.coverContent = GetStoreBookCoverLink(this.uuid);
+			}
+
+			this.bookFileUploaded = response.data.file;
+		}else{
+			// Redirect back to the author page
+			this.router.navigate(['author']);
+		}
 	}
 
 	GoBack(){
@@ -237,28 +256,7 @@ export class AuthorBookPageComponent{
 		)
 	}
 
-	async GetStoreBookResponse(response: ApiResponse){
-		if(response.status == 200){
-			this.book.collection = response.data.collection;
-			this.book.title = response.data.title;
-			this.book.description = response.data.description;
-			this.book.price = response.data.price;
-			this.book.status = GetBookStatusByString(response.data.status);
-			
-			this.languageSelectedKey = response.data.language;
-
-			if(response.data.cover){
-				this.coverContent = GetStoreBookCoverLink(this.uuid);
-			}
-
-			this.bookFileUploaded = response.data.file;
-		}else{
-			// Redirect back to the author page
-			this.router.navigate(['author']);
-		}
-	}
-
-	UpdateStoreBookResponse(response: ApiResponse){
+	UpdateStoreBookResponse(response: ApiResponse<any>){
 		if(this.editDescription){
 			// The description was updated
 			if(response.status == 200){
@@ -335,7 +333,7 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	SetStoreBookFileResponse(response: ApiResponse){
+	SetStoreBookFileResponse(response: ApiResponse<any>){
 		this.bookFileUploaded = response.status == 200;
 	}
 }
