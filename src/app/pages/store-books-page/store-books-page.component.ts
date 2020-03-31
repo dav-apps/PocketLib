@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataService, ApiResponse, Category, GetStoreBookCoverLink } from 'src/app/services/data-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
-import { environment } from 'src/environments/environment';
+import { ApiResponse } from 'dav-npm';
+import { DataService, Category, GetStoreBookCoverLink } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 
 @Component({
 	selector: 'store-books-page',
@@ -20,7 +20,7 @@ export class StoreBooksPageComponent{
 	
 	constructor(
 		public dataService: DataService,
-		private websocketService: WebsocketService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	){
@@ -37,7 +37,10 @@ export class StoreBooksPageComponent{
 
 		// Get the books of the category
 		this.books = [];
-		let getStoreBooksByCategoryResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetStoreBooksByCategory, {key, language: this.dataService.locale.slice(0, 2)});
+		let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory(
+			key,
+			this.dataService.locale.slice(0, 2)
+		)
 
 		for(let storeBook of getStoreBooksByCategoryResponse.data.books){
 			this.books.push({
