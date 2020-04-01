@@ -214,7 +214,7 @@ export class AuthorBookPageComponent{
 		this.coverContent = file.content;
 
 		// Upload the image
-		await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookCover, {
+		await this.apiService.SetStoreBookCover({
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			type: file.type,
