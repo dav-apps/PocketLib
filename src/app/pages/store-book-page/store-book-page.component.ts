@@ -253,7 +253,11 @@ export class StoreBookPageComponent{
 	}
 
 	async PublishStoreBook(){
-		let response: ApiResponse<any> = await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {jwt: this.dataService.user.JWT, uuid: this.uuid, status: "published"});
+		let response: ApiResponse<any> = await this.apiService.UpdateStoreBook({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			status: "published"
+		})
 		if(response.status == 200) this.book.status = BookStatus.Published;
 	}
 }

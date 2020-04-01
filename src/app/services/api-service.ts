@@ -583,5 +583,53 @@ export class ApiService{
 
 		return result;
 	}
+
+	async UpdateStoreBook(params: {
+		jwt: string,
+		uuid: string,
+		title?: string,
+		description?: string,
+		language?: string,
+		price?: number,
+		published?: boolean,
+		status?: string
+	}) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let data = {};
+			if(params.title) data["title"] = params.title;
+			if(params.description) data["description"] = params.description;
+			if(params.language) data["language"] = params.language;
+			if(params.price) data["price"] = params.price;
+			if(params.published) data["published"] = params.published;
+			if(params.status) data["status"] = params.status;
+
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`,
+				headers: {
+					Authorization: params.jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				// Api error
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}else{
+				// Javascript error
+				result.status = -1;
+				result.data = {};
+			}
+		}
+
+		return result;
+	}
 	//#endregion
 }

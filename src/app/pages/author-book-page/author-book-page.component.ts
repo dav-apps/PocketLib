@@ -134,7 +134,7 @@ export class AuthorBookPageComponent{
 
 	async UpdateTitle(){
 		this.UpdateStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				title: this.editTitleDialogTitle
@@ -144,7 +144,7 @@ export class AuthorBookPageComponent{
 
 	async UpdatePrice(){
 		this.UpdateStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				price: parseInt(this.editPriceDialogPrice)
@@ -158,7 +158,7 @@ export class AuthorBookPageComponent{
 
 			//	Save the new description on the server
 			this.UpdateStoreBookResponse(
-				await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+				await this.apiService.UpdateStoreBook({
 					jwt: this.dataService.user.JWT,
 					uuid: this.uuid,
 					description: this.newDescription
@@ -175,7 +175,7 @@ export class AuthorBookPageComponent{
 		this.updateLanguage = true;
 
 		this.UpdateStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				language: e.option.key
@@ -248,10 +248,10 @@ export class AuthorBookPageComponent{
 		this.publishingOrUnpublishing = true;
 
 		this.UpdateStoreBookResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.UpdateStoreBook, {
+			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
-				published: published
+				published
 			})
 		)
 	}
