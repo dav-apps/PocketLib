@@ -2,35 +2,7 @@ import * as websocket from '../websocket';
 import * as axios from 'axios';
 
 export const sockets = {
-	getStoreBooksInReview,
 	updateStoreBook
-}
-
-export async function getStoreBooksInReview(message: {jwt: string}){
-	var result: {status: number, headers: any, data: any} = {status: -1, headers: {}, data: {}};
-
-	try{
-		let response = await axios.default({
-			method: 'get',
-			url: `${process.env.POCKETLIB_API_URL}/store/books/review`,
-			headers: {
-				Authorization: message.jwt
-			}
-		});
-
-		result.status = response.status;
-		result.headers = response.headers;
-		result.data = response.data;
-	}catch(error){
-		if(error.response){
-			// Api error
-			result.status = error.response.status;
-			result.headers = error.response.headers;
-			result.data = error.response.data;
-		}
-	}
-
-	websocket.emit(getStoreBooksInReview.name, result);
 }
 
 export async function updateStoreBook(message: {

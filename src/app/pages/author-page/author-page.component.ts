@@ -4,7 +4,6 @@ import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ApiResponse } from 'dav-npm';
 import { DataService } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
 const navbarHeight: number = 64;
@@ -43,7 +42,6 @@ export class AuthorPageComponent{
    constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private websocketService: WebsocketService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
    ){
@@ -59,7 +57,7 @@ export class AuthorPageComponent{
 		await this.dataService.userPromise;
 		if(this.dataService.userIsAdmin && !this.uuid){
 			// Get the books in review
-			let response = await this.websocketService.Emit(WebsocketCallbackType.GetStoreBooksInReview, {jwt: this.dataService.user.JWT});
+			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview(this.dataService.user.JWT);
 
 			if(response.status == 200){
 				this.booksInReview = [];
