@@ -12,7 +12,6 @@ import {
 	Author
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { environment } from 'src/environments/environment';
 import { enUS } from 'src/locales/locales';
@@ -63,7 +62,6 @@ export class StoreBookPageComponent{
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private websocketService: WebsocketService,
 		private routingService: RoutingService,
 		private snackBar: MatSnackBar,
 		private router: Router,
@@ -208,10 +206,10 @@ export class StoreBookPageComponent{
 		}
 
 		// Add the StoreBook to the library of the user
-		let response: ApiResponse<any> = await this.websocketService.Emit(WebsocketCallbackType.CreateBook, {
+		let response: ApiResponse<any> = await this.apiService.CreateBook({
 			jwt: this.dataService.user.JWT,
 			storeBook: this.uuid
-		});
+		})
 
 		if(response.status == 201){
 			this.addToLibraryButtonDisabled = true;

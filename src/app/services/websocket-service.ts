@@ -45,15 +45,12 @@ interface WebsocketSubscription{
 }
 
 export enum WebsocketCallbackType{
-	// Book
-	CreateBook,
 	// Category
 	GetCategories
 	// Misc
 }
 
 export const Callbacks = {
-	createBook: WebsocketCallbackType.CreateBook,
 	getCategories: WebsocketCallbackType.GetCategories
 }
 
