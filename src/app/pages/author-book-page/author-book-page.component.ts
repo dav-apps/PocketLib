@@ -234,14 +234,14 @@ export class AuthorBookPageComponent{
 		let fileContent = await readPromise;
 
 		// Upload the file
-		this.SetStoreBookFileResponse(
-			await this.websocketService.Emit(WebsocketCallbackType.SetStoreBookFile, {
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				type: file.type,
-				file: fileContent
-			})
-		)
+		let response: ApiResponse<any> = await this.apiService.SetStoreBookFile({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			type: file.type,
+			file: fileContent
+		})
+
+		this.bookFileUploaded = response.status == 200;
 	}
 
 	async PublishOrUnpublishBook(published: boolean){
@@ -266,12 +266,10 @@ export class AuthorBookPageComponent{
 				let errorCode = response.data.errors[0].code;
 
 				switch(errorCode){
-					case 2305: 
-						// Field too short: description
+					case 2305:	// Field too short: description
 						this.newDescriptionError = this.locale.errors.descriptionTooShort;
 						break;
-					case 2405:
-						// Field too long: description
+					case 2405:	// Field too long: description
 						this.newDescriptionError = this.locale.errors.descriptionTooLong;
 						break;
 					default:
@@ -317,12 +315,10 @@ export class AuthorBookPageComponent{
 				let errorCode = response.data.errors[0].code;
 	
 				switch(errorCode){
-					case 2304:
-						// Field too short: title
+					case 2304:	// Field too short: title
 						this.editTitleDialogTitleError = this.locale.errors.titleTooShort;
 						break;
-					case 2404:
-						// Field too long: title
+					case 2404:	// Field too long: title
 						this.editTitleDialogTitleError = this.locale.errors.titleTooLong;
 						break;
 					default:
@@ -331,9 +327,5 @@ export class AuthorBookPageComponent{
 				}
 			}
 		}
-	}
-
-	SetStoreBookFileResponse(response: ApiResponse<any>){
-		this.bookFileUploaded = response.status == 200;
 	}
 }

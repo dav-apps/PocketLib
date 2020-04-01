@@ -665,4 +665,37 @@ export class ApiService{
 		return result;
 	}
 	//#endregion
+
+	//#region StoreBookFile
+	async SetStoreBookFile(params: {
+		jwt: string,
+		uuid: string,
+		type: string,
+		file: any
+	}) : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/file`,
+				headers: {
+					Authorization: params.jwt,
+					'Content-Type': params.type
+				},
+				data: params.file
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}
+		}
+
+		return result;
+	}
+	//#endregion
 }
