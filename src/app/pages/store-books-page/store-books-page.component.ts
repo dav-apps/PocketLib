@@ -37,10 +37,10 @@ export class StoreBooksPageComponent{
 
 		// Get the books of the category
 		this.books = [];
-		let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory(
+		let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
 			key,
-			this.dataService.locale.slice(0, 2)
-		)
+			language: this.dataService.locale.slice(0, 2)
+		})
 
 		for(let storeBook of getStoreBooksByCategoryResponse.data.books){
 			this.books.push({

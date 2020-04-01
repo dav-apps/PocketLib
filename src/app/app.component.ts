@@ -112,7 +112,7 @@ export class AppComponent{
 
 	async LoadAuthorOfUser(){
 		await this.dataService.userPromise;
-		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser(this.dataService.user.JWT);
+		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.dataService.user.JWT});
 
 		if(response.status == 200){
 			if(response.data.authors){

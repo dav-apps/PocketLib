@@ -115,10 +115,10 @@ export class StoreBookPageComponent{
 	}
 
 	async GetStoreBook() : Promise<string>{
-		let response: ApiResponse<any> = await this.apiService.GetStoreBook(
-			this.uuid,
-			this.dataService.user.JWT
-		)
+		let response: ApiResponse<any> = await this.apiService.GetStoreBook({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid
+		})
 
 		if(response.status == 200){
 			this.book.collection = response.data.collection;
@@ -160,10 +160,10 @@ export class StoreBookPageComponent{
 	}
 
 	async GetStoreBookCollection(uuid: string) : Promise<string>{
-		let response: ApiResponse<any> = await this.apiService.GetStoreBookCollection(
-			uuid,
-			this.dataService.user.JWT
-		)
+		let response: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
+			jwt: this.dataService.user.JWT,
+			uuid
+		})
 
 		if(response.status == 200){
 			return response.data.author;
@@ -173,7 +173,7 @@ export class StoreBookPageComponent{
 	}
 
 	async GetAuthor(uuid: string){
-		let response: ApiResponse<any> = await this.apiService.GetAuthor(uuid);
+		let response: ApiResponse<any> = await this.apiService.GetAuthor({uuid});
 
 		if(response.status == 200){
 			this.author.uuid = response.data.uuid;

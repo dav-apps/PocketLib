@@ -240,18 +240,22 @@ export class AuthorProfileComponent{
 			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
 
 			if(this.authorMode == AuthorMode.AuthorOfUser){
-				this.ProcessSetBioResponse(await this.apiService.SetBioOfAuthorOfUser(
-					this.dataService.user.JWT,
-					selectedOption.data.language,
-					this.newBio
-				))
+				this.ProcessSetBioResponse(
+					await this.apiService.SetBioOfAuthorOfUser({
+						jwt: this.dataService.user.JWT,
+						language: selectedOption.data.language,
+						bio: this.newBio
+					})
+				)
 			}else{
-				this.ProcessSetBioResponse(await this.apiService.SetBioOfAuthor(
-					this.dataService.user.JWT,
-					this.uuid,
-					selectedOption.data.language,
-					this.newBio
-				))
+				this.ProcessSetBioResponse(
+					await this.apiService.SetBioOfAuthor({
+						jwt: this.dataService.user.JWT,
+						uuid: this.uuid,
+						language: selectedOption.data.language,
+						bio: this.newBio
+					})
+				)
 			}
 		}else{
 			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio;
@@ -294,18 +298,18 @@ export class AuthorProfileComponent{
 		let response: ApiResponse<any>;
 
 		if(this.authorMode == AuthorMode.AuthorOfUser){
-			response = await this.apiService.SetProfileImageOfAuthorOfUser(
-				this.dataService.user.JWT,
-				file.type,
-				imageContent
-			)
+			response = await this.apiService.SetProfileImageOfAuthorOfUser({
+				jwt: this.dataService.user.JWT,
+				type: file.type,
+				file: imageContent
+			})
 		}else{
-			response = await this.apiService.SetProfileImageOfAuthor(
-				this.dataService.user.JWT,
-				this.uuid,
-				file.type,
-				imageContent
-			)
+			response = await this.apiService.SetProfileImageOfAuthor({
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				type: file.type,
+				file: imageContent
+			})
 		}
 
 		if(response.status == 200){
@@ -325,12 +329,12 @@ export class AuthorProfileComponent{
 	async CreateCollection(){
 		this.createCollectionDialogNameError = "";
 
-		let response: ApiResponse<any> = await this.apiService.CreateStoreBookCollection(
-			this.dataService.user.JWT,
-			this.createCollectionDialogName,
-			this.dataService.locale.slice(0, 2),
-			this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null
-		)
+		let response: ApiResponse<any> = await this.apiService.CreateStoreBookCollection({
+			jwt: this.dataService.user.JWT,
+			author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
+			name: this.createCollectionDialogName,
+			language: this.dataService.locale.slice(0, 2)
+		})
 
 		if(response.status == 201){
 			// Add the collection to the author in DataService
@@ -408,7 +412,11 @@ export class AuthorProfileComponent{
 	}
 
 	async LoadAuthor(){
-		let response: ApiResponse<any> = await this.apiService.GetAuthor(this.uuid, true, this.dataService.locale.slice(0, 2));
+		let response: ApiResponse<any> = await this.apiService.GetAuthor({
+			uuid: this.uuid,
+			books: true,
+			language: this.dataService.locale.slice(0, 2)
+		});
 
 		if(response.status == 200){
 			this.author = {

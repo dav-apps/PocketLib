@@ -57,7 +57,7 @@ export class AuthorPageComponent{
 		await this.dataService.userPromise;
 		if(this.dataService.userIsAdmin && !this.uuid){
 			// Get the books in review
-			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview(this.dataService.user.JWT);
+			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview({jwt: this.dataService.user.JWT});
 
 			if(response.status == 200){
 				this.booksInReview = [];
@@ -114,11 +114,11 @@ export class AuthorPageComponent{
 		this.createAuthorDialogFirstNameError = "";
 		this.createAuthorDialogLastNameError = "";
 
-		let response: ApiResponse<any> = await this.apiService.CreateAuthor(
-			this.dataService.user.JWT,
-			this.createAuthorDialogFirstName,
-			this.createAuthorDialogLastName
-		)
+		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
+			jwt: this.dataService.user.JWT,
+			firstName: this.createAuthorDialogFirstName,
+			lastName: this.createAuthorDialogLastName
+		})
 
 		if(response.status == 201){
 			// Add the author to the admin authors in DataService

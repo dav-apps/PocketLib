@@ -39,11 +39,11 @@ export class AuthorSetupPageComponent{
 		this.firstNameError = "";
 		this.lastNameError = "";
 
-		let response: ApiResponse<any> = await this.apiService.CreateAuthor(
-			this.dataService.user.JWT,
-			this.firstName,
-			this.lastName
-		)
+		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
+			jwt: this.dataService.user.JWT,
+			firstName: this.firstName,
+			lastName: this.lastName
+		})
 
 		if(response.status == 201){
 			// Set the author in DataService

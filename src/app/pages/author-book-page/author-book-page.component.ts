@@ -87,10 +87,10 @@ export class AuthorBookPageComponent{
 		}
 
 		// Get the store book
-		let response: ApiResponse<any> = await this.apiService.GetStoreBook(
-			this.uuid,
-			this.dataService.user.JWT
-		)
+		let response: ApiResponse<any> = await this.apiService.GetStoreBook({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid
+		})
 
 		if(response.status == 200){
 			this.book.collection = response.data.collection;

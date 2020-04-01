@@ -77,10 +77,10 @@ export class CollectionViewComponent{
 		await this.dataService.adminAuthorsPromise;
 
 		// Get the collection
-		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection(
-			this.uuid,
-			this.dataService.user.JWT
-		)
+		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid
+		})
 
 		if(getCollectionResponse.status == 200){
 			this.collection = getCollectionResponse.data;
@@ -142,12 +142,12 @@ export class CollectionViewComponent{
 	async CreateBook(){
 		this.createBookDialogTitleError = "";
 
-		let response: ApiResponse<any> = await this.apiService.CreateStoreBook(
-			this.dataService.user.JWT,
-			this.uuid,
-			this.createBookDialogTitle,
-			this.dataService.locale.startsWith("de") ? "de" : "en"
-		)
+		let response: ApiResponse<any> = await this.apiService.CreateStoreBook({
+			jwt: this.dataService.user.JWT,
+			collection: this.uuid,
+			title: this.createBookDialogTitle,
+			language: this.dataService.locale.startsWith("de") ? "de" : "en"
+		})
 
 		if(response.status == 201){
 			this.createBookDialogVisible = false;

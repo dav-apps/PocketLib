@@ -68,12 +68,12 @@ export class EditCollectionNamesComponent{
 		collectionName.errorMessage = "";
 
 		// Update the collection name on the server
-		let setCollectionNameResponse: ApiResponse<any> = await this.apiService.SetStoreBookCollectionName(
-			this.dataService.user.JWT,
-			this.uuid,
-			collectionName.language,
-			collectionName.name
-		)
+		let setCollectionNameResponse: ApiResponse<any> = await this.apiService.SetStoreBookCollectionName({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			language: collectionName.language,
+			name: collectionName.name
+		})
 
 		if(setCollectionNameResponse.status == 200){
 			collectionName.edit = false;

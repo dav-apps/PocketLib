@@ -6,23 +6,23 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class ApiService{
 	//#region Author functions
-	async CreateAuthor(
+	async CreateAuthor(params: {
 		jwt: string,
 		firstName: string,
 		lastName: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(firstName) data["first_name"]	= firstName;
-			if(lastName) data["last_name"] = lastName;
+			if(params.firstName) data["first_name"] = params.firstName;
+			if(params.lastName) data["last_name"] = params.lastName;
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -32,20 +32,17 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetAuthorOfUser(jwt: string) : Promise<ApiResponse<any>>{
+	async GetAuthorOfUser(params: {
+		jwt: string
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
@@ -53,7 +50,7 @@ export class ApiService{
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
-					Authorization: jwt
+					Authorization: params.jwt
 				}
 			});
 
@@ -61,50 +58,40 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetAuthor(
+	async GetAuthor(params: {
 		uuid: string,
 		books?: boolean,
 		language?: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
-			let params = {};
-			if(books){
-				params["books"] = true;
-				params["language"] = language || "en";
+			let parameters = {};
+			if(params.books){
+				parameters["books"] = true;
+				parameters["language"] = params.language || "en";
 			}
 
 			let response = await axios.default({
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}`,
-				params
+				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
+				params: parameters
 			});
 
 			result.status = response.status;
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -124,13 +111,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -139,22 +121,22 @@ export class ApiService{
 	//#endregion
 
 	//#region AuthorBio
-	async SetBioOfAuthorOfUser(
+	async SetBioOfAuthorOfUser(params: {
 		jwt: string,
 		language: string,
 		bio: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(bio) data["bio"] = bio;
+			if(params.bio) data["bio"] = params.bio;
 
 			let response = await axios.default({
 				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/author/bio/${language}`,
+				url: `${environment.pocketlibApiBaseUrl}/author/bio/${params.language}`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -164,36 +146,31 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async SetBioOfAuthor(
+	async SetBioOfAuthor(params: {
 		jwt: string,
 		uuid: string,
 		language: string,
 		bio: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(bio) data["bio"] = bio;
+			if(params.bio) data["bio"] = params.bio;
 
 			let response = await axios.default({
 				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/bio/${language}`,
+				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/bio/${params.language}`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -203,13 +180,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -218,11 +190,11 @@ export class ApiService{
 	//#endregion
 
 	//#region AuthorProfileImage
-	async SetProfileImageOfAuthorOfUser(
+	async SetProfileImageOfAuthorOfUser(params: {
 		jwt: string,
 		type: string,
 		file: any
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
@@ -230,59 +202,49 @@ export class ApiService{
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/profile_image`,
 				headers: {
-					Authorization: jwt,
-					'Content-Type': type
+					Authorization: params.jwt,
+					'Content-Type': params.type
 				},
-				data: file
+				data: params.file
 			});
 
 			result.status = response.status;
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async SetProfileImageOfAuthor(
+	async SetProfileImageOfAuthor(params: {
 		jwt: string,
 		uuid: string,
 		type: string,
 		file: any
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let response = await axios.default({
 				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`,
+				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/profile_image`,
 				headers: {
-					Authorization: jwt,
-					'Content-Type': type
+					Authorization: params.jwt,
+					'Content-Type': params.type
 				},
-				data: file
+				data: params.file
 			});
 
 			result.status = response.status;
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -291,25 +253,25 @@ export class ApiService{
 	//#endregion
 
 	//#region StoreBookCollection
-	async CreateStoreBookCollection(
+	async CreateStoreBookCollection(params: {
 		jwt: string,
+		author?: string,
 		name: string,
-		language: string,
-		author?: string
-	) : Promise<ApiResponse<any>>{
+		language: string
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(name) data["name"] = name;
-			if(language) data["language"] = language;
-			if(author) data["author"] = author;
+			if(params.name) data["name"] = params.name;
+			if(params.language) data["language"] = params.language;
+			if(params.author) data["author"] = params.author;
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -319,34 +281,29 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetStoreBookCollection(
-		uuid: string,
-		jwt?: string
-	) : Promise<ApiResponse<any>>{
+	async GetStoreBookCollection(params: {
+		jwt?: string,
+		uuid: string
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let options: axios.AxiosRequestConfig = {
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store/collection/${uuid}`
+				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}`
 			}
 
-			if(jwt){
+			if(params.jwt){
 				options.headers = {
-					Authorization: jwt
+					Authorization: params.jwt
 				}
 			}
 
@@ -356,13 +313,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -371,23 +323,23 @@ export class ApiService{
 	//#endregion
 
 	//#region StoreBookCollectionName
-	async SetStoreBookCollectionName(
+	async SetStoreBookCollectionName(params: {
 		jwt: string,
 		uuid: string,
 		language: string,
 		name: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(name) data["name"] = name;
+			if(params.name) data["name"] = params.name;
 
 			let response = await axios.default({
 				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/store/collection/${uuid}/name/${language}`,
+				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}/name/${params.language}`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -397,13 +349,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -412,25 +359,25 @@ export class ApiService{
 	//#endregion
 
 	//#region StoreBook
-	async CreateStoreBook(
+	async CreateStoreBook(params: {
 		jwt: string,
 		collection: string,
 		title: string,
 		language: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(collection) data["collection"] = collection;
-			if(title) data["title"] = title;
-			if(language) data["language"] = language;
+			if(params.collection) data["collection"] = params.collection;
+			if(params.title) data["title"] = params.title;
+			if(params.language) data["language"] = params.language;
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/book`,
 				headers: {
-					Authorization: jwt,
+					Authorization: params.jwt,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -440,34 +387,29 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetStoreBook(
-		uuid: string,
-		jwt?: string
-	) : Promise<ApiResponse<any>>{
+	async GetStoreBook(params: {
+		jwt?: string,
+		uuid: string
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let options: axios.AxiosRequestConfig = {
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store/book/${uuid}`
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`
 			}
 
-			if(jwt){
+			if(params.jwt){
 				options.headers = {
-					Authorization: jwt
+					Authorization: params.jwt
 				}
 			}
 
@@ -477,85 +419,72 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetStoreBooksByCategory(
+	async GetStoreBooksByCategory(params: {
 		key: string,
 		language: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
+			let parameters = {};
+			if(params.language) parameters["language"] = params.language;
+
 			let response = await axios.default({
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${key}`,
-				params: {
-					language
-				}
+				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${params.key}`,
+				params: parameters
 			});
 
 			result.status = response.status;
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetLatestStoreBooks(
+	async GetLatestStoreBooks(params: {
 		language: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
+			let parameters = {};
+			if(params.language) parameters["language"] = params.language;
+
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/latest`,
-				params: {
-					language
-				}
+				params: parameters
 			});
 
 			result.status = response.status;
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
 		return result;
 	}
 
-	async GetStoreBooksInReview(
+	async GetStoreBooksInReview(params: {
 		jwt: string
-	) : Promise<ApiResponse<any>>{
+	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
@@ -563,7 +492,7 @@ export class ApiService{
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/review`,
 				headers: {
-					Authorization: jwt
+					Authorization: params.jwt
 				}
 			});
 
@@ -571,13 +500,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
@@ -619,13 +543,8 @@ export class ApiService{
 			result.data = response.data;
 		}catch(error){
 			if(error.response){
-				// Api error
 				result.status = error.response.status;
 				result.data = error.response.data;
-			}else{
-				// Javascript error
-				result.status = -1;
-				result.data = {};
 			}
 		}
 
