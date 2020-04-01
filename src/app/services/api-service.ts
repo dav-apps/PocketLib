@@ -732,4 +732,27 @@ export class ApiService{
 		return result;
 	}
 	//#endregion
+
+	//#region Category
+	async GetCategories() : Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}};
+
+		try{
+			let response = await axios.default({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store/categories`
+			});
+
+			result.status = response.status;
+			result.data = response.data;
+		}catch(error){
+			if(error.response){
+				result.status = error.response.status;
+				result.data = error.response.data;
+			}
+		}
+
+		return result;
+	}
+	//#endregion
 }

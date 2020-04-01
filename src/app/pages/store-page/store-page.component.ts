@@ -1,7 +1,8 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService, ApiResponse, FindAppropriateLanguage } from 'src/app/services/data-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
+import { ApiResponse } from 'dav-npm';
+import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service';
+import { ApiService } from 'src/app/services/api-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -14,7 +15,7 @@ export class StorePageComponent{
 	
 	constructor(
 		public dataService: DataService,
-		private websocketService: WebsocketService,
+		private apiService: ApiService,
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().storePage;
@@ -25,7 +26,7 @@ export class StorePageComponent{
 
 		if(this.dataService.categories.length == 0){
 			// Get the categories
-			let getCategoriesResponse: ApiResponse = await this.websocketService.Emit(WebsocketCallbackType.GetCategories, {});
+			let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
 
 			// Get the names in the appropriate language
 			for(let category of getCategoriesResponse.data.categories){

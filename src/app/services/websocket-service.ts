@@ -45,13 +45,11 @@ interface WebsocketSubscription{
 }
 
 export enum WebsocketCallbackType{
-	// Category
-	GetCategories
-	// Misc
+	
 }
 
 export const Callbacks = {
-	getCategories: WebsocketCallbackType.GetCategories
+	
 }
 
 function getKeyByValue(object: any, value: any) {
