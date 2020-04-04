@@ -83,7 +83,7 @@
 			</div>
 
 			<div style="grid-column: 2; grid-row: 4" class="d-flex">
-				<p class="text-color" style="margin-top: 6px">{{ book.price == 0 ? locale.free : (book.price / 100).toFixed(2) + " €" }}</p>
+				<p class="text-color" style="margin-top: 6px">{{ price }}</p>
 
 				<button
 					type="button"
@@ -149,13 +149,14 @@
 			[(value)]="editTitleDialogTitle"
 			[label]="locale.editTitleDialog.titleTextfieldLabel"
 			[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
-			[errorMessage]="editTitleDialogTitleError">
+			[errorMessage]="editTitleDialogTitleError"
+			(keydown.enter)="UpdateTitle()">
 		</fab-text-field>
 	</div>
 
 	<fab-dialog-footer>
-		<fab-default-button (click)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
+		<fab-default-button (onClick)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
 
@@ -173,12 +174,13 @@
 			[(value)]="editPriceDialogPrice"
 			[label]="locale.editPriceDialog.priceTextfieldLabel"
 			[placeholder]="locale.editPriceDialog.priceTextfieldPlaceholder"
-			[errorMessage]="editPriceDialogPriceError">
+			[errorMessage]="editPriceDialogPriceError"
+			(keydown.enter)="UpdatePrice()">
 		</fab-text-field>
 	</div>
 
 	<fab-dialog-footer>
-		<fab-default-button (click)="editPriceDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (click)="UpdatePrice()">{{ locale.save }}</fab-primary-button>
+		<fab-default-button (onClick)="editPriceDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdatePrice()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>

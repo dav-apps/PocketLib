@@ -10,7 +10,6 @@ import {
 	GetStoreBookCoverLink
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -21,6 +20,7 @@ export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
 	uuid: string;
 	book: {collection: string, title: string, description: string, price: number, status: BookStatus} = {collection: "", title: "", description: "", price: 0, status: BookStatus.Unpublished}
+	price: string = "";
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
@@ -64,7 +64,6 @@ export class AuthorBookPageComponent{
 	constructor(
 		private dataService: DataService,
 		private apiService: ApiService,
-		private websocketService: WebsocketService,
 		private router: Router,
       private activatedRoute: ActivatedRoute
 	){
@@ -101,6 +100,8 @@ export class AuthorBookPageComponent{
 			
 			this.languageSelectedKey = response.data.language;
 
+			this.UpdatePriceString();
+
 			if(response.data.cover){
 				this.coverContent = GetStoreBookCoverLink(this.uuid);
 			}
@@ -114,6 +115,18 @@ export class AuthorBookPageComponent{
 
 	GoBack(){
 		this.router.navigate(["author", "collection", this.book.collection]);
+	}
+
+	UpdatePriceString(){
+		if(this.book.price == 0){
+			this.price = this.locale.free;
+		}else{
+			this.price = (this.book.price / 100).toFixed(2) + " €";
+
+			if(this.dataService.locale.slice(0, 2) == "de"){
+				this.price = this.price.replace('.', ',');
+			}
+		}
 	}
 
 	ShowEditTitleModal(){
@@ -287,6 +300,7 @@ export class AuthorBookPageComponent{
 			// The price was updated
 			if(response.status == 200){
 				this.book.price = response.data.price;
+				this.UpdatePriceString();
 				this.editPriceDialogVisible = false;
 			}else{
 				let errorCode = response.data.errors[0].code;
