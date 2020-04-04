@@ -3,7 +3,6 @@ import { IDropdownOption } from 'office-ui-fabric-react';
 import { ApiResponse } from 'dav-npm';
 import { DataService } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
-import { WebsocketService, WebsocketCallbackType } from 'src/app/services/websocket-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
