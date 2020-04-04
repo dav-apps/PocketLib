@@ -219,6 +219,32 @@ export class StoreBookPageComponent{
 		}
 	}
 
+	async BuyBook(){
+		if(this.book.price == 0){
+			// Purchase this book directly
+			let createPurchaseResponse: ApiResponse<PurchaseResponseData> | ApiErrorResponse = await CreatePurchase(
+				this.dataService.user.JWT,
+				this.uuid,
+				this.coverContent,
+				this.book.title,
+				this.authorProfileImageContent,
+				`${this.author.firstName} ${this.author.lastName}`,
+				this.book.price,
+				"eur"
+			)
+
+			if(createPurchaseResponse.status == 201){
+				this.book.purchased = true;
+			}else{
+				// TODO: Show error
+			
+			}
+		}else{
+			// Show dialog for buying the book
+			this.ShowBuyBookDialog();
+		}
+	}
+
 	ShowBuyBookDialog(){
 		this.buyBookDialogContentProps.title = this.locale.buyBookDialog.title;
 		this.buyBookDialogVisible = true;
@@ -247,6 +273,9 @@ export class StoreBookPageComponent{
 			let purchaseId = (createPurchaseResponse as ApiResponse<PurchaseResponseData>).data.id;
 			
 			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseId}?redirect_url=${url}`;
+		}else{
+			// TODO: Show error
+			
 		}
 	}
 

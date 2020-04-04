@@ -14,13 +14,13 @@
 				<!-- Buy button -->
 				<div *ngIf="!book.purchased">
 					<fab-default-button
-						(onClick)="ShowBuyBookDialog()">
+						(onClick)="BuyBook()">
 						{{ price }}
 					</fab-default-button>
 				</div>
 
 				<!-- Add to library button -->
-				<div class="mt-2" style="min-width: 194px" *ngIf="book.price > 0">
+				<div class="mt-2" style="min-width: 194px" *ngIf="!(book.price == 0 && !this.book.purchased)">
 					<fab-primary-button
 						(onClick)="AddToLibrary()"
 						[disabled]="addToLibraryButtonDisabled">
@@ -90,13 +90,13 @@
 				<!-- Buy button -->
 				<div *ngIf="!book.purchased">
 					<fab-default-button
-						(onClick)="ShowBuyBookDialog()">
+						(onClick)="BuyBook()">
 						{{ price }}
 					</fab-default-button>
 				</div>
 
 				<!-- Add to library button -->
-				<div class="mt-2" style="min-width: 194px"  *ngIf="book.price > 0">
+				<div class="mt-2" style="min-width: 194px"  *ngIf="!(book.price == 0 && !this.book.purchased)">
 					<fab-primary-button
 						(onClick)="AddToLibrary()"
 						[disabled]="addToLibraryButtonDisabled">
