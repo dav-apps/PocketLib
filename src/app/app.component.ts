@@ -2,7 +2,12 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log, ApiResponse } from 'dav-npm';
-import { DataService } from 'src/app/services/data-service';
+import {
+	DataService,
+	FindAppropriateLanguage,
+	GetBookStatusByString,
+	GetStoreBookCoverLink
+} from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from './services/routing-service';
 import { GetSettings } from 'src/app/models/Settings';
@@ -119,14 +124,21 @@ export class AppComponent{
 				this.dataService.adminAuthors = [];
 
 				for(let author of response.data.authors){
-					this.dataService.adminAuthors.push({
+					let newAuthor = {
 						uuid: author.uuid,
 						firstName: author.first_name,
 						lastName: author.last_name,
 						bios: author.bios,
-						collections: author.collections,
+						collections: [],
 						profileImage: author.profile_image
-					});
+					}
+
+					// Get the collections of the store books
+					newAuthor.collections.push(
+						...await this.LoadCollections(author.collections)
+					)
+
+					this.dataService.adminAuthors.push(newAuthor);
 				}
 			}else{
 				this.dataService.userAuthor = {
@@ -134,9 +146,14 @@ export class AppComponent{
 					firstName: response.data.first_name,
 					lastName: response.data.last_name,
 					bios: response.data.bios,
-					collections: response.data.collections,
+					collections: [],
 					profileImage: response.data.profile_image
 				}
+
+				// Get the collections and store books
+				this.dataService.userAuthor.collections.push(
+					...await this.LoadCollections(response.data.collections)
+				)
 			}
 		}else{
 			this.dataService.userAuthor = null;
@@ -145,6 +162,56 @@ export class AppComponent{
 
 		this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
 		this.dataService.adminAuthorsPromiseResolve(this.dataService.adminAuthors);
+	}
+
+	async LoadCollections(collectionData: any) : Promise<any[]>{
+		let collections: any[] = [];
+
+		for(let collection of collectionData){
+			let c = await this.apiService.GetStoreBookCollection({
+				jwt: this.dataService.user.JWT,
+				uuid: collection.uuid
+			})
+
+			if(c.status == 200){
+				let collectionResponseData = (c as ApiResponse<any>).data;
+
+				let newCollection = {
+					uuid: collectionResponseData.uuid,
+					names: collectionResponseData.names,
+					categories: [],
+					books: []
+				}
+
+				// Get the categories with the correct name
+				for(let category of collectionResponseData.categories){
+					newCollection.categories.push({
+						key: category.key,
+						name: category.names[FindAppropriateLanguage(this.dataService.locale.slice(0, 2), category.names)].name
+					})
+				}
+
+				// Get the books
+				for(let book of collectionResponseData.books){
+					let newBook = {
+						uuid: book.uuid,
+						title: book.title,
+						description: book.description,
+						language: book.language,
+						status: GetBookStatusByString(book.status),
+						cover: book.cover,
+						coverContent: book.cover ? GetStoreBookCoverLink(book.uuid) : null,
+						file: book.file
+					}
+
+					newCollection.books.push(newBook)
+				}
+
+				collections.push(newCollection);
+			}
+		}
+
+		return collections;
 	}
    
    SetTitleBarColor(){

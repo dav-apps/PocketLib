@@ -195,8 +195,31 @@ export interface Author{
 	uuid: string;
 	firstName: string;
 	lastName: string;
-	bios: {bio: string, language: string}[];
-	collections: {uuid: string, names: {name: string, language: string}[]}[];
+	bios: {
+		bio: string,
+		language: string
+	}[];
+	collections: {
+		uuid: string,
+		names: {
+			name: string,
+			language: string
+		}[],
+		categories: {
+			key: string,
+			name: string
+		}[],
+		books: {
+			uuid: string,
+			title: string,
+			description: string,
+			language: string,
+			status: BookStatus,
+			cover: boolean,
+			coverContent: string,
+			file: boolean
+		}[]
+	}[];
 	profileImage: boolean;
 }
 
