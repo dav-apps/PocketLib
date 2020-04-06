@@ -221,7 +221,7 @@ const enDefaults = {
 		page: "Page"
 	},
 	authorProfile: {
-		yourCollections: "Your collections",
+		yourBooks: "Your books",
 		uploadProfileImage: "Upload profile image",
 		addYourBio: "Add your biography",
 		bioTextfieldPlaceholder: "Your biography",
@@ -511,7 +511,7 @@ const deDefaults = {
 		page: "Seite"
 	},
 	authorProfile: {
-		yourCollections: "Deine Sammlungen",
+		yourBooks: "Deine Bücher",
 		uploadProfileImage: "Profilbild hochladen",
 		addYourBio: "Biographie angeben",
 		bioTextfieldPlaceholder: "Deine Biographie",

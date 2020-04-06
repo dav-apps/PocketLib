@@ -42,20 +42,45 @@
 			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
-		<div class="col-12 col-md-8 col-xl-9 text-center pt-5" *ngIf="authorMode != 0">
+		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode != 0">
 			<!-- List of collections -->
-			<h3 class="font-weight-light mt-md-5 mb-3 mb-md-4 text-color">{{ locale.yourCollections }}</h3>
+			<h3 class="text-center font-weight-light mt-md-5 mb-3 mb-md-4 text-color">{{ locale.yourBooks }}</h3>
 
-			<div class="list-group" style="display: inline-block">
-				<p class="list-group-item cursor theme-background-color-secondary" (click)="ShowCreateCollectionDialog()" *ngIf="authorMode != 0">
+			<div
+				class="card cursor my-4 theme-background-color-secondary"
+				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+				style="transition: 0.12s"
+				(click)="ShowCreateCollectionDialog()"
+				(mouseover)="addBookHover = true"
+				(mouseout)="addBookHover = false">
+				<div class="card-body d-flex justify-content-center align-items-center">
 					<i class="ms-Icon ms-Icon--Add text-color" aria-hidden="true" style="font-size: 18px"></i>
-				</p>
+				</div>
+			</div>
 
-				<p 
-					class="list-group-item cursor theme-background-color-secondary text-color" 
-					style="font-size: 18px"
-					(click)="NavigateToCollection(collection.uuid)" 
-					*ngFor="let collection of collections">{{ collection.name }}</p>
+			<div
+				class="card my-4 cursor book-list-item theme-background-color-secondary"
+				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
+				style="transition: 0.12s"
+				*ngFor="let collection of collections; let i = index"
+				(click)="NavigateToCollection(collection.uuid)"
+				(mouseover)="hoveredBookIndex = i"
+				(mouseout)="hoveredBookIndex = -1">
+				<div class="row no-gutters">
+					<div class="col-4">
+						<img [src]="collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+					</div>
+
+					<div class="col-8 my-auto">
+						<div class="card-body">
+							<h5
+								[style.fontSize.px]="bookTitleFontSize"
+								class="card-title my-auto text-color">
+								{{ collection.name }}
+							</h5>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -71,7 +96,7 @@
 				(mouseout)="hoveredBookIndex = -1">
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="width: 100px" />
+						<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
 					</div>
 
 					<div class="col-8 my-auto">

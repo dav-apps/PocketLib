@@ -9,7 +9,8 @@ import {
 	GetAuthorProfileImageLink,
 	GetStoreBookCoverLink,
 	Author,
-	AuthorMode
+	AuthorMode,
+	BookStatus
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
 import { enUS } from 'src/locales/locales';
@@ -30,12 +31,26 @@ export class AuthorProfileComponent{
 	bioMode: BioMode = BioMode.None;
 	newBio: string = "";
 	newBioError: string = "";
-	collections: {uuid: string, name: string}[] = [];
+	collections: {
+		uuid: string,
+		name: string,
+		books: {
+			uuid: string,
+			title: string,
+			description: string,
+			language: string,
+			status: BookStatus,
+			cover: boolean,
+			coverContent: string,
+			file: boolean
+		}[]
+	}[] = [];
 	profileImageContent: string = this.dataService.defaultAvatar;
 	createCollectionDialogVisible: boolean = false;
 	createCollectionDialogName: string = "";
 	createCollectionDialogNameError: string = "";
 	hoveredBookIndex: number = -1;
+	addBookHover: boolean = false;
 	bookTitleFontSize: number = 20;
 
 	bioTextfieldStyles = {
@@ -93,7 +108,12 @@ export class AuthorProfileComponent{
 		// Get the appropriate language of each collection
 		for(let collection of this.author.collections){
 			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
-			if(i != -1) this.collections.push({uuid: collection.uuid, name: collection.names[i].name});
+
+			this.collections.push({
+				uuid: collection.uuid,
+				name: collection.names[i].name,
+				books: collection.books
+			})
 		}
 
 		this.SetupBioLanguageDropdown();
@@ -339,7 +359,11 @@ export class AuthorProfileComponent{
 		if(response.status == 201){
 			// Add the collection to the author in DataService
 			this.author.collections.push(response.data)
-			this.collections.push({uuid: response.data.uuid, name: response.data.names[0].name});
+			this.collections.push({
+				uuid: response.data.uuid,
+				name: response.data.names[0].name,
+				books: []
+			})
 			
 			// Redirect to the collection page
 			this.router.navigate(['author', 'collection', response.data.uuid]);
