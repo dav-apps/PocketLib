@@ -19,7 +19,21 @@ import { enUS } from 'src/locales/locales';
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
 	uuid: string;
-	book: {collection: string, title: string, description: string, price: number, status: BookStatus} = {collection: "", title: "", description: "", price: 0, status: BookStatus.Unpublished}
+	book: {
+		collection: string,
+		title: string,
+		description: string,
+		language: string,
+		price: number,
+		status: BookStatus
+	} = {
+		collection: "",
+		title: "",
+		description: "",
+		language: "en",
+		price: 0,
+		status: BookStatus.Unpublished
+	}
 	price: string = "";
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
@@ -27,8 +41,6 @@ export class AuthorBookPageComponent{
 	editDescription: boolean = false;
 	newDescription: string = "";
 	newDescriptionError: string = "";
-	languages = enUS.misc.languages;
-	languageSelectedKey: string = "en";
 	updateLanguage: boolean = false;
 	coverContent: string;
 	bookFileUploaded: boolean = false;
@@ -68,7 +80,6 @@ export class AuthorBookPageComponent{
       private activatedRoute: ActivatedRoute
 	){
 		this.locale = this.dataService.GetLocale().authorBookPage;
-		this.languages = this.dataService.GetLocale().misc.languages;
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
@@ -95,10 +106,9 @@ export class AuthorBookPageComponent{
 			this.book.collection = response.data.collection;
 			this.book.title = response.data.title;
 			this.book.description = response.data.description;
+			this.book.language = response.data.language;
 			this.book.price = response.data.price;
 			this.book.status = GetBookStatusByString(response.data.status);
-			
-			this.languageSelectedKey = response.data.language;
 
 			this.UpdatePriceString();
 
@@ -184,14 +194,14 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	async SetLanguage(e: {event: MouseEvent, option: {key: string, text: string}}){
+	async SetLanguage(language: string){
 		this.updateLanguage = true;
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
-				language: e.option.key
+				language
 			})
 		)
 	}
@@ -294,7 +304,7 @@ export class AuthorBookPageComponent{
 			this.updateLanguage = false;
 
 			if(response.status == 200){
-				this.languageSelectedKey = response.data.language;
+				this.book.language = response.data.language;
 			}
 		}else if(this.editPriceDialogVisible){
 			// The price was updated

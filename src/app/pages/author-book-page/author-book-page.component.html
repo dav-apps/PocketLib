@@ -2,7 +2,7 @@
 	<div class="d-flex justify-content-center">
 		<div class="d-flex my-3">
 			<button type="button" 
-						class="btn mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+						class="btn my-auto text-color theme-background-color-primary theme-border-color-primary icon-button" 
 						style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;"
 						(click)="GoBack()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
@@ -69,12 +69,11 @@
 			</div>
 	
 			<div class="d-flex" style="grid-column: 2; grid-row: 3">
-				<fab-dropdown [selectedKey]="languageSelectedKey" [disabled]="book.status == 2 || book.status == 3" (onChange)="SetLanguage($event)">
-					<options>
-						<fab-dropdown-option optionKey="en" [text]="languages.en"></fab-dropdown-option>
-						<fab-dropdown-option optionKey="de" [text]="languages.de"></fab-dropdown-option>
-					</options>
-				</fab-dropdown>
+				<pocketlib-language-dropdown
+					[language]="book.language"
+					[disabled]="book.status == 2 || book.status == 3"
+					(updated)="SetLanguage($event)">
+				</pocketlib-language-dropdown>
 			</div>
 
 			<!-- Price -->
