@@ -104,11 +104,6 @@ const enDefaults = {
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The title of your book"
 		},
-		editPriceDialog: {
-			title: "Preis bearbeiten",
-			priceTextfieldLabel: "Price (cent in €)",
-			priceTextfieldPlaceholder: "Price of your book in Euro"
-		},
 		cover: "Cover",
 		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
@@ -275,6 +270,11 @@ const enDefaults = {
 	horizontalAuthorList: {
 		newAuthors: "New authors"
 	},
+	editPrice: {
+		priceTextfieldLabel: "Cent in €",
+		priceTextfieldPlaceholder: "Price of your book in Euro",
+		free: "Free"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -393,11 +393,6 @@ const deDefaults = {
 			title: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Der Titel deines Buches"
-		},
-		editPriceDialog: {
-			title: "Preis bearbeiten",
-			priceTextfieldLabel: "Preis (Cent in €)",
-			priceTextfieldPlaceholder: "Preis deines Buches in Euro"
 		},
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
@@ -564,6 +559,11 @@ const deDefaults = {
 	},
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
+	},
+	editPrice: {
+		priceTextfieldLabel: "Cent in €",
+		priceTextfieldPlaceholder: "Preis deines Buches in Euro",
+		free: "Kostenlos"
 	},
 	misc: {
 		languages: {

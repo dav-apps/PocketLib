@@ -54,6 +54,7 @@ import { CollectionViewComponent } from './components/collection-view/collection
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component';
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component';
 import { LanguageDropdownComponent } from './components/language-dropdown/language-dropdown.component';
+import { EditPriceComponent } from './components/edit-price/edit-price.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -89,6 +90,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		HorizontalBookListComponent,
 		HorizontalAuthorListComponent,
 		LanguageDropdownComponent,
+		EditPriceComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,

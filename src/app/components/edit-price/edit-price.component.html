@@ -1,0 +1,33 @@
+<div class="d-flex">
+	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ formattedPrice }}</p>
+
+	<div class="d-flex" *ngIf="edit">
+		<fab-text-field
+			type="number"
+			min="0"
+			max="100000"
+			[(value)]="price"
+			[label]="locale.priceTextfieldLabel"
+			[placeholder]="locale.priceTextfieldPlaceholder"
+			[errorMessage]="errorMessage"
+			(keydown.enter)="UpdatePrice()">
+		</fab-text-field>
+
+		<button
+			type="button"
+			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px;"
+			(click)="UpdatePrice()">
+			<fab-icon iconName="Save"></fab-icon>
+		</button>
+	</div>
+
+	<button
+		type="button"
+		class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
+		style="height: 32px; padding: 3px 6px; font-size: 16px"
+		*ngIf="canEdit && !edit"
+		(click)="edit = true">
+		<fab-icon iconName="Edit"></fab-icon>
+	</button>
+</div>
