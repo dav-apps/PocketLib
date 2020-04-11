@@ -81,17 +81,12 @@
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 4" class="d-flex">
-				<p class="text-color" style="margin-top: 6px">{{ price }}</p>
-
-				<button
-					type="button"
-					class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
-					style="height: 32px; padding: 3px 6px; font-size: 16px"
-					(click)="ShowEditPriceDialog()"
-					*ngIf="book.status == 0 || book.status == 1">
-					<fab-icon iconName="Edit"></fab-icon>
-				</button>
+			<div style="grid-column: 2; grid-row: 4">
+				<pocketlib-edit-price
+					#editPrice
+					[canEdit]="book.status == 0 || book.status == 1"
+					(update)="UpdatePrice($event)">
+				</pocketlib-edit-price>
 			</div>
 
 			<!-- Book file -->
@@ -156,30 +151,5 @@
 	<fab-dialog-footer>
 		<fab-default-button (onClick)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
 		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
-
-<fab-dialog
-	[hidden]="!editPriceDialogVisible"
-	[dialogContentProps]="editPriceDialogContentProps"
-	(onDismiss)="editPriceDialogVisible = false">
-
-	<!-- Price -->
-	<div class="mb-4">
-		<fab-text-field
-			type="number"
-			min="0"
-			max="100000"
-			[(value)]="editPriceDialogPrice"
-			[label]="locale.editPriceDialog.priceTextfieldLabel"
-			[placeholder]="locale.editPriceDialog.priceTextfieldPlaceholder"
-			[errorMessage]="editPriceDialogPriceError"
-			(keydown.enter)="UpdatePrice()">
-		</fab-text-field>
-	</div>
-
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="editPriceDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdatePrice()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>

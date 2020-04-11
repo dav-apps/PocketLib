@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
@@ -10,6 +10,7 @@ import {
 	GetStoreBookCoverLink
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
+import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -18,6 +19,7 @@ import { enUS } from 'src/locales/locales';
 })
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
+	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent;
 	uuid: string;
 	book: {
 		collection: string,
@@ -34,7 +36,6 @@ export class AuthorBookPageComponent{
 		price: 0,
 		status: BookStatus.Unpublished
 	}
-	price: string = "";
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
 	editTitleDialogTitleError: string = "";
@@ -45,9 +46,7 @@ export class AuthorBookPageComponent{
 	coverContent: string;
 	bookFileUploaded: boolean = false;
 	publishingOrUnpublishing: boolean = false;
-	editPriceDialogVisible: boolean = false;
-	editPriceDialogPrice: string = "0";
-	editPriceDialogPriceError: string = "";
+	editPrice: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -61,9 +60,6 @@ export class AuthorBookPageComponent{
 	}
 	editTitleDialogContentProps: IDialogContentProps = {
 		title: this.locale.editTitleDialog.title
-	}
-	editPriceDialogContentProps: IDialogContentProps = {
-		title: this.locale.editPriceDialog.title
 	}
 	descriptionTextfieldStyles = {
 		root: {
@@ -110,7 +106,7 @@ export class AuthorBookPageComponent{
 			this.book.price = response.data.price;
 			this.book.status = GetBookStatusByString(response.data.status);
 
-			this.UpdatePriceString();
+			this.editPriceComponent.SetPrice(this.book.price);
 
 			if(response.data.cover){
 				this.coverContent = GetStoreBookCoverLink(this.uuid);
@@ -127,32 +123,12 @@ export class AuthorBookPageComponent{
 		this.router.navigate(["author", "collection", this.book.collection]);
 	}
 
-	UpdatePriceString(){
-		if(this.book.price == 0){
-			this.price = this.locale.free;
-		}else{
-			this.price = (this.book.price / 100).toFixed(2) + " €";
-
-			if(this.dataService.locale.slice(0, 2) == "de"){
-				this.price = this.price.replace('.', ',');
-			}
-		}
-	}
-
 	ShowEditTitleModal(){
 		this.editTitleDialogTitle = this.book.title;
 		this.editTitleDialogTitleError = "";
 
 		this.editTitleDialogContentProps.title = this.locale.editTitleDialog.title;
 		this.editTitleDialogVisible = true;
-	}
-
-	ShowEditPriceDialog(){
-		this.editPriceDialogPrice = this.book.price.toString();
-		this.editPriceDialogPriceError = "";
-
-		this.editPriceDialogContentProps.title = this.locale.editPriceDialog.title;
-		this.editPriceDialogVisible = true;
 	}
 
 	async UpdateTitle(){
@@ -165,12 +141,14 @@ export class AuthorBookPageComponent{
 		)
 	}
 
-	async UpdatePrice(){
+	async UpdatePrice(price: number) {
+		this.editPrice = true;
+
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
-				price: parseInt(this.editPriceDialogPrice)
+				price
 			})
 		)
 	}
@@ -306,21 +284,22 @@ export class AuthorBookPageComponent{
 			if(response.status == 200){
 				this.book.language = response.data.language;
 			}
-		}else if(this.editPriceDialogVisible){
+		} else if (this.editPrice) {
+			this.editPrice = false;
+
 			// The price was updated
 			if(response.status == 200){
 				this.book.price = response.data.price;
-				this.UpdatePriceString();
-				this.editPriceDialogVisible = false;
+				this.editPriceComponent.SetPrice(this.book.price);
 			}else{
 				let errorCode = response.data.errors[0].code;
 
 				switch(errorCode){
 					case 2501:	// Price invalid
-						this.editPriceDialogPriceError = this.locale.errors.priceInvalid;
+						this.editPriceComponent.SetError(this.locale.errors.priceInvalid)
 						break;
 					default:		// Unexpected error
-						this.editPriceDialogPriceError = this.locale.errors.unexpectedError;
+						this.editPriceComponent.SetError(this.locale.errors.unexpectedError)
 						break;
 				}
 			}
