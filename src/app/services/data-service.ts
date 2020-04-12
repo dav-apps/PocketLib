@@ -185,12 +185,6 @@ export class DataService{
 	//#endregion
 }
 
-export interface ApiResponse{
-	status: number;
-	headers: any;
-	data: any;
-}
-
 export interface Author{
 	uuid: string;
 	firstName: string;

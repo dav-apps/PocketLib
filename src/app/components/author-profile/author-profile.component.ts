@@ -1,5 +1,5 @@
 import { Component, Input, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { ApiResponse } from 'dav-npm';
@@ -344,6 +344,18 @@ export class AuthorProfileComponent{
 
 		this.createCollectionDialogContentProps.title = this.locale.createCollectionDialog.title;
 		this.createCollectionDialogVisible = true;
+	}
+
+	NavigateToNewBookPage() {
+		let extras: NavigationExtras = {};
+
+		if (this.dataService.userIsAdmin) {
+			extras.queryParams = {
+				author: this.author.uuid
+			}
+		}
+
+		this.router.navigate(["author", "book", "new"], extras);
 	}
 
 	async CreateCollection(){

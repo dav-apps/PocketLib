@@ -1,1 +1,223 @@
-<h1>Hello World</h1>
+<div class="container ms-motion-slideUpIn">
+	<div class="d-flex justify-content-center">
+		<div class="d-flex my-3">
+			<button
+				type="button"
+				class="btn my-auto text-color theme-background-color-primary theme-border-color-primary icon-button"
+				style="height: 35px; width: 40px; padding: 2px 0px 0px 0px"
+				(click)="GoBack()">
+				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
+			</button>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ nameSubmitted ? submittedName : 'Buch erstellen' }}</h2>
+
+			<button
+				type="button"
+				class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+				style="height: 35px; padding: 3px 6px; font-size: 18px"
+				*ngIf="nameSubmitted"
+				(click)="NavigateToSection(0)">
+				<fab-icon iconName="Edit"></fab-icon>
+			</button>
+		</div>
+	</div>
+
+	<!-- Name -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 0 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 0 ? 'none' : null">
+		<div class="form-group">
+			<label
+				class="col-form-label text-color mb-1"
+				style="font-size: 15px">
+				Gib den Titel deines Buches ein.
+			</label>
+
+			<fab-text-field
+				[(value)]="name"
+				[placeholder]="nameSamples[sampleDataIndex]"
+				(keydown.enter)="SubmitName()">
+			</fab-text-field>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				[disabled]="name.length < 3"
+				(onClick)="SubmitName()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Collection -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 1 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 500px"
+		[style.display]="visibleSection != 1 ? 'none' : null">
+
+		<div>
+			<p>Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?</p>
+
+			<div class="list-group">
+				<div
+					class="list-group-item cursor mb-3"
+					[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
+					style="transition: 0.12s"
+					(click)="selectedCollection = -1">
+					Neue Veröffentlichung
+				</div>
+
+				<div
+					class="card my-3 cursor theme-background-color-secondary"
+					[ngClass]="selectedCollection == i ? 'shadow' : ''"
+					style="transition: 0.12s"
+					*ngFor="let collection of collections; let i = index"
+					(click)="selectedCollection = i">
+					<div class="row no-gutters">
+						<div class="col-4">
+							<img [src]="collection.cover ? collection.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+						</div>
+
+						<div class="col-8 my-auto">
+							<div class="card-body">
+								<h5
+									class="card-title my-auto text-color"
+									style="font-size: 18px">
+									{{ collection.name }}
+								</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				[disabled]="selectedCollection == -2"
+				(onClick)="SubmitCollection()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Description -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 2 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 2 ? 'none' : null">
+
+		<div class="form-group">
+			<label
+				class="col-form-label text-color mb-1"
+				style="font-size: 15px">
+				Gib eine Beschreibung für dein Buch an.<br>
+				Du kannst die Beschreibung auch später noch hinzufügen oder ändern.
+			</label>
+
+			<div class="d-flex mb-2">
+				<pocketlib-language-dropdown
+					[language]="language"
+					(updated)="SetLanguage($event)">
+				</pocketlib-language-dropdown>
+			</div>
+
+			<fab-text-field
+				[(value)]="description"
+				[placeholder]="descriptionSamples[sampleDataIndex]"
+				multiline="true"
+				autoAdjustHeight="true">
+			</fab-text-field>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				(onClick)="SubmitDescription()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Categories -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 3 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 3 ? 'none' : null">
+
+		<div class="mb-3">
+			<p>Wähle die passenden Kategorien für dein Buch (maximal 2).</p>
+
+			<fab-checkbox
+				[label]="category.name"
+				[disabled]="selectedCategories.length >= 2 && !selectedCategories.includes(category.key)"
+				(onChange)="CategoryCheckboxSelected($event, category.key)"
+				*ngFor="let category of dataService.categories">
+			</fab-checkbox>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				[disabled]="selectedCategories.length == 0"
+				(onClick)="SubmitCategories()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Price -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 4 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 4 ? 'none' : null">
+
+		<div class="mb-3">
+			<p>Gib den Preis für dein Buch an.</p>
+
+			<pocketlib-edit-price
+				#editPrice
+				[canEdit]="true"
+				(update)="SetPrice($event)">
+			</pocketlib-edit-price>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				(onClick)="SubmitPrice()">
+				Fertigstellen
+			</fab-primary-button>
+		</div>
+	</div>
+</div>

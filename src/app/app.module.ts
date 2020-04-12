@@ -30,7 +30,8 @@ import {
 	FabToggleModule,
 	FabSpinnerModule,
 	FabDialogModule,
-	FabDropdownModule
+	FabDropdownModule,
+	FabCheckboxModule
 } from '@angular-react/fabric';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -138,6 +139,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		FabSpinnerModule,
 		FabDialogModule,
 		FabDropdownModule,
+		FabCheckboxModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [
