@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IIconStyles } from 'office-ui-fabric-react';
+import { Router, ActivatedRoute } from '@angular/router';
+import { IIconStyles, SpinnerSize } from 'office-ui-fabric-react';
+import { ReadFile } from 'ngx-file-helpers';
 import { ApiResponse } from 'dav-npm';
 import { DataService, Author, FindAppropriateLanguage } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
@@ -12,6 +13,7 @@ import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.com
 	templateUrl: './new-book-page.component.html'
 })
 export class NewBookPageComponent{
+	//#region General variables
 	author: Author = {
 		uuid: "",
 		firstName: "",
@@ -20,11 +22,15 @@ export class NewBookPageComponent{
 		collections: [],
 		profileImage: false
 	}
+	//#endregion
 
-	name: string = "";
-	submittedName: string = "";
-	nameSubmitted: boolean = false;
+	//#region Title variables
+	title: string = "";
+	submittedTitle: string = "";
+	titleSubmitted: boolean = false;
+	//#endregion
 
+	//#region Collection variables
 	collections: {
 		uuid: string,
 		name: string,
@@ -32,24 +38,48 @@ export class NewBookPageComponent{
 		coverContent: string
 	}[] = [];
 	selectedCollection: number = -2;
+	loadCollectionsPromise: Promise<null> = new Promise(resolve => this.loadCollectionsPromiseResolve = resolve);
+	loadCollectionsPromiseResolve: Function;
+	noCollections: boolean = false;
+	//#endregion
 
+	//#region Description + Language variables
 	description: string = "";
 	language: string = this.dataService.locale.startsWith("de") ? "de" : "en";
+	//#endregion
 
+	//#region Categories variables
 	selectedCategories: string[] = [];
+	//#endregion
 
+	//#region Price variables
 	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent;
 	price: number = 0;
+	//#endregion
+
+	//#region Cover variables
+	coverContentBase64: string = "";
+	coverContent: ArrayBuffer;
+	coverType: string = "";
+	//#endregion
+
+	//#region BookFile variables
+	bookFileName: string = "";
+	bookFileContent: ArrayBuffer;
+	bookFileType: string = "";
+	//#endregion
 
 	//#region Navigation variables
 	section: number = 0;
 	visibleSection: number = 0;
 	forwardNavigation: boolean = true;
+	spinnerSize: SpinnerSize = SpinnerSize.small;
+	loading: boolean = false;
 	//#endregion
 
 	//#region Sample data variables
 	sampleDataIndex: number = 0;
-	nameSamples: string[] = [
+	titleSamples: string[] = [
 		"Das winzigste Elflein",
 		"Der Wasserkreislauf"
 	]
@@ -69,9 +99,10 @@ export class NewBookPageComponent{
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private router: Router,
 		private activatedRoute: ActivatedRoute
 	){
-		this.sampleDataIndex = this.RandomInteger(0, this.nameSamples.length - 1);
+		this.sampleDataIndex = this.RandomInteger(0, this.titleSamples.length - 1);
 	}
 
 	async ngOnInit() {
@@ -123,6 +154,9 @@ export class NewBookPageComponent{
 			})
 		}
 
+		this.loadCollectionsPromiseResolve();
+		this.noCollections = this.collections.length == 0;
+
 		if (this.dataService.categories.length == 0) {
 			// Get the categories
 			let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
@@ -147,12 +181,22 @@ export class NewBookPageComponent{
 		this.routingService.NavigateBack("/author");
 	}
 
-	Previous(){
-		this.NavigateToSection(this.section - 1);
+	Previous() {
+		if (this.noCollections && this.section == 2) {
+			// Skip the collections section
+			this.NavigateToSection(this.section - 2);
+		} else {
+			this.NavigateToSection(this.section - 1);
+		}
 	}
 
-	Next(){
-		this.NavigateToSection(this.section + 1);
+	Next() {
+		if (this.noCollections && this.section == 0) {
+			// Skip the collections section
+			this.NavigateToSection(this.section + 2);
+		} else {
+			this.NavigateToSection(this.section + 1);
+		}
 	}
 
 	NavigateToSection(index: number){
@@ -166,12 +210,17 @@ export class NewBookPageComponent{
 	}
 
 	//#region Name functions
-	SubmitName(){
-		if(this.name.length >= 3){
+	async SubmitTitle(){
+		if (this.title.length >= 3) {
+			// Wait for the collections
+			this.loading = true;
+			await this.loadCollectionsPromise;
+			this.loading = false;
+
 			this.Next();
 
-			this.submittedName = this.name;
-			this.nameSubmitted = true;
+			this.submittedTitle = this.title;
+			this.titleSubmitted = true;
 		}
 	}
 	//#endregion
@@ -225,9 +274,107 @@ export class NewBookPageComponent{
 	}
 
 	SubmitPrice() {
-		
+		this.Next();
 	}
 	//#endregion
+
+	//#region Cover functions
+	async CoverUpload(file: ReadFile) {
+		this.coverContentBase64 = file.content;
+		this.coverType = file.type;
+
+		// Read the content of the image file
+		this.coverContent = await new Promise(resolve => {
+			let reader = new FileReader();
+			reader.addEventListener('loadend', () => {
+				resolve(reader.result as ArrayBuffer);
+			});
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
+		});
+	}
+
+	SubmitCover() {
+		this.Next();
+	}
+	//#endregion
+
+	//#region Book file
+	async BookFileUpload(file: ReadFile) {
+		this.bookFileName = file.name;
+		this.bookFileType = file.type;
+
+		// Read the content of the book file
+		this.bookFileContent = await new Promise(resolve => {
+			let reader = new FileReader();
+			reader.addEventListener('loadend', () => {
+				resolve(reader.result as ArrayBuffer);
+			});
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
+		});
+	}
+	//#endregion
+
+	async Finish() {
+		this.loading = true;
+		let collectionUuid = "";
+
+		if (this.noCollections || this.selectedCollection == -1) {
+			// Create the collection with the given name and the selected language
+			let createCollectionResponse = await this.apiService.CreateStoreBookCollection({
+				jwt: this.dataService.user.JWT,
+				author: this.dataService.userIsAdmin ? this.author.uuid : null,
+				name: this.title,
+				language: this.language
+			})
+
+			if (createCollectionResponse.status != 201) {
+				// TODO: Show error
+				this.loading = false;
+				return;
+			}
+
+			collectionUuid = createCollectionResponse.data.uuid;
+		} else {
+			collectionUuid = this.collections[this.selectedCollection].uuid;
+		}
+
+		// Create the store book with collection, title and language
+		let createStoreBookResponse = await this.apiService.CreateStoreBook({
+			jwt: this.dataService.user.JWT,
+			collection: collectionUuid,
+			title: this.title,
+			language: this.language
+		})
+
+		if (createStoreBookResponse.status != 201) {
+			// TODO: Show error
+			this.loading = false;
+			return;
+		}
+
+		if (this.coverContent) {
+			// Upload the cover
+			await this.apiService.SetStoreBookCover({
+				jwt: this.dataService.user.JWT,
+				uuid: createStoreBookResponse.data.uuid,
+				type: this.coverType,
+				file: this.coverContent
+			})
+		}
+
+		if (this.bookFileContent) {
+			// Upload the book file
+			await this.apiService.SetStoreBookFile({
+				jwt: this.dataService.user.JWT,
+				uuid: createStoreBookResponse.data.uuid,
+				type: this.bookFileType,
+				file: this.bookFileContent
+			})
+		}
+
+		// Redirect to the AuthorBookPage
+		this.router.navigate(["author", "book", createStoreBookResponse.data.uuid]);
+	}
 
 	RandomInteger(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;

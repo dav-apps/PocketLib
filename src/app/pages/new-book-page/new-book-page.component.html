@@ -8,20 +8,20 @@
 				(click)="GoBack()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
-			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ nameSubmitted ? submittedName : 'Buch erstellen' }}</h2>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ titleSubmitted ? submittedTitle : 'Buch erstellen' }}</h2>
 
 			<button
 				type="button"
 				class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 				style="height: 35px; padding: 3px 6px; font-size: 18px"
-				*ngIf="nameSubmitted"
+				*ngIf="titleSubmitted"
 				(click)="NavigateToSection(0)">
 				<fab-icon iconName="Edit"></fab-icon>
 			</button>
 		</div>
 	</div>
 
-	<!-- Name -->
+	<!-- Title -->
 	<div
 		class="mx-auto"
 		[ngClass]="section != 0 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
@@ -35,16 +35,22 @@
 			</label>
 
 			<fab-text-field
-				[(value)]="name"
-				[placeholder]="nameSamples[sampleDataIndex]"
-				(keydown.enter)="SubmitName()">
+				[(value)]="title"
+				[placeholder]="titleSamples[sampleDataIndex]"
+				(keydown.enter)="SubmitTitle()">
 			</fab-text-field>
 		</div>
 
-		<div style="float: right">
+		<div class="d-flex" style="float: right">
+			<div
+				style="margin-top: 8px; margin-right: 14px"
+				*ngIf="loading">
+				<fab-spinner [size]="spinnerSize"></fab-spinner>
+			</div>
+
 			<fab-primary-button
-				[disabled]="name.length < 3"
-				(onClick)="SubmitName()">
+				[disabled]="title.length < 3 || loading"
+				(onClick)="SubmitTitle()">
 				Weiter
 			</fab-primary-button>
 		</div>
@@ -60,7 +66,7 @@
 		<div>
 			<p>Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?</p>
 
-			<div class="list-group">
+			<div class="list-group mb-3">
 				<div
 					class="list-group-item cursor mb-3"
 					[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
@@ -110,7 +116,7 @@
 		</div>
 	</div>
 
-	<!-- Description -->
+	<!-- Description + Language -->
 	<div
 		class="mx-auto"
 		[ngClass]="section != 2 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
@@ -213,9 +219,96 @@
 			</fab-default-button>
 		</div>
 
-		<div style="float: right">
+		<div class="d-flex" style="float: right">
+			<div
+				style="margin-top: 8px; margin-right: 14px"
+				*ngIf="loading">
+				<fab-spinner [size]="spinnerSize"></fab-spinner>
+			</div>
+
 			<fab-primary-button
 				(onClick)="SubmitPrice()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Cover -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 5 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 5 ? 'none' : null">
+
+		<div class="mb-4">
+			<p>Lade ein Cover für dein Buch hoch.</p>
+
+			<div class="my-3" *ngIf="coverContent">
+				<img [src]="coverContentBase64" height="200">
+			</div>
+
+			<fab-primary-button
+				ngxFilePicker
+				accept="image/png,image/jpeg"
+				(filePick)="CoverUpload($event)">
+				Cover hochladen
+			</fab-primary-button>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div style="float: right">
+			<fab-primary-button
+				(onClick)="SubmitCover()">
+				Weiter
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Book file -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 6 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 6 ? 'none' : null">
+
+		<div class="mb-4">
+			<p>Lade die Buch-Datei hoch.</p>
+
+			<p class="font-italic"
+				*ngIf="bookFileName.length > 0">
+				{{ bookFileName }}
+			</p>
+
+			<fab-primary-button
+				ngxFilePicker
+				accept="application/epub+zip,application/pdf"
+				(filePick)="BookFileUpload($event)">
+				Buch-Datei hochladen
+			</fab-primary-button>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				Zurück
+			</fab-default-button>
+		</div>
+
+		<div class="d-flex" style="float: right">
+			<div
+				style="margin-top: 8px; margin-right: 14px"
+				*ngIf="loading">
+				<fab-spinner [size]="spinnerSize"></fab-spinner>
+			</div>
+
+			<fab-primary-button
+				(onClick)="Finish()">
 				Fertigstellen
 			</fab-primary-button>
 		</div>
