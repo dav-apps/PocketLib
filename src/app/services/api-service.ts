@@ -363,15 +363,19 @@ export class ApiService{
 		jwt: string,
 		collection: string,
 		title: string,
-		language: string
+		description?: string,
+		language: string,
+		price?: number
 	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(params.collection) data["collection"] = params.collection;
-			if(params.title) data["title"] = params.title;
-			if(params.language) data["language"] = params.language;
+			if (params.collection) data["collection"] = params.collection;
+			if (params.title) data["title"] = params.title;
+			if (params.description) data["description"] = params.description;
+			if (params.language) data["language"] = params.language;
+			if (params.price) data["price"] = params.price;
 
 			let response = await axios.default({
 				method: 'post',

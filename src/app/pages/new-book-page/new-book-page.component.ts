@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, SpinnerSize } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
@@ -13,6 +13,26 @@ import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.com
 	templateUrl: './new-book-page.component.html'
 })
 export class NewBookPageComponent{
+	//#region Navigation variables
+	section: number = 0;
+	visibleSection: number = 0;
+	forwardNavigation: boolean = true;
+	spinnerSize: SpinnerSize = SpinnerSize.small;
+	loading: boolean = false;
+	//#endregion
+
+	//#region Sample data variables
+	sampleDataIndex: number = 0;
+	titleSamples: string[] = [
+		"Das winzigste Elflein",
+		"Der Wasserkreislauf"
+	]
+	descriptionSamples: string[] = [
+		"Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt.",
+		"Nachdem die Wissenschaftler der ganzen Welt mit großem Zeitaufwand Ozeane erforscht, Regengüsse untersucht und verschiedene Trinkbrunnen intensiv angestarrt hatten, haben sie eine Theorie dazu entwickelt, wie sich das Wasser auf unserem Planeten verteilt; diese Theorie haben sie den \"Wasserkreislauf\" genannt. Der Wasserkreislauf besteht aus drei zentralen Erscheinungen - Verdunstung, Niederschlag und Abfluss -, und alle drei sind gleich langweilig."
+	]
+	//#endregion
+
 	//#region General variables
 	author: Author = {
 		uuid: "",
@@ -21,6 +41,12 @@ export class NewBookPageComponent{
 		bios: [],
 		collections: [],
 		profileImage: false
+	}
+
+	backButtonIconStyles: IIconStyles = {
+		root: {
+         fontSize: 18
+		}
 	}
 	//#endregion
 
@@ -53,7 +79,7 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Price variables
-	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent;
+	@ViewChild('editPrice', { static: false }) editPriceComponent: EditPriceComponent;
 	price: number = 0;
 	//#endregion
 
@@ -69,31 +95,11 @@ export class NewBookPageComponent{
 	bookFileType: string = "";
 	//#endregion
 
-	//#region Navigation variables
-	section: number = 0;
-	visibleSection: number = 0;
-	forwardNavigation: boolean = true;
-	spinnerSize: SpinnerSize = SpinnerSize.small;
-	loading: boolean = false;
+	//#region Loading Screen variables
+	height: number = 400;
+	loadingScreenVisible: boolean = false;
+	loadingScreenMessage: string = "";
 	//#endregion
-
-	//#region Sample data variables
-	sampleDataIndex: number = 0;
-	titleSamples: string[] = [
-		"Das winzigste Elflein",
-		"Der Wasserkreislauf"
-	]
-	descriptionSamples: string[] = [
-		"Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt.",
-		"Nachdem die Wissenschaftler der ganzen Welt mit großem Zeitaufwand Ozeane erforscht, Regengüsse untersucht und verschiedene Trinkbrunnen intensiv angestarrt hatten, haben sie eine Theorie dazu entwickelt, wie sich das Wasser auf unserem Planeten verteilt; diese Theorie haben sie den \"Wasserkreislauf\" genannt. Der Wasserkreislauf besteht aus drei zentralen Erscheinungen - Verdunstung, Niederschlag und Abfluss -, und alle drei sind gleich langweilig."
-	]
-	//#endregion
-
-	backButtonIconStyles: IIconStyles = {
-		root: {
-         fontSize: 18
-		}
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -106,6 +112,7 @@ export class NewBookPageComponent{
 	}
 
 	async ngOnInit() {
+		this.setSize();
 		await this.dataService.userAuthorPromise;
 
 		// Get the author
@@ -177,6 +184,11 @@ export class NewBookPageComponent{
 		}
 	}
 
+	@HostListener('window:resize')
+	setSize(){
+		this.height = window.innerHeight;
+   }
+
 	GoBack(){
 		this.routingService.NavigateBack("/author");
 	}
@@ -239,7 +251,6 @@ export class NewBookPageComponent{
 	}
 
 	SubmitDescription(){
-		// TODO: Update the book with the description and language on the server
 		this.Next();
 	}
 	//#endregion
@@ -265,11 +276,8 @@ export class NewBookPageComponent{
 
 	//#region Price functions
 	SetPrice(price: number) {
+		// TODO: Check if the price is valid
 		this.price = price;
-
-		// TODO: Update the price on the server + error handling
-
-
 		this.editPriceComponent.SetPrice(price);
 	}
 
@@ -298,7 +306,7 @@ export class NewBookPageComponent{
 	}
 	//#endregion
 
-	//#region Book file
+	//#region Book file functions
 	async BookFileUpload(file: ReadFile) {
 		this.bookFileName = file.name;
 		this.bookFileType = file.type;
@@ -314,9 +322,26 @@ export class NewBookPageComponent{
 	}
 	//#endregion
 
+	//#region Loading Screen functions
+	ShowLoadingScreen() {
+		this.dataService.navbarVisible = false;
+		this.loadingScreenVisible = true;
+
+		setTimeout(() => {
+			// Set the color of the progress ring
+			let progress = document.getElementsByTagName('circle');
+			if(progress.length > 0){
+				let item = progress.item(0);
+				item.setAttribute('style', item.getAttribute('style') + ' stroke: white');
+			}
+		}, 1);
+	}
+
 	async Finish() {
-		this.loading = true;
+		this.ShowLoadingScreen();
 		let collectionUuid = "";
+
+		this.loadingScreenMessage = "Buch wird erstellt...";
 
 		if (this.noCollections || this.selectedCollection == -1) {
 			// Create the collection with the given name and the selected language
@@ -342,8 +367,10 @@ export class NewBookPageComponent{
 		let createStoreBookResponse = await this.apiService.CreateStoreBook({
 			jwt: this.dataService.user.JWT,
 			collection: collectionUuid,
+			description: this.description,
 			title: this.title,
-			language: this.language
+			language: this.language,
+			price: this.price
 		})
 
 		if (createStoreBookResponse.status != 201) {
@@ -353,6 +380,8 @@ export class NewBookPageComponent{
 		}
 
 		if (this.coverContent) {
+			this.loadingScreenMessage = "Cover wird hochgeladen...";
+
 			// Upload the cover
 			await this.apiService.SetStoreBookCover({
 				jwt: this.dataService.user.JWT,
@@ -363,6 +392,8 @@ export class NewBookPageComponent{
 		}
 
 		if (this.bookFileContent) {
+			this.loadingScreenMessage = "Buch-Datei wird hochgeladen...";
+
 			// Upload the book file
 			await this.apiService.SetStoreBookFile({
 				jwt: this.dataService.user.JWT,
@@ -373,8 +404,10 @@ export class NewBookPageComponent{
 		}
 
 		// Redirect to the AuthorBookPage
+		this.dataService.navbarVisible = true;
 		this.router.navigate(["author", "book", createStoreBookResponse.data.uuid]);
 	}
+	//#endregion
 
 	RandomInteger(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;

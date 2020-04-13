@@ -27,6 +27,8 @@ export class EditPriceComponent{
 
 	UpdatePrice() {
 		this.errorMessage = "";
+		
+		if (this.price == "") this.price = "0";
 		this.update.emit(parseInt(this.price));
 	}
 
