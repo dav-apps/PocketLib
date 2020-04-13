@@ -161,6 +161,13 @@ export class NewBookPageComponent{
 			})
 		}
 
+		// If the user navigated from the collection view, preselect the appropriate collection
+		let collectionUuid = this.activatedRoute.snapshot.queryParamMap.get("collection");
+		if (collectionUuid) {
+			let i = this.collections.findIndex(c => c.uuid == collectionUuid);
+			if (i != -1) this.selectedCollection = i;
+		}
+
 		this.loadCollectionsPromiseResolve();
 		this.noCollections = this.collections.length == 0;
 

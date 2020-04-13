@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ApiResponse } from 'dav-npm';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
@@ -138,6 +138,18 @@ export class CollectionViewComponent{
 		}else{
 			this.router.navigate(["author"]);
 		}
+	}
+
+	NavigateToNewBookPage() {
+		let extras: NavigationExtras = {
+			queryParams: {collection: this.uuid}
+		}
+
+		if (this.dataService.userIsAdmin) {
+			extras.queryParams.author = this.collection.author;
+		}
+
+		this.router.navigate(["author", "book", "new"], extras);
 	}
 
 	NavigateToBook(uuid: string){

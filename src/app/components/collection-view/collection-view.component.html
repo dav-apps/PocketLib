@@ -28,6 +28,11 @@
 	</p>
 
 	<div class="col-12 col-md-6 mx-auto">
+		<pocketlib-add-list-item
+			(click)="NavigateToNewBookPage()"
+			*ngIf="collection.books.length > 0">
+		</pocketlib-add-list-item>
+
 		<div
 			class="card my-4 cursor book-list-item theme-background-color-secondary"
 			[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
