@@ -50,7 +50,6 @@ export class AuthorProfileComponent{
 	createCollectionDialogName: string = "";
 	createCollectionDialogNameError: string = "";
 	hoveredBookIndex: number = -1;
-	addBookHover: boolean = false;
 	bookTitleFontSize: number = 20;
 
 	bioTextfieldStyles = {

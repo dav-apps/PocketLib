@@ -1,0 +1,16 @@
+<div
+	class="card cursor my-4 theme-background-color-secondary"
+	[ngClass]="hover ? 'shadow' : 'shadow-sm'"
+	style="transition: 0.12s"
+	(click)="ItemClick()"
+	(mouseover)="hover = true"
+	(mouseout)="hover = false">
+
+	<div class="card-body d-flex justify-content-center align-items-center">
+		<i class="ms-Icon ms-Icon--Add text-color"
+			aria-hidden="true"
+			style="font-size: 18px"
+			[@hover]="hover">
+		</i>
+	</div>
+</div>
