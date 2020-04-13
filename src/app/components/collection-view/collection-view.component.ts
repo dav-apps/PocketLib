@@ -1,6 +1,6 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, ViewChild, Input, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { IIconStyles, IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
+import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ApiResponse } from 'dav-npm';
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component';
 import {
@@ -18,8 +18,7 @@ import { enUS } from 'src/locales/locales';
 })
 export class CollectionViewComponent{
 	locale = enUS.collectionView;
-	@ViewChild(EditCollectionNamesComponent, {static: true})
-	private editCollectionNamesComponent: EditCollectionNamesComponent;
+	@ViewChild(EditCollectionNamesComponent, {static: true}) editCollectionNamesComponent: EditCollectionNamesComponent;
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
 	collectionName: {name: string, language: string} = {name: "", language: ""};
@@ -38,25 +37,16 @@ export class CollectionViewComponent{
 			coverContent: string
 		}[]
 	} = {uuid: "", author: "", names: [], books: []};
-	createBookDialogVisible: boolean = false;
-	createBookDialogTitle: string = "";
-	createBookDialogTitleError: string = "";
 	collectionNamesDialogVisible: boolean = false;
 	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
 	showAddLanguageButton: boolean = false;
+	bookTitleFontSize: number = 20;
+	hoveredBookIndex: number = -1;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
          fontSize: 18
 		}
-	}
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	createBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.createBookDialog.title
 	}
 	collectionNamesDialogContentProps: IDialogContentProps = {
 		title: this.locale.collectionNamesDialog.title
@@ -119,6 +109,29 @@ export class CollectionViewComponent{
 		}
 	}
 
+	@HostListener('window:resize')
+	setSize(){
+		this.UpdateFontSize();
+	}
+
+	UpdateFontSize(){
+		let bookListItems = document.getElementsByClassName('book-list-item');
+		if(bookListItems.length == 0) return;
+
+		let bookItemStyles = getComputedStyle(bookListItems.item(0));
+		let bookItemWidth = +bookItemStyles.width.replace('px', '');
+
+		if(bookItemWidth <= 360){
+			this.bookTitleFontSize = 17;
+		}else if(bookItemWidth <= 400){
+			this.bookTitleFontSize = 18;
+		}else if(bookItemWidth <= 470){
+			this.bookTitleFontSize = 19;
+		}else{
+			this.bookTitleFontSize = 20;
+		}
+	}
+
 	GoBack(){
 		if(this.dataService.userIsAdmin){
 			this.router.navigate(["author", this.collection.author]);
@@ -127,55 +140,8 @@ export class CollectionViewComponent{
 		}
 	}
 
-	ShowBook(uuid: string){
+	NavigateToBook(uuid: string){
 		this.router.navigate(["author", "book", uuid]);
-	}
-
-	ShowCreateBookDialog(){
-		this.createBookDialogTitle = "";
-		this.createBookDialogTitleError = "";
-
-		this.createBookDialogContentProps.title = this.locale.createBookDialog.title;
-		this.createBookDialogVisible = true;
-	}
-
-	async CreateBook(){
-		this.createBookDialogTitleError = "";
-
-		let response: ApiResponse<any> = await this.apiService.CreateStoreBook({
-			jwt: this.dataService.user.JWT,
-			collection: this.uuid,
-			title: this.createBookDialogTitle,
-			language: this.dataService.locale.startsWith("de") ? "de" : "en"
-		})
-
-		if(response.status == 201){
-			this.createBookDialogVisible = false;
-
-			// Redirect to AuthorAppPage
-			this.router.navigate(["author", "book", response.data.uuid]);
-		}else{
-			for(let error of response.data.errors){
-				switch(error.code){
-					case 2105:
-						// Title missing
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleMissing;
-						break;
-					case 2304:
-						// Title too short
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooShort;
-						break;
-					case 2404:
-						// Title too long
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.titleTooLong;
-						break;
-					default:
-						// Unexpected error
-						this.createBookDialogTitleError = this.locale.createBookDialog.errors.unexpectedError;
-						break;
-				}
-			}
-		}
 	}
 
 	ShowCollectionNamesDialog(){

@@ -66,6 +66,7 @@
 				(click)="NavigateToCollection(collection.uuid)"
 				(mouseover)="hoveredBookIndex = i"
 				(mouseout)="hoveredBookIndex = -1">
+				
 				<div class="row no-gutters">
 					<div class="col-4">
 						<img [src]="collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover" style="width: 100px">

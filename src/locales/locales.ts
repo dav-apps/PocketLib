@@ -244,25 +244,11 @@ const enDefaults = {
 		create: "Create"
 	},
 	collectionView: {
-		createBookDialog: {
-			title: "Create book",
-			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The title of your book",
-			errors: {
-				titleMissing: "Please enter a title",
-				titleTooShort: "The title is too short",
-				titleTooLong: "The title is too long",
-				unexpectedError: "An unexpected error occured"
-			}
-		},
 		collectionNamesDialog: {
 			title: "Collection name"
 		},
 		noBooks: "This collection contains no books",
-		add: "Add",
-		close: "Close",
-		cancel: "Cancel",
-		save: "Save"
+		close: "Close"
 	},
 	horizontalBookList: {
 		recentlyPublished: "Recently published books"
@@ -534,25 +520,11 @@ const deDefaults = {
 		create: "Erstellen"
 	},
 	collectionView: {
-		createBookDialog: {
-			title: "Buch erstellen",
-			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Der Titel deines Buches",
-			errors: {
-				titleMissing: "Bitte gib einen Titel an",
-				titleTooShort: "Der Titel ist zu kurz",
-				titleTooLong: "Der Titel ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
-			}
-		},
 		collectionNamesDialog: {
 			title: "Name der Sammlung"
 		},
 		noBooks: "Diese Sammlung enthält keine Bücher",
-		add: "Hinzufügen",
-		close: "Schließen",
-		cancel: "Abbrechen",
-		save: "Speichern"
+		close: "Schließen"
 	},
 	horizontalBookList: {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher"
