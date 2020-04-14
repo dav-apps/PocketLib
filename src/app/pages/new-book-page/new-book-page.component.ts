@@ -1,6 +1,6 @@
 import { Component, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles, SpinnerSize } from 'office-ui-fabric-react';
+import { IIconStyles, SpinnerSize, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { ApiResponse } from 'dav-npm';
 import { DataService, Author, FindAppropriateLanguage } from 'src/app/services/data-service';
@@ -42,11 +42,20 @@ export class NewBookPageComponent{
 		collections: [],
 		profileImage: false
 	}
+	goBackDialogVisible: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
          fontSize: 18
 		}
+	}
+	dialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10
+		}
+	}
+	goBackDialogContentProps: IDialogContentProps = {
+		title: "Seite verlassen"
 	}
 	//#endregion
 
@@ -194,7 +203,16 @@ export class NewBookPageComponent{
 	@HostListener('window:resize')
 	setSize(){
 		this.height = window.innerHeight;
-   }
+	}
+
+	@HostListener('window:beforeunload', ['$event'])
+	ShowAlert(event: any) {
+		event.returnValue = true;
+	}
+	
+	ShowGoBackDialog() {
+		this.goBackDialogVisible = true;
+	}
 
 	GoBack(){
 		this.routingService.NavigateBack("/author");

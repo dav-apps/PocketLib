@@ -5,7 +5,7 @@
 				type="button"
 				class="btn my-auto text-color theme-background-color-primary theme-border-color-primary icon-button"
 				style="height: 35px; width: 40px; padding: 2px 0px 0px 0px"
-				(click)="GoBack()">
+				(click)="ShowGoBackDialog()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
 			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ titleSubmitted ? submittedTitle : 'Buch erstellen' }}</h2>
@@ -330,3 +330,16 @@
 		</p>
 	</div>
 </div>
+
+<fab-dialog
+	[hidden]="!goBackDialogVisible"
+	[dialogContentProps]="goBackDialogContentProps"
+	(onDismiss)="goBackDialogVisible = false">
+
+	<p>Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.</p>
+
+	<fab-dialog-footer>
+		<fab-default-button (onClick)="goBackDialogVisible = false">Abbrechen</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="GoBack()">Verlassen</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
