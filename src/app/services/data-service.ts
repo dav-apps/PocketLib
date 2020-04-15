@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as localforage from 'localforage';
-import { DavUser, GetAllTableObjects } from 'dav-npm';
+import { DavUser, ApiResponse, GetAllTableObjects } from 'dav-npm';
+import { ApiService } from './api-service';
 import { environment } from 'src/environments/environment';
 import { keys } from 'src/environments/keys';
 import * as locales from 'src/locales/locales';
@@ -45,7 +46,9 @@ export class DataService{
 	categoriesPromise: Promise<null> = new Promise(resolve => this.categoriesPromiseResolve = resolve);
 	categoriesPromiseResolve: Function;
 
-   constructor(){
+	constructor(
+		private apiService: ApiService
+	){
 		this.user = new DavUser(() => {
 			this.userIsAdmin = environment.admins.includes(this.user.Id);
 			this.userPromiseResolve(this.user);
@@ -58,7 +61,107 @@ export class DataService{
 			{language: "en", fullLanguage: languages.en},
 			{language: "de", fullLanguage: languages.de}
 		)
-   }
+	}
+	
+	async LoadAuthorOfUser(){
+		await this.userPromise;
+		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
+
+		if(response.status == 200){
+			if(response.data.authors){
+				this.adminAuthors = [];
+
+				for(let author of response.data.authors){
+					let newAuthor = {
+						uuid: author.uuid,
+						firstName: author.first_name,
+						lastName: author.last_name,
+						bios: author.bios,
+						collections: [],
+						profileImage: author.profile_image
+					}
+
+					// Get the collections of the store books
+					newAuthor.collections.push(
+						...await this.LoadCollections(author.collections)
+					)
+
+					this.adminAuthors.push(newAuthor);
+				}
+			}else{
+				this.userAuthor = {
+					uuid: response.data.uuid,
+					firstName: response.data.first_name,
+					lastName: response.data.last_name,
+					bios: response.data.bios,
+					collections: [],
+					profileImage: response.data.profile_image
+				}
+
+				// Get the collections and store books
+				this.userAuthor.collections.push(
+					...await this.LoadCollections(response.data.collections)
+				)
+			}
+		}else{
+			this.userAuthor = null;
+			this.adminAuthors = [];
+		}
+
+		this.userAuthorPromiseResolve(this.userAuthor);
+		this.adminAuthorsPromiseResolve(this.adminAuthors);
+	}
+
+	private async LoadCollections(collectionData: any) : Promise<any[]>{
+		let collections: any[] = [];
+
+		for(let collection of collectionData){
+			let c = await this.apiService.GetStoreBookCollection({
+				jwt: this.user.JWT,
+				uuid: collection.uuid
+			})
+
+			if(c.status == 200){
+				let collectionResponseData = (c as ApiResponse<any>).data;
+
+				let newCollection = {
+					uuid: collectionResponseData.uuid,
+					names: collectionResponseData.names,
+					categories: [],
+					books: []
+				}
+
+				// Get the categories with the correct name
+				for(let category of collectionResponseData.categories){
+					newCollection.categories.push({
+						key: category.key,
+						name: category.names[FindAppropriateLanguage(this.locale.slice(0, 2), category.names)].name
+					})
+				}
+
+				// Get the books
+				for(let book of collectionResponseData.books){
+					let newBook = {
+						uuid: book.uuid,
+						title: book.title,
+						description: book.description,
+						language: book.language,
+						price: book.price ? parseInt(book.price) : 0,
+						status: GetBookStatusByString(book.status),
+						cover: book.cover,
+						coverContent: book.cover ? GetStoreBookCoverLink(book.uuid) : null,
+						file: book.file
+					}
+
+					newCollection.books.push(newBook)
+				}
+
+				collections.push(newCollection);
+			}
+		}
+
+		return collections;
+	}
 
    async LoadAllBooks(){
       this.books = await GetAllBooks();
