@@ -3,7 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, SpinnerSize, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { ApiResponse } from 'dav-npm';
-import { DataService, Author, FindAppropriateLanguage } from 'src/app/services/data-service';
+import {
+	DataService,
+	Author,
+	FindAppropriateLanguage
+} from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
@@ -386,6 +390,21 @@ export class NewBookPageComponent{
 			collectionUuid = createCollectionResponse.data.uuid;
 		} else {
 			collectionUuid = this.collections[this.selectedCollection].uuid;
+
+			// Check if the selected collection has already a name in the given language
+			let originalCollection = this.author.collections.find(c => c.uuid = collectionUuid);
+			
+			let nameIndex = originalCollection.names.findIndex(name => name.language == this.language);
+
+			if (nameIndex == -1) {
+				// Add the new name to the collection
+				await this.apiService.SetStoreBookCollectionName({
+					jwt: this.dataService.user.JWT,
+					uuid: collectionUuid,
+					language: this.language,
+					name: this.title
+				})
+			}
 		}
 
 		// Create the store book with collection, title and language
@@ -427,6 +446,10 @@ export class NewBookPageComponent{
 				file: this.bookFileContent
 			})
 		}
+
+		// Reload the author of the user
+		this.loadingScreenMessage = "Lokale Daten werden aktualisiert...";
+		await this.dataService.LoadAuthorOfUser();
 
 		// Redirect to the AuthorBookPage
 		this.dataService.navbarVisible = true;
