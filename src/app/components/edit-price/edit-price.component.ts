@@ -25,6 +25,19 @@ export class EditPriceComponent{
 		this.UpdateFormattedPrice();
 	}
 
+	ShowEditPrice() {
+		this.edit = true;
+
+		setTimeout(() => {
+			// Set the text color of the textfield labels
+			let labels = document.getElementsByClassName('ms-Label');
+
+			for (let i = 0; i < labels.length; i++){
+				labels.item(i).setAttribute("style", "color: var(--text-color)");
+			}
+		}, 1);
+	}
+
 	UpdatePrice() {
 		this.errorMessage = "";
 		

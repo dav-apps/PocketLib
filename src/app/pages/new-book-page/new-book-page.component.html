@@ -64,23 +64,23 @@
 		[style.display]="visibleSection != 1 ? 'none' : null">
 
 		<div>
-			<p>Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?</p>
+			<p class="text-color">Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?</p>
 
 			<div class="list-group mb-3">
-				<div
-					class="list-group-item cursor mb-3"
+				<p
+					class="list-group-item mb-3 cursor text-center text-color theme-background-color-secondary"
 					[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
 					style="transition: 0.12s"
-					(click)="selectedCollection = -1">
+					(click)="SelectCollection(-1)">
 					Neue Veröffentlichung
-				</div>
+				</p>
 
 				<div
 					class="card my-3 cursor theme-background-color-secondary"
 					[ngClass]="selectedCollection == i ? 'shadow' : ''"
 					style="transition: 0.12s"
 					*ngFor="let collection of collections; let i = index"
-					(click)="selectedCollection = i">
+					(click)="SelectCollection(i)">
 					<div class="row no-gutters">
 						<div class="col-4">
 							<img [src]="collection.cover ? collection.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
@@ -127,8 +127,7 @@
 			<label
 				class="col-form-label text-color mb-1"
 				style="font-size: 15px">
-				Gib eine Beschreibung für dein Buch an.<br>
-				Du kannst die Beschreibung auch später noch hinzufügen oder ändern.
+				Gib eine Beschreibung an.
 			</label>
 
 			<div class="d-flex mb-2">
@@ -142,7 +141,8 @@
 				[(value)]="description"
 				[placeholder]="descriptionSamples[sampleDataIndex]"
 				multiline="true"
-				autoAdjustHeight="true">
+				autoAdjustHeight="true"
+				spellcheck="true">
 			</fab-text-field>
 		</div>
 
@@ -169,7 +169,7 @@
 		[style.display]="visibleSection != 3 ? 'none' : null">
 
 		<div class="mb-3">
-			<p>Wähle die passenden Kategorien für dein Buch (maximal 2).</p>
+			<p class="text-color">Wähle die passenden Kategorien für dein Buch (maximal 2).</p>
 
 			<fab-checkbox
 				[label]="category.name"
@@ -188,7 +188,6 @@
 
 		<div style="float: right">
 			<fab-primary-button
-				[disabled]="selectedCategories.length == 0"
 				(onClick)="SubmitCategories()">
 				Weiter
 			</fab-primary-button>
@@ -203,7 +202,7 @@
 		[style.display]="visibleSection != 4 ? 'none' : null">
 
 		<div class="mb-3">
-			<p>Gib den Preis für dein Buch an.</p>
+			<p class="text-color">Gib den Preis für dein Buch an.</p>
 
 			<pocketlib-edit-price
 				#editPrice
@@ -241,7 +240,7 @@
 		[style.display]="visibleSection != 5 ? 'none' : null">
 
 		<div class="mb-4">
-			<p>Lade ein Cover für dein Buch hoch.</p>
+			<p class="text-color">Lade ein Cover für dein Buch hoch.</p>
 
 			<div class="my-3" *ngIf="coverContent">
 				<img [src]="coverContentBase64" height="200">
@@ -278,7 +277,7 @@
 		[style.display]="visibleSection != 6 ? 'none' : null">
 
 		<div class="mb-4">
-			<p>Lade die Buch-Datei hoch.</p>
+			<p class="text-color">Lade die Buch-Datei hoch.</p>
 
 			<p class="font-italic"
 				*ngIf="bookFileName.length > 0">

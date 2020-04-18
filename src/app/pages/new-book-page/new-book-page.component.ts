@@ -77,6 +77,7 @@ export class NewBookPageComponent{
 		coverContent: string
 	}[] = [];
 	selectedCollection: number = -2;
+	collectionSelected: boolean = false;
 	loadCollectionsPromise: Promise<null> = new Promise(resolve => this.loadCollectionsPromiseResolve = resolve);
 	loadCollectionsPromiseResolve: Function;
 	noCollections: boolean = false;
@@ -202,6 +203,15 @@ export class NewBookPageComponent{
 
 			this.dataService.categoriesPromiseResolve();
 		}
+
+		setTimeout(() => {
+			// Set the text color of the checkbox labels
+			let checkboxes = document.getElementsByClassName('ms-Checkbox-text');
+
+			for (let i = 0; i < checkboxes.length; i++){
+				checkboxes.item(i).setAttribute("style", "color: var(--text-color)");
+			}
+		}, 1)
 	}
 
 	@HostListener('window:resize')
@@ -267,6 +277,15 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Collection functions
+	SelectCollection(index: number) {
+		this.selectedCollection = index;
+
+		if (!this.collectionSelected) {
+			this.collectionSelected = true;
+			this.Next();
+		}
+	}
+
 	SubmitCollection() {
 		if (this.selectedCollection != -2) {
 			this.Next();
@@ -297,9 +316,7 @@ export class NewBookPageComponent{
 	}
 
 	SubmitCategories() {
-		if (this.selectedCategories.length > 0) {
-			this.Next();
-		}
+		this.Next();
 	}
 	//#endregion
 
