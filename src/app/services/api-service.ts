@@ -365,7 +365,8 @@ export class ApiService{
 		title: string,
 		description?: string,
 		language: string,
-		price?: number
+		price?: number,
+		categories?: string[]
 	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
@@ -376,6 +377,7 @@ export class ApiService{
 			if (params.description) data["description"] = params.description;
 			if (params.language) data["language"] = params.language;
 			if (params.price) data["price"] = params.price;
+			if (params.categories) data["categories"] = params.categories;
 
 			let response = await axios.default({
 				method: 'post',
@@ -520,18 +522,20 @@ export class ApiService{
 		language?: string,
 		price?: number,
 		published?: boolean,
-		status?: string
+		status?: string,
+		categories?: string[]
 	}) : Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}};
 
 		try{
 			let data = {};
-			if(params.title) data["title"] = params.title;
-			if(params.description) data["description"] = params.description;
-			if(params.language) data["language"] = params.language;
-			if(params.price != null) data["price"] = params.price;
-			if(params.published) data["published"] = params.published;
-			if(params.status) data["status"] = params.status;
+			if (params.title) data["title"] = params.title;
+			if (params.description) data["description"] = params.description;
+			if (params.language) data["language"] = params.language;
+			if (params.price != null) data["price"] = params.price;
+			if (params.published) data["published"] = params.published;
+			if (params.status) data["status"] = params.status;
+			if (params.categories) data["categories"] = params.categories;
 
 			let response = await axios.default({
 				method: 'put',

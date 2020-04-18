@@ -431,7 +431,8 @@ export class NewBookPageComponent{
 			description: this.description,
 			title: this.title,
 			language: this.language,
-			price: this.price
+			price: this.price,
+			categories: this.selectedCategories
 		})
 
 		if (createStoreBookResponse.status != 201) {
