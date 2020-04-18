@@ -127,16 +127,7 @@ export class DataService{
 				let newCollection = {
 					uuid: collectionResponseData.uuid,
 					names: collectionResponseData.names,
-					categories: [],
 					books: []
-				}
-
-				// Get the categories with the correct name
-				for(let category of collectionResponseData.categories){
-					newCollection.categories.push({
-						key: category.key,
-						name: category.names[FindAppropriateLanguage(this.locale.slice(0, 2), category.names)].name
-					})
 				}
 
 				// Get the books
@@ -301,10 +292,6 @@ export interface Author{
 		names: {
 			name: string,
 			language: string
-		}[],
-		categories: {
-			key: string,
-			name: string
 		}[],
 		books: {
 			uuid: string,
