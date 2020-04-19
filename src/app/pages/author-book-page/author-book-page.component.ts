@@ -27,14 +27,19 @@ export class AuthorBookPageComponent{
 		description: string,
 		language: string,
 		price: number,
-		status: BookStatus
+		status: BookStatus,
+		categories: {
+			key: string,
+			name: string
+		}[]
 	} = {
 		collection: "",
 		title: "",
 		description: "",
 		language: "en",
 		price: 0,
-		status: BookStatus.Unpublished
+		status: BookStatus.Unpublished,
+		categories: []
 	}
 	editTitleDialogVisible: boolean = false;
 	editTitleDialogTitle: string = "";
@@ -105,6 +110,21 @@ export class AuthorBookPageComponent{
 			this.book.language = response.data.language;
 			this.book.price = response.data.price;
 			this.book.status = GetBookStatusByString(response.data.status);
+
+			// Get the categories
+			await this.dataService.categoriesPromise;
+
+			for (let key of response.data.categories) {
+				// Find the category with the key
+				let category = this.dataService.categories.find(c => c.key == key);
+
+				if (category) {
+					this.book.categories.push({
+						key: category.key,
+						name: category.name
+					})
+				}
+			}
 
 			this.editPriceComponent.SetPrice(this.book.price);
 

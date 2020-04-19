@@ -76,12 +76,37 @@
 				</pocketlib-language-dropdown>
 			</div>
 
-			<!-- Price -->
+			<!-- Categories -->
 			<div style="grid-column: 1; grid-row: 4">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
 			</div>
 
 			<div style="grid-column: 2; grid-row: 4">
+				<div class="d-flex">
+					<div class="my-auto">
+						<span
+							class="badge badge-pill  mr-2"
+							[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+							style="font-size: 13px"
+							*ngFor="let category of book.categories; let i = index">
+							{{ category.name }}
+						</span>
+					</div>
+
+					<button type="button" 
+						class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+						style="height: 35px; padding: 3px 6px; font-size: 18px">
+						<fab-icon iconName="Edit"></fab-icon>
+					</button>
+				</div>
+			</div>
+
+			<!-- Price -->
+			<div style="grid-column: 1; grid-row: 5">
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
+			</div>
+
+			<div style="grid-column: 2; grid-row: 5">
 				<pocketlib-edit-price
 					#editPrice
 					[canEdit]="book.status == 0 || book.status == 1"
@@ -90,11 +115,11 @@
 			</div>
 
 			<!-- Book file -->
-			<div style="grid-column: 1; grid-row: 5;">
+			<div style="grid-column: 1; grid-row: 6;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 5;">
+			<div style="grid-column: 2; grid-row: 6;">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
 
@@ -108,11 +133,11 @@
 			</div>
 
 			<!-- Status -->
-			<div style="grid-column: 1; grid-row: 6;">
+			<div style="grid-column: 1; grid-row: 7;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 6;">
+			<div style="grid-column: 2; grid-row: 7;">
 				<div *ngIf="book.status == 0 || book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
 					<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
