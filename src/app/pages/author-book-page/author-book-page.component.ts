@@ -10,6 +10,7 @@ import {
 	GetStoreBookCoverLink
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
+import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
 import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
 import { enUS } from 'src/locales/locales';
 
@@ -20,6 +21,7 @@ import { enUS } from 'src/locales/locales';
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage;
 	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent;
+	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent;
 	uuid: string;
 	book: {
 		collection: string,
@@ -52,6 +54,7 @@ export class AuthorBookPageComponent{
 	bookFileUploaded: boolean = false;
 	publishingOrUnpublishing: boolean = false;
 	editPrice: boolean = false;
+	categoriesSelectionDialogVisible: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -66,6 +69,9 @@ export class AuthorBookPageComponent{
 	editTitleDialogContentProps: IDialogContentProps = {
 		title: this.locale.editTitleDialog.title
 	}
+	categoriesSelectionDialogContentProps: IDialogContentProps = {
+		title: this.locale.categoriesSelectionDialog.title
+	}
 	descriptionTextfieldStyles = {
 		root: {
 			marginTop: "3px",
@@ -75,7 +81,7 @@ export class AuthorBookPageComponent{
 	}
 
 	constructor(
-		private dataService: DataService,
+		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router,
       private activatedRoute: ActivatedRoute
@@ -113,18 +119,7 @@ export class AuthorBookPageComponent{
 
 			// Get the categories
 			await this.dataService.categoriesPromise;
-
-			for (let key of response.data.categories) {
-				// Find the category with the key
-				let category = this.dataService.categories.find(c => c.key == key);
-
-				if (category) {
-					this.book.categories.push({
-						key: category.key,
-						name: category.name
-					})
-				}
-			}
+			this.LoadCategories(response.data.categories);
 
 			this.editPriceComponent.SetPrice(this.book.price);
 
@@ -143,7 +138,23 @@ export class AuthorBookPageComponent{
 		this.router.navigate(["author", "collection", this.book.collection]);
 	}
 
-	ShowEditTitleModal(){
+	LoadCategories(keys: string[]) {
+		this.book.categories = [];
+
+		for (let key of keys) {
+			// Find the category with the key
+			let category = this.dataService.categories.find(c => c.key == key);
+
+			if (category) {
+				this.book.categories.push({
+					key: category.key,
+					name: category.name
+				})
+			}
+		}
+	}
+
+	ShowEditTitleDialog(){
 		this.editTitleDialogTitle = this.book.title;
 		this.editTitleDialogTitleError = "";
 
@@ -157,18 +168,6 @@ export class AuthorBookPageComponent{
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				title: this.editTitleDialogTitle
-			})
-		)
-	}
-
-	async UpdatePrice(price: number) {
-		this.editPrice = true;
-
-		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
-				uuid: this.uuid,
-				price
 			})
 		)
 	}
@@ -200,6 +199,42 @@ export class AuthorBookPageComponent{
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				language
+			})
+		)
+	}
+
+	ShowCategoriesDialog() {
+		// Get the category keys of the book
+		let keys: string[] = [];
+		this.book.categories.forEach(c => keys.push(c.key));
+		this.categoriesSelectionComponent.SetSelectedCategories(keys);
+
+		this.categoriesSelectionDialogContentProps.title = this.locale.categoriesSelectionDialog.title;
+		this.categoriesSelectionDialogVisible = true;
+	}
+
+	async UpdateCategories() {
+		let categories = this.categoriesSelectionComponent.GetSelectedCategories();
+
+		// Update the categories on the server
+		await this.apiService.UpdateStoreBook({
+			jwt: this.dataService.user.JWT,
+			uuid: this.uuid,
+			categories
+		})
+
+		this.LoadCategories(categories);
+		this.categoriesSelectionDialogVisible = false;
+	}
+
+	async UpdatePrice(price: number) {
+		this.editPrice = true;
+
+		this.UpdateStoreBookResponse(
+			await this.apiService.UpdateStoreBook({
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				price
 			})
 		)
 	}

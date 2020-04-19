@@ -104,6 +104,9 @@ const enDefaults = {
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The title of your book"
 		},
+		categoriesSelectionDialog: {
+			title: "Select categories"
+		},
 		cover: "Cover",
 		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
@@ -380,6 +383,9 @@ const deDefaults = {
 			title: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Der Titel deines Buches"
+		},
+		categoriesSelectionDialog: {
+			title: "Kategorien auswählen"
 		},
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",

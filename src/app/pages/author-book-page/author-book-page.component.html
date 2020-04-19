@@ -12,7 +12,7 @@
 			<button type="button" 
 					class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 					style="height: 35px; padding: 3px 6px; font-size: 18px" 
-					(click)="ShowEditTitleModal()">
+					(click)="ShowEditTitleDialog()">
 				<fab-icon iconName="Edit"></fab-icon>
 			</button>
 		</div>
@@ -95,7 +95,8 @@
 
 					<button type="button" 
 						class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
-						style="height: 35px; padding: 3px 6px; font-size: 18px">
+						style="height: 35px; padding: 3px 6px; font-size: 18px"
+						(click)="ShowCategoriesDialog()">
 						<fab-icon iconName="Edit"></fab-icon>
 					</button>
 				</div>
@@ -176,5 +177,19 @@
 	<fab-dialog-footer>
 		<fab-default-button (onClick)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
 		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
+	[hidden]="!categoriesSelectionDialogVisible"
+	[dialogContentProps]="categoriesSelectionDialogContentProps"
+	(onDismiss)="categoriesSelectionDialogVisible = false">
+
+	<pocketlib-categories-selection #categoriesSelection>
+	</pocketlib-categories-selection>
+
+	<fab-dialog-footer>
+		<fab-default-button (onClick)="categoriesSelectionDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateCategories()">{{ locale.save }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
