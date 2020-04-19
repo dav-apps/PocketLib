@@ -1,0 +1,7 @@
+<fab-checkbox
+	[label]="category.name"
+	[checked]="selectedCategories.includes(category.key)"
+	[disabled]="selectedCategories.length >= 2 && !selectedCategories.includes(category.key)"
+	(onChange)="CategoryCheckboxSelected($event, category.key)"
+	*ngFor="let category of dataService.categories">
+</fab-checkbox>
