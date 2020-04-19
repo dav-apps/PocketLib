@@ -2,7 +2,6 @@ import { Component, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IIconStyles, SpinnerSize, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
-import { ApiResponse } from 'dav-npm';
 import {
 	DataService,
 	Author,
@@ -10,6 +9,7 @@ import {
 } from 'src/app/services/data-service';
 import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from 'src/app/services/routing-service';
+import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
 import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
 
 @Component({
@@ -89,6 +89,7 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Categories variables
+	@ViewChild('categoriesSelection', { static: false }) categoriesSelectionComponent: CategoriesSelectionComponent;
 	selectedCategories: string[] = [];
 	//#endregion
 
@@ -184,15 +185,6 @@ export class NewBookPageComponent{
 
 		this.loadCollectionsPromiseResolve();
 		this.noCollections = this.collections.length == 0;
-
-		setTimeout(() => {
-			// Set the text color of the checkbox labels
-			let checkboxes = document.getElementsByClassName('ms-Checkbox-text');
-
-			for (let i = 0; i < checkboxes.length; i++){
-				checkboxes.item(i).setAttribute("style", "color: var(--text-color)");
-			}
-		}, 1)
 	}
 
 	@HostListener('window:resize')
@@ -285,18 +277,8 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Categories functions
-	CategoryCheckboxSelected(event: {checked: boolean}, key: string) {
-		if (event.checked) {
-			// Add the category to the selected categories
-			this.selectedCategories.push(key);
-		} else {
-			// Remove the category from the selected categories
-			let i = this.selectedCategories.indexOf(key);
-			if (i != -1) this.selectedCategories.splice(i, 1);
-		}
-	}
-
 	SubmitCategories() {
+		this.selectedCategories = this.categoriesSelectionComponent.GetSelectedCategories();
 		this.Next();
 	}
 	//#endregion

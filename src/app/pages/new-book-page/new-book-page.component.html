@@ -171,12 +171,7 @@
 		<div class="mb-3">
 			<p class="text-color">Wähle die passenden Kategorien für dein Buch (maximal 2).</p>
 
-			<fab-checkbox
-				[label]="category.name"
-				[disabled]="selectedCategories.length >= 2 && !selectedCategories.includes(category.key)"
-				(onChange)="CategoryCheckboxSelected($event, category.key)"
-				*ngFor="let category of dataService.categories">
-			</fab-checkbox>
+			<pocketlib-categories-selection #categoriesSelection></pocketlib-categories-selection>
 		</div>
 
 		<div style="float: left">
@@ -201,7 +196,7 @@
 		style="max-width: 300px"
 		[style.display]="visibleSection != 4 ? 'none' : null">
 
-		<div class="mb-3">
+		<div class="mb-4">
 			<p class="text-color">Gib den Preis für dein Buch an.</p>
 
 			<pocketlib-edit-price
