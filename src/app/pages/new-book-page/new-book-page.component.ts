@@ -185,25 +185,6 @@ export class NewBookPageComponent{
 		this.loadCollectionsPromiseResolve();
 		this.noCollections = this.collections.length == 0;
 
-		if (this.dataService.categories.length == 0) {
-			// Get the categories
-			let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
-
-			// Get the names in the appropriate language	
-			for (let category of getCategoriesResponse.data.categories) {
-				let currentLanguageIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), category.names);
-				let currentLanguage = category.names[currentLanguageIndex];
-
-				this.dataService.categories.push({
-					key: category.key,
-					name: currentLanguage.name,
-					language: currentLanguage.language
-				});
-			}
-
-			this.dataService.categoriesPromiseResolve();
-		}
-
 		setTimeout(() => {
 			// Set the text color of the checkbox labels
 			let checkboxes = document.getElementsByClassName('ms-Checkbox-text');

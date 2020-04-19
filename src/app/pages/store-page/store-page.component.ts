@@ -1,8 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiResponse } from 'dav-npm';
-import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
+import { DataService } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -15,7 +13,6 @@ export class StorePageComponent{
 	
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private router: Router
 	){
 		this.locale = this.dataService.GetLocale().storePage;
@@ -23,25 +20,6 @@ export class StorePageComponent{
 
 	async ngOnInit(){
 		this.setSize();
-
-		if(this.dataService.categories.length == 0){
-			// Get the categories
-			let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
-
-			// Get the names in the appropriate language
-			for(let category of getCategoriesResponse.data.categories){
-				let currentLanguageIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), category.names);
-				let currentLanguage = category.names[currentLanguageIndex];
-				
-				this.dataService.categories.push({
-					key: category.key,
-					name: currentLanguage.name,
-					language: currentLanguage.language
-				});
-			}
-
-			this.dataService.categoriesPromiseResolve();
-		}
 	}
 
 	@HostListener('window:resize')

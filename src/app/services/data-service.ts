@@ -154,6 +154,26 @@ export class DataService{
 		return collections;
 	}
 
+	async LoadCategories() {
+		// Get the categories
+		let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
+		this.categories = [];
+
+		// Get the names in the appropriate language
+		for(let category of getCategoriesResponse.data.categories){
+			let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names);
+			let currentLanguage = category.names[currentLanguageIndex];
+			
+			this.categories.push({
+				key: category.key,
+				name: currentLanguage.name,
+				language: currentLanguage.language
+			});
+		}
+
+		this.categoriesPromiseResolve();
+	}
+
    async LoadAllBooks(){
       this.books = await GetAllBooks();
    }

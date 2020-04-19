@@ -99,6 +99,9 @@ export class AppComponent{
 
 		// Load the author
 		await this.dataService.LoadAuthorOfUser();
+
+		// Load the categories
+		await this.dataService.LoadCategories();
 	}
 
 	ngAfterViewInit(){
