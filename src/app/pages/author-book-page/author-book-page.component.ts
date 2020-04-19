@@ -134,8 +134,42 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	GoBack(){
-		this.router.navigate(["author", "collection", this.book.collection]);
+	GoBack() {
+		// Check if this is the only book in the collection
+		let skipCollection = false;
+		let authorUuid: string;
+
+		if (this.dataService.userIsAdmin) {
+			let collectionFound = false;
+
+			for (let author of this.dataService.adminAuthors) {
+				for (let collection of author.collections) {
+					if (collection.uuid == this.book.collection) {
+						collectionFound = true;
+						skipCollection = collection.books.length == 1;
+						authorUuid = author.uuid;
+						break;
+					}
+				}
+
+				if (collectionFound) break;
+			}
+		} else {
+			for (let collection of this.dataService.userAuthor.collections) {
+				if (collection.uuid == this.book.collection) {
+					skipCollection = collection.books.length == 1;
+					break;
+				}
+			}
+		}
+
+		if (skipCollection && this.dataService.userIsAdmin) {
+			this.router.navigate(["author", authorUuid]);
+		} else if (skipCollection) {
+			this.router.navigate(["author"]);
+		} else {
+			this.router.navigate(["author", "collection", this.book.collection]);
+		}
 	}
 
 	LoadCategories(keys: string[]) {

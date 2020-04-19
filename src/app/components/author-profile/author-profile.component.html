@@ -55,7 +55,7 @@
 				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
 				style="transition: 0.12s"
 				*ngFor="let collection of collections; let i = index"
-				(click)="NavigateToCollection(collection.uuid)"
+				(click)="collection.books.length == 1 ? NavigateToAuthorStoreBook(collection.books[0].uuid) : NavigateToCollection(collection.uuid)"
 				(mouseover)="hoveredBookIndex = i"
 				(mouseout)="hoveredBookIndex = -1">
 				

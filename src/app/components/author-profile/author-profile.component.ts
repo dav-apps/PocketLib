@@ -160,8 +160,12 @@ export class AuthorProfileComponent{
 		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.author.bios);
 	}
 
-	NavigateToCollection(uuid: string){
+	NavigateToCollection(uuid: string) {
 		this.router.navigate(["author", "collection", uuid]);
+	}
+
+	NavigateToAuthorStoreBook(uuid: string) {
+		this.router.navigate(["author", "book", uuid]);
 	}
 
 	NavigateToStoreBook(uuid: string){
