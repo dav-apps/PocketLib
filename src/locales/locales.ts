@@ -139,6 +139,50 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured"
 		}
 	},
+	newBookPage: {
+		title: "Create book",
+		titleSection: {
+			description: "Enter the title of your book.",
+			titleTextfieldPlaceholder: "The Littlest Elf"
+		},
+		collectionSection: {
+			description: "Is this book a different version, a new edition or a translation of another book you have already published on PocketLib?",
+			newPublication: "New publication"
+		},
+		descriptionSection: {
+			description: "Enter a description.",
+			descriptionTextfieldPlaceholder: "This book tells the story of a teensy-weensy little man who scurries around Fairyland having all sorts of adorable adventures."
+		},
+		categoriesSection: {
+			description: "Choose the appropriate categories for your book (maximum 2)."
+		},
+		priceSection: {
+			description: "Specify the price for your book."
+		},
+		coverSection: {
+			description: "Upload a cover for your book.",
+			uploadButtonText: "Upload cover"
+		},
+		bookFileSection: {
+			description: "Upload the book file.",
+			uploadButtonText: "Upload book file"
+		},
+		loadingScreen: {
+			creatingBook: "Creating the book...",
+			uploadingCover: "Uploading the cover...",
+			uploadingBookFile: "Uploading the book file...",
+			updatingLocalData: "Updating local data..."
+		},
+		leavePageDialog: {
+			title: "Leave page",
+			description: "Are you sure? The data you have entered will not be saved.",
+			cancel: "Cancel",
+			leave: "Leave"
+		},
+		previous: "Previous",
+		next: "Next",
+		finish: "Finish"
+	},
 	loginPage: {
 		title: "Log in to dav",
 		emailTextfieldLabel: "Email",
@@ -418,6 +462,50 @@ const deDefaults = {
 			priceInvalid: "Der Preis ist ungültig",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		}
+	},
+	newBookPage: {
+		title: "Buch erstellen",
+		titleSection: {
+			description: "Gib den Titel deines Buches ein.",
+			titleTextfieldPlaceholder: "Das winzigste Elflein"
+		},
+		collectionSection: {
+			description: "Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?",
+			newPublication: "Neue Veröffentlichung"
+		},
+		descriptionSection: {
+			description: "Gib eine Beschreibung an.",
+			descriptionTextfieldPlaceholder: "Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt."
+		},
+		categoriesSection: {
+			description: "Wähle die passenden Kategorien für dein Buch (maximal 2)."
+		},
+		priceSection: {
+			description: "Gib den Preis für dein Buch an."
+		},
+		coverSection: {
+			description: "Lade ein Cover für dein Buch hoch.",
+			uploadButtonText: "Cover hochladen"
+		},
+		bookFileSection: {
+			description: "Lade die Buch-Datei hoch.",
+			uploadButtonText: "Buch-Datei hochladen"
+		},
+		loadingScreen: {
+			creatingBook: "Buch wird erstellt...",
+			uploadingCover: "Cover wird hochgeladen...",
+			uploadingBookFile: "Buch-Datei wird hochgeladen...",
+			updatingLocalData: "Lokale Daten werden aktualisiert..."
+		},
+		leavePageDialog: {
+			title: "Seite verlassen",
+			description: "Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
+			cancel: "Abbrechen",
+			leave: "Verlassen"
+		},
+		previous: "Zurück",
+		next: "Weiter",
+		finish: "Fertigstellen"
 	},
 	loginPage: {
 		title: "Mit dav anmelden",

@@ -11,6 +11,7 @@ import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
 import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
+import { enUS } from 'src/locales/locales';
 
 @Component({
 	selector: 'pocketlib-new-book-page',
@@ -25,19 +26,8 @@ export class NewBookPageComponent{
 	loading: boolean = false;
 	//#endregion
 
-	//#region Sample data variables
-	sampleDataIndex: number = 0;
-	titleSamples: string[] = [
-		"Das winzigste Elflein",
-		"Der Wasserkreislauf"
-	]
-	descriptionSamples: string[] = [
-		"Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt.",
-		"Nachdem die Wissenschaftler der ganzen Welt mit großem Zeitaufwand Ozeane erforscht, Regengüsse untersucht und verschiedene Trinkbrunnen intensiv angestarrt hatten, haben sie eine Theorie dazu entwickelt, wie sich das Wasser auf unserem Planeten verteilt; diese Theorie haben sie den \"Wasserkreislauf\" genannt. Der Wasserkreislauf besteht aus drei zentralen Erscheinungen - Verdunstung, Niederschlag und Abfluss -, und alle drei sind gleich langweilig."
-	]
-	//#endregion
-
 	//#region General variables
+	locale = enUS.newBookPage;
 	author: Author = {
 		uuid: "",
 		firstName: "",
@@ -46,7 +36,7 @@ export class NewBookPageComponent{
 		collections: [],
 		profileImage: false
 	}
-	goBackDialogVisible: boolean = false;
+	leavePageDialogVisible: boolean = false;
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -58,8 +48,8 @@ export class NewBookPageComponent{
 			marginLeft: 10
 		}
 	}
-	goBackDialogContentProps: IDialogContentProps = {
-		title: "Seite verlassen"
+	leavePageDialogContentProps: IDialogContentProps = {
+		title: this.locale.leavePageDialog.title
 	}
 	//#endregion
 
@@ -122,8 +112,8 @@ export class NewBookPageComponent{
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	){
-		this.sampleDataIndex = this.RandomInteger(0, this.titleSamples.length - 1);
+	) {
+		this.locale = this.dataService.GetLocale().newBookPage;
 	}
 
 	async ngOnInit() {
@@ -198,7 +188,8 @@ export class NewBookPageComponent{
 	}
 	
 	ShowGoBackDialog() {
-		this.goBackDialogVisible = true;
+		this.leavePageDialogContentProps.title = this.locale.leavePageDialog.title;
+		this.leavePageDialogVisible = true;
 	}
 
 	GoBack(){
@@ -350,7 +341,7 @@ export class NewBookPageComponent{
 		this.ShowLoadingScreen();
 		let collectionUuid = "";
 
-		this.loadingScreenMessage = "Buch wird erstellt...";
+		this.loadingScreenMessage = this.locale.loadingScreen.creatingBook;
 
 		if (this.noCollections || this.selectedCollection == -1) {
 			// Create the collection with the given name and the selected language
@@ -405,7 +396,7 @@ export class NewBookPageComponent{
 		}
 
 		if (this.coverContent) {
-			this.loadingScreenMessage = "Cover wird hochgeladen...";
+			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover;
 
 			// Upload the cover
 			await this.apiService.SetStoreBookCover({
@@ -417,7 +408,7 @@ export class NewBookPageComponent{
 		}
 
 		if (this.bookFileContent) {
-			this.loadingScreenMessage = "Buch-Datei wird hochgeladen...";
+			this.loadingScreenMessage = this.locale.loadingScreen.uploadingBookFile;
 
 			// Upload the book file
 			await this.apiService.SetStoreBookFile({
@@ -429,7 +420,7 @@ export class NewBookPageComponent{
 		}
 
 		// Reload the author of the user
-		this.loadingScreenMessage = "Lokale Daten werden aktualisiert...";
+		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData;
 		await this.dataService.LoadAuthorOfUser();
 
 		// Redirect to the AuthorBookPage

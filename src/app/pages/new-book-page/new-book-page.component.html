@@ -8,7 +8,7 @@
 				(click)="ShowGoBackDialog()">
 				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
 			</button>
-			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ titleSubmitted ? submittedTitle : 'Buch erstellen' }}</h2>
+			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ titleSubmitted ? submittedTitle : locale.title }}</h2>
 
 			<button
 				type="button"
@@ -31,12 +31,12 @@
 			<label
 				class="col-form-label text-color mb-1"
 				style="font-size: 15px">
-				Gib den Titel deines Buches ein.
+				{{ locale.titleSection.description }}
 			</label>
 
 			<fab-text-field
 				[(value)]="title"
-				[placeholder]="titleSamples[sampleDataIndex]"
+				[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
 				(keydown.enter)="SubmitTitle()">
 			</fab-text-field>
 		</div>
@@ -51,7 +51,7 @@
 			<fab-primary-button
 				[disabled]="title.length < 3 || loading"
 				(onClick)="SubmitTitle()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 		[style.display]="visibleSection != 1 ? 'none' : null">
 
 		<div>
-			<p class="text-color">Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?</p>
+			<p class="text-color">{{ locale.collectionSection.description }}</p>
 
 			<div class="list-group mb-3">
 				<p
@@ -72,7 +72,7 @@
 					[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
 					style="transition: 0.12s"
 					(click)="SelectCollection(-1)">
-					Neue Veröffentlichung
+					{{ locale.collectionSection.newPublication }}
 				</p>
 
 				<div
@@ -103,7 +103,7 @@
 		<div class="mb-4" style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
@@ -111,7 +111,7 @@
 			<fab-primary-button
 				[disabled]="selectedCollection == -2"
 				(onClick)="SubmitCollection()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -127,7 +127,7 @@
 			<label
 				class="col-form-label text-color mb-1"
 				style="font-size: 15px">
-				Gib eine Beschreibung an.
+				{{ locale.descriptionSection.description }}
 			</label>
 
 			<div class="d-flex mb-2">
@@ -139,7 +139,7 @@
 
 			<fab-text-field
 				[(value)]="description"
-				[placeholder]="descriptionSamples[sampleDataIndex]"
+				[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
 				multiline="true"
 				autoAdjustHeight="true"
 				spellcheck="true">
@@ -149,14 +149,14 @@
 		<div style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
 		<div style="float: right">
 			<fab-primary-button
 				(onClick)="SubmitDescription()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -169,7 +169,7 @@
 		[style.display]="visibleSection != 3 ? 'none' : null">
 
 		<div class="mb-3">
-			<p class="text-color">Wähle die passenden Kategorien für dein Buch (maximal 2).</p>
+			<p class="text-color">{{ locale.categoriesSection.description }}</p>
 
 			<pocketlib-categories-selection #categoriesSelection></pocketlib-categories-selection>
 		</div>
@@ -177,14 +177,14 @@
 		<div style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
 		<div style="float: right">
 			<fab-primary-button
 				(onClick)="SubmitCategories()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -197,7 +197,7 @@
 		[style.display]="visibleSection != 4 ? 'none' : null">
 
 		<div class="mb-4">
-			<p class="text-color">Gib den Preis für dein Buch an.</p>
+			<p class="text-color">{{ locale.priceSection.description }}</p>
 
 			<pocketlib-edit-price
 				#editPrice
@@ -209,7 +209,7 @@
 		<div style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
@@ -222,7 +222,7 @@
 
 			<fab-primary-button
 				(onClick)="SubmitPrice()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -235,7 +235,7 @@
 		[style.display]="visibleSection != 5 ? 'none' : null">
 
 		<div class="mb-4">
-			<p class="text-color">Lade ein Cover für dein Buch hoch.</p>
+			<p class="text-color">{{ locale.coverSection.description }}</p>
 
 			<div class="my-3" *ngIf="coverContent">
 				<img [src]="coverContentBase64" height="200">
@@ -245,21 +245,21 @@
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				(filePick)="CoverUpload($event)">
-				Cover hochladen
+				{{ locale.coverSection.uploadButtonText }}
 			</fab-primary-button>
 		</div>
 
 		<div style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
 		<div style="float: right">
 			<fab-primary-button
 				(onClick)="SubmitCover()">
-				Weiter
+				{{ locale.next }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -272,7 +272,7 @@
 		[style.display]="visibleSection != 6 ? 'none' : null">
 
 		<div class="mb-4">
-			<p class="text-color">Lade die Buch-Datei hoch.</p>
+			<p class="text-color">{{ locale.bookFileSection.description }}</p>
 
 			<p class="font-italic"
 				*ngIf="bookFileName.length > 0">
@@ -283,21 +283,21 @@
 				ngxFilePicker
 				accept="application/epub+zip,application/pdf"
 				(filePick)="BookFileUpload($event)">
-				Buch-Datei hochladen
+				{{ locale.bookFileSection.uploadButtonText }}
 			</fab-primary-button>
 		</div>
 
 		<div style="float: left">
 			<fab-default-button
 				(onClick)="Previous()">
-				Zurück
+				{{ locale.previous }}
 			</fab-default-button>
 		</div>
 
 		<div style="float: right">
 			<fab-primary-button
 				(onClick)="Finish()">
-				Fertigstellen
+				{{ locale.finish }}
 			</fab-primary-button>
 		</div>
 	</div>
@@ -326,14 +326,14 @@
 </div>
 
 <fab-dialog
-	[hidden]="!goBackDialogVisible"
-	[dialogContentProps]="goBackDialogContentProps"
-	(onDismiss)="goBackDialogVisible = false">
+	[hidden]="!leavePageDialogVisible"
+	[dialogContentProps]="leavePageDialogContentProps"
+	(onDismiss)="leavePageDialogVisible = false">
 
-	<p>Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.</p>
+	<p>{{ locale.leavePageDialog.description }}</p>
 
 	<fab-dialog-footer>
-		<fab-default-button (onClick)="goBackDialogVisible = false">Abbrechen</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="GoBack()">Verlassen</fab-primary-button>
+		<fab-default-button (onClick)="leavePageDialogVisible = false">{{ locale.leavePageDialog.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="GoBack()">{{ locale.leavePageDialog.leave }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
