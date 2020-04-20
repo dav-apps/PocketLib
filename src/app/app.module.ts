@@ -21,7 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { 
    FabTextFieldModule, 
-   FabButtonModule, 
+   FabButtonModule,
    FabMessageBarModule,
    FabIconModule,
    FabPanelModule,

@@ -61,7 +61,7 @@
 				
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+						<img [src]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover" style="width: 100px">
 					</div>
 
 					<div class="col-8 my-auto">

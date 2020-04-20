@@ -179,6 +179,7 @@ const enDefaults = {
 			cancel: "Cancel",
 			leave: "Leave"
 		},
+		errorMessage: "An unexpected error occured. Please try it again later.",
 		previous: "Previous",
 		next: "Next",
 		finish: "Finish"
@@ -503,6 +504,7 @@ const deDefaults = {
 			cancel: "Abbrechen",
 			leave: "Verlassen"
 		},
+		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
 		previous: "Zurück",
 		next: "Weiter",
 		finish: "Fertigstellen"

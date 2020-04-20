@@ -1,6 +1,12 @@
 import { Component, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles, SpinnerSize, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import {
+	IIconStyles,
+	SpinnerSize,
+	IButtonStyles,
+	IDialogContentProps,
+	MessageBarType
+} from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import {
 	DataService,
@@ -37,6 +43,8 @@ export class NewBookPageComponent{
 		profileImage: false
 	}
 	leavePageDialogVisible: boolean = false;
+	errorMessageBarType: MessageBarType = MessageBarType.error;
+	errorMessage: string = "";
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -276,7 +284,8 @@ export class NewBookPageComponent{
 
 	//#region Price functions
 	SetPrice(price: number) {
-		// TODO: Check if the price is valid
+		if (price < 0) price = -price;
+
 		this.price = price;
 		this.editPriceComponent.SetPrice(price);
 	}
@@ -337,6 +346,11 @@ export class NewBookPageComponent{
 		}, 1);
 	}
 
+	HideLoadingScreen() {
+		this.dataService.navbarVisible = true;
+		this.loadingScreenVisible = false;
+	}
+
 	async Finish() {
 		this.ShowLoadingScreen();
 		let collectionUuid = "";
@@ -353,8 +367,8 @@ export class NewBookPageComponent{
 			})
 
 			if (createCollectionResponse.status != 201) {
-				// TODO: Show error
-				this.loading = false;
+				this.errorMessage = this.locale.errorMessage;
+				this.HideLoadingScreen();
 				return;
 			}
 
@@ -390,8 +404,8 @@ export class NewBookPageComponent{
 		})
 
 		if (createStoreBookResponse.status != 201) {
-			// TODO: Show error
-			this.loading = false;
+			this.errorMessage = this.locale.errorMessage;
+			this.HideLoadingScreen();
 			return;
 		}
 
