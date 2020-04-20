@@ -57,7 +57,17 @@
 			</div>
 
 			<!-- Description -->
-			<p class="mt-2 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
+			<p class="mt-2 mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
+
+			<!-- Categories -->
+			<span
+				class="badge badge-pill mr-2 cursor"
+				[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+				style="font-size: 13px"
+				*ngFor="let category of book.categories; let i = index"
+				(click)="NavigateToCategory(category.key)">
+				{{ category.name }}
+			</span>
 		</div>
 	</div>
 
@@ -117,7 +127,18 @@
 			</div>
 		</div>
 
-		<p class="mt-4 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
+		<!-- Description -->
+		<p class="mt-4 mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
+
+		<!-- Categories -->
+		<span
+			class="badge badge-pill mr-2 cursor"
+			[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+			style="font-size: 13px"
+			*ngFor="let category of book.categories; let i = index"
+			(click)="NavigateToCategory(category.key)">
+			{{ category.name }}
+		</span>
 	</div>
 </div>
 

@@ -29,9 +29,22 @@ export class StoreBookPageComponent{
 		description: string,
 		price: number,
 		status: BookStatus,
+		categories: {
+			key: string,
+			name: string
+		}[],
 		inLibrary: boolean,
 		purchased: boolean
-	} = {collection: "", title: "", description: "", price: 0, status: BookStatus.Unpublished, inLibrary: false, purchased: false};
+	} = {
+		collection: "",
+		title: "",
+		description: "",
+		price: 0,
+		status: BookStatus.Unpublished,
+		categories: [],
+		inLibrary: false,
+		purchased: false
+	}
 	price: string = "";
 	bookStatus: string = "";
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
@@ -131,6 +144,7 @@ export class StoreBookPageComponent{
 
 			this.addToLibraryButtonDisabled = this.book.inLibrary;
 
+			// Load the price
 			if(this.book.price == 0){
 				this.price = this.locale.free;
 			}else{
@@ -141,6 +155,7 @@ export class StoreBookPageComponent{
 				}
 			}
 			
+			// Load the status
 			switch(this.book.status){
 				case BookStatus.Unpublished:
 					this.bookStatus = this.locale.unpublished;
@@ -151,6 +166,20 @@ export class StoreBookPageComponent{
 				case BookStatus.Hidden:
 					this.bookStatus = this.locale.hidden;
 					break;
+			}
+
+			// Load the categories
+			await this.dataService.categoriesPromise;
+			for (let key of response.data.categories) {
+				// Find the category with the key
+				let category = this.dataService.categories.find(c => c.key == key);
+
+				if (category) {
+					this.book.categories.push({
+						key: category.key,
+						name: category.name
+					})
+				}
 			}
 
 			return response.data.collection;
@@ -252,6 +281,10 @@ export class StoreBookPageComponent{
 
 	NavigateToAccountPage(){
 		this.router.navigate(['account']);
+	}
+
+	NavigateToCategory(key: string) {
+		this.router.navigate(["store", "books", key]);
 	}
 
 	async NavigateToPurchasePage(){
