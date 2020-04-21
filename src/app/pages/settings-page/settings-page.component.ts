@@ -14,22 +14,16 @@ export class SettingsPageComponent{
 	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
    selectedTheme: string;
    openLastReadBook: boolean = false;
-	isWindows: boolean = false;
 
 	constructor(
       public dataService: DataService
    ){
 		this.locale = this.dataService.GetLocale().settingsPage;
-		this.isWindows = window["Windows"] != null;
-		this.dataService.HideWindowsBackButton();
 	}
 	
 	async ngOnInit(){
 		// Select the correct theme radio button
 		this.selectedTheme = await this.dataService.GetTheme();
-		if(!this.isWindows && this.selectedTheme == keys.systemThemeKey){
-			this.selectedTheme = keys.lightThemeKey;
-      }
       
       // Set the openLastReadBook toggle
       this.openLastReadBook = await this.dataService.GetOpenLastReadBook();

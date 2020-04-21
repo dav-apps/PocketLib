@@ -23,7 +23,6 @@ export class DataService{
 	darkTheme: boolean = false;
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
 	defaultAvatar: string = defaultAvatarUrl;
-   windowsUiSettings = null;
    settings: Settings;
 	settingsLoadPromise: Promise<Settings> = new Promise(resolve => this.settingsLoadPromiseResolve = resolve);
 	settingsLoadPromiseResolve: Function;
@@ -231,7 +230,7 @@ export class DataService{
 	async ApplyTheme(theme?: string){
 		if(!theme){
 			// Get the theme from the settings
-			theme = await localforage.getItem(keys.settingsThemeKey);
+			theme = await this.GetTheme();
 		}
 
 		switch(theme){
@@ -239,25 +238,18 @@ export class DataService{
 				this.darkTheme = true;
 				break;
 			case keys.systemThemeKey:
-				// Get the Windows theme
-				if(window["Windows"]){
-					if(this.windowsUiSettings == null){
-						this.windowsUiSettings = new window["Windows"].UI.ViewManagement.UISettings();
-					}
+				// Get the browser theme
+				let darkTheme = false;
 
-					var color = this.windowsUiSettings.getColorValue(
-						window["Windows"].UI.ViewManagement.UIColorType.background
-					);
+				if (window.matchMedia) {
+					let colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-					this.darkTheme = color.r == 0;
-
-					// Observe the system theme
-					this.windowsUiSettings.oncolorvalueschanged = () => {
-						this.ApplyTheme();
-					}
-
-					break;
+					darkTheme = colorScheme.matches;
+					colorScheme.onchange = () => this.ApplyTheme();
 				}
+
+				this.darkTheme = darkTheme;
+				break;
 			default:
 				// Light theme
 				this.darkTheme = false;
@@ -271,12 +263,6 @@ export class DataService{
 
 		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
    }
-   
-   HideWindowsBackButton(){
-		if(window["Windows"]){
-			window["Windows"].UI.Core.SystemNavigationManager.getForCurrentView().appViewBackButtonVisibility = window["Windows"].UI.Core.AppViewBackButtonVisibility.collapsed;
-		}
-	}
 	
 	//#region Settings
 	async SetTheme(value: string){
