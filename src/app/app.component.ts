@@ -1,14 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { Init, DavEnvironment, TableObject, Log, ApiResponse } from 'dav-npm';
+import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
 import {
-	DataService,
-	FindAppropriateLanguage,
-	GetBookStatusByString,
-	GetStoreBookCoverLink
+	DataService
 } from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from './services/routing-service';
 import { GetSettings } from 'src/app/models/Settings';
 import { environment } from 'src/environments/environment';
@@ -23,14 +19,12 @@ const visitEventName = "visit";
 export class AppComponent{
    constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		public routingService: RoutingService,
       private router: Router
    ){}
 
 	async ngOnInit(){
 		this.dataService.ApplyTheme();
-		this.SetTitleBarColor();
 		initializeIcons();
 
 		let notificationOptions = {
@@ -116,26 +110,6 @@ export class AppComponent{
 	setSize(){
 		let navbarHeight = document.getElementById('navbar').clientHeight;
 		this.dataService.contentHeight = window.innerHeight - navbarHeight;
-	}
-   
-   SetTitleBarColor(){
-		if(window["Windows"] && window["Windows"].UI.ViewManagement){
-			// #007bff
-			var themeColor = {
-				r: 13,
-				g: 71,
-				b: 161,
-				a: 255
-         }
-
-			let titleBar = window["Windows"].UI.ViewManagement.ApplicationView.getForCurrentView().titleBar;
-			titleBar.foregroundColor = themeColor;
-			titleBar.backgroundColor = themeColor;
-			titleBar.buttonBackgroundColor = themeColor;
-			titleBar.buttonInactiveBackgroundColor = themeColor;
-			titleBar.inactiveForegroundColor = themeColor;
-			titleBar.inactiveBackgroundColor = themeColor;
-		}
 	}
 
 	ShowAuthorPage(){
