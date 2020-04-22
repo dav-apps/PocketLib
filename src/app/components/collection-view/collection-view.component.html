@@ -1,24 +1,11 @@
 <div class="container ms-motion-slideUpIn">
-	<div class="d-flex justify-content-center mb-4">
-		<div class="d-flex my-3">
-			<button
-				type="button" 
-				class="btn my-auto text-color theme-background-color-primary theme-border-color-primary icon-button" 
-				style="height: 35px; width: 40px; padding: 2px 0px 0px 0px;"
-				(click)="GoBack()">
-				<fab-icon iconName="Back" [styles]="backButtonIconStyles"></fab-icon>
-			</button>
-			<h2 class="text-center font-weight-light mt-2 ml-3 text-color">{{ collectionName.name }}</h2>
-
-			<button
-				type="button" 
-				class="btn ml-3 mt-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
-				style="height: 35px; padding: 3px 6px; font-size: 18px"
-				*ngIf="authorMode != 0"
-				(click)="ShowCollectionNamesDialog()">
-				<fab-icon iconName="Edit"></fab-icon>
-			</button>
-		</div>
+	<div class="mt-3 mb-4">
+		<pocketlib-header
+			[title]="collectionName.name"
+			[editButtonVisible]="authorMode != 0"
+			(backButtonClick)="GoBack()"
+			(editButtonClick)="ShowCollectionNamesDialog()">
+		</pocketlib-header>
 	</div>
 
 	<p class="font-weight-light text-center mt-3 text-color"

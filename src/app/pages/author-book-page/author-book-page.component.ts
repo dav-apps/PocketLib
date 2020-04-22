@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { ApiResponse } from 'dav-npm';
 import {
@@ -56,11 +56,6 @@ export class AuthorBookPageComponent{
 	editPrice: boolean = false;
 	categoriesSelectionDialogVisible: boolean = false;
 
-	backButtonIconStyles: IIconStyles = {
-		root: {
-         fontSize: 18
-		}
-	}
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
 			marginLeft: 10

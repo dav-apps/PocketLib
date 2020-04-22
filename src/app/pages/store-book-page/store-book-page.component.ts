@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IIconStyles, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
 import { CreatePurchase, ApiResponse, ApiErrorResponse, PurchaseResponseData } from 'dav-npm';
 import {
 	DataService,
@@ -55,11 +55,6 @@ export class StoreBookPageComponent{
 	showMobileLayout: boolean = false;
 	buyBookDialogVisible: boolean = false;
 
-	backButtonIconStyles: IIconStyles = {
-		root: {
-         fontSize: 18
-		}
-	}
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
 			marginLeft: 10

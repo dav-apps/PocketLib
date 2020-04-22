@@ -1,7 +1,6 @@
 import { Component, ViewChild, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-	IIconStyles,
 	SpinnerSize,
 	IButtonStyles,
 	IDialogContentProps,
@@ -46,11 +45,6 @@ export class NewBookPageComponent{
 	errorMessageBarType: MessageBarType = MessageBarType.error;
 	errorMessage: string = "";
 
-	backButtonIconStyles: IIconStyles = {
-		root: {
-         fontSize: 18
-		}
-	}
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
 			marginLeft: 10
