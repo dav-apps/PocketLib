@@ -82,9 +82,7 @@ const enDefaults = {
 		title: "Create your author profile",
 		create: "create",
 		firstNameTextfieldLabel: "First name",
-		firstNameTextfieldPlaceholder: "Your first name",
 		lastNameTextfieldLabel: "Last name",
-		lastNameTextfieldPlaceholder: "Your last name",
 		errors: {
 			firstNameMissing: "Please enter your first name",
 			lastNameMissing: "Please enter your last name",
@@ -407,9 +405,7 @@ const deDefaults = {
 		title: "Erstelle dein Autoren-Profil",
 		create: "Erstellen",
 		firstNameTextfieldLabel: "Vorname",
-		firstNameTextfieldPlaceholder: "Dein Vorname",
 		lastNameTextfieldLabel: "Nachname",
-		lastNameTextfieldPlaceholder: "Dein Nachname",
 		errors: {
 			firstNameMissing: "Bitte gib deinen Vornamen ein",
 			lastNameMissing: "Bitte gib deinen Nachnamen ein",
