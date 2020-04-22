@@ -533,7 +533,7 @@ export class ApiService{
 			if (params.description) data["description"] = params.description;
 			if (params.language) data["language"] = params.language;
 			if (params.price != null) data["price"] = params.price;
-			if (params.published) data["published"] = params.published;
+			if (params.published != null) data["published"] = params.published;
 			if (params.status) data["status"] = params.status;
 			if (params.categories) data["categories"] = params.categories;
 

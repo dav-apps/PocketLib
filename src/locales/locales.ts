@@ -65,9 +65,7 @@ const enDefaults = {
 		createAuthorDialog: {
 			title: "Create author",
 			firstNameTextfieldLabel: "First name",
-			firstNameTextfieldPlaceholder: "The first name of the author",
 			lastNameTextfieldLabel: "Last name",
-			lastNameTextfieldPlaceholder: "The last name of the author",
 			errors: {
 				firstNameMissing: "Please enter the first name",
 				lastNameMissing: "Please enter the last name",
@@ -95,9 +93,6 @@ const enDefaults = {
 			lastNameTooLong: "The last name is too long",
 			unexpectedError: "An unexpected error occured. Please try again later."
 		}
-	},
-	authorCollectionPage: {
-		
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -220,7 +215,7 @@ const enDefaults = {
 		},
 		buyBookDialog: {
 			title: "Buy book",
-			description: "When you buy this book, you can access it regardless of you plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>70 % of the price goes directly to the author.",
+			description: "When you buy this book, you can access it regardless of you plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
 			continue: "Continue"
 		},
 		back: "Back"
@@ -391,9 +386,7 @@ const deDefaults = {
 		createAuthorDialog: {
 			title: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
-			firstNameTextfieldPlaceholder: "Der Vorname des Autors",
 			lastNameTextfieldLabel: "Nachname",
-			lastNameTextfieldPlaceholder: "Der Nachname des Autors",
 			errors: {
 				firstNameMissing: "Bitte gib einen Vornamen ein",
 				lastNameMissing: "Bitte gib einen Nachnamen ein",
@@ -421,9 +414,6 @@ const deDefaults = {
 			lastNameTooLong: "Der Nachname ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
-	},
-	authorCollectionPage: {
-		
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -546,7 +536,7 @@ const deDefaults = {
 		},
 		buyBookDialog: {
 			title: "Buch kaufen",
-			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>70 % des Preises geht direkt an den Autor.",
+			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
 			continue: "Weiter"
 		},
 		back: "Zurück"

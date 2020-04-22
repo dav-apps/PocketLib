@@ -61,7 +61,7 @@
 		<fab-text-field
 			[(value)]="createAuthorDialogFirstName"
 			[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
-			[placeholder]="locale.createAuthorDialog.firstNameTextfieldPlaceholder"
+			placeholder="Monty"
 			[errorMessage]="createAuthorDialogFirstNameError">
 		</fab-text-field>
 	</div>
@@ -69,11 +69,11 @@
 	<!-- Last name -->
 	<div class="mb-4">
 		<fab-text-field
-		 [(value)]="createAuthorDialogLastName"
-		 [label]="locale.createAuthorDialog.lastNameTextfieldLabel"
-		 [placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
-		 [errorMessage]="createAuthorDialogLastNameError"
-		 (keydown.enter)="CreateAuthor()">
+			[(value)]="createAuthorDialogLastName"
+			[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
+			placeholder="Kensicle"
+			[errorMessage]="createAuthorDialogLastNameError"
+			(keydown.enter)="CreateAuthor()">
 		</fab-text-field>
 	</div>
 

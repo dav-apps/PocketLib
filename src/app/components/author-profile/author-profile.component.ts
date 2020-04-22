@@ -156,8 +156,9 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	SelectDefaultBio(){
+	SelectDefaultBio() {
 		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.author.bios);
+		if (this.bioLanguageDropdownSelectedIndex < 0) this.bioLanguageDropdownSelectedIndex = 0;
 	}
 
 	NavigateToCollection(uuid: string) {
