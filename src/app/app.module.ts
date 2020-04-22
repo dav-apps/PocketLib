@@ -58,6 +58,7 @@ import { LanguageDropdownComponent } from './components/language-dropdown/langua
 import { CategoriesSelectionComponent } from './components/categories-selection/categories-selection.component';
 import { EditPriceComponent } from './components/edit-price/edit-price.component';
 import { AddListItemComponent } from './components/add-list-item/add-list-item.component';
+import { HeaderComponent } from './components/header/header.component';
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
@@ -96,6 +97,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		CategoriesSelectionComponent,
 		EditPriceComponent,
 		AddListItemComponent,
+		HeaderComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,
