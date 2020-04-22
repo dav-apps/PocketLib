@@ -44,15 +44,17 @@ export class LibraryPageComponent{
 	contextMenuPositionY: number = 0;
 	selectedBook: Book;
 	showRenameBookOption: boolean = false;		// If the option in the context menu to rename the book is visible. Only for PdfBook
-   hoveredBookIndex: number = -1;	// The currently hovered book, for showing the shadow
-   addBookHover: boolean = false;	// Indicator for if the mouse is over the add book card
+   hoveredBookIndex: number = -1;			// The currently hovered book, for showing the shadow
+	addBookHover: boolean = false;			// Indicator for if the mouse is over the add book card
+	discoverBooksHover: boolean = false;	// Indicator for if the mouse is over the discover books card
 
 	constructor(
-		public router: Router,
-		public dataService: DataService
+		public dataService: DataService,
+		private router: Router
    ){
 		this.locale = this.dataService.GetLocale().libraryPage;
 		this.dataService.navbarVisible = true;
+
 		document.onclick = (event: MouseEvent) => {
 			if(!this.contextMenuVisible) return;
 
@@ -74,6 +76,10 @@ export class LibraryPageComponent{
 			await EpubBook.Create(file.underlyingFile);
 		}
       await this.dataService.LoadAllBooks();
+	}
+
+	NavigateToStorePage() {
+		this.router.navigate(['store']);
 	}
    
    async ShowBook(book: EpubBook){

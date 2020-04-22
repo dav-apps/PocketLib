@@ -1,49 +1,108 @@
 <div class="container ms-motion-slideUpIn">
 	<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
 
-   <div class="mt-3 row justify-content-center">
-      <!-- Card for adding new book -->
+   <div class="mt-3">
 		<div
-			class="card cursor m-2 theme-background-color-secondary"
-			style="width: 180px; transition: 0.12s" 
-			[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
-			ngxFilePicker
-			accept="application/epub+zip,application/pdf"
-			(filePick)="filePick($event)"
-			(mouseover)="addBookHover = true"
-			(mouseout)="addBookHover = false">
-			
-			<div class="card-body d-flex justify-content-center align-items-center">
-				<i class="ms-Icon ms-Icon--Add text-color"
-					aria-hidden="true"
-					style="font-size: 22px"
-					[@addBookHover]="addBookHover">
-				</i>
-         </div>
-      </div>
+			class="d-flex"
+			*ngIf="dataService.books.length == 0">
 
-		<div
-			class="card m-2 cursor theme-background-color-secondary"
-			[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
-			style="width: 180px; transition: 0.12s" 
-			*ngFor="let book of dataService.books; let i = index" 
-   		(click)="ShowBook(book)" 
-			(contextmenu)="onContextMenu($event, book)"
-			(mouseover)="hoveredBookIndex = i"
-			(mouseout)="hoveredBookIndex = -1">
-
-			<img
-				[src]="book.cover ? book.cover : dataService.defaultStoreBookCover"
-				class="card-img-top"
-				style="width: 100%; height: 270px; object-fit: cover;">
-
-         <div class="card-body">
-				<p class="card-text text-center text-color"
-					style="max-width: 150px; font-size: 15px">
-					{{ book.title }}
+			<div class="mx-auto" style="width: 100%; height: 100%; max-width: 600px">
+				<p class="font-weight-light text-center mt-2 mb-3"
+					style="font-size: 19px">
+					{{ locale.libraryEmpty }}
 				</p>
-         </div>
-      </div>
+
+				<!-- Card for discovering books in the Store -->
+				<div
+					class="card cursor theme-background-color-secondary"
+					style="width: 100%; transition: 0.12s; margin-top: 28px; margin-bottom: 28px" 
+					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
+					(mouseover)="discoverBooksHover = true"
+					(mouseout)="discoverBooksHover = false"
+					(click)="NavigateToStorePage()">
+
+					<div class="card-body d-flex">
+						<div class="mx-auto text-center">
+							<i class="ms-Icon ms-Icon--Shop text-color"
+								aria-hidden="true"
+								style="font-size: 28px">
+							</i>
+
+							<p class="mb-0" style="font-size: 18px; margin-top: 12px">{{ locale.discoverBooks }}</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Card for adding new book if the library is empty -->
+				<div
+					class="card cursor theme-background-color-secondary"
+					style="width: 100%; transition: 0.12s" 
+					[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+					ngxFilePicker
+					accept="application/epub+zip,application/pdf"
+					(filePick)="filePick($event)"
+					(mouseover)="addBookHover = true"
+					(mouseout)="addBookHover = false">
+					
+					<div class="card-body d-flex">
+						<div class="mx-auto text-center">
+							<i class="ms-Icon ms-Icon--Add text-color"
+								aria-hidden="true"
+								style="font-size: 28px">
+							</i>
+
+							<p class="mb-0" style="font-size: 18px; margin-top: 12px">{{ locale.addFile }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<!-- Card for adding new book -->
+			<div
+				class="card cursor m-2 theme-background-color-secondary"
+				style="width: 180px; transition: 0.12s" 
+				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+				ngxFilePicker
+				accept="application/epub+zip,application/pdf"
+				(filePick)="filePick($event)"
+				(mouseover)="addBookHover = true"
+				(mouseout)="addBookHover = false"
+				*ngIf="dataService.books.length > 0">
+				
+				<div class="card-body d-flex justify-content-center align-items-center">
+					<i class="ms-Icon ms-Icon--Add text-color"
+						aria-hidden="true"
+						style="font-size: 22px"
+						[@addBookHover]="addBookHover">
+					</i>
+				</div>
+			</div>
+
+			<div
+				class="card m-2 cursor theme-background-color-secondary"
+				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
+				style="width: 180px; transition: 0.12s" 
+				*ngFor="let book of dataService.books; let i = index" 
+				(click)="ShowBook(book)" 
+				(contextmenu)="onContextMenu($event, book)"
+				(mouseover)="hoveredBookIndex = i"
+				(mouseout)="hoveredBookIndex = -1">
+
+				<img
+					[src]="book.cover ? book.cover : dataService.defaultStoreBookCover"
+					class="card-img-top"
+					style="width: 100%; height: 270px; object-fit: cover;">
+
+				<div class="card-body">
+					<p class="card-text text-center text-color"
+						style="max-width: 150px; font-size: 15px">
+						{{ book.title }}
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

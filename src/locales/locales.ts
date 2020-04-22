@@ -1,7 +1,10 @@
 //#region en
 const enDefaults = {
    libraryPage: {
-      title: "Your Library",
+		title: "Your Library",
+		libraryEmpty: "Your library is currently empty...",
+		discoverBooks: "Discover books in the PocketLib Store",
+		addFile: "Open a local file",
       bookContextMenuDelete: "Delete",
       bookContextMenuRename: "Rename"
    },
@@ -324,7 +327,10 @@ export var enGB = enDefaults;
 //#region de
 const deDefaults = {
    libraryPage: {
-      title: "Deine Bibliothek",
+		title: "Deine Bibliothek",
+		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
+		discoverBooks: "Entdecke Bücher im PocketLib Store",
+		addFile: "Öffne eine lokale Datei",
       bookContextMenuDelete: "Löschen",
       bookContextMenuRename: "Umbenennen"
    },
