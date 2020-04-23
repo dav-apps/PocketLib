@@ -57,7 +57,7 @@
          
          <p class="mt-2 text-color" style="margin-bottom: 2px">{{ locale.storageUsed.replace("{0}", bytesToGigabytes(dataService.user.UsedStorage, 1)).replace("{1}", bytesToGigabytes(dataService.user.TotalStorage, 0)) }}</p>
 
-         <button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="ShowLogoutModal()">{{ locale.logout }}</button>
+         <button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="ShowLogoutDialog()">{{ locale.logout }}</button>
       </div>
 	</div>
 
@@ -80,6 +80,17 @@
 			</ul>
 		</div>
 	</div>
-	
-	<pocketlib-logout-modal (logout)="Logout()"></pocketlib-logout-modal>
 </div>
+
+<fab-dialog
+	[hidden]="!logoutDialogVisible"
+	[dialogContentProps]="logoutDialogContentProps"
+	(onDismiss)="logoutDialogVisible = false">
+
+	<p>{{ locale.logoutDialog.description }}</p>
+
+	<fab-dialog-footer>
+		<fab-default-button (onClick)="logoutDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="logoutDialogPrimaryButtonStyles" (onClick)="Logout()">{{ locale.logout }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

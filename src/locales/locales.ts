@@ -46,7 +46,12 @@ const enDefaults = {
 			feature1: "Get access to all books in the PocketLib Store",
 			feature2: "Support the authors of the books you read",
 			feature3: "Help us with the development of new apps and features"
-		}
+		},
+		logoutDialog: {
+			title: "Log out",
+			description: "Are you sure you want to log out?"
+		},
+		cancel: "Cancel"
    },
 	settingsPage: {
       title: "Settings",
@@ -248,12 +253,6 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured. Please try it again later."
 		}
 	},
-	logoutModal: {
-		title: "Log out",
-		description: "Are you sure you want to log out?",
-		logout: "Log out",
-		cancel: "Cancel"
-   },
    epubContent: {
       toc: "Table of contents",
       bookmarks: "Bookmarks",
@@ -372,7 +371,12 @@ const deDefaults = {
 			feature1: "Greife auf alle Bücher im PocketLib Store zu",
 			feature2: "Unterstütze die Autoren der Bücher, die du liest",
 			feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen"
-		}
+		},
+		logoutDialog: {
+			title: "Abmelden",
+			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
+		},
+		cancel: "Abbrechen"
    },
    settingsPage: {
       title: "Einstellungen",
@@ -573,12 +577,6 @@ const deDefaults = {
 			nameTooLong: "Der Name ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
-	},
-	logoutModal: {
-		title: "Abmelden",
-		description: "Bist du dir sicher, dass du dich abmelden möchtest?",
-		logout: "Abmelden",
-		cancel: "Abbrechen"
 	},
    epubContent: {
       toc: "Inhaltsverzeichnis",

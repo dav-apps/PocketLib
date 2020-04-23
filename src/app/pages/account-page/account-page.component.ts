@@ -1,9 +1,9 @@
-import { Component, ViewChild, HostListener } from "@angular/core";
-import { DataService } from 'src/app/services/data-service';
+import { Component, HostListener } from "@angular/core";
+import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import * as Dav from 'dav-npm';
+import { DataService } from 'src/app/services/data-service';
 import { environment } from 'src/environments/environment';
 import { enUS } from 'src/locales/locales';
-import { LogoutModalComponent } from '../../components/logout-modal/logout-modal.component';
 
 @Component({
    selector: "pocketlib-account-page",
@@ -11,10 +11,26 @@ import { LogoutModalComponent } from '../../components/logout-modal/logout-modal
 })
 export class AccountPageComponent{
    locale = enUS.accountPage;
-	@ViewChild(LogoutModalComponent, { static: false }) logoutModalComponent: LogoutModalComponent;
 	width: number = window.innerWidth;
 	textMaxWidth: number = 240;
 	textFontSize: number = 21;
+	logoutDialogVisible: boolean = false;
+
+	logoutDialogContentProps: IDialogContentProps = {
+		title: this.locale.logoutDialog.title
+	}
+	logoutDialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10,
+			backgroundColor: "#dc3545"
+		},
+		rootHovered: {
+			backgroundColor: "#c82333"
+		},
+		rootPressed: {
+			backgroundColor: "#c82333"
+		}
+	}
 
    constructor(
       public dataService: DataService
@@ -45,15 +61,17 @@ export class AccountPageComponent{
       Dav.ShowSignupPage(environment.apiKey, environment.baseUrl);
    }
 
-   ShowLogoutModal(){
-      this.logoutModalComponent.Show();
+   ShowLogoutDialog(){
+		this.logoutDialogContentProps.title = this.locale.logoutDialog.title;
+		this.logoutDialogVisible = true;
 	}
 	
 	ShowPlansAccountPage(){
 		window.open("https://dav-apps.tech/login?redirect=user%23plans%0A", 'blank');
 	}
 
-   Logout(){
+	Logout() {
+		this.logoutDialogVisible = false;
       this.dataService.user.Logout().then(() => {
          window.location.href = "/account";
       });
