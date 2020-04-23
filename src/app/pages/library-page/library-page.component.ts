@@ -1,11 +1,10 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { Router } from '@angular/router';
 import { transition, trigger, state, style, animate } from '@angular/animations';
+import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import { ReadFile } from 'ngx-file-helpers';
 import { enUS } from 'src/locales/locales';
 import { DataService } from 'src/app/services/data-service';
-import { RenameBookModalComponent } from 'src/app/components/rename-book-modal/rename-book-modal.component';
-import { DeleteBookModalComponent } from 'src/app/components/delete-book-modal/delete-book-modal.component';
 import { Book } from 'src/app/models/Book';
 import { EpubBook } from 'src/app/models/EpubBook';
 import { PdfBook } from 'src/app/models/PdfBook';
@@ -37,16 +36,42 @@ const pdfType = "application/pdf";
 export class LibraryPageComponent{
 	locale = enUS.libraryPage;
 	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
-	@ViewChild(RenameBookModalComponent, {static: true}) renameBookModalComponent: RenameBookModalComponent;
-	@ViewChild(DeleteBookModalComponent, {static: true}) deleteBookModalComponent: DeleteBookModalComponent;
 	contextMenuVisible: boolean = false;
 	contextMenuPositionX: number = 0;
 	contextMenuPositionY: number = 0;
 	selectedBook: Book;
-	showRenameBookOption: boolean = false;		// If the option in the context menu to rename the book is visible. Only for PdfBook
+	showRenameBookOption: boolean = false;	// If the option in the context menu to rename the book is visible. Only for PdfBook
    hoveredBookIndex: number = -1;			// The currently hovered book, for showing the shadow
 	addBookHover: boolean = false;			// Indicator for if the mouse is over the add book card
 	discoverBooksHover: boolean = false;	// Indicator for if the mouse is over the discover books card
+	renameBookDialogVisible: boolean = false;
+	renameBookDialogTitle: string = "";
+	renameBookDialogError: string = "";
+	removeBookDialogVisible: boolean = false;
+
+	renameBookDialogContentProps: IDialogContentProps = {
+		title: this.locale.renameBookDialog.title
+	}
+	removeBookDialogContentProps: IDialogContentProps = {
+		title: this.locale.removeBookDialog.title
+	}
+	dialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10
+		}
+	}
+	removeBookDialogPrimaryButtonStyles: IButtonStyles = {
+		root: {
+			marginLeft: 10,
+			backgroundColor: "#dc3545"
+		},
+		rootHovered: {
+			backgroundColor: "#c82333"
+		},
+		rootPressed: {
+			backgroundColor: "#c82333"
+		}
+	}
 
 	constructor(
 		public dataService: DataService,
@@ -114,21 +139,37 @@ export class LibraryPageComponent{
 		return false;
 	}
 	
-	ShowRenameBookModal(){
+	ShowRenameBookDialog() {
 		this.contextMenuVisible = false;
-      this.renameBookModalComponent.Show(this.selectedBook as PdfBook);
+		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title;
+		this.renameBookDialogError = "";
+
+		this.renameBookDialogContentProps.title = this.locale.renameBookDialog.title;
+		this.renameBookDialogVisible = true;
 	}
 	
-	ShowDeleteBookModal(){
+	ShowRemoveBookDialog(){
 		this.contextMenuVisible = false;
-		this.deleteBookModalComponent.Show(this.selectedBook);
+		this.removeBookDialogContentProps.title = this.locale.removeBookDialog.title;
+		this.removeBookDialogVisible = true;
    }
    
-   async RenameBook(newTitle: string){
-      await (this.selectedBook as PdfBook).SetTitle(newTitle);
+	async RenameBook() {
+		this.renameBookDialogError = "";
+
+		if(this.renameBookDialogTitle.length == 0){
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleMissing;
+		}else if (this.renameBookDialogTitle.length < 2) {
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooShort;
+		}else if(this.renameBookDialogTitle.length > 100){
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooLong;
+		} else {
+			await (this.selectedBook as PdfBook).SetTitle(this.renameBookDialogTitle);
+			this.renameBookDialogVisible = false;
+		}
    }
 
-	async DeleteBook(){
+	async RemoveBook(){
 		await this.selectedBook.Delete();
 		await this.dataService.LoadAllBooks();
 	}

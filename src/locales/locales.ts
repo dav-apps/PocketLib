@@ -5,8 +5,25 @@ const enDefaults = {
 		libraryEmpty: "Your library is currently empty...",
 		discoverBooks: "Discover books in the PocketLib Store",
 		addFile: "Open a local file",
-      bookContextMenuDelete: "Delete",
-      bookContextMenuRename: "Rename"
+		bookContextMenuRename: "Rename",
+		bookContextMenuRemove: "Remove",
+		renameBookDialog: {
+			title: "Rename book",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The Littlest Elf",
+			errors: {
+				titleMissing: "Please enter a title",
+				titleTooShort: "The title is too short",
+				titleTooLong: "The title is too long"
+			}
+		},
+		removeBookDialog: {
+			title: "Remove book",
+			description: "Are you sure you want to remove this book from your library?"
+		},
+		save: "Save",
+		remove: "Remove",
+		cancel: "Cancel"
    },
    accountPage: {
 		title: "Your Account",
@@ -231,18 +248,6 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured. Please try it again later."
 		}
 	},
-   renameBookModal: {
-      title: "Rename book",
-      bookTitle: "Title",
-      save: "Save",
-      cancel: "Cancel"
-	},
-	deleteBookModal: {
-		title: "Delete book",
-		description: "Are you sure you want to delete this book?",
-		delete: "Delete",
-		cancel: "Cancel"
-	},
 	logoutModal: {
 		title: "Log out",
 		description: "Are you sure you want to log out?",
@@ -326,8 +331,25 @@ const deDefaults = {
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addFile: "Öffne eine lokale Datei",
-      bookContextMenuDelete: "Löschen",
-      bookContextMenuRename: "Umbenennen"
+		bookContextMenuRename: "Umbenennen",
+		bookContextMenuRemove: "Entfernen",
+		renameBookDialog: {
+			title: "Buch umbenennen",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Das winzigste Elflein",
+			errors: {
+				titleMissing: "Bitte gib einen Titel ein",
+				titleTooShort: "Der Titel ist zu kurz",
+				titleTooLong: "Der Titel ist zu lang"
+			}
+		},
+		removeBookDialog: {
+			title: "Buch entfernen",
+			description: "Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
+		},
+		save: "Speichern",
+		remove: "Entfernen",
+		cancel: "Abbrechen"
    },
    accountPage: {
 		title: "Dein Account",
@@ -551,18 +573,6 @@ const deDefaults = {
 			nameTooLong: "Der Name ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
-	},
-   renameBookModal: {
-      title: "Buch umbenennen",
-      bookTitle: "Titel",
-      save: "Speichern",
-      cancel: "Abbrechen"
-	},
-	deleteBookModal: {
-		title: "Buch löschen",
-		description: "Bist du dir sicher, dass du dieses Buch löschen willst?",
-		delete: "Löschen",
-		cancel: "Abbrechen"
 	},
 	logoutModal: {
 		title: "Abmelden",

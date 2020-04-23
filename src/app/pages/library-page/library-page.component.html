@@ -119,7 +119,7 @@
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
 		*ngIf="showRenameBookOption"
-		(click)="ShowRenameBookModal()">
+		(click)="ShowRenameBookDialog()">
 
 		<i class="ms-Icon ms-Icon--Edit text-color"
 			aria-hidden="true"
@@ -133,11 +133,11 @@
 		</span>
 	</div>
 	
-	<!-- Delete -->
+	<!-- Remove -->
 	<div
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
-		(click)="ShowDeleteBookModal()">
+		(click)="ShowRemoveBookDialog()">
 
 		<i class="ms-Icon ms-Icon--Delete text-color"
 			aria-hidden="true"
@@ -147,10 +147,43 @@
 		<span
 			class="text-color"
 			style="margin-top: 3px; margin-bottom: 2px">
-			{{ locale.bookContextMenuDelete }}
+			{{ locale.bookContextMenuRemove }}
 		</span>
 	</div>
 </div>
 
-<pocketlib-rename-book-modal (save)="RenameBook($event)"></pocketlib-rename-book-modal>
-<pocketlib-delete-book-modal (delete)="DeleteBook()"></pocketlib-delete-book-modal>
+<fab-dialog
+	[hidden]="!renameBookDialogVisible"
+	[dialogContentProps]="renameBookDialogContentProps"
+	(onDismiss)="renameBookDialogVisible = false">
+
+	<!-- Title -->
+	<div class="mb-4">
+		<fab-text-field
+			[(value)]="renameBookDialogTitle"
+			[label]="locale.renameBookDialog.titleTextfieldLabel"
+			[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
+			[errorMessage]="renameBookDialogError"
+			(onChange)="renameBookDialogError = ''"
+			(keydown.enter)="RenameBook()">
+		</fab-text-field>
+	</div>
+
+	<fab-dialog-footer>
+		<fab-default-button (onClick)="renameBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="RenameBook()">{{ locale.save }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
+	[hidden]="!removeBookDialogVisible"
+	[dialogContentProps]="removeBookDialogContentProps"
+	(onDismiss)="removeBookDialogVisible = false">
+
+	<p>{{ locale.removeBookDialog.description }}</p>
+
+	<fab-dialog-footer>
+		<fab-default-button (onClick)="removeBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="removeBookDialogPrimaryButtonStyles" (onClick)="RemoveBook()">{{ locale.remove }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
