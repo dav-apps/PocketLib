@@ -45,7 +45,6 @@ import { RoutingService } from './services/routing-service';
 import { AppComponent } from './app.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
 import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component';
-import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
 import { AuthorProfileComponent } from './components/author-profile/author-profile.component';
@@ -82,7 +81,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		AppComponent,
 		ChaptersTreeComponent,
 		EditCollectionNamesComponent,
-		LogoutModalComponent,
 		EpubContentComponent,
 		PdfContentComponent,
 		AuthorProfileComponent,
