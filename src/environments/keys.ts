@@ -1,7 +1,8 @@
 export const keys = {
 	version: "0.6",
 	// Shared keys for book table
-	bookTableFileUuidKey: "file",
+	bookTableFileKey: "file",
+	bookTableStoreBookKey: "store_book",
 	// Keys for EpubBook
 	epubBookTableChapterKey: "chapter",
 	epubBookTableProgressKey: "progress",

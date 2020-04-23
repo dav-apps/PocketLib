@@ -195,7 +195,7 @@ export class DataService{
    async ReloadBookByFile(uuid: string){
       // Find the book with the file uuid
       let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
-      let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileUuidKey) == uuid);
+      let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileKey) == uuid);
       if(!bookObject) return;
 
 		await this.ReloadBook(bookObject.Uuid);

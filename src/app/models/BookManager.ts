@@ -46,7 +46,7 @@ async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
 }
 
 async function GetBookFileOfBookTableObject(tableObject: TableObject) : Promise<TableObject>{
-	let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileUuidKey);
+	let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey);
 	if(!fileUuid) return null;
 
 	let fileTableObject = await GetTableObject(fileUuid);
@@ -70,6 +70,9 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 
 	// Get the file
 	let file = bookFileTableObject.File;
+
+	// Get the storeBook
+	let storeBook: string = bookTableObject.GetPropertyValue(keys.bookTableStoreBookKey);
 
 	// Get the chapter
 	let chapter: number = 0;
@@ -95,7 +98,7 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 		}
 	}
 
-	let book = new EpubBook(file, chapter, progress, bookmarks);
+	let book = new EpubBook(file, storeBook, chapter, progress, bookmarks);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }
@@ -106,6 +109,9 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 
 	// Get the file
 	let file = bookFileTableObject.File;
+
+	// Get the storeBook
+	let storeBook: string = bookTableObject.GetPropertyValue(keys.bookTableStoreBookKey);
 
 	// Get the title
 	let title = bookTableObject.GetPropertyValue(keys.pdfBookTableTitleKey);
@@ -134,7 +140,7 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
       zoom = +zoomString;
    }
 
-	let book = new PdfBook(file, title, page, bookmarks, zoom);
+	let book = new PdfBook(file, storeBook, title, page, bookmarks, zoom);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }

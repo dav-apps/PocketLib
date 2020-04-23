@@ -17,11 +17,12 @@ export class EpubBook extends Book{
 
 	constructor(
 		file: Blob,
+		storeBook: string,
 		chapter: number = 0,
       progress: number = 0,
       bookmarks: EpubBookmark[] = []
 	){
-		super(file);
+		super(file, storeBook);
 		this.chapter = chapter;
       this.progress = progress;
       this.bookmarks = bookmarks;
@@ -29,7 +30,7 @@ export class EpubBook extends Book{
 
 	public static async Create(file: File) : Promise<string>{
 		// Convert the file to a blob
-		let book = new EpubBook(new Blob([file], {type: file.type}));
+		let book = new EpubBook(new Blob([file], {type: file.type}), null);
 		await book.Save();
 		return book.uuid;
 	}

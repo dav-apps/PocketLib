@@ -12,12 +12,13 @@ export class PdfBook extends Book{
 
 	constructor(
 		file: Blob,
+		storeBook: string = null,
 		title: string = "",
       page: number = 1,
 		bookmarks: number[] = [],
 		zoom: number = 1
 	){
-		super(file);
+		super(file, storeBook);
 		this.title = title;
       this.page = page;
 		this.bookmarks = bookmarks;
@@ -26,7 +27,7 @@ export class PdfBook extends Book{
 
 	public static async Create(file: File, title: string) : Promise<string>{
 		// Convert the file to a blob
-		let book = new PdfBook(new Blob([file], {type: file.type}), title);
+		let book = new PdfBook(new Blob([file], {type: file.type}), null, title);
 		await book.Save();
 		return book.uuid;
    }

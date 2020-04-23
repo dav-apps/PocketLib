@@ -6,7 +6,8 @@ export class Book{
 	public uuid: string;
 
 	constructor(
-		public file: Blob
+		public file: Blob,
+		public storeBook: string
 	){}
 
 	protected async Save(fileExt: string, properties: Property[]){
@@ -20,7 +21,7 @@ export class Book{
 			this.uuid = tableObject.Uuid;
 		}else{
 			// Check if the table object has a file table object
-			let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileUuidKey);
+			let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey);
 			if(fileUuid) fileTableObject = await GetTableObject(fileUuid);
       }
 
@@ -33,7 +34,7 @@ export class Book{
 
 			// Save the uuid of the file table object in the table object
          properties.push({
-            name: keys.bookTableFileUuidKey,
+            name: keys.bookTableFileKey,
             value: fileTableObject.Uuid
          });
       }
@@ -46,11 +47,11 @@ export class Book{
 		let tableObject = await GetTableObject(this.uuid);
 		if(!tableObject) return;
 
-		let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileUuidKey);
+		let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey);
 		let fileTableObject = await GetTableObject(fileUuid);
 
 		// Delete the file table object
-		if(fileTableObject){
+		if (fileTableObject && !this.storeBook) {
 			await fileTableObject.Delete();
 		}
 
