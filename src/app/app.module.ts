@@ -45,8 +45,6 @@ import { RoutingService } from './services/routing-service';
 import { AppComponent } from './app.component';
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component';
 import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component';
-import { RenameBookModalComponent } from './components/rename-book-modal/rename-book-modal.component';
-import { DeleteBookModalComponent } from './components/delete-book-modal/delete-book-modal.component';
 import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 import { EpubContentComponent } from './components/epub-content/epub-content.component';
 import { PdfContentComponent } from './components/pdf-content/pdf-content.component';
@@ -84,8 +82,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		AppComponent,
 		ChaptersTreeComponent,
 		EditCollectionNamesComponent,
-		RenameBookModalComponent,
-		DeleteBookModalComponent,
 		LogoutModalComponent,
 		EpubContentComponent,
 		PdfContentComponent,
