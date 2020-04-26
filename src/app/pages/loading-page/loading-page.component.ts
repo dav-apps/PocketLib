@@ -81,8 +81,8 @@ export class LoadingPageComponent{
 		// Load the current book
 		this.dataService.currentBook = await GetBook(this.dataService.settings.book);
 
-		// Check if the user can access the book
-		if (this.dataService.currentBook.storeBook && !this.dataService.user.IsLoggedIn) {
+		// Check if the book exits and if the user can access the book
+		if (!this.dataService.currentBook || (this.dataService.currentBook.storeBook && !this.dataService.user.IsLoggedIn)) {
 			this.router.navigate(['/']);
 			return;
 		}
@@ -95,12 +95,7 @@ export class LoadingPageComponent{
 			this.dataService.currentBook.page = this.dataService.settings.progress;
 		}
 
-		if(this.dataService.currentBook){
-			// Go to the book page to show the current book
-			this.router.navigate(['book']);
-		}else{
-			// Go to the Library page as the book does not exist
-			this.router.navigate(['/']);
-		}
+		// Go to the book page to show the current book
+		this.router.navigate(['book']);
 	}
 }

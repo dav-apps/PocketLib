@@ -2,7 +2,13 @@ import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { CreatePurchase, ApiResponse, ApiErrorResponse, PurchaseResponseData } from 'dav-npm';
+import {
+	CreatePurchase,
+	ApiResponse,
+	ApiErrorResponse,
+	PurchaseResponseData,
+	DownloadTableObject
+} from 'dav-npm';
 import {
 	DataService,
 	BookStatus,
@@ -235,11 +241,15 @@ export class StoreBookPageComponent{
 			storeBook: this.uuid
 		})
 
-		if(response.status == 201){
+		if (response.status == 201) {
 			this.addToLibraryButtonDisabled = true;
 
 			// Show Snackbar
-			this.snackBar.open(this.locale.snackbarMessageAdded, null, {duration: 5000});
+			this.snackBar.open(this.locale.snackbarMessageAdded, null, { duration: 5000 });
+			
+			// Download the table objects
+			await DownloadTableObject(response.data.uuid);
+			await DownloadTableObject(response.data.file);
 		}
 	}
 
