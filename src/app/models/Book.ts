@@ -51,8 +51,12 @@ export class Book{
 		let fileTableObject = await GetTableObject(fileUuid);
 
 		// Delete the file table object
-		if (fileTableObject && !this.storeBook) {
-			await fileTableObject.Delete();
+		if (fileTableObject) {
+			if (this.storeBook) {
+				await fileTableObject.Remove();
+			} else {
+				await fileTableObject.Delete();
+			}
 		}
 
 		// Delete the book table object
