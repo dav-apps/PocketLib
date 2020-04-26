@@ -21,6 +21,11 @@ const enDefaults = {
 			title: "Remove book",
 			description: "Are you sure you want to remove this book from your library?"
 		},
+		loginToAccessBookDialog: {
+			title: "Login required",
+			description: "Please log in to access this book.",
+			ok: "Okay"
+		},
 		save: "Save",
 		remove: "Remove",
 		cancel: "Cancel"
@@ -345,6 +350,11 @@ const deDefaults = {
 		removeBookDialog: {
 			title: "Buch entfernen",
 			description: "Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
+		},
+		loginToAccessBookDialog: {
+			title: "Anmeldung erforderlich",
+			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
+			ok: "Ok"
 		},
 		save: "Speichern",
 		remove: "Entfernen",

@@ -48,12 +48,16 @@ export class LibraryPageComponent{
 	renameBookDialogTitle: string = "";
 	renameBookDialogError: string = "";
 	removeBookDialogVisible: boolean = false;
+	loginToAccessBookDialogVisible: boolean = false;
 
 	renameBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.renameBookDialog.title
 	}
 	removeBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.removeBookDialog.title
+	}
+	loginToAccessBookDialogContentProps: IDialogContentProps = {
+		title: this.locale.loginToAccessBookDialog.title
 	}
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -107,7 +111,14 @@ export class LibraryPageComponent{
 		this.router.navigate(['store']);
 	}
    
-   async ShowBook(book: EpubBook){
+   async ShowBook(book: Book){
+		// Check if the user can access the book
+		if (book.storeBook && !this.dataService.user.IsLoggedIn) {
+			this.loginToAccessBookDialogContentProps.title = this.locale.loginToAccessBookDialog.title;
+			this.loginToAccessBookDialogVisible = true;
+			return;
+		}
+
 		this.dataService.currentBook = book;
 
 		// Update the settings with the position of the current book
@@ -122,7 +133,7 @@ export class LibraryPageComponent{
 
    onContextMenu(event: MouseEvent, book: Book){
 		this.selectedBook = book;
-		this.showRenameBookOption = book instanceof PdfBook;
+		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook;
 		
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX;
@@ -169,7 +180,8 @@ export class LibraryPageComponent{
 		}
    }
 
-	async RemoveBook(){
+	async RemoveBook() {
+		this.removeBookDialogVisible = false;
 		await this.selectedBook.Delete();
 		await this.dataService.LoadAllBooks();
 	}

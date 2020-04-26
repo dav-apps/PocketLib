@@ -81,6 +81,12 @@ export class LoadingPageComponent{
 		// Load the current book
 		this.dataService.currentBook = await GetBook(this.dataService.settings.book);
 
+		// Check if the user can access the book
+		if (this.dataService.currentBook.storeBook && !this.dataService.user.IsLoggedIn) {
+			this.router.navigate(['/']);
+			return;
+		}
+
 		// Load the progress of the current book
 		if(this.dataService.currentBook instanceof EpubBook){
 			this.dataService.currentBook.chapter = this.dataService.settings.chapter;
