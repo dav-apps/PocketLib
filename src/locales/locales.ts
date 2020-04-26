@@ -245,6 +245,11 @@ const enDefaults = {
 			description: "When you buy this book, you can access it regardless of you plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
 			continue: "Continue"
 		},
+		errorDialog: {
+			title: "Error",
+			description: "An error occured. Please check your internet connection or try it again later.",
+			ok: "Okay"
+		},
 		back: "Back"
 	},
 	editCollectionNames: {
@@ -574,6 +579,11 @@ const deDefaults = {
 			title: "Buch kaufen",
 			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
 			continue: "Weiter"
+		},
+		errorDialog: {
+			title: "Fehler",
+			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal.",
+			ok: "Ok"
 		},
 		back: "Zurück"
 	},

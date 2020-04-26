@@ -157,3 +157,17 @@
 		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="NavigateToPurchasePage()">{{ locale.buyBookDialog.continue }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
+
+<fab-dialog
+	[hidden]="!errorDialogVisible"
+	[dialogContentProps]="errorDialogContentProps"
+	(onDismiss)="errorDialogVisible = false">
+
+	<p>
+		{{ locale.errorDialog.description }}
+	</p>
+
+	<fab-dialog-footer>
+		<fab-primary-button (onClick)="errorDialogVisible = false">{{ locale.errorDialog.ok }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>

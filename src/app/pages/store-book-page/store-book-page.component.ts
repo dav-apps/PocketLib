@@ -60,6 +60,7 @@ export class StoreBookPageComponent{
 	davProRequiredDialogVisible: boolean = false;
 	showMobileLayout: boolean = false;
 	buyBookDialogVisible: boolean = false;
+	errorDialogVisible: boolean = false;
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -71,6 +72,9 @@ export class StoreBookPageComponent{
 	}
 	buyBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.buyBookDialog.title
+	}
+	errorDialogContentProps: IDialogContentProps = {
+		title: this.locale.errorDialog.title
 	}
 
 	constructor(
@@ -113,6 +117,11 @@ export class StoreBookPageComponent{
 
 	NavigateToAuthor(){
 		this.router.navigate(['store', 'author', this.author.uuid]);
+	}
+
+	ShowErrorDialog() {
+		this.errorDialogContentProps.title = this.locale.errorDialog.title;
+		this.errorDialogVisible = true;
 	}
 
 	async GetData(){
@@ -250,6 +259,9 @@ export class StoreBookPageComponent{
 			// Download the table objects
 			await DownloadTableObject(response.data.uuid);
 			await DownloadTableObject(response.data.file);
+		} else {
+			// Show error
+			this.ShowErrorDialog();
 		}
 	}
 
@@ -270,8 +282,8 @@ export class StoreBookPageComponent{
 			if(createPurchaseResponse.status == 201){
 				this.book.purchased = true;
 			}else{
-				// TODO: Show error
-			
+				// Show error
+				this.ShowErrorDialog();
 			}
 		}else{
 			// Show dialog for buying the book
@@ -304,6 +316,7 @@ export class StoreBookPageComponent{
 			this.book.price,
 			"eur"
 		)
+		this.buyBookDialogVisible = false;
 
 		if(createPurchaseResponse.status == 201){
 			// Navigate to the purchase page on the website
@@ -312,8 +325,8 @@ export class StoreBookPageComponent{
 			
 			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseId}?redirect_url=${url}`;
 		}else{
-			// TODO: Show error
-			
+			// Show error
+			this.ShowErrorDialog();
 		}
 	}
 
