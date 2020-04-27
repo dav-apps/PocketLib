@@ -1,5 +1,5 @@
 export const keys = {
-	version: "0.6",
+	version: "1.0",
 	// Shared keys for book table
 	bookTableFileKey: "file",
 	bookTableStoreBookKey: "store_book",
