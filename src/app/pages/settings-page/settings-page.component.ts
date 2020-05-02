@@ -11,9 +11,10 @@ import { MatRadioChange } from '@angular/material/radio';
 export class SettingsPageComponent{
    locale = enUS.settingsPage;
 	version: string = keys.version;
+	year = (new Date()).getFullYear();
 	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
    selectedTheme: string;
-   openLastReadBook: boolean = false;
+	openLastReadBook: boolean = false;
 
 	constructor(
       public dataService: DataService
