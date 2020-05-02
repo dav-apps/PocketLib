@@ -150,11 +150,12 @@
 	[dialogContentProps]="buyBookDialogContentProps"
 	(onDismiss)="buyBookDialogVisible = false">
 
-	<p [innerHTML]="locale.buyBookDialog.description"></p>
+	<p [innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description">
+	</p>
 
 	<fab-dialog-footer>
 		<fab-default-button (onClick)="buyBookDialogVisible = false">{{ locale.back }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="NavigateToPurchasePage()">{{ locale.buyBookDialog.continue }}</fab-primary-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()">{{ locale.buyBookDialog.continue }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
 

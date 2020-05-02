@@ -125,7 +125,7 @@ const enDefaults = {
 		editTitleDialog: {
 			title: "Edit title",
 			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The title of your book"
+			titleTextfieldPlaceholder: "The Littlest Elf"
 		},
 		categoriesSelectionDialog: {
 			title: "Select categories"
@@ -224,7 +224,7 @@ const enDefaults = {
 		}
 	},
 	storePage: {
-		startPage: "Start page",
+		startPage: "Start",
 		categories: "Categories"
 	},
 	storeBookPage: {
@@ -242,7 +242,12 @@ const enDefaults = {
 		},
 		buyBookDialog: {
 			title: "Buy book",
-			description: "When you buy this book, you can access it regardless of you plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
+			description: "When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
+			loginRequired: {
+				titleFree: "Login required",
+				description: "When you buy a book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
+				descriptionFree: "Log in to read this book."
+			},
 			continue: "Continue"
 		},
 		errorDialog: {
@@ -460,7 +465,7 @@ const deDefaults = {
 		editTitleDialog: {
 			title: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Der Titel deines Buches"
+			titleTextfieldPlaceholder: "Das winzigste Elflein"
 		},
 		categoriesSelectionDialog: {
 			title: "Kategorien auswählen"
@@ -578,6 +583,11 @@ const deDefaults = {
 		buyBookDialog: {
 			title: "Buch kaufen",
 			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
+			loginRequired: {
+				titleFree: "Anmeldung erforderlich",
+				description: "Wenn du ein Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
+				descriptionFree: "Melde dich an, um dieses Buch zu lesen."
+			},
 			continue: "Weiter"
 		},
 		errorDialog: {

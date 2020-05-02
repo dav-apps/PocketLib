@@ -56,10 +56,11 @@ export class StoreBookPageComponent{
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
 	coverContent: string;
 	authorProfileImageContent: string = this.dataService.defaultAvatar;
+	showMobileLayout: boolean = false;
 	addToLibraryButtonDisabled: boolean = false;
 	davProRequiredDialogVisible: boolean = false;
-	showMobileLayout: boolean = false;
 	buyBookDialogVisible: boolean = false;
+	buyBookDialogLoginRequired: boolean = false;
 	errorDialogVisible: boolean = false;
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
@@ -265,34 +266,40 @@ export class StoreBookPageComponent{
 		}
 	}
 
-	async BuyBook(){
-		if(this.book.price == 0){
-			// Purchase this book directly
-			let createPurchaseResponse: ApiResponse<PurchaseResponseData> | ApiErrorResponse = await CreatePurchase(
-				this.dataService.user.JWT,
-				this.uuid,
-				this.coverContent,
-				this.book.title,
-				this.authorProfileImageContent,
-				`${this.author.firstName} ${this.author.lastName}`,
-				this.book.price,
-				"eur"
-			)
-
-			if(createPurchaseResponse.status == 201){
-				this.book.purchased = true;
+	async BuyBook() {
+		if (this.dataService.user.IsLoggedIn) {
+			if(this.book.price == 0){
+				// Purchase this book directly
+				let createPurchaseResponse: ApiResponse<PurchaseResponseData> | ApiErrorResponse = await CreatePurchase(
+					this.dataService.user.JWT,
+					this.uuid,
+					this.coverContent,
+					this.book.title,
+					this.authorProfileImageContent,
+					`${this.author.firstName} ${this.author.lastName}`,
+					this.book.price,
+					"eur"
+				)
+	
+				if(createPurchaseResponse.status == 201){
+					this.book.purchased = true;
+				}else{
+					// Show error
+					this.ShowErrorDialog();
+				}
 			}else{
-				// Show error
-				this.ShowErrorDialog();
+				// Show dialog for buying the book
+				this.ShowBuyBookDialog(false);
 			}
-		}else{
-			// Show dialog for buying the book
-			this.ShowBuyBookDialog();
+		} else {
+			// Show the Buy book dialog with login required
+			this.ShowBuyBookDialog(true);
 		}
 	}
 
-	ShowBuyBookDialog(){
-		this.buyBookDialogContentProps.title = this.locale.buyBookDialog.title;
+	ShowBuyBookDialog(loginRequired: boolean){
+		this.buyBookDialogContentProps.title = this.book.price == 0 ? this.locale.buyBookDialog.loginRequired.titleFree : this.locale.buyBookDialog.title;
+		this.buyBookDialogLoginRequired = loginRequired;
 		this.buyBookDialogVisible = true;
 	}
 
