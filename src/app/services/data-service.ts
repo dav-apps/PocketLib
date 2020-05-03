@@ -64,6 +64,8 @@ export class DataService{
 	
 	async LoadAuthorOfUser(){
 		await this.userPromise;
+		if (!this.user.IsLoggedIn) return;
+
 		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
 
 		if(response.status == 200){
