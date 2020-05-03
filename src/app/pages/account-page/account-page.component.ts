@@ -1,4 +1,5 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
 import * as Dav from 'dav-npm';
 import { DataService } from 'src/app/services/data-service';
@@ -15,6 +16,7 @@ export class AccountPageComponent{
 	textMaxWidth: number = 240;
 	textFontSize: number = 21;
 	logoutDialogVisible: boolean = false;
+	redirect: string;
 
 	logoutDialogContentProps: IDialogContentProps = {
 		title: this.locale.logoutDialog.title
@@ -33,9 +35,13 @@ export class AccountPageComponent{
 	}
 
    constructor(
-      public dataService: DataService
+		public dataService: DataService,
+		private activatedRoute: ActivatedRoute
    ){
-      this.locale = this.dataService.GetLocale().accountPage;
+		this.locale = this.dataService.GetLocale().accountPage;
+		
+		// Get the redirect url param
+		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect");
 	}
 	
 	ngOnInit(){
@@ -53,12 +59,20 @@ export class AccountPageComponent{
 		this.textFontSize = this.width > 550 ? 21 : 19;
 	}
 
-   ShowLoginPage(){
-      Dav.ShowLoginPage(environment.apiKey, environment.baseUrl);
+	ShowLoginPage() {
+		if (this.redirect == "author") {
+			Dav.ShowLoginPage(environment.apiKey, `${environment.baseUrl}/author`);
+		} else {
+			Dav.ShowLoginPage(environment.apiKey, environment.baseUrl);
+		}
    }
 
-   ShowSignupPage(){
-      Dav.ShowSignupPage(environment.apiKey, environment.baseUrl);
+	ShowSignupPage() {
+		if (this.redirect == "author") {
+			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/author`);
+		} else {
+			Dav.ShowSignupPage(environment.apiKey, environment.baseUrl);
+		}
    }
 
    ShowLogoutDialog(){

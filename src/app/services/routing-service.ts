@@ -14,10 +14,10 @@ export class RoutingService{
 	){
 		// Log the user in if there is a jwt in the url
       this.activatedRoute.queryParams.subscribe(async params => {
-         if(params["jwt"]){
+			if (params["jwt"]) {
             // Login with the jwt
             if(await this.dataService.user.Login(params["jwt"])){
-               window.location.href = "/";
+               window.location.href = this.router.url.slice(0, this.router.url.indexOf('?'));
             }
          }
 		});
