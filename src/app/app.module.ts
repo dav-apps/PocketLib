@@ -71,7 +71,6 @@ import { LoadingPageComponent } from './pages/loading-page/loading-page.componen
 import { StorePageComponent } from './pages/store-page/store-page.component';
 import { StoreStartPageComponent } from './pages/store-start-page/store-start-page.component';
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component';
-import { StoreCollectionPageComponent } from './pages/store-collection-page/store-collection-page.component';
 import { StoreBookPageComponent } from './pages/store-book-page/store-book-page.component';
 import { StoreBooksPageComponent } from './pages/store-books-page/store-books-page.component';
 
@@ -106,7 +105,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		StorePageComponent,
 		StoreStartPageComponent,
 		StoreAuthorPageComponent,
-		StoreCollectionPageComponent,
 		StoreBookPageComponent,
 		StoreBooksPageComponent
   	],
