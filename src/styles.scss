@@ -36,8 +36,17 @@ $primary: #0d47a1;	// Blue 900
 }
 
 body{
-	background-color: var(--theme-color-primary);
+	background-color: $primary;
 	font-family: 'Roboto', sans-serif;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+}
+
+#root{
+	background-color: var(--theme-color-primary);
+	height: fit-content;
+	overflow: hidden;
 }
 
 .theme-background-color-primary{
