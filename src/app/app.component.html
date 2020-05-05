@@ -5,9 +5,8 @@
 		</button>
 
 		<a 
-			routerLink="/" 
-			routerLinkActive="active" 
-			[routerLinkActiveOptions]="{exact: true}" 
+			href="/"
+			(click)="ShowLibraryPage()"
 			class="nav-link"
 			style="color: white; font-size: 22px">
 			{{ routingService.showsStore ? 'PocketLib Store' : 'PocketLib' }}

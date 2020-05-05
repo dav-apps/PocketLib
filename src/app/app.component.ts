@@ -2,9 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Init, DavEnvironment, TableObject, Log } from 'dav-npm';
-import {
-	DataService
-} from 'src/app/services/data-service';
+import { DataService } from 'src/app/services/data-service';
 import { RoutingService } from './services/routing-service';
 import { GetSettings } from 'src/app/models/Settings';
 import { environment } from 'src/environments/environment';
@@ -112,19 +110,24 @@ export class AppComponent{
 		this.dataService.contentHeight = window.innerHeight - navbarHeight;
 	}
 
+	ShowLibraryPage() {
+		this.routingService.NavigateToLibraryPage();
+		return false;
+	}
+
 	ShowAuthorPage(){
-		this.router.navigate(["author"])
+		this.routingService.NavigateToAuthorPage();
 	}
 
 	ShowStorePage(){
-		this.router.navigate(["store"])
+		this.routingService.NavigateToStorePage();
 	}
 	
 	ShowAccountPage(){
-		this.router.navigate(["account"])
+		this.routingService.NavigateToAccountPage();
 	}
    
    ShowSettingsPage(){
-      this.router.navigate(["settings"])
+		this.routingService.NavigateToSettingsPage();
    }
 }

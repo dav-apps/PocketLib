@@ -6,6 +6,7 @@ import { DataService } from './data-service';
 export class RoutingService{
 	private history: string[] = [];
 	public showsStore: boolean = false;
+	public toolbarNavigationEvent: Function;
 
 	constructor(
 		private dataService: DataService,
@@ -39,6 +40,34 @@ export class RoutingService{
 			this.router.navigateByUrl(this.history.pop());
 		}else{
 			this.router.navigateByUrl(alternativeRoute);
+		}
+	}
+
+	NavigateToLibraryPage() {
+		this.NavigateToPage(["/"]);
+	}
+
+	NavigateToAuthorPage() {
+		this.NavigateToPage(["author"]);
+	}
+
+	NavigateToStorePage() {
+		this.NavigateToPage(["store"]);
+	}
+
+	NavigateToAccountPage() {
+		this.NavigateToPage(["account"]);
+	}
+
+	NavigateToSettingsPage() {
+		this.NavigateToPage(["settings"]);
+	}
+
+	private async NavigateToPage(route: string[]) {
+		if (this.toolbarNavigationEvent) {
+			if(await this.toolbarNavigationEvent()) this.router.navigate(route);
+		} else {
+			this.router.navigate(route);
 		}
 	}
 }
