@@ -23,7 +23,7 @@ export class LoadingPageComponent{
 		this.setSize();
 
 		// Wait for the user to be loaded
-		await this.dataService.userPromise;
+		await this.dataService.userPromiseHolder.AwaitResult();
 		
 		await this.LoadSettings();
    }
@@ -48,7 +48,7 @@ export class LoadingPageComponent{
 	
 	async LoadSettings(){
 		// Wait for the settings to be loaded
-		await this.dataService.settingsLoadPromise;
+		await this.dataService.settingsLoadPromiseHolder.AwaitResult();
 
 		// Wait for the settings to be synced if the user is logged in
 		if(this.dataService.user.IsLoggedIn){
@@ -56,7 +56,7 @@ export class LoadingPageComponent{
 				let resolved: boolean = false;
 	
 				// Wait for the settings to be synced
-				this.dataService.settingsSyncPromise.then(() => {
+				this.dataService.settingsSyncPromiseHolder.AwaitResult().then(() => {
 					if(!resolved){
 						resolved = true;
 						resolve();

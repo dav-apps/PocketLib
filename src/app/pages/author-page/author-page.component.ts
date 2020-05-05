@@ -54,7 +54,7 @@ export class AuthorPageComponent{
    async ngOnInit(){
 		this.setSize();
 
-		await this.dataService.userPromise;
+		await this.dataService.userPromiseHolder.AwaitResult();
 		if(this.dataService.userIsAdmin && !this.uuid){
 			// Get the books in review
 			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview({jwt: this.dataService.user.JWT});

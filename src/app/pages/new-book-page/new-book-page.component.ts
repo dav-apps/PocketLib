@@ -16,6 +16,7 @@ import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
 import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
+import { PromiseHolder } from 'src/app/models/PromiseHolder';
 import { enUS } from 'src/locales/locales';
 
 @Component({
@@ -44,8 +45,7 @@ export class NewBookPageComponent{
 	leavePageDialogVisible: boolean = false;
 	errorMessageBarType: MessageBarType = MessageBarType.error;
 	errorMessage: string = "";
-	navigationEventPromise: Promise<boolean> = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
-	navigationEventPromiseResolve: Function;
+	navigationEventPromiseHolder = new PromiseHolder<boolean>();
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -72,8 +72,7 @@ export class NewBookPageComponent{
 	}[] = [];
 	selectedCollection: number = -2;
 	collectionSelected: boolean = false;
-	loadCollectionsPromise: Promise<null> = new Promise(resolve => this.loadCollectionsPromiseResolve = resolve);
-	loadCollectionsPromiseResolve: Function;
+	loadCollectionsPromiseHolder = new PromiseHolder();
 	noCollections: boolean = false;
 	//#endregion
 
@@ -123,7 +122,7 @@ export class NewBookPageComponent{
 
 	async ngOnInit() {
 		this.setSize();
-		await this.dataService.userAuthorPromise;
+		await this.dataService.userAuthorPromiseHolder.AwaitResult();
 
 		// Get the author
 		if (this.dataService.userIsAdmin) {
@@ -178,7 +177,7 @@ export class NewBookPageComponent{
 			if (i != -1) this.selectedCollection = i;
 		}
 
-		this.loadCollectionsPromiseResolve();
+		this.loadCollectionsPromiseHolder.Resolve();
 		this.noCollections = this.collections.length == 0;
 	}
 
@@ -197,21 +196,21 @@ export class NewBookPageComponent{
 	}
 
 	async HandleToolbarNavigationEvent() {
-		this.navigationEventPromise = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
+		this.navigationEventPromiseHolder.Setup();
 
 		// Show the leave page dialog
 		this.ShowLeavePageDialog();
 
-		return await this.navigationEventPromise;
+		return await this.navigationEventPromiseHolder.AwaitResult();
 	}
 
 	async GoBack() {
-		this.navigationEventPromise = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
+		this.navigationEventPromiseHolder.Setup();
 
 		// Show the leave page dialog
 		this.ShowLeavePageDialog();
 
-		if (await this.navigationEventPromise) {
+		if(await this.navigationEventPromiseHolder.AwaitResult()){
 			this.routingService.NavigateBack("/author");
 		}
 	}
@@ -223,12 +222,12 @@ export class NewBookPageComponent{
 
 	LeavePageDialogLeave() {
 		this.leavePageDialogVisible = false;
-		this.navigationEventPromiseResolve(true);
+		this.navigationEventPromiseHolder.Resolve(true);
 	}
 
 	LeavePageDialogCancel() {
 		this.leavePageDialogVisible = false;
-		this.navigationEventPromiseResolve(false);
+		this.navigationEventPromiseHolder.Resolve(false);
 	}
 
 	Previous() {
@@ -264,7 +263,7 @@ export class NewBookPageComponent{
 		if (this.title.length >= 3) {
 			// Wait for the collections
 			this.loading = true;
-			await this.loadCollectionsPromise;
+			await this.loadCollectionsPromiseHolder.AwaitResult();
 			this.loading = false;
 
 			this.Next();

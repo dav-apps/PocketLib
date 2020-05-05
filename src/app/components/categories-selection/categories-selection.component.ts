@@ -14,7 +14,7 @@ export class CategoriesSelectionComponent{
 	) { }
 
 	async ngOnInit() {
-		await this.dataService.categoriesPromise;
+		await this.dataService.categoriesPromiseHolder.AwaitResult();
 
 		setTimeout(() => {
 			// Set the text color of the checkbox labels

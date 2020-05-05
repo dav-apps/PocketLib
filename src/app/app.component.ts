@@ -46,7 +46,7 @@ export class AppComponent{
 						}
 
 						// Resolve the settings synced promise
-						this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
+						this.dataService.settingsSyncPromiseHolder.Resolve(this.dataService.settings);
 					}
 				},
 				UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => {
@@ -66,7 +66,7 @@ export class AppComponent{
 					this.dataService.syncFinished = true;
 
 					// Resolve the settings synced promise
-					this.dataService.settingsSyncPromiseResolve(this.dataService.settings);
+					this.dataService.settingsSyncPromiseHolder.Resolve(this.dataService.settings);
 					
 					this.dataService.LoadAllBooks();
 				}
@@ -77,7 +77,7 @@ export class AppComponent{
 		this.dataService.settings = await GetSettings();
 
 		// Resolve the settings load promise
-		this.dataService.settingsLoadPromiseResolve(this.dataService.settings);
+		this.dataService.settingsLoadPromiseHolder.Resolve(this.dataService.settings);
 
       if(await this.dataService.GetOpenLastReadBook() && this.router.url == "/"){
 			this.router.navigate(['loading'], {skipLocationChange: true});

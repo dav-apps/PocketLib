@@ -89,9 +89,9 @@ export class AuthorBookPageComponent{
 
 	async ngOnInit(){
 		// Wait for the user to be loaded
-		await this.dataService.userPromise;
-		await this.dataService.userAuthorPromise;
-		await this.dataService.adminAuthorsPromise;
+		await this.dataService.userPromiseHolder.AwaitResult();
+		await this.dataService.userAuthorPromiseHolder.AwaitResult();
+		await this.dataService.adminAuthorsPromiseHolder.AwaitResult();
 
 		// Redirect back to the author page if the user is not an author
 		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
@@ -113,7 +113,7 @@ export class AuthorBookPageComponent{
 			this.book.status = GetBookStatusByString(response.data.status);
 
 			// Get the categories
-			await this.dataService.categoriesPromise;
+			await this.dataService.categoriesPromiseHolder.AwaitResult();
 			this.LoadCategories(response.data.categories);
 
 			this.editPriceComponent.SetPrice(this.book.price);

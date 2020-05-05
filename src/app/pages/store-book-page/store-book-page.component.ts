@@ -94,7 +94,7 @@ export class StoreBookPageComponent{
 
 	async ngOnInit(){
 		this.setSize();
-		await this.dataService.userPromise;
+		await this.dataService.userPromiseHolder.AwaitResult();
 
 		// Get the store book cover
 		this.coverContent = GetStoreBookCoverLink(this.uuid);
@@ -180,7 +180,7 @@ export class StoreBookPageComponent{
 			}
 
 			// Load the categories
-			await this.dataService.categoriesPromise;
+			await this.dataService.categoriesPromiseHolder.AwaitResult();
 			for (let key of response.data.categories) {
 				// Find the category with the key
 				let category = this.dataService.categories.find(c => c.key == key);

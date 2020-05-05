@@ -32,7 +32,7 @@ export class StoreBooksPageComponent{
 
 	async UpdateView(key: string){
 		// Get the selected category
-		await this.dataService.categoriesPromise;
+		await this.dataService.categoriesPromiseHolder.AwaitResult();
 		this.category = this.dataService.categories.find(c => c.key == key);
 
 		// Get the books of the category

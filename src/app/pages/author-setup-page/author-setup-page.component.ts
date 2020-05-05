@@ -29,8 +29,8 @@ export class AuthorSetupPageComponent{
 
 	async ngOnInit(){
 		// Redirect back to the author page if the user is already an author
-		if(await this.dataService.userAuthorPromise){
-			this.router.navigate(['/author']);
+		if(await this.dataService.userAuthorPromiseHolder.AwaitResult()){
+			this.router.navigate(["author"]);
 		}
 	}
 
@@ -55,7 +55,7 @@ export class AuthorSetupPageComponent{
 				collections: [],
 				profileImage: false
 			}
-			this.dataService.userAuthorPromiseResolve(this.dataService.userAuthor);
+			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor);
 
 			// Redirect to the author page
 			this.router.navigate(['/author']);

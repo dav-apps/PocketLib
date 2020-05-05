@@ -76,7 +76,7 @@ export class AuthorProfileComponent{
 
 	async ngOnInit(){
 		this.setSize();
-		await this.dataService.userAuthorPromise;
+		await this.dataService.userAuthorPromiseHolder.AwaitResult();
 
 		// Determine the author mode
 		if(!this.uuid){

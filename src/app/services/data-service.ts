@@ -8,6 +8,7 @@ import * as locales from 'src/locales/locales';
 import { Book } from '../models/Book';
 import { GetAllBooks, GetBook } from '../models/BookManager';
 import { Settings } from '../models/Settings';
+import { PromiseHolder } from 'src/app/models/PromiseHolder';
 
 const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png";
 const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png";
@@ -24,33 +25,27 @@ export class DataService{
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
 	defaultAvatar: string = defaultAvatarUrl;
    settings: Settings;
-	settingsLoadPromise: Promise<Settings> = new Promise(resolve => this.settingsLoadPromiseResolve = resolve);
-	settingsLoadPromiseResolve: Function;
-	settingsSyncPromise: Promise<Settings> = new Promise(resolve => this.settingsSyncPromiseResolve = resolve);
-	settingsSyncPromiseResolve: Function;
+	settingsLoadPromiseHolder = new PromiseHolder<Settings>();
+	settingsSyncPromiseHolder = new PromiseHolder<Settings>();
    syncFinished: boolean = false;
-	userPromise: Promise<DavUser> = new Promise(resolve => this.userPromiseResolve = resolve);
-	userPromiseResolve: Function;
+	userPromiseHolder = new PromiseHolder<DavUser>();
 	userAuthor: Author = null;
-	userAuthorPromise: Promise<Author> = new Promise(resolve => this.userAuthorPromiseResolve = resolve);
-	userAuthorPromiseResolve: Function;
+	userAuthorPromiseHolder = new PromiseHolder<Author>();
 	adminAuthors: Author[] = [];
-	adminAuthorsPromise: Promise<Author[]> = new Promise(resolve => this.adminAuthorsPromiseResolve = resolve);
-	adminAuthorsPromiseResolve: Function;
+	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>();
 	userIsAdmin: boolean = false;
 	supportedLanguages: {language: string, fullLanguage: string}[] = [];
 	sideNavOpened: boolean = false;
 	contentHeight: number = 200;
 	categories: Category[] = [];
-	categoriesPromise: Promise<null> = new Promise(resolve => this.categoriesPromiseResolve = resolve);
-	categoriesPromiseResolve: Function;
+	categoriesPromiseHolder = new PromiseHolder();
 
 	constructor(
 		private apiService: ApiService
 	){
 		this.user = new DavUser(() => {
 			this.userIsAdmin = environment.admins.includes(this.user.Id);
-			this.userPromiseResolve(this.user);
+			this.userPromiseHolder.Resolve(this.user);
 		});
 
 		// Set the supported languages
@@ -63,7 +58,7 @@ export class DataService{
 	}
 	
 	async LoadAuthorOfUser(){
-		await this.userPromise;
+		await this.userPromiseHolder.AwaitResult();
 		if (!this.user.IsLoggedIn) return;
 
 		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
@@ -109,8 +104,8 @@ export class DataService{
 			this.adminAuthors = [];
 		}
 
-		this.userAuthorPromiseResolve(this.userAuthor);
-		this.adminAuthorsPromiseResolve(this.adminAuthors);
+		this.userAuthorPromiseHolder.Resolve(this.userAuthor);
+		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors);
 	}
 
 	private async LoadCollections(collectionData: any) : Promise<any[]>{
@@ -172,7 +167,7 @@ export class DataService{
 			});
 		}
 
-		this.categoriesPromiseResolve();
+		this.categoriesPromiseHolder.Resolve();
 	}
 
    async LoadAllBooks(){

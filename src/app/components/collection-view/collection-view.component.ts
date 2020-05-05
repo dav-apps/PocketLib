@@ -62,9 +62,9 @@ export class CollectionViewComponent{
 
 	async ngOnInit(){
 		// Wait for the user to be loaded
-		await this.dataService.userPromise;
-		await this.dataService.userAuthorPromise;
-		await this.dataService.adminAuthorsPromise;
+		await this.dataService.userPromiseHolder.AwaitResult();
+		await this.dataService.userAuthorPromiseHolder.AwaitResult();
+		await this.dataService.adminAuthorsPromiseHolder.AwaitResult();
 
 		// Get the collection
 		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
