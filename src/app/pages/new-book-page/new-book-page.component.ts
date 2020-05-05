@@ -44,6 +44,8 @@ export class NewBookPageComponent{
 	leavePageDialogVisible: boolean = false;
 	errorMessageBarType: MessageBarType = MessageBarType.error;
 	errorMessage: string = "";
+	navigationEventPromise: Promise<boolean> = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
+	navigationEventPromiseResolve: Function;
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -116,6 +118,7 @@ export class NewBookPageComponent{
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().newBookPage;
+		this.routingService.toolbarNavigationEvent = async () => await this.HandleToolbarNavigationEvent();
 	}
 
 	async ngOnInit() {
@@ -179,6 +182,10 @@ export class NewBookPageComponent{
 		this.noCollections = this.collections.length == 0;
 	}
 
+	ngOnDestroy() {
+		this.routingService.toolbarNavigationEvent = null;
+	}
+
 	@HostListener('window:resize')
 	setSize(){
 		this.height = window.innerHeight;
@@ -188,14 +195,40 @@ export class NewBookPageComponent{
 	ShowAlert(event: any) {
 		event.returnValue = true;
 	}
+
+	async HandleToolbarNavigationEvent() {
+		this.navigationEventPromise = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
+
+		// Show the leave page dialog
+		this.ShowLeavePageDialog();
+
+		return await this.navigationEventPromise;
+	}
+
+	async GoBack() {
+		this.navigationEventPromise = new Promise(resolve => this.navigationEventPromiseResolve = resolve);
+
+		// Show the leave page dialog
+		this.ShowLeavePageDialog();
+
+		if (await this.navigationEventPromise) {
+			this.routingService.NavigateBack("/author");
+		}
+	}
 	
-	ShowGoBackDialog() {
+	ShowLeavePageDialog() {
 		this.leavePageDialogContentProps.title = this.locale.leavePageDialog.title;
 		this.leavePageDialogVisible = true;
 	}
 
-	GoBack(){
-		this.routingService.NavigateBack("/author");
+	LeavePageDialogLeave() {
+		this.leavePageDialogVisible = false;
+		this.navigationEventPromiseResolve(true);
+	}
+
+	LeavePageDialogCancel() {
+		this.leavePageDialogVisible = false;
+		this.navigationEventPromiseResolve(false);
 	}
 
 	Previous() {

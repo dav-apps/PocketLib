@@ -3,7 +3,7 @@
 		<pocketlib-header
 			[title]="titleSubmitted ? submittedTitle : locale.title"
 			[editButtonVisible]="titleSubmitted"
-			(backButtonClick)="ShowGoBackDialog()"
+			(backButtonClick)="GoBack()"
 			(editButtonClick)="NavigateToSection(0)">
 		</pocketlib-header>
 	</div>
@@ -324,12 +324,12 @@
 <fab-dialog
 	[hidden]="!leavePageDialogVisible"
 	[dialogContentProps]="leavePageDialogContentProps"
-	(onDismiss)="leavePageDialogVisible = false">
+	(onDismiss)="LeavePageDialogCancel()">
 
 	<p>{{ locale.leavePageDialog.description }}</p>
 
 	<fab-dialog-footer>
-		<fab-default-button (onClick)="leavePageDialogVisible = false">{{ locale.leavePageDialog.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="GoBack()">{{ locale.leavePageDialog.leave }}</fab-primary-button>
+		<fab-default-button (onClick)="LeavePageDialogCancel()">{{ locale.leavePageDialog.cancel }}</fab-default-button>
+		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="LeavePageDialogLeave()">{{ locale.leavePageDialog.leave }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
