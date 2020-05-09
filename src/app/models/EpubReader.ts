@@ -146,6 +146,9 @@ export class EpubChapter{
    ){
 		// Get the current path from the file path
 		this.currentPath = GetFileDirectory(this.filePath);
+
+		// Remove all line breaks from the html content
+		this.htmlContent = this.htmlContent.replace(/\n/g, '');
    }
    
    async GetChapterHtml() : Promise<HTMLHtmlElement>{
