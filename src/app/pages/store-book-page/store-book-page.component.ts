@@ -237,7 +237,7 @@ export class StoreBookPageComponent{
 		if(
 			!this.dataService.userIsAdmin && 
 			!isAuthorOfBook &&
-			this.dataService.user.Plan != 2
+			(this.book.price > 0 && this.dataService.user.Plan != 2)
 		){
 			// Show dav Pro dialog
 			this.davProRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title;
