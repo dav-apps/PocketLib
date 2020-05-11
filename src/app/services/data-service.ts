@@ -59,49 +59,49 @@ export class DataService{
 	
 	async LoadAuthorOfUser(){
 		await this.userPromiseHolder.AwaitResult();
-		if (!this.user.IsLoggedIn) return;
+		if (this.user.IsLoggedIn) {
+			let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
 
-		let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
+			if(response.status == 200){
+				if(response.data.authors){
+					this.adminAuthors = [];
 
-		if(response.status == 200){
-			if(response.data.authors){
-				this.adminAuthors = [];
+					for(let author of response.data.authors){
+						let newAuthor = {
+							uuid: author.uuid,
+							firstName: author.first_name,
+							lastName: author.last_name,
+							bios: author.bios,
+							collections: [],
+							profileImage: author.profile_image
+						}
 
-				for(let author of response.data.authors){
-					let newAuthor = {
-						uuid: author.uuid,
-						firstName: author.first_name,
-						lastName: author.last_name,
-						bios: author.bios,
+						// Get the collections of the store books
+						newAuthor.collections.push(
+							...await this.LoadCollections(author.collections)
+						)
+
+						this.adminAuthors.push(newAuthor);
+					}
+				}else{
+					this.userAuthor = {
+						uuid: response.data.uuid,
+						firstName: response.data.first_name,
+						lastName: response.data.last_name,
+						bios: response.data.bios,
 						collections: [],
-						profileImage: author.profile_image
+						profileImage: response.data.profile_image
 					}
 
-					// Get the collections of the store books
-					newAuthor.collections.push(
-						...await this.LoadCollections(author.collections)
+					// Get the collections and store books
+					this.userAuthor.collections.push(
+						...await this.LoadCollections(response.data.collections)
 					)
-
-					this.adminAuthors.push(newAuthor);
 				}
 			}else{
-				this.userAuthor = {
-					uuid: response.data.uuid,
-					firstName: response.data.first_name,
-					lastName: response.data.last_name,
-					bios: response.data.bios,
-					collections: [],
-					profileImage: response.data.profile_image
-				}
-
-				// Get the collections and store books
-				this.userAuthor.collections.push(
-					...await this.LoadCollections(response.data.collections)
-				)
+				this.userAuthor = null;
+				this.adminAuthors = [];
 			}
-		}else{
-			this.userAuthor = null;
-			this.adminAuthors = [];
 		}
 
 		this.userAuthorPromiseHolder.Resolve(this.userAuthor);
