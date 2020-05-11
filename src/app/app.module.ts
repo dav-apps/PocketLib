@@ -38,7 +38,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 // Services
 import { DataService } from './services/data-service';
 import { ApiService } from './services/api-service';
-import { WebsocketService } from './services/websocket-service';
 import { RoutingService } from './services/routing-service';
 
 // Components
@@ -143,7 +142,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
   	providers: [
 		DataService,
 		ApiService,
-		WebsocketService,
 		RoutingService
    ],
    bootstrap: [AppComponent],
