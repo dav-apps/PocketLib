@@ -1,27 +1,18 @@
 # PocketLib
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
+PocketLib lets you read wherever and whenever you want! Create your library by getting books from the PocketLib Store or add your own ebook files.
 
-## Development server
+<img src="https://jajl8q.am.files.1drv.com/y4m19IxZ1SJhAbAeCEqJFO9oPpaF028f2g4YjnEOhqXFmstjzkp0gGt3X4sn-FH4sRvoEwgsbzAMsLLB1bCkKCpXrSVjfbEZfxGJi_t7eIvN-Vf47rapgxP_yEOCMG7qHykpK6mDkrCBcajPRQQFi1fqF8mZ2MR_nY3ES_fn4JqpXQJrs5gcoeAWMccbsXjjJg8b49vzFl26-pAQu7OTeIvxQ?width=1442&height=3080&cropmode=none" alt="PocketLib Screenshot" width="320" />
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Getting started
+You can find the web app here: 
 
-## Code scaffolding
+[pocketlib.dav-apps.tech](https://pocketlib.dav-apps.tech)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Contributing
 
-## Build
+We are currently not accepting any contributions, but if you have any feature requests or ideas for how to improve the app, you can always create an issue.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Licensing
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+The code in this project is licensed under MIT license.
