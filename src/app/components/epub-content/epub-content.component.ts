@@ -170,7 +170,7 @@ export class EpubContentComponent{
 				let index = bookChapter.filePath.lastIndexOf('/');
 				if(index < 0) index = 0;
 
-				chapter.filename = bookChapter.filePath.slice(index + 1);
+				chapter.filename = bookChapter.filePath;
 				this.chapters.push(chapter);
 			}
 
@@ -1329,14 +1329,9 @@ export class EpubContentComponent{
 	}
 
 	async NavigateToLink(href: string){
-		// Get the chapter name and element id
-		let hrefEnd = href;
-		if(href.includes('/')){
-			hrefEnd = hrefEnd.slice(href.lastIndexOf('/') + 1);
-		}
-
+		// Separate the chapter name from the anchor
 		let elementId = null;
-		let chapterName = hrefEnd;
+		let chapterName = href;
 
 		if(chapterName.includes('#')){
 			elementId = chapterName.slice(chapterName.lastIndexOf('#') + 1);
