@@ -148,7 +148,7 @@ export class EpubChapter{
 		this.currentPath = GetFileDirectory(this.filePath);
 
 		// Remove all line breaks from the html content
-		this.htmlContent = this.htmlContent.replace(/\n/g, '').replace(/\t/g, ' ').replace(/\r/g, ' ');
+		this.htmlContent = this.htmlContent.trim().replace(/\n/g, '').replace(/\t/g, ' ').replace(/\r/g, ' ');
    }
    
    async GetChapterHtml() : Promise<HTMLHtmlElement>{
@@ -244,7 +244,6 @@ export class EpubChapter{
 		// Inject the images directly into the html
 		// Get the img tags with src attribute
 		let imgTags = chapterBody.getElementsByTagName("img");
-		
 		for(let i = 0; i < imgTags.length; i++){
 			let imageTag = imgTags[i];
 			let src = imageTag.getAttribute("src");
@@ -299,6 +298,18 @@ export class EpubChapter{
 			for(let newImageTag of newImageTags){
 				svgTag.parentNode.replaceChild(newImageTag, svgTag);
 			}
+		}
+
+		// Update links with absolute paths
+		let aTags = chapterBody.getElementsByTagName("a");
+		for (let i = 0; i < aTags.length; i++){
+			let aTag = aTags[i];
+
+			// Get the href
+			let href = aTag.getAttribute("href");
+
+			// Update the href with the absolute path
+			if(href) aTag.setAttribute("href", MergePaths(this.currentPath, href));
 		}
 	
 		return chapterBody.outerHTML;
