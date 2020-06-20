@@ -1,6 +1,6 @@
 {
   "name": "pocketlib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -40,7 +40,7 @@
     "dav-npm": "git+https://github.com/dav-apps/dav-npm.git#v1.5",
     "express": "^4.17.1",
     "http": "0.0.0",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.1",
     "jszip": "^3.2.2",
     "localforage": "^1.7.3",
     "ng2-pdf-viewer": "^5.3.4",
@@ -55,7 +55,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.24",
+    "@angular-devkit/build-angular": "^0.803.27",
     "@angular/cli": "~8.2.1",
     "@angular/compiler-cli": "~8.2.2",
     "@angular/language-service": "~8.2.2",
