@@ -50,7 +50,7 @@
 		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 		[style.height.px]="showBottomToolbar ? height : height - 40" 
 		(click)="NextPage()" 
-		*ngIf="!lastPage && !showBottomToolbar">
+		*ngIf="!showBottomToolbar">
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 

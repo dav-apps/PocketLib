@@ -20,8 +20,8 @@ export class Settings{
 	
 	public async SetBook(book: string, chapter?: number, progress?: number){
 		this.book = book;
-		if(chapter) this.chapter = chapter;
-		if(progress) this.progress = progress;
+		if(chapter != null) this.chapter = chapter;
+		if(progress != null) this.progress = progress;
 		await this.Save();
 	}
 	

@@ -325,9 +325,19 @@ export class EpubContentComponent{
 
 		this.showPageRunning = true;
 
-		// Return if this is the last chapter and the last page
-		if(this.currentChapter >= this.chapters.length - 1 
-			&& this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1)) return;
+		// Check if this is the last chapter and the last page
+		if (
+			this.currentChapter >= this.chapters.length - 1 
+			&& this.currentPage >= this.chapters[this.chapters.length - 1].pagePositions.length - (this.width > secondPageMinWidth ? 2 : 1)
+		) {
+			// Reset the progress
+			await this.currentBook.SetPosition(0, 0);
+			await this.dataService.settings.SetBook("", 0, 0);
+
+			// Go back to the library page
+			this.router.navigate(["/"]);
+			return;
+		}
 
 		let chapter = this.chapters[this.currentChapter];
 
@@ -397,36 +407,18 @@ export class EpubContentComponent{
 		if(direction == NavigationDirection.Forward){
 			// Move the viewer positions
 			await this.MoveViewersClockwise();
-
-			// Set the event listeners to the curent page
-			this.SetEventListeners(ViewerPosition.Current);
-
-			// Render the next page
-			await this.RenderNextPage();
-		}else if(direction == NavigationDirection.Back){
+		} else if (direction == NavigationDirection.Back) {
 			// Move the viewer positions
 			await this.MoveViewersCounterClockwise();
-
-			// Set the event listeners to the curent page
-			this.SetEventListeners(ViewerPosition.Current);
-
-			// Render the previous page
-			await this.RenderPreviousPage();
 		}else{
 			// Render the current page on the next page viewer
 			await this.RenderCurrentPage(ViewerPosition.Next, progress, elementId);
 
+			// Set the event listeners
+			this.SetEventListeners(ViewerPosition.Next);
+
 			// Move the viewer positions
 			await this.MoveViewersClockwise();
-
-			// Set the event listeners to the curent page
-			this.SetEventListeners(ViewerPosition.Current);
-
-			// Render the next page
-			await this.RenderNextPage();
-
-			// Render the previous page
-			await this.RenderPreviousPage();
 		}
 
 		let currentLeftViewer = this.GetCurrentViewer();
@@ -477,12 +469,39 @@ export class EpubContentComponent{
 			if(bookmark.chapter != this.currentChapter) continue;
 
 			if(
-				(!lastPage && bookmark.progress > currentPageProgress && bookmark.progress < nextPageProgress) ||
-				(lastPage && bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress)
-				){
+				(!lastPage && bookmark.progress > currentPageProgress && bookmark.progress < nextPageProgress)
+				|| (lastPage && bookmark.progress >= currentPageProgress && bookmark.progress <= nextPageProgress)
+			){
 				this.currentPageBookmark = bookmark.uuid;
 				break;
 			}
+		}
+
+		if (direction == NavigationDirection.Forward) {
+			// Check if the next page is the last page
+			if (this.lastPage) {
+				this.ClearNextPage();
+			} else {
+				// Render the next page
+				await this.RenderNextPage();
+
+				// Set the event listeners for the next page
+				this.SetEventListeners(ViewerPosition.Next);
+			}
+		} else if (direction == NavigationDirection.Back) {
+			// Render the previous page
+			await this.RenderPreviousPage();
+
+			// Set the event listeners for the previous page
+			this.SetEventListeners(ViewerPosition.Previous);
+		} else {
+			// Render the next and the previous page
+			await this.RenderNextPage();
+			await this.RenderPreviousPage();
+
+			// Set the event listeners for the next and previous page
+			this.SetEventListeners(ViewerPosition.Next);
+			this.SetEventListeners(ViewerPosition.Previous);
 		}
 
 		this.showPageRunning = false;
@@ -561,6 +580,14 @@ export class EpubContentComponent{
 				this.SetHeightOfNextViewer((newViewerRightHeight < 0 || isNaN(newViewerRightHeight)) ? this.contentHeight - 8 : newViewerRightHeight, true);
 			}
 		}
+	}
+
+	ClearNextPage() {
+		let nextLeftViewer = this.GetNextViewer();
+		let nextRightViewer = this.GetNextViewer(true);
+
+		nextLeftViewer.srcdoc = "";
+		nextRightViewer.srcdoc = "";
 	}
 
 	async RenderPreviousPage(){
@@ -751,7 +778,7 @@ export class EpubContentComponent{
 				if(this.showPageRunningWhenSwipeStarted) return;
 				
 				// Move the pages
-				if(this.touchDiffX > 0 && !this.lastPage){
+				if(this.touchDiffX > 0){
 					// Swipe to the left; move the current viewer to the left
 					this.SetLeftOfCurrentViewer(-this.touchDiffX);
 				}else if(!this.firstPage){
@@ -780,7 +807,7 @@ export class EpubContentComponent{
 				// Disable horizontal swiping until the next and previous pages are fully rendered
 				if(this.showPageRunningWhenSwipeStarted) return;
 
-				if(this.touchDiffX > 0 && !this.lastPage){
+				if(this.touchDiffX > 0){
 					// If the page was swiped wide enough, show the next page
 					if(this.touchDiffX > this.width * 0.15){
 						this.NextPage();
