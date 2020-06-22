@@ -296,14 +296,22 @@ export class PdfContentComponent{
 	UpdatePages(newPage: number){
 		this.currentPage = newPage;
 
-		let pageDiff = this.showSecondPage ? 2 : 1;
-		this.SetPageOfCurrentViewer(this.currentPage);
-		this.SetPageOfNextViewer(this.currentPage + pageDiff);
-		this.SetPageOfPreviousViewer(this.currentPage - pageDiff);
-
 		// Update firstPage and lastPage
 		this.firstPage = this.currentPage <= 1;
 		this.lastPage = this.currentPage >= this.totalPages;
+
+		// Update the viewers
+		let pageDiff = this.showSecondPage ? 2 : 1;
+
+		this.SetPageOfCurrentViewer(this.currentPage);
+
+		if (this.lastPage) {
+			this.SetPageOfNextViewer(0);
+		} else {
+			this.SetPageOfNextViewer(this.currentPage + pageDiff);
+		}
+
+		this.SetPageOfPreviousViewer(this.currentPage - pageDiff);
 	}
    
    async PrevPage(){
@@ -313,8 +321,16 @@ export class PdfContentComponent{
 		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1));
    }
 
-   async NextPage(){
-		if(this.lastPage) return;
+	async NextPage() {
+		if (this.lastPage) {
+			// Reset the progress
+			await this.currentBook.SetPage(1);
+			await this.dataService.settings.SetBook("", 0, 0);
+
+			// Go back to the library page
+			this.router.navigate(["/"]);
+			return;
+		}
 
 		this.goingBack = false;
 		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1));
@@ -396,7 +412,7 @@ export class PdfContentComponent{
 				this.swipeStart = false;
 			}else if(this.swipeDirection == SwipeDirection.Horizontal){
 				// Move the pages
-				if(this.touchDiffX > 0 && !this.lastPage){
+				if(this.touchDiffX > 0){
 					// Swipe to the left; move the current viewer to the left
 					this.SetLeftOfCurrentViewer(-this.touchDiffX);
 				}else if(!this.firstPage){
@@ -422,7 +438,7 @@ export class PdfContentComponent{
 			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime;
 
 			if(this.swipeDirection == SwipeDirection.Horizontal){
-				if(this.touchDiffX > 0 && !this.lastPage){
+				if(this.touchDiffX > 0){
 					// If the page was swiped wide enough, show the next page
 					if(this.touchDiffX > this.width * 0.15){
 						this.NextPage();
