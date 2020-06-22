@@ -320,7 +320,7 @@ export class PdfContentComponent{
 		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1));
 	}
 
-	GoBack(){
+	GoHome(){
 		this.router.navigate(["/"]);
 	}
 
@@ -349,7 +349,7 @@ export class PdfContentComponent{
 	onKeyDown(keyCode: number){
 		switch (keyCode) {
 			case 8:		// Back key
-				this.ngZone.run(() => this.GoBack());
+				this.ngZone.run(() => this.GoHome());
 				break;
 			case 37:		// Left arrow key
 				this.ngZone.run(() => this.PrevPage());

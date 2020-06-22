@@ -1350,9 +1350,11 @@ export class EpubContentComponent{
 			this.currentChapter = lastPosition.chapter;
 			this.currentPage = lastPosition.page;
 			this.ShowPage();
-		}else{
-			this.router.navigate(["/"]);
 		}
+	}
+
+	GoHome() {
+		this.router.navigate(["/"]);
 	}
 
 	async NavigateToLink(href: string){
