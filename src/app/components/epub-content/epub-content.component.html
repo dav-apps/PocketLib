@@ -54,6 +54,10 @@
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
+<div class="w-100 d-flex justify-content-center" style="position: absolute; bottom: 0; height: 50px" *ngIf="!showBottomToolbar">
+	<p class="align-self-center font-weight-light" style="display: inline-block; margin: 0; font-size: 14px">{{ currentChapterTitle }}</p>
+</div>
+
 <!-- Top Toolbar -->
 <div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar && initialized">
 	<!-- Back button -->

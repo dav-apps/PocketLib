@@ -5,7 +5,7 @@ import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
 import { enUS } from 'src/locales/locales';
 import { EpubBook } from 'src/app/models/EpubBook';
 import { EpubBookmark } from 'src/app/models/EpubBookmark';
-import { EpubReader } from 'src/app/models/EpubReader';
+import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader';
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -1329,18 +1329,26 @@ export class EpubContentComponent{
 		}
 
 		// Find the toc item with the same href
-		let tocItem = this.book.toc.find(item => {
-			let itemPath = item.href;
+		let tocItem: EpubTocItem = null;
 
-			if(itemPath.includes('#')){
-				itemPath = itemPath.slice(0, itemPath.lastIndexOf('#'));
-			}
-
-			return itemPath == chapterFilePath;
-		});
+		for (let item of this.book.toc) {
+			tocItem = this.FindTocItemByHref(item, chapterFilePath);
+			if (tocItem != null) break;
+		}
 
 		if(tocItem) this.currentChapterTitle = tocItem.title;
-		else			this.currentChapterTitle = null;
+		else this.currentChapterTitle = null;
+	}
+
+	FindTocItemByHref(item: EpubTocItem, href: string): EpubTocItem {
+		if (item.href == href) return item;
+
+		if (item.items.length > 0) {
+			for (let subItem of item.items) {
+				let result = this.FindTocItemByHref(subItem, href);
+				if (result != null) return result;
+			}
+		}
 	}
 
 	GoBack(){
