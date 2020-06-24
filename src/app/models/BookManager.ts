@@ -128,7 +128,14 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 	let pageString = bookTableObject.GetPropertyValue(keys.pdfBookTablePageKey);
 	if(pageString){
 		page = Number.parseInt(pageString);
-   }
+	}
+	
+	// Get the total progress
+	let totalProgress: number = 0;
+	let totalProgressString = bookTableObject.GetPropertyValue(keys.pdfBookTableTotalProgressKey);
+	if (totalProgressString) {
+		totalProgress = Number.parseInt(totalProgressString);
+	}
    
    // Get the bookmarks
    let bookmarks: number[] = [];
@@ -147,7 +154,7 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
       zoom = +zoomString;
    }
 
-	let book = new PdfBook(file, storeBook, title, page, bookmarks, zoom);
+	let book = new PdfBook(file, storeBook, title, page, totalProgress, bookmarks, zoom);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }

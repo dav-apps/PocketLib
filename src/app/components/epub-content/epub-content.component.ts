@@ -507,7 +507,7 @@ export class EpubContentComponent{
 					}
 				}
 
-				await this.currentBook.SetTotalProgress(newTotalProgress);
+				await this.currentBook.SetTotalProgress(Math.ceil(newTotalProgress));
 				this.totalProgress = newTotalProgress / progressFactor
 			}
 		}

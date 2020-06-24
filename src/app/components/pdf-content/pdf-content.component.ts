@@ -5,6 +5,7 @@ import { PdfBook } from 'src/app/models/PdfBook';
 import { enUS } from 'src/locales/locales';
 declare var $: any;
 
+const progressFactor = 100000;
 const currentViewerZIndex = -2;
 const nextPageViewerZIndex = -3;
 const previousPageViewerZIndex = -1;
@@ -75,6 +76,10 @@ export class PdfContentComponent{
 	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
+	//#endregion
+
+	//#region Variables for progress bar
+	totalProgress: number = 0;				// The current progress in percent
 	//#endregion
 
 	//#region Variables for Booksmarks panel
@@ -234,6 +239,10 @@ export class PdfContentComponent{
       // Save the new progress
 		await this.currentBook.SetPage(this.currentPage);
 		await this.dataService.settings.SetBook(this.currentBook.uuid, null, this.currentPage);
+
+		// Save the new total progress
+		this.totalProgress = this.currentBook.page / this.totalPages * 100
+		await this.currentBook.SetTotalProgress(Math.ceil(this.totalProgress * progressFactor))
 		
 		// Set currentPageBookmarked
 		if(this.showSecondPage){

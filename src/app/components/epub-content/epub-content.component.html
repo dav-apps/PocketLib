@@ -93,12 +93,6 @@
 	</div>
 </div>
 
-<!-- Total progress -->
-<div
-	style="position: absolute; border: 0.5px solid #b9b9b9; bottom: 0"
-	[style.width.%]="totalProgress">
-</div>
-
 <!-- Bottom toolbar -->
 <div class="w-100 d-flex justify-content-center"
 		style="z-index: 2; position: absolute; bottom: 0;"
@@ -145,6 +139,12 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Total progress -->
+<div
+	style="position: absolute; bottom: 0; border: 1px solid #b9b9b9"
+	[style.width.%]="totalProgress">
 </div>
 
 <fab-panel 

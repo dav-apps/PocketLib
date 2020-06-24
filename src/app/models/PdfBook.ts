@@ -6,7 +6,8 @@ const pdfExt = "pdf";
 
 export class PdfBook extends Book{
 	public title: string;
-   public page: number;
+	public page: number;
+	public totalProgress: number;
    public bookmarks: number[];
    public zoom: number;
 
@@ -14,13 +15,15 @@ export class PdfBook extends Book{
 		file: Blob,
 		storeBook: string = null,
 		title: string = "",
-      page: number = 1,
+		page: number = 1,
+		totalProgress: number = 0,
 		bookmarks: number[] = [],
 		zoom: number = 1
 	){
 		super(file, storeBook);
 		this.title = title;
-      this.page = page;
+		this.page = page;
+		this.totalProgress = totalProgress;
 		this.bookmarks = bookmarks;
 		this.zoom = zoom;
 	}
@@ -40,6 +43,11 @@ export class PdfBook extends Book{
 	public async SetPage(page: number){
 		this.page = page;
 		await this.Save();
+	}
+
+	public async SetTotalProgress(totalProgress: number) {
+		this.totalProgress = totalProgress
+		await this.Save()
 	}
 
 	public async AddBookmark(page: number){
@@ -94,6 +102,7 @@ export class PdfBook extends Book{
 		let properties: Property[] = [
 			{ name: keys.pdfBookTableTitleKey, value: this.title },
 			{ name: keys.pdfBookTablePageKey, value: this.page.toString() },
+			{ name: keys.pdfBookTableTotalProgressKey, value: this.totalProgress.toString() },
 			{ name: keys.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
 			{ name: keys.pdfBookTableZoomKey, value: this.zoom.toString() }
       ]

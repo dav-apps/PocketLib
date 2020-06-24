@@ -11,6 +11,7 @@ export const keys = {
 	// Keys for PdfBook
 	pdfBookTableTitleKey: "title",
 	pdfBookTablePageKey: "page",
+	pdfBookTableTotalProgressKey: "total_progress",
 	pdfBookTableBookmarksKey: "bookmarks",
 	pdfBookTableZoomKey: "zoom",
 	// Keys for App table
