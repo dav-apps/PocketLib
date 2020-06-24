@@ -7,7 +7,9 @@ const epubExt = "epub";
 
 export class EpubBook extends Book{
 	public chapter: number;
-   public progress: number;
+	public progress: number;
+	public totalProgress: number;
+	public chapterPercentages: number[];
    public bookmarks: EpubBookmark[];
 
 	// Properties which are read from the epub file
@@ -19,12 +21,15 @@ export class EpubBook extends Book{
 		file: Blob,
 		storeBook: string,
 		chapter: number = 0,
-      progress: number = 0,
+		progress: number = 0,
+		totalProgress: number = 0,
       bookmarks: EpubBookmark[] = []
 	){
 		super(file, storeBook);
 		this.chapter = chapter;
-      this.progress = progress;
+		this.progress = progress;
+		this.totalProgress = totalProgress;
+		this.chapterPercentages = [];
       this.bookmarks = bookmarks;
 	}
 
@@ -39,7 +44,17 @@ export class EpubBook extends Book{
 		this.chapter = chapter;
 		this.progress = progress;
 		await this.Save();
-   }
+	}
+
+	public async SetTotalProgress(totalProgress: number) {
+		this.totalProgress = totalProgress;
+		await this.Save();
+	}
+
+	public async SetChapterPercentages(chapterPercentages: number[]) {
+		if (this.chapterPercentages.length > 0) return
+		this.chapterPercentages = chapterPercentages
+	}
    
    public async AddBookmark(name: string, chapter: number, progress: number) : Promise<string>{
 		let bookmark = await EpubBookmark.Create(this.uuid, name, chapter, progress);
@@ -71,6 +86,7 @@ export class EpubBook extends Book{
 		let properties: Property[] = [
 			{ name: keys.epubBookTableChapterKey, value: this.chapter.toString() },
 			{ name: keys.epubBookTableProgressKey, value: this.progress.toString() },
+			{ name: keys.epubBookTableTotalProgressKey, value: this.totalProgress.toString() },
 			{ name: keys.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
 		]
 

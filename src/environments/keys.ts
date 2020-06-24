@@ -6,6 +6,7 @@ export const keys = {
 	// Keys for EpubBook
 	epubBookTableChapterKey: "chapter",
 	epubBookTableProgressKey: "progress",
+	epubBookTableTotalProgressKey: "total_progress",
 	epubBookTableBookmarksKey: "bookmarks",
 	// Keys for PdfBook
 	pdfBookTableTitleKey: "title",

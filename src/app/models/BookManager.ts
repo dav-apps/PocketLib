@@ -88,6 +88,13 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 		progress = Number.parseInt(progressString);
 	}
 
+	// Get the totalProgress
+	let totalProgress: number = 0;
+	let totalProgressString = bookTableObject.GetPropertyValue(keys.epubBookTableTotalProgressKey);
+	if (totalProgressString) {
+		totalProgress = Number.parseInt(totalProgressString);
+	}
+
 	// Get the bookmarks
 	let bookmarks: EpubBookmark[] = [];
 	let bookmarksString = bookTableObject.GetPropertyValue(keys.epubBookTableBookmarksKey);
@@ -98,7 +105,7 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 		}
 	}
 
-	let book = new EpubBook(file, storeBook, chapter, progress, bookmarks);
+	let book = new EpubBook(file, storeBook, chapter, progress, totalProgress, bookmarks);
 	book.uuid = bookTableObject.Uuid;
 	return book;
 }

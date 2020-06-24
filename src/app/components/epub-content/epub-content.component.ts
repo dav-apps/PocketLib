@@ -184,6 +184,8 @@ export class EpubContentComponent{
          await this.ShowPage(NavigationDirection.None, progress);
          
 			this.chapterTree.Init(this.book.toc);
+
+			await this.LoadChapterPercentages();
 		}
 
 		// Bind the keydown and wheel events
@@ -265,6 +267,35 @@ export class EpubContentComponent{
 		if(this.initialized){
 			await this.ShowPage(NavigationDirection.None);
 		}
+	}
+
+	async LoadChapterPercentages() {
+		if (this.currentBook.chapterPercentages.length > 0) return;
+
+		// Get the html of each chapter and count the elements
+		let totalElements = 0;
+		let chapterElements: number[] = [];
+		let chapterPercentages: number[] = [];
+
+		for (let i = 0; i < this.book.chapters.length; i++){
+			let html = await this.book.chapters[i].GetChapterHtml();
+			let body = html.getElementsByTagName("body")[0];
+			let currentChapterElements = body.getElementsByTagName("*").length
+
+			totalElements += currentChapterElements;
+			chapterElements.push(currentChapterElements);
+		}
+		
+		let percentageBase = 100 / totalElements * progressFactor
+
+		// Calculate the percentage of each chapter
+		for (let i = 0; i < chapterElements.length; i++){
+			let chapterPercentage = Math.ceil(percentageBase * chapterElements[i])
+			chapterPercentages.push(chapterPercentage)
+		}
+
+		// Save the chapter progresses and the total progress
+		await this.currentBook.SetChapterPercentages(chapterPercentages);
 	}
 
 	async PrevPage(){
@@ -455,6 +486,25 @@ export class EpubContentComponent{
 			// Save the new progress
 			await this.currentBook.SetPosition(this.currentChapter, newProgress);
 			await this.dataService.settings.SetBook(this.currentBook.uuid, this.currentChapter, newProgress);
+
+			// Calculate the new total progress
+			if (this.currentBook.chapterPercentages.length > 0) {
+				let newTotalProgress = 0
+
+				for (let i = 0; i < this.chapters.length; i++){
+					if (i == this.currentChapter) {
+						// Calculate the progress within the current chapter
+						if (newProgress > 0) newProgress /= progressFactor
+						newTotalProgress += this.currentBook.chapterPercentages[i] * newProgress
+						break;
+					} else {
+						// Add the entire percentage of the chapter
+						newTotalProgress += this.currentBook.chapterPercentages[i]
+					}
+				}
+
+				await this.currentBook.SetTotalProgress(newTotalProgress);
+			}
 		}
 
 		// Set currentPageBookmarked
