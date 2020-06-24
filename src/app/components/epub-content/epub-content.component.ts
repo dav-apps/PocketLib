@@ -113,7 +113,11 @@ export class EpubContentComponent{
 	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
-   //#endregion
+	//#endregion
+	
+	//#region Variables for the progress bar
+	totalProgress: number = 0;					// The current progress in percent
+	//#endregion
 	
 	//#region Variables for the chapters panel
    showChaptersPanel: boolean = false;
@@ -504,6 +508,7 @@ export class EpubContentComponent{
 				}
 
 				await this.currentBook.SetTotalProgress(newTotalProgress);
+				this.totalProgress = newTotalProgress / progressFactor
 			}
 		}
 
