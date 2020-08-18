@@ -83,26 +83,20 @@ async function GetAllSettings() : Promise<Settings[]>{
 }
 
 function ConvertTableObjectToSettings(tableObject: TableObject) : Settings{
-	if(!tableObject || tableObject.TableId != environment.settingsTableId) return null;
+	if(!tableObject || tableObject.TableId != environment.settingsTableId) return null
 
 	// book
-	let book: string = tableObject.GetPropertyValue(keys.settingsTableBookKey);
+	let book = tableObject.GetPropertyValue(keys.settingsTableBookKey) as string
 
 	// chapter
-	let chapter: number = 0;
-	let chapterString: string = tableObject.GetPropertyValue(keys.settingsTableChapterKey);
-	if(chapterString){
-		chapter = +chapterString;
-	}
+	let chapter = tableObject.GetPropertyValue(keys.settingsTableChapterKey) as number
+	if(chapter == null) chapter = 0
 
 	// progress
-	let progress: number = 0;
-	let progressString: string = tableObject.GetPropertyValue(keys.settingsTableProgressKey);
-	if(progressString){
-		progress = +progressString;
-	}
+	let progress = tableObject.GetPropertyValue(keys.settingsTableProgressKey) as number
+	if(progress == null) progress = 0
 
-	let settings = new Settings(book, chapter, progress);
-	settings.uuid = tableObject.Uuid;
-	return settings;
+	let settings = new Settings(book, chapter, progress)
+	settings.uuid = tableObject.Uuid
+	return settings
 }

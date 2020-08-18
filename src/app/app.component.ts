@@ -35,7 +35,6 @@ export class AppComponent{
 			environment.appId,
 			[environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
 			[],
-			true,
 			notificationOptions,
 			{
 				UpdateAllOfTable: async (tableId: number, changed: boolean) => {

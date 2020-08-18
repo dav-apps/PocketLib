@@ -61,27 +61,21 @@ export async function GetEpubBookmark(uuid: string) : Promise<EpubBookmark>{
 }
 
 function ConvertTableObjectToEpubBookmark(tableObject: TableObject){
-	if(!tableObject || tableObject.TableId != environment.epubBookmarkTableId) return null;
+	if(!tableObject || tableObject.TableId != environment.epubBookmarkTableId) return null
 
 	// book
-	let book = tableObject.GetPropertyValue(keys.epubBookmarkTableBookKey);
+	let book = tableObject.GetPropertyValue(keys.epubBookmarkTableBookKey) as string
 
 	// name
-	let name = tableObject.GetPropertyValue(keys.epubBookmarkTableNameKey);
+	let name = tableObject.GetPropertyValue(keys.epubBookmarkTableNameKey) as string
 
 	// chapter
-	let chapter: number = 0;
-	let chapterString = tableObject.GetPropertyValue(keys.epubBookmarkTableChapterKey);
-	if(chapterString){
-		chapter = +chapterString;
-	}
+	let chapter = tableObject.GetPropertyValue(keys.epubBookmarkTableChapterKey) as number
+	if(chapter == null) chapter = 0
 
 	// progress
-	let progress: number = 0;
-	let progressString = tableObject.GetPropertyValue(keys.epubBookmarkTableProgressKey);
-	if(progressString){
-		progress = +progressString;
-	}
+	let progress = tableObject.GetPropertyValue(keys.epubBookmarkTableProgressKey) as number
+	if(progress == null) progress = 0
 
 	let bookmark = new EpubBookmark(book, name, chapter, progress);
 	bookmark.uuid = tableObject.Uuid;
