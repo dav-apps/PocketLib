@@ -1054,22 +1054,14 @@ export class EpubContentComponent{
 
 		// Add spans to the texts
 		let textNodes = Utils.TextNodesUnder(chapterBody);
-		for(let textNode of textNodes){
-			// Wrap each word inside a span
-			let textNodeContent = textNode.textContent.trim();
-			if(textNodeContent.length == 0) continue;
+		for (let textNode of textNodes) {
+			// Wrap each space within a span
+			let span = document.createElement("span")
+			span.innerHTML = textNode.textContent.replace(/ /g, '<span> </span>')
 
-			let splittetText: string[] = textNodeContent.split(' ');
-			if(splittetText.length < 10) continue;
-
-			for(let text of splittetText){
-				// Create a new span Element
-				let span = document.createElement("span");
-				span.innerText = text + " ";
-				textNode.before(span);
-			}
-
-			textNode.parentElement.removeChild(textNode);
+			// Add the span and remove the old text node
+			textNode.before(span)
+			textNode.parentElement.removeChild(textNode)
 		}
 
 		chapter.Init(chapterHtml, window.innerWidth, window.innerHeight);
