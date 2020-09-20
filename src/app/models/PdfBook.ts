@@ -101,10 +101,10 @@ export class PdfBook extends Book{
 	protected async Save(){
 		let properties: Property[] = [
 			{ name: keys.pdfBookTableTitleKey, value: this.title },
-			{ name: keys.pdfBookTablePageKey, value: this.page.toString() },
-			{ name: keys.pdfBookTableTotalProgressKey, value: this.totalProgress.toString() },
+			{ name: keys.pdfBookTablePageKey, value: this.page },
+			{ name: keys.pdfBookTableTotalProgressKey, value: this.totalProgress },
 			{ name: keys.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
-			{ name: keys.pdfBookTableZoomKey, value: this.zoom.toString() }
+			{ name: keys.pdfBookTableZoomKey, value: this.zoom }
       ]
 
 		await super.Save(pdfExt, properties);

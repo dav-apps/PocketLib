@@ -37,8 +37,8 @@ export class Settings{
 
 		let properties: Property[] = [
 			{ name: keys.settingsTableBookKey, value: this.book },
-			{ name: keys.settingsTableChapterKey, value: this.chapter.toString() },
-			{ name: keys.settingsTableProgressKey, value: this.progress.toString() }
+			{ name: keys.settingsTableChapterKey, value: this.chapter },
+			{ name: keys.settingsTableProgressKey, value: this.progress }
 		]
 
 		await tableObject.SetPropertyValues(properties);

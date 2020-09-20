@@ -40,8 +40,8 @@ export class EpubBookmark{
 		let properties: Property[] = [
 			{ name: keys.epubBookmarkTableBookKey, value: this.book },
 			{ name: keys.epubBookmarkTableNameKey, value: this.name },
-			{ name: keys.epubBookmarkTableChapterKey, value: this.chapter.toString() },
-			{ name: keys.epubBookmarkTableProgressKey, value: this.progress.toString() }
+			{ name: keys.epubBookmarkTableChapterKey, value: this.chapter },
+			{ name: keys.epubBookmarkTableProgressKey, value: this.progress }
 		]
 
 		await tableObject.SetPropertyValues(properties);

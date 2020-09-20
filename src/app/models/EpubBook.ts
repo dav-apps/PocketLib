@@ -84,9 +84,9 @@ export class EpubBook extends Book{
 		this.bookmarks.forEach(bookmark => bookmarkUuids.push(bookmark.uuid));
 
 		let properties: Property[] = [
-			{ name: keys.epubBookTableChapterKey, value: this.chapter.toString() },
-			{ name: keys.epubBookTableProgressKey, value: this.progress.toString() },
-			{ name: keys.epubBookTableTotalProgressKey, value: this.totalProgress.toString() },
+			{ name: keys.epubBookTableChapterKey, value: this.chapter },
+			{ name: keys.epubBookTableProgressKey, value: this.progress },
+			{ name: keys.epubBookTableTotalProgressKey, value: this.totalProgress },
 			{ name: keys.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
 		]
 
