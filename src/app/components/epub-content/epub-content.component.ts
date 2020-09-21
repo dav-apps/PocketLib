@@ -1,11 +1,12 @@
-import { Component, HostListener, NgZone, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { DataService } from 'src/app/services/data-service';
-import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component';
-import { enUS } from 'src/locales/locales';
-import { EpubBook } from 'src/app/models/EpubBook';
-import { EpubBookmark } from 'src/app/models/EpubBookmark';
-import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader';
+import { Component, HostListener, NgZone, ViewChild } from '@angular/core'
+import { Router } from '@angular/router'
+import { DataService } from 'src/app/services/data-service'
+import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
+import { enUS } from 'src/locales/locales'
+import { PromiseHolder } from 'src/app/models/PromiseHolder'
+import { EpubBook } from 'src/app/models/EpubBook'
+import { EpubBookmark } from 'src/app/models/EpubBookmark'
+import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader'
 declare var $: any;
 
 const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
@@ -90,6 +91,7 @@ export class EpubContentComponent{
 	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
 	nextPageTimerRunning: boolean = false;		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
 	prevPageTimerRunning: boolean = false;		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
+	pageRenderingPromiseHolder = new PromiseHolder()	// PromiseHolder for rendering the pages, is resolved after the rendering of pages is finished
 
 	//#region Variables for finding the chapter page positions
 	pageHeight: number = 500;
@@ -221,8 +223,9 @@ export class EpubContentComponent{
 		this.setSize();
 	}
 
-	onKeyDown(keyCode: number){
-		if(this.showChaptersPanel) return;
+	async onKeyDown(keyCode: number){
+		if (this.showChaptersPanel) return
+		await this.pageRenderingPromiseHolder.AwaitResult()
 
 		switch (keyCode) {
 			case 8:		// Back key
@@ -237,8 +240,9 @@ export class EpubContentComponent{
 		}
 	}
 
-	onMouseWheel(wheelDelta: number){
-		if(this.showChaptersPanel) return;
+	async onMouseWheel(wheelDelta: number){
+		if (this.showChaptersPanel) return
+		await this.pageRenderingPromiseHolder.AwaitResult()
 
 		if(wheelDelta > 0){
 			// Wheel up
@@ -425,7 +429,11 @@ export class EpubContentComponent{
 	 * @param progress If not -1, uses the progress to calculate the current page
 	 * @param elementId Finds the element with the id and jumps to the page with the element
 	 */
-	async ShowPage(direction: NavigationDirection = NavigationDirection.None, progress: number = -1, elementId: string = null){
+	async ShowPage(
+		direction: NavigationDirection = NavigationDirection.None,
+		progress: number = -1,
+		elementId: string = null
+	) {
 		// direction == Forward ?
 			// Move 1 -> 3, 3 -> 2 and 2 -> 1
 			// viewer 2 is now the currently visible viewer
@@ -438,6 +446,8 @@ export class EpubContentComponent{
 			// Render the current page on viewer 2
 			// Move to the next page without animation
 			// Render the next page on viewer 3 and the previous page on viewer 1
+		
+		this.pageRenderingPromiseHolder.Setup()
 		
 		if(direction == NavigationDirection.Forward){
 			// Move the viewer positions
@@ -560,6 +570,7 @@ export class EpubContentComponent{
 		}
 
 		this.showPageRunning = false;
+		this.pageRenderingPromiseHolder.resolve()
 	}
 
 	async RenderNextPage(){
@@ -1333,22 +1344,22 @@ export class EpubContentComponent{
 		let leftViewer = this.GetViewer(position);
 		let rightViewer = this.GetViewer(position, true);
 
-		// Bind the keydown and wheel events to the viewers
-		$(leftViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(rightViewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
-		$(leftViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
-		$(rightViewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		this.SetEventListenersForViewer(leftViewer)
+		this.SetEventListenersForViewer(rightViewer)
+
 		leftViewer.contentWindow.focus();
+	}
+
+	SetEventListenersForViewer(viewer: HTMLIFrameElement) {
+		// Bind the keydown and wheel events to the viewers
+		$(viewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode));
+		$(viewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta));
 
 		// Bind the touch and click events to the viewers
-      leftViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		rightViewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		leftViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		rightViewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		leftViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		rightViewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		leftViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
-		rightViewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+      viewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		viewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		viewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		viewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
 	}
 
 	/**
