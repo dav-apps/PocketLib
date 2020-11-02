@@ -3,10 +3,11 @@
 	"short_name": "PocketLib",
 	"description": "PocketLib is the library in your pocket! Read your book wherever and whenever you want.",
 	"theme_color": "#0d47a1",
-	"background_color": "#fafafa",
+	"background_color": "#0d47a1",
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/",
+	"categories": ["books", "education", "entertainment"],
 	"icons": [
 		{
 			"src": "assets/icons/icon-72x72.png",
@@ -48,5 +49,6 @@
 			"sizes": "512x512",
 			"type": "image/png"
 		}
-	]
+	],
+	"screenshots": []
 }
