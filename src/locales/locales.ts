@@ -64,9 +64,10 @@ const enDefaults = {
       lightTheme: "Light",
       darkTheme: "Dark",
       systemTheme: "Use system setting",
-      openLastReadBook: "Open the last read book at startup",
-      privacy: "Privacy Policy",
-      github: "PocketLib on GitHub"
+		openLastReadBook: "Open the last read book at startup",
+		news: "News and updates",
+		github: "PocketLib on GitHub",
+      privacy: "Privacy Policy"
    },
    developerPage: {
       landingHeader1: "Build on PocketLib",
@@ -404,9 +405,10 @@ const deDefaults = {
       lightTheme: "Hell",
       darkTheme: "Dunkel",
       systemTheme: "Systemeinstellung verwenden",
-      openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten",
-      privacy: "Datenschutzerklärung",
-      github: "PocketLib auf GitHub"
+		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten",
+		news: "Neuigkeiten und Updates",
+		github: "PocketLib auf GitHub",
+      privacy: "Datenschutzerklärung"
 	},
 	developerPage: {
       landingHeader1: "Baue auf PocketLib",
