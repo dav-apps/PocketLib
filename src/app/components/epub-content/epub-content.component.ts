@@ -1052,7 +1052,7 @@ export class EpubContentComponent{
 
 		let chapterHtml: HTMLHtmlElement = chapter.IsInitialized() ? chapter.GetHtml() : await this.book.chapters[chapterIndex].GetChapterHtml();
 		let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement;
-		chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'};`);
+		chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'}; background-color: transparent`);
 
 		// Adapt the image sizes to the page size
 		let imageTags = chapterHtml.getElementsByTagName("img");
@@ -1286,7 +1286,7 @@ export class EpubContentComponent{
 		}
 	}
 
-	async MoveViewersClockwise() : Promise<void>{
+	async MoveViewersClockwise(): Promise<void>{
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(-this.width);
 		this.SetLeftOfNextViewer(0);
