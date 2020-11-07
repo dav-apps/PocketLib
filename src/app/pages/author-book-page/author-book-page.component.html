@@ -24,8 +24,7 @@
 				<fab-primary-button 
 					ngxFilePicker
 					accept="image/png,image/jpeg"
-					(filePick)="CoverUpload($event)"
-					*ngIf="book.status == 0 || book.status == 1">
+					(filePick)="CoverUpload($event)">
 					{{ locale.uploadCover }}
 				</fab-primary-button>
 			</div>
