@@ -10,7 +10,15 @@
 			(click)="NavigateToStoreBook(book.uuid)"
 			(mouseover)="hoveredBookIndex = i"
 			(mouseout)="hoveredBookIndex = -1">
-			<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" class="card-img-top" style="width: 100%; height: 270px; object-fit: cover;" />
+
+			<pocketlib-blurhash-image
+				width="178"
+				height="270"
+				[src]="book.coverContent"
+				[fallback]="dataService.defaultStoreBookCover"
+				[blurhash]="book.coverBlurhash">
+			</pocketlib-blurhash-image>
+
 			<div class="card-body">
 				<p class="card-text text-center text-color" style="max-width: 150px; font-size: 15px">{{ book.title }}</p>
 			</div>
