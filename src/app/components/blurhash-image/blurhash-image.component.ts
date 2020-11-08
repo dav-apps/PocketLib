@@ -11,9 +11,18 @@ export class BlurhashImageComponent{
 	@Input() src: string = ""
 	@Input() fallback: string = ""
 	@Input() blurhash: string = ""
+	@Input() margin: string = ""
+	@Input() shadow: boolean = false
+	@Input() rounded: boolean = false
 	@ViewChild('image', { static: true }) image: ElementRef<HTMLImageElement>
 
+	classes: string[] = []
+	hover: boolean = false
+
 	ngOnInit() {
+		if (this.shadow) this.classes.push("cursor")
+		if (this.rounded) this.classes.push("rounded-circle")
+
 		let fallbackSrc = this.fallback
 		let canvas = document.createElement("canvas")
 		canvas.width = this.width
@@ -40,6 +49,26 @@ export class BlurhashImageComponent{
 		img.onload = () => {
 			// Show the proper image
 			this.image.nativeElement.src = this.src
+		}
+	}
+
+	SetHover(hover: boolean) {
+		if (!this.shadow) return
+
+		if (hover) {
+			// Remove shadow-sm
+			let i = this.classes.indexOf("shadow-sm")
+			if (i != -1) this.classes.splice(i, 1)
+			
+			// Add shadow
+			this.classes.push('shadow')
+		} else {
+			// Remove shadow
+			let i = this.classes.indexOf("shadow")
+			if (i != -1) this.classes.splice(i, 1)
+			
+			// Add shadow-sm
+			this.classes.push('shadow-sm')
 		}
 	}
 }
