@@ -6,15 +6,19 @@
 			<div
 				class="card cursor mx-2 my-3 theme-background-color-secondary"
 				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
-				style="width: 125px; transition: 0.12s; display: inline-block"
+				style="width: 125px; transition: 0.12s; display: inline-flex"
 				*ngFor="let book of books; let i = index"
 				(click)="NavigateToStoreBook(book.uuid)"
 				(mouseover)="hoveredBookIndex = i"
 				(mouseout)="hoveredBookIndex = -1">
-				<img
-					[src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover"
-					class="card-img-top"
-					style="width: 100%; height: 190px; object-fit: cover;" />
+
+				<pocketlib-blurhash-image
+					width="123"
+					height="190"
+					[src]="book.coverContent"
+					[fallback]="dataService.defaultStoreBookCover"
+					[blurhash]="book.coverBlurhash">
+				</pocketlib-blurhash-image>
 			</div>
 		</div>
 	</div>
