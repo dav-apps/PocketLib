@@ -24,7 +24,7 @@ export class AuthorProfileComponent{
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
-	books: {uuid: string, title: string, description: string, language: string, coverContent: string}[] = [];
+	books: {uuid: string, title: string, description: string, language: string, coverContent: string, coverBlurhash: string}[] = []
 	profileImageWidth: number = 200;
 	bioLanguageDropdownSelectedIndex: number = 0;
 	bioLanguageDropdownOptions: IDropdownOption[] = [];
@@ -42,6 +42,7 @@ export class AuthorProfileComponent{
 			status: BookStatus,
 			cover: boolean,
 			coverContent: string,
+			coverBlurhash: string,
 			file: boolean
 		}[]
 	}[] = [];
@@ -475,8 +476,9 @@ export class AuthorProfileComponent{
 					title: book.title,
 					description: book.description,
 					language: book.language,
-					coverContent: GetStoreBookCoverLink(book.uuid)
-				});
+					coverContent: GetStoreBookCoverLink(book.uuid),
+					coverBlurhash: book.cover_blurhash
+				})
 			}
 
 			this.bioMode = BioMode.Normal;

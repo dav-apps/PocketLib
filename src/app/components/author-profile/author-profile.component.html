@@ -1,7 +1,17 @@
 <div class="container ms-motion-slideUpIn">
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
-			<img class="rounded-circle shadow mb-3" [style.width.px]="profileImageWidth" [src]="profileImageContent"><br>
+			<pocketlib-blurhash-image
+				[src]="profileImageContent"
+				[fallback]="dataService.defaultProfileImageUrl"
+				[blurhash]="author.profileImageBlurhash"
+				[width]="profileImageWidth"
+				[height]="profileImageWidth"
+				margin="0 0 1rem 0"
+				shadow="true"
+				rounded="true">
+			</pocketlib-blurhash-image>
+
 			<fab-primary-button 
 				ngxFilePicker
 				accept="image/png,image/jpeg"
@@ -61,7 +71,13 @@
 				
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+						<pocketlib-blurhash-image
+							[src]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
+							[fallback]="dataService.defaultStoreBookCover"
+							[blurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
+							width="100"
+							height="160">
+						</pocketlib-blurhash-image>
 					</div>
 
 					<div class="col-8 my-auto">
@@ -89,7 +105,13 @@
 				(mouseout)="hoveredBookIndex = -1">
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+						<pocketlib-blurhash-image
+							[src]="book.coverContent"
+							[fallback]="dataService.defaultStoreBookCover"
+							[blurhash]="book.coverBlurhash"
+							[width]="100"
+							[height]="160">
+						</pocketlib-blurhash-image>
 					</div>
 
 					<div class="col-8 my-auto">
