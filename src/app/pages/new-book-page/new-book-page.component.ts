@@ -40,7 +40,8 @@ export class NewBookPageComponent{
 		lastName: "",
 		bios: [],
 		collections: [],
-		profileImage: false
+		profileImage: false,
+		profileImageBlurhash: null
 	}
 	leavePageDialogVisible: boolean = false;
 	errorMessageBarType: MessageBarType = MessageBarType.error;

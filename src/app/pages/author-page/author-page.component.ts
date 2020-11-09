@@ -132,8 +132,9 @@ export class AuthorPageComponent{
 				lastName: response.data.last_name,
 				bios: response.data.bios,
 				collections: response.data.collections,
-				profileImage: response.data.profile_image
-			});
+				profileImage: response.data.profile_image,
+				profileImageBlurhash: response.data.profile_image_blurhash
+			})
 
 			this.createAuthorDialogVisible = false;
 

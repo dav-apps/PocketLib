@@ -23,7 +23,7 @@ export class AuthorProfileComponent{
 	locale = enUS.authorProfile;
 	@Input() uuid: string;
 	authorMode: AuthorMode = AuthorMode.Normal;
-	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
+	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
 	books: {uuid: string, title: string, description: string, language: string, coverContent: string}[] = [];
 	profileImageWidth: number = 200;
 	bioLanguageDropdownSelectedIndex: number = 0;
@@ -465,7 +465,8 @@ export class AuthorProfileComponent{
 				lastName: response.data.last_name,
 				bios: response.data.bios,
 				collections: [],
-				profileImage: response.data.profile_image
+				profileImage: response.data.profile_image,
+				profileImageBlurhash: response.data.profile_image_blurhash
 			}
 
 			for(let book of response.data.books){

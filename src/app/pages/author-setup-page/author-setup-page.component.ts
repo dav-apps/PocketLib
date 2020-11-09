@@ -53,7 +53,8 @@ export class AuthorSetupPageComponent{
 				lastName: response.data.last_name,
 				bios: [],
 				collections: [],
-				profileImage: false
+				profileImage: false,
+				profileImageBlurhash: null
 			}
 			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor);
 

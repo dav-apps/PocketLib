@@ -73,7 +73,8 @@ export class DataService{
 							lastName: author.last_name,
 							bios: author.bios,
 							collections: [],
-							profileImage: author.profile_image
+							profileImage: author.profile_image,
+							profileImageBlurhash: author.profile_image_blurhash
 						}
 
 						// Get the collections of the store books
@@ -90,7 +91,8 @@ export class DataService{
 						lastName: response.data.last_name,
 						bios: response.data.bios,
 						collections: [],
-						profileImage: response.data.profile_image
+						profileImage: response.data.profile_image,
+						profileImageBlurhash: response.data.profile_image_blurhash
 					}
 
 					// Get the collections and store books
@@ -283,13 +285,13 @@ export class DataService{
 }
 
 export interface Author{
-	uuid: string;
-	firstName: string;
-	lastName: string;
+	uuid: string
+	firstName: string
+	lastName: string
 	bios: {
 		bio: string,
 		language: string
-	}[];
+	}[]
 	collections: {
 		uuid: string,
 		names: {
@@ -304,10 +306,12 @@ export interface Author{
 			status: BookStatus,
 			cover: boolean,
 			coverContent: string,
+			coverBlurhash: string,
 			file: boolean
 		}[]
-	}[];
-	profileImage: boolean;
+	}[]
+	profileImage: boolean
+	profileImageBlurhash: string
 }
 
 export interface Category{
