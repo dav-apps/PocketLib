@@ -12,11 +12,12 @@
 			(mouseout)="hoveredBookIndex = -1">
 
 			<pocketlib-blurhash-image
-				width="178"
-				height="270"
 				[src]="book.coverContent"
 				[fallback]="dataService.defaultStoreBookCover"
-				[blurhash]="book.coverBlurhash">
+				[blurhash]="book.coverBlurhash"
+				width="178"
+				height="270"
+				fillWidth="true">
 			</pocketlib-blurhash-image>
 
 			<div class="card-body">

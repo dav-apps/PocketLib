@@ -3,15 +3,14 @@
 		<div class="col-4 mt-2 d-flex">
 			<div class="mx-auto">
 				<!-- Cover -->
-				<div class="shadow">
-					<pocketlib-blurhash-image
-						[src]="coverContent"
-						[fallback]="dataService.defaultStoreBookCover"
-						[blurhash]="book.coverBlurhash"
-						width="175"
-						height="270">
-					</pocketlib-blurhash-image>
-				</div>
+				<pocketlib-blurhash-image
+					[src]="coverContent"
+					[fallback]="dataService.defaultStoreBookCover"
+					[blurhash]="book.coverBlurhash"
+					width="160"
+					height="270"
+					shadow="true">
+				</pocketlib-blurhash-image>
 
 				<!-- Author profile image and name -->
 				<div class="d-flex my-3">
@@ -21,7 +20,7 @@
 						[blurhash]="author.profileImageBlurhash"
 						width="30"
 						height="30"
-						shadow="true"
+						shadowSm="true"
 						rounded="true"
 						cursor="true"
 						(click)="NavigateToAuthor()">

@@ -18,8 +18,10 @@ export class BlurhashImageComponent{
 	@Input() blurhash: string = null
 	@Input() width: number = 0
 	@Input() height: number = 0
+	@Input() fillWidth: boolean = false			// If true, the entire width will be used by the image
 	@Input() margin: string = ""
-	@Input() shadow: boolean = false				// Show shadow-sm on the image
+	@Input() shadowSm: boolean = false			// Show shadow-sm on the image
+	@Input() shadow: boolean = false				// Show shadow on the image
 	@Input() shadowOnHover: boolean = false	// Show shadow-sm on the image and shadow on the image on hover
 	@Input() rounded: boolean = false			// Show the image as a circle
 	@Input() cursor: boolean = false
@@ -45,7 +47,8 @@ export class BlurhashImageComponent{
 	public Init() {
 		this.classes = []
 		if (this.shadowOnHover || this.cursor) this.classes.push("cursor")
-		if(this.shadow || this.shadowOnHover) this.classes.push("shadow-sm")
+		if (this.shadowSm || this.shadowOnHover) this.classes.push("shadow-sm")
+		else if(this.shadow) this.classes.push("shadow")
 		if (this.rounded) this.classes.push("rounded-circle")
 
 		let fallbackSrc = this.fallback
@@ -76,6 +79,10 @@ export class BlurhashImageComponent{
 		img.onload = () => {
 			// Show the proper image
 			this.image.nativeElement.src = this.src
+
+			if (this.fillWidth) {
+				this.image.nativeElement.width = this.width
+			}
 		}
 	}
 
