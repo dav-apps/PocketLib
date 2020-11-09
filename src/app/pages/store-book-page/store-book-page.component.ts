@@ -1,14 +1,14 @@
-import { Component, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
+import { Component, HostListener } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import {
 	CreatePurchase,
 	ApiResponse,
 	ApiErrorResponse,
 	PurchaseResponseData,
 	DownloadTableObject
-} from 'dav-npm';
+} from 'dav-npm'
 import {
 	DataService,
 	BookStatus,
@@ -16,11 +16,11 @@ import {
 	GetAuthorProfileImageLink,
 	GetStoreBookCoverLink,
 	Author
-} from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { RoutingService } from 'src/app/services/routing-service';
-import { environment } from 'src/environments/environment';
-import { enUS } from 'src/locales/locales';
+} from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { RoutingService } from 'src/app/services/routing-service'
+import { environment } from 'src/environments/environment'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-store-book-page',
@@ -35,6 +35,7 @@ export class StoreBookPageComponent{
 		description: string,
 		price: number,
 		status: BookStatus,
+		coverBlurhash: string,
 		categories: {
 			key: string,
 			name: string
@@ -47,21 +48,22 @@ export class StoreBookPageComponent{
 		description: "",
 		price: 0,
 		status: BookStatus.Unpublished,
+		coverBlurhash: null,
 		categories: [],
 		inLibrary: false,
 		purchased: false
 	}
-	price: string = "";
-	bookStatus: string = "";
-	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false};
-	coverContent: string;
-	authorProfileImageContent: string = this.dataService.defaultAvatar;
-	showMobileLayout: boolean = false;
-	addToLibraryButtonDisabled: boolean = false;
-	davProRequiredDialogVisible: boolean = false;
-	buyBookDialogVisible: boolean = false;
-	buyBookDialogLoginRequired: boolean = false;
-	errorDialogVisible: boolean = false;
+	price: string = ""
+	bookStatus: string = ""
+	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
+	coverContent: string
+	authorProfileImageContent: string = this.dataService.defaultAvatar
+	showMobileLayout: boolean = false
+	addToLibraryButtonDisabled: boolean = false
+	davProRequiredDialogVisible: boolean = false
+	buyBookDialogVisible: boolean = false
+	buyBookDialogLoginRequired: boolean = false
+	errorDialogVisible: boolean = false
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -144,25 +146,26 @@ export class StoreBookPageComponent{
 			uuid: this.uuid
 		})
 
-		if(response.status == 200){
-			this.book.collection = response.data.collection;
-			this.book.title = response.data.title;
-			this.book.description = response.data.description;
-			this.book.price = response.data.price;
-			this.book.status = GetBookStatusByString(response.data.status);
-			this.book.inLibrary = response.data.in_library;
-			this.book.purchased = response.data.purchased;
+		if (response.status == 200) {
+			this.book.collection = response.data.collection
+			this.book.title = response.data.title
+			this.book.description = response.data.description
+			this.book.price = response.data.price
+			this.book.status = GetBookStatusByString(response.data.status)
+			this.book.coverBlurhash = response.data.cover_blurhash
+			this.book.inLibrary = response.data.in_library
+			this.book.purchased = response.data.purchased
 
-			this.addToLibraryButtonDisabled = this.book.inLibrary;
+			this.addToLibraryButtonDisabled = this.book.inLibrary
 
 			// Load the price
 			if(this.book.price == 0){
-				this.price = this.locale.free;
+				this.price = this.locale.free
 			}else{
-				this.price = (this.book.price / 100).toFixed(2) + " €";
+				this.price = (this.book.price / 100).toFixed(2) + " €"
 
 				if(this.dataService.locale.slice(0, 2) == "de"){
-					this.price = this.price.replace('.', ',');
+					this.price = this.price.replace('.', ',')
 				}
 			}
 			
@@ -213,16 +216,17 @@ export class StoreBookPageComponent{
 	}
 
 	async GetAuthor(uuid: string){
-		let response: ApiResponse<any> = await this.apiService.GetAuthor({uuid});
+		let response: ApiResponse<any> = await this.apiService.GetAuthor({uuid})
 
 		if(response.status == 200){
-			this.author.uuid = response.data.uuid;
-			this.author.firstName = response.data.first_name;
-			this.author.lastName = response.data.last_name;
-			this.author.bios = response.data.bios;
-			this.author.collections = response.data.collections;
-			this.author.profileImage = response.data.profile_image;
-			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultAvatar;
+			this.author.uuid = response.data.uuid
+			this.author.firstName = response.data.first_name
+			this.author.lastName = response.data.last_name
+			this.author.bios = response.data.bios
+			this.author.collections = response.data.collections
+			this.author.profileImage = response.data.profile_image
+			this.author.profileImageBlurhash = response.data.profile_image_blurhash
+			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultAvatar
 		}
 	}
 

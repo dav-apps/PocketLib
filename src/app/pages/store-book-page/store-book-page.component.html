@@ -3,12 +3,35 @@
 		<div class="col-4 mt-2 d-flex">
 			<div class="mx-auto">
 				<!-- Cover -->
-				<img [src]="coverContent ? coverContent : dataService.defaultStoreBookCover" class="shadow" style="height: 270px; object-fit: cover;" />
+				<div class="shadow">
+					<pocketlib-blurhash-image
+						[src]="coverContent"
+						[fallback]="dataService.defaultStoreBookCover"
+						[blurhash]="book.coverBlurhash"
+						width="175"
+						height="270">
+					</pocketlib-blurhash-image>
+				</div>
 
 				<!-- Author profile image and name -->
 				<div class="d-flex my-3">
-					<img [src]="authorProfileImageContent" class="rounded-circle shadow-sm cursor" style="width: 30px; height: 30px" (click)="NavigateToAuthor()" />
-					<p class="font-weight-light my-auto cursor text-color" style="font-size: 18px; margin-left: 13px" (click)="NavigateToAuthor()">{{ author.firstName }} {{ author.lastName }}</p>
+					<pocketlib-blurhash-image
+						[src]="authorProfileImageContent"
+						[fallback]="dataService.defaultAvatarUrl"
+						[blurhash]="author.profileImageBlurhash"
+						width="30"
+						height="30"
+						shadow="true"
+						rounded="true"
+						cursor="true"
+						(click)="NavigateToAuthor()">
+					</pocketlib-blurhash-image>
+
+					<p class="font-weight-light my-auto cursor text-color"
+						style="font-size: 18px; margin-left: 13px"
+						(click)="NavigateToAuthor()">
+						{{ author.firstName }} {{ author.lastName }}
+					</p>
 				</div>
 
 				<!-- Buy button -->
