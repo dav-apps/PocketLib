@@ -12,7 +12,7 @@ import { PromiseHolder } from 'src/app/models/PromiseHolder';
 
 const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png";
 const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png";
-const defaultAvatarUrl = "https://davapps.blob.core.windows.net/avatars/default.png";
+const defaultProfileImageUrl = "/assets/images/profile-image-placeholder.png"
 
 @Injectable()
 export class DataService{
@@ -23,7 +23,7 @@ export class DataService{
 	currentBook: Book = null;
 	darkTheme: boolean = false;
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
-	defaultAvatar: string = defaultAvatarUrl;
+	defaultAvatar: string = defaultProfileImageUrl;
    settings: Settings;
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>();
 	settingsSyncPromiseHolder = new PromiseHolder<Settings>();
