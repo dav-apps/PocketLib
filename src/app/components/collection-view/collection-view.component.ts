@@ -17,11 +17,11 @@ import { enUS } from 'src/locales/locales';
 	templateUrl: './collection-view.component.html'
 })
 export class CollectionViewComponent{
-	locale = enUS.collectionView;
-	@ViewChild(EditCollectionNamesComponent, {static: true}) editCollectionNamesComponent: EditCollectionNamesComponent;
-	@Input() uuid: string;
-	authorMode: AuthorMode = AuthorMode.Normal;
-	collectionName: {name: string, language: string} = {name: "", language: ""};
+	locale = enUS.collectionView
+	@ViewChild(EditCollectionNamesComponent, {static: true}) editCollectionNamesComponent: EditCollectionNamesComponent
+	@Input() uuid: string
+	authorMode: AuthorMode = AuthorMode.Normal
+	collectionName: {name: string, language: string} = {name: "", language: ""}
 	collection: {
 		uuid: string,
 		author: string,
@@ -34,14 +34,15 @@ export class CollectionViewComponent{
 			status: string,
 			cover: boolean,
 			file: boolean,
-			coverContent: string
+			coverContent: string,
+			coverBlurhash: string
 		}[]
-	} = {uuid: "", author: "", names: [], books: []};
-	collectionNamesDialogVisible: boolean = false;
-	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = [];
-	showAddLanguageButton: boolean = false;
-	bookTitleFontSize: number = 20;
-	hoveredBookIndex: number = -1;
+	} = {uuid: "", author: "", names: [], books: []}
+	collectionNamesDialogVisible: boolean = false
+	collectionNames: {name: string, language: string, fullLanguage: string, edit: boolean}[] = []
+	showAddLanguageButton: boolean = false
+	bookTitleFontSize: number = 20
+	hoveredBookIndex: number = -1
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -62,9 +63,9 @@ export class CollectionViewComponent{
 
 	async ngOnInit(){
 		// Wait for the user to be loaded
-		await this.dataService.userPromiseHolder.AwaitResult();
-		await this.dataService.userAuthorPromiseHolder.AwaitResult();
-		await this.dataService.adminAuthorsPromiseHolder.AwaitResult();
+		await this.dataService.userPromiseHolder.AwaitResult()
+		await this.dataService.userAuthorPromiseHolder.AwaitResult()
+		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
 		// Get the collection
 		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
@@ -72,27 +73,47 @@ export class CollectionViewComponent{
 			uuid: this.uuid
 		})
 
-		if(getCollectionResponse.status == 200){
-			this.collection = getCollectionResponse.data;
+		if (getCollectionResponse.status == 200) {
+			this.collection = {
+				uuid: getCollectionResponse.data.uuid,
+				author: getCollectionResponse.data.author,
+				names: getCollectionResponse.data.names,
+				books: []
+			}
 
 			// Get the appropriate collection name
-			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
-			if(i != -1) this.collectionName = this.collection.names[i];
+			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names)
+			if(i != -1) this.collectionName = this.collection.names[i]
 
-			for(let book of this.collection.books){
+			for (let responseBook of getCollectionResponse.data.books) {
+				let book = {
+					uuid: responseBook.uuid,
+					title: responseBook.title,
+					description: responseBook.description,
+					language: responseBook.language,
+					status: responseBook.status,
+					cover: responseBook.cover,
+					file: responseBook.file,
+					coverContent: null,
+					coverBlurhash: null
+				}
+
 				// Cut the description
 				if(book.description && book.description.length > 170){
-					book.description = book.description.slice(0, 169) + "...";
+					book.description = book.description.slice(0, 169) + "..."
 				}
 
-				if(book.cover){
-					book.coverContent = GetStoreBookCoverLink(book.uuid);
+				if (book.cover) {
+					book.coverContent = GetStoreBookCoverLink(book.uuid)
+					book.coverBlurhash = responseBook.cover_blurhash
 				}
+
+				this.collection.books.push(book)
 			}
 		}else{
 			// Redirect back to the author page
-			this.router.navigate(["author"]);
-			return;
+			this.router.navigate(["author"])
+			return
 		}
 
 		// Determine the author mode
@@ -100,12 +121,12 @@ export class CollectionViewComponent{
 			this.dataService.userIsAdmin &&
 			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.collection.author) != -1)
 		){
-			this.authorMode = AuthorMode.AuthorOfAdmin;
+			this.authorMode = AuthorMode.AuthorOfAdmin
 		}else if(
 			this.dataService.userAuthor &&
 			this.collection.author == this.dataService.userAuthor.uuid
 		){
-			this.authorMode = AuthorMode.AuthorOfUser;
+			this.authorMode = AuthorMode.AuthorOfUser
 		}
 	}
 

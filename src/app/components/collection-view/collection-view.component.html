@@ -31,7 +31,13 @@
 
 			<div class="row no-gutters">
 				<div class="col-4">
-					<img [src]="book.coverContent ? book.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+					<pocketlib-blurhash-image
+						[src]="book.coverContent"
+						[fallback]="dataService.defaultStoreBookCover"
+						[blurhash]="book.coverBlurhash"
+						width="100"
+						height="150">
+					</pocketlib-blurhash-image>
 				</div>
 
 				<div class="col-8 my-auto">
