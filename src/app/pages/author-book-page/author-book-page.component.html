@@ -18,7 +18,14 @@
 			<div style="grid-column: 2; grid-row: 1;">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
-					<img [src]="coverContent" height="200" />
+					<pocketlib-blurhash-image
+						[src]="coverContent"
+						[fallback]="dataService.defaultStoreBookCover"
+						[blurhash]="book.coverBlurhash"
+						height="200"
+						width="140"
+						>
+					</pocketlib-blurhash-image>
 				</div>
 	
 				<fab-primary-button 

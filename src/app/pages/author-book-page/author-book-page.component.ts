@@ -19,9 +19,9 @@ import { enUS } from 'src/locales/locales';
 	templateUrl: './author-book-page.component.html'
 })
 export class AuthorBookPageComponent{
-	locale = enUS.authorBookPage;
-	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent;
-	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent;
+	locale = enUS.authorBookPage
+	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent
+	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent
 	uuid: string;
 	book: {
 		collection: string,
@@ -30,6 +30,7 @@ export class AuthorBookPageComponent{
 		language: string,
 		price: number,
 		status: BookStatus,
+		coverBlurhash: string,
 		categories: {
 			key: string,
 			name: string
@@ -41,20 +42,21 @@ export class AuthorBookPageComponent{
 		language: "en",
 		price: 0,
 		status: BookStatus.Unpublished,
+		coverBlurhash: null,
 		categories: []
 	}
-	editTitleDialogVisible: boolean = false;
-	editTitleDialogTitle: string = "";
-	editTitleDialogTitleError: string = "";
-	editDescription: boolean = false;
-	newDescription: string = "";
-	newDescriptionError: string = "";
-	updateLanguage: boolean = false;
-	coverContent: string;
-	bookFileUploaded: boolean = false;
-	publishingOrUnpublishing: boolean = false;
-	editPrice: boolean = false;
-	categoriesSelectionDialogVisible: boolean = false;
+	editTitleDialogVisible: boolean = false
+	editTitleDialogTitle: string = ""
+	editTitleDialogTitleError: string = ""
+	editDescription: boolean = false
+	newDescription: string = ""
+	newDescriptionError: string = ""
+	updateLanguage: boolean = false
+	coverContent: string
+	bookFileUploaded: boolean = false
+	publishingOrUnpublishing: boolean = false
+	editPrice: boolean = false
+	categoriesSelectionDialogVisible: boolean = false
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -81,21 +83,21 @@ export class AuthorBookPageComponent{
 		private router: Router,
       private activatedRoute: ActivatedRoute
 	){
-		this.locale = this.dataService.GetLocale().authorBookPage;
+		this.locale = this.dataService.GetLocale().authorBookPage
 
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
+		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
 	async ngOnInit(){
 		// Wait for the user to be loaded
-		await this.dataService.userPromiseHolder.AwaitResult();
-		await this.dataService.userAuthorPromiseHolder.AwaitResult();
-		await this.dataService.adminAuthorsPromiseHolder.AwaitResult();
+		await this.dataService.userPromiseHolder.AwaitResult()
+		await this.dataService.userAuthorPromiseHolder.AwaitResult()
+		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
 		// Redirect back to the author page if the user is not an author
 		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
-			this.router.navigate(['author']);
+			this.router.navigate(['author'])
 		}
 
 		// Get the store book
@@ -105,27 +107,28 @@ export class AuthorBookPageComponent{
 		})
 
 		if(response.status == 200){
-			this.book.collection = response.data.collection;
-			this.book.title = response.data.title;
-			this.book.description = response.data.description;
-			this.book.language = response.data.language;
-			this.book.price = response.data.price;
-			this.book.status = GetBookStatusByString(response.data.status);
+			this.book.collection = response.data.collection
+			this.book.title = response.data.title
+			this.book.description = response.data.description
+			this.book.language = response.data.language
+			this.book.price = response.data.price
+			this.book.status = GetBookStatusByString(response.data.status)
+			this.book.coverBlurhash = response.data.cover_blurhash
 
 			// Get the categories
-			await this.dataService.categoriesPromiseHolder.AwaitResult();
-			this.LoadCategories(response.data.categories);
+			await this.dataService.categoriesPromiseHolder.AwaitResult()
+			this.LoadCategories(response.data.categories)
 
-			this.editPriceComponent.SetPrice(this.book.price);
+			this.editPriceComponent.SetPrice(this.book.price)
 
 			if(response.data.cover){
-				this.coverContent = GetStoreBookCoverLink(this.uuid);
+				this.coverContent = GetStoreBookCoverLink(this.uuid)
 			}
 
-			this.bookFileUploaded = response.data.file;
+			this.bookFileUploaded = response.data.file
 		}else{
 			// Redirect back to the author page
-			this.router.navigate(['author']);
+			this.router.navigate(['author'])
 		}
 	}
 
