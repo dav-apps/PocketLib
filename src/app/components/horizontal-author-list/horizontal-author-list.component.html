@@ -4,13 +4,14 @@
 	<div class="horizontal-store-list" style="height: 150px; overflow-x: scroll; overflow-y: hidden">
 		<div class="mb-3 pl-4" style="width: max-content">
 			<pocketlib-blurhash-image
-				margin="1rem 0.5rem 1rem 0.5rem"
-				shadow="true"
-				rounded="true"
+				[src]="author.profileImageContent"
+				[fallback]="dataService.defaultAvatarUrl"
+				[blurhash]="author.profileImageBlurhash"
 				width="100"
 				height="100"
-				[src]="author.profileImageContent"
-				[blurhash]="author.profileImageBlurhash"
+				margin="1rem 0.5rem 1rem 0.5rem"
+				shadowOnHover="true"
+				rounded="true"
 				*ngFor="let author of authors"
 				(click)="NavigateToAuthor(author.uuid)">
 			</pocketlib-blurhash-image>

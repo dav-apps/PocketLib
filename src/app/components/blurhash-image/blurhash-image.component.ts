@@ -1,4 +1,11 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core'
+import {
+	Component,
+	Input,
+	ViewChild,
+	ElementRef,
+	SimpleChange,
+	SimpleChanges
+} from '@angular/core'
 import { decode } from 'blurhash'
 
 @Component({
@@ -6,21 +13,39 @@ import { decode } from 'blurhash'
 	templateUrl: "./blurhash-image.component.html"
 })
 export class BlurhashImageComponent{
-	@Input() width: number = 0
-	@Input() height: number = 0
 	@Input() src: string = ""
 	@Input() fallback: string = ""
-	@Input() blurhash: string = ""
+	@Input() blurhash: string = null
+	@Input() width: number = 0
+	@Input() height: number = 0
 	@Input() margin: string = ""
-	@Input() shadow: boolean = false
-	@Input() rounded: boolean = false
+	@Input() shadow: boolean = false				// Show shadow-sm on the image
+	@Input() shadowOnHover: boolean = false	// Show shadow-sm on the image and shadow on the image on hover
+	@Input() rounded: boolean = false			// Show the image as a circle
+	@Input() cursor: boolean = false
 	@ViewChild('image', { static: true }) image: ElementRef<HTMLImageElement>
 
 	classes: string[] = []
 	hover: boolean = false
 
 	ngOnInit() {
-		if (this.shadow) this.classes.push("cursor")
+		this.Init()
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		// Trigger Init if the src or the blurhash has changed
+		let change: SimpleChange
+		if (changes.src) change = changes.src
+		if (changes.blurhash) change = changes.blurhash
+		if (!change) return
+		
+		this.Init()
+	}
+
+	public Init() {
+		this.classes = []
+		if (this.shadowOnHover || this.cursor) this.classes.push("cursor")
+		if(this.shadow || this.shadowOnHover) this.classes.push("shadow-sm")
 		if (this.rounded) this.classes.push("rounded-circle")
 
 		let fallbackSrc = this.fallback
@@ -43,6 +68,8 @@ export class BlurhashImageComponent{
 		// Show the fallback image or the blurhash, if there is one
 		this.image.nativeElement.src = fallbackSrc
 
+		if(this.src == null) return
+
 		// Start loading the proper image
 		let img = document.createElement("img")
 		img.src = this.src
@@ -53,7 +80,7 @@ export class BlurhashImageComponent{
 	}
 
 	SetHover(hover: boolean) {
-		if (!this.shadow) return
+		if (!this.shadowOnHover) return
 
 		if (hover) {
 			// Remove shadow-sm
