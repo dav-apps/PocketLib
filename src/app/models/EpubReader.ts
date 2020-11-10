@@ -243,35 +243,36 @@ export class EpubChapter{
 	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
 		// Inject the images directly into the html
 		// Get the img tags with src attribute
-		let imgTags = chapterBody.getElementsByTagName("img");
+		let imgTags = chapterBody.getElementsByTagName("img")
 		for(let i = 0; i < imgTags.length; i++){
-			let imageTag = imgTags[i];
-			let src = imageTag.getAttribute("src");
-         let newSrc = await this.GetRawImageSource(src);
+			let imageTag = imgTags[i]
+			let src = imageTag.getAttribute("src")
+			let newSrc = await this.GetRawImageSource(src)
+			if(newSrc == null) continue
 	
 			// Create the new image tag with the new src
          let newImageTag = document.createElement("img");
          
          let imageLoadPromise = new Promise(resolve => {
             newImageTag.onload = resolve
-         });
-         newImageTag.src = newSrc
+			})
+			newImageTag.src = newSrc
          
 			// Wait until the image loaded
-			await imageLoadPromise;
+			await imageLoadPromise
 
 			// Set the width and height attributes
-			newImageTag.setAttribute("height", newImageTag.naturalHeight.toString());
-			newImageTag.setAttribute("width", newImageTag.naturalWidth.toString());
+			newImageTag.setAttribute("height", newImageTag.naturalHeight.toString())
+			newImageTag.setAttribute("width", newImageTag.naturalWidth.toString())
 
 			// Replace the old image tag with the new one
 			imageTag.parentNode.replaceChild(newImageTag, imageTag)
 		}
 
 		// Get the images from svg tags and add them as img tags
-		let svgTags = chapterBody.getElementsByTagName("svg");
+		let svgTags = chapterBody.getElementsByTagName("svg")
 		for(let i = 0; i < svgTags.length; i++){
-			let svgTag = svgTags[i];
+			let svgTag = svgTags[i]
 			
 			// Get the image tags
 			let imageTags = chapterBody.getElementsByTagName("image");
@@ -317,21 +318,21 @@ export class EpubChapter{
 
 	private async GetRawImageSource(src: string) : Promise<string>{
 		// Get the image from the zip package
-		let imagePath = MergePaths(this.currentPath, src);
+		let imagePath = MergePaths(this.currentPath, src)
 	
 		// Get the image from the zip file entries
-		let entry = this.book.entries[imagePath];
+		let entry = this.book.entries[imagePath]
 		if(entry){
 			// Get the image content
-			let imageContent = await entry.async("base64");
+			let imageContent = await entry.async("base64")
 			
 			// Get the mime type from the manifest items
-			let index = this.book.manifestItems.findIndex(item => item.href == imagePath);
-			let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg";
+			let index = this.book.manifestItems.findIndex(item => item.href == imagePath)
+			let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg"
 	
-			return `data:${mimeType};base64,${imageContent}`;
+			return `data:${mimeType};base64,${imageContent}`
 		}
-		return "";
+		return null
 	}
 }
 
