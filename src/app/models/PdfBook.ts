@@ -104,7 +104,7 @@ export class PdfBook extends Book{
 			{ name: keys.pdfBookTablePageKey, value: this.page },
 			{ name: keys.pdfBookTableTotalProgressKey, value: this.totalProgress },
 			{ name: keys.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
-			{ name: keys.pdfBookTableZoomKey, value: this.zoom }
+			{ name: keys.pdfBookTableZoomKey, value: this.zoom, options: { local: true } }
       ]
 
 		await super.Save(pdfExt, properties);

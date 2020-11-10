@@ -1,21 +1,21 @@
-import { Property } from 'dav-npm';
-import { keys } from 'src/environments/keys';
-import { Book } from './Book';
-import { EpubBookmark } from './EpubBookmark';
+import { Property } from 'dav-npm'
+import { keys } from 'src/environments/keys'
+import { Book } from './Book'
+import { EpubBookmark } from './EpubBookmark'
 
-const epubExt = "epub";
+const epubExt = "epub"
 
 export class EpubBook extends Book{
-	public chapter: number;
-	public progress: number;
-	public totalProgress: number;
-	public chapterPercentages: number[];
-   public bookmarks: EpubBookmark[];
+	public chapter: number
+	public progress: number
+	public totalProgress: number
+	public chapterPercentages: number[]
+   public bookmarks: EpubBookmark[]
 
 	// Properties which are read from the epub file
-	public title: string;
-	public author: string;
-	public cover: string;
+	public title: string
+	public author: string
+	public cover: string
 
 	constructor(
 		file: Blob,
@@ -23,14 +23,15 @@ export class EpubBook extends Book{
 		chapter: number = 0,
 		progress: number = 0,
 		totalProgress: number = 0,
+		chapterPercentages: number[] = [],
       bookmarks: EpubBookmark[] = []
 	){
-		super(file, storeBook);
-		this.chapter = chapter;
-		this.progress = progress;
-		this.totalProgress = totalProgress;
-		this.chapterPercentages = [];
-      this.bookmarks = bookmarks;
+		super(file, storeBook)
+		this.chapter = chapter
+		this.progress = progress
+		this.totalProgress = totalProgress
+		this.chapterPercentages = chapterPercentages
+		this.bookmarks = bookmarks
 	}
 
 	public static async Create(file: File) : Promise<string>{
@@ -54,6 +55,7 @@ export class EpubBook extends Book{
 	public async SetChapterPercentages(chapterPercentages: number[]) {
 		if (this.chapterPercentages.length > 0) return
 		this.chapterPercentages = chapterPercentages
+		await this.Save()
 	}
    
    public async AddBookmark(name: string, chapter: number, progress: number) : Promise<string>{
@@ -87,6 +89,7 @@ export class EpubBook extends Book{
 			{ name: keys.epubBookTableChapterKey, value: this.chapter },
 			{ name: keys.epubBookTableProgressKey, value: this.progress },
 			{ name: keys.epubBookTableTotalProgressKey, value: this.totalProgress },
+			{ name: keys.epubBookTableChapterPercentagesKey, value: this.chapterPercentages.join(','), options: { local: true } },
 			{ name: keys.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
 		]
 

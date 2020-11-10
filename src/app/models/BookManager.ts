@@ -84,7 +84,16 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 
 	// Get the totalProgress
 	let totalProgress = bookTableObject.GetPropertyValue(keys.epubBookTableTotalProgressKey) as number
-	if(totalProgress == null) totalProgress = 0
+	if (totalProgress == null) totalProgress = 0
+	
+	// Get the chapterPercentages
+	let chapterPercentages: number[] = []
+	let chapterPercentagesString = bookTableObject.GetPropertyValue(keys.epubBookTableChapterPercentagesKey) as string
+	if (chapterPercentagesString) {
+		for (let chapterPercentage of chapterPercentagesString.split(',')) {
+			chapterPercentages.push(+chapterPercentage)
+		}
+	}
 
 	// Get the bookmarks
 	let bookmarks: EpubBookmark[] = []
@@ -96,7 +105,7 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 		}
 	}
 
-	let book = new EpubBook(file, storeBook, chapter, progress, totalProgress, bookmarks)
+	let book = new EpubBook(file, storeBook, chapter, progress, totalProgress, chapterPercentages, bookmarks)
 	book.uuid = bookTableObject.Uuid
 	return book
 }
