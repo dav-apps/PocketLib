@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import * as localforage from 'localforage';
-import { DavUser, ApiResponse, GetAllTableObjects } from 'dav-npm';
-import { ApiService } from './api-service';
-import { environment } from 'src/environments/environment';
-import { keys } from 'src/environments/keys';
-import * as locales from 'src/locales/locales';
-import { Book } from '../models/Book';
-import { GetAllBooks, GetBook } from '../models/BookManager';
-import { Settings } from '../models/Settings';
-import { PromiseHolder } from 'src/app/models/PromiseHolder';
+import { Injectable } from "@angular/core"
+import * as localforage from 'localforage'
+import { DavUser, ApiResponse, GetAllTableObjects } from 'dav-npm'
+import { ApiService } from './api-service'
+import { environment } from 'src/environments/environment'
+import { keys } from 'src/environments/keys'
+import * as locales from 'src/locales/locales'
+import { Book } from '../models/Book'
+import { GetAllBooks, GetBook } from '../models/BookManager'
+import { Settings } from '../models/Settings'
+import { PromiseHolder } from 'src/app/models/PromiseHolder'
 
-const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png";
-const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png";
+const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png"
+const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png"
 const defaultProfileImageUrl = "/assets/images/profile-image-placeholder.png"
 
 @Injectable()
@@ -23,7 +23,7 @@ export class DataService{
 	currentBook: Book = null;
 	darkTheme: boolean = false;
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
-	defaultAvatar: string = defaultProfileImageUrl;
+	defaultProfileImageUrl: string = defaultProfileImageUrl;
    settings: Settings;
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>();
 	settingsSyncPromiseHolder = new PromiseHolder<Settings>();

@@ -40,7 +40,7 @@ export class HorizontalAuthorListComponent{
 				firstName: author.first_name,
 				lastName: author.last_name,
 				profileImage: author.profile_image,
-				profileImageContent: author.profile_image ? GetAuthorProfileImageLink(author.uuid) : this.dataService.defaultAvatar,
+				profileImageContent: author.profile_image ? GetAuthorProfileImageLink(author.uuid) : this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profile_image_blurhash
 			})
 		}

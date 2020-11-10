@@ -46,7 +46,7 @@ export class AuthorProfileComponent{
 			file: boolean
 		}[]
 	}[] = [];
-	profileImageContent: string = this.dataService.defaultAvatar;
+	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	createCollectionDialogVisible: boolean = false;
 	createCollectionDialogName: string = "";
 	createCollectionDialogNameError: string = "";

@@ -57,7 +57,7 @@ export class StoreBookPageComponent{
 	bookStatus: string = ""
 	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
 	coverContent: string
-	authorProfileImageContent: string = this.dataService.defaultAvatar
+	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	showMobileLayout: boolean = false
 	addToLibraryButtonDisabled: boolean = false
 	davProRequiredDialogVisible: boolean = false
@@ -226,7 +226,7 @@ export class StoreBookPageComponent{
 			this.author.collections = response.data.collections
 			this.author.profileImage = response.data.profile_image
 			this.author.profileImageBlurhash = response.data.profile_image_blurhash
-			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultAvatar
+			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultProfileImageUrl
 		}
 	}
 
