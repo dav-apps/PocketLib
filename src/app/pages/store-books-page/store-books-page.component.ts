@@ -15,7 +15,9 @@ export class StoreBooksPageComponent{
 		title: string,
 		cover: boolean,
 		coverContent: string,
-		coverBlurhash: string
+		coverBlurhash: string,
+		coverWidth: number,
+		coverHeight: number
 	}[] = []
 	hoveredBookIndex: number = -1
 	
@@ -44,12 +46,31 @@ export class StoreBooksPageComponent{
 		})
 
 		for(let storeBook of getStoreBooksByCategoryResponse.data.books){
+			// Calculate the width and height
+			let width = 178
+			let height = 270
+
+			if (storeBook.cover_aspect_ratio != null) {
+				let parts = storeBook.cover_aspect_ratio.split(':')
+				let widthAspectRatio = +parts[0]
+				let heightAspectRatio = +parts[1]
+
+				if (widthAspectRatio == 1) {
+					// 1:2 -> 0.5:1
+					widthAspectRatio /= heightAspectRatio
+				}
+
+				width = Math.round(height * widthAspectRatio)
+			}
+
 			this.books.push({
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				cover: storeBook.cover,
 				coverContent: GetStoreBookCoverLink(storeBook.uuid),
-				coverBlurhash: storeBook.cover_blurhash
+				coverBlurhash: storeBook.cover_blurhash,
+				coverWidth: width,
+				coverHeight: height
 			})
 		}
 	}
