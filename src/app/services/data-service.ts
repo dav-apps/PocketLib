@@ -19,27 +19,26 @@ export class DataService{
    user: DavUser
 	locale: string = navigator.language
 	supportedLocale: string = "en"
-   navbarVisible: boolean = true;
-	books: Book[] = [];
-	currentBook: Book = null;
-	darkTheme: boolean = false;
-	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
-	defaultProfileImageUrl: string = defaultProfileImageUrl;
-   settings: Settings;
-	settingsLoadPromiseHolder = new PromiseHolder<Settings>();
-	settingsSyncPromiseHolder = new PromiseHolder<Settings>();
-   syncFinished: boolean = false;
-	userPromiseHolder = new PromiseHolder<DavUser>();
-	userAuthor: Author = null;
-	userAuthorPromiseHolder = new PromiseHolder<Author>();
-	adminAuthors: Author[] = [];
-	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>();
-	userIsAdmin: boolean = false;
-	supportedLanguages: {language: string, fullLanguage: string}[] = [];
-	sideNavOpened: boolean = false;
-	contentHeight: number = 200;
-	categories: Category[] = [];
-	categoriesPromiseHolder = new PromiseHolder();
+   navbarVisible: boolean = true
+	books: Book[] = []
+	currentBook: Book = null
+	darkTheme: boolean = false
+	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
+	defaultProfileImageUrl: string = defaultProfileImageUrl
+   settings: Settings
+	settingsLoadPromiseHolder = new PromiseHolder<Settings>()
+	settingsSyncPromiseHolder = new PromiseHolder<Settings>()
+   syncFinished: boolean = false
+	userPromiseHolder = new PromiseHolder<DavUser>()
+	userAuthor: Author = null
+	userAuthorPromiseHolder = new PromiseHolder<Author>()
+	adminAuthors: Author[] = []
+	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
+	userIsAdmin: boolean = false
+	sideNavOpened: boolean = false
+	contentHeight: number = 200
+	categories: Category[] = []
+	categoriesPromiseHolder = new PromiseHolder()
 
 	constructor(
 		private apiService: ApiService
@@ -50,7 +49,7 @@ export class DataService{
 		})
 
 		// Set the supported locale
-		if (this.locale == "de") {
+		if (this.locale.startsWith("de")) {
 			this.supportedLocale = "de"
 		} else {
 			this.supportedLocale = "en"
@@ -58,11 +57,6 @@ export class DataService{
 
 		// Set the supported languages
 		let languages = this.GetLocale().misc.languages
-		
-		this.supportedLanguages.push(
-			{language: "en", fullLanguage: languages.en},
-			{language: "de", fullLanguage: languages.de}
-		)
 	}
 	
 	async LoadAuthorOfUser(){
@@ -222,10 +216,10 @@ export class DataService{
    GetLocale(){
       let l = this.locale.toLowerCase();
 
-      if(l.includes("en")){            // en
+      if(l.startsWith("en")){            // en
          if(l == "en-gb")              return locales.enGB;
          else                          return locales.enUS;
-      }else if(l.includes("de")){      // de
+      }else if(l.startsWith("de")){      // de
 			if(l == "de-at")					return locales.deAT;
 			else if(l == "de-ch")			return locales.deCH;
 			else									return locales.deDE;

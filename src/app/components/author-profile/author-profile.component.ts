@@ -191,32 +191,33 @@ export class AuthorProfileComponent{
 				}
 			});
 
-			i++;
+			i++
 		}
 
 		if(this.bioLanguageDropdownOptions.length == 0){
-			this.bioMode = BioMode.None;
+			this.bioMode = BioMode.None
 
 			// Add default item
 			this.bioLanguageDropdownOptions.push({
 				key: 0,
 				text: this.locale.addYourBio
-			});
+			})
 
-			i++;
+			i++
 
 			// Add each supported language
-			for(let supportedLanguage of this.dataService.supportedLanguages){
+			let languages = this.dataService.GetLocale().misc.languages
+			for (let language of Object.keys(languages)) {
 				this.bioLanguageDropdownOptions.push({
 					key: i,
-					text: supportedLanguage.fullLanguage,
+					text: languages[language],
 					data: {
-						language: supportedLanguage.language,
+						language,
 						added: false
 					}
-				});
+				})
 
-				i++;
+				i++
 			}
 		}else{
 			// Add a divider and all possible languages to add
@@ -224,36 +225,37 @@ export class AuthorProfileComponent{
 				key: "header",
 				text: this.locale.additionalLanguages,
 				itemType: DropdownMenuItemType.Header
-			}];
+			}]
 
-			for(let supportedLanguage of this.dataService.supportedLanguages){
+			let languages = this.dataService.GetLocale().misc.languages
+			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
-				let index = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == supportedLanguage.language);
+				let index = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == language)
 
-				if(index == -1){
+				if (index == -1) {
 					// There is no bio in that language
 					// Add an option to add that language
 					newOptions.push({
 						key: i,
-						text: supportedLanguage.fullLanguage,
+						text: languages[language],
 						data: {
-							language: supportedLanguage.language,
+							language,
 							added: false
 						}
-					});
+					})
 
-					i++;
+					i++
 				}
 			}
 
 			if(newOptions.length > 1){
 				for(let option of newOptions){
-					this.bioLanguageDropdownOptions.push(option);
+					this.bioLanguageDropdownOptions.push(option)
 				}
 			}
 
 			// Select and show the first language
-			this.bioMode = BioMode.Normal;
+			this.bioMode = BioMode.Normal
 		}
 	}
 
