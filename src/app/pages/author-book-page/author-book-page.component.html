@@ -38,12 +38,12 @@
 	
 			<!-- Description -->
 			<div style="grid-column: 1; grid-row: 2;">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px; white-space: pre-line">{{ locale.description }}: </p>
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
 	
 			<div style="grid-column: 2; grid-row: 2; min-width: 300px">
 				<p class="text-color"
-					style="margin-top: 3px; max-width: 400px"
+					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
 					*ngIf="book.description && !editDescription">
 					{{ book.description }}
 				</p>

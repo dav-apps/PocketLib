@@ -227,7 +227,12 @@ const enDefaults = {
 	storePage: {
 		startPage: "Start",
 		categories: "Categories",
-		languages: "Languages"
+		languages: "Languages",
+		selectLanguagesDialog: {
+			title: "Select languages",
+			description: "Select the languages for which books should be displayed.",
+			close: "Close"
+		}
 	},
 	storeBookPage: {
 		addToLibrary: "Add to your library",
@@ -569,7 +574,12 @@ const deDefaults = {
 	storePage: {
 		startPage: "Startseite",
 		categories: "Kategorien",
-		languages: "Sprachen"
+		languages: "Sprachen",
+		selectLanguagesDialog: {
+			title: "Sprachen auswählen",
+			description: "Wähle die Sprachen, für die Bücher angezeigt werden sollen.",
+			close: "Schließen"
+		}
 	},
 	storeBookPage: {
 		addToLibrary: "Zur Bibliothek hinzufügen",
