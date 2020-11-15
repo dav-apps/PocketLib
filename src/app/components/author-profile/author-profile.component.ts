@@ -107,7 +107,7 @@ export class AuthorProfileComponent{
 
 		// Get the appropriate language of each collection
 		for(let collection of this.author.collections){
-			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
+			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
 
 			this.collections.push({
 				uuid: collection.uuid,
@@ -116,7 +116,7 @@ export class AuthorProfileComponent{
 			})
 		}
 
-		this.SetupBioLanguageDropdown();
+		this.SetupBioLanguageDropdown()
 	}
 
 	ngAfterViewInit(){
@@ -158,8 +158,8 @@ export class AuthorProfileComponent{
 	}
 
 	SelectDefaultBio() {
-		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.author.bios);
-		if (this.bioLanguageDropdownSelectedIndex < 0) this.bioLanguageDropdownSelectedIndex = 0;
+		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.supportedLocale, this.author.bios)
+		if (this.bioLanguageDropdownSelectedIndex < 0) this.bioLanguageDropdownSelectedIndex = 0
 	}
 
 	NavigateToCollection(uuid: string) {
@@ -372,7 +372,7 @@ export class AuthorProfileComponent{
 			jwt: this.dataService.user.JWT,
 			author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
 			name: this.createCollectionDialogName,
-			language: this.dataService.locale.slice(0, 2)
+			language: this.dataService.supportedLocale
 		})
 
 		if(response.status == 201){
@@ -458,8 +458,8 @@ export class AuthorProfileComponent{
 		let response: ApiResponse<any> = await this.apiService.GetAuthor({
 			uuid: this.uuid,
 			books: true,
-			language: this.dataService.locale.slice(0, 2)
-		});
+			language: this.dataService.supportedLocale
+		})
 
 		if(response.status == 200){
 			this.author = {

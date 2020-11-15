@@ -82,7 +82,7 @@ export class CollectionViewComponent{
 			}
 
 			// Get the appropriate collection name
-			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names)
+			let i = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
 			if(i != -1) this.collectionName = this.collection.names[i]
 
 			for (let responseBook of getCollectionResponse.data.books) {
@@ -210,7 +210,7 @@ export class CollectionViewComponent{
 				this.collection.names.push(collectionName);
 
 				// Set the title of the name for the current language was just added
-				let j = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), this.collection.names);
+				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names);
 				if(j != -1) this.collectionName = this.collection.names[j];
 			}else{
 				// Update the name in the collection

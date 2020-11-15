@@ -79,7 +79,7 @@ export class NewBookPageComponent{
 
 	//#region Description + Language variables
 	description: string = "";
-	language: string = this.dataService.locale.startsWith("de") ? "de" : "en";
+	language: string = this.dataService.supportedLocale
 	//#endregion
 
 	//#region Categories variables
@@ -150,7 +150,7 @@ export class NewBookPageComponent{
 		// Get the collections
 		for (let collection of this.author.collections) {
 			// Find the correct name
-			let i = FindAppropriateLanguage(this.dataService.locale.slice(0, 2), collection.names);
+			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
 
 			// Find a cover
 			let cover: boolean = false;

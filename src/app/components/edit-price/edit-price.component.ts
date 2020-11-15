@@ -63,7 +63,7 @@ export class EditPriceComponent{
 		} else {
 			this.formattedPrice = (price / 100).toFixed(2) + " €";
 
-			if (this.dataService.locale.slice(0, 2) == "de") {
+			if (this.dataService.supportedLocale == "de") {
 				this.formattedPrice = this.formattedPrice.replace('.', ',');
 			}
 		}
