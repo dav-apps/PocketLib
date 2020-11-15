@@ -435,57 +435,57 @@ export class ApiService{
 
 	async GetStoreBooksByCategory(params: {
 		key: string,
-		language: string
+		languages?: string[]
 	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let parameters = {};
-			if(params.language) parameters["language"] = params.language;
+			let parameters = {}
+			if(params.languages) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${params.key}`,
 				params: parameters
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetLatestStoreBooks(params: {
-		language: string
+		languages?: string[]
 	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let parameters = {};
-			if(params.language) parameters["language"] = params.language;
+			if(params.languages) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/latest`,
 				params: parameters
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetStoreBooksInReview(params: {

@@ -42,7 +42,7 @@ export class StoreBooksPageComponent{
 		this.books = []
 		let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
 			key,
-			language: this.dataService.locale.slice(0, 2)
+			languages: await this.dataService.GetStoreLanguages()
 		})
 
 		for(let storeBook of getStoreBooksByCategoryResponse.data.books){

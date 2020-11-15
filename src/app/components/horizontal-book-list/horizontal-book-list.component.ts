@@ -33,7 +33,7 @@ export class HorizontalBookListComponent{
 	async ngOnInit(){
 		// Get the latest store books
 		this.books = []
-		let response: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({language: this.dataService.locale.slice(0, 2)})
+		let response: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({languages: await this.dataService.GetStoreLanguages()})
 		if (response.status != 200) return
 		
 		for (let storeBook of response.data.books) {
