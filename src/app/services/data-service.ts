@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core"
+import { Injectable } from '@angular/core'
 import * as localforage from 'localforage'
 import { DavUser, ApiResponse, GetAllTableObjects } from 'dav-npm'
 import { ApiService } from './api-service'
@@ -16,8 +16,9 @@ const defaultProfileImageUrl = "/assets/images/profile-image-placeholder.png"
 
 @Injectable()
 export class DataService{
-   user: DavUser;
-	locale: string = navigator.language;
+   user: DavUser
+	locale: string = navigator.language
+	supportedLocale: string = "en"
    navbarVisible: boolean = true;
 	books: Book[] = [];
 	currentBook: Book = null;
@@ -44,12 +45,19 @@ export class DataService{
 		private apiService: ApiService
 	){
 		this.user = new DavUser(() => {
-			this.userIsAdmin = environment.admins.includes(this.user.Id);
-			this.userPromiseHolder.Resolve(this.user);
-		});
+			this.userIsAdmin = environment.admins.includes(this.user.Id)
+			this.userPromiseHolder.Resolve(this.user)
+		})
+
+		// Set the supported locale
+		if (this.locale == "de") {
+			this.supportedLocale = "de"
+		} else {
+			this.supportedLocale = "en"
+		}
 
 		// Set the supported languages
-		let languages = this.GetLocale().misc.languages;
+		let languages = this.GetLocale().misc.languages
 		
 		this.supportedLanguages.push(
 			{language: "en", fullLanguage: languages.en},
@@ -265,22 +273,31 @@ export class DataService{
 	
 	//#region Settings
 	async SetTheme(value: string){
-		await localforage.setItem(keys.settingsThemeKey, value);
+		await localforage.setItem(keys.settingsThemeKey, value)
 	}
 
-	async GetTheme() : Promise<string>{
-		var value = await localforage.getItem(keys.settingsThemeKey) as string;
-		return value ? value : keys.settingsThemeDefault;
+	async GetTheme(): Promise<string>{
+		var value = await localforage.getItem(keys.settingsThemeKey) as string
+		return value != null ? value : keys.settingsThemeDefault
    }
    
    async SetOpenLastReadBook(value: boolean){
-      await localforage.setItem(keys.settingsOpenLastReadBookKey, value);
+      await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
    }
 
-   async GetOpenLastReadBook() : Promise<boolean>{
-      var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean;
-      return value != null ? value : keys.settingsOpenLastReadBookDefault;
-   }
+   async GetOpenLastReadBook(): Promise<boolean>{
+      var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean
+      return value != null ? value : keys.settingsOpenLastReadBookDefault
+	}
+	
+	async SetStoreLanguages(languages: string[]) {
+		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
+	}
+
+	async GetStoreLanguages(): Promise<string[]>{
+		var value = await localforage.getItem(keys.settingsStoreLanguagesKey) as string[]
+		return value != null ? value : [this.supportedLocale]
+	}
 	//#endregion
 }
 

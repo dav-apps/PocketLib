@@ -30,6 +30,7 @@ export const keys = {
 	// Settings keys
 	settingsThemeKey: "settings-theme",
 	settingsOpenLastReadBookKey: "settings-openLastReadBook",
+	settingsStoreLanguagesKey: "settings-storeLanguages",
 	// Settings default
 	settingsThemeDefault: "system",
 	settingsOpenLastReadBookDefault: true,

@@ -226,7 +226,8 @@ const enDefaults = {
 	},
 	storePage: {
 		startPage: "Start",
-		categories: "Categories"
+		categories: "Categories",
+		languages: "Languages"
 	},
 	storeBookPage: {
 		addToLibrary: "Add to your library",
@@ -567,7 +568,8 @@ const deDefaults = {
 	},
 	storePage: {
 		startPage: "Startseite",
-		categories: "Kategorien"
+		categories: "Kategorien",
+		languages: "Sprachen"
 	},
 	storeBookPage: {
 		addToLibrary: "Zur Bibliothek hinzufügen",
