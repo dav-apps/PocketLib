@@ -1,45 +1,45 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IDropdownOption } from 'office-ui-fabric-react';
-import { ApiResponse } from 'dav-npm';
-import { DataService } from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { enUS } from 'src/locales/locales';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { IDropdownOption } from 'office-ui-fabric-react'
+import { ApiResponse } from 'dav-npm'
+import { DataService } from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-edit-collection-names',
 	templateUrl: './edit-collection-names.component.html'
 })
 export class EditCollectionNamesComponent{
-	locale = enUS.editCollectionNames;
-	@Input() collectionNames: CollectionName[] = [];
-	@Input() supportedLanguages: {language: string, fullLanguage: string}[] = [];
-	@Input() uuid: string;
-	@Output() update = new EventEmitter();
-	@Output() showAddLanguageButton = new EventEmitter();
-	@Output() hideAddLanguageButton = new EventEmitter();
-	addLanguageSelectedKey: string = "default";
-	addLanguageOptions: IDropdownOption[] = [];
+	locale = enUS.editCollectionNames
+	@Input() collectionNames: CollectionName[] = []
+	@Input() uuid: string
+	@Output() update = new EventEmitter()
+	@Output() showAddLanguageButton = new EventEmitter()
+	@Output() hideAddLanguageButton = new EventEmitter()
+	addLanguageSelectedKey: string = "default"
+	addLanguageOptions: IDropdownOption[] = []
 
 	constructor(
 		private dataService: DataService,
 		private apiService: ApiService
 	){
-		this.locale = this.dataService.GetLocale().editCollectionNames;
+		this.locale = this.dataService.GetLocale().editCollectionNames
 	}
 
 	Init(){
 		this.addLanguageOptions = [{
 			key: "default",
 			text: this.locale.selectLanguage
-		}];
+		}]
 
-		for(let lang of this.supportedLanguages){
-			if(this.collectionNames.findIndex(name => name.language == lang.language) == -1){
+		let languages = this.dataService.GetLocale().misc.languages
+		for (let language of Object.keys(languages)) {
+			if (this.collectionNames.findIndex(name => name.language == language) == -1) {
 				// Add the language as an option to add
 				this.addLanguageOptions.push({
-					key: lang.language,
-					text: lang.fullLanguage
-				});
+					key: language,
+					text: languages[language]
+				})
 			}
 		}
 	}
