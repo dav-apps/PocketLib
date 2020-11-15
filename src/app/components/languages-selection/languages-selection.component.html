@@ -1,0 +1,7 @@
+<fab-checkbox
+	[label]="lang.name"
+	(onChange)="ToggleLanguage(lang.code)"
+	[checked]="lang.checked"
+	[disabled]="lang.disabled"
+	*ngFor="let lang of languages">
+</fab-checkbox>
