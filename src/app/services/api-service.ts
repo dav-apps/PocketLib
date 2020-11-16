@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import * as axios from 'axios';
-import { ApiResponse } from 'dav-npm';
-import { environment } from 'src/environments/environment';
+import { Injectable } from '@angular/core'
+import * as axios from 'axios'
+import { ApiResponse } from 'dav-npm'
+import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class ApiService{
@@ -10,13 +10,13 @@ export class ApiService{
 		jwt: string,
 		firstName: string,
 		lastName: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if(params.firstName) data["first_name"] = params.firstName;
-			if(params.lastName) data["last_name"] = params.lastName;
+			let data = {}
+			if(params.firstName != null) data["first_name"] = params.firstName
+			if(params.lastName != null) data["last_name"] = params.lastName
 
 			let response = await axios.default({
 				method: 'post',
@@ -26,24 +26,24 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 	
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetAuthorOfUser(params: {
 		jwt: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -52,71 +52,71 @@ export class ApiService{
 				headers: {
 					Authorization: params.jwt
 				}
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetAuthor(params: {
 		uuid: string,
 		books?: boolean,
 		language?: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let parameters = {};
-			if(params.books){
-				parameters["books"] = true;
-				parameters["language"] = params.language || "en";
+			let parameters = {}
+			if(params.books != null){
+				parameters["books"] = true
+				parameters["language"] = params.language || "en"
 			}
 
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
 				params: parameters
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
-	async GetLatestAuthors() : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	async GetLatestAuthors(): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			var response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors/latest`
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -125,12 +125,12 @@ export class ApiService{
 		jwt: string,
 		language: string,
 		bio: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = { status: -1, data: {} };
 
 		try{
-			let data = {};
-			if(params.bio) data["bio"] = params.bio;
+			let data = {}
+			if (params.bio != null) data["bio"] = params.bio
 
 			let response = await axios.default({
 				method: 'put',
@@ -140,18 +140,18 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async SetBioOfAuthor(params: {
@@ -159,12 +159,12 @@ export class ApiService{
 		uuid: string,
 		language: string,
 		bio: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if(params.bio) data["bio"] = params.bio;
+			let data = {}
+			if(params.bio != null) data["bio"] = params.bio
 
 			let response = await axios.default({
 				method: 'put',
@@ -174,18 +174,18 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -194,8 +194,8 @@ export class ApiService{
 		jwt: string,
 		type: string,
 		file: any
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -206,18 +206,18 @@ export class ApiService{
 					'Content-Type': params.type
 				},
 				data: params.file
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async SetProfileImageOfAuthor(params: {
@@ -225,8 +225,8 @@ export class ApiService{
 		uuid: string,
 		type: string,
 		file: any
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -237,18 +237,18 @@ export class ApiService{
 					'Content-Type': params.type
 				},
 				data: params.file
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -258,14 +258,14 @@ export class ApiService{
 		author?: string,
 		name: string,
 		language: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if(params.name) data["name"] = params.name;
-			if(params.language) data["language"] = params.language;
-			if(params.author) data["author"] = params.author;
+			let data = {}
+			if(params.name != null) data["name"] = params.name
+			if(params.language != null) data["language"] = params.language
+			if(params.author != null) data["author"] = params.author
 
 			let response = await axios.default({
 				method: 'post',
@@ -275,25 +275,25 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetStoreBookCollection(params: {
 		jwt?: string,
 		uuid: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let options: axios.AxiosRequestConfig = {
@@ -301,24 +301,24 @@ export class ApiService{
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}`
 			}
 
-			if(params.jwt){
+			if(params.jwt != null){
 				options.headers = {
 					Authorization: params.jwt
 				}
 			}
 
-			let response = await axios.default(options);
+			let response = await axios.default(options)
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -328,12 +328,12 @@ export class ApiService{
 		uuid: string,
 		language: string,
 		name: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if(params.name) data["name"] = params.name;
+			let data = {}
+			if(params.name != null) data["name"] = params.name
 
 			let response = await axios.default({
 				method: 'put',
@@ -343,18 +343,18 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -367,17 +367,17 @@ export class ApiService{
 		language: string,
 		price?: number,
 		categories?: string[]
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if (params.collection) data["collection"] = params.collection;
-			if (params.title) data["title"] = params.title;
-			if (params.description) data["description"] = params.description;
-			if (params.language) data["language"] = params.language;
-			if (params.price) data["price"] = params.price;
-			if (params.categories) data["categories"] = params.categories;
+			let data = {}
+			if (params.collection != null) data["collection"] = params.collection
+			if (params.title != null) data["title"] = params.title
+			if (params.description != null) data["description"] = params.description
+			if (params.language != null) data["language"] = params.language
+			if (params.price != null) data["price"] = params.price
+			if (params.categories != null) data["categories"] = params.categories
 
 			let response = await axios.default({
 				method: 'post',
@@ -387,25 +387,25 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetStoreBook(params: {
 		jwt?: string,
 		uuid: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let options: axios.AxiosRequestConfig = {
@@ -413,35 +413,35 @@ export class ApiService{
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`
 			}
 
-			if(params.jwt){
+			if(params.jwt != null){
 				options.headers = {
 					Authorization: params.jwt
 				}
 			}
 
-			let response = await axios.default(options);
+			let response = await axios.default(options)
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async GetStoreBooksByCategory(params: {
 		key: string,
 		languages?: string[]
-	}) : Promise<ApiResponse<any>>{
+	}): Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let parameters = {}
-			if(params.languages) parameters["languages"] = params.languages.join(',')
+			if(params.languages != null) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
@@ -463,12 +463,12 @@ export class ApiService{
 
 	async GetLatestStoreBooks(params: {
 		languages?: string[]
-	}) : Promise<ApiResponse<any>>{
+	}): Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let parameters = {};
-			if(params.languages) parameters["languages"] = params.languages.join(',')
+			if(params.languages != null) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
@@ -490,8 +490,8 @@ export class ApiService{
 
 	async GetStoreBooksInReview(params: {
 		jwt: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -500,18 +500,18 @@ export class ApiService{
 				headers: {
 					Authorization: params.jwt
 				}
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	async UpdateStoreBook(params: {
@@ -524,18 +524,18 @@ export class ApiService{
 		published?: boolean,
 		status?: string,
 		categories?: string[]
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if (params.title) data["title"] = params.title;
-			if (params.description) data["description"] = params.description;
-			if (params.language) data["language"] = params.language;
-			if (params.price != null) data["price"] = params.price;
-			if (params.published != null) data["published"] = params.published;
-			if (params.status) data["status"] = params.status;
-			if (params.categories) data["categories"] = params.categories;
+			let data = {}
+			if (params.title != null) data["title"] = params.title
+			if (params.description != null) data["description"] = params.description
+			if (params.language != null) data["language"] = params.language
+			if (params.price != null) data["price"] = params.price
+			if (params.published != null) data["published"] = params.published
+			if (params.status != null) data["status"] = params.status
+			if (params.categories != null) data["categories"] = params.categories
 
 			let response = await axios.default({
 				method: 'put',
@@ -545,18 +545,18 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -566,8 +566,8 @@ export class ApiService{
 		uuid: string,
 		type: string,
 		file: any
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -578,18 +578,18 @@ export class ApiService{
 					'Content-Type': params.type
 				},
 				data: params.file
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -599,8 +599,8 @@ export class ApiService{
 		uuid: string,
 		type: string,
 		file: any
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
@@ -611,18 +611,18 @@ export class ApiService{
 					'Content-Type': params.type
 				},
 				data: params.file
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
@@ -630,12 +630,12 @@ export class ApiService{
 	async CreateBook(params: {
 		jwt: string,
 		storeBook: string
-	}) : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	}): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
-			let data = {};
-			if(params.storeBook) data["store_book"] = params.storeBook;
+			let data = {}
+			if(params.storeBook != null) data["store_book"] = params.storeBook
 
 			let response = await axios.default({
 				method: 'post',
@@ -645,41 +645,41 @@ export class ApiService{
 					'Content-Type': 'application/json'
 				},
 				data
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 
 	//#region Category
-	async GetCategories() : Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}};
+	async GetCategories(): Promise<ApiResponse<any>>{
+		var result: ApiResponse<any> = {status: -1, data: {}}
 
 		try{
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/categories`
-			});
+			})
 
-			result.status = response.status;
-			result.data = response.data;
+			result.status = response.status
+			result.data = response.data
 		}catch(error){
 			if(error.response){
-				result.status = error.response.status;
-				result.data = error.response.data;
+				result.status = error.response.status
+				result.data = error.response.data
 			}
 		}
 
-		return result;
+		return result
 	}
 	//#endregion
 }
