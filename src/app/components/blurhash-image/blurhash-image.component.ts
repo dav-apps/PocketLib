@@ -25,6 +25,7 @@ export class BlurhashImageComponent{
 	@Input() shadowOnHover: boolean = false	// Show shadow-sm on the image and shadow on the image on hover
 	@Input() rounded: boolean = false			// Show the image as a circle
 	@Input() cursor: boolean = false
+	@Input() loading: boolean = false			// Show the opacity on the image and the spinner if true
 	@ViewChild('image', { static: true }) image: ElementRef<HTMLImageElement>
 
 	classes: string[] = []

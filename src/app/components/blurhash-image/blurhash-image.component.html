@@ -1,8 +1,19 @@
-<img
-	#image
-	[ngClass]="classes"
-	[style.transition.s]="0.12"
-	[style.margin]="margin"
-	[height]="height"
-	(mouseover)="SetHover(true)"
-	(mouseout)="SetHover(false)">
+<div style="position: relative; display: inline-block">
+	<div
+		style="position: absolute"
+		[style.marginTop.px]="(height / 2) - 10"
+		[style.marginLeft.px]="(width / 2) - 10"
+		*ngIf="loading">
+		<fab-spinner></fab-spinner>
+	</div>
+
+	<img
+		#image
+		[ngClass]="classes"
+		[style.transition.s]="0.12"
+		[style.margin]="margin"
+		[style.opacity]="loading ? 0.4 : 1"
+		[height]="height"
+		(mouseover)="SetHover(true)"
+		(mouseout)="SetHover(false)">
+</div>
