@@ -35,8 +35,9 @@
 			</fab-text-field>
 		</div>
 	
-		<div class="mt-3">
-			<fab-primary-button (click)="Submit()">{{ locale.create }}</fab-primary-button>
+		<div class="d-flex mt-3">
+			<fab-primary-button (click)="Submit()" [disabled]="loading">{{ locale.create }}</fab-primary-button>
+			<div style="margin-top: 8px; margin-left: 14px" *ngIf="loading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
 		</div>
 	</div>
 </div>

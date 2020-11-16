@@ -1,43 +1,46 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { MessageBarType } from 'office-ui-fabric-react';
-import { ApiResponse } from 'dav-npm';
-import { DataService } from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { enUS } from 'src/locales/locales';
+import { Component } from '@angular/core'
+import { Router } from '@angular/router'
+import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
+import { ApiResponse } from 'dav-npm'
+import { DataService } from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-author-setup-page',
 	templateUrl: './author-setup-page.component.html'
 })
 export class AuthorSetupPageComponent{
-	locale = enUS.authorSetupPage;
-	firstName: string = "";
-	lastName: string = "";
-	generalError: string = "";
-	firstNameError: string = "";
-	lastNameError: string = "";
-	messageBarType: MessageBarType = MessageBarType.error;
+	locale = enUS.authorSetupPage
+	firstName: string = ""
+	lastName: string = ""
+	generalError: string = ""
+	firstNameError: string = ""
+	lastNameError: string = ""
+	loading: boolean = false
+	messageBarType: MessageBarType = MessageBarType.error
+	spinnerSize: SpinnerSize = SpinnerSize.small
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router
 	){
-		this.locale = this.dataService.GetLocale().authorSetupPage;
+		this.locale = this.dataService.GetLocale().authorSetupPage
 	}
 
 	async ngOnInit(){
 		// Redirect back to the author page if the user is already an author
 		if(await this.dataService.userAuthorPromiseHolder.AwaitResult()){
-			this.router.navigate(["author"]);
+			this.router.navigate(["author"])
 		}
 	}
 
 	async Submit(){
-		this.generalError = "";
-		this.firstNameError = "";
-		this.lastNameError = "";
+		this.generalError = ""
+		this.firstNameError = ""
+		this.lastNameError = ""
+		this.loading = true
 
 		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
 			jwt: this.dataService.user.JWT,
@@ -56,34 +59,36 @@ export class AuthorSetupPageComponent{
 				profileImage: false,
 				profileImageBlurhash: null
 			}
-			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor);
+			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor)
 
 			// Redirect to the author page
-			this.router.navigate(['/author']);
-		}else{
+			this.router.navigate(['/author'])
+		} else {
+			this.loading = false
+
 			for(let error of response.data.errors){
 				switch (error.code) {
 					case 2102:	// Missing field: first_name
-						this.firstNameError = this.locale.errors.firstNameMissing;
-						break;
+						this.firstNameError = this.locale.errors.firstNameMissing
+						break
 					case 2103:	// Missing field: last_name
-						this.lastNameError = this.locale.errors.lastNameMissing;
-						break;
+						this.lastNameError = this.locale.errors.lastNameMissing
+						break
 					case 2301:	// Field too short: first_name
-						this.firstNameError = this.locale.errors.firstNameTooShort;
-						break;
+						this.firstNameError = this.locale.errors.firstNameTooShort
+						break
 					case 2302:	// Field too short: last_name
-						this.lastNameError = this.locale.errors.lastNameTooShort;
-						break;
+						this.lastNameError = this.locale.errors.lastNameTooShort
+						break
 					case 2401:	// Field too long: first_name
-						this.firstNameError = this.locale.errors.firstNameTooLong;
-						break;
+						this.firstNameError = this.locale.errors.firstNameTooLong
+						break
 					case 2402:	// Field too long: last_name
-						this.lastNameError = this.locale.errors.lastNameTooLong;
-						break;
+						this.lastNameError = this.locale.errors.lastNameTooLong
+						break
 					default:		// Unexpected error
-						this.generalError = this.locale.errors.unexpectedError;
-						break;
+						this.generalError = this.locale.errors.unexpectedError
+						break
 				}
 			}
 		}
