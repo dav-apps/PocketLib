@@ -34,21 +34,22 @@ const pdfType = "application/pdf";
 	]
 })
 export class LibraryPageComponent{
-	locale = enUS.libraryPage;
-	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef;
-	contextMenuVisible: boolean = false;
-	contextMenuPositionX: number = 0;
-	contextMenuPositionY: number = 0;
-	selectedBook: Book;
-	showRenameBookOption: boolean = false;	// If the option in the context menu to rename the book is visible. Only for PdfBook
-   hoveredBookIndex: number = -1;			// The currently hovered book, for showing the shadow
-	addBookHover: boolean = false;			// Indicator for if the mouse is over the add book card
-	discoverBooksHover: boolean = false;	// Indicator for if the mouse is over the discover books card
-	renameBookDialogVisible: boolean = false;
-	renameBookDialogTitle: string = "";
-	renameBookDialogError: string = "";
-	removeBookDialogVisible: boolean = false;
-	loginToAccessBookDialogVisible: boolean = false;
+	locale = enUS.libraryPage
+	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef
+	contextMenuVisible: boolean = false
+	contextMenuPositionX: number = 0
+	contextMenuPositionY: number = 0
+	selectedBook: Book
+	showRenameBookOption: boolean = false		// If the option in the context menu to rename the book is visible. Only for PdfBook
+	hoveredBookIndex: number = -1					// The currently hovered book, for showing the shadow
+	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
+	addBookHover: boolean = false					// Indicator for if the mouse is hovering the add book card
+	goToAuthorPageHover: boolean = false		// Indicator for if the mouse is hovering the card for going to the author page
+	renameBookDialogVisible: boolean = false
+	renameBookDialogTitle: string = ""
+	renameBookDialogError: string = ""
+	removeBookDialogVisible: boolean = false
+	loginToAccessBookDialogVisible: boolean = false
 
 	renameBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.renameBookDialog.title
@@ -108,7 +109,11 @@ export class LibraryPageComponent{
 	}
 
 	NavigateToStorePage() {
-		this.router.navigate(['store']);
+		this.router.navigate(['store'])
+	}
+
+	NavigateToAuthorPage() {
+		this.router.navigate(['author'])
 	}
    
    async ShowBook(book: Book){

@@ -5,6 +5,7 @@ const enDefaults = {
 		libraryEmpty: "Your library is currently empty...",
 		discoverBooks: "Discover books in the PocketLib Store",
 		addFile: "Open a local file",
+		goToAuthorPage: "Go to your author profile",
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
 		renameBookDialog: {
@@ -352,6 +353,7 @@ const deDefaults = {
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addFile: "Öffne eine lokale Datei",
+		goToAuthorPage: "Gehe zu deinem Autor-Profil",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
 		renameBookDialog: {
