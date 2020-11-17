@@ -24,13 +24,14 @@
 						[blurhash]="book.coverBlurhash"
 						height="200"
 						width="140"
-						>
+						[loading]="coverLoading">
 					</pocketlib-blurhash-image>
 				</div>
 	
 				<fab-primary-button 
 					ngxFilePicker
 					accept="image/png,image/jpeg"
+					[disabled]="coverLoading"
 					(filePick)="CoverUpload($event)">
 					{{ locale.uploadCover }}
 				</fab-primary-button>
@@ -59,8 +60,8 @@
 					*ngIf="editDescription">
 				</fab-text-field>
 				
-				<fab-primary-button (click)="EditDescription()">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
-				<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription">{{ locale.cancel }}</fab-default-button>
+				<fab-primary-button (click)="EditDescription()" [disabled]="descriptionLoading">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
+				<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription" [disabled]="descriptionLoading">{{ locale.cancel }}</fab-default-button>
 			</div>
 	
 			<!-- Language -->
@@ -124,13 +125,18 @@
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
 
-				<fab-primary-button
-					ngxFilePicker
-					accept="application/epub+zip,application/pdf"
-					(filePick)="BookFileUpload($event)"
-					*ngIf="book.status == 0 || book.status == 1">
-					{{ locale.uploadBookFile }}
-				</fab-primary-button>
+				<div class="d-flex">
+					<fab-primary-button
+						ngxFilePicker
+						accept="application/epub+zip,application/pdf"
+						[disabled]="bookFileLoading"
+						(filePick)="BookFileUpload($event)"
+						*ngIf="book.status == 0 || book.status == 1">
+						{{ locale.uploadBookFile }}
+					</fab-primary-button>
+
+					<div style="margin-top: 8px; margin-left: 14px" *ngIf="bookFileLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+				</div>
 			</div>
 
 			<!-- Status -->
@@ -141,17 +147,29 @@
 			<div style="grid-column: 2; grid-row: 7;">
 				<div *ngIf="book.status == 0 || book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
-					<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description">{{ locale.publish }}</fab-primary-button>
+
+					<div class="d-flex">
+						<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading">{{ locale.publish }}</fab-primary-button>
+						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+					</div>
 				</div>
 
 				<div *ngIf="book.status == 1">
 					<p class="text-color">{{ locale.inReview }}</p>
-					<fab-primary-button (onClick)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+
+					<div class="d-flex">
+						<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
+						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+					</div>
 				</div>
 
 				<div *ngIf="book.status == 2">
 					<p class="text-color">{{ locale.published }}</p>
-					<fab-primary-button (onClick)="PublishOrUnpublishBook(false)">{{ locale.unpublish }}</fab-primary-button>
+
+					<div class="d-flex">
+						<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
+						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,18 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { ReadFile } from 'ngx-file-helpers';
-import { ApiResponse } from 'dav-npm';
+import { Component, ViewChild } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
+import { IButtonStyles, IDialogContentProps, SpinnerSize } from 'office-ui-fabric-react'
+import { ReadFile } from 'ngx-file-helpers'
+import { ApiResponse } from 'dav-npm'
 import {
 	DataService,
 	BookStatus,
 	GetBookStatusByString,
 	GetStoreBookCoverLink
-} from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
-import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
-import { enUS } from 'src/locales/locales';
+} from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
+import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-author-book-page',
@@ -51,13 +51,18 @@ export class AuthorBookPageComponent{
 	editDescription: boolean = false
 	newDescription: string = ""
 	newDescriptionError: string = ""
+	descriptionLoading: boolean = false
 	updateLanguage: boolean = false
 	coverContent: string
+	coverLoading: boolean = false
 	bookFileUploaded: boolean = false
+	bookFileLoading: boolean = false
 	publishingOrUnpublishing: boolean = false
+	statusLoading: boolean = false
 	editPrice: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
 
+	spinnerSize: SpinnerSize = SpinnerSize.small
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
 			marginLeft: 10
@@ -206,7 +211,8 @@ export class AuthorBookPageComponent{
 
 	async EditDescription(){
 		if(this.editDescription){
-			this.newDescriptionError = "";
+			this.newDescriptionError = ""
+			this.descriptionLoading = true
 
 			//	Save the new description on the server
 			this.UpdateStoreBookResponse(
@@ -271,35 +277,36 @@ export class AuthorBookPageComponent{
 		)
 	}
 
-	async CoverUpload(file: ReadFile){
+	async CoverUpload(file: ReadFile) {
 		// Get the content of the image file
 		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
-			let reader = new FileReader();
+			let reader = new FileReader()
 			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer);
-			});
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
-		});
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
 
-		let imageContent = await readPromise;
+		let imageContent = await readPromise
 
-		let image = new Image();
-		let imageHeight = 0;
-		let imageWidth = 0;
+		let image = new Image()
+		let imageHeight = 0
+		let imageWidth = 0
 
 		let imageLoadPromise: Promise<null> = new Promise((resolve) => {
 			image.onload = () => {
-				imageHeight = image.height;
-				imageWidth = image.width;
-				resolve();
+				imageHeight = image.height
+				imageWidth = image.width
+				resolve()
 			}
-		});
+		})
 
-		image.src = file.content;
-		await imageLoadPromise;
+		image.src = file.content
+		await imageLoadPromise
 
 		// TODO: Validate the image dimensions
-		this.coverContent = file.content;
+		this.coverContent = file.content
+		this.coverLoading = true
 
 		// Upload the image
 		await this.apiService.SetStoreBookCover({
@@ -308,18 +315,21 @@ export class AuthorBookPageComponent{
 			type: file.type,
 			file: imageContent
 		})
+
+		this.coverLoading = false
 	}
 
 	async BookFileUpload(file: ReadFile){
 		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
-			let reader = new FileReader();
+			let reader = new FileReader()
 			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer);
-			});
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
-		});
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
 
-		let fileContent = await readPromise;
+		let fileContent = await readPromise
+		this.bookFileLoading = true
 
 		// Upload the file
 		let response: ApiResponse<any> = await this.apiService.SetStoreBookFile({
@@ -329,11 +339,13 @@ export class AuthorBookPageComponent{
 			file: fileContent
 		})
 
-		this.bookFileUploaded = response.status == 200;
+		this.bookFileUploaded = response.status == 200
+		this.bookFileLoading = false
 	}
 
 	async PublishOrUnpublishBook(published: boolean){
-		this.publishingOrUnpublishing = true;
+		this.publishingOrUnpublishing = true
+		this.statusLoading = true
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
@@ -365,6 +377,8 @@ export class AuthorBookPageComponent{
 						break;
 				}
 			}
+
+			this.descriptionLoading = false
 		}else if(this.updateLanguage){
 			this.updateLanguage = false;
 
@@ -391,10 +405,11 @@ export class AuthorBookPageComponent{
 				}
 			}
 		}else if(this.publishingOrUnpublishing){
-			this.publishingOrUnpublishing = false;
+			this.publishingOrUnpublishing = false
+			this.statusLoading = false
 			
 			if(response.status == 200){
-				this.book.status = GetBookStatusByString(response.data.status);
+				this.book.status = GetBookStatusByString(response.data.status)
 			}
 		}else{
 			// The title was updated

@@ -372,12 +372,12 @@ export class ApiService{
 
 		try{
 			let data = {}
-			if (params.collection != null) data["collection"] = params.collection
-			if (params.title != null) data["title"] = params.title
-			if (params.description != null) data["description"] = params.description
-			if (params.language != null) data["language"] = params.language
-			if (params.price != null) data["price"] = params.price
-			if (params.categories != null) data["categories"] = params.categories
+			if (params.collection) data["collection"] = params.collection
+			if (params.title) data["title"] = params.title
+			if (params.description) data["description"] = params.description
+			if (params.language) data["language"] = params.language
+			if (params.price) data["price"] = params.price
+			if (params.categories) data["categories"] = params.categories
 
 			let response = await axios.default({
 				method: 'post',
