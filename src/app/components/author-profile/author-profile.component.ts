@@ -31,6 +31,7 @@ export class AuthorProfileComponent{
 	bioMode: BioMode = BioMode.None;
 	newBio: string = "";
 	newBioError: string = "";
+	bioLoading: boolean = false
 	collections: {
 		uuid: string,
 		name: string,
@@ -45,7 +46,8 @@ export class AuthorProfileComponent{
 			coverBlurhash: string,
 			file: boolean
 		}[]
-	}[] = [];
+	}[] = []
+	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	createCollectionDialogVisible: boolean = false;
 	createCollectionDialogName: string = "";
@@ -261,7 +263,8 @@ export class AuthorProfileComponent{
 
 	async EditBio(){
 		if(this.bioMode == BioMode.New || this.bioMode == BioMode.NormalEdit){
-			this.newBioError = "";
+			this.newBioError = ""
+			this.bioLoading = true
 
 			// Save the new bio on the server
 			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
@@ -309,20 +312,22 @@ export class AuthorProfileComponent{
 	}
 
 	async UploadProfileImage(file: ReadFile){
+		this.profileImageLoading = true
+
 		// Get the content of the image file
 		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
 			let reader = new FileReader();
 			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer);
-			});
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]));
-		});
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
 
-		let imageContent = await readPromise;
-		this.profileImageContent = file.content;
+		let imageContent = await readPromise
+		this.profileImageContent = file.content
 
 		// Upload the image
-		let response: ApiResponse<any>;
+		let response: ApiResponse<any>
 
 		if(this.authorMode == AuthorMode.AuthorOfUser){
 			response = await this.apiService.SetProfileImageOfAuthorOfUser({
@@ -339,9 +344,11 @@ export class AuthorProfileComponent{
 			})
 		}
 
+		this.profileImageLoading = false
+
 		if(response.status == 200){
 			// Show the uploaded profile image
-			this.author.profileImage = true;
+			this.author.profileImage = true
 		}
 	}
 
@@ -452,6 +459,8 @@ export class AuthorProfileComponent{
 					break;
 			}
 		}
+
+		this.bioLoading = false
 	}
 
 	async LoadAuthor(){

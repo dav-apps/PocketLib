@@ -9,13 +9,15 @@
 				[height]="profileImageWidth"
 				margin="0 0 1rem 0"
 				shadow="true"
-				rounded="true">
+				rounded="true"
+				[loading]="profileImageLoading">
 			</pocketlib-blurhash-image>
 			<br>
 
-			<fab-primary-button 
+			<fab-primary-button
 				ngxFilePicker
 				accept="image/png,image/jpeg"
+				[disabled]="profileImageLoading"
 				(filePick)="UploadProfileImage($event)"
 				*ngIf="authorMode != 0">
 				{{ locale.uploadProfileImage }}
@@ -49,8 +51,8 @@
 				</fab-text-field>
 			</div>
 
-			<fab-primary-button (click)="EditBio()" *ngIf="authorMode != 0 && bioMode != 0">{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}</fab-primary-button>
-			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
+			<fab-primary-button (click)="EditBio()" [disabled]="bioLoading" *ngIf="authorMode != 0 && bioMode != 0">{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}</fab-primary-button>
+			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" [disabled]="bioLoading" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
 		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode != 0">
