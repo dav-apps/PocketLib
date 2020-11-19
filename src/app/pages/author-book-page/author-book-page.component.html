@@ -122,8 +122,10 @@
 			</div>
 
 			<div style="grid-column: 2; grid-row: 6;">
-				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded">{{ locale.noBookFile }}</p>
-				<p class="font-weight-light text-color" *ngIf="bookFileUploaded">{{ locale.bookFileUploaded }}</p>
+				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
+				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
+				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
+				<p class="font-weight-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
 
 				<div class="d-flex">
 					<fab-primary-button

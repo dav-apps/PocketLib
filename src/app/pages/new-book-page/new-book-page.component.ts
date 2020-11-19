@@ -99,9 +99,9 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region BookFile variables
-	bookFileName: string = "";
-	bookFileContent: ArrayBuffer;
-	bookFileType: string = "";
+	bookFileName: string = ""
+	bookFileContent: ArrayBuffer
+	bookFileType: string = ""
 	//#endregion
 
 	//#region Loading Screen variables
@@ -456,6 +456,7 @@ export class NewBookPageComponent{
 				jwt: this.dataService.user.JWT,
 				uuid: createStoreBookResponse.data.uuid,
 				type: this.bookFileType,
+				name: this.bookFileName,
 				file: this.bookFileContent
 			})
 		}

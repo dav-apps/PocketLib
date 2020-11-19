@@ -31,6 +31,7 @@ export class AuthorBookPageComponent{
 		price: number,
 		status: BookStatus,
 		coverBlurhash: string,
+		fileName: string,
 		categories: {
 			key: string,
 			name: string
@@ -43,6 +44,7 @@ export class AuthorBookPageComponent{
 		price: 0,
 		status: BookStatus.Unpublished,
 		coverBlurhash: null,
+		fileName: null,
 		categories: []
 	}
 	editTitleDialogVisible: boolean = false
@@ -119,6 +121,8 @@ export class AuthorBookPageComponent{
 			this.book.price = response.data.price
 			this.book.status = GetBookStatusByString(response.data.status)
 			this.book.coverBlurhash = response.data.cover_blurhash
+			this.book.fileName = response.data.file_name
+			this.bookFileUploaded = response.data.file
 
 			// Get the categories
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
@@ -129,8 +133,6 @@ export class AuthorBookPageComponent{
 			if(response.data.cover){
 				this.coverContent = GetStoreBookCoverLink(this.uuid)
 			}
-
-			this.bookFileUploaded = response.data.file
 		}else{
 			// Redirect back to the author page
 			this.router.navigate(['author'])
@@ -319,7 +321,7 @@ export class AuthorBookPageComponent{
 		this.coverLoading = false
 	}
 
-	async BookFileUpload(file: ReadFile){
+	async BookFileUpload(file: ReadFile) {
 		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
 			let reader = new FileReader()
 			reader.addEventListener('loadend', () => {
@@ -336,11 +338,16 @@ export class AuthorBookPageComponent{
 			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			type: file.type,
+			name: file.name,
 			file: fileContent
 		})
 
 		this.bookFileUploaded = response.status == 200
 		this.bookFileLoading = false
+
+		if (response.status == 200) {
+			this.book.fileName = file.name
+		}
 	}
 
 	async PublishOrUnpublishBook(published: boolean){

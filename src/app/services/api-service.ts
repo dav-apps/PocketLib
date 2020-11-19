@@ -598,6 +598,7 @@ export class ApiService{
 		jwt: string,
 		uuid: string,
 		type: string,
+		name: string,
 		file: any
 	}): Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}}
@@ -608,7 +609,8 @@ export class ApiService{
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/file`,
 				headers: {
 					Authorization: params.jwt,
-					'Content-Type': params.type
+					'Content-Type': params.type,
+					'Content-Disposition': `attachment; filename="${params.name}"`
 				},
 				data: params.file
 			})

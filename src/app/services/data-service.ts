@@ -54,9 +54,6 @@ export class DataService{
 		} else {
 			this.supportedLocale = "en"
 		}
-
-		// Set the supported languages
-		let languages = this.GetLocale().misc.languages
 	}
 	
 	async LoadAuthorOfUser(){
