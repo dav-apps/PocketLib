@@ -96,8 +96,8 @@ const enDefaults = {
 			firstNameTextfieldLabel: "First name",
 			lastNameTextfieldLabel: "Last name",
 			errors: {
-				firstNameMissing: "Please enter the first name",
-				lastNameMissing: "Please enter the last name",
+				firstNameMissing: "Please enter your first name",
+				lastNameMissing: "Please enter your last name",
 				firstNameTooShort: "The first name is too short",
 				lastNameTooShort: "The last name is too short",
 				firstNameTooLong: "The first name is too long",
@@ -295,15 +295,28 @@ const enDefaults = {
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
 		additionalLanguages: "Additional languages",
-		createCollectionDialog: {
-			title: "Create collection",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "The name of the collection",
+		editProfileDialog: {
+			title: "Edit your profile",
+			firstNameTextfieldLabel: "First name",
+			lastNameTextfieldLabel: "Last name",
+			websiteUrlTextfieldLabel: "Website",
+			websiteUrlTextfieldPlaceholder: "Link to your website",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Your username on Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Your username on Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Your username on Twitter",
 			errors: {
-				nameMissing: "Please enter a name",
-				nameTooShort: "The name is too short",
-				nameTooLong: "The name is too long",
-				unexpectedError: "An unexpected error occured"
+				firstNameMissing: "Please enter your first name",
+				lastNameMissing: "Please enter your last name",
+				firstNameTooShort: "The first name is too short",
+				lastNameTooShort: "The last name is too short",
+				firstNameTooLong: "The first name is too long",
+				lastNameTooLong: "The last name is too long",
+				websiteUrlInvalid: "The link is invalid",
+				usernameInvalid: "The username is invalid",
+				unexpectedError: "An unexpected error occured. Please try again later."
 			}
 		},
 		errors: {
@@ -445,8 +458,8 @@ const deDefaults = {
 			firstNameTextfieldLabel: "Vorname",
 			lastNameTextfieldLabel: "Nachname",
 			errors: {
-				firstNameMissing: "Bitte gib einen Vornamen ein",
-				lastNameMissing: "Bitte gib einen Nachnamen ein",
+				firstNameMissing: "Bitte gib deinen Vornamen ein",
+				lastNameMissing: "Bitte gib deinen Nachnamen ein",
 				firstNameTooShort: "Der Vorname ist zu kurz",
 				lastNameTooShort: "Der Nachname ist zu kurz",
 				firstNameTooLong: "Der Vorname ist zu lang",
@@ -644,15 +657,28 @@ const deDefaults = {
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
 		additionalLanguages: "Weitere Sprachen",
-		createCollectionDialog: {
-			title: "Sammlung erstellen",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Der Name der Sammlung",
+		editProfileDialog: {
+			title: "Profil bearbeiten",
+			firstNameTextfieldLabel: "Vorname",
+			lastNameTextfieldLabel: "Nachname",
+			websiteUrlTextfieldLabel: "Webseite",
+			websiteUrlTextfieldPlaceholder: "Link zu deiner Webseite",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Dein Nutzername auf Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Dein Nutzername auf Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Dein Nutzername auf Twitter",
 			errors: {
-				nameMissing: "Bitte gib einen Namen ein",
-				nameTooShort: "Der Name ist zu kurz",
-				nameTooLong: "Der Name ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+				firstNameMissing: "Bitte gib deinen Vornamen ein",
+				lastNameMissing: "Bitte gib deinen Nachnamen ein",
+				firstNameTooShort: "Der Vorname ist zu kurz",
+				lastNameTooShort: "Der Nachname ist zu kurz",
+				firstNameTooLong: "Der Vorname ist zu lang",
+				lastNameTooLong: "Der Nachname ist zu lang",
+				websiteUrlInvalid: "Der Link ist ungültig",
+				usernameInvalid: "Der Nutzername ist ungültig",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		errors: {

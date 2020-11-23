@@ -1,8 +1,10 @@
-import { Component, Input, HostListener } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
-import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { ReadFile } from 'ngx-file-helpers';
-import { ApiResponse } from 'dav-npm';
+import { Component, Input, HostListener } from '@angular/core'
+import { Router, NavigationExtras } from '@angular/router'
+import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
+import { ReadFile } from 'ngx-file-helpers'
+import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { ApiResponse } from 'dav-npm'
 import {
 	DataService,
 	FindAppropriateLanguage,
@@ -11,26 +13,42 @@ import {
 	Author,
 	AuthorMode,
 	BookStatus
-} from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { enUS } from 'src/locales/locales';
+} from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-author-profile',
 	templateUrl: './author-profile.component.html'
 })
 export class AuthorProfileComponent{
-	locale = enUS.authorProfile;
-	@Input() uuid: string;
-	authorMode: AuthorMode = AuthorMode.Normal;
-	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
+	locale = enUS.authorProfile
+	faGlobe = faGlobe
+	faFacebook = faFacebook
+	faInstagram = faInstagram
+	faTwitter = faTwitter
+	@Input() uuid: string
+	authorMode: AuthorMode = AuthorMode.Normal
+	author: Author = {
+		uuid: "",
+		firstName: "",
+		lastName: "",
+		websiteUrl: "",
+		facebookUsername: "",
+		instagramUsername: "",
+		twitterUsername: "",
+		bios: [],
+		collections: [],
+		profileImage: false,
+		profileImageBlurhash: null
+	}
 	books: {uuid: string, title: string, description: string, language: string, coverContent: string, coverBlurhash: string}[] = []
-	profileImageWidth: number = 200;
-	bioLanguageDropdownSelectedIndex: number = 0;
-	bioLanguageDropdownOptions: IDropdownOption[] = [];
-	bioMode: BioMode = BioMode.None;
-	newBio: string = "";
-	newBioError: string = "";
+	profileImageWidth: number = 200
+	bioLanguageDropdownSelectedIndex: number = 0
+	bioLanguageDropdownOptions: IDropdownOption[] = []
+	bioMode: BioMode = BioMode.None
+	newBio: string = ""
+	newBioError: string = ""
 	bioLoading: boolean = false
 	collections: {
 		uuid: string,
@@ -49,11 +67,25 @@ export class AuthorProfileComponent{
 	}[] = []
 	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
-	createCollectionDialogVisible: boolean = false;
-	createCollectionDialogName: string = "";
-	createCollectionDialogNameError: string = "";
-	hoveredBookIndex: number = -1;
-	bookTitleFontSize: number = 20;
+
+	//#region EditProfileDialog
+	editProfileDialogVisible: boolean = false
+	editProfileDialogFirstName: string = ""
+	editProfileDialogLastName: string = ""
+	editProfileDialogFirstNameError: string = ""
+	editProfileDialogLastNameError: string = ""
+	editProfileDialogWebsiteUrl: string = ""
+	editProfileDialogWebsiteUrlError: string = ""
+	editProfileDialogFacebookUsername: string = ""
+	editProfileDialogFacebookUsernameError: string = ""
+	editProfileDialogInstagramUsername: string = ""
+	editProfileDialogInstagramUsernameError: string = ""
+	editProfileDialogTwitterUsername: string = ""
+	editProfileDialogTwitterUsernameError: string = ""
+	//#endregion
+
+	hoveredBookIndex: number = -1
+	bookTitleFontSize: number = 20
 
 	bioTextfieldStyles = {
 		root: {
@@ -65,16 +97,16 @@ export class AuthorProfileComponent{
 			marginLeft: 10
 		}
 	}
-	createCollectionDialogContentProps: IDialogContentProps = {
-		title: this.locale.createCollectionDialog.title
+	editProfileDialogContentProps: IDialogContentProps = {
+		title: this.locale.editProfileDialog.title
 	}
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router
-	){
-		this.locale = this.dataService.GetLocale().authorProfile;
+	) {
+		this.locale = this.dataService.GetLocale().authorProfile
 	}
 
 	async ngOnInit(){
@@ -352,12 +384,22 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	ShowCreateCollectionDialog(){
-		this.createCollectionDialogName = "";
-		this.createCollectionDialogNameError = "";
+	ShowEditProfileDialog() {
+		this.editProfileDialogFirstName = this.author.firstName
+		this.editProfileDialogFirstNameError = ""
+		this.editProfileDialogLastName = this.author.lastName
+		this.editProfileDialogLastNameError = ""
+		this.editProfileDialogWebsiteUrl = this.author.websiteUrl
+		this.editProfileDialogWebsiteUrlError = ""
+		this.editProfileDialogFacebookUsername = this.author.facebookUsername
+		this.editProfileDialogFacebookUsernameError = ""
+		this.editProfileDialogInstagramUsername = this.author.instagramUsername
+		this.editProfileDialogInstagramUsernameError = ""
+		this.editProfileDialogTwitterUsername = this.author.twitterUsername
+		this.editProfileDialogTwitterUsernameError = ""
 
-		this.createCollectionDialogContentProps.title = this.locale.createCollectionDialog.title;
-		this.createCollectionDialogVisible = true;
+		this.editProfileDialogContentProps.title = this.locale.editProfileDialog.title
+		this.editProfileDialogVisible = true
 	}
 
 	NavigateToNewBookPage() {
@@ -372,43 +414,96 @@ export class AuthorProfileComponent{
 		this.router.navigate(["author", "book", "new"], extras);
 	}
 
-	async CreateCollection(){
-		this.createCollectionDialogNameError = "";
+	async SaveProfile() {
+		this.editProfileDialogFirstNameError = ""
+		this.editProfileDialogLastNameError = ""
+		this.editProfileDialogWebsiteUrlError = ""
+		this.editProfileDialogFacebookUsernameError = ""
+		this.editProfileDialogInstagramUsernameError = ""
+		this.editProfileDialogTwitterUsernameError = ""
 
-		let response: ApiResponse<any> = await this.apiService.CreateStoreBookCollection({
-			jwt: this.dataService.user.JWT,
-			author: this.authorMode == AuthorMode.AuthorOfAdmin ? this.author.uuid : null,
-			name: this.createCollectionDialogName,
-			language: this.dataService.supportedLocale
-		})
-
-		if(response.status == 201){
-			// Add the collection to the author in DataService
-			this.author.collections.push(response.data)
-			this.collections.push({
-				uuid: response.data.uuid,
-				name: response.data.names[0].name,
-				books: []
+		let response: ApiResponse<any>
+		if (this.dataService.userIsAdmin) {
+			response = await this.apiService.UpdateAuthor({
+				uuid: this.author.uuid,
+				jwt: this.dataService.user.JWT,
+				firstName: this.editProfileDialogFirstName,
+				lastName: this.editProfileDialogLastName,
+				websiteUrl: this.editProfileDialogWebsiteUrl,
+				facebookUsername: this.editProfileDialogFacebookUsername,
+				instagramUsername: this.editProfileDialogInstagramUsername,
+				twitterUsername: this.editProfileDialogTwitterUsername
 			})
-			
-			// Redirect to the collection page
-			this.router.navigate(['author', 'collection', response.data.uuid]);
-		}else{
-			let errorCode = response.data.errors[0].code;
+		} else {
+			response = await this.apiService.UpdateAuthorOfUser({
+				jwt: this.dataService.user.JWT,
+				firstName: this.editProfileDialogFirstName,
+				lastName: this.editProfileDialogLastName,
+				websiteUrl: this.editProfileDialogWebsiteUrl,
+				facebookUsername: this.editProfileDialogFacebookUsername,
+				instagramUsername: this.editProfileDialogInstagramUsername,
+				twitterUsername: this.editProfileDialogTwitterUsername
+			})
+		}
 
-			switch(errorCode){
-				case 2108:	// Missing field: name
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameMissing;
-					break;
-				case 2307:	// Field too short: name
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooShort;
-					break;
-				case 2407:	// Field too long: name
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.nameTooLong;
-					break;
-				default:		// Unexpected error
-					this.createCollectionDialogNameError = this.locale.createCollectionDialog.errors.unexpectedError;
-					break;
+		if (response.status == 200) {
+			// Close the dialog and update the values in the appropriate author
+			this.editProfileDialogVisible = false
+
+			if (this.dataService.userIsAdmin) {
+				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == response.data.uuid)
+				if (i == -1) return
+				
+				this.dataService.adminAuthors[i].firstName = response.data.first_name
+				this.dataService.adminAuthors[i].lastName = response.data.last_name
+				this.dataService.adminAuthors[i].websiteUrl = response.data.website_url
+				this.dataService.adminAuthors[i].facebookUsername = response.data.facebook_username
+				this.dataService.adminAuthors[i].instagramUsername = response.data.instagram_username
+				this.dataService.adminAuthors[i].twitterUsername = response.data.twitter_username
+			} else {
+				this.dataService.userAuthor.firstName = response.data.first_name
+				this.dataService.userAuthor.lastName = response.data.last_name
+				this.dataService.userAuthor.websiteUrl = response.data.website_url
+				this.dataService.userAuthor.facebookUsername = response.data.facebook_username
+				this.dataService.userAuthor.instagramUsername = response.data.instagram_username
+				this.dataService.userAuthor.twitterUsername = response.data.twitter_username
+			}
+		} else {
+			for (let error of response.data.errors) {
+				switch (error.code) {
+					case 2301:	// Field too short: first_name
+						if (this.editProfileDialogFirstName.length == 0) {
+							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameMissing
+						} else {
+							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooShort
+						}
+						break
+					case 2302:	// Field too short: last_name
+						if (this.editProfileDialogLastName.length == 0) {
+							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameMissing
+						} else {
+							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooShort
+						}
+						break
+					case 2401:	// Field too long: first_name
+						this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooLong
+						break
+					case 2402:	// Field too long: last_name
+						this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooLong
+						break
+					case 2503:	// Field invalid: website_url
+						this.editProfileDialogWebsiteUrlError = this.locale.editProfileDialog.errors.websiteUrlInvalid
+						break
+					case 2504:	// Field invalid: facebook_username
+						this.editProfileDialogFacebookUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+					case 2505:	// Field invalid: instagram_username
+						this.editProfileDialogInstagramUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+					case 2506:	// Field invalid: twitter_username
+						this.editProfileDialogTwitterUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+				}
 			}
 		}
 	}
@@ -475,6 +570,10 @@ export class AuthorProfileComponent{
 				uuid: response.data.uuid,
 				firstName: response.data.first_name,
 				lastName: response.data.last_name,
+				websiteUrl: response.data.website_url,
+				facebookUsername: response.data.facebook_username,
+				instagramUsername: response.data.instagram_username,
+				twitterUsername: response.data.twitter_username,
 				bios: response.data.bios,
 				collections: [],
 				profileImage: response.data.profile_image,
@@ -495,6 +594,26 @@ export class AuthorProfileComponent{
 			this.bioMode = BioMode.Normal;
 			this.SelectDefaultBio();
 		}
+	}
+
+	NavigateToWebsite() {
+		if (!this.author.websiteUrl) return
+		window.open(this.author.websiteUrl, 'blank')
+	}
+
+	NavigateToFacebook() {
+		if (!this.author.facebookUsername) return
+		window.open(`https://facebook.com/${this.author.facebookUsername}`, 'blank')
+	}
+
+	NavigateToInstagram() {
+		if (!this.author.instagramUsername) return
+		window.open(`https://instagram.com/${this.author.instagramUsername}`, 'blank')
+	}
+
+	NavigateToTwitter() {
+		if (!this.author.twitterUsername) return
+		window.open(`https://twitter.com/${this.author.twitterUsername}`, 'blank')
 	}
 }
 
