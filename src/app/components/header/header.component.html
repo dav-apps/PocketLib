@@ -1,20 +1,18 @@
-<div class="d-flex">
-	<h2 class="mx-auto ml-3 mb-0 text-center font-weight-light text-color">
-		<button
-			type="button"
-			class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
-			(click)="backButtonClick.emit()">
-			<fab-icon iconName="Back"></fab-icon>
-		</button>
-		{{ title }}
-		<button
-			type="button"
-			class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 35px; font-size: 18px; margin-top: -6px; padding: 0px 6px"
-			(click)="editButtonClick.emit()"
-			*ngIf="editButtonVisible">
-			<fab-icon iconName="Edit"></fab-icon>
-		</button>
-	</h2>
-</div>
+<h2 class="mx-auto ml-3 mb-0 text-center font-weight-light text-color">
+	<button
+		type="button"
+		class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+		style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
+		(click)="backButtonClick.emit()">
+		<fab-icon iconName="Back"></fab-icon>
+	</button>
+	{{ title }}
+	<button
+		type="button"
+		class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
+		style="height: 35px; font-size: 18px; margin-top: -6px; padding: 0px 6px"
+		(click)="editButtonClick.emit()"
+		*ngIf="editButtonVisible">
+		<fab-icon iconName="Edit"></fab-icon>
+	</button>
+</h2>

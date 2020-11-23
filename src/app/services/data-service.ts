@@ -70,6 +70,10 @@ export class DataService{
 							uuid: author.uuid,
 							firstName: author.first_name,
 							lastName: author.last_name,
+							websiteUrl: author.website_url,
+							facebookUsername: author.facebook_username,
+							instagramUsername: author.instagram_username,
+							twitterUsername: author.twitter_username,
 							bios: author.bios,
 							collections: [],
 							profileImage: author.profile_image,
@@ -88,6 +92,10 @@ export class DataService{
 						uuid: response.data.uuid,
 						firstName: response.data.first_name,
 						lastName: response.data.last_name,
+						websiteUrl: response.data.website_url,
+						facebookUsername: response.data.facebook_username,
+						instagramUsername: response.data.instagram_username,
+						twitterUsername: response.data.twitter_username,
 						bios: response.data.bios,
 						collections: [],
 						profileImage: response.data.profile_image,
@@ -296,6 +304,10 @@ export interface Author{
 	uuid: string
 	firstName: string
 	lastName: string
+	websiteUrl: string
+	facebookUsername: string
+	instagramUsername: string
+	twitterUsername: string
 	bios: {
 		bio: string,
 		language: string

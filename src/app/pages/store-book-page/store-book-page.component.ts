@@ -55,7 +55,19 @@ export class StoreBookPageComponent{
 	}
 	price: string = ""
 	bookStatus: string = ""
-	author: Author = {uuid: "", firstName: "", lastName: "", bios: [], collections: [], profileImage: false, profileImageBlurhash: null}
+	author: Author = {
+		uuid: "",
+		firstName: "",
+		lastName: "",
+		websiteUrl: null,
+		facebookUsername: null,
+		instagramUsername: null,
+		twitterUsername: null,
+		bios: [],
+		collections: [],
+		profileImage: false,
+		profileImageBlurhash: null
+	}
 	coverContent: string
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	showMobileLayout: boolean = false

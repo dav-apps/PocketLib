@@ -118,6 +118,91 @@ export class ApiService{
 
 		return result
 	}
+
+	async UpdateAuthorOfUser(params: {
+		jwt: string,
+		firstName?: string,
+		lastName?: string,
+		websiteUrl?: string,
+		facebookUsername?: string,
+		instagramUsername?: string,
+		twitterUsername?: string
+	}): Promise<ApiResponse<any>> {
+		let result: ApiResponse<any> = { status: -1, data: {} }
+		
+		try {
+			let data = {}
+			if (params.firstName != null) data["first_name"] = params.firstName
+			if (params.lastName != null) data["last_name"] = params.lastName
+			if (params.websiteUrl != null) data["website_url"] = params.websiteUrl
+			if (params.facebookUsername != null) data["facebook_username"] = params.facebookUsername
+			if (params.instagramUsername != null) data["instagram_username"] = params.instagramUsername
+			if (params.twitterUsername != null) data["twitter_username"] = params.twitterUsername
+
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author`,
+				headers: {
+					Authorization: params.jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			})
+
+			result.status = response.status
+			result.data = response.data
+		} catch (error) {
+			if(error.response){
+				result.status = error.response.status
+				result.data = error.response.data
+			}
+		}
+
+		return result
+	}
+
+	async UpdateAuthor(params: {
+		jwt: string,
+		uuid: string,
+		firstName?: string,
+		lastName?: string,
+		websiteUrl?: string,
+		facebookUsername?: string,
+		instagramUsername?: string,
+		twitterUsername?: string
+	}): Promise<ApiResponse<any>>{
+		let result: ApiResponse<any> = { status: -1, data: {} }
+		
+		try {
+			let data = {}
+			if (params.firstName != null) data["first_name"] = params.firstName
+			if (params.lastName != null) data["last_name"] = params.lastName
+			if (params.websiteUrl != null) data["website_url"] = params.websiteUrl
+			if (params.facebookUsername != null) data["facebook_username"] = params.facebookUsername
+			if (params.instagramUsername != null) data["instagram_username"] = params.instagramUsername
+			if (params.twitterUsername != null) data["twitter_username"] = params.twitterUsername
+
+			let response = await axios.default({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
+				headers: {
+					Authorization: params.jwt,
+					'Content-Type': 'application/json'
+				},
+				data
+			})
+
+			result.status = response.status
+			result.data = response.data
+		} catch (error) {
+			if(error.response){
+				result.status = error.response.status
+				result.data = error.response.data
+			}
+		}
+
+		return result
+	}
 	//#endregion
 
 	//#region AuthorBio
