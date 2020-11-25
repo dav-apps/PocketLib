@@ -15,7 +15,7 @@ import {
 import { ApiService } from 'src/app/services/api-service';
 import { RoutingService } from 'src/app/services/routing-service';
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
-import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component';
+import { PriceInputComponent } from 'src/app/components/price-input/price-input.component';
 import { PromiseHolder } from 'src/app/models/PromiseHolder';
 import { enUS } from 'src/locales/locales';
 
@@ -92,8 +92,8 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Price variables
-	@ViewChild('editPrice', { static: false }) editPriceComponent: EditPriceComponent;
-	price: number = 0;
+	@ViewChild('editPrice', { static: false }) editPriceComponent: PriceInputComponent
+	price: number = 0
 	//#endregion
 
 	//#region Cover variables

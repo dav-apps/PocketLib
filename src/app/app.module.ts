@@ -53,7 +53,7 @@ import { HorizontalBookListComponent } from './components/horizontal-book-list/h
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component'
 import { LanguageDropdownComponent } from './components/language-dropdown/language-dropdown.component'
 import { CategoriesSelectionComponent } from './components/categories-selection/categories-selection.component'
-import { EditPriceComponent } from './components/edit-price/edit-price.component'
+import { PriceInputComponent } from './components/price-input/price-input.component'
 import { AddListItemComponent } from './components/add-list-item/add-list-item.component'
 import { HeaderComponent } from './components/header/header.component'
 import { LinkIconButtonComponent } from './components/link-icon-button/link-icon-button.component'
@@ -91,7 +91,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		HorizontalAuthorListComponent,
 		LanguageDropdownComponent,
 		CategoriesSelectionComponent,
-		EditPriceComponent,
+		PriceInputComponent,
 		AddListItemComponent,
 		HeaderComponent,
 		LinkIconButtonComponent,

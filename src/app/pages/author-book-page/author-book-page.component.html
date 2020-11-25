@@ -109,11 +109,11 @@
 			</div>
 
 			<div style="grid-column: 2; grid-row: 5">
-				<pocketlib-edit-price
+				<pocketlib-price-input
 					#editPrice
 					[canEdit]="book.status == 0 || book.status == 1"
 					(update)="UpdatePrice($event)">
-				</pocketlib-edit-price>
+				</pocketlib-price-input>
 			</div>
 
 			<!-- Book file -->

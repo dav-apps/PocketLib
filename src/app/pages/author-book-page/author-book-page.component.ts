@@ -11,7 +11,7 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
-import { EditPriceComponent } from 'src/app/components/edit-price/edit-price.component'
+import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -20,7 +20,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage
-	@ViewChild('editPrice', { static: true }) editPriceComponent: EditPriceComponent
+	@ViewChild('editPrice', { static: true }) editPriceComponent: PriceInputComponent
 	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent
 	uuid: string;
 	book: {

@@ -195,11 +195,11 @@
 		<div class="mb-4">
 			<p class="text-color">{{ locale.priceSection.description }}</p>
 
-			<pocketlib-edit-price
+			<pocketlib-price-input
 				#editPrice
 				[canEdit]="true"
 				(update)="SetPrice($event)">
-			</pocketlib-edit-price>
+			</pocketlib-price-input>
 		</div>
 
 		<div style="float: left">

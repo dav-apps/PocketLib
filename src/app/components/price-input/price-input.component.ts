@@ -3,10 +3,10 @@ import { DataService } from 'src/app/services/data-service';
 import { enUS } from 'src/locales/locales';
 
 @Component({
-	selector: 'pocketlib-edit-price',
-	templateUrl: './edit-price.component.html'
+	selector: 'pocketlib-price-input',
+	templateUrl: './price-input.component.html'
 })
-export class EditPriceComponent{
+export class PriceInputComponent{
 	locale = enUS.editPrice;
 	price: string = "0";
 	@Input() canEdit: boolean = false;
