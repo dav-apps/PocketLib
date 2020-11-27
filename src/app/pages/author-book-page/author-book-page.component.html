@@ -110,18 +110,38 @@
 
 			<div style="grid-column: 2; grid-row: 5">
 				<pocketlib-price-input
-					#editPrice
+					#priceInput
 					[canEdit]="book.status == 0 || book.status == 1"
 					(update)="UpdatePrice($event)">
 				</pocketlib-price-input>
 			</div>
 
-			<!-- Book file -->
+			<!-- ISBN -->
 			<div style="grid-column: 1; grid-row: 6;">
+				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">ISBN: </p>
+			</div>
+
+			<div class="d-flex text-color" style="grid-column: 2; grid-row: 6;">
+				<p class="font-weight-light font-italic text-color"
+					style="margin-top: 3px"
+					*ngIf="!editIsbn && book.isbn.length == 0">
+					{{ locale.noIsbn }}
+				</p>
+
+				<pocketlib-isbn-input
+					#isbnInput
+					[canEdit]="book.status == 0 || book.status == 1"
+					(editChange)="editIsbn = $event"
+					(update)="UpdateISBN($event)">
+				</pocketlib-isbn-input>
+			</div>
+
+			<!-- Book file -->
+			<div style="grid-column: 1; grid-row: 7;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 6;">
+			<div style="grid-column: 2; grid-row: 7;">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
@@ -142,11 +162,11 @@
 			</div>
 
 			<!-- Status -->
-			<div style="grid-column: 1; grid-row: 7;">
+			<div style="grid-column: 1; grid-row: 8;">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 7;">
+			<div style="grid-column: 2; grid-row: 8;">
 				<div *ngIf="book.status == 0 || book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
 

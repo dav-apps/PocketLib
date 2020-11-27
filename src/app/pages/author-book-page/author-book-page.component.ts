@@ -12,6 +12,7 @@ import {
 import { ApiService } from 'src/app/services/api-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
+import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -20,8 +21,9 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorBookPageComponent{
 	locale = enUS.authorBookPage
-	@ViewChild('editPrice', { static: true }) editPriceComponent: PriceInputComponent
 	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent
+	@ViewChild('priceInput', { static: true }) priceInput: PriceInputComponent
+	@ViewChild('isbnInput', {static: true}) isbnInput: IsbnInputComponent
 	uuid: string;
 	book: {
 		collection: string,
@@ -29,6 +31,7 @@ export class AuthorBookPageComponent{
 		description: string,
 		language: string,
 		price: number,
+		isbn: string,
 		status: BookStatus,
 		coverBlurhash: string,
 		fileName: string,
@@ -42,6 +45,7 @@ export class AuthorBookPageComponent{
 		description: "",
 		language: "en",
 		price: 0,
+		isbn: "",
 		status: BookStatus.Unpublished,
 		coverBlurhash: null,
 		fileName: null,
@@ -61,7 +65,9 @@ export class AuthorBookPageComponent{
 	bookFileLoading: boolean = false
 	publishingOrUnpublishing: boolean = false
 	statusLoading: boolean = false
-	editPrice: boolean = false
+	priceUpdating: boolean = false
+	isbnUpdating: boolean = false
+	editIsbn: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
 
 	spinnerSize: SpinnerSize = SpinnerSize.small
@@ -119,6 +125,7 @@ export class AuthorBookPageComponent{
 			this.book.description = response.data.description
 			this.book.language = response.data.language
 			this.book.price = response.data.price
+			this.book.isbn = response.data.isbn ? response.data.isbn : ""
 			this.book.status = GetBookStatusByString(response.data.status)
 			this.book.coverBlurhash = response.data.cover_blurhash
 			this.book.fileName = response.data.file_name
@@ -128,7 +135,8 @@ export class AuthorBookPageComponent{
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
 			this.LoadCategories(response.data.categories)
 
-			this.editPriceComponent.SetPrice(this.book.price)
+			this.priceInput.SetPrice(this.book.price)
+			this.isbnInput.SetISBN(this.book.isbn)
 
 			if(response.data.cover){
 				this.coverContent = GetStoreBookCoverLink(this.uuid)
@@ -268,13 +276,25 @@ export class AuthorBookPageComponent{
 	}
 
 	async UpdatePrice(price: number) {
-		this.editPrice = true;
+		this.priceUpdating = true
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				price
+			})
+		)
+	}
+
+	async UpdateISBN(isbn: string) {
+		this.isbnUpdating = true
+
+		this.UpdateStoreBookResponse(
+			await this.apiService.UpdateStoreBook({
+				jwt: this.dataService.user.JWT,
+				uuid: this.uuid,
+				isbn
 			})
 		)
 	}
@@ -387,28 +407,47 @@ export class AuthorBookPageComponent{
 
 			this.descriptionLoading = false
 		}else if(this.updateLanguage){
-			this.updateLanguage = false;
+			this.updateLanguage = false
 
 			if(response.status == 200){
-				this.book.language = response.data.language;
+				this.book.language = response.data.language
 			}
-		} else if (this.editPrice) {
-			this.editPrice = false;
+		} else if (this.priceUpdating) {
+			this.priceUpdating = false
 
 			// The price was updated
 			if(response.status == 200){
-				this.book.price = response.data.price;
-				this.editPriceComponent.SetPrice(this.book.price);
+				this.book.price = response.data.price
+				this.priceInput.SetPrice(this.book.price)
 			}else{
-				let errorCode = response.data.errors[0].code;
+				let errorCode = response.data.errors[0].code
 
 				switch(errorCode){
 					case 2501:	// Price invalid
-						this.editPriceComponent.SetError(this.locale.errors.priceInvalid)
-						break;
+						this.priceInput.SetError(this.locale.errors.priceInvalid)
+						break
 					default:		// Unexpected error
-						this.editPriceComponent.SetError(this.locale.errors.unexpectedError)
-						break;
+						this.priceInput.SetError(this.locale.errors.unexpectedError)
+						break
+				}
+			}
+		} else if (this.isbnUpdating) {
+			this.isbnUpdating = false
+
+			// The ISBN was updated
+			if (response.status == 200) {
+				this.book.isbn = response.data.isbn ? response.data.isbn : ""
+				this.isbnInput.SetISBN(this.book.isbn)
+			} else {
+				let errorCode = response.data.errors[0].code
+
+				switch (errorCode) {
+					case 2507:	// ISBN invalid
+						this.isbnInput.SetError(this.locale.errors.isbnInvalid)
+						break
+					default:		// Unexpected error
+						this.isbnInput.SetError(this.locale.errors.unexpectedError)
+						break
 				}
 			}
 		}else if(this.publishingOrUnpublishing){

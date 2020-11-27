@@ -606,6 +606,7 @@ export class ApiService{
 		description?: string,
 		language?: string,
 		price?: number,
+		isbn?: string,
 		published?: boolean,
 		status?: string,
 		categories?: string[]
@@ -618,6 +619,7 @@ export class ApiService{
 			if (params.description != null) data["description"] = params.description
 			if (params.language != null) data["language"] = params.language
 			if (params.price != null) data["price"] = params.price
+			if (params.isbn != null) data["isbn"] = params.isbn
 			if (params.published != null) data["published"] = params.published
 			if (params.status != null) data["status"] = params.status
 			if (params.categories != null) data["categories"] = params.categories
