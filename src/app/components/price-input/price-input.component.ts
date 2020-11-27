@@ -1,70 +1,76 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DataService } from 'src/app/services/data-service';
-import { enUS } from 'src/locales/locales';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { DataService } from 'src/app/services/data-service'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-price-input',
 	templateUrl: './price-input.component.html'
 })
 export class PriceInputComponent{
-	locale = enUS.editPrice;
-	price: string = "0";
-	@Input() canEdit: boolean = false;
-	@Output() update = new EventEmitter();
-	formattedPrice: string = this.locale.free;
-	edit: boolean;
-	errorMessage: string = "";
+	locale = enUS.priceInput
+	price: string = "0"
+	@Input() canEdit: boolean = false
+	@Output() update = new EventEmitter()
+	formattedPrice: string = this.locale.free
+	edit: boolean
+	errorMessage: string = ""
 
 	constructor(
 		public dataService: DataService
 	) {
-		this.locale = this.dataService.GetLocale().editPrice;
+		this.locale = this.dataService.GetLocale().priceInput
 	}
 
 	ngOnInit() {
-		this.UpdateFormattedPrice();
+		this.UpdateFormattedPrice()
 	}
 
 	ShowEditPrice() {
-		this.edit = true;
+		this.edit = true
 
 		setTimeout(() => {
 			// Set the text color of the textfield labels
-			let labels = document.getElementsByClassName('ms-Label');
+			let labels = document.getElementsByClassName('ms-Label')
 
 			for (let i = 0; i < labels.length; i++){
-				labels.item(i).setAttribute("style", "color: var(--text-color)");
+				labels.item(i).setAttribute("style", "color: var(--text-color)")
 			}
-		}, 1);
+		}, 1)
 	}
 
 	UpdatePrice() {
-		this.errorMessage = "";
+		// Check if the price is valid
+		if (+this.price < 0) {
+			this.errorMessage = this.locale.errors.priceInvalid
+			return
+		}
+
+		this.errorMessage = ""
 		
-		if (this.price == "") this.price = "0";
-		this.update.emit(parseInt(this.price));
+		if (this.price == "") this.price = "0"
+		this.update.emit(parseInt(this.price))
 	}
 
 	public SetPrice(price: number) {
-		this.price = price.toString();
-		this.UpdateFormattedPrice();
-		this.edit = false;
+		this.price = price.toString()
+		this.UpdateFormattedPrice()
+		this.edit = false
 	}
 
 	public SetError(error: string) {
-		this.errorMessage = error;
+		this.errorMessage = error
 	}
 
 	UpdateFormattedPrice() {
-		let price = parseInt(this.price);
+		let price = parseInt(this.price)
 
 		if (price == 0) {
-			this.formattedPrice = this.locale.free;
+			this.formattedPrice = this.locale.free
 		} else {
-			this.formattedPrice = (price / 100).toFixed(2) + " €";
+			this.formattedPrice = (price / 100).toFixed(2) + " €"
 
 			if (this.dataService.supportedLocale == "de") {
-				this.formattedPrice = this.formattedPrice.replace('.', ',');
+				this.formattedPrice = this.formattedPrice.replace('.', ',')
 			}
 		}
 	}

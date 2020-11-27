@@ -18,6 +18,7 @@
 			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px;"
 			(click)="UpdatePrice()">
+			
 			<fab-icon iconName="Save"></fab-icon>
 		</button>
 	</div>
@@ -28,6 +29,7 @@
 		style="height: 32px; padding: 3px 6px; font-size: 16px"
 		*ngIf="canEdit && !edit"
 		(click)="ShowEditPrice()">
+
 		<fab-icon iconName="Edit"></fab-icon>
 	</button>
 </div>

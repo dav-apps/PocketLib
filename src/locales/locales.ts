@@ -162,6 +162,7 @@ const enDefaults = {
 			descriptionTooShort: "The description is too short",
 			descriptionTooLong: "The description is too long",
 			priceInvalid: "The price is invalid",
+			isbnInvalid: "The ISBN is invalid",
 			unexpectedError: "An unexpected error occured"
 		}
 	},
@@ -342,10 +343,13 @@ const enDefaults = {
 	horizontalAuthorList: {
 		newAuthors: "New authors"
 	},
-	editPrice: {
+	priceInput: {
 		priceTextfieldLabel: "Cent in €",
 		priceTextfieldPlaceholder: "Price of your book in Euro",
-		free: "Free"
+		free: "Free",
+		errors: {
+			priceInvalid: "The price is invalid"
+		}
 	},
 	misc: {
 		languages: {
@@ -355,9 +359,9 @@ const enDefaults = {
 	}
 }
 
-export var enUS = enDefaults;
+export var enUS = enDefaults
 
-export var enGB = enDefaults;
+export var enGB = enDefaults
 //#endregion
 
 //#region de
@@ -524,6 +528,7 @@ const deDefaults = {
 			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
 			priceInvalid: "Der Preis ist ungültig",
+			isbnInvalid: "Die ISBN ist ungültig",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		}
 	},
@@ -704,10 +709,13 @@ const deDefaults = {
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
 	},
-	editPrice: {
+	priceInput: {
 		priceTextfieldLabel: "Cent in €",
 		priceTextfieldPlaceholder: "Preis deines Buches in Euro",
-		free: "Kostenlos"
+		free: "Kostenlos",
+		errors: {
+			priceInvalid: "Der Preis ist ungültig"
+		}
 	},
 	misc: {
 		languages: {
@@ -717,9 +725,9 @@ const deDefaults = {
 	}
 }
 
-export var deDE = deDefaults;
+export var deDE = deDefaults
 
-export var deAT = deDefaults;
+export var deAT = deDefaults
 
-export var deCH = deDefaults;
+export var deCH = deDefaults
 //#endregion
