@@ -1,0 +1,41 @@
+<div class="d-flex">
+	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ isbn }}</p>
+
+	<div class="d-flex" *ngIf="edit">
+		<fab-text-field
+			[(value)]="isbn"
+			label="ISBN"
+			placeholder="9780064407663"
+			[errorMessage]="errorMessage"
+			(keydown.enter)="UpdateValue()">
+		</fab-text-field>
+
+		<button
+			type="button"
+			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px;"
+			(click)="UpdateValue()">
+			
+			<fab-icon iconName="Save"></fab-icon>
+		</button>
+
+		<button
+			type="button"
+			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px"
+			(click)="Cancel()">
+
+			<fab-icon iconName="Clear"></fab-icon>
+		</button>
+	</div>
+
+	<button
+		type="button"
+		class="btn ml-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
+		style="height: 32px; padding: 3px 6px; font-size: 16px"
+		*ngIf="!edit && canEdit"
+		(click)="EnableEditing()">
+
+		<fab-icon iconName="Edit"></fab-icon>
+	</button>
+</div>

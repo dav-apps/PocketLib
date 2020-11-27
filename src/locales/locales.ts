@@ -142,6 +142,7 @@ const enDefaults = {
 		categories: "Categories",
 		price: "Price",
 		free: "Free",
+		noIsbn: "No ISBN provided",
 		bookFile: "Book file",
 		noBookFile: "No book file uploaded",
 		uploadBookFile: "Upload book file",
@@ -351,6 +352,11 @@ const enDefaults = {
 			priceInvalid: "The price is invalid"
 		}
 	},
+	isbnInput: {
+		errors: {
+			isbnInvalid: "The ISBN is invalid"
+		}
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -508,6 +514,7 @@ const deDefaults = {
 		categories: "Kategorien",
 		price: "Preis",
 		free: "Kostenlos",
+		noIsbn: "Keine ISBN angegeben",
 		bookFile: "Buch-Datei",
 		noBookFile: "Keine Buch-Datei hochgeladen",
 		uploadBookFile: "Buch-Datei hochladen",
@@ -715,6 +722,11 @@ const deDefaults = {
 		free: "Kostenlos",
 		errors: {
 			priceInvalid: "Der Preis ist ungültig"
+		}
+	},
+	isbnInput: {
+		errors: {
+			isbnInvalid: "Die ISBN ist ungültig"
 		}
 	},
 	misc: {
