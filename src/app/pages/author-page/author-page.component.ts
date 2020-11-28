@@ -1,12 +1,11 @@
-import { Component, HostListener } from "@angular/core";
-import { Router, ActivatedRoute } from '@angular/router';
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react';
-import { ApiResponse } from 'dav-npm';
-import { DataService } from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { enUS } from 'src/locales/locales';
-
-const navbarHeight: number = 64;
+import { Component, HostListener } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
+import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
+import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
+import { ApiResponse } from 'dav-npm'
+import { DataService } from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: "pocketlib-author-page",
@@ -16,19 +15,24 @@ const navbarHeight: number = 64;
    ]
 })
 export class AuthorPageComponent{
-	locale = enUS.authorPage;
-   header1Height: number = 600;
-	header1TextMarginTop: number = 200;
-	uuid: string;
-	createAuthorDialogVisible: boolean = false;
-	createAuthorDialogFirstName: string = "";
-	createAuthorDialogLastName: string = "";
-	createAuthorDialogFirstNameError: string = "";
-	createAuthorDialogLastNameError: string = "";
+	locale = enUS.authorPage
+	faCoins = faCoins
+	faHandHoldingUsd = faHandHoldingUsd
+   section1Height: number = 600
+	section1TextMarginTop: number = 200
+	section2Height: number = 600
+	section3Height: number = 400
+	authorSampleProfileImageWidth: number = 392
+	uuid: string
+	createAuthorDialogVisible: boolean = false
+	createAuthorDialogFirstName: string = ""
+	createAuthorDialogLastName: string = ""
+	createAuthorDialogFirstNameError: string = ""
+	createAuthorDialogLastNameError: string = ""
 	booksInReview: {
 		uuid: string,
 		title: string
-	}[] = [];
+	}[] = []
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -52,21 +56,21 @@ export class AuthorPageComponent{
    }
    
    async ngOnInit(){
-		this.setSize();
+		this.setSize()
 
-		await this.dataService.userPromiseHolder.AwaitResult();
+		await this.dataService.userPromiseHolder.AwaitResult()
 		if(this.dataService.userIsAdmin && !this.uuid){
 			// Get the books in review
-			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview({jwt: this.dataService.user.JWT});
+			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview({jwt: this.dataService.user.JWT})
 
 			if(response.status == 200){
-				this.booksInReview = [];
+				this.booksInReview = []
 
 				for(let book of response.data.books){
 					this.booksInReview.push({
 						uuid: book.uuid,
 						title: book.title
-					});
+					})
 				}
 			}
 		}
@@ -74,12 +78,33 @@ export class AuthorPageComponent{
 
    @HostListener('window:resize')
 	onResize(){
-		this.setSize();
+		this.setSize()
    }
    
-   setSize(){
-		this.header1Height = window.innerHeight - navbarHeight;
-		this.header1TextMarginTop = this.header1Height * 0.36;
+	setSize() {
+		let navbarHeight = window.innerWidth < 600 ? 56 : 64
+		this.section1Height = window.innerHeight - navbarHeight
+		this.section1TextMarginTop = this.section1Height * 0.36
+
+		if (window.innerWidth < 600) {
+			// Small width
+			this.section2Height = 850
+			this.section3Height = 500
+		} else if (window.innerWidth < 768) {
+			// Medium width
+			this.section2Height = 800
+			this.section3Height = 450
+		} else {
+			// Large width
+			this.section2Height = 600
+			this.section3Height = 400
+		}
+
+		if (window.innerWidth < 980 && window.innerWidth >= 768) {
+			this.authorSampleProfileImageWidth = 350
+		} else {
+			this.authorSampleProfileImageWidth = 392
+		}
 	}
 
    createProfileButtonClick(){
@@ -92,7 +117,7 @@ export class AuthorPageComponent{
 				queryParams: {
 					redirect: "author"
 				}
-			});
+			})
 		}
 	}
 

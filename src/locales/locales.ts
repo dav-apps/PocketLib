@@ -85,8 +85,13 @@ const enDefaults = {
 		redirectUrl: "Redirect url"
    },
    authorPage: {
-      landingHeader1: "Publish on PocketLib",
-      landingSubheader1: "Put your book into the PocketLib Store",
+      landingSection1Header: "Publish on PocketLib",
+		landingSection1Subheader: "Put your book into the PocketLib Store",
+		landingSection2Header: "Create your profile",
+		landingSection2Description: "Customize your profile with your profile picture and a description. You can link to your website and your social media pages.<br><br>All your published books are listed here.",
+		landingSection3Header: "Earn money",
+		landingSection3Description: "80 percent of the revenue from your books go directly to you.<br>For users with a subscription, the monthly amount is divided equally between the authors of the books they read.",
+		landingSection4Header: "Join a growing number of authors",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
 		yourAuthors: "Your authors",
@@ -460,8 +465,13 @@ const deDefaults = {
 		redirectUrl: "Weiterleitungs-URL"
    },
    authorPage: {
-      landingHeader1: "Veröffentliche auf PocketLib",
-      landingSubheader1: "Setze dein Buch in den PocketLib Store",
+      landingSection1Header: "Veröffentliche auf PocketLib",
+		landingSection1Subheader: "Setze dein Buch in den PocketLib Store",
+		landingSection2Header: "Erstelle dein Profil",
+		landingSection2Description: "Gestalte dein Profil mit deinem Profilbild und einer Beschreibung. Du kannst auf deine Webseite und deine Seiten in sozialen Medien verlinken.<br><br>Hier werden alle deine veröffentlichten Bücher aufgelistet.",
+		landingSection3Header: "Verdiene Geld",
+		landingSection3Description: "80 Prozent der Einnahmen deiner Bücher gehen direkt an dich.<br>Bei Nutzern mit Abo wird der monatliche Betrag gleichmäßig zwischen den Autoren der gelesenen Bücher aufgeteilt.",
+		landingSection4Header: "Trete einer wachsenden Anzahl an Autoren bei",
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
 		yourAuthors: "Deine Autoren",
