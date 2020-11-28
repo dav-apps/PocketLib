@@ -12,7 +12,6 @@ export class IsbnInputComponent{
 	locale = enUS.isbnInput
 	edit: boolean = false
 	@Input() canEdit: boolean = false
-	@Output() editChange = new EventEmitter()
 	@Output() update = new EventEmitter()
 	previousIsbn: string = ""
 	isbn: string = ""
@@ -30,7 +29,6 @@ export class IsbnInputComponent{
 
 	SetEdit(edit: boolean) {
 		this.edit = edit
-		this.editChange.emit(edit)
 		this.errorMessage = ""
 
 		setTimeout(() => {
@@ -76,7 +74,7 @@ export class IsbnInputComponent{
 		this.SetEdit(false)
 	}
 
-	public SetISBN(isbn: string) {
+	public SetIsbn(isbn: string) {
 		this.isbn = isbn
 		this.previousIsbn = isbn
 		this.SetEdit(false)

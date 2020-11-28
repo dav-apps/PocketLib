@@ -67,7 +67,6 @@ export class AuthorBookPageComponent{
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
 	isbnUpdating: boolean = false
-	editIsbn: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
 
 	spinnerSize: SpinnerSize = SpinnerSize.small
@@ -136,7 +135,7 @@ export class AuthorBookPageComponent{
 			this.LoadCategories(response.data.categories)
 
 			this.priceInput.SetPrice(this.book.price)
-			this.isbnInput.SetISBN(this.book.isbn)
+			this.isbnInput.SetIsbn(this.book.isbn)
 
 			if(response.data.cover){
 				this.coverContent = GetStoreBookCoverLink(this.uuid)
@@ -287,7 +286,7 @@ export class AuthorBookPageComponent{
 		)
 	}
 
-	async UpdateISBN(isbn: string) {
+	async UpdateIsbn(isbn: string) {
 		this.isbnUpdating = true
 
 		this.UpdateStoreBookResponse(
@@ -437,7 +436,7 @@ export class AuthorBookPageComponent{
 			// The ISBN was updated
 			if (response.status == 200) {
 				this.book.isbn = response.data.isbn ? response.data.isbn : ""
-				this.isbnInput.SetISBN(this.book.isbn)
+				this.isbnInput.SetIsbn(this.book.isbn)
 			} else {
 				let errorCode = response.data.errors[0].code
 

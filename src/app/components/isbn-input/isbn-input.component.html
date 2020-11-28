@@ -1,6 +1,12 @@
 <div class="d-flex">
 	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ isbn }}</p>
 
+	<p class="font-weight-light font-italic text-color"
+		style="margin-top: 3px"
+		*ngIf="!edit && isbn.length == 0">
+		{{ locale.noIsbn }}
+	</p>
+
 	<div class="d-flex" *ngIf="edit">
 		<fab-text-field
 			[(value)]="isbn"

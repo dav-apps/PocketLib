@@ -122,17 +122,10 @@
 			</div>
 
 			<div class="d-flex text-color" style="grid-column: 2; grid-row: 6;">
-				<p class="font-weight-light font-italic text-color"
-					style="margin-top: 3px"
-					*ngIf="!editIsbn && book.isbn.length == 0">
-					{{ locale.noIsbn }}
-				</p>
-
 				<pocketlib-isbn-input
 					#isbnInput
 					[canEdit]="book.status == 0 || book.status == 1"
-					(editChange)="editIsbn = $event"
-					(update)="UpdateISBN($event)">
+					(update)="UpdateIsbn($event)">
 				</pocketlib-isbn-input>
 			</div>
 
