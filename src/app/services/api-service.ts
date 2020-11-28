@@ -451,6 +451,7 @@ export class ApiService{
 		description?: string,
 		language: string,
 		price?: number,
+		isbn?: string,
 		categories?: string[]
 	}): Promise<ApiResponse<any>>{
 		var result: ApiResponse<any> = {status: -1, data: {}}
@@ -462,6 +463,7 @@ export class ApiService{
 			if (params.description) data["description"] = params.description
 			if (params.language) data["language"] = params.language
 			if (params.price) data["price"] = params.price
+			if (params.isbn) data["isbn"] = params.isbn
 			if (params.categories) data["categories"] = params.categories
 
 			let response = await axios.default({

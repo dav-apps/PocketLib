@@ -142,7 +142,6 @@ const enDefaults = {
 		categories: "Categories",
 		price: "Price",
 		free: "Free",
-		noIsbn: "No ISBN provided",
 		bookFile: "Book file",
 		noBookFile: "No book file uploaded",
 		uploadBookFile: "Upload book file",
@@ -186,6 +185,9 @@ const enDefaults = {
 		},
 		priceSection: {
 			description: "Specify the price for your book."
+		},
+		isbnSection: {
+			description: "If your book has an ISBN, you can enter it here."
 		},
 		coverSection: {
 			description: "Upload a cover for your book.",
@@ -353,6 +355,7 @@ const enDefaults = {
 		}
 	},
 	isbnInput: {
+		noIsbn: "No ISBN provided",
 		errors: {
 			isbnInvalid: "The ISBN is invalid"
 		}
@@ -514,7 +517,6 @@ const deDefaults = {
 		categories: "Kategorien",
 		price: "Preis",
 		free: "Kostenlos",
-		noIsbn: "Keine ISBN angegeben",
 		bookFile: "Buch-Datei",
 		noBookFile: "Keine Buch-Datei hochgeladen",
 		uploadBookFile: "Buch-Datei hochladen",
@@ -558,6 +560,9 @@ const deDefaults = {
 		},
 		priceSection: {
 			description: "Gib den Preis für dein Buch an."
+		},
+		isbnSection: {
+			description: "Falls dein Buch eine ISBN hat, kannst du sie hier eintragen."
 		},
 		coverSection: {
 			description: "Lade ein Cover für dein Buch hoch.",
@@ -725,6 +730,7 @@ const deDefaults = {
 		}
 	},
 	isbnInput: {
+		noIsbn: "Keine ISBN angegeben",
 		errors: {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}

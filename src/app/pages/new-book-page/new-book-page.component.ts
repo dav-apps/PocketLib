@@ -1,23 +1,24 @@
-import { Component, ViewChild, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, HostListener } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
 import {
 	SpinnerSize,
 	IButtonStyles,
 	IDialogContentProps,
 	MessageBarType
-} from 'office-ui-fabric-react';
-import { ReadFile } from 'ngx-file-helpers';
+} from 'office-ui-fabric-react'
+import { ReadFile } from 'ngx-file-helpers'
 import {
 	DataService,
 	Author,
 	FindAppropriateLanguage
-} from 'src/app/services/data-service';
-import { ApiService } from 'src/app/services/api-service';
-import { RoutingService } from 'src/app/services/routing-service';
-import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component';
-import { PriceInputComponent } from 'src/app/components/price-input/price-input.component';
-import { PromiseHolder } from 'src/app/models/PromiseHolder';
-import { enUS } from 'src/locales/locales';
+} from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
+import { RoutingService } from 'src/app/services/routing-service'
+import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
+import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
+import { PromiseHolder } from 'src/app/models/PromiseHolder'
+import { enUS } from 'src/locales/locales'
+import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 
 @Component({
 	selector: 'pocketlib-new-book-page',
@@ -87,13 +88,18 @@ export class NewBookPageComponent{
 	//#endregion
 
 	//#region Categories variables
-	@ViewChild('categoriesSelection', { static: false }) categoriesSelectionComponent: CategoriesSelectionComponent;
+	@ViewChild('categoriesSelection', { static: false }) categoriesSelection: CategoriesSelectionComponent;
 	selectedCategories: string[] = [];
 	//#endregion
 
 	//#region Price variables
-	@ViewChild('editPrice', { static: false }) editPriceComponent: PriceInputComponent
+	@ViewChild('priceInput', { static: false }) priceInput: PriceInputComponent
 	price: number = 0
+	//#endregion
+
+	//#region ISBN variables
+	@ViewChild('isbnInput', { static: false }) isbnInput: IsbnInputComponent
+	isbn: string = ""
 	//#endregion
 
 	//#region Cover variables
@@ -238,18 +244,18 @@ export class NewBookPageComponent{
 	Previous() {
 		if (this.noCollections && this.section == 2) {
 			// Skip the collections section
-			this.NavigateToSection(this.section - 2);
+			this.NavigateToSection(this.section - 2)
 		} else {
-			this.NavigateToSection(this.section - 1);
+			this.NavigateToSection(this.section - 1)
 		}
 	}
 
 	Next() {
 		if (this.noCollections && this.section == 0) {
 			// Skip the collections section
-			this.NavigateToSection(this.section + 2);
+			this.NavigateToSection(this.section + 2)
 		} else {
-			this.NavigateToSection(this.section + 1);
+			this.NavigateToSection(this.section + 1)
 		}
 	}
 
@@ -308,21 +314,32 @@ export class NewBookPageComponent{
 
 	//#region Categories functions
 	SubmitCategories() {
-		this.selectedCategories = this.categoriesSelectionComponent.GetSelectedCategories();
+		this.selectedCategories = this.categoriesSelection.GetSelectedCategories();
 		this.Next();
 	}
 	//#endregion
 
 	//#region Price functions
 	SetPrice(price: number) {
-		if (price < 0) price = -price;
+		if (price < 0) price = -price
 
-		this.price = price;
-		this.editPriceComponent.SetPrice(price);
+		this.price = price
+		this.priceInput.SetPrice(price)
 	}
 
 	SubmitPrice() {
-		this.Next();
+		this.Next()
+	}
+	//#endregion
+
+	//#region ISBN functions
+	UpdateIsbn(isbn: string) {
+		this.isbn = isbn
+		this.isbnInput.SetIsbn(isbn)
+	}
+
+	SubmitIsbn() {
+		this.Next()
 	}
 	//#endregion
 
@@ -431,6 +448,7 @@ export class NewBookPageComponent{
 			title: this.title,
 			language: this.language,
 			price: this.price,
+			isbn: this.isbn,
 			categories: this.selectedCategories
 		})
 

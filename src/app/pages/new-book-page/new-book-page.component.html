@@ -196,7 +196,7 @@
 			<p class="text-color">{{ locale.priceSection.description }}</p>
 
 			<pocketlib-price-input
-				#editPrice
+				#priceInput
 				[canEdit]="true"
 				(update)="SetPrice($event)">
 			</pocketlib-price-input>
@@ -223,12 +223,50 @@
 		</div>
 	</div>
 
-	<!-- Cover -->
+	<!-- ISBN -->
 	<div
 		class="mx-auto"
 		[ngClass]="section != 5 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 		style="max-width: 300px"
 		[style.display]="visibleSection != 5 ? 'none' : null">
+
+		<div class="mb-4">
+			<p class="text-color">{{ locale.isbnSection.description }}</p>
+
+			<pocketlib-isbn-input
+				#isbnInput
+				[canEdit]="true"
+				(update)="UpdateIsbn($event)">
+			</pocketlib-isbn-input>
+		</div>
+
+		<div style="float: left">
+			<fab-default-button
+				(onClick)="Previous()">
+				{{ locale.previous }}
+			</fab-default-button>
+		</div>
+
+		<div class="d-flex" style="float: right">
+			<div
+				style="margin-top: 8px; margin-right: 14px"
+				*ngIf="loading">
+				<fab-spinner [size]="spinnerSize"></fab-spinner>
+			</div>
+
+			<fab-primary-button
+				(onClick)="SubmitIsbn()">
+				{{ locale.next }}
+			</fab-primary-button>
+		</div>
+	</div>
+
+	<!-- Cover -->
+	<div
+		class="mx-auto"
+		[ngClass]="section != 6 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		style="max-width: 300px"
+		[style.display]="visibleSection != 6 ? 'none' : null">
 
 		<div class="mb-4">
 			<p class="text-color">{{ locale.coverSection.description }}</p>
@@ -263,9 +301,9 @@
 	<!-- Book file -->
 	<div
 		class="mx-auto"
-		[ngClass]="section != 6 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+		[ngClass]="section != 7 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 		style="max-width: 300px"
-		[style.display]="visibleSection != 6 ? 'none' : null">
+		[style.display]="visibleSection != 7 ? 'none' : null">
 
 		<div class="mb-4">
 			<p class="text-color">{{ locale.bookFileSection.description }}</p>
