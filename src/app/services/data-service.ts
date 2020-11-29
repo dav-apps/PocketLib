@@ -295,7 +295,7 @@ export class DataService{
 
 	async GetStoreLanguages(): Promise<string[]>{
 		var value = await localforage.getItem(keys.settingsStoreLanguagesKey) as string[]
-		return value != null ? value : [this.supportedLocale]
+		return value != null ? value : ["en", "de"]
 	}
 	//#endregion
 }

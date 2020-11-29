@@ -50,7 +50,11 @@ export class BlurhashImageComponent{
 		if (this.shadowOnHover || this.cursor) this.classes.push("cursor")
 		if (this.shadowSm || this.shadowOnHover) this.classes.push("shadow-sm")
 		else if(this.shadow) this.classes.push("shadow")
-		if (this.rounded) this.classes.push("rounded-circle")
+		if (this.rounded) {
+			this.classes.push("rounded-circle")
+		} else {
+			this.classes.push("rounded")
+		}
 
 		let fallbackSrc = this.fallback
 		let canvas = document.createElement("canvas")
