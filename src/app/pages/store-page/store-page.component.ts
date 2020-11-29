@@ -50,6 +50,11 @@ export class StorePageComponent{
 		if(this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 
+	ShowAuthorPage() {
+		this.router.navigate(["author"])
+		if(this.sideNavHidden) this.dataService.sideNavOpened = false
+	}
+
 	async ShowLanguagesDialog() {
 		this.selectLanguagesDialogContentProps.title = this.locale.selectLanguagesDialog.title
 		this.selectLanguagesDialogVisible = true

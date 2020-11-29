@@ -239,6 +239,7 @@ const enDefaults = {
 		startPage: "Start",
 		categories: "Categories",
 		languages: "Languages",
+		publish: "Publish",
 		selectLanguagesDialog: {
 			title: "Select languages",
 			description: "Select the languages for which books should be displayed.",
@@ -619,6 +620,7 @@ const deDefaults = {
 		startPage: "Startseite",
 		categories: "Kategorien",
 		languages: "Sprachen",
+		publish: "Veröffentlichen",
 		selectLanguagesDialog: {
 			title: "Sprachen auswählen",
 			description: "Wähle die Sprachen, für die Bücher angezeigt werden sollen.",
