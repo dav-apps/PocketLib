@@ -115,7 +115,7 @@ export class AuthorPageComponent{
 			// Redirect to the Account page
 			this.router.navigate(["account"], {
 				queryParams: {
-					redirect: "author"
+					redirect: "author/setup"
 				}
 			})
 		}

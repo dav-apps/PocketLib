@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-npm'
-import { DataService } from 'src/app/services/data-service'
+import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { enUS } from 'src/locales/locales'
 
@@ -34,6 +34,14 @@ export class AuthorSetupPageComponent{
 		if(await this.dataService.userAuthorPromiseHolder.AwaitResult()){
 			this.router.navigate(["author"])
 		}
+	}
+
+	ngAfterViewInit() {
+		// Set the autocomplete attributes for the input elements
+		setTimeout(() => {
+			SetTextFieldAutocomplete('first-name-textfield', 'given-name', true)
+			SetTextFieldAutocomplete('last-name-textfield', 'family-name', true)
+		}, 1)
 	}
 
 	async Submit(){
@@ -79,10 +87,18 @@ export class AuthorSetupPageComponent{
 						this.lastNameError = this.locale.errors.lastNameMissing
 						break
 					case 2301:	// Field too short: first_name
-						this.firstNameError = this.locale.errors.firstNameTooShort
+						if (this.firstName.length == 0) {
+							this.firstNameError = this.locale.errors.firstNameMissing
+						} else {
+							this.firstNameError = this.locale.errors.firstNameTooShort
+						}
 						break
 					case 2302:	// Field too short: last_name
-						this.lastNameError = this.locale.errors.lastNameTooShort
+						if (this.lastName.length == 0) {
+							this.lastNameError = this.locale.errors.lastNameMissing
+						} else {
+							this.lastNameError = this.locale.errors.lastNameTooShort
+						}
 						break
 					case 2401:	// Field too long: first_name
 						this.firstNameError = this.locale.errors.firstNameTooLong

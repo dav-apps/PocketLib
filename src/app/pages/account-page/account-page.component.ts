@@ -60,10 +60,10 @@ export class AccountPageComponent{
 	}
 
 	ShowLoginPage() {
-		if (this.redirect == "author") {
-			Dav.ShowLoginPage(environment.apiKey, `${environment.baseUrl}/author`);
+		if (this.redirect == "author/setup") {
+			Dav.ShowLoginPage(environment.apiKey, `${environment.baseUrl}/author/setup`)
 		} else {
-			Dav.ShowLoginPage(environment.apiKey, environment.baseUrl);
+			Dav.ShowLoginPage(environment.apiKey, environment.baseUrl)
 		}
    }
 

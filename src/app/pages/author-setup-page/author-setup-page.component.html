@@ -6,38 +6,44 @@
 	</div>
 
 	<div class="mx-auto" style="width: 300px">
-		<div class="form-group mt-3">
-			<label
-				class="col-form-label text-color"
-				style="font-size: 15px">
-				{{ locale.firstNameTextfieldLabel }}
-			</label>
-
-			<fab-text-field
-				[(value)]="firstName"
-				placeholder="Monty"
-				[errorMessage]="firstNameError">
-			</fab-text-field>
-		</div>
+		<form>
+			<div class="form-group mt-3">
+				<label
+					class="col-form-label text-color"
+					style="font-size: 15px">
+					{{ locale.firstNameTextfieldLabel }}
+				</label>
 	
-		<div class="form-group mt-3">
-			<label
-				class="col-form-label text-color"
-				style="font-size: 15px">
-				{{ locale.lastNameTextfieldLabel }}
-			</label>
+				<fab-text-field
+					id="first-name-textfield"
+					[(value)]="firstName"
+					placeholder="Monty"
+					[errorMessage]="firstNameError"
+					autocomplete="given-name">
+				</fab-text-field>
+			</div>
 
-			<fab-text-field
-				[(value)]="lastName"
-				placeholder="Kensicle"
-				[errorMessage]="lastNameError"
-				(keydown.enter)="Submit()">
-			</fab-text-field>
-		</div>
+			<div class="form-group mt-3">
+				<label
+					class="col-form-label text-color"
+					style="font-size: 15px">
+					{{ locale.lastNameTextfieldLabel }}
+				</label>
 	
-		<div class="d-flex mt-3">
-			<fab-primary-button (click)="Submit()" [disabled]="loading">{{ locale.create }}</fab-primary-button>
-			<div style="margin-top: 8px; margin-left: 14px" *ngIf="loading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
-		</div>
+				<fab-text-field
+					id="last-name-textfield"
+					[(value)]="lastName"
+					placeholder="Kensicle"
+					[errorMessage]="lastNameError"
+					autocomplete="family-name"
+					(keydown.enter)="Submit()">
+				</fab-text-field>
+			</div>
+
+			<div class="d-flex mt-4">
+				<fab-primary-button (click)="Submit()" [disabled]="loading">{{ locale.create }}</fab-primary-button>
+				<div style="margin-top: 8px; margin-left: 14px" *ngIf="loading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+			</div>
+		</form>
 	</div>
 </div>
