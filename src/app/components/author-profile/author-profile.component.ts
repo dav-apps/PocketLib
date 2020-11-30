@@ -1,10 +1,16 @@
 import { Component, Input, HostListener } from '@angular/core'
 import { Router, NavigationExtras } from '@angular/router'
-import { IDropdownOption, DropdownMenuItemType, IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
+import {
+	IDropdownOption,
+	DropdownMenuItemType,
+	IButtonStyles,
+	IDialogContentProps,
+	MessageBarType
+} from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse, GetUserPageLink } from 'dav-npm'
 import {
 	DataService,
 	FindAppropriateLanguage,
@@ -67,6 +73,11 @@ export class AuthorProfileComponent{
 	}[] = []
 	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
+	hoveredBookIndex: number = -1
+	bookTitleFontSize: number = 20
+	messageBarType: MessageBarType = MessageBarType.warning
+	showProviderMessage: boolean = false
+	providerMessage: string = ""
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -83,9 +94,6 @@ export class AuthorProfileComponent{
 	editProfileDialogTwitterUsername: string = ""
 	editProfileDialogTwitterUsernameError: string = ""
 	//#endregion
-
-	hoveredBookIndex: number = -1
-	bookTitleFontSize: number = 20
 
 	bioTextfieldStyles = {
 		root: {
@@ -109,34 +117,41 @@ export class AuthorProfileComponent{
 		this.locale = this.dataService.GetLocale().authorProfile
 	}
 
-	async ngOnInit(){
-		this.setSize();
-		await this.dataService.userAuthorPromiseHolder.AwaitResult();
+	async ngOnInit() {
+		this.setSize()
+
+		await this.dataService.userPromiseHolder.AwaitResult()
+		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
 		// Determine the author mode
 		if(!this.uuid){
-			this.authorMode = AuthorMode.AuthorOfUser;
+			this.authorMode = AuthorMode.AuthorOfUser
 		}else if(
 			this.dataService.userIsAdmin && 
-			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)){
-			this.authorMode = AuthorMode.AuthorOfAdmin;
+			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)
+		) {
+			this.authorMode = AuthorMode.AuthorOfAdmin
 		}
 
 		if(this.authorMode == AuthorMode.AuthorOfAdmin){
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
-			this.SelectDefaultBio();
+			this.SelectDefaultBio()
 		}else if(this.authorMode == AuthorMode.AuthorOfUser){
-			this.author = this.dataService.userAuthor;
-			this.SelectDefaultBio();
+			this.author = this.dataService.userAuthor
+			this.SelectDefaultBio()
+
+			// Set the text and visibility for the provider message
+			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', GetUserPageLink('provider'))
+			this.showProviderMessage = !this.dataService.user.Provider
 		}else{
 			// Get the author from the server
-			await this.LoadAuthor();
+			await this.LoadAuthor()
 		}
 
 		if(this.author.profileImage){
 			// Set the author profile image link
-			this.profileImageContent = GetAuthorProfileImageLink(this.author.uuid);
+			this.profileImageContent = GetAuthorProfileImageLink(this.author.uuid)
 		}
 
 		// Get the appropriate language of each collection

@@ -99,8 +99,20 @@
 		</div>
 	
 		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode != 0">
+			<!-- Message to sign up as a provider -->
+			<div
+				class="mt-3 mx-auto"
+				style="min-width: 200px; max-width: 300px"
+				*ngIf="showProviderMessage">
+				<fab-message-bar [messageBarType]="messageBarType"><span [innerHtml]="providerMessage"></span></fab-message-bar>
+			</div>
+
 			<!-- List of collections -->
-			<h3 class="text-center font-weight-light mt-md-5 mb-3 mb-md-4 text-color">{{ locale.yourBooks }}</h3>
+			<h3
+				class="text-center font-weight-light mb-3 mb-md-4 text-color"
+				[ngClass]="showProviderMessage ? 'mt-md-4' : 'mt-md-5'">
+				{{ locale.yourBooks }}
+			</h3>
 
 			<pocketlib-add-list-item
 				(click)="NavigateToNewBookPage()">

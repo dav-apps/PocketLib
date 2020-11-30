@@ -68,27 +68,27 @@ export class AccountPageComponent{
    }
 
 	ShowSignupPage() {
-		if (this.redirect == "author") {
-			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/author`);
+		if (this.redirect == "author/setup") {
+			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/author/setup`)
 		} else {
-			Dav.ShowSignupPage(environment.apiKey, environment.baseUrl);
+			Dav.ShowSignupPage(environment.apiKey, environment.baseUrl)
 		}
    }
 
    ShowLogoutDialog(){
-		this.logoutDialogContentProps.title = this.locale.logoutDialog.title;
-		this.logoutDialogVisible = true;
+		this.logoutDialogContentProps.title = this.locale.logoutDialog.title
+		this.logoutDialogVisible = true
 	}
 	
-	ShowPlansAccountPage(){
-		window.open("https://dav-apps.tech/login?redirect=user%23plans%0A", 'blank');
+	ShowPlansAccountPage() {
+		Dav.ShowUserPage("plans", true)
 	}
 
 	Logout() {
-		this.logoutDialogVisible = false;
+		this.logoutDialogVisible = false
       this.dataService.user.Logout().then(() => {
-         window.location.href = "/account";
-      });
+         window.location.href = "/account"
+      })
 	}
 
    bytesToGigabytes(bytes: number, rounding: number) : string{

@@ -334,6 +334,9 @@ const enDefaults = {
 			bioTooLong: "Your biography is too long",
 			unexpectedError: "An unexpected error occured. Please try again."
 		},
+		messages: {
+			providerMessage: "<a href='{0}' target='blank'>Register as a provider</a> so that your earnings can be transferred."
+		},
 		edit: "Edit",
 		cancel: "Cancel",
 		save: "Save",
@@ -714,6 +717,9 @@ const deDefaults = {
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+		},
+		messages: {
+			providerMessage: "<a href='{0}' target='blank'>Registriere dich als Anbieter</a>, damit deine Einnahmen überwiesen werden können."
 		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
