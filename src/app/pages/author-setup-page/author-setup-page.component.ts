@@ -5,6 +5,7 @@ import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-npm'
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -39,7 +40,11 @@ export class AuthorSetupPageComponent{
 		}
 
 		// Set the terms of service text
-		this.terms = this.domSanitizer.bypassSecurityTrustHtml(this.locale.terms.replace('{0}', this.dataService.darkTheme ? `style="color: #74aaff"` : ""))
+		this.terms = this.domSanitizer.bypassSecurityTrustHtml(
+			this.locale.terms
+				.replace('{0}', environment.websiteBaseUrl)
+				.replace('{1}', this.dataService.darkTheme ? `style="color: #74aaff"` : "")
+		)
 	}
 
 	ngAfterViewInit() {
