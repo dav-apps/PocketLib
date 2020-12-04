@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-npm'
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
@@ -17,6 +18,7 @@ export class AuthorSetupPageComponent{
 	generalError: string = ""
 	firstNameError: string = ""
 	lastNameError: string = ""
+	terms: SafeHtml = ""
 	loading: boolean = false
 	messageBarType: MessageBarType = MessageBarType.error
 	spinnerSize: SpinnerSize = SpinnerSize.small
@@ -24,7 +26,8 @@ export class AuthorSetupPageComponent{
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private router: Router
+		private router: Router,
+		private domSanitizer: DomSanitizer
 	){
 		this.locale = this.dataService.GetLocale().authorSetupPage
 	}
@@ -34,6 +37,9 @@ export class AuthorSetupPageComponent{
 		if(await this.dataService.userAuthorPromiseHolder.AwaitResult()){
 			this.router.navigate(["author"])
 		}
+
+		// Set the terms of service text
+		this.terms = this.domSanitizer.bypassSecurityTrustHtml(this.locale.terms.replace('{0}', this.dataService.darkTheme ? `style="color: #74aaff"` : ""))
 	}
 
 	ngAfterViewInit() {

@@ -115,9 +115,10 @@ const enDefaults = {
 	},
 	authorSetupPage: {
 		title: "Create your author profile",
-		create: "create",
+		create: "Create",
 		firstNameTextfieldLabel: "First name",
 		lastNameTextfieldLabel: "Last name",
+		terms: `With the creation you accept our <a href="https://dav-apps.tech/pocketlib/terms" target="blank" {0}>Terms of Service</a>.`,
 		errors: {
 			firstNameMissing: "Please enter your first name",
 			lastNameMissing: "Please enter your last name",
@@ -502,6 +503,7 @@ const deDefaults = {
 		create: "Erstellen",
 		firstNameTextfieldLabel: "Vorname",
 		lastNameTextfieldLabel: "Nachname",
+		terms: `Mit dem Erstellen akzeptierst du unsere <a href="https://dav-apps.tech/pocketlib/terms" target="blank" {0}>Allgemeinen Geschäftsbedingungen</a>.`,
 		errors: {
 			firstNameMissing: "Bitte gib deinen Vornamen ein",
 			lastNameMissing: "Bitte gib deinen Nachnamen ein",
