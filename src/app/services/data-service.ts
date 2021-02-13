@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core'
 import * as localforage from 'localforage'
-import { DavUser, ApiResponse, GetAllTableObjects } from 'dav-npm'
+import {
+	Dav,
+	ApiResponse,
+	GetAllTableObjects,
+	PromiseHolder
+} from 'dav-npm'
 import { ApiService } from './api-service'
 import { environment } from 'src/environments/environment'
 import { keys } from 'src/environments/keys'
@@ -8,28 +13,27 @@ import * as locales from 'src/locales/locales'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
-import { PromiseHolder } from 'src/app/models/PromiseHolder'
 
 const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png"
 const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png"
 const defaultProfileImageUrl = "/assets/images/profile-image-placeholder.png"
 
 @Injectable()
-export class DataService{
-   user: DavUser
+export class DataService {
+	dav = Dav
 	locale: string = navigator.language
 	supportedLocale: string = "en"
-   navbarVisible: boolean = true
+	navbarVisible: boolean = true
 	books: Book[] = []
 	currentBook: Book = null
 	darkTheme: boolean = false
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
-   settings: Settings
+	settings: Settings
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>()
 	settingsSyncPromiseHolder = new PromiseHolder<Settings>()
-   syncFinished: boolean = false
-	userPromiseHolder = new PromiseHolder<DavUser>()
+	syncFinished: boolean = false
+	userPromiseHolder = new PromiseHolder()
 	userAuthor: Author = null
 	userAuthorPromiseHolder = new PromiseHolder<Author>()
 	adminAuthors: Author[] = []
@@ -42,12 +46,7 @@ export class DataService{
 
 	constructor(
 		private apiService: ApiService
-	){
-		this.user = new DavUser(() => {
-			this.userIsAdmin = environment.admins.includes(this.user.Id)
-			this.userPromiseHolder.Resolve(this.user)
-		})
-
+	) {
 		// Set the supported locale
 		if (this.locale.startsWith("de")) {
 			this.supportedLocale = "de"
@@ -55,17 +54,17 @@ export class DataService{
 			this.supportedLocale = "en"
 		}
 	}
-	
-	async LoadAuthorOfUser(){
-		await this.userPromiseHolder.AwaitResult();
-		if (this.user.IsLoggedIn) {
-			let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser({jwt: this.user.JWT});
 
-			if(response.status == 200){
-				if(response.data.authors){
-					this.adminAuthors = [];
+	async LoadAuthorOfUser() {
+		await this.userPromiseHolder.AwaitResult()
+		if (this.dav.isLoggedIn) {
+			let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser()
 
-					for(let author of response.data.authors){
+			if (response.status == 200) {
+				if (response.data.authors) {
+					this.adminAuthors = []
+
+					for (let author of response.data.authors) {
 						let newAuthor = {
 							uuid: author.uuid,
 							firstName: author.first_name,
@@ -85,9 +84,9 @@ export class DataService{
 							...await this.LoadCollections(author.collections)
 						)
 
-						this.adminAuthors.push(newAuthor);
+						this.adminAuthors.push(newAuthor)
 					}
-				}else{
+				} else {
 					this.userAuthor = {
 						uuid: response.data.uuid,
 						firstName: response.data.first_name,
@@ -107,26 +106,25 @@ export class DataService{
 						...await this.LoadCollections(response.data.collections)
 					)
 				}
-			}else{
-				this.userAuthor = null;
-				this.adminAuthors = [];
+			} else {
+				this.userAuthor = null
+				this.adminAuthors = []
 			}
 		}
 
-		this.userAuthorPromiseHolder.Resolve(this.userAuthor);
-		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors);
+		this.userAuthorPromiseHolder.Resolve(this.userAuthor)
+		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors)
 	}
 
-	private async LoadCollections(collectionData: any) : Promise<any[]>{
-		let collections: any[] = [];
+	private async LoadCollections(collectionData: any): Promise<any[]> {
+		let collections: any[] = []
 
-		for(let collection of collectionData){
+		for (let collection of collectionData) {
 			let c = await this.apiService.GetStoreBookCollection({
-				jwt: this.user.JWT,
 				uuid: collection.uuid
 			})
 
-			if(c.status == 200){
+			if (c.status == 200) {
 				let collectionResponseData = (c as ApiResponse<any>).data;
 
 				let newCollection = {
@@ -136,7 +134,7 @@ export class DataService{
 				}
 
 				// Get the books
-				for(let book of collectionResponseData.books){
+				for (let book of collectionResponseData.books) {
 					let newBook = {
 						uuid: book.uuid,
 						title: book.title,
@@ -152,155 +150,155 @@ export class DataService{
 					newCollection.books.push(newBook)
 				}
 
-				collections.push(newCollection);
+				collections.push(newCollection)
 			}
 		}
 
-		return collections;
+		return collections
 	}
 
 	async LoadCategories() {
 		// Get the categories
-		let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories();
-		this.categories = [];
+		let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories()
+		this.categories = []
 
 		// Get the names in the appropriate language
-		for(let category of getCategoriesResponse.data.categories){
-			let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names);
-			let currentLanguage = category.names[currentLanguageIndex];
-			
+		for (let category of getCategoriesResponse.data.categories) {
+			let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names)
+			let currentLanguage = category.names[currentLanguageIndex]
+
 			this.categories.push({
 				key: category.key,
 				name: currentLanguage.name,
 				language: currentLanguage.language
-			});
+			})
 		}
 
-		this.categoriesPromiseHolder.Resolve();
+		this.categoriesPromiseHolder.Resolve()
 	}
 
-   async LoadAllBooks(){
-      this.books = await GetAllBooks();
-   }
-
-   async ReloadBook(uuid: string){
-      // The book was updated in the database. Get it and replace the old book in the list with the new one
-      let book = await GetBook(uuid);
-      if(!book) return;
-
-      // Replace or add the book
-      let i = this.books.findIndex(b => b.uuid == book.uuid);
-      
-      if(i !== -1){
-         this.books[i] = book;
-      }else{
-         this.books.push(book);
-      }
-   }
-
-   async ReloadBookByFile(uuid: string){
-      // Find the book with the file uuid
-      let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
-      let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileKey) == uuid);
-      if(!bookObject) return;
-
-		await this.ReloadBook(bookObject.Uuid);
+	async LoadAllBooks() {
+		this.books = await GetAllBooks()
 	}
-	
-	GetFullLanguage(language: string) : string{
-		let languagesLocale = this.GetLocale().misc.languages;
-	
-		switch(language){
+
+	async ReloadBook(uuid: string) {
+		// The book was updated in the database. Get it and replace the old book in the list with the new one
+		let book = await GetBook(uuid)
+		if (!book) return
+
+		// Replace or add the book
+		let i = this.books.findIndex(b => b.uuid == book.uuid)
+
+		if (i !== -1) {
+			this.books[i] = book
+		} else {
+			this.books.push(book)
+		}
+	}
+
+	async ReloadBookByFile(uuid: string) {
+		// Find the book with the file uuid
+		let tableObjects = await GetAllTableObjects(environment.bookTableId, false)
+		let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileKey) == uuid)
+		if (!bookObject) return
+
+		await this.ReloadBook(bookObject.Uuid)
+	}
+
+	GetFullLanguage(language: string): string {
+		let languagesLocale = this.GetLocale().misc.languages
+
+		switch (language) {
 			case "en":
-				return languagesLocale.en;
+				return languagesLocale.en
 			case "de":
-				return languagesLocale.de;
+				return languagesLocale.de
 		}
 	}
 
-   GetLocale(){
-      let l = this.locale.toLowerCase();
+	GetLocale() {
+		let l = this.locale.toLowerCase()
 
-      if(l.startsWith("en")){            // en
-         if(l == "en-gb")              return locales.enGB;
-         else                          return locales.enUS;
-      }else if(l.startsWith("de")){      // de
-			if(l == "de-at")					return locales.deAT;
-			else if(l == "de-ch")			return locales.deCH;
-			else									return locales.deDE;
+		if (l.startsWith("en")) {            // en
+			if (l == "en-gb") return locales.enGB
+			else return locales.enUS
+		} else if (l.startsWith("de")) {      // de
+			if (l == "de-at") return locales.deAT
+			else if (l == "de-ch") return locales.deCH
+			else return locales.deDE
 		}
-		
-		return locales.enUS;
-   }
 
-	async ApplyTheme(theme?: string){
-		if(!theme){
+		return locales.enUS
+	}
+
+	async ApplyTheme(theme?: string) {
+		if (!theme) {
 			// Get the theme from the settings
-			theme = await this.GetTheme();
+			theme = await this.GetTheme()
 		}
 
-		switch(theme){
+		switch (theme) {
 			case keys.darkThemeKey:
 				this.darkTheme = true;
-				break;
+				break
 			case keys.systemThemeKey:
 				// Get the browser theme
-				let darkTheme = false;
+				let darkTheme = false
 
 				if (window.matchMedia) {
-					let colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+					let colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
 
-					darkTheme = colorScheme.matches;
-					colorScheme.onchange = () => this.ApplyTheme();
+					darkTheme = colorScheme.matches
+					colorScheme.onchange = () => this.ApplyTheme()
 				}
 
-				this.darkTheme = darkTheme;
-				break;
+				this.darkTheme = darkTheme
+				break
 			default:
 				// Light theme
-				this.darkTheme = false;
-				break;
+				this.darkTheme = false
+				break
 		}
 
 		document.body.setAttribute(
-			keys.themeKey, 
+			keys.themeKey,
 			this.darkTheme ? keys.darkThemeKey : keys.lightThemeKey
 		)
 
-		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl;
-   }
-	
+		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
+	}
+
 	//#region Settings
-	async SetTheme(value: string){
+	async SetTheme(value: string) {
 		await localforage.setItem(keys.settingsThemeKey, value)
 	}
 
-	async GetTheme(): Promise<string>{
+	async GetTheme(): Promise<string> {
 		var value = await localforage.getItem(keys.settingsThemeKey) as string
 		return value != null ? value : keys.settingsThemeDefault
-   }
-   
-   async SetOpenLastReadBook(value: boolean){
-      await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
-   }
-
-   async GetOpenLastReadBook(): Promise<boolean>{
-      var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean
-      return value != null ? value : keys.settingsOpenLastReadBookDefault
 	}
-	
+
+	async SetOpenLastReadBook(value: boolean) {
+		await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
+	}
+
+	async GetOpenLastReadBook(): Promise<boolean> {
+		var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean
+		return value != null ? value : keys.settingsOpenLastReadBookDefault
+	}
+
 	async SetStoreLanguages(languages: string[]) {
 		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
 	}
 
-	async GetStoreLanguages(): Promise<string[]>{
+	async GetStoreLanguages(): Promise<string[]> {
 		var value = await localforage.getItem(keys.settingsStoreLanguagesKey) as string[]
 		return value != null ? value : ["en", "de"]
 	}
 	//#endregion
 }
 
-export interface Author{
+export interface Author {
 	uuid: string
 	firstName: string
 	lastName: string
@@ -334,88 +332,88 @@ export interface Author{
 	profileImageBlurhash: string
 }
 
-export interface Category{
+export interface Category {
 	key: string;
 	name: string;
 	language: string;
 }
 
-export enum AuthorMode{
+export enum AuthorMode {
 	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
 	AuthorOfUser = 1,	// If the author belongs to the user
 	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
 }
 
-export enum BookStatus{
+export enum BookStatus {
 	Unpublished = 0,
 	Review = 1,
 	Published = 2,
 	Hidden = 3
 }
 
-export function FindElement(currentElement: Element, tagName: string) : Element{
-	if(currentElement.tagName.toLowerCase() == tagName) return currentElement;
+export function FindElement(currentElement: Element, tagName: string): Element {
+	if (currentElement.tagName.toLowerCase() == tagName) return currentElement
 
-	for(let i = 0; i < currentElement.children.length; i++){
-		let child = currentElement.children.item(i);
-		
-		let foundElement = FindElement(child, tagName);
-		if(foundElement) return foundElement;
+	for (let i = 0; i < currentElement.children.length; i++) {
+		let child = currentElement.children.item(i)
+
+		let foundElement = FindElement(child, tagName)
+		if (foundElement) return foundElement
 	}
 
-	return null;
+	return null
 }
 
-export function SetTextFieldAutocomplete(textFieldId: string, autocomplete: string, setFocus: boolean = false){
+export function SetTextFieldAutocomplete(textFieldId: string, autocomplete: string, setFocus: boolean = false) {
 	// Find the input element
-	let textField = document.getElementById(textFieldId);
-	let input = FindElement(textField, "input") as HTMLInputElement;
+	let textField = document.getElementById(textFieldId)
+	let input = FindElement(textField, "input") as HTMLInputElement
 
-	if(input){
-		if(setFocus) input.focus();
+	if (input) {
+		if (setFocus) input.focus()
 
 		// Set the autocomplete attribute
-		input.setAttribute("autocomplete", autocomplete);
+		input.setAttribute("autocomplete", autocomplete)
 	}
 }
 
-export function FindAppropriateLanguage(targetLanguage: string, objects: {language: string}[]) : number{
-	if(objects.length == 0) return -1;
-	if(objects.length == 1) return 0;
+export function FindAppropriateLanguage(targetLanguage: string, objects: { language: string }[]): number {
+	if (objects.length == 0) return -1
+	if (objects.length == 1) return 0
 
 	// Try to get the name of the target language
-	let i = objects.findIndex(n => n.language == targetLanguage);
-	if(i != -1) return i;
+	let i = objects.findIndex(n => n.language == targetLanguage)
+	if (i != -1) return i
 
 	// Try to get the name of the default language
-	i = objects.findIndex(n => n.language == "en");
-	if(i != -1) return i;
+	i = objects.findIndex(n => n.language == "en")
+	if (i != -1) return i
 
 	// Return the first name
-	return 0;
+	return 0
 }
 
-export function GetContentAsInlineSource(content: string, contentType: string) : string{
-	return `data:${contentType};base64,${btoa(content)}`;
+export function GetContentAsInlineSource(content: string, contentType: string): string {
+	return `data:${contentType};base64,${btoa(content)}`
 }
 
-export function GetBookStatusByString(status: string) : BookStatus{
-	switch(status){
+export function GetBookStatusByString(status: string): BookStatus {
+	switch (status) {
 		case "published":
-			return BookStatus.Published;
+			return BookStatus.Published
 		case "review":
-			return BookStatus.Review;
+			return BookStatus.Review
 		case "hidden":
-			return BookStatus.Hidden;
+			return BookStatus.Hidden
 		default:
-			return BookStatus.Unpublished;
+			return BookStatus.Unpublished
 	}
 }
 
-export function GetAuthorProfileImageLink(uuid: string){
-	return `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`;
+export function GetAuthorProfileImageLink(uuid: string) {
+	return `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`
 }
 
-export function GetStoreBookCoverLink(uuid: string){
-	return `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`;
+export function GetStoreBookCoverLink(uuid: string) {
+	return `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`
 }
