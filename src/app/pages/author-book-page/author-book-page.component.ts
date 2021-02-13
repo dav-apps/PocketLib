@@ -19,11 +19,11 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-author-book-page',
 	templateUrl: './author-book-page.component.html'
 })
-export class AuthorBookPageComponent{
+export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
 	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent
 	@ViewChild('priceInput', { static: true }) priceInput: PriceInputComponent
-	@ViewChild('isbnInput', {static: true}) isbnInput: IsbnInputComponent
+	@ViewChild('isbnInput', { static: true }) isbnInput: IsbnInputComponent
 	uuid: string;
 	book: {
 		collection: string,
@@ -40,17 +40,17 @@ export class AuthorBookPageComponent{
 			name: string
 		}[]
 	} = {
-		collection: "",
-		title: "",
-		description: "",
-		language: "en",
-		price: 0,
-		isbn: "",
-		status: BookStatus.Unpublished,
-		coverBlurhash: null,
-		fileName: null,
-		categories: []
-	}
+			collection: "",
+			title: "",
+			description: "",
+			language: "en",
+			price: 0,
+			isbn: "",
+			status: BookStatus.Unpublished,
+			coverBlurhash: null,
+			fileName: null,
+			categories: []
+		}
 	editTitleDialogVisible: boolean = false
 	editTitleDialogTitle: string = ""
 	editTitleDialogTitleError: string = ""
@@ -93,32 +93,31 @@ export class AuthorBookPageComponent{
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router,
-      private activatedRoute: ActivatedRoute
-	){
+		private activatedRoute: ActivatedRoute
+	) {
 		this.locale = this.dataService.GetLocale().authorBookPage
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
-	async ngOnInit(){
+	async ngOnInit() {
 		// Wait for the user to be loaded
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
 		// Redirect back to the author page if the user is not an author
-		if(!this.dataService.userAuthor && !this.dataService.userIsAdmin){
+		if (!this.dataService.userAuthor && !this.dataService.userIsAdmin) {
 			this.router.navigate(['author'])
 		}
 
 		// Get the store book
 		let response: ApiResponse<any> = await this.apiService.GetStoreBook({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid
 		})
 
-		if(response.status == 200){
+		if (response.status == 200) {
 			this.book.collection = response.data.collection
 			this.book.title = response.data.title
 			this.book.description = response.data.description
@@ -137,10 +136,10 @@ export class AuthorBookPageComponent{
 			this.priceInput.SetPrice(this.book.price)
 			this.isbnInput.SetIsbn(this.book.isbn)
 
-			if(response.data.cover){
+			if (response.data.cover) {
 				this.coverContent = GetStoreBookCoverLink(this.uuid)
 			}
-		}else{
+		} else {
 			// Redirect back to the author page
 			this.router.navigate(['author'])
 		}
@@ -148,48 +147,48 @@ export class AuthorBookPageComponent{
 
 	GoBack() {
 		// Check if this is the only book in the collection
-		let skipCollection = false;
-		let authorUuid: string;
+		let skipCollection = false
+		let authorUuid: string
 
 		if (this.dataService.userIsAdmin) {
-			let collectionFound = false;
+			let collectionFound = false
 
 			for (let author of this.dataService.adminAuthors) {
 				for (let collection of author.collections) {
 					if (collection.uuid == this.book.collection) {
-						collectionFound = true;
-						skipCollection = collection.books.length == 1;
-						authorUuid = author.uuid;
-						break;
+						collectionFound = true
+						skipCollection = collection.books.length == 1
+						authorUuid = author.uuid
+						break
 					}
 				}
 
-				if (collectionFound) break;
+				if (collectionFound) break
 			}
 		} else {
 			for (let collection of this.dataService.userAuthor.collections) {
 				if (collection.uuid == this.book.collection) {
-					skipCollection = collection.books.length == 1;
-					break;
+					skipCollection = collection.books.length == 1
+					break
 				}
 			}
 		}
 
 		if (skipCollection && this.dataService.userIsAdmin) {
-			this.router.navigate(["author", authorUuid]);
+			this.router.navigate(["author", authorUuid])
 		} else if (skipCollection) {
-			this.router.navigate(["author"]);
+			this.router.navigate(["author"])
 		} else {
-			this.router.navigate(["author", "collection", this.book.collection]);
+			this.router.navigate(["author", "collection", this.book.collection])
 		}
 	}
 
 	LoadCategories(keys: string[]) {
-		this.book.categories = [];
+		this.book.categories = []
 
 		for (let key of keys) {
 			// Find the category with the key
-			let category = this.dataService.categories.find(c => c.key == key);
+			let category = this.dataService.categories.find(c => c.key == key)
 
 			if (category) {
 				this.book.categories.push({
@@ -200,50 +199,47 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	ShowEditTitleDialog(){
-		this.editTitleDialogTitle = this.book.title;
-		this.editTitleDialogTitleError = "";
+	ShowEditTitleDialog() {
+		this.editTitleDialogTitle = this.book.title
+		this.editTitleDialogTitleError = ""
 
-		this.editTitleDialogContentProps.title = this.locale.editTitleDialog.title;
-		this.editTitleDialogVisible = true;
+		this.editTitleDialogContentProps.title = this.locale.editTitleDialog.title
+		this.editTitleDialogVisible = true
 	}
 
-	async UpdateTitle(){
+	async UpdateTitle() {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				title: this.editTitleDialogTitle
 			})
 		)
 	}
 
-	async EditDescription(){
-		if(this.editDescription){
+	async EditDescription() {
+		if (this.editDescription) {
 			this.newDescriptionError = ""
 			this.descriptionLoading = true
 
 			//	Save the new description on the server
 			this.UpdateStoreBookResponse(
 				await this.apiService.UpdateStoreBook({
-					jwt: this.dataService.user.JWT,
 					uuid: this.uuid,
 					description: this.newDescription
 				})
 			)
-		}else{
-			this.newDescription = this.book.description ? this.book.description : "";
-			this.newDescriptionError = "";
-			this.editDescription = true;
+		} else {
+			this.newDescription = this.book.description ? this.book.description : ""
+			this.newDescriptionError = ""
+			this.editDescription = true
 		}
 	}
 
-	async SetLanguage(language: string){
-		this.updateLanguage = true;
+	async SetLanguage(language: string) {
+		this.updateLanguage = true
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				language
 			})
@@ -252,26 +248,25 @@ export class AuthorBookPageComponent{
 
 	ShowCategoriesDialog() {
 		// Get the category keys of the book
-		let keys: string[] = [];
-		this.book.categories.forEach(c => keys.push(c.key));
-		this.categoriesSelectionComponent.SetSelectedCategories(keys);
+		let keys: string[] = []
+		this.book.categories.forEach(c => keys.push(c.key))
+		this.categoriesSelectionComponent.SetSelectedCategories(keys)
 
-		this.categoriesSelectionDialogContentProps.title = this.locale.categoriesSelectionDialog.title;
-		this.categoriesSelectionDialogVisible = true;
+		this.categoriesSelectionDialogContentProps.title = this.locale.categoriesSelectionDialog.title
+		this.categoriesSelectionDialogVisible = true
 	}
 
 	async UpdateCategories() {
-		let categories = this.categoriesSelectionComponent.GetSelectedCategories();
+		let categories = this.categoriesSelectionComponent.GetSelectedCategories()
 
 		// Update the categories on the server
 		await this.apiService.UpdateStoreBook({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			categories
 		})
 
-		this.LoadCategories(categories);
-		this.categoriesSelectionDialogVisible = false;
+		this.LoadCategories(categories)
+		this.categoriesSelectionDialogVisible = false
 	}
 
 	async UpdatePrice(price: number) {
@@ -279,7 +274,6 @@ export class AuthorBookPageComponent{
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				price
 			})
@@ -291,7 +285,6 @@ export class AuthorBookPageComponent{
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				isbn
 			})
@@ -314,7 +307,7 @@ export class AuthorBookPageComponent{
 		let imageHeight = 0
 		let imageWidth = 0
 
-		let imageLoadPromise: Promise<null> = new Promise((resolve) => {
+		let imageLoadPromise = new Promise((resolve: Function) => {
 			image.onload = () => {
 				imageHeight = image.height
 				imageWidth = image.width
@@ -331,7 +324,6 @@ export class AuthorBookPageComponent{
 
 		// Upload the image
 		await this.apiService.SetStoreBookCover({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			type: file.type,
 			file: imageContent
@@ -354,7 +346,6 @@ export class AuthorBookPageComponent{
 
 		// Upload the file
 		let response: ApiResponse<any> = await this.apiService.SetStoreBookFile({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			type: file.type,
 			name: file.name,
@@ -369,59 +360,58 @@ export class AuthorBookPageComponent{
 		}
 	}
 
-	async PublishOrUnpublishBook(published: boolean){
+	async PublishOrUnpublishBook(published: boolean) {
 		this.publishingOrUnpublishing = true
 		this.statusLoading = true
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				published
 			})
 		)
 	}
 
-	UpdateStoreBookResponse(response: ApiResponse<any>){
-		if(this.editDescription){
+	UpdateStoreBookResponse(response: ApiResponse<any>) {
+		if (this.editDescription) {
 			// The description was updated
-			if(response.status == 200){
-				this.book.description = response.data.description;
-				this.editDescription = false;
-			}else{
-				let errorCode = response.data.errors[0].code;
+			if (response.status == 200) {
+				this.book.description = response.data.description
+				this.editDescription = false
+			} else {
+				let errorCode = response.data.errors[0].code
 
-				switch(errorCode){
+				switch (errorCode) {
 					case 2305:	// Field too short: description
-						this.newDescriptionError = this.locale.errors.descriptionTooShort;
-						break;
+						this.newDescriptionError = this.locale.errors.descriptionTooShort
+						break
 					case 2405:	// Field too long: description
-						this.newDescriptionError = this.locale.errors.descriptionTooLong;
-						break;
+						this.newDescriptionError = this.locale.errors.descriptionTooLong
+						break
 					default:
-						this.newDescriptionError = this.locale.errors.unexpectedError;
-						break;
+						this.newDescriptionError = this.locale.errors.unexpectedError
+						break
 				}
 			}
 
 			this.descriptionLoading = false
-		}else if(this.updateLanguage){
+		} else if (this.updateLanguage) {
 			this.updateLanguage = false
 
-			if(response.status == 200){
+			if (response.status == 200) {
 				this.book.language = response.data.language
 			}
 		} else if (this.priceUpdating) {
 			this.priceUpdating = false
 
 			// The price was updated
-			if(response.status == 200){
+			if (response.status == 200) {
 				this.book.price = response.data.price
 				this.priceInput.SetPrice(this.book.price)
-			}else{
+			} else {
 				let errorCode = response.data.errors[0].code
 
-				switch(errorCode){
+				switch (errorCode) {
 					case 2501:	// Price invalid
 						this.priceInput.SetError(this.locale.errors.priceInvalid)
 						break
@@ -449,31 +439,31 @@ export class AuthorBookPageComponent{
 						break
 				}
 			}
-		}else if(this.publishingOrUnpublishing){
+		} else if (this.publishingOrUnpublishing) {
 			this.publishingOrUnpublishing = false
 			this.statusLoading = false
-			
-			if(response.status == 200){
+
+			if (response.status == 200) {
 				this.book.status = GetBookStatusByString(response.data.status)
 			}
-		}else{
+		} else {
 			// The title was updated
-			if(response.status == 200){
-				this.book.title = response.data.title;
-				this.editTitleDialogVisible = false;
-			}else{
-				let errorCode = response.data.errors[0].code;
-	
-				switch(errorCode){
+			if (response.status == 200) {
+				this.book.title = response.data.title
+				this.editTitleDialogVisible = false
+			} else {
+				let errorCode = response.data.errors[0].code
+
+				switch (errorCode) {
 					case 2304:	// Field too short: title
-						this.editTitleDialogTitleError = this.locale.errors.titleTooShort;
-						break;
+						this.editTitleDialogTitleError = this.locale.errors.titleTooShort
+						break
 					case 2404:	// Field too long: title
-						this.editTitleDialogTitleError = this.locale.errors.titleTooLong;
-						break;
+						this.editTitleDialogTitleError = this.locale.errors.titleTooLong
+						break
 					default:
-						this.editTitleDialogTitleError = this.locale.errors.unexpectedError;
-						break;
+						this.editTitleDialogTitleError = this.locale.errors.unexpectedError
+						break
 				}
 			}
 		}

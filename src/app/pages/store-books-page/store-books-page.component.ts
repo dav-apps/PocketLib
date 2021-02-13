@@ -8,8 +8,8 @@ import { ApiService } from 'src/app/services/api-service'
 	selector: 'store-books-page',
 	templateUrl: './store-books-page.component.html'
 })
-export class StoreBooksPageComponent{
-	category: Category = {key: "", name: "", language: ""}
+export class StoreBooksPageComponent {
+	category: Category = { key: "", name: "", language: "" }
 	books: {
 		uuid: string,
 		title: string,
@@ -20,23 +20,23 @@ export class StoreBooksPageComponent{
 		coverHeight: number
 	}[] = []
 	hoveredBookIndex: number = -1
-	
+
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	){
+	) {
 		this.activatedRoute.url.subscribe(async () => {
 			let key = this.activatedRoute.snapshot.paramMap.get('key')
 			await this.UpdateView(key)
 		})
 	}
 
-	async UpdateView(key: string){
+	async UpdateView(key: string) {
 		// Get the selected category
-		await this.dataService.categoriesPromiseHolder.AwaitResult();
-		this.category = this.dataService.categories.find(c => c.key == key);
+		await this.dataService.categoriesPromiseHolder.AwaitResult()
+		this.category = this.dataService.categories.find(c => c.key == key)
 
 		// Get the books of the category
 		this.books = []
@@ -45,7 +45,7 @@ export class StoreBooksPageComponent{
 			languages: await this.dataService.GetStoreLanguages()
 		})
 
-		for(let storeBook of getStoreBooksByCategoryResponse.data.books){
+		for (let storeBook of getStoreBooksByCategoryResponse.data.books) {
 			// Calculate the width and height
 			let width = 178
 			let height = 270
@@ -75,7 +75,7 @@ export class StoreBooksPageComponent{
 		}
 	}
 
-	NavigateToStoreBook(uuid: string){
-		this.router.navigate(["store", "book", uuid]);
+	NavigateToStoreBook(uuid: string) {
+		this.router.navigate(["store", "book", uuid])
 	}
 }

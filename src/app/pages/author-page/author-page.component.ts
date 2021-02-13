@@ -9,16 +9,16 @@ import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: "pocketlib-author-page",
-   templateUrl: "./author-page.component.html",
-   styleUrls: [
-      './author-page.component.scss'
-   ]
+	templateUrl: "./author-page.component.html",
+	styleUrls: [
+		'./author-page.component.scss'
+	]
 })
-export class AuthorPageComponent{
+export class AuthorPageComponent {
 	locale = enUS.authorPage
 	faCoins = faCoins
 	faHandHoldingUsd = faHandHoldingUsd
-   section1Height: number = 600
+	section1Height: number = 600
 	section1TextMarginTop: number = 200
 	section2Height: number = 600
 	section3Height: number = 400
@@ -43,30 +43,30 @@ export class AuthorPageComponent{
 		title: this.locale.createAuthorDialog.title
 	}
 
-   constructor(
+	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-   ){
-		this.locale = this.dataService.GetLocale().authorPage;
+	) {
+		this.locale = this.dataService.GetLocale().authorPage
 
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
-   }
-   
-   async ngOnInit(){
+		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
+	}
+
+	async ngOnInit() {
 		this.setSize()
 
 		await this.dataService.userPromiseHolder.AwaitResult()
-		if(this.dataService.userIsAdmin && !this.uuid){
+		if (this.dataService.userIsAdmin && !this.uuid) {
 			// Get the books in review
-			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview({jwt: this.dataService.user.JWT})
+			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview()
 
-			if(response.status == 200){
+			if (response.status == 200) {
 				this.booksInReview = []
 
-				for(let book of response.data.books){
+				for (let book of response.data.books) {
 					this.booksInReview.push({
 						uuid: book.uuid,
 						title: book.title
@@ -76,11 +76,11 @@ export class AuthorPageComponent{
 		}
 	}
 
-   @HostListener('window:resize')
-	onResize(){
+	@HostListener('window:resize')
+	onResize() {
 		this.setSize()
-   }
-   
+	}
+
 	setSize() {
 		let navbarHeight = window.innerWidth < 600 ? 56 : 64
 		this.section1Height = window.innerHeight - navbarHeight
@@ -107,11 +107,11 @@ export class AuthorPageComponent{
 		}
 	}
 
-   createProfileButtonClick(){
-		if(this.dataService.user.IsLoggedIn){
+	createProfileButtonClick() {
+		if (this.dataService.dav.isLoggedIn) {
 			// Redirect to the Author setup page
-			this.router.navigate(['author', 'setup']);
-      }else{
+			this.router.navigate(['author', 'setup'])
+		} else {
 			// Redirect to the Account page
 			this.router.navigate(["account"], {
 				queryParams: {
@@ -121,35 +121,34 @@ export class AuthorPageComponent{
 		}
 	}
 
-	ShowAuthor(uuid: string){
-		this.router.navigate(['author', uuid]);
+	ShowAuthor(uuid: string) {
+		this.router.navigate(['author', uuid])
 	}
 
-	ShowCreateAuthorDialog(){
-		this.createAuthorDialogFirstName = "";
-		this.createAuthorDialogFirstNameError = "";
-		this.createAuthorDialogLastName = "";
-		this.createAuthorDialogLastNameError = "";
+	ShowCreateAuthorDialog() {
+		this.createAuthorDialogFirstName = ""
+		this.createAuthorDialogFirstNameError = ""
+		this.createAuthorDialogLastName = ""
+		this.createAuthorDialogLastNameError = ""
 
-		this.createAuthorDialogContentProps.title = this.locale.createAuthorDialog.title;
-		this.createAuthorDialogVisible = true;
+		this.createAuthorDialogContentProps.title = this.locale.createAuthorDialog.title
+		this.createAuthorDialogVisible = true
 	}
 
-	ShowBook(uuid: string){
-		this.router.navigate(["store", "book", uuid]);
+	ShowBook(uuid: string) {
+		this.router.navigate(["store", "book", uuid])
 	}
 
-	async CreateAuthor(){
-		this.createAuthorDialogFirstNameError = "";
-		this.createAuthorDialogLastNameError = "";
+	async CreateAuthor() {
+		this.createAuthorDialogFirstNameError = ""
+		this.createAuthorDialogLastNameError = ""
 
 		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
-			jwt: this.dataService.user.JWT,
 			firstName: this.createAuthorDialogFirstName,
 			lastName: this.createAuthorDialogLastName
 		})
 
-		if(response.status == 201){
+		if (response.status == 201) {
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push({
 				uuid: response.data.uuid,
@@ -165,34 +164,34 @@ export class AuthorPageComponent{
 				profileImageBlurhash: response.data.profile_image_blurhash
 			})
 
-			this.createAuthorDialogVisible = false;
+			this.createAuthorDialogVisible = false
 
 			// Redirect to the author page of the new author
-			this.router.navigate(['author', response.data.uuid]);
-		}else{
-			for(let error of response.data.errors){
-				switch(error.code){
+			this.router.navigate(['author', response.data.uuid])
+		} else {
+			for (let error of response.data.errors) {
+				switch (error.code) {
 					case 2102:	// Missing field: first_name
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing;
-						break;
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
+						break
 					case 2103:	// Missing field: last_name
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing;
-						break;
+						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
+						break
 					case 2301:	// Field too short: first_name
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort;
-						break;
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+						break
 					case 2302:	// Field too short: last_name
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort;
-						break;
+						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+						break
 					case 2401:	// Field too long: first_name
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong;
-						break;
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
+						break
 					case 2402:	// Field too long: last_name
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong;
-						break;
+						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong
+						break
 					default:		// Unexpected error
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError;
-						break;
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError
+						break
 				}
 			}
 		}

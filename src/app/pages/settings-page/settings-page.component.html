@@ -6,18 +6,21 @@
 		<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
 		
 		<fab-toggle 
-				[(checked)]="openLastReadBook"
-				(onChange)="onOpenLastReadBookToggleChange($event)">
+			[(checked)]="openLastReadBook"
+			(onChange)="onOpenLastReadBookToggleChange($event)">
 		</fab-toggle>
    </div>
 
    <div class="mx-auto mt-4" style="max-width: 170px">
 		<!-- Theme -->
 		<p class="text-color" style="font-size: 20px">{{ locale.theme }}</p>
-		<mat-radio-group class="d-flex flex-column text-color" 
-								[color]="dataService.darkTheme ? 'accent' : 'primary'" 
-								[value]="selectedTheme" 
-								(change)="onThemeRadioButtonSelected($event)">
+		
+		<mat-radio-group
+			class="d-flex flex-column text-color" 
+			[color]="dataService.darkTheme ? 'accent' : 'primary'" 
+			[value]="selectedTheme" 
+			(change)="onThemeRadioButtonSelected($event)">
+
 			<mat-radio-button [value]="themeKeys[0]">
 				{{ locale.lightTheme }}
 			</mat-radio-button>

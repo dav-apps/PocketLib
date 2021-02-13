@@ -1,18 +1,18 @@
-import { Component, ViewChild, ElementRef } from "@angular/core";
-import { Router } from '@angular/router';
-import { transition, trigger, state, style, animate } from '@angular/animations';
-import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react';
-import { ReadFile } from 'ngx-file-helpers';
-import { enUS } from 'src/locales/locales';
-import { DataService } from 'src/app/services/data-service';
-import { Book } from 'src/app/models/Book';
-import { EpubBook } from 'src/app/models/EpubBook';
-import { PdfBook } from 'src/app/models/PdfBook';
+import { Component, ViewChild, ElementRef } from "@angular/core"
+import { Router } from '@angular/router'
+import { transition, trigger, state, style, animate } from '@angular/animations'
+import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
+import { ReadFile } from 'ngx-file-helpers'
+import { enUS } from 'src/locales/locales'
+import { DataService } from 'src/app/services/data-service'
+import { Book } from 'src/app/models/Book'
+import { EpubBook } from 'src/app/models/EpubBook'
+import { PdfBook } from 'src/app/models/PdfBook'
 
-const pdfType = "application/pdf";
+const pdfType = "application/pdf"
 
 @Component({
-   selector: "pocketlib-library-page",
+	selector: "pocketlib-library-page",
 	templateUrl: "./library-page.component.html",
 	animations: [
 		trigger('addBookHover', [
@@ -33,9 +33,9 @@ const pdfType = "application/pdf";
 		])
 	]
 })
-export class LibraryPageComponent{
+export class LibraryPageComponent {
 	locale = enUS.libraryPage
-	@ViewChild('contextMenu', {static: true}) contextMenu: ElementRef
+	@ViewChild('contextMenu', { static: true }) contextMenu: ElementRef
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -81,31 +81,31 @@ export class LibraryPageComponent{
 	constructor(
 		public dataService: DataService,
 		private router: Router
-   ){
-		this.locale = this.dataService.GetLocale().libraryPage;
-		this.dataService.navbarVisible = true;
+	) {
+		this.locale = this.dataService.GetLocale().libraryPage
+		this.dataService.navbarVisible = true
 
 		document.onclick = (event: MouseEvent) => {
-			if(!this.contextMenuVisible) return;
+			if (!this.contextMenuVisible) return
 
-			let target = event.target as Node;
-			let contextMenu = this.contextMenu.nativeElement as HTMLDivElement;
+			let target = event.target as Node
+			let contextMenu = this.contextMenu.nativeElement as HTMLDivElement
 
-			if(!contextMenu.contains(target)){
+			if (!contextMenu.contains(target)) {
 				// Hide the context menu
-				this.contextMenuVisible = false;
+				this.contextMenuVisible = false
 			}
 		}
-   }
+	}
 
-	async filePick(file: ReadFile){
+	async filePick(file: ReadFile) {
 		// Create a new book
-		if(file.type == pdfType){
-			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')));
-		}else{
-			await EpubBook.Create(file.underlyingFile);
+		if (file.type == pdfType) {
+			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
+		} else {
+			await EpubBook.Create(file.underlyingFile)
 		}
-      await this.dataService.LoadAllBooks();
+		await this.dataService.LoadAllBooks()
 	}
 
 	NavigateToStorePage() {
@@ -115,79 +115,79 @@ export class LibraryPageComponent{
 	NavigateToAuthorPage() {
 		this.router.navigate(['author'])
 	}
-   
-   async ShowBook(book: Book){
+
+	async ShowBook(book: Book) {
 		// Check if the user can access the book
-		if (book.storeBook && !this.dataService.user.IsLoggedIn) {
-			this.loginToAccessBookDialogContentProps.title = this.locale.loginToAccessBookDialog.title;
-			this.loginToAccessBookDialogVisible = true;
-			return;
+		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
+			this.loginToAccessBookDialogContentProps.title = this.locale.loginToAccessBookDialog.title
+			this.loginToAccessBookDialogVisible = true
+			return
 		}
 
-		this.dataService.currentBook = book;
+		this.dataService.currentBook = book
 
 		// Update the settings with the position of the current book
-		if(this.dataService.currentBook instanceof EpubBook){
-			await this.dataService.settings.SetBook(book.uuid, this.dataService.currentBook.chapter, this.dataService.currentBook.progress);
-		}else if(this.dataService.currentBook instanceof PdfBook){
-			await this.dataService.settings.SetBook(book.uuid, null, this.dataService.currentBook.page);
+		if (this.dataService.currentBook instanceof EpubBook) {
+			await this.dataService.settings.SetBook(book.uuid, this.dataService.currentBook.chapter, this.dataService.currentBook.progress)
+		} else if (this.dataService.currentBook instanceof PdfBook) {
+			await this.dataService.settings.SetBook(book.uuid, null, this.dataService.currentBook.page)
 		}
 
-		this.router.navigate(["book"]);
-   }
+		this.router.navigate(["book"])
+	}
 
-   onContextMenu(event: MouseEvent, book: Book){
-		this.selectedBook = book;
-		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook;
-		
+	onContextMenu(event: MouseEvent, book: Book) {
+		this.selectedBook = book
+		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
+
 		// Set the position of the context menu
-		this.contextMenuPositionX = event.pageX;
-		this.contextMenuPositionY = event.pageY;
+		this.contextMenuPositionX = event.pageX
+		this.contextMenuPositionY = event.pageY
 
-		if(this.contextMenuVisible){
-			this.contextMenuVisible = false;
+		if (this.contextMenuVisible) {
+			this.contextMenuVisible = false
 			setTimeout(() => {
-				this.contextMenuVisible = true;
-			}, 60);
-		}else{
-			this.contextMenuVisible = true;
-		}
-		return false;
-	}
-	
-	ShowRenameBookDialog() {
-		this.contextMenuVisible = false;
-		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title;
-		this.renameBookDialogError = "";
-
-		this.renameBookDialogContentProps.title = this.locale.renameBookDialog.title;
-		this.renameBookDialogVisible = true;
-	}
-	
-	ShowRemoveBookDialog(){
-		this.contextMenuVisible = false;
-		this.removeBookDialogContentProps.title = this.locale.removeBookDialog.title;
-		this.removeBookDialogVisible = true;
-   }
-   
-	async RenameBook() {
-		this.renameBookDialogError = "";
-
-		if(this.renameBookDialogTitle.length == 0){
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleMissing;
-		}else if (this.renameBookDialogTitle.length < 2) {
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooShort;
-		}else if(this.renameBookDialogTitle.length > 100){
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooLong;
+				this.contextMenuVisible = true
+			}, 60)
 		} else {
-			await (this.selectedBook as PdfBook).SetTitle(this.renameBookDialogTitle);
-			this.renameBookDialogVisible = false;
+			this.contextMenuVisible = true
 		}
-   }
+		return false
+	}
+
+	ShowRenameBookDialog() {
+		this.contextMenuVisible = false
+		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
+		this.renameBookDialogError = ""
+
+		this.renameBookDialogContentProps.title = this.locale.renameBookDialog.title
+		this.renameBookDialogVisible = true
+	}
+
+	ShowRemoveBookDialog() {
+		this.contextMenuVisible = false
+		this.removeBookDialogContentProps.title = this.locale.removeBookDialog.title
+		this.removeBookDialogVisible = true
+	}
+
+	async RenameBook() {
+		this.renameBookDialogError = ""
+
+		if (this.renameBookDialogTitle.length == 0) {
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleMissing
+		} else if (this.renameBookDialogTitle.length < 2) {
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooShort
+		} else if (this.renameBookDialogTitle.length > 100) {
+			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooLong
+		} else {
+			await (this.selectedBook as PdfBook).SetTitle(this.renameBookDialogTitle)
+			this.renameBookDialogVisible = false
+		}
+	}
 
 	async RemoveBook() {
-		this.removeBookDialogVisible = false;
-		await this.selectedBook.Delete();
-		await this.dataService.LoadAllBooks();
+		this.removeBookDialogVisible = false
+		await this.selectedBook.Delete()
+		await this.dataService.LoadAllBooks()
 	}
 }

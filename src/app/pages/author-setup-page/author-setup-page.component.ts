@@ -12,7 +12,7 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-author-setup-page',
 	templateUrl: './author-setup-page.component.html'
 })
-export class AuthorSetupPageComponent{
+export class AuthorSetupPageComponent {
 	locale = enUS.authorSetupPage
 	firstName: string = ""
 	lastName: string = ""
@@ -29,13 +29,13 @@ export class AuthorSetupPageComponent{
 		private apiService: ApiService,
 		private router: Router,
 		private domSanitizer: DomSanitizer
-	){
+	) {
 		this.locale = this.dataService.GetLocale().authorSetupPage
 	}
 
-	async ngOnInit(){
+	async ngOnInit() {
 		// Redirect back to the author page if the user is already an author
-		if(await this.dataService.userAuthorPromiseHolder.AwaitResult()){
+		if (await this.dataService.userAuthorPromiseHolder.AwaitResult()) {
 			this.router.navigate(["author"])
 		}
 
@@ -55,19 +55,18 @@ export class AuthorSetupPageComponent{
 		}, 1)
 	}
 
-	async Submit(){
+	async Submit() {
 		this.generalError = ""
 		this.firstNameError = ""
 		this.lastNameError = ""
 		this.loading = true
 
 		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
-			jwt: this.dataService.user.JWT,
 			firstName: this.firstName,
 			lastName: this.lastName
 		})
 
-		if(response.status == 201){
+		if (response.status == 201) {
 			// Set the author in DataService
 			this.dataService.userAuthor = {
 				uuid: response.data.uuid,
@@ -89,7 +88,7 @@ export class AuthorSetupPageComponent{
 		} else {
 			this.loading = false
 
-			for(let error of response.data.errors){
+			for (let error of response.data.errors) {
 				switch (error.code) {
 					case 2102:	// Missing field: first_name
 						this.firstNameError = this.locale.errors.firstNameMissing

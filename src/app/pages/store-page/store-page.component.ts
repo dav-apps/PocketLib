@@ -8,7 +8,7 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-store-page',
 	templateUrl: './store-page.component.html'
 })
-export class StorePageComponent{
+export class StorePageComponent {
 	locale = enUS.storePage
 	sideNavHidden: boolean = false
 	selectLanguagesDialogVisible: boolean = false
@@ -16,43 +16,43 @@ export class StorePageComponent{
 	selectLanguagesDialogContentProps: IDialogContentProps = {
 		title: this.locale.selectLanguagesDialog.title
 	}
-	
+
 	constructor(
 		public dataService: DataService,
 		private router: Router
-	){
+	) {
 		this.locale = this.dataService.GetLocale().storePage
 	}
 
-	async ngOnInit(){
+	async ngOnInit() {
 		this.setSize()
 	}
 
 	@HostListener('window:resize')
-	onResize(){
+	onResize() {
 		this.setSize()
 	}
 
-	setSize(){
+	setSize() {
 		this.sideNavHidden = window.outerWidth < 576
 
-		if(!this.sideNavHidden) this.dataService.sideNavOpened = true
+		if (!this.sideNavHidden) this.dataService.sideNavOpened = true
 		else this.dataService.sideNavOpened = false
 	}
 
-	ShowStartPage(){
+	ShowStartPage() {
 		this.router.navigate(["store"])
-		if(this.sideNavHidden) this.dataService.sideNavOpened = false
+		if (this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 
-	ShowCategory(key: string){
+	ShowCategory(key: string) {
 		this.router.navigate(["store", "books", key])
-		if(this.sideNavHidden) this.dataService.sideNavOpened = false
+		if (this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 
 	ShowAuthorPage() {
 		this.router.navigate(["author"])
-		if(this.sideNavHidden) this.dataService.sideNavOpened = false
+		if (this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 
 	async ShowLanguagesDialog() {

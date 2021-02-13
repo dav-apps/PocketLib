@@ -14,7 +14,7 @@
 			<div
 				class="mt-4 mr-2">
 				<fab-primary-button (onClick)="createProfileButtonClick()">
-					{{ dataService.user.IsLoggedIn ? locale.createProfile : locale.login }}
+					{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
 				</fab-primary-button>
 			</div>
 		</div>
@@ -61,7 +61,7 @@
 		<h4 class="pt-5 mb-4">{{ locale.landingSection4Header }}</h4>
 
 		<fab-primary-button (onClick)="createProfileButtonClick()">
-			{{ dataService.user.IsLoggedIn ? locale.createProfile : locale.login }}
+			{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
 		</fab-primary-button>
 	</div>
 </div>
