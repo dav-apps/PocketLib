@@ -3,11 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import {
-	CreatePurchase,
 	ApiResponse,
 	ApiErrorResponse,
-	PurchaseResponseData,
-	DownloadTableObject
+	DownloadTableObject,
+	PurchasesController,
+	Purchase
 } from 'dav-npm'
 import {
 	DataService,
@@ -26,9 +26,9 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-store-book-page',
 	templateUrl: './store-book-page.component.html'
 })
-export class StoreBookPageComponent{
-	locale = enUS.storeBookPage;
-	uuid: string;
+export class StoreBookPageComponent {
+	locale = enUS.storeBookPage
+	uuid: string
 	book: {
 		collection: string,
 		title: string,
@@ -43,16 +43,16 @@ export class StoreBookPageComponent{
 		inLibrary: boolean,
 		purchased: boolean
 	} = {
-		collection: "",
-		title: "",
-		description: "",
-		price: 0,
-		status: BookStatus.Unpublished,
-		coverBlurhash: null,
-		categories: [],
-		inLibrary: false,
-		purchased: false
-	}
+			collection: "",
+			title: "",
+			description: "",
+			price: 0,
+			status: BookStatus.Unpublished,
+			coverBlurhash: null,
+			categories: [],
+			inLibrary: false,
+			purchased: false
+		}
 	price: string = ""
 	bookStatus: string = ""
 	author: Author = {
@@ -99,62 +99,61 @@ export class StoreBookPageComponent{
 		private snackBar: MatSnackBar,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	){
-		this.locale = this.dataService.GetLocale().storeBookPage;
+	) {
+		this.locale = this.dataService.GetLocale().storeBookPage
 
 		// Get the uuid from the params
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid');
+		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
-	async ngOnInit(){
-		this.setSize();
-		await this.dataService.userPromiseHolder.AwaitResult();
+	async ngOnInit() {
+		this.setSize()
+		await this.dataService.userPromiseHolder.AwaitResult()
 
 		// Get the store book cover
-		this.coverContent = GetStoreBookCoverLink(this.uuid);
+		this.coverContent = GetStoreBookCoverLink(this.uuid)
 
 		// Get StoreBook, StoreBookCollection and Author
-		await this.GetData();
+		await this.GetData()
 	}
 
 	@HostListener('window:resize')
-	onResize(){
-		this.setSize();
+	onResize() {
+		this.setSize()
 	}
 
-	setSize(){
-		this.showMobileLayout = window.outerWidth < 768;
+	setSize() {
+		this.showMobileLayout = window.outerWidth < 768
 	}
 
-	GoBack(){
-		this.routingService.NavigateBack("/store");
+	GoBack() {
+		this.routingService.NavigateBack("/store")
 	}
 
-	NavigateToAuthor(){
-		this.router.navigate(['store', 'author', this.author.uuid]);
+	NavigateToAuthor() {
+		this.router.navigate(['store', 'author', this.author.uuid])
 	}
 
 	ShowErrorDialog() {
-		this.errorDialogContentProps.title = this.locale.errorDialog.title;
-		this.errorDialogVisible = true;
+		this.errorDialogContentProps.title = this.locale.errorDialog.title
+		this.errorDialogVisible = true
 	}
 
-	async GetData(){
+	async GetData() {
 		// Get the StoreBook
-		let collectionUuid = await this.GetStoreBook();
-		if(!collectionUuid) return;
+		let collectionUuid = await this.GetStoreBook()
+		if (!collectionUuid) return
 
 		// Get the StoreBookCollection
-		let authorUuid = await this.GetStoreBookCollection(collectionUuid);
-		if(!authorUuid) return;
+		let authorUuid = await this.GetStoreBookCollection(collectionUuid)
+		if (!authorUuid) return
 
 		// Get the Author
-		await this.GetAuthor(authorUuid);
+		await this.GetAuthor(authorUuid)
 	}
 
-	async GetStoreBook() : Promise<string>{
+	async GetStoreBook(): Promise<string> {
 		let response: ApiResponse<any> = await this.apiService.GetStoreBook({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid
 		})
 
@@ -171,34 +170,34 @@ export class StoreBookPageComponent{
 			this.addToLibraryButtonDisabled = this.book.inLibrary
 
 			// Load the price
-			if(this.book.price == 0){
+			if (this.book.price == 0) {
 				this.price = this.locale.free
-			}else{
+			} else {
 				this.price = (this.book.price / 100).toFixed(2) + " €"
 
-				if(this.dataService.supportedLocale == "de"){
+				if (this.dataService.supportedLocale == "de") {
 					this.price = this.price.replace('.', ',')
 				}
 			}
-			
+
 			// Load the status
-			switch(this.book.status){
+			switch (this.book.status) {
 				case BookStatus.Unpublished:
-					this.bookStatus = this.locale.unpublished;
-					break;
+					this.bookStatus = this.locale.unpublished
+					break
 				case BookStatus.Review:
-					this.bookStatus = this.locale.review;
-					break;
+					this.bookStatus = this.locale.review
+					break
 				case BookStatus.Hidden:
-					this.bookStatus = this.locale.hidden;
-					break;
+					this.bookStatus = this.locale.hidden
+					break
 			}
 
 			// Load the categories
-			await this.dataService.categoriesPromiseHolder.AwaitResult();
+			await this.dataService.categoriesPromiseHolder.AwaitResult()
 			for (let key of response.data.categories) {
 				// Find the category with the key
-				let category = this.dataService.categories.find(c => c.key == key);
+				let category = this.dataService.categories.find(c => c.key == key)
 
 				if (category) {
 					this.book.categories.push({
@@ -208,29 +207,28 @@ export class StoreBookPageComponent{
 				}
 			}
 
-			return response.data.collection;
+			return response.data.collection
 		}
 
-		return null;
+		return null
 	}
 
-	async GetStoreBookCollection(uuid: string) : Promise<string>{
+	async GetStoreBookCollection(uuid: string): Promise<string> {
 		let response: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
-			jwt: this.dataService.user.JWT,
 			uuid
 		})
 
-		if(response.status == 200){
-			return response.data.author;
+		if (response.status == 200) {
+			return response.data.author
 		}
 
-		return null;
+		return null
 	}
 
-	async GetAuthor(uuid: string){
-		let response: ApiResponse<any> = await this.apiService.GetAuthor({uuid})
+	async GetAuthor(uuid: string) {
+		let response: ApiResponse<any> = await this.apiService.GetAuthor({ uuid })
 
-		if(response.status == 200){
+		if (response.status == 200) {
 			this.author.uuid = response.data.uuid
 			this.author.firstName = response.data.first_name
 			this.author.lastName = response.data.last_name
@@ -242,123 +240,117 @@ export class StoreBookPageComponent{
 		}
 	}
 
-	async AddToLibrary(){
+	async AddToLibrary() {
 		// Check if the user can add the book to the library
-		let isAuthorOfBook = false;
-		if(this.dataService.userAuthor){
+		let isAuthorOfBook = false
+		if (this.dataService.userAuthor) {
 			// Try to find the book in the books of the author
-			isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1;
+			isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
 		}
 
-		if(
-			!this.dataService.userIsAdmin && 
-			!isAuthorOfBook &&
-			(this.book.price > 0 && this.dataService.user.Plan != 2)
-		){
+		if (
+			!this.dataService.userIsAdmin
+			&& !isAuthorOfBook
+			&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
+		) {
 			// Show dav Pro dialog
-			this.davProRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title;
-			this.davProRequiredDialogVisible = true;
-			return;
+			this.davProRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title
+			this.davProRequiredDialogVisible = true
+			return
 		}
 
 		// Add the StoreBook to the library of the user
 		let response: ApiResponse<any> = await this.apiService.CreateBook({
-			jwt: this.dataService.user.JWT,
 			storeBook: this.uuid
 		})
 
 		if (response.status == 201) {
-			this.addToLibraryButtonDisabled = true;
+			this.addToLibraryButtonDisabled = true
 
 			// Show Snackbar
-			this.snackBar.open(this.locale.snackbarMessageAdded, null, { duration: 5000 });
-			
+			this.snackBar.open(this.locale.snackbarMessageAdded, null, { duration: 5000 })
+
 			// Download the table objects
-			await DownloadTableObject(response.data.uuid);
-			await DownloadTableObject(response.data.file);
+			await DownloadTableObject(response.data.uuid)
+			await DownloadTableObject(response.data.file)
 		} else {
 			// Show error
-			this.ShowErrorDialog();
+			this.ShowErrorDialog()
 		}
 	}
 
 	async BuyBook() {
-		if (this.dataService.user.IsLoggedIn) {
-			if(this.book.price == 0){
+		if (this.dataService.dav.isLoggedIn) {
+			if (this.book.price == 0) {
 				// Purchase this book directly
-				let createPurchaseResponse: ApiResponse<PurchaseResponseData> | ApiErrorResponse = await CreatePurchase(
-					this.dataService.user.JWT,
-					this.uuid,
-					this.coverContent,
-					this.book.title,
-					this.authorProfileImageContent,
-					`${this.author.firstName} ${this.author.lastName}`,
-					this.book.price,
-					"eur"
-				)
-	
-				if(createPurchaseResponse.status == 201){
-					this.book.purchased = true;
-				}else{
+				let createPurchaseResponse: ApiResponse<Purchase> | ApiErrorResponse = await PurchasesController.CreatePurchase({
+					tableObjectUuid: this.uuid,
+					providerName: `${this.author.firstName} ${this.author.lastName}`,
+					providerImage: this.authorProfileImageContent,
+					productName: this.book.title,
+					productImage: this.coverContent,
+					currency: "eur"
+				})
+
+				if (createPurchaseResponse.status == 201) {
+					this.book.purchased = true
+				} else {
 					// Show error
-					this.ShowErrorDialog();
+					this.ShowErrorDialog()
 				}
-			}else{
+			} else {
 				// Show dialog for buying the book
-				this.ShowBuyBookDialog(false);
+				this.ShowBuyBookDialog(false)
 			}
 		} else {
 			// Show the Buy book dialog with login required
-			this.ShowBuyBookDialog(true);
+			this.ShowBuyBookDialog(true)
 		}
 	}
 
-	ShowBuyBookDialog(loginRequired: boolean){
-		this.buyBookDialogContentProps.title = this.book.price == 0 ? this.locale.buyBookDialog.loginRequired.titleFree : this.locale.buyBookDialog.title;
-		this.buyBookDialogLoginRequired = loginRequired;
-		this.buyBookDialogVisible = true;
+	ShowBuyBookDialog(loginRequired: boolean) {
+		this.buyBookDialogContentProps.title = this.book.price == 0 ? this.locale.buyBookDialog.loginRequired.titleFree : this.locale.buyBookDialog.title
+		this.buyBookDialogLoginRequired = loginRequired
+		this.buyBookDialogVisible = true
 	}
 
-	NavigateToAccountPage(){
-		this.router.navigate(['account']);
+	NavigateToAccountPage() {
+		this.router.navigate(['account'])
 	}
 
 	NavigateToCategory(key: string) {
-		this.router.navigate(["store", "books", key]);
+		this.router.navigate(["store", "books", key])
 	}
 
-	async NavigateToPurchasePage(){
+	async NavigateToPurchasePage() {
 		// Create the purchase on the server
-		let createPurchaseResponse: ApiResponse<PurchaseResponseData> | ApiErrorResponse = await CreatePurchase(
-			this.dataService.user.JWT,
-			this.uuid,
-			this.coverContent,
-			this.book.title,
-			this.authorProfileImageContent,
-			`${this.author.firstName} ${this.author.lastName}`,
-			this.book.price,
-			"eur"
-		)
-		this.buyBookDialogVisible = false;
+		let createPurchaseResponse: ApiResponse<Purchase> | ApiErrorResponse = await PurchasesController.CreatePurchase({
+			tableObjectUuid: this.uuid,
+			providerName: `${this.author.firstName} ${this.author.lastName}`,
+			providerImage: this.authorProfileImageContent,
+			productName: this.book.title,
+			productImage: this.coverContent,
+			currency: "eur"
+		})
+		this.buyBookDialogVisible = false
 
-		if(createPurchaseResponse.status == 201){
+		if (createPurchaseResponse.status == 201) {
 			// Navigate to the purchase page on the website
-			let url = environment.baseUrl + this.router.url;
-			let purchaseId = (createPurchaseResponse as ApiResponse<PurchaseResponseData>).data.id;
-			
-			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseId}?redirect_url=${url}`;
-		}else{
+			let url = environment.baseUrl + this.router.url
+			let purchaseId = (createPurchaseResponse as ApiResponse<Purchase>).data.Id
+
+			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseId}?redirectUrl=${url}`
+		} else {
 			// Show error
-			this.ShowErrorDialog();
+			this.ShowErrorDialog()
 		}
 	}
 
-	async PublishStoreBook(){
+	async PublishStoreBook() {
 		let response: ApiResponse<any> = await this.apiService.UpdateStoreBook({
-			jwt: this.dataService.user.JWT,
 			uuid: this.uuid,
 			status: "published"
 		})
-		if(response.status == 200) this.book.status = BookStatus.Published;
+		if (response.status == 200) this.book.status = BookStatus.Published
 	}
 }
