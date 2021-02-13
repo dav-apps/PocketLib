@@ -1,37 +1,36 @@
 import { Injectable } from '@angular/core'
 import * as axios from 'axios'
-import { ApiResponse } from 'dav-npm'
+import { Dav, ApiResponse } from 'dav-npm'
 import { environment } from 'src/environments/environment'
 
 @Injectable()
-export class ApiService{
+export class ApiService {
 	//#region Author functions
 	async CreateAuthor(params: {
-		jwt: string,
 		firstName: string,
 		lastName: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
-			if(params.firstName != null) data["first_name"] = params.firstName
-			if(params.lastName != null) data["last_name"] = params.lastName
+			if (params.firstName != null) data["first_name"] = params.firstName
+			if (params.lastName != null) data["last_name"] = params.lastName
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
 			})
-	
+
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -40,24 +39,22 @@ export class ApiService{
 		return result
 	}
 
-	async GetAuthorOfUser(params: {
-		jwt: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	async GetAuthorOfUser(): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
-					Authorization: params.jwt
+					Authorization: Dav.accessToken
 				}
 			})
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -70,12 +67,12 @@ export class ApiService{
 		uuid: string,
 		books?: boolean,
 		language?: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let parameters = {}
-			if(params.books != null){
+			if (params.books != null) {
 				parameters["books"] = true
 				parameters["language"] = params.language || "en"
 			}
@@ -88,8 +85,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -98,10 +95,10 @@ export class ApiService{
 		return result
 	}
 
-	async GetLatestAuthors(): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	async GetLatestAuthors(): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			var response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors/latest`
@@ -109,8 +106,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -120,7 +117,6 @@ export class ApiService{
 	}
 
 	async UpdateAuthorOfUser(params: {
-		jwt: string,
 		firstName?: string,
 		lastName?: string,
 		websiteUrl?: string,
@@ -129,7 +125,7 @@ export class ApiService{
 		twitterUsername?: string
 	}): Promise<ApiResponse<any>> {
 		let result: ApiResponse<any> = { status: -1, data: {} }
-		
+
 		try {
 			let data = {}
 			if (params.firstName != null) data["first_name"] = params.firstName
@@ -143,7 +139,7 @@ export class ApiService{
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -152,7 +148,7 @@ export class ApiService{
 			result.status = response.status
 			result.data = response.data
 		} catch (error) {
-			if(error.response){
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -162,7 +158,6 @@ export class ApiService{
 	}
 
 	async UpdateAuthor(params: {
-		jwt: string,
 		uuid: string,
 		firstName?: string,
 		lastName?: string,
@@ -170,9 +165,9 @@ export class ApiService{
 		facebookUsername?: string,
 		instagramUsername?: string,
 		twitterUsername?: string
-	}): Promise<ApiResponse<any>>{
+	}): Promise<ApiResponse<any>> {
 		let result: ApiResponse<any> = { status: -1, data: {} }
-		
+
 		try {
 			let data = {}
 			if (params.firstName != null) data["first_name"] = params.firstName
@@ -186,7 +181,7 @@ export class ApiService{
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -195,7 +190,7 @@ export class ApiService{
 			result.status = response.status
 			result.data = response.data
 		} catch (error) {
-			if(error.response){
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -207,13 +202,12 @@ export class ApiService{
 
 	//#region AuthorBio
 	async SetBioOfAuthorOfUser(params: {
-		jwt: string,
 		language: string,
 		bio: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = { status: -1, data: {} };
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
 			if (params.bio != null) data["bio"] = params.bio
 
@@ -221,7 +215,7 @@ export class ApiService{
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/bio/${params.language}`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -229,8 +223,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -240,22 +234,21 @@ export class ApiService{
 	}
 
 	async SetBioOfAuthor(params: {
-		jwt: string,
 		uuid: string,
 		language: string,
 		bio: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
-			if(params.bio != null) data["bio"] = params.bio
+			if (params.bio != null) data["bio"] = params.bio
 
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/bio/${params.language}`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -263,8 +256,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -276,18 +269,17 @@ export class ApiService{
 
 	//#region AuthorProfileImage
 	async SetProfileImageOfAuthorOfUser(params: {
-		jwt: string,
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/profile_image`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': params.type
 				},
 				data: params.file
@@ -295,8 +287,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -306,19 +298,18 @@ export class ApiService{
 	}
 
 	async SetProfileImageOfAuthor(params: {
-		jwt: string,
 		uuid: string,
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/profile_image`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': params.type
 				},
 				data: params.file
@@ -326,8 +317,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -339,24 +330,23 @@ export class ApiService{
 
 	//#region StoreBookCollection
 	async CreateStoreBookCollection(params: {
-		jwt: string,
 		author?: string,
 		name: string,
 		language: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
-			if(params.name != null) data["name"] = params.name
-			if(params.language != null) data["language"] = params.language
-			if(params.author != null) data["author"] = params.author
+			if (params.name != null) data["name"] = params.name
+			if (params.language != null) data["language"] = params.language
+			if (params.author != null) data["author"] = params.author
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -364,8 +354,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -375,20 +365,19 @@ export class ApiService{
 	}
 
 	async GetStoreBookCollection(params: {
-		jwt?: string,
 		uuid: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let options: axios.AxiosRequestConfig = {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}`
 			}
 
-			if(params.jwt != null){
+			if (Dav.accessToken != null) {
 				options.headers = {
-					Authorization: params.jwt
+					Authorization: Dav.accessToken
 				}
 			}
 
@@ -396,8 +385,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -409,22 +398,21 @@ export class ApiService{
 
 	//#region StoreBookCollectionName
 	async SetStoreBookCollectionName(params: {
-		jwt: string,
 		uuid: string,
 		language: string,
 		name: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
-			if(params.name != null) data["name"] = params.name
+			if (params.name != null) data["name"] = params.name
 
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}/name/${params.language}`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -432,8 +420,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -445,7 +433,6 @@ export class ApiService{
 
 	//#region StoreBook
 	async CreateStoreBook(params: {
-		jwt: string,
 		collection: string,
 		title: string,
 		description?: string,
@@ -453,10 +440,10 @@ export class ApiService{
 		price?: number,
 		isbn?: string,
 		categories?: string[]
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
 			if (params.collection) data["collection"] = params.collection
 			if (params.title) data["title"] = params.title
@@ -470,7 +457,7 @@ export class ApiService{
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/book`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -478,8 +465,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -489,20 +476,19 @@ export class ApiService{
 	}
 
 	async GetStoreBook(params: {
-		jwt?: string,
 		uuid: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let options: axios.AxiosRequestConfig = {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`
 			}
 
-			if(params.jwt != null){
+			if (Dav.accessToken != null) {
 				options.headers = {
-					Authorization: params.jwt
+					Authorization: Dav.accessToken
 				}
 			}
 
@@ -510,8 +496,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -523,12 +509,12 @@ export class ApiService{
 	async GetStoreBooksByCategory(params: {
 		key: string,
 		languages?: string[]
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let parameters = {}
-			if(params.languages != null) parameters["languages"] = params.languages.join(',')
+			if (params.languages != null) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
@@ -538,8 +524,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -550,12 +536,12 @@ export class ApiService{
 
 	async GetLatestStoreBooks(params: {
 		languages?: string[]
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let parameters = {};
-			if(params.languages != null) parameters["languages"] = params.languages.join(',')
+			if (params.languages != null) parameters["languages"] = params.languages.join(',')
 
 			let response = await axios.default({
 				method: 'get',
@@ -565,8 +551,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -575,24 +561,22 @@ export class ApiService{
 		return result
 	}
 
-	async GetStoreBooksInReview(params: {
-		jwt: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	async GetStoreBooksInReview(): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/review`,
 				headers: {
-					Authorization: params.jwt
+					Authorization: Dav.accessToken
 				}
 			})
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -602,7 +586,6 @@ export class ApiService{
 	}
 
 	async UpdateStoreBook(params: {
-		jwt: string,
 		uuid: string,
 		title?: string,
 		description?: string,
@@ -612,10 +595,10 @@ export class ApiService{
 		published?: boolean,
 		status?: string,
 		categories?: string[]
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
 			if (params.title != null) data["title"] = params.title
 			if (params.description != null) data["description"] = params.description
@@ -630,7 +613,7 @@ export class ApiService{
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -638,8 +621,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -651,19 +634,18 @@ export class ApiService{
 
 	//#region StoreBookCover
 	async SetStoreBookCover(params: {
-		jwt: string,
 		uuid: string,
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/cover`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': params.type
 				},
 				data: params.file
@@ -671,8 +653,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -684,20 +666,19 @@ export class ApiService{
 
 	//#region StoreBookFile
 	async SetStoreBookFile(params: {
-		jwt: string,
 		uuid: string,
 		type: string,
 		name: string,
 		file: any
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/file`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': params.type,
 					'Content-Disposition': `attachment; filename="${params.name}"`
 				},
@@ -706,8 +687,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -719,20 +700,19 @@ export class ApiService{
 
 	//#region Book
 	async CreateBook(params: {
-		jwt: string,
 		storeBook: string
-	}): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let data = {}
-			if(params.storeBook != null) data["store_book"] = params.storeBook
+			if (params.storeBook != null) data["store_book"] = params.storeBook
 
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/book`,
 				headers: {
-					Authorization: params.jwt,
+					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
 				data
@@ -740,8 +720,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
@@ -752,10 +732,10 @@ export class ApiService{
 	//#endregion
 
 	//#region Category
-	async GetCategories(): Promise<ApiResponse<any>>{
-		var result: ApiResponse<any> = {status: -1, data: {}}
+	async GetCategories(): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
 
-		try{
+		try {
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/categories`
@@ -763,8 +743,8 @@ export class ApiService{
 
 			result.status = response.status
 			result.data = response.data
-		}catch(error){
-			if(error.response){
+		} catch (error) {
+			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
 			}
