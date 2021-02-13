@@ -20,10 +20,10 @@
 			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
 		</div>
 		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowAccountPage()">
-         <i class="material-icons" style="margin-top: 6px; font-size: 25px" *ngIf="!dataService.user.IsLoggedIn">account_circle</i>
+         <i class="material-icons" style="margin-top: 6px; font-size: 25px" *ngIf="!dataService.dav.isLoggedIn">account_circle</i>
 			<img
-				*ngIf="dataService.user.IsLoggedIn" 
-         	[src]="dataService.user.Avatar" 
+				*ngIf="dataService.dav.isLoggedIn" 
+         	[src]="dataService.dav.user.ProfileImage" 
          	class="rounded-circle" 
          	height="28" width="28"
          	style="margin-top: 4px; margin-left: -2px">
