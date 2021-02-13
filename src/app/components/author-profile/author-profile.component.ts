@@ -10,7 +10,7 @@ import {
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { ApiResponse, GetUserPageLink } from 'dav-npm'
+import { Dav, ApiResponse } from 'dav-npm'
 import {
 	DataService,
 	FindAppropriateLanguage,
@@ -27,7 +27,7 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-author-profile',
 	templateUrl: './author-profile.component.html'
 })
-export class AuthorProfileComponent{
+export class AuthorProfileComponent {
 	locale = enUS.authorProfile
 	faGlobe = faGlobe
 	faFacebook = faFacebook
@@ -48,7 +48,14 @@ export class AuthorProfileComponent{
 		profileImage: false,
 		profileImageBlurhash: null
 	}
-	books: {uuid: string, title: string, description: string, language: string, coverContent: string, coverBlurhash: string}[] = []
+	books: {
+		uuid: string,
+		title: string,
+		description: string,
+		language: string,
+		coverContent: string,
+		coverBlurhash: string
+	}[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownSelectedIndex: number = 0
 	bioLanguageDropdownOptions: IDropdownOption[] = []
@@ -124,38 +131,38 @@ export class AuthorProfileComponent{
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
 		// Determine the author mode
-		if(!this.uuid){
+		if (!this.uuid) {
 			this.authorMode = AuthorMode.AuthorOfUser
-		}else if(
-			this.dataService.userIsAdmin && 
-			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)
+		} else if (
+			this.dataService.userIsAdmin
+			&& (this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)
 		) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
 		}
 
-		if(this.authorMode == AuthorMode.AuthorOfAdmin){
+		if (this.authorMode == AuthorMode.AuthorOfAdmin) {
 			// Get the author from the admin authors
-			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid);
+			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
 			this.SelectDefaultBio()
-		}else if(this.authorMode == AuthorMode.AuthorOfUser){
+		} else if (this.authorMode == AuthorMode.AuthorOfUser) {
 			this.author = this.dataService.userAuthor
 			this.SelectDefaultBio()
 
 			// Set the text and visibility for the provider message
-			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', GetUserPageLink('provider'))
-			this.showProviderMessage = !this.dataService.user.Provider
-		}else{
+			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
+			this.showProviderMessage = !this.dataService.dav.user.Provider
+		} else {
 			// Get the author from the server
 			await this.LoadAuthor()
 		}
 
-		if(this.author.profileImage){
+		if (this.author.profileImage) {
 			// Set the author profile image link
 			this.profileImageContent = GetAuthorProfileImageLink(this.author.uuid)
 		}
 
 		// Get the appropriate language of each collection
-		for(let collection of this.author.collections){
+		for (let collection of this.author.collections) {
 			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
 
 			this.collections.push({
@@ -168,41 +175,41 @@ export class AuthorProfileComponent{
 		this.SetupBioLanguageDropdown()
 	}
 
-	ngAfterViewInit(){
-		this.UpdateFontSize();
+	ngAfterViewInit() {
+		this.UpdateFontSize()
 	}
 
 	@HostListener('window:resize')
-	onResize(){
-		this.setSize();
-		this.UpdateFontSize();
+	onResize() {
+		this.setSize()
+		this.UpdateFontSize()
 	}
 
-	setSize(){
-		if(window.innerWidth < 768){
-			this.profileImageWidth = 110;
-		}else if(window.innerWidth < 1200){
-			this.profileImageWidth = 120;
-		}else{
-			this.profileImageWidth = 130;
+	setSize() {
+		if (window.innerWidth < 768) {
+			this.profileImageWidth = 110
+		} else if (window.innerWidth < 1200) {
+			this.profileImageWidth = 120
+		} else {
+			this.profileImageWidth = 130
 		}
 	}
 
-	UpdateFontSize(){
-		let bookListItems = document.getElementsByClassName('book-list-item');
-		if(bookListItems.length == 0) return;
+	UpdateFontSize() {
+		let bookListItems = document.getElementsByClassName('book-list-item')
+		if (bookListItems.length == 0) return
 
-		let bookItemStyles = getComputedStyle(bookListItems.item(0));
-		let bookItemWidth = +bookItemStyles.width.replace('px', '');
+		let bookItemStyles = getComputedStyle(bookListItems.item(0))
+		let bookItemWidth = +bookItemStyles.width.replace('px', '')
 
-		if(bookItemWidth <= 360){
-			this.bookTitleFontSize = 17;
-		}else if(bookItemWidth <= 400){
-			this.bookTitleFontSize = 18;
-		}else if(bookItemWidth <= 470){
-			this.bookTitleFontSize = 19;
-		}else{
-			this.bookTitleFontSize = 20;
+		if (bookItemWidth <= 360) {
+			this.bookTitleFontSize = 17
+		} else if (bookItemWidth <= 400) {
+			this.bookTitleFontSize = 18
+		} else if (bookItemWidth <= 470) {
+			this.bookTitleFontSize = 19
+		} else {
+			this.bookTitleFontSize = 20
 		}
 	}
 
@@ -212,25 +219,25 @@ export class AuthorProfileComponent{
 	}
 
 	NavigateToCollection(uuid: string) {
-		this.router.navigate(["author", "collection", uuid]);
+		this.router.navigate(["author", "collection", uuid])
 	}
 
 	NavigateToAuthorStoreBook(uuid: string) {
-		this.router.navigate(["author", "book", uuid]);
+		this.router.navigate(["author", "book", uuid])
 	}
 
-	NavigateToStoreBook(uuid: string){
-		this.router.navigate(["store", "book", uuid]);
+	NavigateToStoreBook(uuid: string) {
+		this.router.navigate(["store", "book", uuid])
 	}
 
-	SetupBioLanguageDropdown(){
-		if(this.authorMode == AuthorMode.Normal) return;
+	SetupBioLanguageDropdown() {
+		if (this.authorMode == AuthorMode.Normal) return
 
 		// Prepare the Bio language dropdown
-		this.bioLanguageDropdownOptions = [];
-		let i = 0;
+		this.bioLanguageDropdownOptions = []
+		let i = 0
 
-		for(let lang of this.author.bios){
+		for (let lang of this.author.bios) {
 			this.bioLanguageDropdownOptions.push({
 				key: i,
 				text: this.dataService.GetFullLanguage(lang.language),
@@ -238,12 +245,12 @@ export class AuthorProfileComponent{
 					language: lang.language,
 					added: true
 				}
-			});
+			})
 
 			i++
 		}
 
-		if(this.bioLanguageDropdownOptions.length == 0){
+		if (this.bioLanguageDropdownOptions.length == 0) {
 			this.bioMode = BioMode.None
 
 			// Add default item
@@ -268,7 +275,7 @@ export class AuthorProfileComponent{
 
 				i++
 			}
-		}else{
+		} else {
 			// Add a divider and all possible languages to add
 			let newOptions: IDropdownOption[] = [{
 				key: "header",
@@ -297,8 +304,8 @@ export class AuthorProfileComponent{
 				}
 			}
 
-			if(newOptions.length > 1){
-				for(let option of newOptions){
+			if (newOptions.length > 1) {
+				for (let option of newOptions) {
 					this.bioLanguageDropdownOptions.push(option)
 				}
 			}
@@ -308,57 +315,55 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	async EditBio(){
-		if(this.bioMode == BioMode.New || this.bioMode == BioMode.NormalEdit){
+	async EditBio() {
+		if (this.bioMode == BioMode.New || this.bioMode == BioMode.NormalEdit) {
 			this.newBioError = ""
 			this.bioLoading = true
 
 			// Save the new bio on the server
-			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)];
+			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)]
 
-			if(this.authorMode == AuthorMode.AuthorOfUser){
+			if (this.authorMode == AuthorMode.AuthorOfUser) {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthorOfUser({
-						jwt: this.dataService.user.JWT,
 						language: selectedOption.data.language,
 						bio: this.newBio
 					})
 				)
-			}else{
+			} else {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthor({
-						jwt: this.dataService.user.JWT,
 						uuid: this.uuid,
 						language: selectedOption.data.language,
 						bio: this.newBio
 					})
 				)
 			}
-		}else{
-			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio;
-			this.newBioError = "";
-			this.bioMode = BioMode.NormalEdit;
+		} else {
+			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio
+			this.newBioError = ""
+			this.bioMode = BioMode.NormalEdit
 		}
 	}
 
-	CancelEditBio(){
-		this.bioMode = 2;
-		this.newBio = "";
-		this.newBioError = "";
+	CancelEditBio() {
+		this.bioMode = 2
+		this.newBio = ""
+		this.newBioError = ""
 	}
 
-	BioLanguageDropdownChange(e: {event: MouseEvent, option: {key: number, text: string, data: any}, index: number}){
-		this.bioLanguageDropdownSelectedIndex = e.option.key;
-		this.newBioError = "";
+	BioLanguageDropdownChange(e: { event: MouseEvent, option: { key: number, text: string, data: any }, index: number }) {
+		this.bioLanguageDropdownSelectedIndex = e.option.key
+		this.newBioError = ""
 
-		if(!e.option.data){
-			this.bioMode = BioMode.None;
-		}else{
-			this.bioMode = e.option.data.added ? BioMode.Normal : BioMode.New;
+		if (!e.option.data) {
+			this.bioMode = BioMode.None
+		} else {
+			this.bioMode = e.option.data.added ? BioMode.Normal : BioMode.New
 		}
 	}
 
-	async UploadProfileImage(file: ReadFile){
+	async UploadProfileImage(file: ReadFile) {
 		this.profileImageLoading = true
 
 		// Get the content of the image file
@@ -376,15 +381,13 @@ export class AuthorProfileComponent{
 		// Upload the image
 		let response: ApiResponse<any>
 
-		if(this.authorMode == AuthorMode.AuthorOfUser){
+		if (this.authorMode == AuthorMode.AuthorOfUser) {
 			response = await this.apiService.SetProfileImageOfAuthorOfUser({
-				jwt: this.dataService.user.JWT,
 				type: file.type,
 				file: imageContent
 			})
-		}else{
+		} else {
 			response = await this.apiService.SetProfileImageOfAuthor({
-				jwt: this.dataService.user.JWT,
 				uuid: this.uuid,
 				type: file.type,
 				file: imageContent
@@ -393,7 +396,7 @@ export class AuthorProfileComponent{
 
 		this.profileImageLoading = false
 
-		if(response.status == 200){
+		if (response.status == 200) {
 			// Show the uploaded profile image
 			this.author.profileImage = true
 		}
@@ -418,7 +421,7 @@ export class AuthorProfileComponent{
 	}
 
 	NavigateToNewBookPage() {
-		let extras: NavigationExtras = {};
+		let extras: NavigationExtras = {}
 
 		if (this.dataService.userIsAdmin) {
 			extras.queryParams = {
@@ -426,7 +429,7 @@ export class AuthorProfileComponent{
 			}
 		}
 
-		this.router.navigate(["author", "book", "new"], extras);
+		this.router.navigate(["author", "book", "new"], extras)
 	}
 
 	async SaveProfile() {
@@ -441,7 +444,6 @@ export class AuthorProfileComponent{
 		if (this.dataService.userIsAdmin) {
 			response = await this.apiService.UpdateAuthor({
 				uuid: this.author.uuid,
-				jwt: this.dataService.user.JWT,
 				firstName: this.editProfileDialogFirstName,
 				lastName: this.editProfileDialogLastName,
 				websiteUrl: this.editProfileDialogWebsiteUrl,
@@ -451,7 +453,6 @@ export class AuthorProfileComponent{
 			})
 		} else {
 			response = await this.apiService.UpdateAuthorOfUser({
-				jwt: this.dataService.user.JWT,
 				firstName: this.editProfileDialogFirstName,
 				lastName: this.editProfileDialogLastName,
 				websiteUrl: this.editProfileDialogWebsiteUrl,
@@ -468,7 +469,7 @@ export class AuthorProfileComponent{
 			if (this.dataService.userIsAdmin) {
 				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == response.data.uuid)
 				if (i == -1) return
-				
+
 				this.dataService.adminAuthors[i].firstName = response.data.first_name
 				this.dataService.adminAuthors[i].lastName = response.data.last_name
 				this.dataService.adminAuthors[i].websiteUrl = response.data.website_url
@@ -523,64 +524,64 @@ export class AuthorProfileComponent{
 		}
 	}
 
-	ProcessSetBioResponse(response: ApiResponse<any>){
-		if(response.status == 200){
-			if(this.bioMode == BioMode.New){
+	ProcessSetBioResponse(response: ApiResponse<any>) {
+		if (response.status == 200) {
+			if (this.bioMode == BioMode.New) {
 				// Add the new bio to the bios
-				this.author.bios.push(response.data);
+				this.author.bios.push(response.data)
 
 				// Update the dropdown
-				this.bioMode = BioMode.Normal;
-				this.newBio = "";
-				this.newBioError = "";
-				this.SetupBioLanguageDropdown();
+				this.bioMode = BioMode.Normal
+				this.newBio = ""
+				this.newBioError = ""
+				this.SetupBioLanguageDropdown()
 
 				// Show the bio in the language that was just added
-				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == response.data.language);
-				if(i != -1){
-					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i].key as number;
+				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == response.data.language)
+				if (i != -1) {
+					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i].key as number
 				}
-			}else{
+			} else {
 				// Find and update the edited bio
-				let i = this.author.bios.findIndex(bio => bio.language == response.data.language);
-				if(i != -1){
-					this.author.bios[i].bio = response.data.bio;
+				let i = this.author.bios.findIndex(bio => bio.language == response.data.language)
+				if (i != -1) {
+					this.author.bios[i].bio = response.data.bio
 				}
 
-				this.newBio = "";
-				this.newBioError = "";
-				this.bioMode = BioMode.Normal;
+				this.newBio = ""
+				this.newBioError = ""
+				this.bioMode = BioMode.Normal
 			}
-		}else{
-			let errorCode = response.data.errors[0].code;
+		} else {
+			let errorCode = response.data.errors[0].code
 
-			switch(errorCode){
+			switch (errorCode) {
 				case 2303:
 					// Field too short: bio
-					this.newBioError = this.locale.errors.bioTooShort;
-					break;
+					this.newBioError = this.locale.errors.bioTooShort
+					break
 				case 2403:
 					// Field too long: bio
-					this.newBioError = this.locale.errors.bioTooLong;
-					break;
+					this.newBioError = this.locale.errors.bioTooLong
+					break
 				default:
 					// Unexpected error
-					this.newBioError = this.locale.errors.unexpectedError;
-					break;
+					this.newBioError = this.locale.errors.unexpectedError
+					break
 			}
 		}
 
 		this.bioLoading = false
 	}
 
-	async LoadAuthor(){
+	async LoadAuthor() {
 		let response: ApiResponse<any> = await this.apiService.GetAuthor({
 			uuid: this.uuid,
 			books: true,
 			language: this.dataService.supportedLocale
 		})
 
-		if(response.status == 200){
+		if (response.status == 200) {
 			this.author = {
 				uuid: response.data.uuid,
 				firstName: response.data.first_name,
@@ -595,7 +596,7 @@ export class AuthorProfileComponent{
 				profileImageBlurhash: response.data.profile_image_blurhash
 			}
 
-			for(let book of response.data.books){
+			for (let book of response.data.books) {
 				this.books.push({
 					uuid: book.uuid,
 					title: book.title,
@@ -606,8 +607,8 @@ export class AuthorProfileComponent{
 				})
 			}
 
-			this.bioMode = BioMode.Normal;
-			this.SelectDefaultBio();
+			this.bioMode = BioMode.Normal
+			this.SelectDefaultBio()
 		}
 	}
 
@@ -632,7 +633,7 @@ export class AuthorProfileComponent{
 	}
 }
 
-enum BioMode{
+enum BioMode {
 	None = 0,		// If the author has no bios and has not selected to add a bio, show nothing
 	New = 1,			// If the author has selected a language to add, show the input for creating a bio
 	Normal = 2,		// If the author has one or more bios, show the selected bio

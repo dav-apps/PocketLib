@@ -9,7 +9,7 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-horizontal-book-list',
 	templateUrl: './horizontal-book-list.component.html'
 })
-export class HorizontalBookListComponent{
+export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
 	books: {
 		uuid: string,
@@ -21,21 +21,21 @@ export class HorizontalBookListComponent{
 		coverHeight: number
 	}[] = []
 	hoveredBookIndex: number = -1
-	
+
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router
-	){
+	) {
 		this.locale = this.dataService.GetLocale().horizontalBookList
 	}
 
-	async ngOnInit(){
+	async ngOnInit() {
 		// Get the latest store books
 		this.books = []
-		let response: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({languages: await this.dataService.GetStoreLanguages()})
+		let response: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({ languages: await this.dataService.GetStoreLanguages() })
 		if (response.status != 200) return
-		
+
 		for (let storeBook of response.data.books) {
 			let width = 123
 			let height = 190
@@ -65,7 +65,7 @@ export class HorizontalBookListComponent{
 		}
 	}
 
-	NavigateToStoreBook(uuid: string){
+	NavigateToStoreBook(uuid: string) {
 		this.router.navigate(["store", "book", uuid])
 	}
 }

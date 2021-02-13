@@ -1,5 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { transition, trigger, state, style, animate } from '@angular/animations';
+import { Component, Output, EventEmitter } from '@angular/core'
+import { transition, trigger, state, style, animate } from '@angular/animations'
 
 @Component({
 	selector: 'pocketlib-add-list-item',
@@ -24,10 +24,10 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 	]
 })
 export class AddListItemComponent{
-	@Output() click = new EventEmitter();
-	hover: boolean = false;
+	@Output() click = new EventEmitter()
+	hover: boolean = false
 
 	ItemClick() {
-		this.click.emit();
+		this.click.emit()
 	}
 }
