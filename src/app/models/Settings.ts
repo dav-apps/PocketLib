@@ -1,6 +1,6 @@
 import { TableObject, Property, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
-import { keys } from 'src/environments/keys';
+import { keys } from 'src/constants/keys';
 
 export class Settings{
 	public uuid: string;

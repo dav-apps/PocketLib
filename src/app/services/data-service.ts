@@ -8,7 +8,7 @@ import {
 } from 'dav-npm'
 import { ApiService } from './api-service'
 import { environment } from 'src/environments/environment'
-import { keys } from 'src/environments/keys'
+import { keys } from 'src/constants/keys'
 import * as locales from 'src/locales/locales'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'

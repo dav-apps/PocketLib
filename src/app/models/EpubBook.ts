@@ -1,5 +1,5 @@
 import { Property } from 'dav-npm'
-import { keys } from 'src/environments/keys'
+import { keys } from 'src/constants/keys'
 import { Book } from './Book'
 import { EpubBookmark } from './EpubBookmark'
 

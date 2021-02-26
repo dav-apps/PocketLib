@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { keys } from 'src/environments/keys'
+import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
 import { MatRadioChange } from '@angular/material/radio'

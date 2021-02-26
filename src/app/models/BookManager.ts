@@ -1,6 +1,6 @@
 import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
 import { environment } from 'src/environments/environment';
-import { keys } from 'src/environments/keys';
+import { keys } from 'src/constants/keys';
 import { Book } from './Book';
 import { EpubBook } from './EpubBook';
 import { PdfBook } from './PdfBook';
