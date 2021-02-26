@@ -21,6 +21,7 @@ import {
 	BookStatus
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -487,36 +488,36 @@ export class AuthorProfileComponent {
 		} else {
 			for (let error of response.data.errors) {
 				switch (error.code) {
-					case 2301:	// Field too short: first_name
+					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
 							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameMissing
 						} else {
 							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooShort
 						}
 						break
-					case 2302:	// Field too short: last_name
+					case ErrorCodes.LastNameTooShort:
 						if (this.editProfileDialogLastName.length == 0) {
 							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameMissing
 						} else {
 							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooShort
 						}
 						break
-					case 2401:	// Field too long: first_name
+					case ErrorCodes.FirstNameTooLong:
 						this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooLong
 						break
-					case 2402:	// Field too long: last_name
+					case ErrorCodes.LastNameTooLong:
 						this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooLong
 						break
-					case 2503:	// Field invalid: website_url
+					case ErrorCodes.WebsiteUrlInvalid:
 						this.editProfileDialogWebsiteUrlError = this.locale.editProfileDialog.errors.websiteUrlInvalid
 						break
-					case 2504:	// Field invalid: facebook_username
+					case ErrorCodes.FacebookUsernameInvalid:
 						this.editProfileDialogFacebookUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
 						break
-					case 2505:	// Field invalid: instagram_username
+					case ErrorCodes.InstagramUsernameInvalid:
 						this.editProfileDialogInstagramUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
 						break
-					case 2506:	// Field invalid: twitter_username
+					case ErrorCodes.TwitterUsernameInvalid:
 						this.editProfileDialogTwitterUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
 						break
 				}
@@ -556,16 +557,13 @@ export class AuthorProfileComponent {
 			let errorCode = response.data.errors[0].code
 
 			switch (errorCode) {
-				case 2303:
-					// Field too short: bio
+				case ErrorCodes.BioTooShort:
 					this.newBioError = this.locale.errors.bioTooShort
 					break
-				case 2403:
-					// Field too long: bio
+				case ErrorCodes.BioTooLong:
 					this.newBioError = this.locale.errors.bioTooLong
 					break
 				default:
-					// Unexpected error
 					this.newBioError = this.locale.errors.unexpectedError
 					break
 			}

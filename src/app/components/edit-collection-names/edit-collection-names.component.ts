@@ -3,6 +3,7 @@ import { IDropdownOption } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-npm'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -78,16 +79,16 @@ export class EditCollectionNamesComponent {
 			this.update.emit(setCollectionNameResponse.data)
 		} else {
 			switch (setCollectionNameResponse.data.errors[0].code) {
-				case 2108:	// Missing field: name
+				case ErrorCodes.NameMissing:
 					collectionName.errorMessage = this.locale.errors.nameMissing
 					break
-				case 2307:	// Field too short: name
+				case ErrorCodes.NameTooShort:
 					collectionName.errorMessage = this.locale.errors.nameTooShort
 					break
-				case 2407:	// Field too long: name
+				case ErrorCodes.NameTooLong:
 					collectionName.errorMessage = this.locale.errors.nameTooLong
 					break
-				default:		// Unexpected error
+				default:
 					collectionName.errorMessage = this.locale.errors.unexpectedError
 					break
 			}

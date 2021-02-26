@@ -6,6 +6,7 @@ import { ApiResponse } from 'dav-npm'
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { environment } from 'src/environments/environment'
+import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -90,33 +91,33 @@ export class AuthorSetupPageComponent {
 
 			for (let error of response.data.errors) {
 				switch (error.code) {
-					case 2102:	// Missing field: first_name
+					case ErrorCodes.FirstNameMissing:
 						this.firstNameError = this.locale.errors.firstNameMissing
 						break
-					case 2103:	// Missing field: last_name
+					case ErrorCodes.LastNameMissing:
 						this.lastNameError = this.locale.errors.lastNameMissing
 						break
-					case 2301:	// Field too short: first_name
+					case ErrorCodes.FirstNameTooShort:
 						if (this.firstName.length == 0) {
 							this.firstNameError = this.locale.errors.firstNameMissing
 						} else {
 							this.firstNameError = this.locale.errors.firstNameTooShort
 						}
 						break
-					case 2302:	// Field too short: last_name
+					case ErrorCodes.LastNameTooShort:
 						if (this.lastName.length == 0) {
 							this.lastNameError = this.locale.errors.lastNameMissing
 						} else {
 							this.lastNameError = this.locale.errors.lastNameTooShort
 						}
 						break
-					case 2401:	// Field too long: first_name
+					case ErrorCodes.FirstNameTooLong:
 						this.firstNameError = this.locale.errors.firstNameTooLong
 						break
-					case 2402:	// Field too long: last_name
+					case ErrorCodes.LastNameTooLong:
 						this.lastNameError = this.locale.errors.lastNameTooLong
 						break
-					default:		// Unexpected error
+					default:
 						this.generalError = this.locale.errors.unexpectedError
 						break
 				}

@@ -13,6 +13,7 @@ import { ApiService } from 'src/app/services/api-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
+import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -382,10 +383,10 @@ export class AuthorBookPageComponent {
 				let errorCode = response.data.errors[0].code
 
 				switch (errorCode) {
-					case 2305:	// Field too short: description
+					case ErrorCodes.DescriptionTooShort:
 						this.newDescriptionError = this.locale.errors.descriptionTooShort
 						break
-					case 2405:	// Field too long: description
+					case ErrorCodes.DescriptionTooLong:
 						this.newDescriptionError = this.locale.errors.descriptionTooLong
 						break
 					default:
@@ -412,10 +413,10 @@ export class AuthorBookPageComponent {
 				let errorCode = response.data.errors[0].code
 
 				switch (errorCode) {
-					case 2501:	// Price invalid
+					case ErrorCodes.PriceInvalid:
 						this.priceInput.SetError(this.locale.errors.priceInvalid)
 						break
-					default:		// Unexpected error
+					default:
 						this.priceInput.SetError(this.locale.errors.unexpectedError)
 						break
 				}
@@ -431,10 +432,10 @@ export class AuthorBookPageComponent {
 				let errorCode = response.data.errors[0].code
 
 				switch (errorCode) {
-					case 2507:	// ISBN invalid
+					case ErrorCodes.IsbnInvalid:
 						this.isbnInput.SetError(this.locale.errors.isbnInvalid)
 						break
-					default:		// Unexpected error
+					default:
 						this.isbnInput.SetError(this.locale.errors.unexpectedError)
 						break
 				}
@@ -455,10 +456,10 @@ export class AuthorBookPageComponent {
 				let errorCode = response.data.errors[0].code
 
 				switch (errorCode) {
-					case 2304:	// Field too short: title
+					case ErrorCodes.TitleTooShort:
 						this.editTitleDialogTitleError = this.locale.errors.titleTooShort
 						break
-					case 2404:	// Field too long: title
+					case ErrorCodes.TitleTooLong:
 						this.editTitleDialogTitleError = this.locale.errors.titleTooLong
 						break
 					default:

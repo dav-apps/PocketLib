@@ -5,6 +5,7 @@ import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { ApiResponse } from 'dav-npm'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -171,25 +172,25 @@ export class AuthorPageComponent {
 		} else {
 			for (let error of response.data.errors) {
 				switch (error.code) {
-					case 2102:	// Missing field: first_name
+					case ErrorCodes.FirstNameMissing:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
 						break
-					case 2103:	// Missing field: last_name
+					case ErrorCodes.LastNameMissing:
 						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
 						break
-					case 2301:	// Field too short: first_name
+					case ErrorCodes.FirstNameTooShort:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
 						break
-					case 2302:	// Field too short: last_name
+					case ErrorCodes.LastNameTooShort:
 						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
 						break
-					case 2401:	// Field too long: first_name
+					case ErrorCodes.FirstNameTooLong:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
 						break
-					case 2402:	// Field too long: last_name
+					case ErrorCodes.LastNameTooLong:
 						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong
 						break
-					default:		// Unexpected error
+					default:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError
 						break
 				}
