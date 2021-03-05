@@ -26,7 +26,7 @@ export class AppComponent {
 		new Dav({
 			environment: environment.production ? Environment.Production : Environment.Development,
 			appId: environment.appId,
-			tableIds: [environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId, environment.appTableId],
+			tableIds: [environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId],
 			callbacks: {
 				UpdateAllOfTable: (tableId: number, changed: boolean) => this.UpdateAllOfTable(tableId, changed),
 				UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => this.UpdateTableObject(tableObject, fileDownloaded),
@@ -79,7 +79,7 @@ export class AppComponent {
 
 	UserLoaded() {
 		this.dataService.userIsAdmin = environment.admins.includes(this.dataService.dav.user.Id)
-		this.dataService.userPromiseHolder.Resolve(this.dataService.dav.user)
+		this.dataService.userPromiseHolder.Resolve()
 	}
 
 	SyncFinished() {
