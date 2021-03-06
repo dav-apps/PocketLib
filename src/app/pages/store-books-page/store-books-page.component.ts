@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse } from 'dav-js'
 import { DataService, Category, GetStoreBookCoverLink } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 

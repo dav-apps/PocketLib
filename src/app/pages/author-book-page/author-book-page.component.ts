@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { IButtonStyles, IDialogContentProps, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse } from 'dav-js'
 import {
 	DataService,
 	BookStatus,

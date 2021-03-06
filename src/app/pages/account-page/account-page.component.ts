@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
-import { Dav } from 'dav-npm'
+import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'

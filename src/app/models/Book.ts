@@ -1,4 +1,4 @@
-import { TableObject, GetTableObject, Property } from 'dav-npm'
+import { TableObject, GetTableObject, Property } from 'dav-js'
 import { environment } from 'src/environments/environment'
 import { keys } from 'src/constants/keys'
 

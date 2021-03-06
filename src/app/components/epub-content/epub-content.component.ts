@@ -1,6 +1,6 @@
 import { Component, HostListener, NgZone, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
-import { PromiseHolder } from 'dav-npm'
+import { PromiseHolder } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
 import { enUS } from 'src/locales/locales'

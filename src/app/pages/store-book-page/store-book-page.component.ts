@@ -8,7 +8,7 @@ import {
 	DownloadTableObject,
 	PurchasesController,
 	Purchase
-} from 'dav-npm'
+} from 'dav-js'
 import {
 	DataService,
 	BookStatus,

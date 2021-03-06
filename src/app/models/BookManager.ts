@@ -1,11 +1,11 @@
-import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-npm';
-import { environment } from 'src/environments/environment';
-import { keys } from 'src/constants/keys';
-import { Book } from './Book';
-import { EpubBook } from './EpubBook';
-import { PdfBook } from './PdfBook';
-import { EpubReader } from './EpubReader';
-import { EpubBookmark, GetEpubBookmark } from './EpubBookmark';
+import { TableObject, GetTableObject, GetAllTableObjects } from 'dav-js'
+import { environment } from 'src/environments/environment'
+import { keys } from 'src/constants/keys'
+import { Book } from './Book'
+import { EpubBook } from './EpubBook'
+import { PdfBook } from './PdfBook'
+import { EpubReader } from './EpubReader'
+import { EpubBookmark, GetEpubBookmark } from './EpubBookmark'
 
 const epubType = "application/epub+zip";
 const pdfType = "application/pdf";

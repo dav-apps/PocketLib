@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import * as axios from 'axios'
-import { Dav, ApiResponse } from 'dav-npm'
+import { Dav, ApiResponse } from 'dav-js'
 import { environment } from 'src/environments/environment'
 
 @Injectable()

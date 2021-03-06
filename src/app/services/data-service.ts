@@ -5,7 +5,7 @@ import {
 	ApiResponse,
 	GetAllTableObjects,
 	PromiseHolder
-} from 'dav-npm'
+} from 'dav-js'
 import { ApiService } from './api-service'
 import { environment } from 'src/environments/environment'
 import { keys } from 'src/constants/keys'

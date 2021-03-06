@@ -1,7 +1,7 @@
 import { Component, ViewChild, Input, HostListener } from '@angular/core'
 import { Router, NavigationExtras } from '@angular/router'
 import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse } from 'dav-js'
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component'
 import {
 	DataService,

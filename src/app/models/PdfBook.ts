@@ -1,6 +1,6 @@
-import { Property } from 'dav-npm';
-import { keys } from 'src/constants/keys';
-import { Book } from './Book';
+import { Property } from 'dav-js'
+import { keys } from 'src/constants/keys'
+import { Book } from './Book'
 
 const pdfExt = "pdf";
 

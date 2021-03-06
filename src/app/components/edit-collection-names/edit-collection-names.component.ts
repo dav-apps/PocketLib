@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { IDropdownOption } from 'office-ui-fabric-react'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'

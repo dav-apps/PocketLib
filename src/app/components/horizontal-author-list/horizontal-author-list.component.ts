@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { ApiResponse } from 'dav-npm'
+import { ApiResponse } from 'dav-js'
 import { DataService, GetAuthorProfileImageLink } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { enUS } from 'src/locales/locales'

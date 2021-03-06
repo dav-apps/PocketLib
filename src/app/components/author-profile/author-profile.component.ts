@@ -10,7 +10,7 @@ import {
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { Dav, ApiResponse } from 'dav-npm'
+import { Dav, ApiResponse } from 'dav-js'
 import {
 	DataService,
 	FindAppropriateLanguage,

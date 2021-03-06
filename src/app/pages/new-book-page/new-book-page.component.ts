@@ -7,7 +7,7 @@ import {
 	MessageBarType
 } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
-import { PromiseHolder } from 'dav-npm'
+import { PromiseHolder } from 'dav-js'
 import {
 	DataService,
 	Author,

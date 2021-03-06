@@ -1,6 +1,6 @@
-import { TableObject, GetTableObject, Property } from 'dav-npm';
-import { environment } from 'src/environments/environment';
-import { keys } from 'src/constants/keys';
+import { TableObject, GetTableObject, Property } from 'dav-js'
+import { environment } from 'src/environments/environment'
+import { keys } from 'src/constants/keys'
 
 export class EpubBookmark{
 	public uuid: string;

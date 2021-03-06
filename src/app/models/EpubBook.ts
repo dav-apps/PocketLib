@@ -1,4 +1,4 @@
-import { Property } from 'dav-npm'
+import { Property } from 'dav-js'
 import { keys } from 'src/constants/keys'
 import { Book } from './Book'
 import { EpubBookmark } from './EpubBookmark'
