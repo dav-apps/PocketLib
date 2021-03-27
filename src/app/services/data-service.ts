@@ -411,9 +411,9 @@ export function GetBookStatusByString(status: string): BookStatus {
 }
 
 export function GetAuthorProfileImageLink(uuid: string) {
-	return `${environment.apiBaseUrl}/api/1/call/author/${uuid}/profile_image`
+	return `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`
 }
 
 export function GetStoreBookCoverLink(uuid: string) {
-	return `${environment.apiBaseUrl}/api/1/call/store/book/${uuid}/cover`
+	return `${environment.pocketlibApiBaseUrl}/store/book/${uuid}/cover`
 }
