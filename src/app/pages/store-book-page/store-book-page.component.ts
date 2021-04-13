@@ -324,12 +324,8 @@ export class StoreBookPageComponent {
 
 	async NavigateToPurchasePage() {
 		// Create the purchase on the server
-		let createPurchaseResponse: ApiResponse<Purchase> | ApiErrorResponse = await PurchasesController.CreatePurchase({
-			tableObjectUuid: this.uuid,
-			providerName: `${this.author.firstName} ${this.author.lastName}`,
-			providerImage: this.authorProfileImageContent,
-			productName: this.book.title,
-			productImage: this.coverContent,
+		let createPurchaseResponse: ApiResponse<any> = await this.apiService.CreatePurchaseForStoreBook({
+			uuid: this.uuid,
 			currency: "eur"
 		})
 		this.buyBookDialogVisible = false
@@ -337,9 +333,9 @@ export class StoreBookPageComponent {
 		if (createPurchaseResponse.status == 201) {
 			// Navigate to the purchase page on the website
 			let url = environment.baseUrl + this.router.url
-			let purchaseId = (createPurchaseResponse as ApiResponse<Purchase>).data.Id
+			let purchaseUuid = createPurchaseResponse.data.uuid
 
-			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseId}?redirectUrl=${url}`
+			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseUuid}?redirectUrl=${url}`
 		} else {
 			// Show error
 			this.ShowErrorDialog()

@@ -630,6 +630,37 @@ export class ApiService {
 
 		return result
 	}
+
+	async CreatePurchaseForStoreBook(params: {
+		uuid: string,
+		currency: string
+	}): Promise<ApiResponse<any>> {
+		var result: ApiResponse<any> = { status: -1, data: {} }
+
+		try {
+			let response = await axios.default({
+				method: 'post',
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/purchase`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': 'application/json'
+				},
+				data: {
+					currency: params.currency
+				}
+			})
+
+			result.status = response.status
+			result.data = response.data
+		} catch (error) {
+			if (error.response) {
+				result.status = error.response.status
+				result.data = error.response.data
+			}
+		}
+
+		return result
+	}
 	//#endregion
 
 	//#region StoreBookCover
