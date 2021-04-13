@@ -10,63 +10,63 @@ import { EpubBookmark, GetEpubBookmark } from './EpubBookmark'
 const epubType = "application/epub+zip";
 const pdfType = "application/pdf";
 
-export async function GetBook(uuid: string) : Promise<Book>{
-	let tableObject = await GetTableObject(uuid);
-	if(!tableObject) return null;
+export async function GetBook(uuid: string): Promise<Book> {
+	let tableObject = await GetTableObject(uuid)
+	if (!tableObject) return null
 
-	return await GetBookByTableObject(tableObject);
+	return await GetBookByTableObject(tableObject)
 }
 
-export async function GetAllBooks() : Promise<Book[]>{
-	let tableObjects = await GetAllTableObjects(environment.bookTableId, false);
-	let books: Book[] = [];
+export async function GetAllBooks(): Promise<Book[]> {
+	let tableObjects = await GetAllTableObjects(environment.bookTableId, false)
+	let books: Book[] = []
 
-	for(let tableObject of tableObjects){
-		let book = await GetBookByTableObject(tableObject);
-		if(!book) continue;
-		books.push(book);
+	for (let tableObject of tableObjects) {
+		let book = await GetBookByTableObject(tableObject)
+		if (!book) continue
+		books.push(book)
 	}
 
-	return books;
+	return books
 }
 
-async function GetBookByTableObject(tableObject: TableObject) : Promise<Book>{
+async function GetBookByTableObject(tableObject: TableObject): Promise<Book> {
 	// Get the book file
-	let fileTableObject = await GetBookFileOfBookTableObject(tableObject);
-	if(!fileTableObject) return null;
+	let fileTableObject = await GetBookFileOfBookTableObject(tableObject)
+	if (!fileTableObject) return null
 
 	// Check the type of the file
-	if(fileTableObject.File.type == epubType){
-		let book = await ConvertTableObjectsToEpubBook(tableObject, fileTableObject);
-		await LoadEpubBookDetails(book);
-		return book;
-	}else if(fileTableObject.File.type == pdfType){
-		return ConvertTableObjectsToPdfBook(tableObject, fileTableObject);
+	if (fileTableObject.File.type == epubType) {
+		let book = await ConvertTableObjectsToEpubBook(tableObject, fileTableObject)
+		await LoadEpubBookDetails(book)
+		return book
+	} else if (fileTableObject.File.type == pdfType) {
+		return ConvertTableObjectsToPdfBook(tableObject, fileTableObject)
 	}
 }
 
-async function GetBookFileOfBookTableObject(tableObject: TableObject) : Promise<TableObject>{
+async function GetBookFileOfBookTableObject(tableObject: TableObject): Promise<TableObject> {
 	let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey) as string
-	if(!fileUuid) return null
+	if (!fileUuid) return null
 
 	let fileTableObject = await GetTableObject(fileUuid)
 	return (fileTableObject && fileTableObject.File) ? fileTableObject : null
 }
 
-async function LoadEpubBookDetails(book: EpubBook){
-	if(book.file.type != epubType) return;
+async function LoadEpubBookDetails(book: EpubBook) {
+	if (book.file.type != epubType) return
 
-	let epubReader = new EpubReader();
-	await epubReader.ReadEpubFile(book.file);
+	let epubReader = new EpubReader()
+	await epubReader.ReadEpubFile(book.file)
 
-	book.title = epubReader.title;
-	book.author = epubReader.author;
-	book.cover = epubReader.coverSrc;
+	book.title = epubReader.title
+	book.author = epubReader.author
+	book.cover = epubReader.coverSrc
 }
 
-export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : Promise<EpubBook>{
-	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null
-	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null
+export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject, bookFileTableObject: TableObject): Promise<EpubBook> {
+	if (bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null
+	if (!bookFileTableObject.IsFile || !bookFileTableObject.File) return null
 
 	// Get the file
 	let file = bookFileTableObject.File
@@ -76,16 +76,16 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 
 	// Get the chapter
 	let chapter = bookTableObject.GetPropertyValue(keys.epubBookTableChapterKey) as number
-	if(chapter == null) chapter = 0
+	if (chapter == null) chapter = 0
 
 	// Get the progress
 	let progress = bookTableObject.GetPropertyValue(keys.epubBookTableProgressKey) as number
-	if(progress == null) progress = 0
+	if (progress == null) progress = 0
 
 	// Get the totalProgress
 	let totalProgress = bookTableObject.GetPropertyValue(keys.epubBookTableTotalProgressKey) as number
 	if (totalProgress == null) totalProgress = 0
-	
+
 	// Get the chapterPercentages
 	let chapterPercentages: number[] = []
 	let chapterPercentagesString = bookTableObject.GetPropertyValue(keys.epubBookTableChapterPercentagesKey) as string
@@ -98,21 +98,21 @@ export async function ConvertTableObjectsToEpubBook(bookTableObject: TableObject
 	// Get the bookmarks
 	let bookmarks: EpubBookmark[] = []
 	let bookmarksString = bookTableObject.GetPropertyValue(keys.epubBookTableBookmarksKey) as string
-	if(bookmarksString){
-		for(let uuid of bookmarksString.split(',')){
+	if (bookmarksString) {
+		for (let uuid of bookmarksString.split(',')) {
 			let bookmark = await GetEpubBookmark(uuid)
-			if(bookmark) bookmarks.push(bookmark)
+			if (bookmark) bookmarks.push(bookmark)
 		}
 	}
 
-	let book = new EpubBook(file, storeBook, chapter, progress, totalProgress, chapterPercentages, bookmarks)
+	let book = new EpubBook(file, storeBook, bookFileTableObject.BelongsToUser, bookFileTableObject.Purchase, chapter, progress, totalProgress, chapterPercentages, bookmarks)
 	book.uuid = bookTableObject.Uuid
 	return book
 }
 
-export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookFileTableObject: TableObject) : PdfBook{
-	if(bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null
-	if(!bookFileTableObject.IsFile || !bookFileTableObject.File) return null
+export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookFileTableObject: TableObject): PdfBook {
+	if (bookTableObject.TableId != environment.bookTableId || bookFileTableObject.TableId != environment.bookFileTableId) return null
+	if (!bookFileTableObject.IsFile || !bookFileTableObject.File) return null
 
 	// Get the file
 	let file = bookFileTableObject.File
@@ -125,27 +125,27 @@ export function ConvertTableObjectsToPdfBook(bookTableObject: TableObject, bookF
 
 	// Get the page
 	let page = bookTableObject.GetPropertyValue(keys.pdfBookTablePageKey) as number
-	if(page == null) page = 1
-	
+	if (page == null) page = 1
+
 	// Get the total progress
 	let totalProgress = bookTableObject.GetPropertyValue(keys.pdfBookTableTotalProgressKey) as number
-	if(totalProgress == null) totalProgress = 0
-   
-   // Get the bookmarks
-   let bookmarks: number[] = []
-	let bookmarksString = bookTableObject.GetPropertyValue(keys.pdfBookTableBookmarksKey) as string
-	if(bookmarksString){
-		for(let bookmark of bookmarksString.split(',')){
-			let page = +bookmark
-			if(page > 0) bookmarks.push(page)
-		}
-   }
-   
-   // Get the zoom
-	let zoom = bookTableObject.GetPropertyValue(keys.pdfBookTableZoomKey) as number
-	if(zoom == null) zoom = 1
+	if (totalProgress == null) totalProgress = 0
 
-	let book = new PdfBook(file, storeBook, title, page, totalProgress, bookmarks, zoom)
+	// Get the bookmarks
+	let bookmarks: number[] = []
+	let bookmarksString = bookTableObject.GetPropertyValue(keys.pdfBookTableBookmarksKey) as string
+	if (bookmarksString) {
+		for (let bookmark of bookmarksString.split(',')) {
+			let page = +bookmark
+			if (page > 0) bookmarks.push(page)
+		}
+	}
+
+	// Get the zoom
+	let zoom = bookTableObject.GetPropertyValue(keys.pdfBookTableZoomKey) as number
+	if (zoom == null) zoom = 1
+
+	let book = new PdfBook(file, storeBook, bookFileTableObject.BelongsToUser, bookFileTableObject.Purchase, title, page, totalProgress, bookmarks, zoom)
 	book.uuid = bookTableObject.Uuid
 	return book
 }
