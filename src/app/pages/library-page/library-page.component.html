@@ -136,6 +136,30 @@
 	[style.left.px]="contextMenuPositionX" 
 	[style.top.px]="contextMenuPositionY">
 
+	<!-- Export -->
+	<div
+		class="dropdown-item d-flex cursor"
+		style="padding-left: 10px; padding-right: 10px"
+		*ngIf="showExportBookOption">
+
+		<i class="ms-Icon ms-Icon--Export text-color"
+			aria-hidden="true"
+			style="font-size: 16px; margin-right: 10px; margin-top: 2px">
+		</i>
+
+		<span
+			class="text-color"
+			style="margin-top: 3px; margin-bottom: 2px">
+			{{ locale.bookContextMenuExport }}
+		</span>
+	</div>
+
+	<div
+		class="mx-2 my-1"
+		style="border-top: 1px solid #8e8e8e"
+		*ngIf="showExportBookOption">
+	</div>
+
 	<!-- Rename -->
 	<div
 		class="dropdown-item d-flex cursor"

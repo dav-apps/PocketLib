@@ -6,6 +6,7 @@ const enDefaults = {
 		discoverBooks: "Discover books in the PocketLib Store",
 		addFile: "Open a local file",
 		goToAuthorPage: "Go to your author profile",
+		bookContextMenuExport: "Export",
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
 		renameBookDialog: {
@@ -391,6 +392,7 @@ const deDefaults = {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addFile: "Öffne eine lokale Datei",
 		goToAuthorPage: "Gehe zu deinem Autor-Profil",
+		bookContextMenuExport: "Exportieren",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
 		renameBookDialog: {

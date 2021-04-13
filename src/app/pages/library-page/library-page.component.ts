@@ -41,6 +41,7 @@ export class LibraryPageComponent {
 	contextMenuPositionY: number = 0
 	selectedBook: Book
 	showRenameBookOption: boolean = false		// If the option in the context menu to rename the book is visible. Only for PdfBook
+	showExportBookOption: boolean = false		// If the option in the context menu to export the book is visible
 	hoveredBookIndex: number = -1					// The currently hovered book, for showing the shadow
 	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
 	addBookHover: boolean = false					// Indicator for if the mouse is hovering the add book card
@@ -139,6 +140,7 @@ export class LibraryPageComponent {
 	onContextMenu(event: MouseEvent, book: Book) {
 		this.selectedBook = book
 		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
+		this.showExportBookOption = book.belongsToUser || book.purchase != null
 
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX
