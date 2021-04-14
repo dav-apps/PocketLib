@@ -157,6 +157,13 @@ export class LibraryPageComponent {
 		return false
 	}
 
+	async DownloadBook() {
+		let link = document.createElement("a")
+		link.download = (this.selectedBook as PdfBook | EpubBook).title
+		link.href = URL.createObjectURL(this.selectedBook.file)
+		link.click()
+	}
+
 	ShowRenameBookDialog() {
 		this.contextMenuVisible = false
 		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title

@@ -140,7 +140,8 @@
 	<div
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
-		*ngIf="showExportBookOption">
+		*ngIf="showExportBookOption"
+		(click)="DownloadBook()">
 
 		<i class="ms-Icon ms-Icon--Export text-color"
 			aria-hidden="true"
