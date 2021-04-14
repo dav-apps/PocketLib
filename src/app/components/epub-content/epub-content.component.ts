@@ -7,33 +7,33 @@ import { enUS } from 'src/locales/locales'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { EpubBookmark } from 'src/app/models/EpubBookmark'
 import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader'
-declare var $: any;
+declare var $: any
 
-const secondPageMinWidth = 1050;		// Show two pages on the window if the window width is greater than this
-const progressFactor = 100000;		// The factor with which the progress is saved
-const currentViewerZIndex = -2;
-const nextPageViewerZIndex = -3;
-const previousPageViewerZIndex = -1;
-const touchStart = "touchstart";
-const touchMove = "touchmove";
-const touchEnd = "touchend";
-const click = "click";
-const viewerId = "viewer";
-const viewer2Id = "viewer2";
-const viewer3Id = "viewer3";
-const viewerLeftId = "viewer-left";
-const viewerRightId = "viewer-right";
-const viewerLeft2Id = "viewer-left2";
-const viewerRight2Id = "viewer-right2";
-const viewerLeft3Id = "viewer-left3";
-const viewerRight3Id = "viewer-right3";
-const bottomToolbarMarginBottomOpened = 0;
-const bottomToolbarMarginBottomClosed = -40;
-const defaultViewerTransitionTime = 0.5;
-const defaultBottomToolbarTransitionTime = 0.2;
-const navigationDoubleTapAreaWidth = 50;
-const doubleTapToleranceTime = 400;
-const navigationToleranceTime = 200;
+const secondPageMinWidth = 1050		// Show two pages on the window if the window width is greater than this
+const progressFactor = 100000			// The factor with which the progress is saved
+const currentViewerZIndex = -2
+const nextPageViewerZIndex = -3
+const previousPageViewerZIndex = -1
+const touchStart = "touchstart"
+const touchMove = "touchmove"
+const touchEnd = "touchend"
+const click = "click"
+const firstViewerId = "first-viewer"
+const secondViewerId = "second-viewer"
+const thirdViewerId = "third-viewer"
+const firstViewerLeftId = "first-viewer-left"
+const firstViewerRightId = "first-viewer-right"
+const secondViewerLeftId = "second-viewer-left"
+const secondViewerRightId = "second-viewer-right"
+const thirdViewerLeftId = "third-viewer-left"
+const thirdViewerRightId = "third-viewer-right"
+const bottomToolbarMarginBottomOpened = 0
+const bottomToolbarMarginBottomClosed = -40
+const defaultViewerTransitionTime = 0.5
+const defaultBottomToolbarTransitionTime = 0.2
+const navigationDoubleTapAreaWidth = 50
+const doubleTapToleranceTime = 400
+const navigationToleranceTime = 200
 
 @Component({
 	selector: 'pocketlib-epub-content',
@@ -43,87 +43,110 @@ const navigationToleranceTime = 200;
    ]
 })
 export class EpubContentComponent{
-	locale = enUS.epubContent;
-	book = new EpubReader();
-	currentBook: EpubBook;
-	chapters: BookChapter[] = [];
-	initialized: boolean = false;
+	locale = enUS.epubContent
+	book = new EpubReader()
+	currentBook: EpubBook
+	chapters: BookChapter[] = []
+	initialized: boolean = false
 
-	viewerLeft: HTMLIFrameElement;
-   viewerRight: HTMLIFrameElement;
-   viewerLeft2: HTMLIFrameElement;
-	viewerRight2: HTMLIFrameElement;
-	viewerLeft3: HTMLIFrameElement;
-	viewerRight3: HTMLIFrameElement;
-	width: number = 500;				// The width of the entire window
-	height: number = 500;			// The height of the entire window
-	contentHeight: number = 500;	// The height of the iframe (height - 7 - paddingTop)
-   paddingX: number = 0;
-	paddingTop: number = 80;
-	paddingBottom: number = 60;
-	viewerLeftWidth: number = 500;
-	viewerRightWidth: number = 500;		// The height of the viewers
-	viewerLeftHeight: number = 300;
-	viewerRightHeight: number = 300;
-	viewer2LeftHeight: number = 300;
-	viewer2RightHeight: number = 300;
-	viewer3LeftHeight: number = 300;
-	viewer3RightHeight: number = 300;
-	viewerPositionLeft: number = 0;	// How much the viewer is moved to the right
-	viewer2PositionLeft: number = 0;
-	viewer3PositionLeft: number = 0;
-	viewerZIndex: number = -1;    // -1, -2 or -3
-   viewer2ZIndex: number = -2;
-	viewer3ZIndex: number = -3;
-	viewerTransitionTime: number = defaultViewerTransitionTime;
+	width: number = 500				// The width of the entire window
+	height: number = 500				// The height of the entire window
+	contentHeight: number = 500	// The height of the iframe (height - 7 - paddingTop)
+   paddingX: number = 0
+	paddingTop: number = 80
+	paddingBottom: number = 60
+	viewerTransitionTime: number = defaultViewerTransitionTime
 
-	currentChapter: number = 0;			// The current chapter index in this.chapters
-	currentPage: number = 0;				// The current page in the current chapter
-	currentChapterTitle: string = "";	// The title of the current chapter
+	firstViewer: Viewer = {
+		left: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		right: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		positionLeft: 0,	// How much the viewer is moved to the right
+		zIndex: -1			// -1, -2 or -3
+	}
+	secondViewer: Viewer = {
+		left: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		right: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		positionLeft: 0,
+		zIndex: -1
+	}
+	thirdViewer: Viewer = {
+		left: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		right: {
+			iframe: null,
+			width: 500,
+			height: 300
+		},
+		positionLeft: 0,
+		zIndex: -1
+	}
+
+	currentChapter: number = 0				// The current chapter index in this.chapters
+	currentPage: number = 0					// The current page in the current chapter
+	currentChapterTitle: string = ""		// The title of the current chapter
    
-   firstPage: boolean = false;	// If true, hides the previous button
-	lastPage: boolean = false;		// If true, hides the next button
-	currentViewer: CurrentViewer = CurrentViewer.First;	// Shows, which viewer is currently visible
-	goingBack: boolean = false;	// If true, the viewer goes to the previous page
-	showPageRunning: boolean = false;	// If true, ShowPage is currently executing
-	runNextPageAfterRender: boolean = false;	// If true, NextPage will be called another time
-	runPrevPageAfterRender: boolean = false;	// If true, PrevPage will be called another time
-	navigationHistory: {chapter: number, page: number}[] = [];		// The history of visited pages, is used when clicking a link
-	nextPageTimerRunning: boolean = false;		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
-	prevPageTimerRunning: boolean = false;		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
+   firstPage: boolean = false		// If true, hides the previous button
+	lastPage: boolean = false		// If true, hides the next button
+	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
+	goingBack: boolean = false		// If true, the viewer goes to the previous page
+	showPageRunning: boolean = false		// If true, ShowPage is currently executing
+	runNextPageAfterRender: boolean = false	// If true, NextPage will be called another time
+	runPrevPageAfterRender: boolean = false	// If true, PrevPage will be called another time
+	navigationHistory: {chapter: number, page: number}[] = []		// The history of visited pages, is used when clicking a link
+	nextPageTimerRunning: boolean = false		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
+	prevPageTimerRunning: boolean = false		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
 	pageRenderingPromiseHolder = new PromiseHolder()	// PromiseHolder for rendering the pages, is resolved after the rendering of pages is finished
 
 	//#region Variables for finding the chapter page positions
-	pageHeight: number = 500;
-	pagePositions: number[] = [];
+	pageHeight: number = 500
+	pagePositions: number[] = []
 	//#endregion
 
 	//#region Variables for touch events
-	swipeDirection: SwipeDirection = SwipeDirection.None;	// Whether the user swipes vertically or horizontally
-	swipeStart: boolean = false;
-	showPageRunningWhenSwipeStarted: boolean = false;		// Is set at the beginning of a touch. If true, showPage was running and the touch will be completely ignored
-	touchStartX: number = 0;
-   touchStartY: number = 0;
-   touchDiffX: number = 0;
-	touchDiffY: number = 0;
-	touchStartBottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
-	doubleTapTimerRunning: boolean = false;
+	swipeDirection: SwipeDirection = SwipeDirection.None	// Whether the user swipes vertically or horizontally
+	swipeStart: boolean = false
+	showPageRunningWhenSwipeStarted: boolean = false		// Is set at the beginning of a touch. If true, showPage was running and the touch will be completely ignored
+	touchStartX: number = 0
+   touchStartY: number = 0
+   touchDiffX: number = 0
+	touchDiffY: number = 0
+	touchStartBottomToolbarMarginBottom: number = -40		// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
+	doubleTapTimerRunning: boolean = false
 	//#endregion
 
 	//#region Variables for the bottom toolbar
-	showBottomToolbar: boolean = false;       // Whether the bottom toolbar is visible
-	bottomToolbarOpened: boolean = false;		// Whether the bottom toolbar is opened or closed
-	bottomToolbarMarginBottom: number = -40;	// The margin bottom of the bottom toolbar
-	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime;
+	showBottomToolbar: boolean = false			// Whether the bottom toolbar is visible
+	bottomToolbarOpened: boolean = false		// Whether the bottom toolbar is opened or closed
+	bottomToolbarMarginBottom: number = -40	// The margin bottom of the bottom toolbar
+	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime
 	//#endregion
 	
 	//#region Variables for the progress bar
-	totalProgress: number = 0;					// The current progress in percent
+	totalProgress: number = 0						// The current progress in percent
 	//#endregion
 	
 	//#region Variables for the chapters panel
-   showChaptersPanel: boolean = false;
-	@ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent;
+   showChaptersPanel: boolean = false
+	@ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent
 	panelStyles = {
 		main: {
 			backgroundColor: getComputedStyle(document.body).getPropertyValue("--theme-color-secondary")
@@ -138,8 +161,8 @@ export class EpubContentComponent{
    //#endregion
    
 	//#region Variables for bookmarks
-	currentPageBookmark: string = null;
-	showBookmarksPanel: boolean = false;
+	currentPageBookmark: string = null
+	showBookmarksPanel: boolean = false
 	//#endregion
 
 	constructor(
@@ -147,81 +170,81 @@ export class EpubContentComponent{
 		private router: Router,
 		private ngZone: NgZone
 	){
-		this.locale = this.dataService.GetLocale().epubContent;
-		this.setSize();
+		this.locale = this.dataService.GetLocale().epubContent
+		this.setSize()
 	}
 
 	async ngOnInit(){
-      this.currentBook = this.dataService.currentBook as EpubBook;
+      this.currentBook = this.dataService.currentBook as EpubBook
 
 		// Initialize the html element variables
-		this.viewerLeft = document.getElementById(viewerLeftId) as HTMLIFrameElement;
-      this.viewerRight = document.getElementById(viewerRightId) as HTMLIFrameElement;
-      this.viewerLeft2 = document.getElementById(viewerLeft2Id) as HTMLIFrameElement;
-		this.viewerRight2 = document.getElementById(viewerRight2Id) as HTMLIFrameElement;
-		this.viewerLeft3 = document.getElementById(viewerLeft3Id) as HTMLIFrameElement;
-		this.viewerRight3 = document.getElementById(viewerRight3Id) as HTMLIFrameElement;
-		this.navigationHistory = [];
+		this.firstViewer.left.iframe = document.getElementById(firstViewerLeftId) as HTMLIFrameElement
+      this.firstViewer.right.iframe = document.getElementById(firstViewerRightId) as HTMLIFrameElement
+      this.secondViewer.left.iframe = document.getElementById(secondViewerLeftId) as HTMLIFrameElement
+		this.secondViewer.right.iframe = document.getElementById(secondViewerRightId) as HTMLIFrameElement
+		this.thirdViewer.left.iframe = document.getElementById(thirdViewerLeftId) as HTMLIFrameElement
+		this.thirdViewer.right.iframe = document.getElementById(thirdViewerRightId) as HTMLIFrameElement
+		this.navigationHistory = []
 
 		if(this.dataService.currentBook){
 			// Load the ebook
-			await this.book.ReadEpubFile(this.dataService.currentBook.file);
+			await this.book.ReadEpubFile(this.dataService.currentBook.file)
 
 			// Create a chapter for each chapter of the book
-			this.chapters = [];
+			this.chapters = []
 			for(let i = 0; i < this.book.chapters.length; i++){
-				let bookChapter = this.book.chapters[i];
-				let chapter = new BookChapter();
+				let bookChapter = this.book.chapters[i]
+				let chapter = new BookChapter()
 
-				let index = bookChapter.filePath.lastIndexOf('/');
-				if(index < 0) index = 0;
+				let index = bookChapter.filePath.lastIndexOf('/')
+				if(index < 0) index = 0
 
-				chapter.filename = bookChapter.filePath;
-				this.chapters.push(chapter);
+				chapter.filename = bookChapter.filePath
+				this.chapters.push(chapter)
 			}
 
 			// Get the current chapter and progress of the book
-			let chapter = this.currentBook.chapter;
-			let progress = this.currentBook.progress;
-			this.currentChapter = chapter;
-			this.currentViewer = CurrentViewer.First;
+			let chapter = this.currentBook.chapter
+			let progress = this.currentBook.progress
+			this.currentChapter = chapter
+			this.currentViewer = CurrentViewer.First
 			
-			this.initialized = true;
-         await this.ShowPage(NavigationDirection.None, progress);
+			this.initialized = true
+			await this.ShowPage(NavigationDirection.None, progress)
          
-			this.chapterTree.Init(this.book.toc);
+			this.chapterTree.Init(this.book.toc)
 
 			await this.LoadChapterPercentages()
 			this.CalculateTotalProgress(this.currentBook.progress)
 		}
 
 		// Bind the keydown and wheel events
-		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode));
-		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta));
+		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode))
+		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta))
 		
-		document.getElementById(viewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer2Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer3Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer2Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer3Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer2Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
-		document.getElementById(viewer3Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)));
+		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(firstViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(firstViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 
 		// Bind the click event
-		document.getElementById(viewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
-		document.getElementById(viewer2Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
-		document.getElementById(viewer3Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)));
+		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 	}
    
    ngOnDestroy(){
-      $(document).unbind();
+      $(document).unbind()
    }
 
 	@HostListener('window:resize')
 	onResize(){
-		this.setSize();
+		this.setSize()
 	}
 
 	async onKeyDown(keyCode: number){
@@ -265,16 +288,16 @@ export class EpubContentComponent{
       
       if(this.width > secondPageMinWidth){
          // Show both pages
-			this.viewerLeftWidth = this.width / 2;
-			this.viewerRightWidth = this.width / 2;
+			this.firstViewer.left.width = this.width / 2
+			this.firstViewer.right.width = this.width / 2
       }else{
          // Hide the second page
-			this.viewerLeftWidth = this.width;
-			this.viewerRightWidth = 0;
+			this.firstViewer.left.width = this.width
+			this.firstViewer.right.width = 0
       }
 
 		if(this.initialized){
-			await this.ShowPage(NavigationDirection.None);
+			await this.ShowPage(NavigationDirection.None)
 		}
 	}
 
@@ -1104,196 +1127,196 @@ export class EpubContentComponent{
 	GetCurrentViewer(right: boolean = false) : HTMLIFrameElement{
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				return right ? this.viewerRight : this.viewerLeft;
+				return right ? this.firstViewer.right.iframe : this.firstViewer.left.iframe
 			case CurrentViewer.Second:
-				return right ? this.viewerRight2 : this.viewerLeft2;
+				return right ? this.secondViewer.right.iframe : this.secondViewer.left.iframe
 			case CurrentViewer.Third:
-				return right ? this.viewerRight3 : this.viewerLeft3;
+				return right ? this.thirdViewer.right.iframe : this.thirdViewer.left.iframe
 		}
 	}
 
 	GetNextViewer(right: boolean = false) : HTMLIFrameElement{
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				return right ? this.viewerRight2 : this.viewerLeft2;
+				return right ? this.secondViewer.right.iframe : this.secondViewer.left.iframe
 			case CurrentViewer.Second:
-				return right ? this.viewerRight3 : this.viewerLeft3;
+				return right ? this.thirdViewer.right.iframe : this.thirdViewer.left.iframe
 			case CurrentViewer.Third:
-				return right ? this.viewerRight : this.viewerLeft;
+				return right ? this.firstViewer.right.iframe : this.firstViewer.left.iframe
 		}
 	}
 
 	GetPreviousViewer(right: boolean = false) : HTMLIFrameElement{
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				return right ? this.viewerRight3 : this.viewerLeft3;
+				return right ? this.thirdViewer.right.iframe : this.thirdViewer.left.iframe
 			case CurrentViewer.Second:
-				return right ? this.viewerRight : this.viewerLeft;
+				return right ? this.firstViewer.right.iframe : this.firstViewer.left.iframe
 			case CurrentViewer.Third:
-				return right ? this.viewerRight2 : this.viewerLeft2;
+				return right ? this.secondViewer.right.iframe : this.secondViewer.left.iframe
 		}
 	}
 
 	SetZIndexOfCurrentViewer(zIndex: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewerZIndex = zIndex;
-				break;
+				this.firstViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Second:
-				this.viewer2ZIndex = zIndex;
-				break;
+				this.secondViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Third:
-				this.viewer3ZIndex = zIndex;
-				break;
+				this.thirdViewer.zIndex = zIndex
+				break
 		}
 	}
 
 	SetZIndexOfNextViewer(zIndex: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewer2ZIndex = zIndex;
-				break;
+				this.secondViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Second:
-				this.viewer3ZIndex = zIndex;
-				break;
+				this.thirdViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Third:
-				this.viewerZIndex = zIndex;
-				break;
+				this.firstViewer.zIndex = zIndex
+				break
 		}
 	}
 
 	SetZIndexOfPreviousViewer(zIndex: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewer3ZIndex = zIndex;
-				break;
+				this.thirdViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Second:
-				this.viewerZIndex = zIndex;
-				break;
+				this.firstViewer.zIndex = zIndex
+				break
 			case CurrentViewer.Third:
-				this.viewer2ZIndex = zIndex;
-				break;
+				this.secondViewer.zIndex = zIndex
+				break
 		}
 	}
 
 	SetLeftOfViewer(viewer: ViewerPosition, left: number){
 		switch (viewer) {
 			case ViewerPosition.Current:
-				this.SetLeftOfCurrentViewer(left);
-				break;
+				this.SetLeftOfCurrentViewer(left)
+				break
 			case ViewerPosition.Next:
-				this.SetLeftOfNextViewer(left);
-				break;
+				this.SetLeftOfNextViewer(left)
+				break
 			case ViewerPosition.Previous:
-				this.SetLeftOfPreviousViewer(left);
-				break;
+				this.SetLeftOfPreviousViewer(left)
+				break
 		}
 	}
 
 	SetLeftOfCurrentViewer(left: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewerPositionLeft = left;
-				break;
+				this.firstViewer.positionLeft = left
+				break
 			case CurrentViewer.Second:
-				this.viewer2PositionLeft = left;
-				break;
+				this.secondViewer.positionLeft = left
+				break
 			case CurrentViewer.Third:
-				this.viewer3PositionLeft = left;
-				break;
+				this.thirdViewer.positionLeft = left
+				break
 		}
 	}
 
 	SetLeftOfNextViewer(left: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewer2PositionLeft = left;
-				break;
+				this.secondViewer.positionLeft = left
+				break
 			case CurrentViewer.Second:
-				this.viewer3PositionLeft = left;
-				break;
+				this.thirdViewer.positionLeft = left
+				break
 			case CurrentViewer.Third:
-				this.viewerPositionLeft = left;
-				break;
+				this.firstViewer.positionLeft = left
+				break
 		}
 	}
 
 	SetLeftOfPreviousViewer(left: number){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				this.viewer3PositionLeft = left;
-				break;
+				this.thirdViewer.positionLeft = left
+				break
 			case CurrentViewer.Second:
-				this.viewerPositionLeft = left;
-				break;
+				this.firstViewer.positionLeft = left
+				break
 			case CurrentViewer.Third:
-				this.viewer2PositionLeft = left;
-				break;
+				this.secondViewer.positionLeft = left
+				break
 		}
 	}
 
 	SetHeightOfViewer(viewer: ViewerPosition, height: number, right: boolean = false){
 		switch (viewer) {
 			case ViewerPosition.Current:
-				this.SetHeightOfCurrentViewer(height, right);
-				break;
+				this.SetHeightOfCurrentViewer(height, right)
+				break
 			case ViewerPosition.Next:
-				this.SetHeightOfNextViewer(height, right);
-				break;
+				this.SetHeightOfNextViewer(height, right)
+				break
 			case ViewerPosition.Previous:
-				this.SetHeightOfPreviousViewer(height, right);
-				break;
+				this.SetHeightOfPreviousViewer(height, right)
+				break
 		}
 	}
 
 	SetHeightOfCurrentViewer(height: number, right: boolean = false){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				if(right)	this.viewerRightHeight = height;
-				else			this.viewerLeftHeight = height;
-				break;
+				if(right)	this.firstViewer.right.height = height
+				else			this.firstViewer.left.height = height
+				break
 			case CurrentViewer.Second:
-				if(right) 	this.viewer2RightHeight = height;
-				else			this.viewer2LeftHeight = height;
-				break;
+				if(right) 	this.secondViewer.right.height = height
+				else			this.secondViewer.left.height = height
+				break
 			case CurrentViewer.Third:
-				if(right)	this.viewer3RightHeight = height;
-				else			this.viewer3LeftHeight = height;
-				break;
+				if(right)	this.thirdViewer.right.height = height
+				else			this.thirdViewer.left.height = height
+				break
 		}
 	}
 
 	SetHeightOfNextViewer(height: number, right: boolean = false){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				if(right)	this.viewer2RightHeight = height;
-				else			this.viewer2LeftHeight = height;
-				break;
+				if(right)	this.secondViewer.right.height = height
+				else			this.secondViewer.left.height = height
+				break
 			case CurrentViewer.Second:
-				if(right) 	this.viewer3RightHeight = height;
-				else			this.viewer3LeftHeight = height;
-				break;
+				if(right) 	this.thirdViewer.right.height = height
+				else			this.thirdViewer.left.height = height
+				break
 			case CurrentViewer.Third:
-				if(right)	this.viewerRightHeight = height;
-				else			this.viewerLeftHeight = height;
-				break;
+				if(right)	this.firstViewer.right.height = height
+				else			this.firstViewer.left.height = height
+				break
 		}
 	}
 
 	SetHeightOfPreviousViewer(height: number, right: boolean = false){
 		switch(this.currentViewer){
 			case CurrentViewer.First:
-				if(right)	this.viewer3RightHeight = height;
-				else			this.viewer3LeftHeight = height;
-				break;
+				if(right)	this.thirdViewer.right.height = height
+				else			this.thirdViewer.left.height = height
+				break
 			case CurrentViewer.Second:
-				if(right) 	this.viewerRightHeight = height;
-				else			this.viewerLeftHeight = height;
-				break;
+				if(right) 	this.firstViewer.right.height = height
+				else			this.firstViewer.left.height = height
+				break
 			case CurrentViewer.Third:
-				if(right)	this.viewer2RightHeight = height;
-				else			this.viewer2LeftHeight = height;
-				break;
+				if(right)	this.secondViewer.right.height = height
+				else			this.secondViewer.left.height = height
+				break
 		}
 	}
 
@@ -1639,6 +1662,21 @@ export class BookChapter{
 	GetHtml() : HTMLHtmlElement{
 		return this.html.cloneNode(true) as HTMLHtmlElement;
 	}
+}
+
+interface Viewer{
+	left: {
+		iframe: HTMLIFrameElement
+		width: number
+		height: number
+	},
+	right: {
+		iframe: HTMLIFrameElement
+		width: number
+		height: number
+	}
+	positionLeft: number
+	zIndex: number
 }
 
 enum CurrentViewer{
