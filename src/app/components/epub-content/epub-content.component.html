@@ -40,21 +40,23 @@
 
 <!-- Arrow buttons -->
 <button mat-button 
-		class="book-toolbar-button text-color" 
-		style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
-		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-		[style.height.px]="showBottomToolbar ? height : height - 40" 
-		(click)="PrevPage()" 
-		*ngIf="!firstPage && !showBottomToolbar">
+	class="book-toolbar-button text-color" 
+	style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
+	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
+	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	(click)="PrevPage()" 
+	*ngIf="!firstPage && !showBottomToolbar">
+
 	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
 </button>
 <button mat-button 
-		class="book-toolbar-button text-color" 
-		style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
-		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-		[style.height.px]="showBottomToolbar ? height : height - 40" 
-		(click)="NextPage()" 
-		*ngIf="!showBottomToolbar">
+	class="book-toolbar-button text-color" 
+	style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
+	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
+	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	(click)="NextPage()" 
+	*ngIf="!showBottomToolbar">
+
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
@@ -99,10 +101,11 @@
 
 <!-- Bottom toolbar -->
 <div class="w-100 d-flex justify-content-center"
-		style="z-index: 2; position: absolute; bottom: 0;"
-		[style.marginBottom.px]="bottomToolbarMarginBottom"
-		[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
-		*ngIf="showBottomToolbar && initialized">
+	style="z-index: 2; position: absolute; bottom: 0;"
+	[style.marginBottom.px]="bottomToolbarMarginBottom"
+	[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
+	*ngIf="showBottomToolbar && initialized">
+	
 	<div class="w-100" style="display: inline-block;">
 		<div class="d-flex justify-content-center">
 			<button mat-button class="book-toolbar-button text-color" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
