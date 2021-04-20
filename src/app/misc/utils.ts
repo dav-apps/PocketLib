@@ -38,3 +38,25 @@ export function FindPageBreakPositions(positions: number[], pageHeight: number):
 
 	return pageBreakPositions
 }
+
+export function AdaptLinkTag(tag: Node, callback: Function) {
+	if (tag.nodeType == 3 || tag.nodeName.toLowerCase() != "a") return
+
+	let linkTag = tag as HTMLAnchorElement
+	let link = linkTag.getAttribute("href")
+	if (link == null) return
+
+	if (
+		link.indexOf('http://') == 0
+		|| link.indexOf('https://') == 0
+		|| link.indexOf('www.') == 0)
+	{
+		// Set target = blank
+		linkTag.setAttribute("target", "blank")
+	} else if (link.indexOf('mailto:') != 0) {
+		linkTag.onclick = () => {
+			callback(link)
+			return false
+		}
+	}
+}

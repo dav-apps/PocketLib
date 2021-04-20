@@ -6,7 +6,7 @@ import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { EpubBookmark } from 'src/app/models/EpubBookmark'
 import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader'
-import { FindPositionsInHtmlElement, FindPageBreakPositions } from 'src/app/misc/utils'
+import { FindPositionsInHtmlElement, FindPageBreakPositions, AdaptLinkTag } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 declare var $: any
 
@@ -467,20 +467,6 @@ export class EpubContentComponent {
 
 			// Move the viewer positions
 			await this.MoveViewersClockwise()
-		}
-
-		let currentViewer = this.GetCurrentViewer()
-
-		// Adapt the links of the left viewer
-		let linkTags = currentViewer.left.iframe.contentWindow.document.getElementsByTagName("a")
-		for (let i = 0; i < linkTags.length; i++) {
-			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)))
-		}
-
-		// Adapt the links of the right viewer
-		linkTags = currentViewer.right.iframe.contentWindow.document.getElementsByTagName("a")
-		for (let i = 0; i < linkTags.length; i++) {
-			Utils.AdaptLinkTag(linkTags.item(i), (href: string) => this.ngZone.run(() => this.NavigateToLink(href)))
 		}
 
 		this.setFirstLastPage()
@@ -1095,7 +1081,8 @@ export class EpubContentComponent {
 			this.contentHeight,
 			this.paddingX,
 			3000,
-			this.dataService.darkTheme
+			this.dataService.darkTheme,
+			(link: string) => this.ngZone.run(() => this.NavigateToLink(link))
 		)
 	}
 
@@ -1513,25 +1500,6 @@ class Utils {
 		return -1
 	}
 
-	static AdaptLinkTag(tag: Node, callback: Function) {
-		if (tag.nodeType == 3 || tag.nodeName.toLowerCase() != "a") return
-
-		let linkTag = tag as HTMLAnchorElement
-		let link = linkTag.getAttribute("href")
-
-		if (!link) return
-
-		if (link.indexOf('http://') === 0 || link.indexOf('https://') === 0 || link.indexOf('www.') === 0) {
-			// Set target = blank
-			linkTag.setAttribute("target", "blank")
-		} else if (link.indexOf('mailto:') !== 0) {
-			linkTag.onclick = () => {
-				callback(link)
-				return false
-			}
-		}
-	}
-
 	static TextNodesUnder(el) {
 		var n
 		var a: Text[] = []
@@ -1607,6 +1575,11 @@ export class BookChapter {
 
 	/**
 	 * Getter for the html
+	 * @param width The max width for images
+	 * @param height The max height for images
+	 * @param paddingX The left and right padding
+	 * @param marginTop The top margin
+	 * @param darktheme If true, makes the text color white
 	 * @returns The html of the BookChapter
 	 */
 	GetHtml(
@@ -1665,6 +1638,10 @@ export class BookChapter {
 	 * @param pageHeight The height of the page
 	 * @param contentWidth The width of the html content
 	 * @param contentHeight The height of the html content
+	 * @param paddingX The left and right padding for the html
+	 * @param marginTop The top margin for the html
+	 * @param darkTheme If true, makes the text color white
+	 * @param linkCallback The function called when the user clicks a link in the html
 	 */
 	async Render(
 		viewerSide: ViewerSide,
@@ -1674,7 +1651,8 @@ export class BookChapter {
 		contentHeight: number,
 		paddingX: number,
 		marginTop: number,
-		darkTheme: boolean
+		darkTheme: boolean,
+		linkCallback: Function
 	) {
 		if (!this.initialized) return
 
@@ -1706,6 +1684,12 @@ export class BookChapter {
 				width: pageWidth,
 				height: pageHeight
 			})
+		}
+
+		// Adapt the links
+		let linkTags = viewerSide.iframe.contentWindow.document.getElementsByTagName("a")
+		for (let i = 0; i < linkTags.length; i++) {
+			AdaptLinkTag(linkTags.item(i), (href: string) => linkCallback(href))
 		}
 	}
 }
