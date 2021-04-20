@@ -114,6 +114,7 @@ export class EpubContentComponent {
 
 	firstPage: boolean = false		// If true, hides the previous button
 	lastPage: boolean = false		// If true, hides the next button
+	showSecondPage: boolean = false	// If true, the right viewers are visible
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
 	goingBack: boolean = false		// If true, the viewer goes to the previous page
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
@@ -287,9 +288,10 @@ export class EpubContentComponent {
 		this.pageHeight = this.contentHeight - this.paddingBottom
 		this.paddingX = Math.round(this.width * 0.1)
 
+		this.showSecondPage = this.width > secondPageMinWidth
 		this.showBottomToolbar = this.width < 500
 
-		if (this.width > secondPageMinWidth) {
+		if (this.showSecondPage) {
 			// Show both pages
 			this.firstViewer.left.width = this.width / 2
 			this.firstViewer.right.width = this.width / 2
@@ -320,8 +322,8 @@ export class EpubContentComponent {
 
 		this.goingBack = true
 		if (
-			(this.width > secondPageMinWidth && this.currentPage <= 1)
-			|| (this.width <= secondPageMinWidth && this.currentPage <= 0)
+			(this.showSecondPage && this.currentPage <= 1)
+			|| (!this.showSecondPage && this.currentPage <= 0)
 		) {
 			// Show the previous chapter
 			if (this.currentChapter <= 0) return
@@ -329,8 +331,8 @@ export class EpubContentComponent {
 			let chapter = this.chapters[this.currentChapter]
 
 			this.currentPage = chapter.GetPageBreakPositions(this.width, this.pageHeight).length - 1
-			if (this.width > secondPageMinWidth && this.currentPage % 2 == 1) this.currentPage--
-		} else if (this.width > secondPageMinWidth) {
+			if (this.showSecondPage && this.currentPage % 2 == 1) this.currentPage--
+		} else if (this.showSecondPage) {
 			// Go to the second previous page
 			this.currentPage -= 2
 		} else {
@@ -367,7 +369,7 @@ export class EpubContentComponent {
 		// Check if this is the last chapter and the last page
 		if (
 			this.currentChapter >= this.chapters.length - 1
-			&& this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.width, this.pageHeight).length - (this.width > secondPageMinWidth ? 1 : 0)
+			&& this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.width, this.pageHeight).length - (this.showSecondPage ? 1 : 0)
 		) {
 			// Reset the progress
 			await this.currentBook.SetPosition(0, 0)
@@ -382,13 +384,13 @@ export class EpubContentComponent {
 		let chapterPageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
 		if (
-			(this.width > secondPageMinWidth && this.currentPage >= chapterPageBreakPositions.length - 2)
-			|| (this.width <= secondPageMinWidth && this.currentPage >= chapterPageBreakPositions.length - 1)
+			(this.showSecondPage && this.currentPage >= chapterPageBreakPositions.length - 2)
+			|| (!this.showSecondPage && this.currentPage >= chapterPageBreakPositions.length - 1)
 		) {
 			// Show the next chapter
 			this.currentChapter++
 			this.currentPage = 0
-		} else if (this.width > secondPageMinWidth) {
+		} else if (this.showSecondPage) {
 			// Go to the second next page
 			this.currentPage += 2
 		} else {
@@ -497,9 +499,9 @@ export class EpubContentComponent {
 		// Set currentPageBookmarked
 		this.currentPageBookmark = null
 
-		let lastPage: boolean = currentChapterPageBreakPositions.length - (this.width > secondPageMinWidth ? 2 : 1) <= this.currentPage
+		let lastPage: boolean = currentChapterPageBreakPositions.length - (this.showSecondPage ? 2 : 1) <= this.currentPage
 		let currentPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage)
-		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + (this.width > secondPageMinWidth ? 2 : 1))
+		let nextPageProgress = this.GetProgressOfCurrentChapterPage(this.currentPage + (this.showSecondPage ? 2 : 1))
 		if (nextPageProgress == -1) nextPageProgress = 1 * progressFactor
 
 		for (let bookmark of this.currentBook.bookmarks) {
@@ -549,7 +551,7 @@ export class EpubContentComponent {
 		let nextViewer = this.GetNextViewer()
 
 		let nextPage = this.currentPage + 1
-		if (this.width > secondPageMinWidth) nextPage++
+		if (this.showSecondPage) nextPage++
 
 		let chapterNumber = this.currentChapter
 		let chapter = await this.InitChapter(chapterNumber)
@@ -577,14 +579,14 @@ export class EpubContentComponent {
 			this.chapters[this.currentChapter] = chapter
 		}
 
-		if (this.width > secondPageMinWidth && nextPage < chapterPageBreakPositions.length) {
+		if (this.showSecondPage && nextPage < chapterPageBreakPositions.length) {
 			// Render the chapter on the second page
 			await this.RenderChapter(chapter, nextViewer.right)
 		}
 
 		// Scroll the left viewer
 		nextViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage])
-		if (this.width > secondPageMinWidth && chapterPageBreakPositions[nextPage + 1]) {
+		if (this.showSecondPage && chapterPageBreakPositions[nextPage + 1]) {
 			// Scroll the right viewer
 			nextViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage + 1])
 		}
@@ -595,7 +597,7 @@ export class EpubContentComponent {
 		this.SetHeightOfNextViewer((newViewerLeftHeight < 0 || isNaN(newViewerLeftHeight)) ? this.contentHeight - 8 : newViewerLeftHeight)
 
 		// Update the height of the right viewer
-		if (this.width > secondPageMinWidth) {
+		if (this.showSecondPage) {
 			if (nextPage == chapterPageBreakPositions.length - 1) {
 				// The last page is shown on the left page
 				// Hide the right page
@@ -622,7 +624,7 @@ export class EpubContentComponent {
 		let previousViewer = this.GetPreviousViewer()
 
 		let previousPage = this.currentPage - 1
-		if (this.width > secondPageMinWidth) previousPage--
+		if (this.showSecondPage) previousPage--
 
 		let chapterNumber = this.currentChapter
 		let chapter = await this.InitChapter(chapterNumber)
@@ -648,19 +650,19 @@ export class EpubContentComponent {
 
 			// Update previousPage after generating pagePositions of the previous chapter
 			previousPage = chapterPageBreakPositions.length - 1
-			if (this.width > secondPageMinWidth && previousPage % 2 == 1) previousPage--
+			if (this.showSecondPage && previousPage % 2 == 1) previousPage--
 		} else {
 			this.chapters[this.currentChapter] = chapter
 		}
 
-		if (this.width > secondPageMinWidth && previousPage < chapterPageBreakPositions.length) {
+		if (this.showSecondPage && previousPage < chapterPageBreakPositions.length) {
 			// Render the chapter on the second page
 			await this.RenderChapter(chapter, previousViewer.right)
 		}
 
 		// Scroll the left viewer
 		previousViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage])
-		if (this.width > secondPageMinWidth && chapterPageBreakPositions[previousPage + 1]) {
+		if (this.showSecondPage && chapterPageBreakPositions[previousPage + 1]) {
 			// Scroll the right viewer
 			previousViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage + 1])
 		}
@@ -671,7 +673,7 @@ export class EpubContentComponent {
 		this.SetHeightOfPreviousViewer((newViewerLeftHeight < 0 || isNaN(newViewerLeftHeight)) ? this.contentHeight - 8 : newViewerLeftHeight)
 
 		// Update the height of the right viewer
-		if (this.width > secondPageMinWidth) {
+		if (this.showSecondPage) {
 			if (previousPage == chapterPageBreakPositions.length - 1) {
 				// The last page is shown on the left page
 				// Hide the right page
@@ -699,7 +701,7 @@ export class EpubContentComponent {
 		// Get the page break positions
 		let pageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
-		if (this.width > secondPageMinWidth && this.currentPage < pageBreakPositions.length) {
+		if (this.showSecondPage && this.currentPage < pageBreakPositions.length) {
 			// Render the chapter on the second page
 			await this.RenderChapter(chapter, viewer.right)
 		}
@@ -714,7 +716,7 @@ export class EpubContentComponent {
 			let page = Utils.FindPageForPosition(progressPosition, pageBreakPositions)
 			if (page != -1) {
 				// If it shows two pages and the tag is on the second page, set the current page to the previous page
-				if (this.width > secondPageMinWidth && page % 2 == 1) page -= 1
+				if (this.showSecondPage && page % 2 == 1) page -= 1
 				this.currentPage = page
 			}
 		} else if (elementId) {
@@ -726,7 +728,7 @@ export class EpubContentComponent {
 				let page = Utils.FindPageForPosition(position, pageBreakPositions)
 				if (page != -1) {
 					// If it shows two pages and the tag is on the second page, set the current page to the previous page
-					if (this.width > secondPageMinWidth && page % 2 == 1) page -= 1
+					if (this.showSecondPage && page % 2 == 1) page -= 1
 					this.currentPage = page
 				}
 			}
@@ -734,7 +736,7 @@ export class EpubContentComponent {
 
 		// Scroll the left viewer
 		viewer.left.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage])
-		if (this.width > secondPageMinWidth && pageBreakPositions[this.currentPage + 1]) {
+		if (this.showSecondPage && pageBreakPositions[this.currentPage + 1]) {
 			// Scroll the right viewer
 			viewer.right.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage + 1])
 		}
@@ -745,7 +747,7 @@ export class EpubContentComponent {
 		this.SetHeightOfViewer(position, (newViewerLeftHeight < 0 || isNaN(newViewerLeftHeight)) ? this.contentHeight - 8 : newViewerLeftHeight)
 
 		// Update the height of the right viewer
-		if (this.width > secondPageMinWidth) {
+		if (this.showSecondPage) {
 			if (this.currentPage == pageBreakPositions.length - 1) {
 				// The last page is shown on the left page
 				// Hide the right page
@@ -935,14 +937,14 @@ export class EpubContentComponent {
 			// Calculate the progress of the current page
 			let currentChapter = this.chapters[this.currentChapter]
 			let currentChapterPageBreakPositions = currentChapter.GetPageBreakPositions(this.width, this.pageHeight)
-			let lastPage: boolean = currentChapterPageBreakPositions.length - (this.width > secondPageMinWidth ? 2 : 1) <= this.currentPage
+			let lastPage: boolean = currentChapterPageBreakPositions.length - (this.showSecondPage ? 2 : 1) <= this.currentPage
 
 			let currentPagePosition = currentChapterPageBreakPositions[this.currentPage]
 			let nextPagePosition = lastPage ? currentPagePosition : currentChapterPageBreakPositions[this.currentPage + 1]
 			let lastPagePosition = currentChapterPageBreakPositions[currentChapterPageBreakPositions.length - 1]
 
 			let pageMiddlePosition: number
-			if (this.width > secondPageMinWidth) {
+			if (this.showSecondPage) {
 				pageMiddlePosition = nextPagePosition
 			} else {
 				// Get the position of the current page in the middle
@@ -1070,7 +1072,7 @@ export class EpubContentComponent {
 	 * @param viewerSide The ViewSide where to render the chapter
 	 */
 	 async RenderChapter(chapter: BookChapter, viewerSide: ViewerSide) {
-		let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width
+		let pageWidth = this.showSecondPage ? this.width / 2 : this.width
 		pageWidth = pageWidth - 2 * this.paddingX
 
 		await chapter.Render(
@@ -1375,7 +1377,7 @@ export class EpubContentComponent {
 		this.firstPage = this.currentChapter == 0 && this.currentPage == 0;
 		this.lastPage =
 			(this.currentChapter == this.chapters.length - 1)
-			&& (this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.width, this.pageHeight).length - (this.width > secondPageMinWidth ? 2 : 1))
+			&& (this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.width, this.pageHeight).length - (this.showSecondPage ? 2 : 1))
 	}
 
 	LoadCurrentChapterTitle() {
