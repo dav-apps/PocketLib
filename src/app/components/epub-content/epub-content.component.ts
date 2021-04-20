@@ -53,6 +53,7 @@ export class EpubContentComponent {
 	width: number = 500				// The width of the entire window
 	height: number = 500				// The height of the entire window
 	contentHeight: number = 500	// The height of the iframe (height - 7 - paddingTop)
+	pageHeight: number = 500
 	paddingX: number = 0
 	paddingTop: number = 80
 	paddingBottom: number = 60
@@ -122,11 +123,6 @@ export class EpubContentComponent {
 	nextPageTimerRunning: boolean = false		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
 	prevPageTimerRunning: boolean = false		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
 	pageRenderingPromiseHolder = new PromiseHolder()	// PromiseHolder for rendering the pages, is resolved after the rendering of pages is finished
-
-	//#region Variables for finding the chapter page positions
-	pageHeight: number = 500
-	pagePositions: number[] = []
-	//#endregion
 
 	//#region Variables for touch events
 	swipeDirection: SwipeDirection = SwipeDirection.None	// Whether the user swipes vertically or horizontally
@@ -570,11 +566,11 @@ export class EpubContentComponent {
 		if (this.width > secondPageMinWidth) nextPage++
 
 		let chapterNumber = this.currentChapter
-		let chapter = await this.GenerateChapterHtml(chapterNumber)
+		let chapter = await this.InitChapter(chapterNumber)
 		if (!chapter) return
 
 		// Render the chapter and generate chapter pages
-		await chapter.Render(nextViewer.left, this.width, this.pageHeight)
+		await this.RenderChapter(chapter, nextViewer.left)
 
 		let chapterPageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
@@ -586,10 +582,10 @@ export class EpubContentComponent {
 			// Render the next chapter
 			nextPage = 0
 			chapterNumber = this.currentChapter + 1
-			chapter = await this.GenerateChapterHtml(chapterNumber)
+			chapter = await this.InitChapter(chapterNumber)
 			if (!chapter) return
 
-			await chapter.Render(nextViewer.left, this.width, this.pageHeight)
+			await this.RenderChapter(chapter, nextViewer.left)
 			chapterPageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 		} else {
 			this.chapters[this.currentChapter] = chapter
@@ -597,7 +593,7 @@ export class EpubContentComponent {
 
 		if (this.width > secondPageMinWidth && nextPage < chapterPageBreakPositions.length) {
 			// Render the chapter on the second page
-			await chapter.Render(nextViewer.right, this.width, this.pageHeight)
+			await this.RenderChapter(chapter, nextViewer.right)
 		}
 
 		// Scroll the left viewer
@@ -643,11 +639,11 @@ export class EpubContentComponent {
 		if (this.width > secondPageMinWidth) previousPage--
 
 		let chapterNumber = this.currentChapter
-		let chapter = await this.GenerateChapterHtml(chapterNumber)
+		let chapter = await this.InitChapter(chapterNumber)
 		if (!chapter) return
 
 		// Render the chapter and generate chapter pages
-		await chapter.Render(previousViewer.left, this.width, this.pageHeight)
+		await this.RenderChapter(chapter, previousViewer.left)
 
 		let chapterPageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
@@ -658,10 +654,10 @@ export class EpubContentComponent {
 		if (renderPreviousChapter) {
 			// Render the previous chapter
 			chapterNumber = this.currentChapter - 1
-			chapter = await this.GenerateChapterHtml(chapterNumber)
+			chapter = await this.InitChapter(chapterNumber)
 			if (!chapter) return
 
-			await chapter.Render(previousViewer.left, this.width, this.pageHeight)
+			await this.RenderChapter(chapter, previousViewer.left)
 			chapterPageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
 			// Update previousPage after generating pagePositions of the previous chapter
@@ -673,7 +669,7 @@ export class EpubContentComponent {
 
 		if (this.width > secondPageMinWidth && previousPage < chapterPageBreakPositions.length) {
 			// Render the chapter on the second page
-			await chapter.Render(previousViewer.right, this.width, this.pageHeight)
+			await this.RenderChapter(chapter, previousViewer.right)
 		}
 
 		// Scroll the left viewer
@@ -708,18 +704,18 @@ export class EpubContentComponent {
 	async RenderCurrentPage(position: ViewerPosition, progress: number = -1, elementId: string = null) {
 		let viewer = this.GetViewer(position)
 		let chapterNumber = this.currentChapter
-		let chapter = await this.GenerateChapterHtml(chapterNumber)
+		let chapter = await this.InitChapter(chapterNumber)
 		if (!chapter) return
 
 		// Render the chapter
-		await chapter.Render(viewer.left, this.width, this.pageHeight)
+		await this.RenderChapter(chapter, viewer.left)
 
 		// Get the page break positions
 		let pageBreakPositions = chapter.GetPageBreakPositions(this.width, this.pageHeight)
 
 		if (this.width > secondPageMinWidth && this.currentPage < pageBreakPositions.length) {
 			// Render the chapter on the second page
-			await chapter.Render(viewer.right, this.width, this.height)
+			await this.RenderChapter(chapter, viewer.right)
 		}
 
 		if (progress >= 0) {
@@ -1069,37 +1065,38 @@ export class EpubContentComponent {
 	 * Initializes the given chapter and adapts it to the size of the window
 	 * @param chapterIndex The chapter at the position of this.chapters
 	 */
-	async GenerateChapterHtml(chapterIndex: number): Promise<BookChapter> {
+	async InitChapter(chapterIndex: number): Promise<BookChapter> {
 		let chapter = this.chapters[chapterIndex]
 		if (!chapter) return null
 
-		let chapterHtml: HTMLHtmlElement = chapter.IsInitialized() ? chapter.GetHtml() : await this.book.chapters[chapterIndex].GetChapterHtml()
-		let chapterBody = chapterHtml.getElementsByTagName("body")[0] as HTMLBodyElement
-		chapterBody.setAttribute("style", `padding: 0px ${this.paddingX}px; margin: 0px 0px 3000px 0px; color: ${this.dataService.darkTheme ? 'white !important' : 'black !important'}; background-color: transparent`)
+		if (!chapter.IsInitialized()) {
+			// Get the html and init the chapter
+			let chapterHtml: HTMLHtmlElement = await this.book.chapters[chapterIndex].GetChapterHtml()
+			chapter.Init(chapterHtml)
+		}
 
-		// Adapt the image sizes to the page size
-		let imageTags = chapterHtml.getElementsByTagName("img")
+		return chapter
+	}
+
+	/**
+	 * Renders the given chapter on the appropriate iframe with the correct dimensions
+	 * @param chapter The chapter to render
+	 * @param viewerSide The ViewSide where to render the chapter
+	 */
+	 async RenderChapter(chapter: BookChapter, viewerSide: ViewerSide) {
 		let pageWidth = this.width > secondPageMinWidth ? this.width / 2 : this.width
 		pageWidth = pageWidth - 2 * this.paddingX
 
-		for (let i = 0; i < imageTags.length; i++) {
-			Utils.AdaptImageTagDimensions(imageTags.item(i), this.contentHeight, pageWidth)
-		}
-
-		// Add spans to the texts
-		let textNodes = Utils.TextNodesUnder(chapterBody)
-		for (let textNode of textNodes) {
-			// Wrap each space within a span
-			let span = document.createElement("span")
-			span.innerHTML = textNode.textContent.replace(/ /g, '<span> </span>')
-
-			// Add the span and remove the old text node
-			textNode.before(span)
-			textNode.parentElement.removeChild(textNode)
-		}
-
-		chapter.Init(chapterHtml)
-		return chapter
+		await chapter.Render(
+			viewerSide,
+			this.width,
+			this.pageHeight,
+			pageWidth,
+			this.contentHeight,
+			this.paddingX,
+			3000,
+			this.dataService.darkTheme
+		)
 	}
 
 	GetViewer(position: ViewerPosition): Viewer {
@@ -1516,41 +1513,6 @@ class Utils {
 		return -1
 	}
 
-	static AdaptImageTagDimensions(tag: Node, maxHeight: number, maxWidth: number) {
-		// Check if the tag really is an image
-		if (tag.nodeType == 3 || tag.nodeName.toLowerCase() != "img") return
-
-		// If the image is too large, change the height and width
-		let imageTag = tag as HTMLImageElement
-		let height = +imageTag.getAttribute("height")
-		let width = +imageTag.getAttribute("width")
-		if (height == 0 || width == 0) return
-
-		if (height > maxHeight) {
-			// Change the heigth of the image to the maxHeigth and adjust the width
-			imageTag.setAttribute("height", maxHeight.toString())
-
-			// Calculate the new width and set the new width of the image tag
-			let diffPercent = (100 / height) * maxHeight / 100
-			let newWidth = Math.round(width * diffPercent)
-			imageTag.setAttribute("width", newWidth.toString())
-
-			// Update the variables, for the case that the width is still too high
-			height = maxHeight
-			width = newWidth
-		}
-
-		if (width > maxWidth) {
-			// Change the width of the image to the maxWidth and adjust the height
-			imageTag.setAttribute("width", maxWidth.toString())
-
-			// Calculate the new height and set the new height of the image tag
-			let diffPercent = (100 / width) * maxWidth / 100
-			let newHeight = Math.round(height * diffPercent)
-			imageTag.setAttribute("height", newHeight.toString())
-		}
-	}
-
 	static AdaptLinkTag(tag: Node, callback: Function) {
 		if (tag.nodeType == 3 || tag.nodeName.toLowerCase() != "a") return
 
@@ -1603,6 +1565,42 @@ export class BookChapter {
 	 * @param html The html of the chapter
 	 */
 	Init(html: HTMLHtmlElement) {
+		if (this.initialized) return
+
+		// Prepare the html
+		let styleElement = document.createElement("style") as HTMLStyleElement
+		styleElement.innerHTML = `
+			body {
+				padding: 0px {0}px;
+				margin: 0px 0px {1}px 0px;
+				color: {2};
+				background-color: transparent;
+				font-family: Segoe UI;
+			}
+
+			img {
+				max-width: {3}px;
+				max-height: {4}px;
+			}
+		`
+
+		let headElement = html.getElementsByTagName("head")[0] as HTMLHeadElement
+		headElement.appendChild(styleElement)
+
+		// Add spans to the texts
+		let bodyElement = html.getElementsByTagName("body")[0] as HTMLBodyElement
+		let textNodes = Utils.TextNodesUnder(bodyElement)
+
+		for (let textNode of textNodes) {
+			// Wrap each space within a span
+			let span = document.createElement("span")
+			span.innerHTML = textNode.textContent.replace(/ /g, '<span> </span>')
+
+			// Add the span and remove the old text node
+			textNode.before(span)
+			textNode.parentElement.removeChild(textNode)
+		}
+
 		this.html = html
 		this.initialized = true
 	}
@@ -1611,8 +1609,25 @@ export class BookChapter {
 	 * Getter for the html
 	 * @returns The html of the BookChapter
 	 */
-	GetHtml(): HTMLHtmlElement {
-		return this.html.cloneNode(true) as HTMLHtmlElement
+	GetHtml(
+		width: number,
+		height: number,
+		paddingX: number,
+		marginTop: number,
+		darkTheme: boolean
+	): HTMLHtmlElement {
+		if (!this.initialized) return null
+
+		let updatedHtml = this.html.cloneNode(true) as HTMLHtmlElement
+		let styleElement = updatedHtml.getElementsByTagName("style")[0] as HTMLStyleElement
+		styleElement.innerHTML = styleElement.innerHTML
+			.replace('{0}', paddingX.toString())
+			.replace('{1}', marginTop.toString())
+			.replace('{2}', darkTheme ? 'white !important' : 'black !important')
+			.replace('{3}', width.toString())
+			.replace('{4}', height.toString())
+
+		return updatedHtml
 	}
 
 	/**
@@ -1643,18 +1658,43 @@ export class BookChapter {
 		return this.pageBreakPositions[i].positions
 	}
 
-	async Render(viewerSide: ViewerSide, width: number, height: number) {
+	/**
+	 * Renders the chapter on the given ViewerSide and finds the page break positions, if necessary
+	 * @param viewerSide The ViewerSide on which to render the chapter
+	 * @param pageWidth The width of the page
+	 * @param pageHeight The height of the page
+	 * @param contentWidth The width of the html content
+	 * @param contentHeight The height of the html content
+	 */
+	async Render(
+		viewerSide: ViewerSide,
+		pageWidth: number,
+		pageHeight: number,
+		contentWidth: number,
+		contentHeight: number,
+		paddingX: number,
+		marginTop: number,
+		darkTheme: boolean
+	) {
+		if (!this.initialized) return
+
 		// Check if the chapter is already rendered on the iframe
 		if (this.chapterIndex == viewerSide.chapter) return
 
 		// Render the chapter on the iframe
 		let viewerLoadPromise = new PromiseHolder()
 		viewerSide.iframe.onload = () => viewerLoadPromise.Resolve()
-		viewerSide.iframe.srcdoc = this.html.outerHTML
+		viewerSide.iframe.srcdoc = this.GetHtml(
+			contentWidth,
+			contentHeight,
+			paddingX,
+			marginTop,
+			darkTheme
+		).outerHTML
 		await viewerLoadPromise.AwaitResult()
 
 		// Check if the chapter already contains the page break positions for the current width and height
-		let i = this.pageBreakPositions.findIndex(p => p.width == width && p.height == height)
+		let i = this.pageBreakPositions.findIndex(p => p.width == pageWidth && p.height == pageHeight)
 
 		if (i == -1) {
 			// Find the page break positions
@@ -1662,9 +1702,9 @@ export class BookChapter {
 			FindPositionsInHtmlElement(viewerSide.iframe.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement, positions)
 
 			this.pageBreakPositions.push({
-				positions: FindPageBreakPositions(positions, height),
-				width: width,
-				height: height
+				positions: FindPageBreakPositions(positions, pageHeight),
+				width: pageWidth,
+				height: pageHeight
 			})
 		}
 	}
