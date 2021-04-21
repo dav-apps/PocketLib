@@ -57,12 +57,11 @@ export class EpubContentComponent {
 	paddingX: number = 0
 	paddingTop: number = 80
 	paddingBottom: number = 60
-	viewerTransitionTime: number = defaultViewerTransitionTime
 
 	firstViewer: Viewer = {
 		left: {
 			iframe: null,
-			chapter: -1,	// The html of the chapter that is currently rendered
+			chapter: -1,										// The html of the chapter that is currently rendered
 			width: 500,
 			height: 300
 		},
@@ -72,8 +71,9 @@ export class EpubContentComponent {
 			width: 500,
 			height: 300
 		},
-		positionLeft: 0,	// How much the viewer is moved to the right
-		zIndex: -1			// -1, -2 or -3
+		positionLeft: 0,										// How much the viewer is moved to the right
+		zIndex: -1,												// -1, -2 or -3
+		transitionTime: defaultViewerTransitionTime	// The time for the transition animation
 	}
 	secondViewer: Viewer = {
 		left: {
@@ -89,7 +89,8 @@ export class EpubContentComponent {
 			height: 300
 		},
 		positionLeft: 0,
-		zIndex: -1
+		zIndex: -1,
+		transitionTime: defaultViewerTransitionTime
 	}
 	thirdViewer: Viewer = {
 		left: {
@@ -105,7 +106,8 @@ export class EpubContentComponent {
 			height: 300
 		},
 		positionLeft: 0,
-		zIndex: -1
+		zIndex: -1,
+		transitionTime: defaultViewerTransitionTime
 	}
 
 	currentChapter: number = 0				// The current chapter index in this.chapters
@@ -116,7 +118,6 @@ export class EpubContentComponent {
 	lastPage: boolean = false		// If true, hides the next button
 	showSecondPage: boolean = false	// If true, the right viewers are visible
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
-	goingBack: boolean = false		// If true, the viewer goes to the previous page
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
 	runNextPageAfterRender: boolean = false	// If true, NextPage will be called another time
 	runPrevPageAfterRender: boolean = false	// If true, PrevPage will be called another time
@@ -320,7 +321,6 @@ export class EpubContentComponent {
 
 		this.showPageRunning = true
 
-		this.goingBack = true
 		if (
 			(this.showSecondPage && this.currentPage <= 1)
 			|| (!this.showSecondPage && this.currentPage <= 0)
@@ -341,7 +341,6 @@ export class EpubContentComponent {
 		}
 
 		await this.ShowPage(NavigationDirection.Back)
-		this.goingBack = false
 
 		if (this.runNextPageAfterRender) {
 			this.runNextPageAfterRender = false
@@ -774,7 +773,9 @@ export class EpubContentComponent {
 			this.swipeStart = true
 			this.showPageRunningWhenSwipeStarted = this.showPageRunning
 
-			this.viewerTransitionTime = 0
+			this.firstViewer.transitionTime = 0
+			this.secondViewer.transitionTime = 0
+			this.thirdViewer.transitionTime = 0
 			this.bottomToolbarTransitionTime = 0
 		} else if (event.type == touchMove) {
 			// Calculate the difference between the positions of the first touch and the current touch
@@ -815,7 +816,9 @@ export class EpubContentComponent {
 			}
 		} else if (event.type == touchEnd) {
 			// Reset the transition times
-			this.viewerTransitionTime = defaultViewerTransitionTime
+			this.firstViewer.transitionTime = defaultViewerTransitionTime
+			this.secondViewer.transitionTime = defaultViewerTransitionTime
+			this.thirdViewer.transitionTime = defaultViewerTransitionTime
 			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 			if (this.swipeDirection == SwipeDirection.Horizontal) {
@@ -873,7 +876,9 @@ export class EpubContentComponent {
 				this.doubleTapTimerRunning = false
 
 				// Reset the transition viewer times
-				this.viewerTransitionTime = defaultViewerTransitionTime
+				this.firstViewer.transitionTime = defaultViewerTransitionTime
+				this.secondViewer.transitionTime = defaultViewerTransitionTime
+				this.thirdViewer.transitionTime = defaultViewerTransitionTime
 				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 				if (clickedOnRightEdge) {
@@ -1132,104 +1137,6 @@ export class EpubContentComponent {
 		}
 	}
 
-	SetZIndexOfCurrentViewer(zIndex: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.firstViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Second:
-				this.secondViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Third:
-				this.thirdViewer.zIndex = zIndex
-				break
-		}
-	}
-
-	SetZIndexOfNextViewer(zIndex: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.secondViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Second:
-				this.thirdViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Third:
-				this.firstViewer.zIndex = zIndex
-				break
-		}
-	}
-
-	SetZIndexOfPreviousViewer(zIndex: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.thirdViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Second:
-				this.firstViewer.zIndex = zIndex
-				break
-			case CurrentViewer.Third:
-				this.secondViewer.zIndex = zIndex
-				break
-		}
-	}
-
-	SetLeftOfViewer(viewer: ViewerPosition, left: number) {
-		switch (viewer) {
-			case ViewerPosition.Current:
-				this.SetLeftOfCurrentViewer(left)
-				break
-			case ViewerPosition.Next:
-				this.SetLeftOfNextViewer(left)
-				break
-			case ViewerPosition.Previous:
-				this.SetLeftOfPreviousViewer(left)
-				break
-		}
-	}
-
-	SetLeftOfCurrentViewer(left: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.firstViewer.positionLeft = left
-				break
-			case CurrentViewer.Second:
-				this.secondViewer.positionLeft = left
-				break
-			case CurrentViewer.Third:
-				this.thirdViewer.positionLeft = left
-				break
-		}
-	}
-
-	SetLeftOfNextViewer(left: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.secondViewer.positionLeft = left
-				break
-			case CurrentViewer.Second:
-				this.thirdViewer.positionLeft = left
-				break
-			case CurrentViewer.Third:
-				this.firstViewer.positionLeft = left
-				break
-		}
-	}
-
-	SetLeftOfPreviousViewer(left: number) {
-		switch (this.currentViewer) {
-			case CurrentViewer.First:
-				this.thirdViewer.positionLeft = left
-				break
-			case CurrentViewer.Second:
-				this.firstViewer.positionLeft = left
-				break
-			case CurrentViewer.Third:
-				this.secondViewer.positionLeft = left
-				break
-		}
-	}
-
 	SetHeightOfViewer(viewer: ViewerPosition, height: number, right: boolean = false) {
 		switch (viewer) {
 			case ViewerPosition.Current:
@@ -1295,7 +1202,152 @@ export class EpubContentComponent {
 		}
 	}
 
+	SetLeftOfViewer(viewer: ViewerPosition, left: number) {
+		switch (viewer) {
+			case ViewerPosition.Current:
+				this.SetLeftOfCurrentViewer(left)
+				break
+			case ViewerPosition.Next:
+				this.SetLeftOfNextViewer(left)
+				break
+			case ViewerPosition.Previous:
+				this.SetLeftOfPreviousViewer(left)
+				break
+		}
+	}
+
+	SetLeftOfCurrentViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.firstViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.secondViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.thirdViewer.positionLeft = left
+				break
+		}
+	}
+
+	SetLeftOfNextViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.secondViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.thirdViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.firstViewer.positionLeft = left
+				break
+		}
+	}
+
+	SetLeftOfPreviousViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.thirdViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.firstViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.secondViewer.positionLeft = left
+				break
+		}
+	}
+
+	SetZIndexOfCurrentViewer(zIndex: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.firstViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Second:
+				this.secondViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Third:
+				this.thirdViewer.zIndex = zIndex
+				break
+		}
+	}
+
+	SetZIndexOfNextViewer(zIndex: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.secondViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Second:
+				this.thirdViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Third:
+				this.firstViewer.zIndex = zIndex
+				break
+		}
+	}
+
+	SetZIndexOfPreviousViewer(zIndex: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.thirdViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Second:
+				this.firstViewer.zIndex = zIndex
+				break
+			case CurrentViewer.Third:
+				this.secondViewer.zIndex = zIndex
+				break
+		}
+	}
+
+	SetTransitionTimeOfCurrentViewer(transitionTime: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.firstViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Second:
+				this.secondViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Third:
+				this.thirdViewer.transitionTime = transitionTime
+				break
+		}
+	}
+
+	SetTransitionTimeOfNextViewer(transitionTime: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.secondViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Second:
+				this.thirdViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Third:
+				this.firstViewer.transitionTime = transitionTime
+				break
+		}
+	}
+
+	SetTransitionTimeOfPreviousViewer(transitionTime: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.thirdViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Second:
+				this.firstViewer.transitionTime = transitionTime
+				break
+			case CurrentViewer.Third:
+				this.secondViewer.transitionTime = transitionTime
+				break
+		}
+	}
+
 	async MoveViewersClockwise(): Promise<void> {
+		// Set the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(0)
+		this.SetTransitionTimeOfPreviousViewer(0)
+
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(-this.width)
 		this.SetLeftOfNextViewer(0)
@@ -1319,10 +1371,20 @@ export class EpubContentComponent {
 				break
 		}
 
-		return new Promise(resolve => setTimeout(resolve, this.viewerTransitionTime * 1000))
+		await new Promise(resolve => setTimeout(resolve, 500))
+
+		// Reset the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
 	}
 
 	async MoveViewersCounterClockwise(): Promise<void> {
+		// Set the transition times
+		this.SetTransitionTimeOfCurrentViewer(0)
+		this.SetTransitionTimeOfNextViewer(0)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
+
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(0)
 		this.SetLeftOfNextViewer(-this.width)
@@ -1346,7 +1408,12 @@ export class EpubContentComponent {
 				break
 		}
 
-		return new Promise(resolve => setTimeout(resolve, this.viewerTransitionTime * 1000))
+		await new Promise(resolve => setTimeout(resolve, 500))
+
+		// Reset the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
 	}
 
 	SetEventListeners(position: ViewerPosition) {
@@ -1700,7 +1767,8 @@ export interface Viewer {
 	left: ViewerSide
 	right: ViewerSide
 	positionLeft: number
-	zIndex: number
+	zIndex: number,
+	transitionTime: number
 }
 
 export interface ViewerSide {

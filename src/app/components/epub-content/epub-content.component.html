@@ -6,7 +6,7 @@
 	[style.z-index]="firstViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'">
+	[style.transition]="'left ' + firstViewer.transitionTime + 's'">
 
 	<iframe id="first-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="firstViewer.left.height"></iframe>
 	<iframe id="first-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="firstViewer.right.height"></iframe>
@@ -19,7 +19,7 @@
 	[style.z-index]="secondViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'">
+	[style.transition]="'left ' + secondViewer.transitionTime + 's'">
 
 	<iframe id="second-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="secondViewer.left.height"></iframe>
 	<iframe id="second-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="secondViewer.right.height"></iframe>
@@ -32,7 +32,7 @@
 	[style.z-index]="thirdViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'">
+	[style.transition]="'left ' + thirdViewer.transitionTime + 's'">
 
 	<iframe id="third-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="thirdViewer.left.height"></iframe>
 	<iframe id="third-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="thirdViewer.right.height"></iframe>
