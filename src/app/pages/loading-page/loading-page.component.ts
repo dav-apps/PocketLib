@@ -11,6 +11,8 @@ import { PdfBook } from 'src/app/models/PdfBook'
 })
 export class LoadingPageComponent {
 	height: number = 500
+	width: number = 500
+	dualScreenLayout: boolean = false
 
 	constructor(
 		private dataService: DataService,
@@ -44,6 +46,13 @@ export class LoadingPageComponent {
 
 	setSize() {
 		this.height = window.innerHeight
+		this.width = window.innerWidth
+
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+			this.dualScreenLayout = screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width
+		}
 	}
 
 	async LoadSettings() {
