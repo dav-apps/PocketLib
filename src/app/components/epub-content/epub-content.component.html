@@ -1,38 +1,38 @@
 <div
 	id="first-viewer"
-   style="position: absolute"
+   style="position: absolute; transition-property: transform;"
 	class="d-flex theme-background-color-primary"
-	[style.left.px]="firstViewer.positionLeft" 
-	[style.z-index]="firstViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="'left ' + firstViewer.transitionTime + 's'">
+	[style.z-index]="firstViewer.zIndex"
+	[style.transform]="'translateX(' + firstViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="firstViewer.transitionTime + 'ms'">
 
 	<iframe id="first-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="firstViewer.left.height"></iframe>
 	<iframe id="first-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="firstViewer.right.height"></iframe>
 </div>
 
 <div id="second-viewer"
-	style="position: absolute"
+	style="position: absolute; transition-property: transform;"
 	class="d-flex theme-background-color-primary"
-	[style.left.px]="secondViewer.positionLeft" 
-	[style.z-index]="secondViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="'left ' + secondViewer.transitionTime + 's'">
+	[style.z-index]="secondViewer.zIndex"
+	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="secondViewer.transitionTime + 'ms'">
 
 	<iframe id="second-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="secondViewer.left.height"></iframe>
 	<iframe id="second-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="secondViewer.right.height"></iframe>
 </div>
 
 <div id="third-viewer"
-	style="position: absolute"
+	style="position: absolute; transition-property: transform;"
 	class="d-flex theme-background-color-primary"
-	[style.left.px]="thirdViewer.positionLeft" 
-	[style.z-index]="thirdViewer.zIndex"
 	[style.width.px]="width"
 	[style.height.px]="height"
-	[style.transition]="'left ' + thirdViewer.transitionTime + 's'">
+	[style.z-index]="thirdViewer.zIndex"
+	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'">
 
 	<iframe id="third-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="thirdViewer.left.height"></iframe>
 	<iframe id="third-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="thirdViewer.right.height"></iframe>

@@ -30,7 +30,7 @@ const thirdViewerLeftId = "third-viewer-left"
 const thirdViewerRightId = "third-viewer-right"
 const bottomToolbarMarginBottomOpened = 0
 const bottomToolbarMarginBottomClosed = -40
-const defaultViewerTransitionTime = 0.5
+const defaultViewerTransitionTime = 500
 const defaultBottomToolbarTransitionTime = 0.2
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
@@ -455,10 +455,10 @@ export class EpubContentComponent {
 
 		if (direction == NavigationDirection.Forward) {
 			// Move the viewer positions
-			await this.MoveViewersClockwise()
+			await this.MoveViewersForward()
 		} else if (direction == NavigationDirection.Back) {
 			// Move the viewer positions
-			await this.MoveViewersCounterClockwise()
+			await this.MoveViewersBackward()
 		} else {
 			// Render the current page on the next page viewer
 			await this.RenderCurrentPage(ViewerPosition.Next, progress, elementId)
@@ -467,7 +467,7 @@ export class EpubContentComponent {
 			this.SetEventListeners(ViewerPosition.Next)
 
 			// Move the viewer positions
-			await this.MoveViewersClockwise()
+			await this.MoveViewersForward()
 		}
 
 		this.setFirstLastPage()
@@ -1342,7 +1342,7 @@ export class EpubContentComponent {
 		}
 	}
 
-	async MoveViewersClockwise(): Promise<void> {
+	async MoveViewersForward(): Promise<void> {
 		// Set the transition times
 		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
 		this.SetTransitionTimeOfNextViewer(0)
@@ -1371,7 +1371,7 @@ export class EpubContentComponent {
 				break
 		}
 
-		await new Promise(resolve => setTimeout(resolve, 500))
+		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
 
 		// Reset the transition times
 		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
@@ -1379,7 +1379,7 @@ export class EpubContentComponent {
 		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
 	}
 
-	async MoveViewersCounterClockwise(): Promise<void> {
+	async MoveViewersBackward(): Promise<void> {
 		// Set the transition times
 		this.SetTransitionTimeOfCurrentViewer(0)
 		this.SetTransitionTimeOfNextViewer(0)
@@ -1408,7 +1408,7 @@ export class EpubContentComponent {
 				break
 		}
 
-		await new Promise(resolve => setTimeout(resolve, 500))
+		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
 
 		// Reset the transition times
 		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
