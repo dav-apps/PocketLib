@@ -117,6 +117,7 @@ export class EpubContentComponent {
 	firstPage: boolean = false		// If true, hides the previous button
 	lastPage: boolean = false		// If true, hides the next button
 	showSecondPage: boolean = false	// If true, the right viewers are visible
+	dualScreenLayout: boolean = false	// If true, the app is displayed on a dual-screen like Surface Duo with a vertical fold
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
 	runNextPageAfterRender: boolean = false	// If true, NextPage will be called another time
@@ -181,6 +182,11 @@ export class EpubContentComponent {
 
 	async ngOnInit() {
 		this.currentBook = this.dataService.currentBook as EpubBook
+		if (!this.dataService.currentBook) {
+			// Navigate back to the library page
+			this.router.navigate(['/'])
+			return
+		}
 
 		// Initialize the html element variables
 		this.firstViewer.left.iframe = document.getElementById(firstViewerLeftId) as HTMLIFrameElement
@@ -191,37 +197,41 @@ export class EpubContentComponent {
 		this.thirdViewer.right.iframe = document.getElementById(thirdViewerRightId) as HTMLIFrameElement
 		this.navigationHistory = []
 
-		if (this.dataService.currentBook) {
-			// Load the ebook
-			await this.book.ReadEpubFile(this.dataService.currentBook.file)
-
-			// Create a chapter for each chapter of the book
-			this.chapters = []
-			for (let i = 0; i < this.book.chapters.length; i++) {
-				let bookChapter = this.book.chapters[i]
-
-				this.chapters.push(
-					new BookChapter({
-						chapterIndex: i,
-						filename: bookChapter.filePath
-					})
-				)
-			}
-
-			// Get the current chapter and progress of the book
-			let chapter = this.currentBook.chapter
-			let progress = this.currentBook.progress
-			this.currentChapter = chapter
-			this.currentViewer = CurrentViewer.First
-
-			this.initialized = true
-			await this.ShowPage(NavigationDirection.None, progress)
-
-			this.chapterTree.Init(this.book.toc)
-
-			await this.LoadChapterPercentages()
-			this.CalculateTotalProgress(this.currentBook.progress)
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+			this.dualScreenLayout = screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width
 		}
+
+		// Load the ebook
+		await this.book.ReadEpubFile(this.dataService.currentBook.file)
+
+		// Create a chapter for each chapter of the book
+		this.chapters = []
+		for (let i = 0; i < this.book.chapters.length; i++) {
+			let bookChapter = this.book.chapters[i]
+
+			this.chapters.push(
+				new BookChapter({
+					chapterIndex: i,
+					filename: bookChapter.filePath
+				})
+			)
+		}
+
+		// Get the current chapter and progress of the book
+		let chapter = this.currentBook.chapter
+		let progress = this.currentBook.progress
+		this.currentChapter = chapter
+		this.currentViewer = CurrentViewer.First
+
+		this.initialized = true
+		await this.ShowPage(NavigationDirection.None, progress)
+
+		this.chapterTree.Init(this.book.toc)
+
+		await this.LoadChapterPercentages()
+		this.CalculateTotalProgress(this.currentBook.progress)
 
 		// Bind the keydown and wheel events
 		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode))
