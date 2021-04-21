@@ -103,7 +103,7 @@
 <div class="w-100 d-flex justify-content-center"
 	style="z-index: 2; position: absolute; bottom: 0;"
 	[style.marginBottom.px]="bottomToolbarMarginBottom"
-	[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
+	[style.transition]="'all ' + bottomToolbarTransitionTime + 'ms'"
 	*ngIf="showBottomToolbar && initialized">
 	
 	<div class="w-100" style="display: inline-block;">
@@ -150,9 +150,9 @@
 
 <!-- Total progress -->
 <div
-	style="position: absolute; bottom: 0"
+	style="position: absolute; bottom: 0; width: 1px; transition-duration: 400ms;"
 	[style.border]="dataService.darkTheme ? '1px solid #b9b9b9' : '2px solid #7b7b7b'"
-	[style.width.%]="totalProgress">
+	[style.transform]="'scaleX(' + width * totalProgress + ')'">
 </div>
 
 <fab-panel 

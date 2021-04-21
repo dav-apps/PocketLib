@@ -31,7 +31,7 @@ const thirdViewerRightId = "third-viewer-right"
 const bottomToolbarMarginBottomOpened = 0
 const bottomToolbarMarginBottomClosed = -40
 const defaultViewerTransitionTime = 500
-const defaultBottomToolbarTransitionTime = 0.2
+const defaultBottomToolbarTransitionTime = 200
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
 const navigationToleranceTime = 200
@@ -146,7 +146,7 @@ export class EpubContentComponent {
 	//#endregion
 
 	//#region Variables for the progress bar
-	totalProgress: number = 0						// The current progress in percent
+	totalProgress: number = 0						// The current progress in percent between 0 and 1
 	//#endregion
 
 	//#region Variables for the chapters panel
@@ -1027,7 +1027,7 @@ export class EpubContentComponent {
 			}
 		}
 
-		this.totalProgress = newTotalProgress / progressFactor
+		this.totalProgress = newTotalProgress / progressFactor / 100
 		return newTotalProgress
 	}
 
