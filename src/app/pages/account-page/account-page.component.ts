@@ -15,6 +15,8 @@ export class AccountPageComponent {
 	width: number = window.innerWidth
 	textMaxWidth: number = 240
 	textFontSize: number = 21
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	logoutDialogVisible: boolean = false
 	redirect: string
 
@@ -46,6 +48,21 @@ export class AccountPageComponent {
 
 	ngOnInit() {
 		this.setSize()
+
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+
+			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+				this.dualScreenLayout = true
+
+				// Calculate the width of the fold
+				let foldWidth = screenSegments[1].left - screenSegments[0].right
+				if (foldWidth > 0) {
+					this.dualScreenFoldMargin = foldWidth / 2
+				}
+			}
+		}
 	}
 
 	@HostListener('window:resize')
@@ -80,22 +97,8 @@ export class AccountPageComponent {
 		this.logoutDialogVisible = true
 	}
 
-	ShowPlansAccountPage() {
-		Dav.ShowUserPage("plans", true)
-	}
-
 	Logout() {
 		this.logoutDialogVisible = false
 		this.dataService.dav.Logout().then(() => window.location.href = "/account")
-	}
-
-	bytesToGigabytes(bytes: number, rounding: number): string {
-		if (bytes == 0) return "0"
-		let gb = Math.round(bytes / 1000000000).toFixed(rounding)
-		return gb == "0.0" ? "0" : gb
-	}
-
-	getUsedStoragePercentage(): number {
-		return (this.dataService.dav.user.UsedStorage / this.dataService.dav.user.TotalStorage) * 100
 	}
 }

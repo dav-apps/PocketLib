@@ -62,6 +62,8 @@ import { BlurhashImageComponent } from './components/blurhash-image/blurhash-ima
 import { LanguagesSelectionComponent } from './components/languages-selection/languages-selection.component'
 import { LibraryPageCardsComponent } from './components/library-page-cards/library-page-cards.component'
 import { LibraryPageBookCardComponent } from './components/library-page-book-card/library-page-book-card.component'
+import { UserProfileComponent } from './components/user-profile/user-profile.component'
+import { DavProCardComponent } from './components/dav-pro-card/dav-pro-card.component'
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component'
@@ -103,6 +105,8 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		LanguagesSelectionComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
+		UserProfileComponent,
+		DavProCardComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,

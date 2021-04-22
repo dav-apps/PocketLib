@@ -169,7 +169,6 @@ export class LibraryPageComponent {
 		} else {
 			this.contextMenuVisible = true
 		}
-		return false
 	}
 
 	async DownloadBook() {

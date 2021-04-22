@@ -36,21 +36,8 @@ const enDefaults = {
 		text3: "Get books from the PocketLib Store",
 		text4: "Make sure your books don't get lost",
 		login: "Log in",
-		logout: "Log out",
 		signup: "Sign up",
-		storageUsed: "{0} GB of {1} GB used",
-		planFree: "Free",
-		planPlus: "Plus",
-		planPro: "Pro",
 		upgradeTitle: "Change your plan to make PocketLib even better",
-		selectPlan: "Select",
-		upgradeProCard: {
-			plan: "dav Pro",
-			price: "10 € per month",
-			feature1: "Get access to all books in the PocketLib Store",
-			feature2: "Support the authors of the books you read",
-			feature3: "Help us with the development of new apps and features"
-		},
 		logoutDialog: {
 			title: "Log out",
 			description: "Are you sure you want to log out?"
@@ -373,6 +360,21 @@ const enDefaults = {
 		addBook: "Open a local file",
 		goToAuthorPage: "Go to your author profile"
 	},
+	userProfile: {
+		planFree: "Free",
+		planPlus: "Plus",
+		planPro: "Pro",
+		storageUsed: "{0} GB of {1} GB used",
+		logout: "Log out"
+	},
+	davProCard: {
+		plan: "dav Pro",
+		price: "10 € per month",
+		feature1: "Get access to all books in the PocketLib Store",
+		feature2: "Support the authors of the books you read",
+		feature3: "Help us with the development of new apps and features",
+		selectPlan: "Select"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -424,21 +426,8 @@ const deDefaults = {
 		text3: "Greife auf Bücher im PocketLib Store zu",
 		text4: "Stelle sicher, dass deine Bücher nicht verloren gehen",
 		login: "Anmelden",
-		logout: "Abmelden",
 		signup: "Registrieren",
-		storageUsed: "{0} GB von {1} GB verwendet",
-		planFree: "Free",
-		planPlus: "Plus",
-		planPro: "Pro",
 		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
-		selectPlan: "Auswählen",
-		upgradeProCard: {
-			plan: "dav Pro",
-			price: "10 € pro Monat",
-			feature1: "Greife auf alle Bücher im PocketLib Store zu",
-			feature2: "Unterstütze die Autoren der Bücher, die du liest",
-			feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen"
-		},
 		logoutDialog: {
 			title: "Abmelden",
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
@@ -760,6 +749,21 @@ const deDefaults = {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addBook: "Öffne eine lokale Datei",
 		goToAuthorPage: "Gehe zu deinem Autor-Profil",
+	},
+	userProfile: {
+		planFree: "Free",
+		planPlus: "Plus",
+		planPro: "Pro",
+		storageUsed: "{0} GB von {1} GB verwendet",
+		logout: "Abmelden"
+	},
+	davProCard: {
+		plan: "dav Pro",
+		price: "10 € pro Monat",
+		feature1: "Greife auf alle Bücher im PocketLib Store zu",
+		feature2: "Unterstütze die Autoren der Bücher, die du liest",
+		feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen",
+		selectPlan: "Auswählen"
 	},
 	misc: {
 		languages: {

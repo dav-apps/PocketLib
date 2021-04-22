@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-center">
+	<img
+		class="rounded-circle shadow"
+		[src]="dataService.dav.user.ProfileImage"
+		[height]="compact ? 130 : 150"
+		[width]="compact ? 130 : 150" />
+
+	<div style="width: 200px" [style.marginLeft.px]="compact ? 20 : 40">
+		<h4 class="text-color mb-0">
+			<a class="text-color" href="https://dav-apps.tech/login?redirect=user" target="blank">{{ dataService.dav.user.FirstName }}</a>
+		</h4>
+
+		<p class="text-muted mb-1">
+			{{ dataService.dav.user.Plan == 0 ? locale.planFree : (dataService.dav.user.Plan == 1 ? locale.planPlus : locale.planPro ) }}
+		</p>
+
+		<div class="progress mt-3" style="width: 200px; height: 5%">
+			<div
+				class="progress-bar"
+				role="progressbar"
+				[style.width.%]="usedStoragePercent"
+				aria-valuenow="40"
+				aria-valuemin="0"
+				aria-valuemax="100">
+			</div>
+		</div>
+
+		<p class="mt-2 text-color" style="margin-bottom: 2px">
+			{{ usedStorageText }}
+		</p>
+
+		<button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="LogoutClick()">{{ locale.logout }}</button>
+	</div>
+</div>

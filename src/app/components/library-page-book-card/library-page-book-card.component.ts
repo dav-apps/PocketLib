@@ -22,5 +22,6 @@ export class LibraryPageBookCardComponent {
 
 	ContextMenu(event: MouseEvent) {
 		this.contextMenu.emit(event)
+		return false
 	}
 }
