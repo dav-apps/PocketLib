@@ -36,6 +36,7 @@ const enDefaults = {
 		text3: "Get books from the PocketLib Store",
 		text4: "Make sure your books don't get lost",
 		login: "Log in",
+		logout: "Log out",
 		signup: "Sign up",
 		upgradeTitle: "Change your plan to make PocketLib even better",
 		logoutDialog: {
@@ -426,6 +427,7 @@ const deDefaults = {
 		text3: "Greife auf Bücher im PocketLib Store zu",
 		text4: "Stelle sicher, dass deine Bücher nicht verloren gehen",
 		login: "Anmelden",
+		logout: "Abmelden",
 		signup: "Registrieren",
 		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
 		logoutDialog: {
