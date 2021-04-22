@@ -3,9 +3,6 @@ const enDefaults = {
    libraryPage: {
 		title: "Your Library",
 		libraryEmpty: "Your library is currently empty...",
-		discoverBooks: "Discover books in the PocketLib Store",
-		addFile: "Open a local file",
-		goToAuthorPage: "Go to your author profile",
 		bookContextMenuExport: "Export",
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
@@ -371,6 +368,11 @@ const enDefaults = {
 			isbnInvalid: "The ISBN is invalid"
 		}
 	},
+	libraryPageCards: {
+		discoverBooks: "Discover books in the PocketLib Store",
+		addBook: "Open a local file",
+		goToAuthorPage: "Go to your author profile"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -389,9 +391,6 @@ const deDefaults = {
    libraryPage: {
 		title: "Deine Bibliothek",
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
-		discoverBooks: "Entdecke Bücher im PocketLib Store",
-		addFile: "Öffne eine lokale Datei",
-		goToAuthorPage: "Gehe zu deinem Autor-Profil",
 		bookContextMenuExport: "Exportieren",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
@@ -756,6 +755,11 @@ const deDefaults = {
 		errors: {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}
+	},
+	libraryPageCards: {
+		discoverBooks: "Entdecke Bücher im PocketLib Store",
+		addBook: "Öffne eine lokale Datei",
+		goToAuthorPage: "Gehe zu deinem Autor-Profil",
 	},
 	misc: {
 		languages: {

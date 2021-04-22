@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from "@angular/core"
+import { Component, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
 import { transition, trigger, state, style, animate } from '@angular/animations'
 import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
@@ -40,12 +40,10 @@ export class LibraryPageComponent {
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
 	selectedBook: Book
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	showRenameBookOption: boolean = false		// If the option in the context menu to rename the book is visible. Only for PdfBook
 	showExportBookOption: boolean = false		// If the option in the context menu to export the book is visible
-	hoveredBookIndex: number = -1					// The currently hovered book, for showing the shadow
-	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
-	addBookHover: boolean = false					// Indicator for if the mouse is hovering the add book card
-	goToAuthorPageHover: boolean = false		// Indicator for if the mouse is hovering the card for going to the author page
 	renameBookDialogVisible: boolean = false
 	renameBookDialogTitle: string = ""
 	renameBookDialogError: string = ""
@@ -99,7 +97,24 @@ export class LibraryPageComponent {
 		}
 	}
 
-	async filePick(file: ReadFile) {
+	ngOnInit() {
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+
+			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+				this.dualScreenLayout = true
+
+				// Calculate the width of the fold
+				let foldWidth = screenSegments[1].left - screenSegments[0].right
+				if (foldWidth > 0) {
+					this.dualScreenFoldMargin = foldWidth / 2
+				}
+			}
+		}
+	}
+
+	async AddBookFilePick(file: ReadFile) {
 		// Create a new book
 		if (file.type == pdfType) {
 			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
@@ -137,7 +152,7 @@ export class LibraryPageComponent {
 		this.router.navigate(["book"])
 	}
 
-	onContextMenu(event: MouseEvent, book: Book) {
+	BookContextMenu(event: MouseEvent, book: Book) {
 		this.selectedBook = book
 		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
 		this.showExportBookOption = book.belongsToUser || book.purchase != null

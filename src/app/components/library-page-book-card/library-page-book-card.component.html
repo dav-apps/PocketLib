@@ -1,0 +1,21 @@
+<div
+	class="card m-2 cursor theme-background-color-secondary"
+	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
+	style="width: 180px; transition: 0.12s"
+	(click)="Click()"
+	(contextmenu)="ContextMenu($event)"
+	(mouseover)="hovered = true"
+	(mouseout)="hovered = false">
+
+	<img
+		[src]="book.cover ? book.cover : dataService.defaultStoreBookCover"
+		class="card-img-top"
+		style="width: 100%; height: 270px; object-fit: cover;">
+
+	<div class="card-body">
+		<p class="card-text text-center text-color"
+			style="max-width: 150px; font-size: 15px">
+			{{ book.title }}
+		</p>
+	</div>
+</div>

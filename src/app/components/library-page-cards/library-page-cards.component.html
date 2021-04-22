@@ -1,0 +1,65 @@
+<!-- Card for discovering books in the Store -->
+<div
+	class="card cursor theme-background-color-secondary"
+	style="width: 100%; transition: 0.12s; margin-top: 28px; margin-bottom: 28px" 
+	[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
+	(mouseover)="discoverBooksHover = true"
+	(mouseout)="discoverBooksHover = false"
+	(click)="DiscoverBooksClick()">
+
+	<div class="card-body d-flex">
+		<div class="mx-auto text-center">
+			<i class="ms-Icon ms-Icon--Shop text-color"
+				aria-hidden="true"
+				style="font-size: 28px">
+			</i>
+
+			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.discoverBooks }}</p>
+		</div>
+	</div>
+</div>
+
+<!-- Card for adding new book if the library is empty -->
+<div
+	class="card cursor theme-background-color-secondary"
+	style="width: 100%; transition: 0.12s; margin-bottom: 28px"
+	[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+	ngxFilePicker
+	accept="application/epub+zip,application/pdf"
+	(filePick)="AddBookFilePick($event)"
+	(mouseover)="addBookHover = true"
+	(mouseout)="addBookHover = false">
+
+	<div class="card-body d-flex">
+		<div class="mx-auto text-center">
+			<i class="ms-Icon ms-Icon--Add text-color"
+				aria-hidden="true"
+				style="font-size: 28px">
+			</i>
+
+			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.addBook }}</p>
+		</div>
+	</div>
+</div>
+
+<!-- Card for going to the author page, if the user is an author -->
+<div
+	class="card cursor theme-background-color-secondary"
+	style="width: 100%; transition: 0.12s"
+	[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
+	*ngIf="dataService.userAuthor || dataService.adminAuthors.length > 0"
+	(mouseover)="goToAuthorPageHover = true"
+	(mouseout)="goToAuthorPageHover = false"
+	(click)="GoToAuthorPageClick()">
+
+	<div class="card-body d-flex">
+		<div class="mx-auto text-center">
+			<i class="ms-Icon ms-Icon--EditContact text-color"
+				aria-hidden="true"
+				style="font-size: 28px">
+			</i>
+
+			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.goToAuthorPage }}</p>
+		</div>
+	</div>
+</div>

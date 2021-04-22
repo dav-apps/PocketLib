@@ -60,6 +60,8 @@ import { HeaderComponent } from './components/header/header.component'
 import { LinkIconButtonComponent } from './components/link-icon-button/link-icon-button.component'
 import { BlurhashImageComponent } from './components/blurhash-image/blurhash-image.component'
 import { LanguagesSelectionComponent } from './components/languages-selection/languages-selection.component'
+import { LibraryPageCardsComponent } from './components/library-page-cards/library-page-cards.component'
+import { LibraryPageBookCardComponent } from './components/library-page-book-card/library-page-book-card.component'
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component'
@@ -99,6 +101,8 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		LinkIconButtonComponent,
 		BlurhashImageComponent,
 		LanguagesSelectionComponent,
+		LibraryPageCardsComponent,
+		LibraryPageBookCardComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,
