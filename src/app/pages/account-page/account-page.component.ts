@@ -5,6 +5,7 @@ import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: "pocketlib-account-page",
@@ -42,27 +43,17 @@ export class AccountPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().accountPage
 
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
 		// Get the redirect url param
 		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect")
 	}
 
 	ngOnInit() {
 		this.setSize()
-
-		// Check if this is a dual-screen device with a vertical fold
-		if (window["getWindowSegments"]) {
-			let screenSegments = window["getWindowSegments"]()
-
-			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
-				this.dualScreenLayout = true
-
-				// Calculate the width of the fold
-				let foldWidth = screenSegments[1].left - screenSegments[0].right
-				if (foldWidth > 0) {
-					this.dualScreenFoldMargin = foldWidth / 2
-				}
-			}
-		}
 	}
 
 	@HostListener('window:resize')

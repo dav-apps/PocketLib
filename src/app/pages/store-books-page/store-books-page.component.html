@@ -22,7 +22,7 @@
 	*ngIf="dualScreenLayout">
 
 	<!-- Left screen -->
-	<div [style.marginRight.px]="dualScreenFoldMargin">
+	<div style="grid-row: 1; grid-column: 1;" [style.marginRight.px]="dualScreenFoldMargin">
 		<h1 class="text-center font-weight-light mt-3 text-color">{{ category.name }}</h1>
 
 		<div class="d-flex flex-wrap justify-content-center">
@@ -35,7 +35,7 @@
 	</div>
 
 	<!-- Right screen -->
-	<div [style.marginLeft.px]="dualScreenFoldMargin">
+	<div style="grid-row: 1; grid-column: 2;" [style.marginLeft.px]="dualScreenFoldMargin">
 		<div class="d-flex flex-wrap justify-content-center" style="margin-top: 72px">
 			<pocketlib-store-books-page-book-card
 				[book]="book"

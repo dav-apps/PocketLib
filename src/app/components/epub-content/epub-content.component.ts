@@ -8,6 +8,7 @@ import { EpubBookmark } from 'src/app/models/EpubBookmark'
 import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader'
 import { FindPositionsInHtmlElement, FindPageBreakPositions, AdaptLinkTag } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 declare var $: any
 
 const secondPageMinWidth = 1050		// Show two pages on the window if the window width is greater than this
@@ -198,10 +199,7 @@ export class EpubContentComponent {
 		this.navigationHistory = []
 
 		// Check if this is a dual-screen device with a vertical fold
-		if (window["getWindowSegments"]) {
-			let screenSegments = window["getWindowSegments"]()
-			this.dualScreenLayout = screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width
-		}
+		this.dualScreenLayout = GetDualScreenSettings().dualScreenLayout
 
 		// Load the ebook
 		await this.book.ReadEpubFile(this.dataService.currentBook.file)

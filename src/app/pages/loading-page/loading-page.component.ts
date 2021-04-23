@@ -4,6 +4,7 @@ import { DataService } from 'src/app/services/data-service'
 import { GetBook } from 'src/app/models/BookManager'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-loading-page',
@@ -18,11 +19,14 @@ export class LoadingPageComponent {
 		private dataService: DataService,
 		private router: Router
 	) {
-		this.dataService.navbarVisible = false;
+		this.dataService.navbarVisible = false
 	}
 
 	async ngOnInit() {
 		this.setSize()
+
+		// Check if this is a dual-screen device with a vertical fold
+		this.dualScreenLayout = GetDualScreenSettings().dualScreenLayout
 
 		// Wait for the user to be loaded
 		await this.dataService.userPromiseHolder.AwaitResult()
@@ -47,12 +51,6 @@ export class LoadingPageComponent {
 	setSize() {
 		this.height = window.innerHeight
 		this.width = window.innerWidth
-
-		// Check if this is a dual-screen device with a vertical fold
-		if (window["getWindowSegments"]) {
-			let screenSegments = window["getWindowSegments"]()
-			this.dualScreenLayout = screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width
-		}
 	}
 
 	async LoadSettings() {

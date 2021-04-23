@@ -198,12 +198,15 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="d-flex justify-content-end ms-motion-slideUpIn"
+	class="ms-motion-slideUpIn"
+	style="display: grid; grid-template-rows: auto"
+	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
 	*ngIf="dualScreenLayout">
 
 	<!-- Left screen -->
 	<div
-		class="flex-grow-1 d-flex justify-content-center"
+		class="d-flex justify-content-center"
+		style="grid-row: 1; grid-column: 1;"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
 		<div class="text-center">
@@ -314,8 +317,8 @@
 
 	<!-- Right screen -->
 	<div
-		[style.marginLeft.px]="dualScreenFoldMargin"
-		[style.width.px]="(width / 2) - dualScreenFoldMargin">
+		style="grid-row: 1; grid-column: 2;"
+		[style.marginLeft.px]="dualScreenFoldMargin">
 
 		<div
 			class="px-5"

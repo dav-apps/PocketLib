@@ -3,11 +3,12 @@ import { Router } from '@angular/router'
 import { transition, trigger, state, style, animate } from '@angular/animations'
 import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
-import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { enUS } from 'src/locales/locales'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 const pdfType = "application/pdf"
 
@@ -84,6 +85,11 @@ export class LibraryPageComponent {
 		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
 
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
 		document.onclick = (event: MouseEvent) => {
 			if (!this.contextMenuVisible) return
 
@@ -93,23 +99,6 @@ export class LibraryPageComponent {
 			if (!contextMenu.contains(target)) {
 				// Hide the context menu
 				this.contextMenuVisible = false
-			}
-		}
-	}
-
-	ngOnInit() {
-		// Check if this is a dual-screen device with a vertical fold
-		if (window["getWindowSegments"]) {
-			let screenSegments = window["getWindowSegments"]()
-
-			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
-				this.dualScreenLayout = true
-
-				// Calculate the width of the fold
-				let foldWidth = screenSegments[1].left - screenSegments[0].right
-				if (foldWidth > 0) {
-					this.dualScreenFoldMargin = foldWidth / 2
-				}
 			}
 		}
 	}

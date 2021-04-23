@@ -21,6 +21,7 @@ import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-store-book-page',
@@ -105,26 +106,16 @@ export class StoreBookPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().storeBookPage
 
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
 		// Get the uuid from the params
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
 	async ngOnInit() {
-		// Check if this is a dual-screen device with a vertical fold
-		if (window["getWindowSegments"]) {
-			let screenSegments = window["getWindowSegments"]()
-
-			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
-				this.dualScreenLayout = true
-
-				// Calculate the width of the fold
-				let foldWidth = screenSegments[1].left - screenSegments[0].right
-				if (foldWidth > 0) {
-					this.dualScreenFoldMargin = foldWidth / 2
-				}
-			}
-		}
-
 		this.setSize()
 		await this.dataService.userPromiseHolder.AwaitResult()
 

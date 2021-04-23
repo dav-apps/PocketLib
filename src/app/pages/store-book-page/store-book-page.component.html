@@ -92,12 +92,15 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="d-flex justify-content-end ms-motion-slideUpIn w-100"
+	class="ms-motion-slideUpIn"
+	style="display: grid; grid-template-rows: auto"
+	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
 	*ngIf="!showMobileLayout && dualScreenLayout">
 
 	<!-- Left screen -->
 	<div
-		class="flex-grow-1 d-flex justify-content-center"
+		class="d-flex justify-content-center"
+		style="grid-row: 1; grid-column: 1;"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
 		<div class="mt-4">
@@ -165,8 +168,8 @@
 	<!-- Right screen -->
 	<div
 		class="px-5"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-		[style.width.px]="(width / 2) - dualScreenFoldMargin">
+		style="grid-row: 1; grid-column: 2;"
+		[style.marginLeft.px]="dualScreenFoldMargin">
 
 		<!-- Title and back button -->
 		<div class="mx-auto mt-4">
