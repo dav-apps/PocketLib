@@ -1,4 +1,8 @@
-<div class="container ms-motion-slideUpIn">
+<!-- Normal layout -->
+<div
+	class="container ms-motion-slideUpIn"
+	*ngIf="!dualScreenLayout">
+
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
 			<pocketlib-blurhash-image
@@ -30,7 +34,8 @@
 					type="button"
 					class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 					style="height: 32px; font-size: 17px; margin-top: -6px; padding: 0px 4px"
-					(click)="ShowEditProfileDialog()">
+					(click)="ShowEditProfileDialog()"
+					*ngIf="authorMode > 0">
 					<fab-icon iconName="Edit"></fab-icon>
 				</button>
 			</h4>
@@ -183,6 +188,222 @@
 								class="card-title my-auto text-color">
 								{{ book.title }}
 							</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Dual-Screen layout -->
+<div
+	class="d-flex justify-content-end ms-motion-slideUpIn"
+	*ngIf="dualScreenLayout">
+
+	<!-- Left screen -->
+	<div
+		class="flex-grow-1 d-flex justify-content-center"
+		[style.marginRight.px]="dualScreenFoldMargin">
+
+		<div class="text-center">
+			<div class="mx-auto pt-5">
+				<pocketlib-blurhash-image
+					[src]="profileImageContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="author.profileImageBlurhash"
+					[width]="profileImageWidth"
+					[height]="profileImageWidth"
+					margin="0 0 1rem 0"
+					shadow="true"
+					rounded="true"
+					[loading]="profileImageLoading">
+				</pocketlib-blurhash-image>
+				<br>
+	
+				<fab-primary-button
+					ngxFilePicker
+					accept="image/png,image/jpeg"
+					[disabled]="profileImageLoading"
+					(filePick)="UploadProfileImage($event)"
+					*ngIf="authorMode != 0">
+					{{ locale.uploadProfileImage }}
+				</fab-primary-button>
+			</div>
+	
+			<h4 class="mt-3 text-color">
+				{{ author.firstName }} {{ author.lastName }}
+				
+				<button
+					type="button"
+					class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+					style="height: 32px; font-size: 17px; margin-top: -6px; padding: 0px 4px"
+					(click)="ShowEditProfileDialog()"
+					*ngIf="authorMode > 0">
+					<fab-icon iconName="Edit"></fab-icon>
+				</button>
+			</h4>
+	
+			<div
+				style="display: inline-block"
+				*ngIf="author.websiteUrl || author.facebookUsername || author.instagramUsername || author.twitterUsername">
+				
+				<!-- Website -->
+				<pocketlib-link-icon-button
+					[icon]="faGlobe"
+					*ngIf="author.websiteUrl"
+					(click)="NavigateToWebsite()">
+				</pocketlib-link-icon-button>
+	
+				<!-- Facebook -->
+				<pocketlib-link-icon-button
+					[icon]="faFacebook"
+					*ngIf="author.facebookUsername"
+					(click)="NavigateToFacebook()">
+				</pocketlib-link-icon-button>
+	
+				<!-- Instagram -->
+				<pocketlib-link-icon-button
+					[icon]="faInstagram"
+					*ngIf="author.instagramUsername"
+					(click)="NavigateToInstagram()">
+				</pocketlib-link-icon-button>
+	
+				<!-- Twitter -->
+				<pocketlib-link-icon-button
+					[icon]="faTwitter"
+					*ngIf="author.twitterUsername"
+					(click)="NavigateToTwitter()">
+				</pocketlib-link-icon-button>
+			</div>
+
+			<div class="mx-auto mb-3 mt-3 text-left" style="width: 200px" *ngIf="authorMode != 0">
+				<fab-dropdown
+					[selectedKey]="bioLanguageDropdownSelectedIndex"
+					[options]="bioLanguageDropdownOptions"
+					(onChange)="BioLanguageDropdownChange($event)">
+				</fab-dropdown>
+			</div>
+
+			<!-- Display the content of the bio in the selected language -->
+			<p class="mt-3 text-left text-color"
+				style="white-space: pre-wrap; max-width: 250px"
+				*ngIf="bioMode == 2">
+				{{ author.bios[bioLanguageDropdownSelectedIndex] ? author.bios[bioLanguageDropdownSelectedIndex].bio : "" }}
+			</p>
+
+			<!-- Text for the case that there are no bios -->
+			<p class="mt-3 font-weight-light font-italic text-color" *ngIf="bioMode == 0">{{ locale.noBio }}</p>
+
+			<div class="mx-auto my-3" style="width: 80%" *ngIf="bioMode == 1 || bioMode == 3">
+				<fab-text-field
+					[styles]="bioTextfieldStyles"
+					[(value)]="newBio"
+					[placeholder]="locale.bioTextfieldPlaceholder"
+					[errorMessage]="newBioError"
+					multiline="true"
+					autoAdjustHeight="true"
+					(keydown)="newBioError = ''">
+				</fab-text-field>
+			</div>
+
+			<fab-primary-button (click)="EditBio()" [disabled]="bioLoading" *ngIf="authorMode != 0 && bioMode != 0">{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}</fab-primary-button>
+			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" [disabled]="bioLoading" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
+		</div>
+	</div>
+
+	<!-- Right screen -->
+	<div
+		[style.marginLeft.px]="dualScreenFoldMargin"
+		[style.width.px]="(width / 2) - dualScreenFoldMargin">
+
+		<div
+			class="px-5"
+			style="overflow: scroll"
+			[style.height.px]="dataService.contentHeight">
+
+			<div *ngIf="authorMode != 0">
+				<!-- Message to sign up as a provider -->
+				<div
+					class="mt-3 mx-auto"
+					style="min-width: 200px; max-width: 300px"
+					*ngIf="showProviderMessage">
+					<fab-message-bar [messageBarType]="messageBarType"><span [innerHtml]="providerMessage"></span></fab-message-bar>
+				</div>
+
+				<!-- List of collections -->
+				<h3
+					class="text-center font-weight-light mb-3 mb-md-4 text-color"
+					[ngClass]="showProviderMessage ? 'mt-md-4' : 'mt-md-5'">
+					{{ locale.yourBooks }}
+				</h3>
+
+				<pocketlib-add-list-item
+					(click)="NavigateToNewBookPage()">
+				</pocketlib-add-list-item>
+
+				<div
+					class="card my-4 cursor book-list-item theme-background-color-secondary"
+					[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
+					style="transition: 0.12s"
+					*ngFor="let collection of collections; let i = index"
+					(click)="collection.books.length == 1 ? NavigateToAuthorStoreBook(collection.books[0].uuid) : NavigateToCollection(collection.uuid)"
+					(mouseover)="hoveredBookIndex = i"
+					(mouseout)="hoveredBookIndex = -1">
+					
+					<div class="row no-gutters">
+						<div class="col-4">
+							<pocketlib-blurhash-image
+								[src]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
+								[fallback]="dataService.defaultStoreBookCover"
+								[blurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
+								width="100"
+								height="160">
+							</pocketlib-blurhash-image>
+						</div>
+
+						<div class="col-8 my-auto">
+							<div class="card-body">
+								<h5
+									[style.fontSize.px]="bookTitleFontSize"
+									class="card-title my-auto text-color">
+									{{ collection.name }}
+								</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div *ngIf="authorMode == 0">
+				<!-- List of books -->
+				<div
+					class="card my-4 cursor book-list-item theme-background-color-secondary"
+					[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
+					style="transition: 0.12s"
+					*ngFor="let book of books; let i = index"
+					(click)="NavigateToStoreBook(book.uuid)"
+					(mouseover)="hoveredBookIndex = i"
+					(mouseout)="hoveredBookIndex = -1">
+					<div class="row no-gutters">
+						<div class="col-4">
+							<pocketlib-blurhash-image
+								[src]="book.coverContent"
+								[fallback]="dataService.defaultStoreBookCover"
+								[blurhash]="book.coverBlurhash"
+								[width]="100"
+								[height]="160">
+							</pocketlib-blurhash-image>
+						</div>
+
+						<div class="col-8 my-auto">
+							<div class="card-body">
+								<h5
+									[style.fontSize.px]="bookTitleFontSize"
+									class="card-title my-auto text-color">
+									{{ book.title }}
+								</h5>
+							</div>
 						</div>
 					</div>
 				</div>

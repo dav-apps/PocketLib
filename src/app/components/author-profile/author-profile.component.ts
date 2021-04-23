@@ -35,6 +35,9 @@ export class AuthorProfileComponent {
 	faInstagram = faInstagram
 	faTwitter = faTwitter
 	@Input() uuid: string
+	width: number = 500
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	authorMode: AuthorMode = AuthorMode.Normal
 	author: Author = {
 		uuid: "",
@@ -128,6 +131,21 @@ export class AuthorProfileComponent {
 	async ngOnInit() {
 		this.setSize()
 
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+
+			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+				this.dualScreenLayout = true
+
+				// Calculate the width of the fold
+				let foldWidth = screenSegments[1].left - screenSegments[0].right
+				if (foldWidth > 0) {
+					this.dualScreenFoldMargin = foldWidth / 2
+				}
+			}
+		}
+
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
@@ -187,6 +205,8 @@ export class AuthorProfileComponent {
 	}
 
 	setSize() {
+		this.width = window.innerWidth
+		
 		if (window.innerWidth < 768) {
 			this.profileImageWidth = 110
 		} else if (window.innerWidth < 1200) {
