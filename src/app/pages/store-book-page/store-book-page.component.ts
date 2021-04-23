@@ -28,6 +28,10 @@ import { enUS } from 'src/locales/locales'
 })
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
+	width: number = 500
+	showMobileLayout: boolean = false
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	uuid: string
 	book: {
 		collection: string,
@@ -70,7 +74,6 @@ export class StoreBookPageComponent {
 	}
 	coverContent: string
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
-	showMobileLayout: boolean = false
 	addToLibraryButtonDisabled: boolean = false
 	davProRequiredDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
@@ -107,6 +110,21 @@ export class StoreBookPageComponent {
 	}
 
 	async ngOnInit() {
+		// Check if this is a dual-screen device with a vertical fold
+		if (window["getWindowSegments"]) {
+			let screenSegments = window["getWindowSegments"]()
+
+			if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+				this.dualScreenLayout = true
+
+				// Calculate the width of the fold
+				let foldWidth = screenSegments[1].left - screenSegments[0].right
+				if (foldWidth > 0) {
+					this.dualScreenFoldMargin = foldWidth / 2
+				}
+			}
+		}
+
 		this.setSize()
 		await this.dataService.userPromiseHolder.AwaitResult()
 
@@ -123,7 +141,8 @@ export class StoreBookPageComponent {
 	}
 
 	setSize() {
-		this.showMobileLayout = window.outerWidth < 768
+		this.width = window.innerWidth
+		this.showMobileLayout = window.outerWidth < 768 && !this.dualScreenLayout
 	}
 
 	GoBack() {
