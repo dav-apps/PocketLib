@@ -1,29 +1,47 @@
-<div class="container ms-motion-slideUpIn mb-3">
+<!-- Normal layout -->
+<div
+	class="container ms-motion-slideUpIn mb-3"
+	*ngIf="!dualScreenLayout">
+	
 	<h1 class="text-center font-weight-light mt-3 text-color">{{ category.name }}</h1>
 
 	<div class="mt-3 row justify-content-center">
-		<div
-			class="card cursor m-2 theme-background-color-secondary"
-			[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
-			style="transition: 0.12s"
-			[style.width.px]="book.coverWidth"
-			*ngFor="let book of books; let i = index"
+		<pocketlib-store-books-page-book-card
+			[book]="book"
 			(click)="NavigateToStoreBook(book.uuid)"
-			(mouseover)="hoveredBookIndex = i"
-			(mouseout)="hoveredBookIndex = -1">
+			*ngFor="let book of books">
+		</pocketlib-store-books-page-book-card>
+	</div>
+</div>
 
-			<pocketlib-blurhash-image
-				[src]="book.coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
-				[blurhash]="book.coverBlurhash"
-				[width]="book.coverWidth"
-				[height]="book.coverHeight"
-				fillWidth="true">
-			</pocketlib-blurhash-image>
+<!-- Dual-Screen layout -->
+<div
+	class="ms-motion-slideUpIn"
+	style="display: grid; grid-template-rows: auto"
+	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
+	*ngIf="dualScreenLayout">
 
-			<div class="card-body">
-				<p class="card-text text-center text-color" style="font-size: 15px">{{ book.title }}</p>
-			</div>
+	<!-- Left screen -->
+	<div [style.marginRight.px]="dualScreenFoldMargin">
+		<h1 class="text-center font-weight-light mt-3 text-color">{{ category.name }}</h1>
+
+		<div class="d-flex flex-wrap justify-content-center">
+			<pocketlib-store-books-page-book-card
+				[book]="book"
+				(click)="NavigateToStoreBook(book.uuid)"
+				*ngFor="let book of leftScreenBooks">
+			</pocketlib-store-books-page-book-card>
+		</div>
+	</div>
+
+	<!-- Right screen -->
+	<div [style.marginLeft.px]="dualScreenFoldMargin">
+		<div class="d-flex flex-wrap justify-content-center" style="margin-top: 72px">
+			<pocketlib-store-books-page-book-card
+				[book]="book"
+				(click)="NavigateToStoreBook(book.uuid)"
+				*ngFor="let book of rightScreenBooks">
+			</pocketlib-store-books-page-book-card>
 		</div>
 	</div>
 </div>

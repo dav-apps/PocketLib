@@ -66,3 +66,26 @@ export function BytesToGigabytesText(bytes: number, rounding: number): string {
 	let gb = Math.round(bytes / 1000000000).toFixed(rounding)
 	return gb == "0.0" ? "0" : gb
 }
+
+export function GetDualScreenSettings() {
+	let settings = {
+		dualScreenLayout: false,
+		dualScreenFoldMargin: 0
+	}
+
+	if (window["getWindowSegments"]) {
+		let screenSegments = window["getWindowSegments"]()
+
+		if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+			settings.dualScreenLayout = true
+
+			// Calculate the width of the fold
+			let foldWidth = screenSegments[1].left - screenSegments[0].right
+			if (foldWidth > 0) {
+				settings.dualScreenFoldMargin = foldWidth / 2
+			}
+		}
+	}
+
+	return settings
+}

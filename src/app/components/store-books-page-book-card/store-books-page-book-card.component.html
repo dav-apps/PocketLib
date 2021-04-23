@@ -1,0 +1,25 @@
+<div
+	class="card cursor m-2 theme-background-color-secondary"
+	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
+	style="transition: 0.12s"
+	[style.width.px]="book.coverWidth"
+	(click)="Click()"
+	(mouseover)="hovered = true"
+	(mouseout)="hovered = false">
+
+	<pocketlib-blurhash-image
+		[src]="book.coverContent"
+		[fallback]="dataService.defaultStoreBookCover"
+		[blurhash]="book.coverBlurhash"
+		[width]="book.coverWidth"
+		[height]="book.coverHeight"
+		fillWidth="true">
+	</pocketlib-blurhash-image>
+
+	<div class="card-body">
+		<p class="card-text text-center text-color"
+			style="font-size: 15px">
+			{{ book.title }}
+		</p>
+	</div>
+</div>
