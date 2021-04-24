@@ -15,6 +15,7 @@ import { PriceInputComponent } from 'src/app/components/price-input/price-input.
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-author-book-page',
@@ -22,10 +23,13 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
-	@ViewChild('categoriesSelection', { static: true }) categoriesSelectionComponent: CategoriesSelectionComponent
-	@ViewChild('priceInput', { static: true }) priceInput: PriceInputComponent
-	@ViewChild('isbnInput', { static: true }) isbnInput: IsbnInputComponent
-	uuid: string;
+	@ViewChild('categoriesSelection', { static: false }) categoriesSelectionComponent: CategoriesSelectionComponent
+	@ViewChild('priceInput', { static: false }) priceInput: PriceInputComponent
+	@ViewChild('isbnInput', { static: false }) isbnInput: IsbnInputComponent
+	showMobileLayout: boolean = false
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
+	uuid: string
 	book: {
 		collection: string,
 		title: string,
@@ -97,6 +101,11 @@ export class AuthorBookPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorBookPage
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
