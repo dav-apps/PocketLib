@@ -356,11 +356,6 @@ const enDefaults = {
 			isbnInvalid: "The ISBN is invalid"
 		}
 	},
-	libraryPageCards: {
-		discoverBooks: "Discover books in the PocketLib Store",
-		addBook: "Open a local file",
-		goToAuthorPage: "Go to your author profile"
-	},
 	userProfile: {
 		planFree: "Free",
 		planPlus: "Plus",
@@ -375,6 +370,11 @@ const enDefaults = {
 		feature2: "Support the authors of the books you read",
 		feature3: "Help us with the development of new apps and features",
 		selectPlan: "Select"
+	},
+	libraryPageCards: {
+		discoverBooks: "Discover books in the PocketLib Store",
+		addBook: "Open a local file",
+		goToAuthorPage: "Go to your author profile"
 	},
 	misc: {
 		languages: {
@@ -747,11 +747,6 @@ const deDefaults = {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}
 	},
-	libraryPageCards: {
-		discoverBooks: "Entdecke Bücher im PocketLib Store",
-		addBook: "Öffne eine lokale Datei",
-		goToAuthorPage: "Gehe zu deinem Autor-Profil",
-	},
 	userProfile: {
 		planFree: "Free",
 		planPlus: "Plus",
@@ -766,6 +761,11 @@ const deDefaults = {
 		feature2: "Unterstütze die Autoren der Bücher, die du liest",
 		feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen",
 		selectPlan: "Auswählen"
+	},
+	libraryPageCards: {
+		discoverBooks: "Entdecke Bücher im PocketLib Store",
+		addBook: "Öffne eine lokale Datei",
+		goToAuthorPage: "Gehe zu deinem Autor-Profil",
 	},
 	misc: {
 		languages: {

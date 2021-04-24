@@ -1,0 +1,42 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 2 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px"
+	[style.display]="visibleSection != 2 ? 'none' : null">
+
+	<div class="form-group">
+		<label
+			class="col-form-label text-color mb-1"
+			style="font-size: 15px">
+			{{ locale.descriptionSection.description }}
+		</label>
+
+		<div class="d-flex mb-2">
+			<pocketlib-language-dropdown
+				[language]="language"
+				(updated)="SetLanguage($event)">
+			</pocketlib-language-dropdown>
+		</div>
+
+		<fab-text-field
+			[(value)]="description"
+			[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
+			multiline="true"
+			autoAdjustHeight="true">
+		</fab-text-field>
+	</div>
+
+	<div style="float: left">
+		<fab-default-button
+			(onClick)="Previous()">
+			{{ locale.previous }}
+		</fab-default-button>
+	</div>
+
+	<div style="float: right">
+		<fab-primary-button
+			(onClick)="Submit()">
+			{{ locale.next }}
+		</fab-primary-button>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 7 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px"
+	[style.display]="visibleSection != 7 ? 'none' : null">
+
+	<div class="mb-4">
+		<p class="text-color">{{ locale.bookFileSection.description }}</p>
+
+		<p class="text-color font-italic"
+			*ngIf="bookFileName.length > 0">
+			{{ bookFileName }}
+		</p>
+
+		<fab-primary-button
+			ngxFilePicker
+			accept="application/epub+zip,application/pdf"
+			(filePick)="BookFileUpload($event)">
+			{{ locale.bookFileSection.uploadButtonText }}
+		</fab-primary-button>
+	</div>
+
+	<div style="float: left">
+		<fab-default-button
+			(onClick)="Previous()">
+			{{ locale.previous }}
+		</fab-default-button>
+	</div>
+
+	<div style="float: right">
+		<fab-primary-button
+			(onClick)="Finish()">
+			{{ locale.finish }}
+		</fab-primary-button>
+	</div>
+</div>

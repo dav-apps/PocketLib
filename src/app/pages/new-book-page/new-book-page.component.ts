@@ -1,4 +1,4 @@
-import { Component, ViewChild, HostListener } from '@angular/core'
+import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import {
 	SpinnerSize,
@@ -15,10 +15,8 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
-import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { enUS } from 'src/locales/locales'
-import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-new-book-page',
@@ -35,6 +33,8 @@ export class NewBookPageComponent {
 
 	//#region General variables
 	locale = enUS.newBookPage
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	author: Author = {
 		uuid: "",
 		firstName: "",
@@ -88,17 +88,14 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region Categories variables
-	@ViewChild('categoriesSelection', { static: false }) categoriesSelection: CategoriesSelectionComponent
 	selectedCategories: string[] = []
 	//#endregion
 
 	//#region Price variables
-	@ViewChild('priceInput', { static: false }) priceInput: PriceInputComponent
 	price: number = 0
 	//#endregion
 
 	//#region ISBN variables
-	@ViewChild('isbnInput', { static: false }) isbnInput: IsbnInputComponent
 	isbn: string = ""
 	//#endregion
 
@@ -129,6 +126,11 @@ export class NewBookPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().newBookPage
 		this.routingService.toolbarNavigationEvent = async () => await this.HandleToolbarNavigationEvent()
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
@@ -270,7 +272,9 @@ export class NewBookPageComponent {
 	}
 
 	//#region Name functions
-	async SubmitTitle() {
+	async SubmitTitle(title: string) {
+		this.title = title
+
 		if (this.title.length >= 3) {
 			// Wait for the collections
 			this.loading = true
@@ -295,7 +299,9 @@ export class NewBookPageComponent {
 		}
 	}
 
-	SubmitCollection() {
+	SubmitCollection(selectedCollection: number) {
+		this.selectedCollection = selectedCollection
+
 		if (this.selectedCollection != -2) {
 			this.Next()
 		}
@@ -307,24 +313,22 @@ export class NewBookPageComponent {
 		this.language = language
 	}
 
-	SubmitDescription() {
+	SubmitDescription(description: string) {
+		this.description = description
 		this.Next()
 	}
 	//#endregion
 
 	//#region Categories functions
-	SubmitCategories() {
-		this.selectedCategories = this.categoriesSelection.GetSelectedCategories()
+	SubmitCategories(selectedCategories: string[]) {
+		this.selectedCategories = selectedCategories
 		this.Next()
 	}
 	//#endregion
 
 	//#region Price functions
 	SetPrice(price: number) {
-		if (price < 0) price = -price
-
 		this.price = price
-		this.priceInput.SetPrice(price)
 	}
 
 	SubmitPrice() {
@@ -333,9 +337,8 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region ISBN functions
-	UpdateIsbn(isbn: string) {
+	SetIsbn(isbn: string) {
 		this.isbn = isbn
-		this.isbnInput.SetIsbn(isbn)
 	}
 
 	SubmitIsbn() {
@@ -344,18 +347,14 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region Cover functions
-	async CoverUpload(file: ReadFile) {
-		this.coverContentBase64 = file.content
-		this.coverType = file.type
-
-		// Read the content of the image file
-		this.coverContent = await new Promise(resolve => {
-			let reader = new FileReader()
-			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer)
-			})
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
-		})
+	SetCover(coverDetails: {
+		coverContentBase64: string,
+		coverContent: ArrayBuffer,
+		coverType: string
+	}) {
+		this.coverContentBase64 = coverDetails.coverContentBase64
+		this.coverContent = coverDetails.coverContent
+		this.coverType = coverDetails.coverType
 	}
 
 	SubmitCover() {
@@ -364,18 +363,14 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region Book file functions
-	async BookFileUpload(file: ReadFile) {
-		this.bookFileName = file.name
-		this.bookFileType = file.type
-
-		// Read the content of the book file
-		this.bookFileContent = await new Promise(resolve => {
-			let reader = new FileReader()
-			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer)
-			})
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
-		})
+	SetBookFile(bookFileDetails: {
+		bookFileName: string,
+		bookFileContent: ArrayBuffer,
+		bookFileType: string
+	}) {
+		this.bookFileName = bookFileDetails.bookFileName
+		this.bookFileContent = bookFileDetails.bookFileContent
+		this.bookFileType = bookFileDetails.bookFileType
 	}
 	//#endregion
 

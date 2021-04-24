@@ -1,4 +1,5 @@
-<div class="container ms-motion-slideUpIn" *ngIf="!loadingScreenVisible">
+<!-- Normal layout -->
+<div class="container ms-motion-slideUpIn" *ngIf="!loadingScreenVisible && !dualScreenLayout">
 	<div class="mt-3 mb-4">
 		<pocketlib-header
 			[title]="titleSubmitted ? submittedTitle : locale.title"
@@ -19,343 +20,226 @@
 	</div>
 
 	<!-- Title -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 0 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 0 ? 'none' : null">
-		<div class="form-group">
-			<label
-				class="col-form-label text-color mb-1"
-				style="font-size: 15px">
-				{{ locale.titleSection.description }}
-			</label>
-
-			<fab-text-field
-				[(value)]="title"
-				[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
-				(keydown.enter)="SubmitTitle()">
-			</fab-text-field>
-		</div>
-
-		<div class="d-flex" style="float: right">
-			<div
-				style="margin-top: 8px; margin-right: 14px"
-				*ngIf="loading">
-				<fab-spinner [size]="spinnerSize"></fab-spinner>
-			</div>
-
-			<fab-primary-button
-				[disabled]="title.length < 3 || loading"
-				(onClick)="SubmitTitle()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-title-section
+		[loading]="loading"
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(submit)="SubmitTitle($event)">
+	</pocketlib-new-book-page-title-section>
 
 	<!-- Collection -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 1 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 500px"
-		[style.display]="visibleSection != 1 ? 'none' : null">
-
-		<div>
-			<p class="text-color">{{ locale.collectionSection.description }}</p>
-
-			<div class="list-group mb-3">
-				<p
-					class="list-group-item mb-3 cursor text-center text-color theme-background-color-secondary"
-					[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
-					style="transition: 0.12s"
-					(click)="SelectCollection(-1)">
-					{{ locale.collectionSection.newPublication }}
-				</p>
-
-				<div
-					class="card my-3 cursor theme-background-color-secondary"
-					[ngClass]="selectedCollection == i ? 'shadow' : ''"
-					style="transition: 0.12s"
-					*ngFor="let collection of collections; let i = index"
-					(click)="SelectCollection(i)">
-					<div class="row no-gutters">
-						<div class="col-4">
-							<img [src]="collection.cover ? collection.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
-						</div>
-
-						<div class="col-8 my-auto">
-							<div class="card-body">
-								<h5
-									class="card-title my-auto text-color"
-									style="font-size: 18px">
-									{{ collection.name }}
-								</h5>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="mb-4" style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div class="mb-4" style="float: right">
-			<fab-primary-button
-				[disabled]="selectedCollection == -2"
-				(onClick)="SubmitCollection()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-collection-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		[collections]="collections"
+		[selectedCollection]="selectedCollection"
+		(select)="SelectCollection($event)"
+		(previous)="Previous()"
+		(submit)="SubmitCollection($event)">
+	</pocketlib-new-book-page-collection-section>
 
 	<!-- Description + Language -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 2 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 2 ? 'none' : null">
-
-		<div class="form-group">
-			<label
-				class="col-form-label text-color mb-1"
-				style="font-size: 15px">
-				{{ locale.descriptionSection.description }}
-			</label>
-
-			<div class="d-flex mb-2">
-				<pocketlib-language-dropdown
-					[language]="language"
-					(updated)="SetLanguage($event)">
-				</pocketlib-language-dropdown>
-			</div>
-
-			<fab-text-field
-				[(value)]="description"
-				[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
-				multiline="true"
-				autoAdjustHeight="true">
-			</fab-text-field>
-		</div>
-
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div style="float: right">
-			<fab-primary-button
-				(onClick)="SubmitDescription()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-description-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(setLanguage)="SetLanguage($event)"
+		(previous)="Previous()"
+		(submit)="SubmitDescription($event)">
+	</pocketlib-new-book-page-description-section>
 
 	<!-- Categories -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 3 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 3 ? 'none' : null">
-
-		<div class="mb-3">
-			<p class="text-color">{{ locale.categoriesSection.description }}</p>
-
-			<pocketlib-categories-selection #categoriesSelection></pocketlib-categories-selection>
-		</div>
-
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div style="float: right">
-			<fab-primary-button
-				(onClick)="SubmitCategories()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-categories-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(previous)="Previous()"
+		(submit)="SubmitCategories($event)">
+	</pocketlib-new-book-page-categories-section>
 
 	<!-- Price -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 4 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 4 ? 'none' : null">
-
-		<div class="mb-4">
-			<p class="text-color">{{ locale.priceSection.description }}</p>
-
-			<pocketlib-price-input
-				#priceInput
-				[canEdit]="true"
-				(update)="SetPrice($event)">
-			</pocketlib-price-input>
-		</div>
-
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div class="d-flex" style="float: right">
-			<div
-				style="margin-top: 8px; margin-right: 14px"
-				*ngIf="loading">
-				<fab-spinner [size]="spinnerSize"></fab-spinner>
-			</div>
-
-			<fab-primary-button
-				(onClick)="SubmitPrice()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-price-section
+		[loading]="loading"
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(setPrice)="SetPrice($event)"
+		(previous)="Previous()"
+		(submit)="SubmitPrice()">
+	</pocketlib-new-book-page-price-section>
 
 	<!-- ISBN -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 5 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 5 ? 'none' : null">
-
-		<div class="mb-4">
-			<p class="text-color">{{ locale.isbnSection.description }}</p>
-
-			<pocketlib-isbn-input
-				#isbnInput
-				[canEdit]="true"
-				(update)="UpdateIsbn($event)">
-			</pocketlib-isbn-input>
-		</div>
-
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div class="d-flex" style="float: right">
-			<div
-				style="margin-top: 8px; margin-right: 14px"
-				*ngIf="loading">
-				<fab-spinner [size]="spinnerSize"></fab-spinner>
-			</div>
-
-			<fab-primary-button
-				(onClick)="SubmitIsbn()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-isbn-section
+		[loading]="loading"
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(setIsbn)="SetIsbn($event)"
+		(previous)="Previous()"
+		(submit)="SubmitIsbn()">
+	</pocketlib-new-book-page-isbn-section>
 
 	<!-- Cover -->
-	<div
-		class="mx-auto"
-		[ngClass]="section != 6 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 6 ? 'none' : null">
-
-		<div class="mb-4">
-			<p class="text-color">{{ locale.coverSection.description }}</p>
-
-			<div class="my-3" *ngIf="coverContent">
-				<img [src]="coverContentBase64" height="200">
-			</div>
-
-			<fab-primary-button
-				ngxFilePicker
-				accept="image/png,image/jpeg"
-				(filePick)="CoverUpload($event)">
-				{{ locale.coverSection.uploadButtonText }}
-			</fab-primary-button>
-		</div>
-
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
-		</div>
-
-		<div style="float: right">
-			<fab-primary-button
-				(onClick)="SubmitCover()">
-				{{ locale.next }}
-			</fab-primary-button>
-		</div>
-	</div>
+	<pocketlib-new-book-page-cover-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(setCover)="SetCover($event)"
+		(previous)="Previous()"
+		(submit)="SubmitCover()">
+	</pocketlib-new-book-page-cover-section>
 
 	<!-- Book file -->
+	<pocketlib-new-book-page-book-file-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(setBookFile)="SetBookFile($event)"
+		(previous)="Previous()"
+		(finish)="Finish()">
+	</pocketlib-new-book-page-book-file-section>
+</div>
+
+<!-- Dual-Screen layout -->
+<div
+	class="d-flex flex-row ms-motion-slideUpIn"
+	*ngIf="!loadingScreenVisible && dualScreenLayout">
+
+	<!-- Left screen -->
 	<div
-		class="mx-auto"
-		[ngClass]="section != 7 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
-		style="max-width: 300px"
-		[style.display]="visibleSection != 7 ? 'none' : null">
-
-		<div class="mb-4">
-			<p class="text-color">{{ locale.bookFileSection.description }}</p>
-
-			<p class="text-color font-italic"
-				*ngIf="bookFileName.length > 0">
-				{{ bookFileName }}
-			</p>
-
-			<fab-primary-button
-				ngxFilePicker
-				accept="application/epub+zip,application/pdf"
-				(filePick)="BookFileUpload($event)">
-				{{ locale.bookFileSection.uploadButtonText }}
-			</fab-primary-button>
+		class="w-50"
+		[style.marginRight.px]="dualScreenFoldMargin">
+		
+		<div class="mt-3 mb-4">
+			<pocketlib-header
+				[title]="titleSubmitted ? submittedTitle : locale.title"
+				[editButtonVisible]="titleSubmitted"
+				(backButtonClick)="GoBack()"
+				(editButtonClick)="NavigateToSection(0)">
+			</pocketlib-header>
 		</div>
 
-		<div style="float: left">
-			<fab-default-button
-				(onClick)="Previous()">
-				{{ locale.previous }}
-			</fab-default-button>
+		<!-- Error message bar -->
+		<div
+			class="mb-3 mx-auto"
+			style="max-width: 300px"
+			*ngIf="errorMessage">
+			<fab-message-bar [messageBarType]="errorMessageBarType">
+				{{ errorMessage }}
+			</fab-message-bar>
 		</div>
 
-		<div style="float: right">
-			<fab-primary-button
-				(onClick)="Finish()">
-				{{ locale.finish }}
-			</fab-primary-button>
-		</div>
+		<!-- Title -->
+		<pocketlib-new-book-page-title-section
+			[loading]="loading"
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(submit)="SubmitTitle($event)">
+		</pocketlib-new-book-page-title-section>
+
+		<!-- Collection -->
+		<pocketlib-new-book-page-collection-section
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			[collections]="collections"
+			[selectedCollection]="selectedCollection"
+			(select)="SelectCollection($event)"
+			(previous)="Previous()"
+			(submit)="SubmitCollection($event)">
+		</pocketlib-new-book-page-collection-section>
+
+		<!-- Description + Language -->
+		<pocketlib-new-book-page-description-section
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(setLanguage)="SetLanguage($event)"
+			(previous)="Previous()"
+			(submit)="SubmitDescription($event)">
+		</pocketlib-new-book-page-description-section>
+
+		<!-- Categories -->
+		<pocketlib-new-book-page-categories-section
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(previous)="Previous()"
+			(submit)="SubmitCategories($event)">
+		</pocketlib-new-book-page-categories-section>
+
+		<!-- Price -->
+		<pocketlib-new-book-page-price-section
+			[loading]="loading"
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(setPrice)="SetPrice($event)"
+			(previous)="Previous()"
+			(submit)="SubmitPrice()">
+		</pocketlib-new-book-page-price-section>
+
+		<!-- ISBN -->
+		<pocketlib-new-book-page-isbn-section
+			[loading]="loading"
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(setIsbn)="SetIsbn($event)"
+			(previous)="Previous()"
+			(submit)="SubmitIsbn()">
+		</pocketlib-new-book-page-isbn-section>
+
+		<!-- Cover -->
+		<pocketlib-new-book-page-cover-section
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(setCover)="SetCover($event)"
+			(previous)="Previous()"
+			(submit)="SubmitCover()">
+		</pocketlib-new-book-page-cover-section>
+
+		<!-- Book file -->
+		<pocketlib-new-book-page-book-file-section
+			[section]="section"
+			[visibleSection]="visibleSection"
+			[forwardNavigation]="forwardNavigation"
+			(setBookFile)="SetBookFile($event)"
+			(previous)="Previous()"
+			(finish)="Finish()">
+		</pocketlib-new-book-page-book-file-section>
 	</div>
 </div>
 
 <div
-	id="loading-background"
-	class="d-flex justify-content-center ms-motion-slideUpIn"
+	class="ms-motion-slideUpIn"
 	style="background-color: var(--primary); color: white"
 	[style.height.px]="height"
 	*ngIf="loadingScreenVisible">
-	<div style="display: inline-block" class="m-auto text-center">
-		<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 20px" />
 
-		<mat-progress-spinner 
+	<div
+		class="d-flex justify-content-center"
+		[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
+		[style.height.px]="height">
+
+		<div style="display: inline-block" class="m-auto text-center">
+			<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 20px">
+	
+			<mat-progress-spinner 
 				class="mx-auto"
 				mode="indeterminate" 
 				diameter="30">
-		</mat-progress-spinner>
-
-		<p class="font-weight-light"
-			style="margin-top: 30px; font-size: 18px; color: white">
-			{{ loadingScreenMessage }}
-		</p>
+			</mat-progress-spinner>
+	
+			<p class="font-weight-light"
+				style="margin-top: 30px; font-size: 18px; color: white">
+				{{ loadingScreenMessage }}
+			</p>
+		</div>
 	</div>
 </div>
 

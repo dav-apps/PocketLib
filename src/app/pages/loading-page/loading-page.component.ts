@@ -12,7 +12,6 @@ import { GetDualScreenSettings } from 'src/app/misc/utils'
 })
 export class LoadingPageComponent {
 	height: number = 500
-	width: number = 500
 	dualScreenLayout: boolean = false
 
 	constructor(
@@ -50,7 +49,6 @@ export class LoadingPageComponent {
 
 	setSize() {
 		this.height = window.innerHeight
-		this.width = window.innerWidth
 	}
 
 	async LoadSettings() {

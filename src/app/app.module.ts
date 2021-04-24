@@ -60,11 +60,19 @@ import { HeaderComponent } from './components/header/header.component'
 import { LinkIconButtonComponent } from './components/link-icon-button/link-icon-button.component'
 import { BlurhashImageComponent } from './components/blurhash-image/blurhash-image.component'
 import { LanguagesSelectionComponent } from './components/languages-selection/languages-selection.component'
+import { UserProfileComponent } from './components/user-profile/user-profile.component'
+import { DavProCardComponent } from './components/dav-pro-card/dav-pro-card.component'
 import { LibraryPageCardsComponent } from './components/library-page-cards/library-page-cards.component'
 import { LibraryPageBookCardComponent } from './components/library-page-book-card/library-page-book-card.component'
 import { StoreBooksPageBookCardComponent } from './components/store-books-page-book-card/store-books-page-book-card.component'
-import { UserProfileComponent } from './components/user-profile/user-profile.component'
-import { DavProCardComponent } from './components/dav-pro-card/dav-pro-card.component'
+import { NewBookPageTitleSectionComponent } from './components/new-book-page-title-section/new-book-page-title-section.component'
+import { NewBookPageCollectionSectionComponent } from './components/new-book-page-collection-section/new-book-page-collection-section.component'
+import { NewBookPageDescriptionSectionComponent } from './components/new-book-page-description-section/new-book-page-description-section.component'
+import { NewBookPageCategoriesSectionComponent } from './components/new-book-page-categories-section/new-book-page-categories-section.component'
+import { NewBookPagePriceSectionComponent } from './components/new-book-page-price-section/new-book-page-price-section.component'
+import { NewBookPageIsbnSectionComponent } from './components/new-book-page-isbn-section/new-book-page-isbn-section.component'
+import { NewBookPageCoverSectionComponent } from './components/new-book-page-cover-section/new-book-page-cover-section.component'
+import { NewBookPageBookFileSectionComponent } from './components/new-book-page-book-file-section/new-book-page-book-file-section.component'
 
 // Pages
 import { LibraryPageComponent } from './pages/library-page/library-page.component'
@@ -104,11 +112,19 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		LinkIconButtonComponent,
 		BlurhashImageComponent,
 		LanguagesSelectionComponent,
+		UserProfileComponent,
+		DavProCardComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
 		StoreBooksPageBookCardComponent,
-		UserProfileComponent,
-		DavProCardComponent,
+		NewBookPageTitleSectionComponent,
+		NewBookPageCollectionSectionComponent,
+		NewBookPageDescriptionSectionComponent,
+		NewBookPageCategoriesSectionComponent,
+		NewBookPagePriceSectionComponent,
+		NewBookPageIsbnSectionComponent,
+		NewBookPageCoverSectionComponent,
+		NewBookPageBookFileSectionComponent,
 		// Pages
       LibraryPageComponent,
       BookPageComponent,

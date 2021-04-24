@@ -1,0 +1,35 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 6 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px"
+	[style.display]="visibleSection != 6 ? 'none' : null">
+
+	<div class="mb-4">
+		<p class="text-color">{{ locale.coverSection.description }}</p>
+
+		<div class="my-3" *ngIf="coverContent">
+			<img [src]="coverContentBase64" height="200">
+		</div>
+
+		<fab-primary-button
+			ngxFilePicker
+			accept="image/png,image/jpeg"
+			(filePick)="CoverUpload($event)">
+			{{ locale.coverSection.uploadButtonText }}
+		</fab-primary-button>
+	</div>
+
+	<div style="float: left">
+		<fab-default-button
+			(onClick)="Previous()">
+			{{ locale.previous }}
+		</fab-default-button>
+	</div>
+
+	<div style="float: right">
+		<fab-primary-button
+			(onClick)="Submit()">
+			{{ locale.next }}
+		</fab-primary-button>
+	</div>
+</div>

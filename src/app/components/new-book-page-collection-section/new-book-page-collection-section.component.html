@@ -1,0 +1,58 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 1 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 500px"
+	[style.display]="visibleSection != 1 ? 'none' : null">
+
+	<div>
+		<p class="text-color">{{ locale.collectionSection.description }}</p>
+
+		<div class="list-group mb-3">
+			<p
+				class="list-group-item mb-3 cursor text-center text-color theme-background-color-secondary"
+				[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
+				style="transition: 0.12s"
+				(click)="Select(-1)">
+				{{ locale.collectionSection.newPublication }}
+			</p>
+
+			<div
+				class="card my-3 cursor theme-background-color-secondary"
+				[ngClass]="selectedCollection == i ? 'shadow' : ''"
+				style="transition: 0.12s"
+				*ngFor="let collection of collections; let i = index"
+				(click)="Select(i)">
+				<div class="row no-gutters">
+					<div class="col-4">
+						<img [src]="collection.cover ? collection.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+					</div>
+
+					<div class="col-8 my-auto">
+						<div class="card-body">
+							<h5
+								class="card-title my-auto text-color"
+								style="font-size: 18px">
+								{{ collection.name }}
+							</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-4" style="float: left">
+		<fab-default-button
+			(onClick)="Previous()">
+			{{ locale.previous }}
+		</fab-default-button>
+	</div>
+
+	<div class="mb-4" style="float: right">
+		<fab-primary-button
+			[disabled]="selectedCollection == -2"
+			(onClick)="Submit()">
+			{{ locale.next }}
+		</fab-primary-button>
+	</div>
+</div>

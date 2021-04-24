@@ -1,0 +1,33 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 0 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px"
+	[style.display]="visibleSection != 0 ? 'none' : null">
+	<div class="form-group">
+		<label
+			class="col-form-label text-color mb-1"
+			style="font-size: 15px">
+			{{ locale.titleSection.description }}
+		</label>
+
+		<fab-text-field
+			[(value)]="title"
+			[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
+			(keydown.enter)="Submit()">
+		</fab-text-field>
+	</div>
+
+	<div class="d-flex" style="float: right">
+		<div
+			style="margin-top: 8px; margin-right: 14px"
+			*ngIf="loading">
+			<fab-spinner [size]="spinnerSize"></fab-spinner>
+		</div>
+
+		<fab-primary-button
+			[disabled]="title.length < 3 || loading"
+			(onClick)="Submit()">
+			{{ locale.next }}
+		</fab-primary-button>
+	</div>
+</div>

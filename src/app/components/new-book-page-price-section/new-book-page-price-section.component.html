@@ -1,0 +1,36 @@
+<div
+	class="mx-auto"
+	[ngClass]="section != 4 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px"
+	[style.display]="visibleSection != 4 ? 'none' : null">
+
+	<div class="mb-4">
+		<p class="text-color">{{ locale.priceSection.description }}</p>
+
+		<pocketlib-price-input
+			#priceInput
+			[canEdit]="true"
+			(update)="SetPrice($event)">
+		</pocketlib-price-input>
+	</div>
+
+	<div style="float: left">
+		<fab-default-button
+			(onClick)="Previous()">
+			{{ locale.previous }}
+		</fab-default-button>
+	</div>
+
+	<div class="d-flex" style="float: right">
+		<div
+			style="margin-top: 8px; margin-right: 14px"
+			*ngIf="loading">
+			<fab-spinner [size]="spinnerSize"></fab-spinner>
+		</div>
+
+		<fab-primary-button
+			(onClick)="Submit()">
+			{{ locale.next }}
+		</fab-primary-button>
+	</div>
+</div>

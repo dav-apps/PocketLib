@@ -5,12 +5,11 @@
 
 	<div
 		class="d-flex justify-content-center"
-		style="display: inline-block"
-		[style.height.px]="height"
-		[style.width.px]="dualScreenLayout ? width / 2 : width">
+		[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
+		[style.height.px]="height">
 
 		<div style="display: inline-block" class="m-auto text-center">
-			<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 38px" />
+			<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 38px">
 	
 			<mat-progress-spinner 
 				class="mx-auto"
