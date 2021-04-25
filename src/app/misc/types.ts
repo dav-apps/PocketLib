@@ -4,6 +4,6 @@ export interface BookListItem {
 	cover: boolean,
 	coverContent: string,
 	coverBlurhash: string,
-	coverWidth: number,
-	coverHeight: number
+	coverWidth?: number,
+	coverHeight?: number
 }

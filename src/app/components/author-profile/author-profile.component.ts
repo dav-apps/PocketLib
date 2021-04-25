@@ -185,14 +185,9 @@ export class AuthorProfileComponent {
 		this.SetupBioLanguageDropdown()
 	}
 
-	ngAfterViewInit() {
-		this.UpdateFontSize()
-	}
-
 	@HostListener('window:resize')
 	onResize() {
 		this.setSize()
-		this.UpdateFontSize()
 	}
 
 	setSize() {
@@ -204,24 +199,6 @@ export class AuthorProfileComponent {
 			this.profileImageWidth = 120
 		} else {
 			this.profileImageWidth = 130
-		}
-	}
-
-	UpdateFontSize() {
-		let bookListItems = document.getElementsByClassName('book-list-item')
-		if (bookListItems.length == 0) return
-
-		let bookItemStyles = getComputedStyle(bookListItems.item(0))
-		let bookItemWidth = +bookItemStyles.width.replace('px', '')
-
-		if (bookItemWidth <= 360) {
-			this.bookTitleFontSize = 17
-		} else if (bookItemWidth <= 400) {
-			this.bookTitleFontSize = 18
-		} else if (bookItemWidth <= 470) {
-			this.bookTitleFontSize = 19
-		} else {
-			this.bookTitleFontSize = 20
 		}
 	}
 
