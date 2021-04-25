@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, HostListener } from '@angular/core'
+import { Component, ViewChild, Input } from '@angular/core'
 import { Router, NavigationExtras } from '@angular/router'
 import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-js'
@@ -10,6 +10,8 @@ import {
 	AuthorMode
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -20,29 +22,21 @@ export class CollectionViewComponent {
 	locale = enUS.collectionView
 	@ViewChild(EditCollectionNamesComponent, { static: true }) editCollectionNamesComponent: EditCollectionNamesComponent
 	@Input() uuid: string
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	authorMode: AuthorMode = AuthorMode.Normal
 	collectionName: { name: string, language: string } = { name: "", language: "" }
 	collection: {
 		uuid: string,
 		author: string,
 		names: { name: string, language: string }[],
-		books: {
-			uuid: string,
-			title: string,
-			description: string,
-			language: string,
-			status: string,
-			cover: boolean,
-			file: boolean,
-			coverContent: string,
-			coverBlurhash: string
-		}[]
-	} = { uuid: "", author: "", names: [], books: [] }
+		books: BookListItem[],
+		leftScreenBooks: BookListItem[],
+		rightScreenBooks: BookListItem[]
+	} = { uuid: "", author: "", names: [], books: [], leftScreenBooks: [], rightScreenBooks: [] }
 	collectionNamesDialogVisible: boolean = false
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	showAddLanguageButton: boolean = false
-	bookTitleFontSize: number = 20
-	hoveredBookIndex: number = -1
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -59,6 +53,11 @@ export class CollectionViewComponent {
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().collectionView
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
@@ -77,37 +76,42 @@ export class CollectionViewComponent {
 				uuid: getCollectionResponse.data.uuid,
 				author: getCollectionResponse.data.author,
 				names: getCollectionResponse.data.names,
-				books: []
+				books: [],
+				leftScreenBooks: [],
+				rightScreenBooks: []
 			}
 
 			// Get the appropriate collection name
 			let i = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
 			if (i != -1) this.collectionName = this.collection.names[i]
 
+			let j = 0
 			for (let responseBook of getCollectionResponse.data.books) {
-				let book = {
+				let bookItem: BookListItem = {
 					uuid: responseBook.uuid,
 					title: responseBook.title,
-					description: responseBook.description,
-					language: responseBook.language,
-					status: responseBook.status,
 					cover: responseBook.cover,
-					file: responseBook.file,
 					coverContent: null,
 					coverBlurhash: null
 				}
 
-				// Cut the description
-				if (book.description && book.description.length > 170) {
-					book.description = book.description.slice(0, 169) + "..."
+				if (bookItem.cover) {
+					bookItem.coverContent = GetStoreBookCoverLink(bookItem.uuid)
+					bookItem.coverBlurhash = responseBook.cover_blurhash
 				}
 
-				if (book.cover) {
-					book.coverContent = GetStoreBookCoverLink(book.uuid)
-					book.coverBlurhash = responseBook.cover_blurhash
-				}
+				if (this.dualScreenLayout) {
+					// Evenly distribute the books on the left and right screens
+					if (j % 2 == 0) {
+						this.collection.leftScreenBooks.push(bookItem)
+					} else {
+						this.collection.rightScreenBooks.push(bookItem)
+					}
 
-				this.collection.books.push(book)
+					j++
+				} else {
+					this.collection.books.push(bookItem)
+				}
 			}
 		} else {
 			// Redirect back to the author page
@@ -126,29 +130,6 @@ export class CollectionViewComponent {
 			this.collection.author == this.dataService.userAuthor.uuid
 		) {
 			this.authorMode = AuthorMode.AuthorOfUser
-		}
-	}
-
-	@HostListener('window:resize')
-	setSize() {
-		this.UpdateFontSize()
-	}
-
-	UpdateFontSize() {
-		let bookListItems = document.getElementsByClassName('book-list-item')
-		if (bookListItems.length == 0) return
-
-		let bookItemStyles = getComputedStyle(bookListItems.item(0))
-		let bookItemWidth = +bookItemStyles.width.replace('px', '')
-
-		if (bookItemWidth <= 360) {
-			this.bookTitleFontSize = 17
-		} else if (bookItemWidth <= 400) {
-			this.bookTitleFontSize = 18
-		} else if (bookItemWidth <= 470) {
-			this.bookTitleFontSize = 19
-		} else {
-			this.bookTitleFontSize = 20
 		}
 	}
 
