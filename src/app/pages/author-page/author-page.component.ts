@@ -6,6 +6,7 @@ import { ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -24,6 +25,8 @@ export class AuthorPageComponent {
 	section2Height: number = 600
 	section3Height: number = 400
 	authorSampleProfileImageWidth: number = 392
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	uuid: string
 	createAuthorDialogVisible: boolean = false
 	createAuthorDialogFirstName: string = ""
@@ -51,6 +54,11 @@ export class AuthorPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorPage
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
@@ -134,6 +142,10 @@ export class AuthorPageComponent {
 
 		this.createAuthorDialogContentProps.title = this.locale.createAuthorDialog.title
 		this.createAuthorDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	ShowBook(uuid: string) {
