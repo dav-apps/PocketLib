@@ -5,6 +5,7 @@ import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-js'
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -15,6 +16,8 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorSetupPageComponent {
 	locale = enUS.authorSetupPage
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	firstName: string = ""
 	lastName: string = ""
 	generalError: string = ""
@@ -32,6 +35,11 @@ export class AuthorSetupPageComponent {
 		private domSanitizer: DomSanitizer
 	) {
 		this.locale = this.dataService.GetLocale().authorSetupPage
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
