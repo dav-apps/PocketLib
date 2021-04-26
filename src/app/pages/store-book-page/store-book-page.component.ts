@@ -19,9 +19,9 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-store-book-page',
@@ -147,6 +147,10 @@ export class StoreBookPageComponent {
 	ShowErrorDialog() {
 		this.errorDialogContentProps.title = this.locale.errorDialog.title
 		this.errorDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	async GetData() {
@@ -266,6 +270,10 @@ export class StoreBookPageComponent {
 			// Show dav Pro dialog
 			this.davProRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title
 			this.davProRequiredDialogVisible = true
+
+			if (this.dualScreenLayout) {
+				UpdateDialogForDualScreenLayout()
+			}
 			return
 		}
 
@@ -322,6 +330,10 @@ export class StoreBookPageComponent {
 		this.buyBookDialogContentProps.title = this.book.price == 0 ? this.locale.buyBookDialog.loginRequired.titleFree : this.locale.buyBookDialog.title
 		this.buyBookDialogLoginRequired = loginRequired
 		this.buyBookDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	NavigateToAccountPage() {

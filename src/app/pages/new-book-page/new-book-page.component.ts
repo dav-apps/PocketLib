@@ -6,7 +6,6 @@ import {
 	IDialogContentProps,
 	MessageBarType
 } from 'office-ui-fabric-react'
-import { ReadFile } from 'ngx-file-helpers'
 import { PromiseHolder } from 'dav-js'
 import {
 	DataService,
@@ -15,8 +14,8 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-new-book-page',
@@ -231,6 +230,10 @@ export class NewBookPageComponent {
 	ShowLeavePageDialog() {
 		this.leavePageDialogContentProps.title = this.locale.leavePageDialog.title
 		this.leavePageDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	LeavePageDialogLeave() {

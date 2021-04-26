@@ -21,9 +21,9 @@ import {
 	BookStatus
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-author-profile',
@@ -407,6 +407,10 @@ export class AuthorProfileComponent {
 
 		this.editProfileDialogContentProps.title = this.locale.editProfileDialog.title
 		this.editProfileDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	NavigateToNewBookPage() {

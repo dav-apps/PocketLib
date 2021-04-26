@@ -10,7 +10,7 @@ import {
 	AuthorMode
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
@@ -173,6 +173,10 @@ export class CollectionViewComponent {
 
 		this.collectionNamesDialogContentProps.title = this.locale.collectionNamesDialog.title
 		this.collectionNamesDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 
 		setTimeout(() => {
 			this.editCollectionNamesComponent.Init()

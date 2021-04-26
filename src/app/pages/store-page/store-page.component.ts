@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core'
 import { Router } from '@angular/router'
 import { IDialogContentProps } from 'office-ui-fabric-react'
 import { DataService } from 'src/app/services/data-service'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -11,6 +12,8 @@ import { enUS } from 'src/locales/locales'
 export class StorePageComponent {
 	locale = enUS.storePage
 	sideNavHidden: boolean = false
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	selectLanguagesDialogVisible: boolean = false
 
 	selectLanguagesDialogContentProps: IDialogContentProps = {
@@ -22,6 +25,11 @@ export class StorePageComponent {
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().storePage
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
@@ -58,5 +66,9 @@ export class StorePageComponent {
 	async ShowLanguagesDialog() {
 		this.selectLanguagesDialogContentProps.title = this.locale.selectLanguagesDialog.title
 		this.selectLanguagesDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 }

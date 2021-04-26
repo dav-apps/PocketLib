@@ -15,7 +15,7 @@ import { PriceInputComponent } from 'src/app/components/price-input/price-input.
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-author-book-page',
@@ -215,6 +215,10 @@ export class AuthorBookPageComponent {
 
 		this.editTitleDialogContentProps.title = this.locale.editTitleDialog.title
 		this.editTitleDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	async UpdateTitle() {
@@ -264,6 +268,10 @@ export class AuthorBookPageComponent {
 
 		this.categoriesSelectionDialogContentProps.title = this.locale.categoriesSelectionDialog.title
 		this.categoriesSelectionDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	async UpdateCategories() {

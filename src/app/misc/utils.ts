@@ -89,3 +89,17 @@ export function GetDualScreenSettings() {
 
 	return settings
 }
+
+export function UpdateDialogForDualScreenLayout() {
+	setTimeout(() => {
+		let overlayElement = document.getElementsByClassName("ms-Overlay")[0] as HTMLDivElement
+		let dialogElement = document.getElementsByClassName("ms-Dialog")[0] as HTMLDivElement
+		let dialogParentElement = dialogElement.parentElement as HTMLDivElement
+
+		// Set the width of the dialog
+		dialogElement.setAttribute("style", "width: 50%")
+
+		// Move the overlay one element up
+		dialogParentElement.insertBefore(overlayElement, dialogParentElement.children.item(0))
+	}, 1)
+}

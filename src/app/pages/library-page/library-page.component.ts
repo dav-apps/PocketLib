@@ -7,8 +7,8 @@ import { DataService } from 'src/app/services/data-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 const pdfType = "application/pdf"
 
@@ -126,6 +126,10 @@ export class LibraryPageComponent {
 		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
 			this.loginToAccessBookDialogContentProps.title = this.locale.loginToAccessBookDialog.title
 			this.loginToAccessBookDialogVisible = true
+
+			if (this.dualScreenLayout) {
+				UpdateDialogForDualScreenLayout()
+			}
 			return
 		}
 
@@ -174,12 +178,20 @@ export class LibraryPageComponent {
 
 		this.renameBookDialogContentProps.title = this.locale.renameBookDialog.title
 		this.renameBookDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	ShowRemoveBookDialog() {
 		this.contextMenuVisible = false
 		this.removeBookDialogContentProps.title = this.locale.removeBookDialog.title
 		this.removeBookDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	async RenameBook() {

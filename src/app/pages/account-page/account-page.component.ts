@@ -5,7 +5,7 @@ import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 
 @Component({
 	selector: "pocketlib-account-page",
@@ -86,6 +86,10 @@ export class AccountPageComponent {
 	ShowLogoutDialog() {
 		this.logoutDialogContentProps.title = this.locale.logoutDialog.title
 		this.logoutDialogVisible = true
+
+		if (this.dualScreenLayout) {
+			UpdateDialogForDualScreenLayout()
+		}
 	}
 
 	Logout() {
