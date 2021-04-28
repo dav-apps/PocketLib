@@ -173,7 +173,7 @@ export class EpubContentComponent {
 	//#endregion
 
 	constructor(
-		private dataService: DataService,
+		public dataService: DataService,
 		private router: Router,
 		private ngZone: NgZone
 	) {
