@@ -76,15 +76,16 @@ export class AppComponent {
 		await this.dataService.LoadCategories()
 	}
 
-	@HostListener('window:resize')
-	onResize() {
+	ngAfterViewInit() {
 		this.setSize()
 	}
 
+	@HostListener('window:resize')
 	setSize() {
-		let navbarHeight = document.getElementById('navbar').clientHeight
-		this.dataService.contentHeight = window.innerHeight - navbarHeight - toolbarHeight
 		this.dataService.smallWindow = (window.innerWidth <= smallWindowMaxSize)
+
+		let navbarHeight = document.getElementById('navbar').clientHeight
+		this.dataService.contentHeight = window.innerHeight - navbarHeight - (this.dataService.smallWindow ? toolbarHeight : 0)
 	}
 
 	//#region dav-js callback functions

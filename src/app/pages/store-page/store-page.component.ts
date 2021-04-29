@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { IDialogContentProps } from 'office-ui-fabric-react'
 import { DataService } from 'src/app/services/data-service'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { smallWindowMaxSize } from 'src/constants/constants'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -37,12 +38,8 @@ export class StorePageComponent {
 	}
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
-		this.sideNavHidden = window.outerWidth < 576
+		this.sideNavHidden = window.innerWidth <= smallWindowMaxSize
 
 		if (!this.sideNavHidden) this.dataService.sideNavOpened = true
 		else this.dataService.sideNavOpened = false
