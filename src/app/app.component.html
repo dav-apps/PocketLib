@@ -53,8 +53,9 @@
 		mat-flat-button
 		class="bottom-navigation-button flex-fill"
 		routerLink="/">
-		<img src="/assets/svgs/home-white-outlined.svg" [style.display]="currentUrl == '/' ? 'none' : ''">
-		<img src="/assets/svgs/home-white-filled.svg" [style.display]="currentUrl == '/' ? '' : 'none'">
+
+		<i class="ms-Icon ms-Icon--Home" style="font-size: 24px" aria-hidden="true" *ngIf="currentUrl != '/'"></i>
+		<i class="ms-Icon ms-Icon--HomeSolid" style="font-size: 24px" aria-hidden="true" *ngIf="currentUrl == '/'"></i>
 	</button>
 
 	<button
