@@ -13,10 +13,18 @@
 
 		<span style="flex: 1 1 auto"></span>
 
-		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" *ngIf="dataService.userAuthor || dataService.adminAuthors.length > 0" (click)="ShowAuthorPage()">
+		<div
+			class="btn btn-primary mr-2 cursor"
+			style="width: 50px; height: 50px"
+			(click)="ShowAuthorPage()"
+			*ngIf="(dataService.userAuthor || dataService.adminAuthors.length > 0) && !dataService.smallWindow">
 			<i class="ms-Icon ms-Icon--EditContact" style="font-size: 24px" aria-hidden="true"></i>
 		</div>
-		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowStorePage()">
+		<div
+			class="btn btn-primary mr-2 cursor"
+			style="width: 50px; height: 50px"
+			(click)="ShowStorePage()"
+			*ngIf="!dataService.smallWindow">
 			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
 		</div>
 		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowAccountPage()">
@@ -35,3 +43,41 @@
 </mat-toolbar>
 
 <router-outlet></router-outlet>
+
+<div
+	id="bottom-navigation-bar"
+	class="bg-primary d-flex d-row"
+	*ngIf="dataService.smallWindow && dataService.navbarVisible">
+
+	<button
+		mat-flat-button
+		class="bottom-navigation-button flex-fill"
+		routerLink="/">
+		<img src="/assets/svgs/home-white-outlined.svg" [style.display]="currentUrl == '/' ? 'none' : ''">
+		<img src="/assets/svgs/home-white-filled.svg" [style.display]="currentUrl == '/' ? '' : 'none'">
+	</button>
+
+	<button
+		mat-flat-button
+		class="bottom-navigation-button flex-fill"
+		routerLink="/store">
+		
+		<div class="d-flex justify-content-center">
+			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
+			<div
+				style="background-color: white; width: 13px; height: 16px; top: 23px; margin-left: -6px; position:absolute"
+				*ngIf="bottomToolbarStoreEntryActive">
+			</div>
+		</div>
+	</button>
+
+	<button
+		mat-flat-button
+		class="bottom-navigation-button flex-fill"
+		routerLink="/author"
+		*ngIf="dataService.userAuthor || dataService.adminAuthors.length > 0">
+
+		<fa-icon [icon]="faAddressCardSolid" style="font-size: 24px" *ngIf="bottomToolbarAuthorEntryActive"></fa-icon>
+		<fa-icon [icon]="faAddressCardLight" style="font-size: 24px" *ngIf="!bottomToolbarAuthorEntryActive"></fa-icon>
+	</button>
+</div>

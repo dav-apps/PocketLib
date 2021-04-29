@@ -1,25 +1,46 @@
 import { Component, HostListener } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, NavigationStart } from '@angular/router'
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons'
+import { faAddressCard as faAddressCardSolid } from '@fortawesome/free-solid-svg-icons'
+import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { RoutingService } from './services/routing-service'
 import { GetSettings } from 'src/app/models/Settings'
+import { toolbarHeight, smallWindowMaxSize } from 'src/constants/constants'
 import { environment } from 'src/environments/environment'
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss']
+	styleUrls: [
+		'./app.component.scss'
+	]
 })
 export class AppComponent {
+	faAddressCardSolid = faAddressCardSolid
+	faAddressCardLight = faAddressCardLight
+	currentUrl: string = "/"
+	bottomToolbarStoreEntryActive: boolean = false
+	bottomToolbarAuthorEntryActive: boolean = false
+
 	constructor(
 		public dataService: DataService,
 		public routingService: RoutingService,
 		private router: Router
-	) { }
+	) {
+		this.router.events.forEach(data => {
+			if (data instanceof NavigationStart) {
+				// Update the updated todo lists
+				this.currentUrl = data.url
+				this.bottomToolbarStoreEntryActive = this.currentUrl.startsWith("/store")
+				this.bottomToolbarAuthorEntryActive = this.currentUrl.startsWith("/author")
+			}
+		})
+	}
 
 	async ngOnInit() {
+		this.setSize()
 		this.dataService.ApplyTheme()
 		initializeIcons()
 
@@ -55,6 +76,18 @@ export class AppComponent {
 		await this.dataService.LoadCategories()
 	}
 
+	@HostListener('window:resize')
+	onResize() {
+		this.setSize()
+	}
+
+	setSize() {
+		let navbarHeight = document.getElementById('navbar').clientHeight
+		this.dataService.contentHeight = window.innerHeight - navbarHeight - toolbarHeight
+		this.dataService.smallWindow = (window.innerWidth <= smallWindowMaxSize)
+	}
+
+	//#region dav-js callback functions
 	async UpdateAllOfTable(tableId: number, changed: boolean) {
 		if (tableId == environment.settingsTableId) {
 			// Reload the settings if it has changed
@@ -90,20 +123,7 @@ export class AppComponent {
 
 		this.dataService.LoadAllBooks()
 	}
-
-	ngAfterViewInit() {
-		this.setSize()
-	}
-
-	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
-	setSize() {
-		let navbarHeight = document.getElementById('navbar').clientHeight
-		this.dataService.contentHeight = window.innerHeight - navbarHeight
-	}
+	//#endregion
 
 	ShowLibraryPage() {
 		this.routingService.NavigateToLibraryPage()

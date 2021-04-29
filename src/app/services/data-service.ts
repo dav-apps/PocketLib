@@ -7,16 +7,17 @@ import {
 	PromiseHolder
 } from 'dav-js'
 import { ApiService } from './api-service'
-import { environment } from 'src/environments/environment'
-import { keys } from 'src/constants/keys'
 import * as locales from 'src/locales/locales'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
-
-const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png"
-const defaultDarkStoreBookCoverUrl = "/assets/images/placeholder-dark.png"
-const defaultProfileImageUrl = "/assets/images/profile-image-placeholder.png"
+import {
+	defaultLightStoreBookCoverUrl,
+	defaultDarkStoreBookCoverUrl,
+	defaultProfileImageUrl
+} from 'src/constants/constants'
+import { keys } from 'src/constants/keys'
+import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class DataService {
@@ -27,6 +28,7 @@ export class DataService {
 	books: Book[] = []
 	currentBook: Book = null
 	darkTheme: boolean = false
+	smallWindow: boolean = false
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
 	settings: Settings
