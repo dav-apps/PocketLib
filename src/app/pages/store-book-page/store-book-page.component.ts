@@ -1,14 +1,8 @@
-import { Component, HostListener } from '@angular/core'
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
-import {
-	ApiResponse,
-	ApiErrorResponse,
-	DownloadTableObject,
-	PurchasesController,
-	Purchase
-} from 'dav-js'
+import { ApiResponse, DownloadTableObject } from 'dav-js'
 import {
 	DataService,
 	BookStatus,
@@ -19,7 +13,7 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetElementHeight } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
 
@@ -28,6 +22,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-book-page.component.html'
 })
 export class StoreBookPageComponent {
+	@ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>
 	locale = enUS.storeBookPage
 	width: number = 500
 	showMobileLayout: boolean = false
@@ -126,14 +121,15 @@ export class StoreBookPageComponent {
 		await this.GetData()
 	}
 
-	@HostListener('window:resize')
-	onResize() {
+	ngAfterViewInit() {
 		this.setSize()
 	}
 
+	@HostListener('window:resize')
 	setSize() {
 		this.width = window.innerWidth
-		this.showMobileLayout = window.outerWidth < 768 && !this.dualScreenLayout
+		this.showMobileLayout = window.innerWidth < 768 && !this.dualScreenLayout
+		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
 	GoBack() {
@@ -301,12 +297,8 @@ export class StoreBookPageComponent {
 		if (this.dataService.dav.isLoggedIn) {
 			if (this.book.price == 0) {
 				// Purchase this book directly
-				let createPurchaseResponse: ApiResponse<Purchase> | ApiErrorResponse = await PurchasesController.CreatePurchase({
-					tableObjectUuid: this.uuid,
-					providerName: `${this.author.firstName} ${this.author.lastName}`,
-					providerImage: this.authorProfileImageContent,
-					productName: this.book.title,
-					productImage: this.coverContent,
+				let createPurchaseResponse: ApiResponse<any> = await this.apiService.CreatePurchaseForStoreBook({
+					uuid: this.uuid,
 					currency: "eur"
 				})
 

@@ -1,1 +1,6 @@
-<pocketlib-author-profile [uuid]="uuid"></pocketlib-author-profile>
+<div #container>
+	<pocketlib-author-profile
+		[uuid]="uuid"
+		(loaded)="AuthorProfileLoaded()">
+	</pocketlib-author-profile>
+</div>

@@ -103,3 +103,9 @@ export function UpdateDialogForDualScreenLayout() {
 		dialogParentElement.insertBefore(overlayElement, dialogParentElement.children.item(0))
 	}, 1)
 }
+
+export function GetElementHeight(element: HTMLElement): number {
+	return element.offsetHeight
+		+ parseInt(document.defaultView.getComputedStyle(element).marginTop)
+		+ parseInt(document.defaultView.getComputedStyle(element).marginBottom)
+}

@@ -1,5 +1,6 @@
 <!-- Normal layout -->
 <div
+	#container
 	class="container ms-motion-slideUpIn row mt-4"
 	*ngIf="!showMobileLayout && !dualScreenLayout">
 
@@ -92,6 +93,7 @@
 
 <!-- Dual-Screen layout -->
 <div
+	#container
 	class="ms-motion-slideUpIn"
 	style="display: grid; grid-template-rows: auto"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
@@ -197,7 +199,11 @@
 </div>
 
 <!-- Mobile layout -->
-<div class="container ms-motion-slideUpIn" *ngIf="showMobileLayout">
+<div
+	#container
+	class="container ms-motion-slideUpIn"
+	*ngIf="showMobileLayout">
+
 	<!-- Title and back button -->
 	<div class="mt-3 mb-4">
 		<pocketlib-header

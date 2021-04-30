@@ -33,7 +33,7 @@ export class StorePageComponent {
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
-	async ngOnInit() {
+	ngOnInit() {
 		this.setSize()
 	}
 

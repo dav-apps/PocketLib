@@ -1,4 +1,4 @@
-import { Component, Input, HostListener } from '@angular/core'
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core'
 import { Router, NavigationExtras } from '@angular/router'
 import {
 	IDropdownOption,
@@ -36,6 +36,7 @@ export class AuthorProfileComponent {
 	faInstagram = faInstagram
 	faTwitter = faTwitter
 	@Input() uuid: string
+	@Output() loaded = new EventEmitter()
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -183,6 +184,7 @@ export class AuthorProfileComponent {
 		}
 
 		this.SetupBioLanguageDropdown()
+		this.loaded.emit()
 	}
 
 	@HostListener('window:resize')

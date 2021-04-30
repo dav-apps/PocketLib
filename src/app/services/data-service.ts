@@ -29,6 +29,7 @@ export class DataService {
 	currentBook: Book = null
 	darkTheme: boolean = false
 	smallWindow: boolean = false
+	storePageContentHeight: number = 500
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
 	settings: Settings

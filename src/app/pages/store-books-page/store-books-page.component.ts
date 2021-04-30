@@ -1,16 +1,17 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ApiResponse } from 'dav-js'
 import { DataService, Category, GetStoreBookCoverLink } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'store-books-page',
 	templateUrl: './store-books-page.component.html'
 })
 export class StoreBooksPageComponent {
+	@ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>
 	category: Category = { key: "", name: "", language: "" }
 	books: BookListItem[] = []
 	leftScreenBooks: BookListItem[] = []
@@ -34,15 +35,20 @@ export class StoreBooksPageComponent {
 		this.activatedRoute.url.subscribe(async () => {
 			let key = this.activatedRoute.snapshot.paramMap.get('key')
 			await this.UpdateView(key)
+			setTimeout(() => {
+				this.setSize()
+			}, 1)
 		})
 	}
 
-	ngOnInit() {
+	ngAfterViewInit() {
 		this.setSize()
 	}
 
+	@HostListener('window:resize')
 	setSize() {
 		this.width = window.innerWidth
+		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
 	async UpdateView(key: string) {
