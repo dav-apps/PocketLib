@@ -1,5 +1,9 @@
 <!-- Normal layout -->
-<div class="container ms-motion-slideUpIn" *ngIf="!loadingScreenVisible && !dualScreenLayout">
+<div
+	class="container ms-motion-slideUpIn"
+	style="padding-bottom: 56px"
+	*ngIf="!loadingScreenVisible && !dualScreenLayout">
+
 	<div class="mt-3 mb-4">
 		<pocketlib-header
 			[title]="titleSubmitted ? submittedTitle : locale.title"

@@ -1,5 +1,9 @@
 <!-- Normal layout -->
-<div class="container d-flex flex-column ms-motion-slideUpIn" *ngIf="!dualScreenLayout">
+<div
+	class="container d-flex flex-column ms-motion-slideUpIn"
+	style="padding-bottom: 56px"
+	*ngIf="!dualScreenLayout">
+
 	<h2 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h2>
 
 	<div class="mt-2 mx-auto" *ngIf="generalError.length > 0" style="min-width: 200px; max-width: 300px">

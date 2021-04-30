@@ -1,7 +1,8 @@
 <div
-	class="container-fluid p-0 m-0"
+	class="container-fluid m-0"
+	[style.padding]="dataService.smallWindow ? '0px 0px 56px 0px' : '0px'"
 	*ngIf="!dataService.userAuthor && dataService.adminAuthors.length == 0">
-	
+
 	<div
 		id="author-landing-section-1"
 		class="d-flex acrylic light"
@@ -96,7 +97,11 @@
 </pocketlib-author-profile>
 
 <!-- Normal layout for Admin view -->
-<div class="container text-center ms-motion-slideUpIn" *ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout">
+<div
+	class="container text-center ms-motion-slideUpIn"
+	style="padding-bottom: 56px"
+	*ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout">
+
 	<!-- List of authors -->
 	<h1 class="mt-3 mb-4 font-weight-light text-color">{{ locale.yourAuthors }}</h1>
 
