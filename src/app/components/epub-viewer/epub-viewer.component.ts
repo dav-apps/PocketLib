@@ -45,13 +45,13 @@ const doubleTapToleranceTime = 400
 const navigationToleranceTime = 200
 
 @Component({
-	selector: 'pocketlib-epub-content',
-	templateUrl: './epub-content.component.html',
+	selector: 'pocketlib-epub-viewer',
+	templateUrl: './epub-viewer.component.html',
 	styleUrls: [
-		'./epub-content.component.scss'
+		'./epub-viewer.component.scss'
 	]
 })
-export class EpubContentComponent {
+export class EpubViewerComponent {
 	locale = enUS.epubContent
 	book = new EpubReader()
 	currentBook: EpubBook

@@ -24,13 +24,13 @@ const navigationDoubleTapAreaWidth = 50;
 const doubleTapToleranceTime = 400;
 
 @Component({
-	selector: 'pocketlib-pdf-content',
-	templateUrl: './pdf-content.component.html',
+	selector: 'pocketlib-pdf-viewer',
+	templateUrl: './pdf-viewer.component.html',
 	styleUrls: [
-		"./pdf-content.component.scss"
+		"./pdf-viewer.component.scss"
 	]
 })
-export class PdfContentComponent{
+export class PdfViewerComponent{
 	locale = enUS.pdfContent;
 	pdfContent: Uint8Array = null;
 	currentBook: PdfBook;

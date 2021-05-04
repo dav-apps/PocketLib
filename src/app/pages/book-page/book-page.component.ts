@@ -2,8 +2,8 @@ import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
 import { Portal, ComponentPortal } from '@angular/cdk/portal'
-import { EpubContentComponent } from 'src/app/components/epub-content/epub-content.component'
-import { PdfContentComponent } from 'src/app/components/pdf-content/pdf-content.component'
+import { EpubViewerComponent } from 'src/app/components/epub-viewer/epub-viewer.component'
+import { PdfViewerComponent } from 'src/app/components/pdf-viewer/pdf-viewer.component'
 import { GetBook } from 'src/app/models/BookManager'
 
 const epubType = "application/epub+zip"
@@ -41,9 +41,9 @@ export class BookPageComponent {
 
 		// Select the correct rendering component, based on the mime type of the file
 		if (this.dataService.currentBook.file.type == epubType) {
-			this.selectedPortal = new ComponentPortal(EpubContentComponent)
+			this.selectedPortal = new ComponentPortal(EpubViewerComponent)
 		} else if (this.dataService.currentBook.file.type == pdfType) {
-			this.selectedPortal = new ComponentPortal(PdfContentComponent)
+			this.selectedPortal = new ComponentPortal(PdfViewerComponent)
 		}
 	}
 

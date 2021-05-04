@@ -45,8 +45,8 @@ import { RoutingService } from './services/routing-service'
 import { AppComponent } from './app.component'
 import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.component'
 import { EditCollectionNamesComponent } from './components/edit-collection-names/edit-collection-names.component'
-import { EpubContentComponent } from './components/epub-content/epub-content.component'
-import { PdfContentComponent } from './components/pdf-content/pdf-content.component'
+import { EpubViewerComponent } from './components/epub-viewer/epub-viewer.component'
+import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component'
 import { AuthorProfileComponent } from './components/author-profile/author-profile.component'
 import { CollectionViewComponent } from './components/collection-view/collection-view.component'
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component'
@@ -98,8 +98,8 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		AppComponent,
 		ChaptersTreeComponent,
 		EditCollectionNamesComponent,
-		EpubContentComponent,
-		PdfContentComponent,
+		EpubViewerComponent,
+		PdfViewerComponent,
 		AuthorProfileComponent,
 		CollectionViewComponent,
 		HorizontalBookListComponent,
@@ -184,8 +184,8 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
    ],
    bootstrap: [AppComponent],
    entryComponents: [
-      EpubContentComponent,
-      PdfContentComponent
+      EpubViewerComponent,
+      PdfViewerComponent
    ]
 })
 export class AppModule { }
