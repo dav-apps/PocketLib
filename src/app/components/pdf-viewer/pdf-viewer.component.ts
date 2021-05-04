@@ -13,9 +13,9 @@ const touchStart = "touchstart"
 const touchMove = "touchmove"
 const touchEnd = "touchend"
 const click = "click"
-const viewerId = "viewer"
-const viewer2Id = "viewer2"
-const viewer3Id = "viewer3"
+const firstViewerId = "first-viewer"
+const secondViewerId = "second-viewer"
+const thirdViewerId = "third-viewer"
 const defaultViewerTransitionTime = 0.5
 const defaultBottomToolbarTransitionTime = 0.2
 const bottomToolbarMarginBottomOpened = 0
@@ -124,20 +124,20 @@ export class PdfViewerComponent {
 		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta))
 
 		// Bind the touch events
-		document.getElementById(viewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer2Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer3Id).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer2Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer3Id).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer2Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(viewer3Id).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(firstViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(firstViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(secondViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document.getElementById(thirdViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 
 		// Bind the click event
-		document.getElementById(viewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(viewer2Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(viewer3Id).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 	}
 
 	@HostListener('window:resize')
@@ -146,7 +146,7 @@ export class PdfViewerComponent {
 	}
 
 	async setSize() {
-		this.width = window.outerWidth
+		this.width = window.innerWidth
 		this.height = window.innerHeight
 		this.setViewerSize()
 
@@ -211,13 +211,13 @@ export class PdfViewerComponent {
 
 		if (direction == NavigationDirection.Forward) {
 			// Move to the next viewer
-			this.MoveViewersClockwise()
+			this.MoveViewersForward()
 
 			// Update the pages
 			this.UpdatePages(newPage)
 		} else if (direction == NavigationDirection.Back) {
 			// Move to the previous viewer
-			this.MoveViewersCounterClockwise()
+			this.MoveViewersBackward()
 
 			// Update the pages
 			this.UpdatePages(newPage)
@@ -252,7 +252,7 @@ export class PdfViewerComponent {
 		}
 	}
 
-	MoveViewersClockwise() {
+	MoveViewersForward() {
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(-this.width)
 		this.SetLeftOfNextViewer(0)
@@ -277,7 +277,7 @@ export class PdfViewerComponent {
 		}
 	}
 
-	MoveViewersCounterClockwise() {
+	MoveViewersBackward() {
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(0)
 		this.SetLeftOfNextViewer(-this.width)

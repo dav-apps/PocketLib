@@ -11,15 +11,14 @@ import {
 	FindPageBreakPositions,
 	FindPositionById,
 	FindPageForPosition,
-	AdaptLinkTag,
-	TextNodesUnder
+	AdaptLinkTag
 } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 declare var $: any
 
 const secondPageMinWidth = 1050		// Show two pages on the window if the window width is greater than this
-const progressFactor = 100000			// The factor with which the progress is saved
+const progressFactor = 100000			// The factor which is used to save the progress
 const currentViewerZIndex = -2
 const nextPageViewerZIndex = -3
 const previousPageViewerZIndex = -1

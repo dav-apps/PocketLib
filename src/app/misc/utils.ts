@@ -95,14 +95,6 @@ export function AdaptLinkTag(tag: Node, callback: Function) {
 	}
 }
 
-export function TextNodesUnder(el) {
-	var n
-	var a: Text[] = []
-	var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false)
-	while (n = walk.nextNode() as Text) a.push(n)
-	return a
-}
-
 export function BytesToGigabytesText(bytes: number, rounding: number): string {
 	if (bytes == 0) return "0"
 	let gb = Math.round(bytes / 1000000000).toFixed(rounding)

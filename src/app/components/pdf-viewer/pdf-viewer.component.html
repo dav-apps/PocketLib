@@ -1,12 +1,12 @@
-<div id="viewer"
-		class="w-100 h-100 d-flex"
-		style="position: absolute; background-color: white; overflow: hidden"
-		[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'"
-		[style.left.px]="viewerPositionLeft"
-      [style.z-index]="viewerZIndex">
-   
+<div id="first-viewer"
+	class="w-100 h-100 d-flex"
+	style="position: absolute; background-color: white; overflow: hidden"
+	[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + viewerTransitionTime + 's'"
+	[style.left.px]="viewerPositionLeft"
+	[style.z-index]="viewerZIndex">
+
 	<pdf-viewer 
-		id="viewer-left"
+		id="first-viewer-left"
 		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -22,30 +22,30 @@
    </pdf-viewer>
    
    <pdf-viewer
-		id="viewer-right"
+		id="first-viewer-right"
 		class="m-auto"
-      [src]="pdfContent"
-      [show-all]="false"
-      [page]="viewerPage + 1"
-      [stick-to-page]="false"
-      [fit-to-page]="false"
-      [autoresize]="true"
+		[src]="pdfContent"
+		[show-all]="false"
+		[page]="viewerPage + 1"
+		[stick-to-page]="false"
+		[fit-to-page]="false"
+		[autoresize]="true"
 		[original-size]="false"
-      style="display: block;"
+		style="display: block;"
 		[style.width.px]="viewerWidth"
 		[style.display]="(showSecondPage && (viewerPage + 1) <= totalPages) ? '' : 'none'">
    </pdf-viewer>
 </div>
 
-<div id="viewer2"
+<div id="second-viewer"
 		class="w-100 h-100 d-flex"
 		style="position: absolute; background-color: white; overflow: hidden"
 		[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + viewerTransitionTime + 's'"
 		[style.left.px]="viewer2PositionLeft"
 		[style.z-index]="viewer2ZIndex">
-	
+
 	<pdf-viewer 
-		id="viewer-left2"
+		id="second-viewer-left"
 		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -59,7 +59,7 @@
 	</pdf-viewer>
 
 	<pdf-viewer
-		id="viewer-right2"
+		id="second-viewer-right"
 		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -74,7 +74,7 @@
 	</pdf-viewer>
 </div>
 
-<div id="viewer3"
+<div id="third-viewer"
 		class="w-100 h-100 d-flex"
 		style="position: absolute; background-color: white; overflow: hidden"
 		[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + viewerTransitionTime + 's'"
@@ -82,7 +82,7 @@
 		[style.z-index]="viewer3ZIndex">
 	
 	<pdf-viewer 
-		id="viewer-left3"
+		id="third-viewer-left"
 		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -96,7 +96,7 @@
 	</pdf-viewer>
 
 	<pdf-viewer
-		id="viewer-right3"
+		id="third-viewer-right"
 		class="m-auto"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -113,21 +113,23 @@
 
 <!-- Arrow buttons -->
 <button mat-button 
-		class="book-toolbar-button" 
-		style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
-		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-		[style.height.px]="showBottomToolbar ? height : height - 40" 
-		(click)="PrevPage()" 
-		*ngIf="!firstPage && !showBottomToolbar">
+	class="book-toolbar-button" 
+	style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
+	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
+	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	(click)="PrevPage()" 
+	*ngIf="!firstPage && !showBottomToolbar">
+
 	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
 </button>
 <button mat-button 
-		class="book-toolbar-button" 
-		style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
-		[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-		[style.height.px]="showBottomToolbar ? height : height - 40" 
-		(click)="NextPage()" 
-		*ngIf="!showBottomToolbar">
+	class="book-toolbar-button" 
+	style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
+	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
+	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	(click)="NextPage()" 
+	*ngIf="!showBottomToolbar">
+
 	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
 </button>
 
@@ -213,6 +215,7 @@
 		<li class="list-group-item d-flex" 
 			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
 			*ngFor="let page of currentBook.bookmarks">
+			
 			<a href="#" style="color: black;" (click)="NavigateToPage(page)" [ngClass]="currentPage == page ? 'font-weight-bold' : ''">{{ locale.page }} {{ page }}</a>
 		</li>
 	</ul>
@@ -221,20 +224,19 @@
 </fab-panel>
 
 <fab-callout
-		[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"
-		[hidden]="!zoomCalloutVisible"
-		(onDismiss)="zoomCalloutVisible = false">
+	[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"
+	[hidden]="!zoomCalloutVisible"
+	(onDismiss)="zoomCalloutVisible = false">
 	
 	<div class="m-3">
 		<fab-slider
-				[min]="100"
-				[max]="200"
-				[step]="10"
-				[value]="currentBook.zoom * 100"
-            (onChanged)="ZoomChanged($event)"
-				[valueFormat]="FormatZoomValue"
-				[styles]="sliderStyles">
-
+			[min]="100"
+			[max]="200"
+			[step]="10"
+			[value]="currentBook.zoom * 100"
+			(onChanged)="ZoomChanged($event)"
+			[valueFormat]="FormatZoomValue"
+			[styles]="sliderStyles">
 		</fab-slider>
 	</div>
 </fab-callout>
