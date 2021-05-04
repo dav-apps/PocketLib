@@ -6,7 +6,14 @@ import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { EpubBookmark } from 'src/app/models/EpubBookmark'
 import { EpubReader, EpubTocItem } from 'src/app/models/EpubReader'
-import { FindPositionsInHtmlElement, FindPageBreakPositions, AdaptLinkTag } from 'src/app/misc/utils'
+import {
+	FindPositionsInHtmlElement,
+	FindPageBreakPositions,
+	FindPositionById,
+	FindPageForPosition,
+	AdaptLinkTag,
+	TextNodesUnder
+} from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 declare var $: any
@@ -723,7 +730,7 @@ export class EpubContentComponent {
 			let progressPosition = lastPosition * progressPercent
 
 			// Find the page of the position
-			let page = Utils.FindPageForPosition(progressPosition, pageBreakPositions)
+			let page = FindPageForPosition(progressPosition, pageBreakPositions)
 			if (page != -1) {
 				// If it shows two pages and the tag is on the second page, set the current page to the previous page
 				if (this.showSecondPage && page % 2 == 1) page -= 1
@@ -731,11 +738,11 @@ export class EpubContentComponent {
 			}
 		} else if (elementId) {
 			// Find the position of the tag
-			let position = Utils.FindPositionById(viewer.left.iframe.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, elementId)
+			let position = FindPositionById(viewer.left.iframe.contentWindow.document.getElementsByTagName("body")[0] as HTMLBodyElement, elementId)
 
 			if (position != -1) {
 				// Find the page of the position
-				let page = Utils.FindPageForPosition(position, pageBreakPositions)
+				let page = FindPageForPosition(position, pageBreakPositions)
 				if (page != -1) {
 					// If it shows two pages and the tag is on the second page, set the current page to the previous page
 					if (this.showSecondPage && page % 2 == 1) page -= 1
@@ -1537,50 +1544,6 @@ export class EpubContentComponent {
 
 		this.ShowPage(NavigationDirection.None, bookmark.progress)
 		return false
-	}
-}
-
-class Utils {
-	// Go through each element until the element was found, returns -1 if position was not found
-	static FindPositionById(currentElement: Element, id: string): number {
-		if (currentElement.getAttribute("id") == id) {
-			let position = currentElement.getBoundingClientRect()
-			return position.top
-		}
-
-		if (currentElement.children.length > 0) {
-			// Call FindPositionById for each child
-			for (let i = 0; i < currentElement.children.length; i++) {
-				let child = currentElement.children.item(i)
-				let childPosition = this.FindPositionById(child, id)
-
-				if (childPosition != -1) {
-					return childPosition
-				}
-			}
-		}
-
-		return -1
-	}
-
-	static FindPageForPosition(position: number, pagePositions: number[]): number {
-		if (position >= pagePositions[pagePositions.length - 1]) return pagePositions.length - 1
-
-		for (let i = 0; i < pagePositions.length - 1; i++) {
-			if (position >= pagePositions[i] && position < pagePositions[i + 1]) {
-				return i
-			}
-		}
-
-		return -1
-	}
-
-	static TextNodesUnder(el) {
-		var n
-		var a: Text[] = []
-		var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false)
-		while (n = walk.nextNode() as Text) a.push(n)
-		return a
 	}
 }
 

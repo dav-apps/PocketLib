@@ -39,6 +39,40 @@ export function FindPageBreakPositions(positions: number[], pageHeight: number):
 	return pageBreakPositions
 }
 
+// Go through each element until the element was found, returns -1 if position was not found
+export function FindPositionById(currentElement: Element, id: string): number {
+	if (currentElement.getAttribute("id") == id) {
+		let position = currentElement.getBoundingClientRect()
+		return position.top
+	}
+
+	if (currentElement.children.length > 0) {
+		// Call FindPositionById for each child
+		for (let i = 0; i < currentElement.children.length; i++) {
+			let child = currentElement.children.item(i)
+			let childPosition = this.FindPositionById(child, id)
+
+			if (childPosition != -1) {
+				return childPosition
+			}
+		}
+	}
+
+	return -1
+}
+
+export function FindPageForPosition(position: number, pagePositions: number[]): number {
+	if (position >= pagePositions[pagePositions.length - 1]) return pagePositions.length - 1
+
+	for (let i = 0; i < pagePositions.length - 1; i++) {
+		if (position >= pagePositions[i] && position < pagePositions[i + 1]) {
+			return i
+		}
+	}
+
+	return -1
+}
+
 export function AdaptLinkTag(tag: Node, callback: Function) {
 	if (tag.nodeType == 3 || tag.nodeName.toLowerCase() != "a") return
 
@@ -59,6 +93,14 @@ export function AdaptLinkTag(tag: Node, callback: Function) {
 			return false
 		}
 	}
+}
+
+export function TextNodesUnder(el) {
+	var n
+	var a: Text[] = []
+	var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false)
+	while (n = walk.nextNode() as Text) a.push(n)
+	return a
 }
 
 export function BytesToGigabytesText(bytes: number, rounding: number): string {
