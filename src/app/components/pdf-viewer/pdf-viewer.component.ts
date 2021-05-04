@@ -31,7 +31,7 @@ const doubleTapToleranceTime = 400
 	]
 })
 export class PdfViewerComponent {
-	locale = enUS.pdfContent
+	locale = enUS.pdfViewer
 	pdfContent: Uint8Array = null
 	currentBook: PdfBook
 	currentPage: number = 0
@@ -101,7 +101,7 @@ export class PdfViewerComponent {
 		private router: Router,
 		private ngZone: NgZone
 	) {
-		this.locale = this.dataService.GetLocale().pdfContent
+		this.locale = this.dataService.GetLocale().pdfViewer
 	}
 
 	async ngOnInit() {

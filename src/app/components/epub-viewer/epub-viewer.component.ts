@@ -52,7 +52,7 @@ const navigationToleranceTime = 200
 	]
 })
 export class EpubViewerComponent {
-	locale = enUS.epubContent
+	locale = enUS.epubViewer
 	book = new EpubReader()
 	currentBook: EpubBook
 	chapters: BookChapter[] = []
@@ -185,7 +185,7 @@ export class EpubViewerComponent {
 		private router: Router,
 		private ngZone: NgZone
 	) {
-		this.locale = this.dataService.GetLocale().epubContent
+		this.locale = this.dataService.GetLocale().epubViewer
 		this.setSize()
 	}
 

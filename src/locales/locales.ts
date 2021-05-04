@@ -274,13 +274,13 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured. Please try it again later."
 		}
 	},
-   epubContent: {
+   epubViewer: {
       toc: "Table of contents",
       bookmarks: "Bookmarks",
       noBookmarks: "You have no bookmarks",
       untitledBookmark: "Untitled bookmark"
    },
-   pdfContent: {
+   pdfViewer: {
       bookmarks: "Bookmarks",
       noBookmarks: "You have no bookmarks",
 		page: "Page"
@@ -665,13 +665,13 @@ const deDefaults = {
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
 	},
-   epubContent: {
+   epubViewer: {
       toc: "Inhaltsverzeichnis",
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
       untitledBookmark: "Unbenanntes Lesezeichen"
 	},
-	pdfContent: {
+	pdfViewer: {
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
 		page: "Seite"
