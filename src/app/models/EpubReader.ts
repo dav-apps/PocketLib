@@ -1,4 +1,9 @@
-import * as JSZip from 'jszip';
+import * as JSZip from 'jszip'
+import {
+	TextElement,
+	ExtractTextElements,
+	CreateHtmlElementFromTextElement
+} from './TextExtractor'
 
 export class EpubReader{
    title: string;
@@ -136,111 +141,48 @@ export class EpubReader{
 }
 
 export class EpubChapter{
-   private currentPath: string;
+	private currentPath: string
+	private html: HTMLHtmlElement
 
    constructor(
 		public book: EpubReader,
       public id: string,
 		public filePath: string,
-		public htmlContent: string
+		private htmlContent: string
    ){
 		// Get the current path from the file path
-		this.currentPath = GetFileDirectory(this.filePath);
+		this.currentPath = GetFileDirectory(this.filePath)
 
 		// Remove all line breaks from the html content
-		this.htmlContent = this.htmlContent.trim().replace(/\n/g, '').replace(/\t/g, ' ').replace(/\r/g, ' ');
+		this.htmlContent = this.htmlContent.trim().replace(/\n/g, '').replace(/\t/g, ' ').replace(/\r/g, ' ')
    }
-   
-   async GetChapterHtml() : Promise<HTMLHtmlElement>{
-		let parser = new DOMParser();
 
-		let newDocument = parser.parseFromString("<html><head></head><body></body></html>", "text/html");
-		let newHtmlTag = newDocument.getElementsByTagName("html").item(0);
-		let newHead = newDocument.getElementsByTagName("head").item(0);
-		let newBody = newDocument.getElementsByTagName("body").item(0);
+	async GetChapterHtml(): Promise<HTMLHtmlElement>{
+		if (this.html != null) return this.html
+
+		let parser = new DOMParser()
+		let chapterDocument = parser.parseFromString(this.htmlContent, "text/html")
+		let chapterBody = chapterDocument.getElementsByTagName("body")[0]
+
+		await this.LoadBodyHtml(chapterBody)
+
+		// Build the new html
+		let html = document.createElement("html")
+		let head = document.createElement("head")
+		let body = document.createElement("body")
+		html.appendChild(head)
+		html.appendChild(body)
 		
-		let chapterDocument = parser.parseFromString(this.htmlContent, "text/html");
-		let chapterHead = chapterDocument.getElementsByTagName("head")[0];
-		let chapterBody = chapterDocument.getElementsByTagName("body")[0];
+		let textElements: TextElement[] = ExtractTextElements(chapterBody)
 
-		let newHeadHtml = await this.GetHeadHtml(chapterHead);
-		let newBodyHtml = await this.GetBodyHtml(chapterBody);
-
-		newHead.innerHTML = newHeadHtml;
-		newBody.innerHTML = newBodyHtml;
-		return newHtmlTag;
-	}
-
-	private async GetHeadHtml(chapterHead: HTMLHeadElement) : Promise<string>{
-		// Get the link tags of the chapter head
-		let chapterLinkTags = chapterHead.getElementsByTagName("link");
-		let styleElement = document.createElement("style");
-		let css = "";
-	
-		for(let i = 0; i < chapterLinkTags.length; i++){
-			css += await this.GetStyleTagContent(chapterLinkTags[i]);
+		for (let textElement of textElements) {
+			body.appendChild(CreateHtmlElementFromTextElement(textElement))
 		}
-	
-		// Get the style tags and add them without changes to the css
-		let chapterStyleTags = chapterHead.getElementsByTagName("style");
-		for(let i = 0; i < chapterStyleTags.length; i++){
-			css += chapterStyleTags[i].innerHTML;
-      }
-      
-		styleElement.innerHTML = await this.ReplaceFontFileUrlsWithContent(css);
-		return styleElement.outerHTML;
-   }
-	
-	private async GetStyleTagContent(linkTag: HTMLLinkElement) : Promise<string>{
-		let type = linkTag.getAttribute("type");
-	
-		if(type == "text/css"){
-			// Get the CSS file
-			let href = linkTag.getAttribute("href");
-			
-			// Find the correct path
-			let stylePath = MergePaths(this.currentPath, href);
-			
-			// Get the content of the file
-			let entry = this.book.entries[stylePath];
-			return entry ? await entry.async("text") : "";
-		}else{
-			return "";
-		}
-	}
 
-	private async ReplaceFontFileUrlsWithContent(css: string) : Promise<string>{
-		// Replace the font file references with the content of them
-		let completeFontUrl = GetFirstUrlParameterFromCssString(css);
-		let fontUrl = completeFontUrl ? completeFontUrl.replace("\"", "").replace("\"", "").replace("'", "").replace("'", "") : null;
-
-		while(completeFontUrl != null){
-			// Get the correct url of the font file
-         let fontFilePath = MergePaths(this.currentPath, fontUrl);
-         let newUrl = "";
-
-			let entry = this.book.entries[fontFilePath];
-			if(entry){
-				// Get the content of the file
-				let fontFileContent = await entry.async("base64");
-
-				// Get the mime type from the manifest items
-            let index = this.book.manifestItems.findIndex(item => item.href == fontFilePath)
-            let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "application/x-font-ttf";
-
-            newUrl = `data:${mimeType};base64,${fontFileContent}`;
-			}
-
-			// Replace the url with the raw data
-			css = css.replace(completeFontUrl, newUrl);
-
-			// Get the next url
-			completeFontUrl = GetFirstUrlParameterFromCssString(css);
-		}
-		return css;
+		return html
 	}
 	
-	private async GetBodyHtml(chapterBody: HTMLBodyElement) : Promise<string>{
+	private async LoadBodyHtml(chapterBody: HTMLBodyElement) {
 		// Inject the images directly into the html
 		// Get the img tags with src attribute
 		let imgTags = chapterBody.getElementsByTagName("img")
@@ -312,8 +254,6 @@ export class EpubChapter{
 			// Update the href with the absolute path
 			if(href) aTag.setAttribute("href", MergePaths(this.currentPath, href));
 		}
-	
-		return chapterBody.outerHTML;
 	}
 
 	private async GetRawImageSource(src: string) : Promise<string>{
