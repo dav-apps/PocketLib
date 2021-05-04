@@ -35,9 +35,6 @@ export class PdfViewerComponent {
 	pdfContent: Uint8Array = null
 	currentBook: PdfBook
 	currentPage: number = 0
-	viewerPage: number
-	viewer2Page: number
-	viewer3Page: number
 	totalPages: number = 0
 	isLoaded: boolean = false
 	initialized: boolean = false
@@ -51,13 +48,28 @@ export class PdfViewerComponent {
 	width: number = 500			// The width of the entire window
 	height: number = 500			// The height of the entire window
 
-	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
-	viewerPositionLeft: number = 0		// How much the viewer is moved to the right
-	viewer2PositionLeft: number = 0
-	viewer3PositionLeft: number = 0
-	viewerZIndex: number = 0				// The z-index of the viewer; -1, -2 or -3
-	viewer2ZIndex: number = 0
-	viewer3ZIndex: number = 0
+	firstViewer: Viewer = {
+		page: 1,													// The currently displayed page
+		zIndex: -1,												// The z-index of the viewer; -1, -2 or -3
+		positionLeft: 0,										// How much the viewer is moved to the right
+		transitionTime: defaultViewerTransitionTime	// The time for the transition animation
+	}
+
+	secondViewer: Viewer = {
+		page: 1,
+		zIndex: -1,
+		positionLeft: 0,
+		transitionTime: defaultViewerTransitionTime
+	}
+
+	thirdViewer: Viewer = {
+		page: 1,
+		zIndex: -1,
+		positionLeft: 0,
+		transitionTime: defaultViewerTransitionTime
+	}
+
+	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
 	viewerTransitionTime: number = defaultViewerTransitionTime
 
 	//#region Variables for touch events
@@ -592,13 +604,13 @@ export class PdfViewerComponent {
 	SetPageOfCurrentViewer(page: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewerPage = page
+				this.firstViewer.page = page
 				break
 			case CurrentViewer.Second:
-				this.viewer2Page = page
+				this.secondViewer.page = page
 				break
 			case CurrentViewer.Third:
-				this.viewer3Page = page
+				this.thirdViewer.page = page
 				break
 		}
 	}
@@ -606,13 +618,13 @@ export class PdfViewerComponent {
 	SetPageOfNextViewer(page: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer2Page = page
+				this.secondViewer.page = page
 				break
 			case CurrentViewer.Second:
-				this.viewer3Page = page
+				this.thirdViewer.page = page
 				break
 			case CurrentViewer.Third:
-				this.viewerPage = page
+				this.firstViewer.page = page
 				break
 		}
 	}
@@ -620,13 +632,13 @@ export class PdfViewerComponent {
 	SetPageOfPreviousViewer(page: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer3Page = page
+				this.thirdViewer.page = page
 				break
 			case CurrentViewer.Second:
-				this.viewerPage = page
+				this.firstViewer.page = page
 				break
 			case CurrentViewer.Third:
-				this.viewer2Page = page
+				this.secondViewer.page = page
 				break
 		}
 	}
@@ -634,13 +646,13 @@ export class PdfViewerComponent {
 	SetZIndexOfCurrentViewer(zIndex: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewerZIndex = zIndex
+				this.firstViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Second:
-				this.viewer2ZIndex = zIndex
+				this.secondViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Third:
-				this.viewer3ZIndex = zIndex
+				this.thirdViewer.zIndex = zIndex
 				break
 		}
 	}
@@ -648,13 +660,13 @@ export class PdfViewerComponent {
 	SetZIndexOfNextViewer(zIndex: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer2ZIndex = zIndex
+				this.secondViewer.zIndex= zIndex
 				break
 			case CurrentViewer.Second:
-				this.viewer3ZIndex = zIndex
+				this.thirdViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Third:
-				this.viewerZIndex = zIndex
+				this.firstViewer.zIndex = zIndex
 				break
 		}
 	}
@@ -662,13 +674,13 @@ export class PdfViewerComponent {
 	SetZIndexOfPreviousViewer(zIndex: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer3ZIndex = zIndex
+				this.thirdViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Second:
-				this.viewerZIndex = zIndex
+				this.firstViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Third:
-				this.viewer2ZIndex = zIndex
+				this.secondViewer.zIndex = zIndex
 				break
 		}
 	}
@@ -676,13 +688,13 @@ export class PdfViewerComponent {
 	SetLeftOfCurrentViewer(left: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewerPositionLeft = left
+				this.firstViewer.positionLeft = left
 				break
 			case CurrentViewer.Second:
-				this.viewer2PositionLeft = left
+				this.secondViewer.positionLeft = left
 				break
 			case CurrentViewer.Third:
-				this.viewer3PositionLeft = left
+				this.thirdViewer.positionLeft = left
 				break
 		}
 	}
@@ -690,13 +702,13 @@ export class PdfViewerComponent {
 	SetLeftOfNextViewer(left: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer2PositionLeft = left
+				this.secondViewer.positionLeft = left
 				break
 			case CurrentViewer.Second:
-				this.viewer3PositionLeft = left
+				this.thirdViewer.positionLeft = left
 				break
 			case CurrentViewer.Third:
-				this.viewerPositionLeft = left
+				this.firstViewer.positionLeft = left
 				break
 		}
 	}
@@ -704,16 +716,23 @@ export class PdfViewerComponent {
 	SetLeftOfPreviousViewer(left: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.viewer3PositionLeft = left
+				this.thirdViewer.positionLeft = left
 				break
 			case CurrentViewer.Second:
-				this.viewerPositionLeft = left
+				this.firstViewer.positionLeft = left
 				break
 			case CurrentViewer.Third:
-				this.viewer2PositionLeft = left
+				this.secondViewer.positionLeft = left
 				break
 		}
 	}
+}
+
+interface Viewer {
+	page: number
+	positionLeft: number
+	zIndex: number,
+	transitionTime: number
 }
 
 enum CurrentViewer {

@@ -126,7 +126,7 @@ export class EpubViewerComponent {
 	lastPage: boolean = false		// If true, hides the next button
 	showSecondPage: boolean = false	// If true, the right viewers are visible
 	dualScreenLayout: boolean = false	// If true, the app is displayed on a dual-screen like Surface Duo with a vertical fold
-	currentViewer: CurrentViewer = CurrentViewer.First		// Shows, which viewer is currently visible
+	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
 	runNextPageAfterRender: boolean = false	// If true, NextPage will be called another time
 	runPrevPageAfterRender: boolean = false	// If true, PrevPage will be called another time
@@ -1713,7 +1713,7 @@ export class BookChapter {
 	}
 }
 
-export interface Viewer {
+interface Viewer {
 	left: ViewerSide
 	right: ViewerSide
 	positionLeft: number
@@ -1721,32 +1721,32 @@ export interface Viewer {
 	transitionTime: number
 }
 
-export interface ViewerSide {
+interface ViewerSide {
 	iframe: HTMLIFrameElement
 	chapter: number
 	width: number
 	height: number
 }
 
-export enum CurrentViewer {
+enum CurrentViewer {
 	First = 1,
 	Second = 2,
 	Third = 3
 }
 
-export enum ViewerPosition {
+enum ViewerPosition {
 	Current,
 	Next,
 	Previous
 }
 
-export enum SwipeDirection {
+enum SwipeDirection {
 	None,
 	Horizontal,
 	Vertical
 }
 
-export enum NavigationDirection {
+enum NavigationDirection {
 	Forward,
 	Back,
 	None
