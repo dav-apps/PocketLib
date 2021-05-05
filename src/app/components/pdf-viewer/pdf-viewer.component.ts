@@ -90,7 +90,7 @@ export class PdfViewerComponent {
 	//#endregion
 
 	//#region Variables for progress bar
-	totalProgress: number = 0				// The current progress in percent
+	totalProgress: number = 0				// The current progress in percent between 0 and 1
 	//#endregion
 
 	//#region Variables for Booksmarks panel
@@ -252,8 +252,8 @@ export class PdfViewerComponent {
 		await this.dataService.settings.SetBook(this.currentBook.uuid, null, this.currentPage)
 
 		// Save the new total progress
-		this.totalProgress = this.currentBook.page / this.totalPages * 100
-		await this.currentBook.SetTotalProgress(Math.ceil(this.totalProgress * progressFactor))
+		this.totalProgress = this.currentBook.page / this.totalPages
+		await this.currentBook.SetTotalProgress(Math.ceil(this.totalProgress * 100 * progressFactor))
 
 		// Set currentPageBookmarked
 		if (this.showSecondPage) {
