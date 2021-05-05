@@ -128,12 +128,7 @@ export class EpubViewerComponent {
 	dualScreenLayout: boolean = false	// If true, the app is displayed on a dual-screen like Surface Duo with a vertical fold
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
-	runNextPageAfterRender: boolean = false	// If true, NextPage will be called another time
-	runPrevPageAfterRender: boolean = false	// If true, PrevPage will be called another time
-	navigationHistory: { chapter: number, page: number }[] = []		// The history of visited pages, is used when clicking a link
-	nextPageTimerRunning: boolean = false		// If this is true, the timer for NextPage is running, which means that in this timeframe a second call of NextPage is disabled
-	prevPageTimerRunning: boolean = false		// If this is true, the timer for PrevPage is running, which means that in this timeframe a second call of PrevPage is disabled
-	pageRenderingPromiseHolder = new PromiseHolder()	// PromiseHolder for rendering the pages, is resolved after the rendering of pages is finished
+	navigationHistory: { chapter: number, page: number }[] = []		// The history of visited pages; is used when clicking a link
 
 	//#region Variables for touch events
 	swipeDirection: SwipeDirection = SwipeDirection.None	// Whether the user swipes vertically or horizontally
@@ -269,7 +264,6 @@ export class EpubViewerComponent {
 
 	async onKeyDown(keyCode: number) {
 		if (this.showChaptersPanel) return
-		await this.pageRenderingPromiseHolder.AwaitResult()
 
 		switch (keyCode) {
 			case 8:		// Back key
@@ -286,7 +280,6 @@ export class EpubViewerComponent {
 
 	async onMouseWheel(wheelDelta: number) {
 		if (this.showChaptersPanel) return
-		await this.pageRenderingPromiseHolder.AwaitResult()
 
 		if (wheelDelta > 0) {
 			// Wheel up
@@ -325,17 +318,7 @@ export class EpubViewerComponent {
 	}
 
 	async PrevPage() {
-		if (this.showPageRunning) {
-			this.runPrevPageAfterRender = !this.prevPageTimerRunning
-			return
-		}
-
-		// Start the timer
-		this.prevPageTimerRunning = true
-		setTimeout(() => {
-			this.prevPageTimerRunning = false
-		}, navigationToleranceTime)
-
+		if (this.showPageRunning) return
 		this.showPageRunning = true
 
 		if (
@@ -358,28 +341,10 @@ export class EpubViewerComponent {
 		}
 
 		await this.ShowPage(NavigationDirection.Back)
-
-		if (this.runNextPageAfterRender) {
-			this.runNextPageAfterRender = false
-			this.NextPage()
-		} else if (this.runPrevPageAfterRender) {
-			this.runPrevPageAfterRender = false
-			this.PrevPage()
-		}
 	}
 
 	async NextPage() {
-		if (this.showPageRunning) {
-			this.runNextPageAfterRender = !this.nextPageTimerRunning
-			return
-		}
-
-		// Start the timer
-		this.nextPageTimerRunning = true
-		setTimeout(() => {
-			this.nextPageTimerRunning = false
-		}, navigationToleranceTime)
-
+		if (this.showPageRunning) return
 		this.showPageRunning = true
 
 		// Check if this is the last chapter and the last page
@@ -415,14 +380,6 @@ export class EpubViewerComponent {
 		}
 
 		await this.ShowPage(NavigationDirection.Forward)
-
-		if (this.runNextPageAfterRender) {
-			this.runNextPageAfterRender = false
-			this.NextPage()
-		} else if (this.runPrevPageAfterRender) {
-			this.runPrevPageAfterRender = false
-			this.PrevPage()
-		}
 	}
 
 	/**
@@ -467,8 +424,6 @@ export class EpubViewerComponent {
 			// Render the current page on viewer 2
 			// Move to the next page without animation
 			// Render the next page on viewer 3 and the previous page on viewer 1
-
-		this.pageRenderingPromiseHolder.Setup()
 
 		if (direction == NavigationDirection.Forward) {
 			// Move the viewer positions
@@ -560,7 +515,6 @@ export class EpubViewerComponent {
 		}
 
 		this.showPageRunning = false
-		this.pageRenderingPromiseHolder.resolve()
 	}
 
 	async RenderNextPage() {
