@@ -1,9 +1,9 @@
 <div id="first-viewer"
 	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden"
-	[style.transition]="(goingBack && currentViewer == 2) ? '' : 'left ' + firstViewer.transitionTime + 's'"
-	[style.left.px]="firstViewer.positionLeft"
-	[style.z-index]="firstViewer.zIndex">
+	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+	[style.z-index]="firstViewer.zIndex"
+	[style.transform]="'translateX(' + firstViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="firstViewer.transitionTime + 'ms'">
 
 	<pdf-viewer
 		id="first-viewer-left"
@@ -39,10 +39,10 @@
 
 <div id="second-viewer"
 	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden"
-	[style.transition]="(goingBack && currentViewer == 3) ? '' : 'left ' + secondViewer.transitionTime + 's'"
-	[style.left.px]="secondViewer.positionLeft"
-	[style.z-index]="secondViewer.zIndex">
+	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+	[style.z-index]="secondViewer.zIndex"
+	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="secondViewer.transitionTime + 'ms'">
 
 	<pdf-viewer
 		id="second-viewer-left"
@@ -76,11 +76,11 @@
 
 <div id="third-viewer"
 	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden"
-	[style.transition]="(goingBack && currentViewer == 1) ? '' : 'left ' + thirdViewer.transitionTime + 's'"
-	[style.left.px]="thirdViewer.positionLeft"
-	[style.z-index]="thirdViewer.zIndex">
-	
+	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+	[style.z-index]="thirdViewer.zIndex"
+	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
+	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'">
+
 	<pdf-viewer
 		id="third-viewer-left"
 		class="m-auto"
@@ -142,7 +142,7 @@
 
 		<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
    </button>
-   
+
 	<div style="float: right">
 		<button mat-button class="book-toolbar-button" id="zoomButtonTopToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
          <i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
@@ -229,7 +229,7 @@
 	[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"
 	[hidden]="!zoomCalloutVisible"
 	(onDismiss)="zoomCalloutVisible = false">
-	
+
 	<div class="m-3">
 		<fab-slider
 			[min]="100"

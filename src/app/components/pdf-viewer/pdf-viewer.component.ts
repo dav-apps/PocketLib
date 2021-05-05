@@ -16,7 +16,7 @@ const click = "click"
 const firstViewerId = "first-viewer"
 const secondViewerId = "second-viewer"
 const thirdViewerId = "third-viewer"
-const defaultViewerTransitionTime = 0.5
+const defaultViewerTransitionTime = 500
 const defaultBottomToolbarTransitionTime = 0.2
 const bottomToolbarMarginBottomOpened = 0
 const bottomToolbarMarginBottomClosed = -40
@@ -38,7 +38,6 @@ export class PdfViewerComponent {
 	totalPages: number = 0
 	isLoaded: boolean = false
 	initialized: boolean = false
-	goingBack: boolean = false
 	showSecondPage: boolean = false
 	firstPage: boolean = false		// If true, hides the previous button
 	lastPage: boolean = false		// If true, hides the next button
@@ -223,13 +222,13 @@ export class PdfViewerComponent {
 
 		if (direction == NavigationDirection.Forward) {
 			// Move to the next viewer
-			this.MoveViewersForward()
+			await this.MoveViewersForward()
 
 			// Update the pages
 			this.UpdatePages(newPage)
 		} else if (direction == NavigationDirection.Back) {
 			// Move to the previous viewer
-			this.MoveViewersBackward()
+			await this.MoveViewersBackward()
 
 			// Update the pages
 			this.UpdatePages(newPage)
@@ -264,7 +263,12 @@ export class PdfViewerComponent {
 		}
 	}
 
-	MoveViewersForward() {
+	async MoveViewersForward() {
+		// Set the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(0)
+		this.SetTransitionTimeOfPreviousViewer(0)
+
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(-this.width)
 		this.SetLeftOfNextViewer(0)
@@ -287,9 +291,21 @@ export class PdfViewerComponent {
 				this.currentViewer = CurrentViewer.First
 				break
 		}
+
+		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
+
+		// Reset the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
 	}
 
-	MoveViewersBackward() {
+	async MoveViewersBackward() {
+		// Set the transition times
+		this.SetTransitionTimeOfCurrentViewer(0)
+		this.SetTransitionTimeOfNextViewer(0)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
+
 		// Set the position of the viewers
 		this.SetLeftOfCurrentViewer(0)
 		this.SetLeftOfNextViewer(-this.width)
@@ -312,6 +328,13 @@ export class PdfViewerComponent {
 				this.currentViewer = CurrentViewer.Second
 				break
 		}
+
+		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
+
+		// Reset the transition times
+		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfNextViewer(defaultViewerTransitionTime)
+		this.SetTransitionTimeOfPreviousViewer(defaultViewerTransitionTime)
 	}
 
 	UpdatePages(newPage: number) {
@@ -338,7 +361,6 @@ export class PdfViewerComponent {
 	async PrevPage() {
 		if (this.firstPage) return
 
-		this.goingBack = true
 		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1))
 	}
 
@@ -353,7 +375,6 @@ export class PdfViewerComponent {
 			return
 		}
 
-		this.goingBack = false
 		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1))
 	}
 
@@ -643,6 +664,48 @@ export class PdfViewerComponent {
 		}
 	}
 
+	SetLeftOfCurrentViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.firstViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.secondViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.thirdViewer.positionLeft = left
+				break
+		}
+	}
+
+	SetLeftOfNextViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.secondViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.thirdViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.firstViewer.positionLeft = left
+				break
+		}
+	}
+
+	SetLeftOfPreviousViewer(left: number) {
+		switch (this.currentViewer) {
+			case CurrentViewer.First:
+				this.thirdViewer.positionLeft = left
+				break
+			case CurrentViewer.Second:
+				this.firstViewer.positionLeft = left
+				break
+			case CurrentViewer.Third:
+				this.secondViewer.positionLeft = left
+				break
+		}
+	}
+
 	SetZIndexOfCurrentViewer(zIndex: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
@@ -685,44 +748,44 @@ export class PdfViewerComponent {
 		}
 	}
 
-	SetLeftOfCurrentViewer(left: number) {
+	SetTransitionTimeOfCurrentViewer(transitionTime: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.firstViewer.positionLeft = left
+				this.firstViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Second:
-				this.secondViewer.positionLeft = left
+				this.secondViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Third:
-				this.thirdViewer.positionLeft = left
+				this.thirdViewer.transitionTime = transitionTime
 				break
 		}
 	}
 
-	SetLeftOfNextViewer(left: number) {
+	SetTransitionTimeOfNextViewer(transitionTime: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.secondViewer.positionLeft = left
+				this.secondViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Second:
-				this.thirdViewer.positionLeft = left
+				this.thirdViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Third:
-				this.firstViewer.positionLeft = left
+				this.firstViewer.transitionTime = transitionTime
 				break
 		}
 	}
 
-	SetLeftOfPreviousViewer(left: number) {
+	SetTransitionTimeOfPreviousViewer(transitionTime: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.thirdViewer.positionLeft = left
+				this.thirdViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Second:
-				this.firstViewer.positionLeft = left
+				this.firstViewer.transitionTime = transitionTime
 				break
 			case CurrentViewer.Third:
-				this.secondViewer.positionLeft = left
+				this.secondViewer.transitionTime = transitionTime
 				break
 		}
 	}
