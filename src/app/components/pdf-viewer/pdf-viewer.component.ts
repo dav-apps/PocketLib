@@ -69,6 +69,7 @@ export class PdfViewerComponent {
 	}
 
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
+	showPageRunning: boolean = false								// If true, ShowPage is currently executing
 	viewerTransitionTime: number = defaultViewerTransitionTime
 
 	//#region Variables for touch events
@@ -152,10 +153,6 @@ export class PdfViewerComponent {
 	}
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	async setSize() {
 		this.width = window.innerWidth
 		this.height = window.innerHeight
@@ -181,6 +178,33 @@ export class PdfViewerComponent {
 		} else {
 			this.viewerWidth = newWidth - 10
 		}
+	}
+
+	async PrevPage() {
+		if (
+			this.firstPage
+			|| this.showPageRunning
+		) return
+
+		this.showPageRunning = true
+		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1))
+	}
+
+	async NextPage() {
+		if (this.showPageRunning) return
+
+		if (this.lastPage) {
+			// Reset the progress
+			await this.currentBook.SetPage(1)
+			await this.dataService.settings.SetBook("", 0, 0)
+
+			// Go back to the library page
+			this.router.navigate(["/"])
+			return
+		}
+
+		this.showPageRunning = true
+		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1))
 	}
 
 	/**
@@ -247,6 +271,15 @@ export class PdfViewerComponent {
 			this.SetZIndexOfPreviousViewer(previousPageViewerZIndex)
 		}
 
+		// Set currentPageBookmarked
+		if (this.showSecondPage) {
+			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
+		} else {
+			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage)
+		}
+
+		this.showPageRunning = false
+
 		// Save the new progress
 		await this.currentBook.SetPage(this.currentPage)
 		await this.dataService.settings.SetBook(this.currentBook.uuid, null, this.currentPage)
@@ -254,13 +287,6 @@ export class PdfViewerComponent {
 		// Save the new total progress
 		this.totalProgress = this.currentBook.page / this.totalPages
 		await this.currentBook.SetTotalProgress(Math.ceil(this.totalProgress * 100 * progressFactor))
-
-		// Set currentPageBookmarked
-		if (this.showSecondPage) {
-			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
-		} else {
-			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage)
-		}
 	}
 
 	async MoveViewersForward() {
@@ -356,26 +382,6 @@ export class PdfViewerComponent {
 		}
 
 		this.SetPageOfPreviousViewer(this.currentPage - pageDiff)
-	}
-
-	async PrevPage() {
-		if (this.firstPage) return
-
-		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1))
-	}
-
-	async NextPage() {
-		if (this.lastPage) {
-			// Reset the progress
-			await this.currentBook.SetPage(1)
-			await this.dataService.settings.SetBook("", 0, 0)
-
-			// Go back to the library page
-			this.router.navigate(["/"])
-			return
-		}
-
-		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1))
 	}
 
 	GoHome() {
@@ -572,6 +578,7 @@ export class PdfViewerComponent {
 	}
 
 	async AddOrRemoveBookmark() {
+		if (this.showPageRunning) return
 		let removeBookmark: boolean = false
 
 		if (this.showSecondPage) {

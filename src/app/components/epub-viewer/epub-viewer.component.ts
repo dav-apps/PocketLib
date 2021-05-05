@@ -41,7 +41,6 @@ const defaultViewerTransitionTime = 500
 const defaultBottomToolbarTransitionTime = 200
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
-const navigationToleranceTime = 200
 
 @Component({
 	selector: 'pocketlib-epub-viewer',
@@ -226,6 +225,7 @@ export class EpubViewerComponent {
 		this.currentViewer = CurrentViewer.First
 
 		this.initialized = true
+		this.showPageRunning = true
 		await this.ShowPage(NavigationDirection.None, progress)
 
 		this.chapterTree.Init(this.book.toc)
@@ -257,11 +257,6 @@ export class EpubViewerComponent {
 		$(document).unbind()
 	}
 
-	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	async onKeyDown(keyCode: number) {
 		if (this.showChaptersPanel) return
 
@@ -290,6 +285,7 @@ export class EpubViewerComponent {
 		}
 	}
 
+	@HostListener('window:resize')
 	async setSize() {
 		this.width = window.innerWidth
 		this.height = window.innerHeight
