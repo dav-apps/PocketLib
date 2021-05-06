@@ -7,11 +7,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.H5:
 		case TextElementType.H6:
 			let headerElement = document.createElement(textElement.Type) as HTMLHeadingElement
+			if (textElement.Id) headerElement.id = textElement.Id
 			headerElement.setAttribute("style", "text-align: center; margin-top: 2em; margin-bottom: 2em; font-weight: 300")
-			headerElement.innerText = textElement.Content.trim()
+			if (textElement.Content) headerElement.innerText = textElement.Content.trim()
 			return headerElement
 		case TextElementType.P:
 			let pElement = document.createElement("p") as HTMLParagraphElement
+			if (textElement.Id) pElement.id = textElement.Id
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -22,23 +24,28 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			return pElement
 		case TextElementType.SPAN:
 			let spanElement = document.createElement("span") as HTMLSpanElement
-			spanElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			if (textElement.Id) spanElement.id = textElement.Id
+			if (textElement.Content) spanElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
 			return spanElement
 		case TextElementType.EM:
 			let emElement = document.createElement("em") as HTMLElement
-			emElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			if (textElement.Id) emElement.id = textElement.Id
+			if (textElement.Content) emElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
 			return emElement
 		case TextElementType.STRONG:
 			let strongElement = document.createElement("strong") as HTMLElement
-			strongElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			if (textElement.Id) strongElement.id = textElement.Id
+			if (textElement.Content) strongElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
 			return strongElement
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
-			aElement.innerText = textElement.Content
+			if (textElement.Id) aElement.id = textElement.Id
+			if (textElement.Content) aElement.innerText = textElement.Content
 			if (textElement.Href != null) aElement.setAttribute("href", textElement.Href)
 			return aElement
 		case TextElementType.IMG:
 			let imgElement = document.createElement("img") as HTMLImageElement
+			if (textElement.Id) imgElement.id = textElement.Id
 			imgElement.setAttribute("src", textElement.Source)
 			if (textElement.Alt != null) imgElement.setAttribute("alt", textElement.Alt)
 			imgElement.setAttribute("style", "text-align: center")
@@ -50,8 +57,10 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			return imgContainerElement
 		case TextElementType.OL:
 			let olElement = document.createElement("ol") as HTMLUListElement
+			if (textElement.Id) olElement.id = textElement.Id
 		case TextElementType.UL:
 			let ulElement = document.createElement("ul") as HTMLOListElement
+			if (textElement.Id) ulElement.id = textElement.Id
 			let listElement = textElement.Type == TextElementType.OL ? olElement : ulElement
 
 			if (textElement.ListItems) {
@@ -65,10 +74,12 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			return listElement
 		case TextElementType.HR:
 			let hrElement = document.createElement("hr") as HTMLHRElement
+			if (textElement.Id) hrElement.id = textElement.Id
 			hrElement.setAttribute("style", "margin: 4em 0")
 			return hrElement
 		case TextElementType.BR:
 			let brElement = document.createElement("br") as HTMLBRElement
+			if (textElement.Id) brElement.id = textElement.Id
 			return brElement
 	}
 }
@@ -96,6 +107,7 @@ export function ExtractTextElements(node: Node): TextElement[] {
 				textElements.push(...ExtractHeaderTextElements(node as HTMLHeadingElement))
 				break
 			case "P":
+				let pElement = node as HTMLParagraphElement
 				let pTextElements: TextElement[] = []
 
 				for (let i = 0; i < node.childNodes.length; i++) {
@@ -118,24 +130,27 @@ export function ExtractTextElements(node: Node): TextElement[] {
 				let mergedTextElements: TextElement[] = []
 
 				while (selectedTextElements.length > 0) {
+					let currentElement = selectedTextElements[0]
+
 					if (
-						selectedTextElements[0].Type == TextElementType.IMG
-						|| selectedTextElements[0].Type == TextElementType.BR
-						|| selectedTextElements[0].Type == TextElementType.EM
-						|| selectedTextElements[0].Type == TextElementType.STRONG
+						currentElement.Type == TextElementType.IMG
+						|| currentElement.Type == TextElementType.BR
+						|| currentElement.Type == TextElementType.EM
+						|| currentElement.Type == TextElementType.STRONG
 					) {
-						mergedTextElements.push(selectedTextElements[0])
+						mergedTextElements.push(currentElement)
 					} else if (
 						mergedTextElements.length > 0
 						&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.P
 					) {
 						// Add the text of the current selected element to the last element of mergedTextElements
-						mergedTextElements[mergedTextElements.length - 1].Content += " " + selectedTextElements[0].Content
+						mergedTextElements[mergedTextElements.length - 1].Content += " " + currentElement.Content
 					} else {
 						// Add new text element
 						mergedTextElements.push({
 							Type: TextElementType.SPAN,
-							Content: selectedTextElements[0].Content
+							Id: currentElement.Id,
+							Content: currentElement.Content
 						})
 					}
 
@@ -144,35 +159,42 @@ export function ExtractTextElements(node: Node): TextElement[] {
 
 				textElements.push({
 					Type: TextElementType.P,
+					Id: pElement.id,
 					TextElements: mergedTextElements
 				})
 				break
 			case "SPAN":
-				let spanTextContent = node.textContent.trim()
+				let spanElement = node as HTMLSpanElement
+				let spanTextContent = spanElement.textContent.trim()
 
 				if (spanTextContent.length > 0) {
 					textElements.push({
 						Type: TextElementType.SPAN,
+						Id: spanElement.id,
 						Content: spanTextContent
 					})
 				}
 				break
 			case "EM":
-				let emTextContent = node.textContent.trim()
+				let emElement = node as HTMLElement
+				let emTextContent = emElement.textContent.trim()
 
 				if (emTextContent.length > 0) {
 					textElements.push({
 						Type: TextElementType.EM,
+						Id: emElement.id,
 						Content: emTextContent
 					})
 				}
 				break
 			case "STRONG":
-				let strongTextContent = node.textContent.trim()
+				let strongElement = node as HTMLElement
+				let strongTextContent = strongElement.textContent.trim()
 
 				if (strongTextContent.length > 0) {
 					textElements.push({
 						Type: TextElementType.STRONG,
+						Id: strongElement.id,
 						Content: strongTextContent
 					})
 				}
@@ -180,17 +202,36 @@ export function ExtractTextElements(node: Node): TextElement[] {
 			case "A":
 				let aElement = node as HTMLAnchorElement
 
-				textElements.push({
-					Type: TextElementType.A,
-					Content: aElement.textContent,
-					Href: aElement.getAttribute("href")
-				})
+				// Check if the element contains text nodes
+				let aElementText = ""
+				for (let i = 0; i < aElement.childNodes.length; i++) {
+					if (aElement.childNodes.item(i).nodeType == Node.TEXT_NODE) {
+						aElementText += aElement.childNodes.item(i).textContent.trim()
+					}
+				}
+
+				if (aElementText.length == 0) {
+					// Go through and add the child elements
+					for (let i = 0; i < node.childNodes.length; i++) {
+						let childNode = node.childNodes.item(i)
+						textElements.push(...ExtractTextElements(childNode))
+					}
+				} else {
+					// Add the element as an a tag
+					textElements.push({
+						Type: TextElementType.A,
+						Id: aElement.id,
+						Content: aElement.textContent,
+						Href: aElement.getAttribute("href")
+					})
+				}
 				break
 			case "IMG":
 				let imgElement = node as HTMLImageElement
 
 				textElements.push({
 					Type: TextElementType.IMG,
+					Id: imgElement.id,
 					Source: imgElement.getAttribute("src"),
 					Alt: imgElement.getAttribute("alt")
 				})
@@ -208,6 +249,7 @@ export function ExtractTextElements(node: Node): TextElement[] {
 
 				textElements.push({
 					Type: TextElementType.OL,
+					Id: olElement.id,
 					ListItems: olListItems
 				})
 				break
@@ -224,22 +266,34 @@ export function ExtractTextElements(node: Node): TextElement[] {
 
 				textElements.push({
 					Type: TextElementType.UL,
+					Id: ulElement.id,
 					ListItems: ulListItems
 				})
 				break
 			case "HR":
 				textElements.push({
-					Type: TextElementType.HR
+					Type: TextElementType.HR,
+					Id: (node as HTMLHRElement).id
 				})
 				break
 			case "BR":
 				textElements.push({
-					Type: TextElementType.BR
+					Type: TextElementType.BR,
+					Id: (node as HTMLBRElement).id
 				})
 				break
 			default:
-				for (let i = 0; i < node.childNodes.length; i++) {
-					let childNode = node.childNodes.item(i)
+				let element = node as HTMLElement
+				if (element.id) {
+					// Add empty span element with the id
+					textElements.push({
+						Type: TextElementType.SPAN,
+						Id: element.id
+					})
+				}
+
+				for (let i = 0; i < element.childNodes.length; i++) {
+					let childNode = element.childNodes.item(i)
 					textElements.push(...ExtractTextElements(childNode))
 				}
 				break
@@ -281,11 +335,25 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextEleme
 			break
 	}
 
+	// Add the text
 	textElements.push({
 		Type: type,
+		Id: headerElement.id,
 		Content: textContent
 	})
 
+	// Get all children with an id
+	let idNodes = headerElement.querySelectorAll("* > [id]")
+
+	// Add an empty span for each id node
+	for (let i = 0; i < idNodes.length; i++) {
+		textElements.push({
+			Type: TextElementType.SPAN,
+			Id: idNodes.item(i).id
+		})
+	}
+
+	// Add all image elements
 	for (let i = 0; i < imgElements.length; i++) {
 		let imgElement = imgElements.item(i)
 
@@ -301,6 +369,7 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextEleme
 
 export interface TextElement {
 	Type: TextElementType
+	Id?: string
 	Content?: string
 	Href?: string
 	Source?: string

@@ -50,7 +50,7 @@ export function FindPositionById(currentElement: Element, id: string): number {
 		// Call FindPositionById for each child
 		for (let i = 0; i < currentElement.children.length; i++) {
 			let child = currentElement.children.item(i)
-			let childPosition = this.FindPositionById(child, id)
+			let childPosition = FindPositionById(child, id)
 
 			if (childPosition != -1) {
 				return childPosition
