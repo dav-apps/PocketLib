@@ -133,10 +133,11 @@ export function ExtractTextElements(node: Node): TextElement[] {
 					let currentElement = selectedTextElements[0]
 
 					if (
-						currentElement.Type == TextElementType.IMG
-						|| currentElement.Type == TextElementType.BR
-						|| currentElement.Type == TextElementType.EM
+						currentElement.Type == TextElementType.EM
 						|| currentElement.Type == TextElementType.STRONG
+						|| currentElement.Type == TextElementType.A
+						|| currentElement.Type == TextElementType.IMG
+						|| currentElement.Type == TextElementType.BR
 					) {
 						mergedTextElements.push(currentElement)
 					} else if (
@@ -203,20 +204,30 @@ export function ExtractTextElements(node: Node): TextElement[] {
 				let aElement = node as HTMLAnchorElement
 
 				// Check if the element contains text nodes
-				let aElementText = ""
+				let containsText = false
+				
 				for (let i = 0; i < aElement.childNodes.length; i++) {
-					if (aElement.childNodes.item(i).nodeType == Node.TEXT_NODE) {
-						aElementText += aElement.childNodes.item(i).textContent.trim()
+					let childNode = aElement.childNodes.item(0)
+
+					if (
+						childNode.nodeType == Node.TEXT_NODE
+						&& childNode.textContent.trim().length > 0
+					) {
+						containsText = true
+						break
+					}
+
+					if (
+						childNode.nodeType == Node.ELEMENT_NODE
+						&& childNode.nodeName == "SPAN"
+						&& childNode.textContent.trim().length > 0
+					) {
+						containsText = true
+						break
 					}
 				}
 
-				if (aElementText.length == 0) {
-					// Go through and add the child elements
-					for (let i = 0; i < node.childNodes.length; i++) {
-						let childNode = node.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode))
-					}
-				} else {
+				if (containsText) {
 					// Add the element as an a tag
 					textElements.push({
 						Type: TextElementType.A,
@@ -224,6 +235,12 @@ export function ExtractTextElements(node: Node): TextElement[] {
 						Content: aElement.textContent,
 						Href: aElement.getAttribute("href")
 					})
+				} else {
+					// Add the child elements
+					for (let i = 0; i < node.childNodes.length; i++) {
+						let childNode = node.childNodes.item(i)
+						textElements.push(...ExtractTextElements(childNode))
+					}
 				}
 				break
 			case "IMG":
