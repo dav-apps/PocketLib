@@ -50,7 +50,7 @@
     "jquery": "^3.5.1",
     "jszip": "^3.2.2",
     "localforage": "^1.7.3",
-    "ng2-pdf-viewer": "^5.3.4",
+    "ng2-pdf-viewer": "^6.4.1",
     "ngx-file-helpers": "^2.0.0",
     "office-ui-fabric-core": "^10.1.0",
     "office-ui-fabric-react": "^6.214.1",
