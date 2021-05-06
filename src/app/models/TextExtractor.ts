@@ -51,7 +51,14 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			imgElement.setAttribute("style", "text-align: center")
 
 			let imgContainerElement = document.createElement("div")
-			imgContainerElement.setAttribute("style", "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em")
+			let imgContainerElementStyle = "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em"
+
+			// Check if the image is within a p tag
+			if (IsTextElementNestedWithinType(textElement, TextElementType.P)) {
+				imgContainerElementStyle = "margin-top: 2em; margin-bottom: 2em"
+			}
+
+			imgContainerElement.setAttribute("style", imgContainerElementStyle)
 			imgContainerElement.appendChild(imgElement)
 
 			return imgContainerElement
@@ -84,16 +91,17 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 	}
 }
 
-export function ExtractTextElements(node: Node): TextElement[] {
+export function ExtractTextElements(node: Node, parentElement?: TextElement): TextElement[] {
 	let textElements: TextElement[] = []
 
 	if (node.nodeType == Node.TEXT_NODE) {
 		let textContent = node.textContent
 
-		if (textContent.length > 0) {
+		if (textContent.trim().length > 0) {
 			textElements.push({
 				Type: TextElementType.SPAN,
-				Content: textContent
+				Content: textContent,
+				ParentElement: parentElement
 			})
 		}
 	} else if (node.nodeType == Node.ELEMENT_NODE) {
@@ -104,15 +112,20 @@ export function ExtractTextElements(node: Node): TextElement[] {
 			case "H4":
 			case "H5":
 			case "H6":
-				textElements.push(...ExtractHeaderTextElements(node as HTMLHeadingElement))
+				textElements.push(...ExtractHeaderTextElements(node as HTMLHeadingElement, parentElement))
 				break
 			case "P":
 				let pElement = node as HTMLParagraphElement
 				let pTextElements: TextElement[] = []
+				let pTextElement: TextElement = {
+					Type: TextElementType.P,
+					Id: pElement.id,
+					ParentElement: parentElement
+				}
 
 				for (let i = 0; i < node.childNodes.length; i++) {
 					let childNode = node.childNodes.item(i)
-					pTextElements.push(...ExtractTextElements(childNode))
+					pTextElements.push(...ExtractTextElements(childNode, pTextElement))
 				}
 
 				// Select text and image elements
@@ -151,28 +164,27 @@ export function ExtractTextElements(node: Node): TextElement[] {
 						mergedTextElements.push({
 							Type: TextElementType.SPAN,
 							Id: currentElement.Id,
-							Content: currentElement.Content
+							Content: currentElement.Content,
+							ParentElement: pTextElement
 						})
 					}
 
 					selectedTextElements.splice(0, 1)
 				}
 
-				textElements.push({
-					Type: TextElementType.P,
-					Id: pElement.id,
-					TextElements: mergedTextElements
-				})
+				pTextElement.TextElements = mergedTextElements
+				textElements.push(pTextElement)
 				break
 			case "SPAN":
 				let spanElement = node as HTMLSpanElement
-				let spanTextContent = spanElement.textContent.trim()
+				let spanTextContent = spanElement.textContent
 
-				if (spanTextContent.length > 0) {
+				if (spanTextContent.trim().length > 0) {
 					textElements.push({
 						Type: TextElementType.SPAN,
 						Id: spanElement.id,
-						Content: spanTextContent
+						Content: spanTextContent,
+						ParentElement: parentElement
 					})
 				}
 				break
@@ -184,7 +196,8 @@ export function ExtractTextElements(node: Node): TextElement[] {
 					textElements.push({
 						Type: TextElementType.EM,
 						Id: emElement.id,
-						Content: emTextContent
+						Content: emTextContent,
+						ParentElement: parentElement
 					})
 				}
 				break
@@ -196,7 +209,8 @@ export function ExtractTextElements(node: Node): TextElement[] {
 					textElements.push({
 						Type: TextElementType.STRONG,
 						Id: strongElement.id,
-						Content: strongTextContent
+						Content: strongTextContent,
+						ParentElement: parentElement
 					})
 				}
 				break
@@ -233,13 +247,14 @@ export function ExtractTextElements(node: Node): TextElement[] {
 						Type: TextElementType.A,
 						Id: aElement.id,
 						Content: aElement.textContent,
-						Href: aElement.getAttribute("href")
+						Href: aElement.getAttribute("href"),
+						ParentElement: parentElement
 					})
 				} else {
 					// Add the child elements
 					for (let i = 0; i < node.childNodes.length; i++) {
 						let childNode = node.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode))
+						textElements.push(...ExtractTextElements(childNode, parentElement))
 					}
 				}
 				break
@@ -250,7 +265,8 @@ export function ExtractTextElements(node: Node): TextElement[] {
 					Type: TextElementType.IMG,
 					Id: imgElement.id,
 					Source: imgElement.getAttribute("src"),
-					Alt: imgElement.getAttribute("alt")
+					Alt: imgElement.getAttribute("alt"),
+					ParentElement: parentElement
 				})
 				break
 			case "OL":
@@ -267,7 +283,8 @@ export function ExtractTextElements(node: Node): TextElement[] {
 				textElements.push({
 					Type: TextElementType.OL,
 					Id: olElement.id,
-					ListItems: olListItems
+					ListItems: olListItems,
+					ParentElement: parentElement
 				})
 				break
 			case "UL":
@@ -284,19 +301,22 @@ export function ExtractTextElements(node: Node): TextElement[] {
 				textElements.push({
 					Type: TextElementType.UL,
 					Id: ulElement.id,
-					ListItems: ulListItems
+					ListItems: ulListItems,
+					ParentElement: parentElement
 				})
 				break
 			case "HR":
 				textElements.push({
 					Type: TextElementType.HR,
-					Id: (node as HTMLHRElement).id
+					Id: (node as HTMLHRElement).id,
+					ParentElement: parentElement
 				})
 				break
 			case "BR":
 				textElements.push({
 					Type: TextElementType.BR,
-					Id: (node as HTMLBRElement).id
+					Id: (node as HTMLBRElement).id,
+					ParentElement: parentElement
 				})
 				break
 			default:
@@ -305,13 +325,14 @@ export function ExtractTextElements(node: Node): TextElement[] {
 					// Add empty span element with the id
 					textElements.push({
 						Type: TextElementType.SPAN,
-						Id: element.id
+						Id: element.id,
+						ParentElement: parentElement
 					})
 				}
 
 				for (let i = 0; i < element.childNodes.length; i++) {
 					let childNode = element.childNodes.item(i)
-					textElements.push(...ExtractTextElements(childNode))
+					textElements.push(...ExtractTextElements(childNode, parentElement))
 				}
 				break
 		}
@@ -320,7 +341,7 @@ export function ExtractTextElements(node: Node): TextElement[] {
 	return textElements
 }
 
-function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextElement[] {
+function ExtractHeaderTextElements(headerElement: HTMLHeadingElement, parentElement?: TextElement): TextElement[] {
 	let textElements: TextElement[] = []
 	if (headerElement == null) return textElements
 
@@ -356,7 +377,8 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextEleme
 	textElements.push({
 		Type: type,
 		Id: headerElement.id,
-		Content: textContent
+		Content: textContent,
+		ParentElement: parentElement
 	})
 
 	// Get all children with an id
@@ -366,7 +388,8 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextEleme
 	for (let i = 0; i < idNodes.length; i++) {
 		textElements.push({
 			Type: TextElementType.SPAN,
-			Id: idNodes.item(i).id
+			Id: idNodes.item(i).id,
+			ParentElement: parentElement
 		})
 	}
 
@@ -377,11 +400,24 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement): TextEleme
 		textElements.push({
 			Type: TextElementType.IMG,
 			Source: imgElement.getAttribute("src"),
-			Alt: imgElement.getAttribute("alt")
+			Alt: imgElement.getAttribute("alt"),
+			ParentElement: parentElement
 		})
 	}
 
 	return textElements
+}
+
+function IsTextElementNestedWithinType(textElement: TextElement, elementType: TextElementType): boolean {
+	if (textElement.ParentElement) {
+		if (textElement.ParentElement.Type == elementType) {
+			return true
+		}
+
+		return IsTextElementNestedWithinType(textElement.ParentElement, elementType)
+	}
+
+	return false
 }
 
 export interface TextElement {
@@ -392,7 +428,8 @@ export interface TextElement {
 	Source?: string
 	Alt?: string
 	ListItems?: string[]
-	TextElements?: TextElement[]
+	TextElements?: TextElement[],
+	ParentElement?: TextElement
 }
 
 export enum TextElementType {
