@@ -16,6 +16,7 @@ const click = "click"
 const firstViewerId = "first-viewer"
 const secondViewerId = "second-viewer"
 const thirdViewerId = "third-viewer"
+const firstViewerLeftId = "first-viewer-left"
 const defaultViewerTransitionTime = 500
 const defaultBottomToolbarTransitionTime = 0.2
 const bottomToolbarMarginBottomOpened = 0
@@ -34,7 +35,7 @@ export class PdfViewerComponent {
 	locale = enUS.pdfViewer
 	pdfContent: Uint8Array = null
 	currentBook: PdfBook
-	currentPage: number = 0
+	currentPage: number = 1
 	totalPages: number = 0
 	isLoaded: boolean = false
 	initialized: boolean = false
@@ -396,7 +397,7 @@ export class PdfViewerComponent {
 		if (this.initialized) return
 		this.initialized = true
 
-		let pdfViewer = document.getElementById("viewer-left")
+		let pdfViewer = document.getElementById(firstViewerLeftId)
 		let pdfViewerHeightString = getComputedStyle(pdfViewer).height
 		let pdfViewerWidthString = getComputedStyle(pdfViewer).width
 

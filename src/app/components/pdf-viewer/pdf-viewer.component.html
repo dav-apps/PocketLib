@@ -8,6 +8,8 @@
 	<pdf-viewer
 		id="first-viewer-left"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="firstViewer.page"
@@ -15,8 +17,7 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		style="display: block;"
-		[style.width.px]="viewerWidth"
+		[render-text-mode]="2"
 		(after-load-complete)="PdfLoaded($event)"
 		(page-rendered)="PageRendered($event)">
    </pdf-viewer>
@@ -24,6 +25,9 @@
    <pdf-viewer
 		id="first-viewer-right"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
+		[style.display]="(showSecondPage && (firstViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="firstViewer.page + 1"
@@ -31,9 +35,7 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		style="display: block;"
-		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (firstViewer.page + 1) <= totalPages) ? '' : 'none'">
+		[render-text-mode]="2">
    </pdf-viewer>
 </div>
 
@@ -47,6 +49,8 @@
 	<pdf-viewer
 		id="second-viewer-left"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="secondViewer.page"
@@ -54,13 +58,15 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		style="display: block;"
-		[style.width.px]="viewerWidth">
+		[render-text-mode]="2">
 	</pdf-viewer>
 
 	<pdf-viewer
 		id="second-viewer-right"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
+		[style.display]="(showSecondPage && (secondViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="secondViewer.page + 1"
@@ -68,9 +74,7 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		style="display: block;"
-		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (secondViewer.page + 1) <= totalPages) ? '' : 'none'">
+		[render-text-mode]="2">
 	</pdf-viewer>
 </div>
 
@@ -84,6 +88,8 @@
 	<pdf-viewer
 		id="third-viewer-left"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="thirdViewer.page"
@@ -91,13 +97,15 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		style="display: block;"
-		[style.width.px]="viewerWidth">
+		[render-text-mode]="2">
 	</pdf-viewer>
 
 	<pdf-viewer
 		id="third-viewer-right"
 		class="m-auto"
+		style="display: block"
+		[style.width.px]="viewerWidth"
+		[style.display]="(showSecondPage && (thirdViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="thirdViewer.page + 1"
@@ -105,9 +113,7 @@
       [fit-to-page]="false"
       [autoresize]="true"
 		[original-size]="false"
-      style="display: block;"
-		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (thirdViewer.page + 1) <= totalPages) ? '' : 'none'">
+		[render-text-mode]="2">
 	</pdf-viewer>
 </div>
 
