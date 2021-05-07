@@ -37,6 +37,17 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) strongElement.id = textElement.Id
 			if (textElement.Content) strongElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
 			return strongElement
+		case TextElementType.BLOCKQUOTE:
+			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
+			if (textElement.Id) blockquoteElement.id = textElement.Id
+			
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					blockquoteElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return blockquoteElement
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
@@ -205,6 +216,18 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					})
 				}
+				break
+			case "BLOCKQUOTE":
+				let blockquoteElement = node as HTMLQuoteElement
+
+				let blockquoteTextElement: TextElement = {
+					Type: TextElementType.BLOCKQUOTE,
+					Id: blockquoteElement.id,
+					ParentElement: parentElement
+				}
+
+				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement, allowedTypesForBlockquoteElement)
+				textElements.push(blockquoteTextElement)
 				break
 			case "A":
 				let aElement = node as HTMLAnchorElement
@@ -513,6 +536,7 @@ export enum TextElementType {
 	SPAN = "SPAN",
 	EM = "EM",
 	STRONG = "STRONG",
+	BLOCKQUOTE = "BLOCKQUOTE",
 	A = "A",
 	IMG = "IMG",
 	UL = "UL",
@@ -539,6 +563,13 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.A,
 	TextElementType.BR,
 	TextElementType.IMG
+]
+
+const allowedTypesForBlockquoteElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.BR
 ]
 
 const allowedTypesForAnchorElement: TextElementType[] = [
