@@ -137,7 +137,18 @@ export function ExtractTextElements(
 			case "H4":
 			case "H5":
 			case "H6":
-				textElements.push(...ExtractHeaderTextElements(node as HTMLHeadingElement, parentElement))
+				let headerElement = node as HTMLHeadingElement
+
+				if (NodeContainsText(headerElement)) {
+					// Add the element as a header
+					textElements.push(...ExtractHeaderTextElements(headerElement, parentElement))
+				} else {
+					// Add the child elements
+					for (let i = 0; i < headerElement.childNodes.length; i++) {
+						let childNode = headerElement.childNodes.item(i)
+						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
+					}
+				}
 				break
 			case "P":
 				let pElement = node as HTMLParagraphElement
@@ -192,31 +203,7 @@ export function ExtractTextElements(
 			case "A":
 				let aElement = node as HTMLAnchorElement
 
-				// Check if the element contains text nodes
-				let containsText = false
-				
-				for (let i = 0; i < aElement.childNodes.length; i++) {
-					let childNode = aElement.childNodes.item(0)
-
-					if (
-						childNode.nodeType == Node.TEXT_NODE
-						&& childNode.textContent.trim().length > 0
-					) {
-						containsText = true
-						break
-					}
-
-					if (
-						childNode.nodeType == Node.ELEMENT_NODE
-						&& childNode.nodeName == "SPAN"
-						&& childNode.textContent.trim().length > 0
-					) {
-						containsText = true
-						break
-					}
-				}
-
-				if (containsText) {
+				if (NodeContainsText(aElement)) {
 					// Add the element as an a tag
 					textElements.push({
 						Type: TextElementType.A,
@@ -227,8 +214,8 @@ export function ExtractTextElements(
 					})
 				} else {
 					// Add the child elements
-					for (let i = 0; i < node.childNodes.length; i++) {
-						let childNode = node.childNodes.item(i)
+					for (let i = 0; i < aElement.childNodes.length; i++) {
+						let childNode = aElement.childNodes.item(i)
 						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
 					}
 				}
@@ -479,6 +466,30 @@ function IsTextElementNestedWithinType(textElement: TextElement, elementType: Te
 		}
 
 		return IsTextElementNestedWithinType(textElement.ParentElement, elementType)
+	}
+
+	return false
+}
+
+/**
+ * Checks if the given node directly contains any text or text nodes
+ * @param node The node to check for text
+ * @returns Whether the node directly contains any text or text nodes
+ */
+function NodeContainsText(node: Node): boolean {
+	for (let i = 0; i < node.childNodes.length; i++){
+		let childNode = node.childNodes.item(i)
+
+		if (
+			childNode.nodeType == Node.TEXT_NODE
+			&& childNode.textContent.trim().length > 0
+		) return true
+
+		if (
+			childNode.nodeType == Node.ELEMENT_NODE
+			&& childNode.nodeName == "SPAN"
+			&& childNode.textContent.trim().length > 0
+		) return true
 	}
 
 	return false
