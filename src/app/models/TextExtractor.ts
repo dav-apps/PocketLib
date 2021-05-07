@@ -70,15 +70,24 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) ulElement.id = textElement.Id
 			let listElement = textElement.Type == TextElementType.OL ? olElement : ulElement
 
-			if (textElement.ListItems) {
-				for (let listItem of textElement.ListItems) {
-					let liElement = document.createElement("li") as HTMLLIElement
-					liElement.innerText = listItem
-					listElement.appendChild(liElement)
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					listElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
 				}
 			}
 
 			return listElement
+		case TextElementType.LI:
+			let liElement = document.createElement("li") as HTMLLIElement
+			if (textElement.Id) liElement.id = textElement.Id
+			
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					liElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return liElement
 		case TextElementType.HR:
 			let hrElement = document.createElement("hr") as HTMLHRElement
 			if (textElement.Id) hrElement.id = textElement.Id
@@ -139,14 +148,15 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 					|| element.Type == TextElementType.BR
 				)
 
-				// Merge adjourning text elements
+				// Merge adjacent text elements
 				let mergedTextElements: TextElement[] = []
 
 				while (selectedTextElements.length > 0) {
 					let currentElement = selectedTextElements[0]
 
 					if (
-						currentElement.Type == TextElementType.EM
+						currentElement.Type == TextElementType.P
+						|| currentElement.Type == TextElementType.EM
 						|| currentElement.Type == TextElementType.STRONG
 						|| currentElement.Type == TextElementType.A
 						|| currentElement.Type == TextElementType.IMG
@@ -155,7 +165,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 						mergedTextElements.push(currentElement)
 					} else if (
 						mergedTextElements.length > 0
-						&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.P
+						&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.SPAN
 					) {
 						// Add the text of the current selected element to the last element of mergedTextElements
 						mergedTextElements[mergedTextElements.length - 1].Content += " " + currentElement.Content
@@ -273,37 +283,163 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 				let olElement = node as HTMLOListElement
 
 				// Get the list items
-				let olListItemElements = olElement.getElementsByTagName("li")
-				let olListItems: string[] = []
-
-				for (let i = 0; i < olListItemElements.length; i++) {
-					olListItems.push(olListItemElements.item(i).textContent.trim())
-				}
-
-				textElements.push({
+				let olElementListItemElements = olElement.getElementsByTagName("li")
+				let olTextElementListItemElements: TextElement[] = []
+				let olTextElement: TextElement = {
 					Type: TextElementType.OL,
 					Id: olElement.id,
-					ListItems: olListItems,
 					ParentElement: parentElement
-				})
+				}
+
+				for (let i = 0; i < olElementListItemElements.length; i++) {
+					let listItemElement = olElementListItemElements.item(i)
+					let listItemTextElements: TextElement[] = []
+
+					let listItemTextElement: TextElement = {
+						Type: TextElementType.LI,
+						Id: listItemElement.id,
+						TextElements: [],
+						ParentElement: olTextElement
+					}
+
+					for (let j = 0; j < listItemElement.childNodes.length; j++){
+						let listItemChildNode = listItemElement.childNodes.item(j)
+						listItemTextElements.push(...ExtractTextElements(listItemChildNode, listItemTextElement))
+					}
+
+					// Select text elements
+					let selectedListItemTextElements = listItemTextElements.filter(element => 
+						element.Type == TextElementType.P
+						|| element.Type == TextElementType.SPAN
+						|| element.Type == TextElementType.EM
+						|| element.Type == TextElementType.STRONG
+						|| element.Type == TextElementType.A
+						|| element.Type == TextElementType.BR
+					)
+
+					// Merge adjacent text elements
+					let mergedListItemTextElements: TextElement[] = []
+
+					while (selectedListItemTextElements.length > 0) {
+						let currentElement = selectedListItemTextElements[0]
+
+						if (
+							currentElement.Type == TextElementType.P
+							|| currentElement.Type == TextElementType.EM
+							|| currentElement.Type == TextElementType.STRONG
+							|| currentElement.Type == TextElementType.A
+							|| currentElement.Type == TextElementType.BR
+						) {
+							mergedListItemTextElements.push(currentElement)
+						} else if (
+							mergedListItemTextElements.length > 0
+							&& mergedListItemTextElements[mergedListItemTextElements.length - 1].Type == TextElementType.SPAN
+						) {
+							// Add the text of the current selected element to the last element of mergedListItemTextElements
+							mergedListItemTextElements[mergedListItemTextElements.length - 1].Content += " " + currentElement.Content
+						} else {
+							// Add a new text element
+							mergedListItemTextElements.push({
+								Type: TextElementType.SPAN,
+								Id: currentElement.Id,
+								Content: currentElement.Content,
+								ParentElement: listItemTextElement
+							})
+						}
+
+						selectedListItemTextElements.splice(0, 1)
+					}
+
+					olTextElementListItemElements.push({
+						Type: TextElementType.LI,
+						TextElements: mergedListItemTextElements,
+						ParentElement: olTextElement
+					})
+				}
+
+				olTextElement.TextElements = olTextElementListItemElements
+				textElements.push(olTextElement)
 				break
 			case "UL":
 				let ulElement = node as HTMLUListElement
 
 				// Get the list items
-				let ulListItemElements = ulElement.getElementsByTagName("li")
-				let ulListItems: string[] = []
-
-				for (let i = 0; i < ulListItemElements.length; i++) {
-					ulListItems.push(ulListItemElements.item(i).textContent.trim())
-				}
-
-				textElements.push({
+				let ulElementListItemElements = ulElement.getElementsByTagName("li")
+				let ulTextElementListItemElements: TextElement[] = []
+				let ulTextElement: TextElement = {
 					Type: TextElementType.UL,
 					Id: ulElement.id,
-					ListItems: ulListItems,
 					ParentElement: parentElement
-				})
+				}
+
+				for (let i = 0; i < ulElementListItemElements.length; i++){
+					let listItemElement = ulElementListItemElements.item(i)
+					let listItemTextElements: TextElement[] = []
+
+					let listItemTextElement: TextElement = {
+						Type: TextElementType.LI,
+						Id: listItemElement.id,
+						TextElements: [],
+						ParentElement: ulTextElement
+					}
+
+					for (let j = 0; j < listItemElement.childNodes.length; j++){
+						let listItemChildNode = listItemElement.childNodes.item(j)
+						listItemTextElements.push(...ExtractTextElements(listItemChildNode, listItemTextElement))
+					}
+
+					// Select text elements
+					let selectedListItemTextElements = listItemTextElements.filter(element => 
+						element.Type == TextElementType.P
+						|| element.Type == TextElementType.SPAN
+						|| element.Type == TextElementType.EM
+						|| element.Type == TextElementType.STRONG
+						|| element.Type == TextElementType.A
+						|| element.Type == TextElementType.BR
+					)
+
+					// Merge adjacent text elements
+					let mergedListItemTextElements: TextElement[] = []
+
+					while (selectedListItemTextElements.length > 0) {
+						let currentElement = selectedListItemTextElements[0]
+
+						if (
+							currentElement.Type == TextElementType.P
+							|| currentElement.Type == TextElementType.EM
+							|| currentElement.Type == TextElementType.STRONG
+							|| currentElement.Type == TextElementType.A
+							|| currentElement.Type == TextElementType.BR
+						) {
+							mergedListItemTextElements.push(currentElement)
+						} else if (
+							mergedListItemTextElements.length > 0
+							&& mergedListItemTextElements[mergedListItemTextElements.length - 1].Type == TextElementType.SPAN
+						) {
+							// Add the text of the current selected element to the last element of mergedListItemTextElements
+							mergedListItemTextElements[mergedListItemTextElements.length - 1].Content += " " + currentElement.Content
+						} else {
+							// Add a new text element
+							mergedListItemTextElements.push({
+								Type: TextElementType.SPAN,
+								Id: currentElement.Id,
+								Content: currentElement.Content,
+								ParentElement: listItemTextElement
+							})
+						}
+
+						selectedListItemTextElements.splice(0, 1)
+					}
+
+					ulTextElementListItemElements.push({
+						Type: TextElementType.LI,
+						TextElements: mergedListItemTextElements,
+						ParentElement: ulTextElement
+					})
+				}
+
+				ulTextElement.TextElements = ulTextElementListItemElements
+				textElements.push(ulTextElement)
 				break
 			case "HR":
 				textElements.push({
@@ -427,7 +563,6 @@ export interface TextElement {
 	Href?: string
 	Source?: string
 	Alt?: string
-	ListItems?: string[]
 	TextElements?: TextElement[],
 	ParentElement?: TextElement
 }
@@ -447,6 +582,7 @@ export enum TextElementType {
 	IMG = "IMG",
 	UL = "UL",
 	OL = "OL",
+	LI = "LI",
 	HR = "HR",
 	BR = "BR"
 }
