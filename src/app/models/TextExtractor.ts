@@ -100,7 +100,17 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 	}
 }
 
-export function ExtractTextElements(node: Node, parentElement?: TextElement): TextElement[] {
+/**
+ * Recursively retrieves the text elements from the given html element
+ * @param node The html node from which to extract the elements
+ * @param parentElement The TextElement to which the result of this is added
+ * @returns The TextElements of the given node
+ */
+export function ExtractTextElements(
+	node: Node,
+	parentElement?: TextElement,
+	allowedTypes?: TextElementType[]
+): TextElement[] {
 	let textElements: TextElement[] = []
 
 	if (node.nodeType == Node.TEXT_NODE) {
@@ -114,6 +124,12 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 			})
 		}
 	} else if (node.nodeType == Node.ELEMENT_NODE) {
+		if (allowedTypes) {
+			// Check if the allowed types list contains the name of the current node
+			let i = allowedTypes.findIndex(type => type.toString() == node.nodeName)
+			if(i == -1) return textElements
+		}
+
 		switch (node.nodeName) {
 			case "H1":
 			case "H2":
@@ -131,7 +147,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 					ParentElement: parentElement
 				}
 
-				pTextElement.TextElements = GetInnerTextElements(pTextElement, pElement)
+				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypes ? allowedTypes : [TextElementType.IMG])
 				textElements.push(pTextElement)
 				break
 			case "SPAN":
@@ -213,7 +229,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 					// Add the child elements
 					for (let i = 0; i < node.childNodes.length; i++) {
 						let childNode = node.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode, parentElement))
+						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
 					}
 				}
 				break
@@ -248,7 +264,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 						ParentElement: olTextElement
 					}
 
-					listItemTextElement.TextElements = GetInnerTextElements(listItemTextElement, listItemElement)
+					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement)
 					olTextElementListItemElements.push(listItemTextElement)
 				}
 
@@ -275,7 +291,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 						ParentElement: ulTextElement
 					}
 
-					listItemTextElement.TextElements = GetInnerTextElements(listItemTextElement, listItemElement)
+					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement)
 					ulTextElementListItemElements.push(listItemTextElement)
 				}
 
@@ -309,7 +325,7 @@ export function ExtractTextElements(node: Node, parentElement?: TextElement): Te
 
 				for (let i = 0; i < element.childNodes.length; i++) {
 					let childNode = element.childNodes.item(i)
-					textElements.push(...ExtractTextElements(childNode, parentElement))
+					textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
 				}
 				break
 		}
@@ -386,32 +402,44 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement, parentElem
 }
 
 function GetInnerTextElements(
+	node: Node,
 	parentElement: TextElement,
-	node: Node
+	additionalAllowedTypes: TextElementType[] = []
 ): TextElement[] {
 	let textElements: TextElement[] = []
 
-	for (let i = 0; i < node.childNodes.length; i++){
-		let childNode = node.childNodes.item(i)
-		textElements.push(...ExtractTextElements(childNode, parentElement))
+	let allowedTypes: TextElementType[] = [
+		TextElementType.P,
+		TextElementType.SPAN,
+		TextElementType.EM,
+		TextElementType.STRONG,
+		TextElementType.A,
+		TextElementType.BR
+	]
+
+	// Add the additional types to the allowed types
+	for (let type of additionalAllowedTypes) {
+		if (!allowedTypes.includes(type)) {
+			allowedTypes.push(type)
+		}
 	}
 
-	// Select text and image elements
-	let selectedTextElements = textElements.filter(element =>
-		element.Type == TextElementType.P
-		|| element.Type == TextElementType.SPAN
-		|| element.Type == TextElementType.EM
-		|| element.Type == TextElementType.STRONG
-		|| element.Type == TextElementType.A
-		|| element.Type == TextElementType.IMG
-		|| element.Type == TextElementType.BR
-	)
+	for (let i = 0; i < node.childNodes.length; i++){
+		let childNode = node.childNodes.item(i)
+		textElements.push(
+			...ExtractTextElements(
+				childNode,
+				parentElement,
+				allowedTypes
+			)
+		)
+	}
 
 	// Merge adjacent text elements
 	let mergedTextElements: TextElement[] = []
 
-	while (selectedTextElements.length > 0) {
-		let currentElement = selectedTextElements[0]
+	while (textElements.length > 0) {
+		let currentElement = textElements[0]
 
 		if (
 			currentElement.Type == TextElementType.P
@@ -438,7 +466,7 @@ function GetInnerTextElements(
 			})
 		}
 
-		selectedTextElements.splice(0, 1)
+		textElements.splice(0, 1)
 	}
 
 	return mergedTextElements
