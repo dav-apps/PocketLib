@@ -40,14 +40,20 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
-			if (textElement.Content) aElement.innerText = textElement.Content
-			if (textElement.Href != null) aElement.setAttribute("href", textElement.Href)
+			if (textElement.Href) aElement.setAttribute("href", textElement.Href)
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					aElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
 			return aElement
 		case TextElementType.IMG:
 			let imgElement = document.createElement("img") as HTMLImageElement
 			if (textElement.Id) imgElement.id = textElement.Id
 			imgElement.setAttribute("src", textElement.Source)
-			if (textElement.Alt != null) imgElement.setAttribute("alt", textElement.Alt)
+			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
 			imgElement.setAttribute("style", "text-align: center")
 
 			let imgContainerElement = document.createElement("div")
@@ -80,7 +86,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.LI:
 			let liElement = document.createElement("li") as HTMLLIElement
 			if (textElement.Id) liElement.id = textElement.Id
-			
+
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					liElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
@@ -127,7 +133,7 @@ export function ExtractTextElements(
 		if (allowedTypes) {
 			// Check if the allowed types list contains the name of the current node
 			let i = allowedTypes.findIndex(type => type.toString() == node.nodeName)
-			if(i == -1) return textElements
+			if (i == -1) return textElements
 		}
 
 		switch (node.nodeName) {
@@ -158,7 +164,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypes ? allowedTypes : [TextElementType.IMG])
+				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypes ? allowedTypes : allowedTypesForParagraphElement)
 				textElements.push(pTextElement)
 				break
 			case "SPAN":
@@ -205,13 +211,15 @@ export function ExtractTextElements(
 
 				if (NodeContainsText(aElement)) {
 					// Add the element as an a tag
-					textElements.push({
+					let aTextElement: TextElement = {
 						Type: TextElementType.A,
 						Id: aElement.id,
-						Content: aElement.textContent,
 						Href: aElement.getAttribute("href"),
 						ParentElement: parentElement
-					})
+					}
+
+					aTextElement.TextElements = GetInnerTextElements(aElement, aTextElement, allowedTypesForAnchorElement)
+					textElements.push(aTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < aElement.childNodes.length; i++) {
@@ -251,7 +259,7 @@ export function ExtractTextElements(
 						ParentElement: olTextElement
 					}
 
-					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement)
+					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement, allowedTypesForListElement)
 					olTextElementListItemElements.push(listItemTextElement)
 				}
 
@@ -270,7 +278,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				for (let i = 0; i < ulElementListItemElements.length; i++){
+				for (let i = 0; i < ulElementListItemElements.length; i++) {
 					let listItemElement = ulElementListItemElements.item(i)
 					let listItemTextElement: TextElement = {
 						Type: TextElementType.LI,
@@ -278,7 +286,7 @@ export function ExtractTextElements(
 						ParentElement: ulTextElement
 					}
 
-					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement)
+					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement, allowedTypesForListElement)
 					ulTextElementListItemElements.push(listItemTextElement)
 				}
 
@@ -391,27 +399,11 @@ function ExtractHeaderTextElements(headerElement: HTMLHeadingElement, parentElem
 function GetInnerTextElements(
 	node: Node,
 	parentElement: TextElement,
-	additionalAllowedTypes: TextElementType[] = []
+	allowedTypes: TextElementType[] = []
 ): TextElement[] {
 	let textElements: TextElement[] = []
 
-	let allowedTypes: TextElementType[] = [
-		TextElementType.P,
-		TextElementType.SPAN,
-		TextElementType.EM,
-		TextElementType.STRONG,
-		TextElementType.A,
-		TextElementType.BR
-	]
-
-	// Add the additional types to the allowed types
-	for (let type of additionalAllowedTypes) {
-		if (!allowedTypes.includes(type)) {
-			allowedTypes.push(type)
-		}
-	}
-
-	for (let i = 0; i < node.childNodes.length; i++){
+	for (let i = 0; i < node.childNodes.length; i++) {
 		let childNode = node.childNodes.item(i)
 		textElements.push(
 			...ExtractTextElements(
@@ -477,7 +469,7 @@ function IsTextElementNestedWithinType(textElement: TextElement, elementType: Te
  * @returns Whether the node directly contains any text or text nodes
  */
 function NodeContainsText(node: Node): boolean {
-	for (let i = 0; i < node.childNodes.length; i++){
+	for (let i = 0; i < node.childNodes.length; i++) {
 		let childNode = node.childNodes.item(i)
 
 		if (
@@ -487,7 +479,11 @@ function NodeContainsText(node: Node): boolean {
 
 		if (
 			childNode.nodeType == Node.ELEMENT_NODE
-			&& childNode.nodeName == "SPAN"
+			&& (
+				childNode.nodeName == "SPAN"
+				|| childNode.nodeName == "EM"
+				|| childNode.nodeName == "STRONG"
+			)
 			&& childNode.textContent.trim().length > 0
 		) return true
 	}
@@ -525,3 +521,29 @@ export enum TextElementType {
 	HR = "HR",
 	BR = "BR"
 }
+
+const allowedTypesForListElement: TextElementType[] = [
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForParagraphElement: TextElementType[] = [
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR,
+	TextElementType.IMG
+]
+
+const allowedTypesForAnchorElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.BR
+]
