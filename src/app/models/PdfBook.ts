@@ -2,7 +2,7 @@ import { Property } from 'dav-js'
 import { keys } from 'src/constants/keys'
 import { Book } from './Book'
 
-const pdfExt = "pdf";
+const pdfExt = "pdf"
 
 export class PdfBook extends Book {
 	public title: string

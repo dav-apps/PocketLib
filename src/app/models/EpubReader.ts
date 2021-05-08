@@ -16,7 +16,7 @@ export class EpubReader {
 	manifestItems: EpubManifestItem[] = []
 	toc: EpubTocItem[] = []
 
-	async ReadEpubFile(zipFile: Blob) {
+	async ReadEpubFile(zipFile: Blob): Promise<boolean> {
 		this.chapters = []
 		this.entries = {}
 		this.manifestItems = []
@@ -28,8 +28,7 @@ export class EpubReader {
 		let containerEntry = this.entries["META-INF/container.xml"]
 		if (!containerEntry) {
 			// The epub file is invalid
-			// TODO Show some error
-			return
+			return false
 		}
 
 		// Get the content of the container file
@@ -40,8 +39,7 @@ export class EpubReader {
 		let opfFileEntry = this.entries[opfFilePath]
 		if (!opfFileEntry) {
 			// The epub file is invalid
-			// TODO Show some error
-			return
+			return false
 		}
 
 		// Get the content of the opf file
@@ -128,7 +126,7 @@ export class EpubReader {
 		let tocEntry = this.entries[tocFilePath]
 		if (!tocEntry) {
 			// toc file does not exist
-			return
+			return false
 		}
 
 		// Get the content of the toc file
@@ -137,6 +135,7 @@ export class EpubReader {
 		let tocDoc = parser.parseFromString(tocContent, "text/xml")
 		let navMap = tocDoc.getElementsByTagName("navMap")[0]
 		this.toc = GetTocItems(navMap, tocDirectory)
+		return true
 	}
 }
 

@@ -22,11 +22,15 @@ const enDefaults = {
 		},
 		loginToAccessBookDialog: {
 			title: "Login required",
-			description: "Please log in to access this book.",
-			ok: "Okay"
+			description: "Please log in to access this book."
+		},
+		addBookErrorDialog: {
+			title: "Invalid file",
+			description: "The specified file could not be read."
 		},
 		save: "Save",
 		remove: "Remove",
+		ok: "Okay",
 		cancel: "Cancel"
    },
    accountPage: {
@@ -413,11 +417,15 @@ const deDefaults = {
 		},
 		loginToAccessBookDialog: {
 			title: "Anmeldung erforderlich",
-			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
-			ok: "Ok"
+			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen."
+		},
+		addBookErrorDialog: {
+			title: "Ungültige Datei",
+			description: "Die angegebene Datei konnte nicht gelesen werden."
 		},
 		save: "Speichern",
 		remove: "Entfernen",
+		ok: "Ok",
 		cancel: "Abbrechen"
    },
    accountPage: {

@@ -2,6 +2,7 @@ import { Property } from 'dav-js'
 import { keys } from 'src/constants/keys'
 import { Book } from './Book'
 import { EpubBookmark } from './EpubBookmark'
+import { EpubReader } from './EpubReader'
 
 const epubExt = "epub"
 
@@ -38,7 +39,14 @@ export class EpubBook extends Book {
 
 	public static async Create(file: File): Promise<string> {
 		// Convert the file to a blob
-		let book = new EpubBook(new Blob([file], { type: file.type }), null, true, null)
+		let fileBlob = new Blob([file], { type: file.type })
+
+		// Check if the file is a valid epub file
+		let epubReader = new EpubReader()
+		if(!await epubReader.ReadEpubFile(fileBlob)) return null
+
+		// Create and save the epub book
+		let book = new EpubBook(fileBlob, null, true, null)
 		await book.Save()
 		return book.uuid
 	}

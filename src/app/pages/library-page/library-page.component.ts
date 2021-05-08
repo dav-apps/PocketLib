@@ -50,6 +50,7 @@ export class LibraryPageComponent {
 	renameBookDialogError: string = ""
 	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
+	addBookErrorDialogVisible: boolean = false
 
 	renameBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.renameBookDialog.title
@@ -59,6 +60,9 @@ export class LibraryPageComponent {
 	}
 	loginToAccessBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.loginToAccessBookDialog.title
+	}
+	addBookErrorDialogContentProps: IDialogContentProps = {
+		title: this.locale.addBookErrorDialog.title
 	}
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -108,8 +112,16 @@ export class LibraryPageComponent {
 		if (file.type == pdfType) {
 			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
 		} else {
-			await EpubBook.Create(file.underlyingFile)
+			let uuid = await EpubBook.Create(file.underlyingFile)
+
+			if (uuid == null) {
+				// Show error dialog
+				this.addBookErrorDialogContentProps.title = this.locale.addBookErrorDialog.title
+				this.addBookErrorDialogVisible = true
+				return
+			}
 		}
+
 		await this.dataService.LoadAllBooks()
 	}
 

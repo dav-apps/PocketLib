@@ -213,6 +213,18 @@
 	<p>{{ locale.loginToAccessBookDialog.description }}</p>
 
 	<fab-dialog-footer>
-		<fab-primary-button (onClick)="loginToAccessBookDialogVisible = false">{{ locale.loginToAccessBookDialog.ok }}</fab-primary-button>
+		<fab-primary-button (onClick)="loginToAccessBookDialogVisible = false">{{ locale.ok }}</fab-primary-button>
+	</fab-dialog-footer>
+</fab-dialog>
+
+<fab-dialog
+	[hidden]="!addBookErrorDialogVisible"
+	[dialogContentProps]="addBookErrorDialogContentProps"
+	(onDismiss)="addBookErrorDialogVisible = false">
+
+	<p>{{ locale.addBookErrorDialog.description }}</p>
+
+	<fab-dialog-footer>
+		<fab-primary-button (onClick)="addBookErrorDialogVisible = false">{{ locale.ok }}</fab-primary-button>
 	</fab-dialog-footer>
 </fab-dialog>
