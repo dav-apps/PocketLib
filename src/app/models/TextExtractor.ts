@@ -300,57 +300,36 @@ export function ExtractTextElements(
 				break
 			case "OL":
 				let olElement = node as HTMLOListElement
-
-				// Get the list items
-				let olElementListItemElements = olElement.getElementsByTagName("li")
-				let olTextElementListItemElements: TextElement[] = []
 				let olTextElement: TextElement = {
 					Type: TextElementType.OL,
 					Id: olElement.id,
 					ParentElement: parentElement
 				}
 
-				for (let i = 0; i < olElementListItemElements.length; i++) {
-					let listItemElement = olElementListItemElements.item(i)
-					let listItemTextElement: TextElement = {
-						Type: TextElementType.LI,
-						Id: listItemElement.id,
-						ParentElement: olTextElement
-					}
-
-					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement, allowedTypesForListElement)
-					olTextElementListItemElements.push(listItemTextElement)
-				}
-
-				olTextElement.TextElements = olTextElementListItemElements
+				olTextElement.TextElements = GetInnerTextElements(olElement, olTextElement, allowedTypesForListElement)
 				textElements.push(olTextElement)
 				break
 			case "UL":
 				let ulElement = node as HTMLUListElement
-
-				// Get the list items
-				let ulElementListItemElements = ulElement.getElementsByTagName("li")
-				let ulTextElementListItemElements: TextElement[] = []
 				let ulTextElement: TextElement = {
 					Type: TextElementType.UL,
 					Id: ulElement.id,
 					ParentElement: parentElement
 				}
 
-				for (let i = 0; i < ulElementListItemElements.length; i++) {
-					let listItemElement = ulElementListItemElements.item(i)
-					let listItemTextElement: TextElement = {
-						Type: TextElementType.LI,
-						Id: listItemElement.id,
-						ParentElement: ulTextElement
-					}
-
-					listItemTextElement.TextElements = GetInnerTextElements(listItemElement, listItemTextElement, allowedTypesForListElement)
-					ulTextElementListItemElements.push(listItemTextElement)
+				ulTextElement.TextElements = GetInnerTextElements(ulElement, ulTextElement, allowedTypesForListElement)
+				textElements.push(ulTextElement)
+				break
+			case "LI":
+				let liElement = node as HTMLLIElement
+				let liTextElement: TextElement = {
+					Type: TextElementType.LI,
+					Id: liElement.id,
+					ParentElement: parentElement
 				}
 
-				ulTextElement.TextElements = ulTextElementListItemElements
-				textElements.push(ulTextElement)
+				liTextElement.TextElements = GetInnerTextElements(liElement, liTextElement, allowedTypesForListItemElement)
+				textElements.push(liTextElement)
 				break
 			case "HR":
 				textElements.push({
@@ -412,30 +391,24 @@ function GetInnerTextElements(
 	while (textElements.length > 0) {
 		let currentElement = textElements[0]
 
-		if (
-			currentElement.Type == TextElementType.P
-			|| currentElement.Type == TextElementType.EM
-			|| currentElement.Type == TextElementType.STRONG
-			|| currentElement.Type == TextElementType.BLOCKQUOTE
-			|| currentElement.Type == TextElementType.A
-			|| currentElement.Type == TextElementType.IMG
-			|| currentElement.Type == TextElementType.BR
-		) {
-			mergedTextElements.push(currentElement)
-		} else if (
-			mergedTextElements.length > 0
-			&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.SPAN
-		) {
-			// Add the text of the current selected element to the last element of mergedTextElements
-			mergedTextElements[mergedTextElements.length - 1].Content += " " + currentElement.Content
+		if (currentElement.Type == TextElementType.SPAN) {
+			if (
+				mergedTextElements.length > 0
+				&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.SPAN
+			) {
+				// Add the text of the current selected element to the last element of mergedTextElements
+				mergedTextElements[mergedTextElements.length - 1].Content += " " + currentElement.Content
+			} else {
+				// Add new text element
+				mergedTextElements.push({
+					Type: TextElementType.SPAN,
+					Id: currentElement.Id,
+					Content: currentElement.Content,
+					ParentElement: parentElement
+				})
+			}
 		} else {
-			// Add new text element
-			mergedTextElements.push({
-				Type: TextElementType.SPAN,
-				Id: currentElement.Id,
-				Content: currentElement.Content,
-				ParentElement: parentElement
-			})
+			mergedTextElements.push(currentElement)
 		}
 
 		textElements.splice(0, 1)
@@ -536,6 +509,7 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 ]
 
 const allowedTypesForBlockquoteElement: TextElementType[] = [
+	TextElementType.P,
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
@@ -552,7 +526,12 @@ const allowedTypesForAnchorElement: TextElementType[] = [
 ]
 
 const allowedTypesForListElement: TextElementType[] = [
-	TextElementType.P,
+	TextElementType.LI,
+	TextElementType.OL,
+	TextElementType.UL
+]
+
+const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
