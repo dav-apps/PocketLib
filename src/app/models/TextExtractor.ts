@@ -9,7 +9,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			let headerElement = document.createElement(textElement.Type) as HTMLHeadingElement
 			if (textElement.Id) headerElement.id = textElement.Id
 			headerElement.setAttribute("style", "text-align: center; margin-top: 2em; margin-bottom: 2em; font-weight: 300")
-			if (textElement.Content) headerElement.innerText = textElement.Content.trim()
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					headerElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
 			return headerElement
 		case TextElementType.P:
 			let pElement = document.createElement("p") as HTMLParagraphElement
@@ -158,7 +164,37 @@ export function ExtractTextElements(
 
 				if (NodeContainsText(headerElement)) {
 					// Add the element as a header
-					textElements.push(...ExtractHeaderTextElements(headerElement, parentElement))
+					let type = TextElementType.H1
+
+					switch (headerElement.nodeName) {
+						case "H1":
+							type = TextElementType.H1
+							break
+						case "H2":
+							type = TextElementType.H2
+							break
+						case "H3":
+							type = TextElementType.H3
+							break
+						case "H4":
+							type = TextElementType.H4
+							break
+						case "H5":
+							type = TextElementType.H5
+							break
+						case "H6":
+							type = TextElementType.H6
+							break
+					}
+
+					let headerTextElement: TextElement = {
+						Type: type,
+						Id: headerElement.id,
+						ParentElement: parentElement
+					}
+
+					headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement, allowedTypes ? allowedTypes : allowedTypesForHeaderElement)
+					textElements.push(headerTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < headerElement.childNodes.length; i++) {
@@ -352,73 +388,6 @@ export function ExtractTextElements(
 	return textElements
 }
 
-function ExtractHeaderTextElements(headerElement: HTMLHeadingElement, parentElement?: TextElement): TextElement[] {
-	let textElements: TextElement[] = []
-	if (headerElement == null) return textElements
-
-	// Extract text and img tags
-	let textContent = headerElement.textContent.trim()
-	let imgElements = headerElement.getElementsByTagName("img")
-
-	// Get the element type
-	let type = TextElementType.H1
-
-	switch (headerElement.nodeName) {
-		case "H1":
-			type = TextElementType.H1
-			break
-		case "H2":
-			type = TextElementType.H2
-			break
-		case "H3":
-			type = TextElementType.H3
-			break
-		case "H4":
-			type = TextElementType.H4
-			break
-		case "H5":
-			type = TextElementType.H5
-			break
-		case "H6":
-			type = TextElementType.H6
-			break
-	}
-
-	// Add the text
-	textElements.push({
-		Type: type,
-		Id: headerElement.id,
-		Content: textContent,
-		ParentElement: parentElement
-	})
-
-	// Get all children with an id
-	let idNodes = headerElement.querySelectorAll("* > [id]")
-
-	// Add an empty span for each id node
-	for (let i = 0; i < idNodes.length; i++) {
-		textElements.push({
-			Type: TextElementType.SPAN,
-			Id: idNodes.item(i).id,
-			ParentElement: parentElement
-		})
-	}
-
-	// Add all image elements
-	for (let i = 0; i < imgElements.length; i++) {
-		let imgElement = imgElements.item(i)
-
-		textElements.push({
-			Type: TextElementType.IMG,
-			Source: imgElement.getAttribute("src"),
-			Alt: imgElement.getAttribute("alt"),
-			ParentElement: parentElement
-		})
-	}
-
-	return textElements
-}
-
 function GetInnerTextElements(
 	node: Node,
 	parentElement: TextElement,
@@ -447,6 +416,7 @@ function GetInnerTextElements(
 			currentElement.Type == TextElementType.P
 			|| currentElement.Type == TextElementType.EM
 			|| currentElement.Type == TextElementType.STRONG
+			|| currentElement.Type == TextElementType.BLOCKQUOTE
 			|| currentElement.Type == TextElementType.A
 			|| currentElement.Type == TextElementType.IMG
 			|| currentElement.Type == TextElementType.BR
@@ -546,8 +516,7 @@ export enum TextElementType {
 	BR = "BR"
 }
 
-const allowedTypesForListElement: TextElementType[] = [
-	TextElementType.P,
+const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
@@ -560,6 +529,7 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
+	TextElementType.BLOCKQUOTE,
 	TextElementType.A,
 	TextElementType.BR,
 	TextElementType.IMG
@@ -569,6 +539,8 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
+	TextElementType.BLOCKQUOTE,
+	TextElementType.A,
 	TextElementType.BR
 ]
 
@@ -576,5 +548,14 @@ const allowedTypesForAnchorElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.EM,
 	TextElementType.STRONG,
+	TextElementType.BR
+]
+
+const allowedTypesForListElement: TextElementType[] = [
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.A,
 	TextElementType.BR
 ]
