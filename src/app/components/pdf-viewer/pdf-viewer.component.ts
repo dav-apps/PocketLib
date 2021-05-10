@@ -153,6 +153,10 @@ export class PdfViewerComponent {
 		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 	}
 
+	ngOnDestroy() {
+		$(document).unbind()
+	}
+
 	@HostListener('window:resize')
 	async setSize() {
 		this.width = window.innerWidth

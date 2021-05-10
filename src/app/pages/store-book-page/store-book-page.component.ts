@@ -150,6 +150,7 @@ export class StoreBookPageComponent {
 	async GetData() {
 		// Get the StoreBook
 		let collectionUuid = await this.GetStoreBook()
+		this.setSize()
 		if (!collectionUuid) return
 
 		// Get the StoreBookCollection

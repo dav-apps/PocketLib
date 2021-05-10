@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	#container
-	class="container ms-motion-slideUpIn row mt-4"
+	class="container ms-motion-slideUpIn row mt-4 mb-3"
 	*ngIf="!showMobileLayout && !dualScreenLayout">
 
 	<div class="col-4 mt-2 d-flex">
@@ -94,7 +94,7 @@
 <!-- Dual-Screen layout -->
 <div
 	#container
-	class="ms-motion-slideUpIn"
+	class="ms-motion-slideUpIn mb-3"
 	style="display: grid; grid-template-rows: auto"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
 	*ngIf="!showMobileLayout && dualScreenLayout">
@@ -201,7 +201,7 @@
 <!-- Mobile layout -->
 <div
 	#container
-	class="container ms-motion-slideUpIn"
+	class="container ms-motion-slideUpIn mb-3"
 	*ngIf="showMobileLayout">
 
 	<!-- Title and back button -->
