@@ -46,6 +46,9 @@ export class DataService {
 	contentHeight: number = 200
 	categories: Category[] = []
 	categoriesPromiseHolder = new PromiseHolder()
+	settingsCache: {
+		[key: string]: any
+	} = {}
 
 	constructor(
 		private apiService: ApiService
@@ -280,29 +283,49 @@ export class DataService {
 	//#region Settings
 	async SetTheme(value: string) {
 		await localforage.setItem(keys.settingsThemeKey, value)
+		this.settingsCache[keys.settingsThemeKey] = value
 	}
 
 	async GetTheme(): Promise<string> {
-		var value = await localforage.getItem(keys.settingsThemeKey) as string
-		return value != null ? value : keys.settingsThemeDefault
+		return this.GetSetting<string>(
+			keys.settingsThemeKey,
+			keys.settingsThemeDefault
+		)
 	}
 
 	async SetOpenLastReadBook(value: boolean) {
 		await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
+		this.settingsCache[keys.settingsOpenLastReadBookKey] = value
 	}
 
 	async GetOpenLastReadBook(): Promise<boolean> {
-		var value = await localforage.getItem(keys.settingsOpenLastReadBookKey) as boolean
-		return value != null ? value : keys.settingsOpenLastReadBookDefault
+		return this.GetSetting<boolean>(
+			keys.settingsOpenLastReadBookKey,
+			keys.settingsOpenLastReadBookDefault
+		)
 	}
 
 	async SetStoreLanguages(languages: string[]) {
 		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
+		this.settingsCache[keys.settingsStoreLanguagesKey] = languages
 	}
 
 	async GetStoreLanguages(): Promise<string[]> {
-		var value = await localforage.getItem(keys.settingsStoreLanguagesKey) as string[]
-		return value != null ? value : ["en", "de"]
+		return this.GetSetting<string[]>(
+			keys.settingsStoreLanguagesKey,
+			["en", "de"]
+		)
+	}
+
+	private async GetSetting<T>(key: string, defaultValue: T): Promise<T> {
+		let cachedValue = this.settingsCache[key]
+		if (cachedValue != null) return cachedValue
+		
+		let value = await localforage.getItem(key) as T
+		if (value == null) value = defaultValue
+		
+		this.settingsCache[key] = value
+		return value
 	}
 	//#endregion
 }

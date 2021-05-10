@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class ApiService {
-	apiRequestCaches: {
+	apiRequestCache: {
 		[key: string]: ApiResponse<any>
 	} = {}
 
@@ -83,7 +83,7 @@ export class ApiService {
 			books,
 			language
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -100,7 +100,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -116,7 +116,7 @@ export class ApiService {
 
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -129,7 +129,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -361,7 +361,7 @@ export class ApiService {
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetProfileImageOfAuthor.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -375,7 +375,7 @@ export class ApiService {
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -432,7 +432,7 @@ export class ApiService {
 		let cachedResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCollection.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCaches[cachedResponseKey]
+		let cachedResponse = this.apiRequestCache[cachedResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -453,7 +453,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cachedResponseKey] = result
+			this.apiRequestCache[cachedResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -553,7 +553,7 @@ export class ApiService {
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBook.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -574,7 +574,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -598,7 +598,7 @@ export class ApiService {
 			key,
 			languages
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -614,7 +614,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -635,7 +635,7 @@ export class ApiService {
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestStoreBooks.name, {
 			languages
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -651,7 +651,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -805,7 +805,7 @@ export class ApiService {
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCover.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -819,7 +819,7 @@ export class ApiService {
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -902,7 +902,7 @@ export class ApiService {
 
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetCategories.name, {})
-		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -915,7 +915,7 @@ export class ApiService {
 			result.data = response.data
 
 			// Add the response to the cache
-			this.apiRequestCaches[cacheResponseKey] = result
+			this.apiRequestCache[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
