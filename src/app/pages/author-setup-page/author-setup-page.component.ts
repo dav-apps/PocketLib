@@ -60,7 +60,7 @@ export class AuthorSetupPageComponent {
 		// Set the autocomplete attributes for the input elements
 		setTimeout(() => {
 			SetTextFieldAutocomplete('first-name-textfield', 'given-name', true)
-			SetTextFieldAutocomplete('last-name-textfield', 'family-name', true)
+			SetTextFieldAutocomplete('last-name-textfield', 'family-name', false)
 		}, 1)
 	}
 

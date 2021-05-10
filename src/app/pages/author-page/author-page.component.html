@@ -1,7 +1,7 @@
 <div
 	class="container-fluid m-0"
 	[style.padding]="dataService.smallWindow ? '0px 0px 56px 0px' : '0px'"
-	*ngIf="!dataService.userAuthor && dataService.adminAuthors.length == 0">
+	*ngIf="!dataService.userAuthor && !dataService.userIsAdmin">
 
 	<div
 		id="author-landing-section-1"

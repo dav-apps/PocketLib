@@ -47,7 +47,7 @@
 	class="card cursor theme-background-color-secondary"
 	style="width: 100%; transition: 0.12s"
 	[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
-	*ngIf="dataService.userAuthor || dataService.adminAuthors.length > 0"
+	*ngIf="dataService.userAuthor || dataService.userIsAdmin"
 	(mouseover)="goToAuthorPageHover = true"
 	(mouseout)="goToAuthorPageHover = false"
 	(click)="GoToAuthorPageClick()">

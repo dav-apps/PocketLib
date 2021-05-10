@@ -35,7 +35,7 @@
 			class="btn btn-primary mr-2 cursor d-flex justify-content-center"
 			style="width: 50px; height: 50px"
 			(click)="ShowAuthorPage()"
-			*ngIf="(dataService.userAuthor || dataService.adminAuthors.length > 0) && !dataService.smallWindow">
+			*ngIf="(dataService.userAuthor || dataService.userIsAdmin) && !dataService.smallWindow">
 			<fa-icon [icon]="faAddressCardLight" class="d-flex align-items-center" style="font-size: 24px"></fa-icon>
 		</div>
 		<div class="btn btn-primary mr-2 cursor" style="width: 50px; height: 50px" (click)="ShowAccountPage()">
@@ -87,7 +87,7 @@
 		mat-flat-button
 		class="bottom-navigation-button flex-fill"
 		routerLink="/author"
-		*ngIf="dataService.userAuthor || dataService.adminAuthors.length > 0">
+		*ngIf="dataService.userAuthor || dataService.userIsAdmin">
 
 		<fa-icon [icon]="faAddressCardSolid" style="font-size: 24px" *ngIf="bottomToolbarAuthorEntryActive"></fa-icon>
 		<fa-icon [icon]="faAddressCardLight" style="font-size: 24px" *ngIf="!bottomToolbarAuthorEntryActive"></fa-icon>
