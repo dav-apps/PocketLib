@@ -5,6 +5,10 @@ import { environment } from 'src/environments/environment'
 
 @Injectable()
 export class ApiService {
+	apiRequestCaches: {
+		[key: string]: ApiResponse<any>
+	} = {}
+
 	//#region Author functions
 	async CreateAuthor(params: {
 		firstName: string,
@@ -69,22 +73,34 @@ export class ApiService {
 		language?: string
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
+		let uuid = params.uuid
+		let books = params.books != null ? params.books : true
+		let language = params.language != null ? params.language : "en"
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetAuthor.name, {
+			uuid,
+			books,
+			language
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
 
 		try {
-			let parameters = {}
-			if (params.books != null) {
-				parameters["books"] = true
-				parameters["language"] = params.language || "en"
-			}
-
 			let response = await axios.default({
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
-				params: parameters
+				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}`,
+				params: {
+					books,
+					language
+				}
 			})
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -98,6 +114,11 @@ export class ApiService {
 	async GetLatestAuthors(): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
+
 		try {
 			var response = await axios.default({
 				method: 'get',
@@ -106,6 +127,9 @@ export class ApiService {
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -368,11 +392,19 @@ export class ApiService {
 		uuid: string
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
+		let uuid = params.uuid
+
+		// Check if the response is cached
+		let cachedResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCollection.name, {
+			uuid
+		})
+		let cachedResponse = this.apiRequestCaches[cachedResponseKey]
+		if (cachedResponse) return cachedResponse
 
 		try {
 			let options: axios.AxiosRequestConfig = {
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}`
+				url: `${environment.pocketlibApiBaseUrl}/store/collection/${uuid}`
 			}
 
 			if (Dav.accessToken != null) {
@@ -385,6 +417,9 @@ export class ApiService {
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cachedResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -405,9 +440,6 @@ export class ApiService {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 
 		try {
-			let data = {}
-			if (params.name != null) data["name"] = params.name
-
 			let response = await axios.default({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}/name/${params.language}`,
@@ -415,7 +447,9 @@ export class ApiService {
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
-				data
+				data: {
+					name: params.name
+				}
 			})
 
 			result.status = response.status
@@ -445,13 +479,13 @@ export class ApiService {
 
 		try {
 			let data = {}
-			if (params.collection) data["collection"] = params.collection
-			if (params.title) data["title"] = params.title
-			if (params.description) data["description"] = params.description
-			if (params.language) data["language"] = params.language
-			if (params.price) data["price"] = params.price
-			if (params.isbn) data["isbn"] = params.isbn
-			if (params.categories) data["categories"] = params.categories
+			if (params.collection != null) data["collection"] = params.collection
+			if (params.title != null) data["title"] = params.title
+			if (params.description != null) data["description"] = params.description
+			if (params.language != null) data["language"] = params.language
+			if (params.price != null) data["price"] = params.price
+			if (params.isbn != null) data["isbn"] = params.isbn
+			if (params.categories != null) data["categories"] = params.categories
 
 			let response = await axios.default({
 				method: 'post',
@@ -479,6 +513,14 @@ export class ApiService {
 		uuid: string
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
+		let uuid = params.uuid
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBook.name, {
+			uuid
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
 
 		try {
 			let options: axios.AxiosRequestConfig = {
@@ -496,6 +538,9 @@ export class ApiService {
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -511,19 +556,31 @@ export class ApiService {
 		languages?: string[]
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
+		let key = params.key
+		let languages = params.languages != null ? params.languages.join(',') : "en"
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBooksByCategory.name, {
+			key,
+			languages
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
 
 		try {
-			let parameters = {}
-			if (params.languages != null) parameters["languages"] = params.languages.join(',')
-
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${params.key}`,
-				params: parameters
+				params: {
+					languages
+				}
 			})
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -538,19 +595,29 @@ export class ApiService {
 		languages?: string[]
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
+		let languages = params.languages != null ? params.languages.join(',') : "en"
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestStoreBooks.name, {
+			languages
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
 
 		try {
-			let parameters = {};
-			if (params.languages != null) parameters["languages"] = params.languages.join(',')
-
 			let response = await axios.default({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/latest`,
-				params: parameters
+				params: {
+					languages
+				}
 			})
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -736,9 +803,6 @@ export class ApiService {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 
 		try {
-			let data = {}
-			if (params.storeBook != null) data["store_book"] = params.storeBook
-
 			let response = await axios.default({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/book`,
@@ -746,7 +810,9 @@ export class ApiService {
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
 				},
-				data
+				data: {
+					store_book: params.storeBook
+				}
 			})
 
 			result.status = response.status
@@ -766,6 +832,11 @@ export class ApiService {
 	async GetCategories(): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetCategories.name, {})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
+
 		try {
 			let response = await axios.default({
 				method: 'get',
@@ -774,6 +845,9 @@ export class ApiService {
 
 			result.status = response.status
 			result.data = response.data
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
 		} catch (error) {
 			if (error.response) {
 				result.status = error.response.status
@@ -784,4 +858,15 @@ export class ApiService {
 		return result
 	}
 	//#endregion
+
+	private GetApiRequestCacheKey(functionName: string, params: object): string {
+		let apiRequestCacheKey = `${functionName}`
+
+		for (let key of Object.keys(params)) {
+			let value = params[key]
+			apiRequestCacheKey += `,${key}:${value}`
+		}
+
+		return apiRequestCacheKey
+	}
 }
