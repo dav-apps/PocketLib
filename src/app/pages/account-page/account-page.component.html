@@ -114,11 +114,13 @@
 		(logoutClick)="ShowLogoutDialog()">
 	</pocketlib-user-profile>
 
+	<!--
 	<div class="text-color" style="margin-top: 90px" *ngIf="dataService.dav.user.Plan < 2">
 		<h4 class="text-center font-weight-light">{{ locale.upgradeTitle }}</h4>
 
 		<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
 	</div>
+	-->
 </div>
 
 <!-- Dual-Screen layout for logged in -->
@@ -144,11 +146,13 @@
 		class="w-50"
 		[style.marginLeft.px]="dualScreenFoldMargin">
 
+		<!--
 		<div class="text-color mt-4" *ngIf="dataService.dav.user.Plan < 2">
 			<h4 class="text-center font-weight-light">{{ locale.upgradeTitle }}</h4>
 	
 			<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
 		</div>
+		-->
 	</div>
 </div>
 
