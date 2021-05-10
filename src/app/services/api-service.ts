@@ -350,6 +350,40 @@ export class ApiService {
 
 		return result
 	}
+
+	async GetProfileImageOfAuthor(params: {
+		uuid: string
+	}): Promise<ApiResponse<string>> {
+		var result: ApiResponse<string> = { status: -1, data: null }
+		let uuid = params.uuid
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetProfileImageOfAuthor.name, {
+			uuid
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
+
+		try {
+			let response = await axios.default({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`,
+				responseType: 'blob'
+			})
+
+			result.status = response.status
+			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
+		} catch (error) {
+			if (error.response) {
+				result.status = error.response.status
+			}
+		}
+
+		return result
+	}
 	//#endregion
 
 	//#region StoreBookCollection
@@ -782,7 +816,7 @@ export class ApiService {
 			})
 
 			result.status = response.status
-			if(response.data.size > 0) result.data = await BlobToBase64(response.data)
+			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
 			this.apiRequestCaches[cacheResponseKey] = result

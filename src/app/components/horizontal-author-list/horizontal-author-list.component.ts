@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { ApiResponse } from 'dav-js'
-import { DataService, GetAuthorProfileImageLink } from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { enUS } from 'src/locales/locales'
 
@@ -35,14 +35,22 @@ export class HorizontalAuthorListComponent {
 		if (response.status != 200) return
 
 		for (let author of response.data.authors) {
-			this.authors.push({
+			let authorItem = {
 				uuid: author.uuid,
 				firstName: author.first_name,
 				lastName: author.last_name,
 				profileImage: author.profile_image,
-				profileImageContent: author.profile_image ? GetAuthorProfileImageLink(author.uuid) : this.dataService.defaultProfileImageUrl,
+				profileImageContent: null,
 				profileImageBlurhash: author.profile_image_blurhash
-			})
+			}
+
+			if (authorItem.profileImage) {
+				this.apiService.GetProfileImageOfAuthor({ uuid: author.uuid }).then((result: ApiResponse<string>) => {
+					authorItem.profileImageContent = result.data
+				})
+			}
+
+			this.authors.push(authorItem)
 		}
 	}
 

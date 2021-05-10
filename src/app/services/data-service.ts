@@ -418,7 +418,3 @@ export function GetBookStatusByString(status: string): BookStatus {
 			return BookStatus.Unpublished
 	}
 }
-
-export function GetAuthorProfileImageLink(uuid: string) {
-	return `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`
-}

@@ -14,7 +14,6 @@ import { Dav, ApiResponse } from 'dav-js'
 import {
 	DataService,
 	FindAppropriateLanguage,
-	GetAuthorProfileImageLink,
 	Author,
 	AuthorMode,
 	BookStatus
@@ -161,8 +160,8 @@ export class AuthorProfileComponent {
 		}
 
 		if (this.author.profileImage) {
-			// Set the author profile image link
-			this.profileImageContent = GetAuthorProfileImageLink(this.author.uuid)
+			// Set the author profile image
+			this.profileImageContent = (await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })).data
 		}
 
 		// Get the appropriate language of each collection

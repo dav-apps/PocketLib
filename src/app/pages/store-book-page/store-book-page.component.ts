@@ -7,7 +7,6 @@ import {
 	DataService,
 	BookStatus,
 	GetBookStatusByString,
-	GetAuthorProfileImageLink,
 	Author
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -245,7 +244,10 @@ export class StoreBookPageComponent {
 			this.author.collections = response.data.collections
 			this.author.profileImage = response.data.profile_image
 			this.author.profileImageBlurhash = response.data.profile_image_blurhash
-			this.authorProfileImageContent = response.data.profile_image ? GetAuthorProfileImageLink(this.author.uuid) : this.dataService.defaultProfileImageUrl
+
+			if (this.author.profileImage) {
+				this.authorProfileImageContent = (await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })).data
+			}
 		}
 	}
 
