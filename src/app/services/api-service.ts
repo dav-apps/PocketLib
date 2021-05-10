@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import * as axios from 'axios'
-import { Dav, ApiResponse } from 'dav-js'
+import { Dav, ApiResponse, BlobToBase64 } from 'dav-js'
 import { environment } from 'src/environments/environment'
 
 @Injectable()
@@ -755,6 +755,40 @@ export class ApiService {
 			if (error.response) {
 				result.status = error.response.status
 				result.data = error.response.data
+			}
+		}
+
+		return result
+	}
+
+	async GetStoreBookCover(params: {
+		uuid: string
+	}): Promise<ApiResponse<string>> {
+		var result: ApiResponse<string> = { status: -1, data: null }
+		let uuid = params.uuid
+
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCover.name, {
+			uuid
+		})
+		let cachedResponse = this.apiRequestCaches[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
+
+		try {
+			let response = await axios.default({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store/book/${uuid}/cover`,
+				responseType: 'blob'
+			})
+
+			result.status = response.status
+			if(response.data.size > 0) result.data = await BlobToBase64(response.data)
+
+			// Add the response to the cache
+			this.apiRequestCaches[cacheResponseKey] = result
+		} catch (error) {
+			if (error.response) {
+				result.status = error.response.status
 			}
 		}
 

@@ -8,7 +8,6 @@ import {
 	BookStatus,
 	GetBookStatusByString,
 	GetAuthorProfileImageLink,
-	GetStoreBookCoverLink,
 	Author
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -115,7 +114,7 @@ export class StoreBookPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		// Get the store book cover
-		this.coverContent = GetStoreBookCoverLink(this.uuid)
+		this.coverContent = (await this.apiService.GetStoreBookCover({ uuid: this.uuid })).data
 
 		// Get StoreBook, StoreBookCollection and Author
 		await this.GetData()

@@ -6,8 +6,7 @@ import { ApiResponse } from 'dav-js'
 import {
 	DataService,
 	BookStatus,
-	GetBookStatusByString,
-	GetStoreBookCoverLink
+	GetBookStatusByString
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
@@ -147,7 +146,7 @@ export class AuthorBookPageComponent {
 			this.isbnInput.SetIsbn(this.book.isbn)
 
 			if (response.data.cover) {
-				this.coverContent = GetStoreBookCoverLink(this.uuid)
+				this.coverContent = (await this.apiService.GetStoreBookCover({ uuid: this.uuid })).data
 			}
 		} else {
 			// Redirect back to the author page

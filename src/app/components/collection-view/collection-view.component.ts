@@ -6,7 +6,6 @@ import { EditCollectionNamesComponent } from 'src/app/components/edit-collection
 import {
 	DataService,
 	FindAppropriateLanguage,
-	GetStoreBookCoverLink,
 	AuthorMode
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -96,8 +95,11 @@ export class CollectionViewComponent {
 				}
 
 				if (bookItem.cover) {
-					bookItem.coverContent = GetStoreBookCoverLink(bookItem.uuid)
 					bookItem.coverBlurhash = responseBook.cover_blurhash
+
+					this.apiService.GetStoreBookCover({ uuid: bookItem.uuid }).then((result: ApiResponse<string>) => {
+						bookItem.coverContent = result.data
+					})
 				}
 
 				if (this.dualScreenLayout) {

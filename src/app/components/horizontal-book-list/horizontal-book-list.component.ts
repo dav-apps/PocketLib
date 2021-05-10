@@ -1,8 +1,9 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { ApiResponse } from 'dav-js'
-import { DataService, GetStoreBookCoverLink } from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -11,15 +12,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
-	books: {
-		uuid: string,
-		title: string,
-		cover: boolean,
-		coverContent: string,
-		coverBlurhash: string,
-		coverWidth: number,
-		coverHeight: number
-	}[] = []
+	books: BookListItem[] = []
 	hoveredBookIndex: number = -1
 
 	constructor(
@@ -53,15 +46,21 @@ export class HorizontalBookListComponent {
 				width = Math.round(height * widthAspectRatio)
 			}
 
-			this.books.push({
+			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				cover: storeBook.cover,
-				coverContent: GetStoreBookCoverLink(storeBook.uuid),
+				coverContent: null,
 				coverBlurhash: storeBook.cover_blurhash,
 				coverWidth: width,
 				coverHeight: height
+			}
+
+			this.apiService.GetStoreBookCover({ uuid: storeBook.uuid }).then((result: ApiResponse<string>) => {
+				bookItem.coverContent = result.data
 			})
+
+			this.books.push(bookItem)
 		}
 	}
 

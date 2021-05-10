@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ApiResponse } from 'dav-js'
-import { DataService, Category, GetStoreBookCoverLink } from 'src/app/services/data-service'
+import { DataService, Category } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
@@ -84,15 +84,19 @@ export class StoreBooksPageComponent {
 				width = Math.round(height * widthAspectRatio)
 			}
 
-			let bookItem = {
+			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				cover: storeBook.cover,
-				coverContent: GetStoreBookCoverLink(storeBook.uuid),
+				coverContent: null,
 				coverBlurhash: storeBook.cover_blurhash,
 				coverWidth: width,
 				coverHeight: height
 			}
+
+			this.apiService.GetStoreBookCover({ uuid: storeBook.uuid }).then((result: ApiResponse<string>) => {
+				bookItem.coverContent = result.data
+			})
 
 			if (this.dualScreenLayout) {
 				// Evenly distribute the books on the left and right screens

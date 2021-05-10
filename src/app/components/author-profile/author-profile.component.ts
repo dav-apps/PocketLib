@@ -15,13 +15,13 @@ import {
 	DataService,
 	FindAppropriateLanguage,
 	GetAuthorProfileImageLink,
-	GetStoreBookCoverLink,
 	Author,
 	AuthorMode,
 	BookStatus
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { BookListItem } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
@@ -54,14 +54,7 @@ export class AuthorProfileComponent {
 		profileImage: false,
 		profileImageBlurhash: null
 	}
-	books: {
-		uuid: string,
-		title: string,
-		description: string,
-		language: string,
-		coverContent: string,
-		coverBlurhash: string
-	}[] = []
+	books: BookListItem[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownSelectedIndex: number = 0
 	bioLanguageDropdownOptions: IDropdownOption[] = []
@@ -194,7 +187,7 @@ export class AuthorProfileComponent {
 
 	setSize() {
 		this.width = window.innerWidth
-		
+
 		if (window.innerWidth < 768) {
 			this.profileImageWidth = 110
 		} else if (window.innerWidth < 1200) {
@@ -589,14 +582,23 @@ export class AuthorProfileComponent {
 			}
 
 			for (let book of response.data.books) {
-				this.books.push({
+				let bookItem: BookListItem = {
 					uuid: book.uuid,
 					title: book.title,
-					description: book.description,
-					language: book.language,
-					coverContent: GetStoreBookCoverLink(book.uuid),
-					coverBlurhash: book.cover_blurhash
-				})
+					cover: book.cover,
+					coverContent: null,
+					coverBlurhash: null
+				}
+
+				if (bookItem.cover) {
+					bookItem.coverBlurhash = book.cover_blurhash
+
+					this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
+						bookItem.coverContent = result.data
+					})
+				}
+
+				this.books.push(bookItem)
 			}
 
 			this.bioMode = BioMode.Normal

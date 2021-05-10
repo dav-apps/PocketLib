@@ -146,8 +146,14 @@ export class DataService {
 						price: book.price ? parseInt(book.price) : 0,
 						status: GetBookStatusByString(book.status),
 						cover: book.cover,
-						coverContent: book.cover ? GetStoreBookCoverLink(book.uuid) : null,
+						coverContent: null,
 						file: book.file
+					}
+
+					if (book.cover) {
+						this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
+							newBook.coverContent = result.data
+						})
 					}
 
 					newCollection.books.push(newBook)
@@ -415,8 +421,4 @@ export function GetBookStatusByString(status: string): BookStatus {
 
 export function GetAuthorProfileImageLink(uuid: string) {
 	return `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`
-}
-
-export function GetStoreBookCoverLink(uuid: string) {
-	return `${environment.pocketlibApiBaseUrl}/store/book/${uuid}/cover`
 }
