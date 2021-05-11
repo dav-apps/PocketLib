@@ -71,7 +71,6 @@ export class PdfViewerComponent {
 
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
 	showPageRunning: boolean = false								// If true, ShowPage is currently executing
-	viewerTransitionTime: number = defaultViewerTransitionTime
 
 	//#region Variables for touch events
 	swipeDirection: SwipeDirection = SwipeDirection.None		// Whether the user swipes vertically or horizontally
@@ -449,7 +448,9 @@ export class PdfViewerComponent {
 			this.swipeDirection = SwipeDirection.None
 			this.swipeStart = true
 
-			this.viewerTransitionTime = 0
+			this.firstViewer.transitionTime = 0
+			this.secondViewer.transitionTime = 0
+			this.thirdViewer.transitionTime = 0
 			this.bottomToolbarTransitionTime = 0
 		} else if (event.type == touchMove) {
 			// Calculate the difference between the positions of the first touch and the current touch
@@ -487,7 +488,9 @@ export class PdfViewerComponent {
 			}
 		} else if (event.type == touchEnd) {
 			// Reset the transition times
-			this.viewerTransitionTime = defaultViewerTransitionTime
+			this.firstViewer.transitionTime = defaultViewerTransitionTime
+			this.secondViewer.transitionTime = defaultViewerTransitionTime
+			this.thirdViewer.transitionTime = defaultViewerTransitionTime
 			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 			if (this.swipeDirection == SwipeDirection.Horizontal) {
@@ -542,7 +545,9 @@ export class PdfViewerComponent {
 				this.doubleTapTimerRunning = false
 
 				// Reset the transition viewer times
-				this.viewerTransitionTime = defaultViewerTransitionTime
+				this.firstViewer.transitionTime = defaultViewerTransitionTime
+			this.secondViewer.transitionTime = defaultViewerTransitionTime
+			this.thirdViewer.transitionTime = defaultViewerTransitionTime
 				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 				if (clickedOnRightEdge) {

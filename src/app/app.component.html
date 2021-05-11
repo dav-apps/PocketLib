@@ -65,8 +65,8 @@
 		class="bottom-navigation-button flex-fill"
 		routerLink="/">
 
-		<i class="ms-Icon ms-Icon--Home" style="font-size: 24px" aria-hidden="true" *ngIf="currentUrl != '/'"></i>
-		<i class="ms-Icon ms-Icon--HomeSolid" style="font-size: 24px" aria-hidden="true" *ngIf="currentUrl == '/'"></i>
+		<i class="ms-Icon ms-Icon--Home" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl != '/'"></i>
+		<i class="ms-Icon ms-Icon--HomeSolid" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl == '/'"></i>
 	</button>
 
 	<button
