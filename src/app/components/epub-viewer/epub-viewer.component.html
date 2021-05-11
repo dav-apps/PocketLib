@@ -110,7 +110,7 @@
 
 <!-- Bottom toolbar -->
 <div class="w-100 d-flex justify-content-center"
-	style="z-index: 2; position: absolute; bottom: 0;"
+	style="z-index: 2; position: fixed; bottom: 0;"
 	[style.marginBottom.px]="bottomToolbarMarginBottom"
 	[style.transition]="'all ' + bottomToolbarTransitionTime + 'ms'"
 	*ngIf="showBottomToolbar && initialized">
