@@ -24,7 +24,15 @@ export class DataService {
 	dav = Dav
 	locale: string = navigator.language
 	supportedLocale: string = "en"
-	navbarVisible: boolean = true
+	private _navbarVisible: boolean = true
+	get navbarVisible(): boolean {
+		return this._navbarVisible
+	}
+	set navbarVisible(value: boolean) {
+		this._navbarVisible = value
+		this.UpdateBottomToolbarVisibility()
+	}
+	bottomToolbarVisible: boolean = false
 	books: Book[] = []
 	currentBook: Book = null
 	darkTheme: boolean = false
@@ -241,6 +249,10 @@ export class DataService {
 		}
 
 		return locales.enUS
+	}
+
+	UpdateBottomToolbarVisibility() {
+		this.bottomToolbarVisible = this.navbarVisible && this.smallWindow
 	}
 
 	async ApplyTheme(theme?: string) {
