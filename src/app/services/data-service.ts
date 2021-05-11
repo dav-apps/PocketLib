@@ -24,6 +24,7 @@ export class DataService {
 	dav = Dav
 	locale: string = navigator.language
 	supportedLocale: string = "en"
+	currentUrl: string = "/"
 	private _navbarVisible: boolean = true
 	get navbarVisible(): boolean {
 		return this._navbarVisible

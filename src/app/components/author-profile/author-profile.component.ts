@@ -39,6 +39,7 @@ export class AuthorProfileComponent {
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
+	storeContext: boolean = true		// Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
 	author: Author = {
 		uuid: "",
@@ -125,6 +126,8 @@ export class AuthorProfileComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
+		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 	}
 
 	async ngOnInit() {

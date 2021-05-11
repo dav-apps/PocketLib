@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 56 : 0"
 	*ngIf="!dualScreenLayout">
 
 	<div class="row">

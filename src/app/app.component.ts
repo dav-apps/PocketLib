@@ -20,7 +20,6 @@ import { environment } from 'src/environments/environment'
 export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faAddressCardLight = faAddressCardLight
-	currentUrl: string = "/"
 	bottomToolbarStoreEntryActive: boolean = false
 	bottomToolbarAuthorEntryActive: boolean = false
 
@@ -32,9 +31,9 @@ export class AppComponent {
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
 				// Update the updated todo lists
-				this.currentUrl = data.url
-				this.bottomToolbarStoreEntryActive = this.currentUrl.startsWith("/store")
-				this.bottomToolbarAuthorEntryActive = this.currentUrl.startsWith("/author")
+				this.dataService.currentUrl = data.url
+				this.bottomToolbarStoreEntryActive = this.dataService.currentUrl.startsWith("/store")
+				this.bottomToolbarAuthorEntryActive = this.dataService.currentUrl.startsWith("/author")
 			}
 		})
 	}
