@@ -1,12 +1,12 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	style="padding-bottom: 56px"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="!dualScreenLayout">
 
 	<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
 
-   <div class="mt-3">
+   <div class="my-3">
 		<div
 			class="d-flex"
 			*ngIf="dataService.books.length == 0">

@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	style="padding-bottom: 56px"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="!dualScreenLayout">
 
 	<div class="row">
@@ -108,7 +108,7 @@
 			<fab-default-button [styles]="cancelButtonStyles" (click)="CancelEditBio()" [disabled]="bioLoading" *ngIf="authorMode != 0 && bioMode == 3">{{ locale.cancel }}</fab-default-button>
 		</div>
 	
-		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode != 0">
+		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="authorMode != 0">
 			<!-- Message to sign up as a provider -->
 			<div
 				class="mt-3 mx-auto"
@@ -137,7 +137,7 @@
 			</pocketlib-horizontal-book-card>
 		</div>
 
-		<div class="col-12 col-md-6 pt-5 mx-auto" *ngIf="authorMode == 0">
+		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="authorMode == 0">
 			<!-- List of books -->
 			<pocketlib-horizontal-book-card
 				[title]="book.title"

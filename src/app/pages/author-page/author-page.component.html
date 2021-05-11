@@ -99,7 +99,7 @@
 <!-- Normal layout for Admin view -->
 <div
 	class="container text-center ms-motion-slideUpIn"
-	style="padding-bottom: 56px"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout">
 
 	<!-- List of authors -->
