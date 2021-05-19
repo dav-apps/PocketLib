@@ -344,10 +344,7 @@ export class EpubViewerComponent {
 		this.showPageRunning = true
 
 		// Check if this is the last chapter and the last page
-		if (
-			this.currentChapter >= this.chapters.length - 1
-			&& this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.contentWidth, this.contentHeight).length - (this.showSecondPage ? 1 : 0)
-		) {
+		if (this.lastPage) {
 			// Reset the progress
 			await this.currentBook.SetPosition(0, 0)
 			await this.dataService.settings.SetBook("", 0, 0)
@@ -1403,9 +1400,9 @@ export class EpubViewerComponent {
 	 * Updates the firstPage and lastPage properties for updating the UI
 	 */
 	setFirstLastPage() {
-		this.firstPage = this.currentChapter == 0 && this.currentPage == 0;
+		this.firstPage = this.currentChapter == 0 && this.currentPage == 0
 		this.lastPage =
-			(this.currentChapter == this.chapters.length - 1)
+			(this.currentChapter >= this.chapters.length - 1)
 			&& (this.currentPage >= this.chapters[this.chapters.length - 1].GetPageBreakPositions(this.contentWidth, this.contentHeight).length - (this.showSecondPage ? 2 : 1))
 	}
 
