@@ -14,13 +14,13 @@
 	</div>
 
 	<div class="d-flex justify-content-center mb-4">
-		<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
+		<div id="book-details-container">
 			<!-- Cover -->
-			<div style="grid-column: 1; grid-row: 1;">
+			<div id="book-details-cover-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
 			</div>
 	
-			<div style="grid-column: 2; grid-row: 1;">
+			<div id="book-details-cover-data" class="book-details-data">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
 					<pocketlib-blurhash-image
@@ -43,11 +43,11 @@
 			</div>
 	
 			<!-- Description -->
-			<div style="grid-column: 1; grid-row: 2;">
+			<div id="book-details-description-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
 	
-			<div style="grid-column: 2; grid-row: 2; min-width: 300px">
+			<div id="book-details-description-data" class="book-details-data">
 				<p class="text-color"
 					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
 					*ngIf="book.description && !editDescription">
@@ -70,11 +70,11 @@
 			</div>
 	
 			<!-- Language -->
-			<div style="grid-column: 1; grid-row: 3;">
+			<div id="book-details-language-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
 			</div>
 	
-			<div class="d-flex" style="grid-column: 2; grid-row: 3">
+			<div id="book-details-language-data" class="d-flex book-details-data">
 				<pocketlib-language-dropdown
 					[language]="book.language"
 					[disabled]="book.status == 2 || book.status == 3"
@@ -83,11 +83,11 @@
 			</div>
 
 			<!-- Categories -->
-			<div style="grid-column: 1; grid-row: 4">
+			<div id="book-details-categories-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 4">
+			<div id="book-details-categories-data" class="book-details-data">
 				<div class="d-flex">
 					<div class="my-auto">
 						<span
@@ -109,11 +109,11 @@
 			</div>
 
 			<!-- Price -->
-			<div style="grid-column: 1; grid-row: 5">
+			<div id="book-details-price-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 5">
+			<div id="book-details-price-data" class="book-details-data">
 				<pocketlib-price-input
 					#priceInput
 					[canEdit]="book.status == 0 || book.status == 1"
@@ -122,11 +122,11 @@
 			</div>
 
 			<!-- ISBN -->
-			<div style="grid-column: 1; grid-row: 6;">
+			<div id="book-details-isbn-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">ISBN: </p>
 			</div>
 
-			<div class="d-flex text-color" style="grid-column: 2; grid-row: 6;">
+			<div id="book-details-isbn-data" class="d-flex text-color book-details-data">
 				<pocketlib-isbn-input
 					#isbnInput
 					[canEdit]="book.status == 0 || book.status == 1"
@@ -135,11 +135,11 @@
 			</div>
 
 			<!-- Book file -->
-			<div style="grid-column: 1; grid-row: 7;">
+			<div id="book-details-book-file-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 7;">
+			<div id="book-details-book-file-data" class="book-details-data">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
 				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
@@ -160,11 +160,11 @@
 			</div>
 
 			<!-- Status -->
-			<div style="grid-column: 1; grid-row: 8;">
+			<div id="book-details-status-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
-			<div style="grid-column: 2; grid-row: 8;">
+			<div id="book-details-status-data" class="book-details-data">
 				<div *ngIf="book.status == 0 || book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
 

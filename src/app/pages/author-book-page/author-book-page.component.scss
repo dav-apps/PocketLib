@@ -1,0 +1,180 @@
+#book-details-container {
+	display: inline-grid;
+	grid-template-columns: auto auto;
+	grid-gap: 28px 8px;
+}
+
+#book-details-cover-label {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+#book-details-cover-data {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+#book-details-description-label {
+	grid-column: 1;
+	grid-row: 2;
+}
+
+#book-details-description-data {
+	grid-column: 2;
+	grid-row: 2;
+	min-width: 300px;
+}
+
+#book-details-language-label {
+	grid-column: 1;
+	grid-row: 3;
+}
+
+#book-details-language-data {
+	grid-column: 2;
+	grid-row: 3;
+}
+
+#book-details-categories-label {
+	grid-column: 1;
+	grid-row: 4;
+}
+
+#book-details-categories-data {
+	grid-column: 2;
+	grid-row: 4;
+}
+
+#book-details-price-label {
+	grid-column: 1;
+	grid-row: 5;
+}
+
+#book-details-price-data {
+	grid-column: 2;
+	grid-row: 5;
+}
+
+#book-details-isbn-label {
+	grid-column: 1;
+	grid-row: 6;
+}
+
+#book-details-isbn-data {
+	grid-column: 2;
+	grid-row: 6;
+}
+
+#book-details-book-file-label {
+	grid-column: 1;
+	grid-row: 7;
+}
+
+#book-details-book-file-data {
+	grid-column: 2;
+	grid-row: 7;
+}
+
+#book-details-status-label {
+	grid-column: 1;
+	grid-row: 8;
+}
+
+#book-details-status-data {
+	grid-column: 2;
+	grid-row: 8;
+}
+
+// Small window
+@media screen and (max-width: 500px) {
+	#book-details-container {
+		display: inline-grid;
+		grid-template-columns: auto;
+		grid-gap: 0px;
+	}
+
+	#book-details-cover-label {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	#book-details-cover-data {
+		grid-column: 1;
+		grid-row: 2;
+	}
+
+	#book-details-description-label {
+		grid-column: 1;
+		grid-row: 3;
+	}
+
+	#book-details-description-data {
+		grid-column: 1;
+		grid-row: 4;
+		min-width: 300px;
+	}
+
+	#book-details-language-label {
+		grid-column: 1;
+		grid-row: 5;
+	}
+
+	#book-details-language-data {
+		grid-column: 1;
+		grid-row: 6;
+	}
+
+	#book-details-categories-label {
+		grid-column: 1;
+		grid-row: 7;
+	}
+
+	#book-details-categories-data {
+		grid-column: 1;
+		grid-row: 8;
+	}
+
+	#book-details-price-label {
+		grid-column: 1;
+		grid-row: 9;
+	}
+
+	#book-details-price-data {
+		grid-column: 1;
+		grid-row: 10;
+	}
+
+	#book-details-isbn-label {
+		grid-column: 1;
+		grid-row: 11;
+	}
+
+	#book-details-isbn-data {
+		grid-column: 1;
+		grid-row: 12;
+	}
+
+	#book-details-book-file-label {
+		grid-column: 1;
+		grid-row: 13;
+	}
+
+	#book-details-book-file-data {
+		grid-column: 1;
+		grid-row: 14;
+	}
+
+	#book-details-status-label {
+		grid-column: 1;
+		grid-row: 15;
+	}
+
+	#book-details-status-data {
+		grid-column: 1;
+		grid-row: 16;
+	}
+
+	.book-details-data{
+		margin-bottom: 36px;
+	}
+}

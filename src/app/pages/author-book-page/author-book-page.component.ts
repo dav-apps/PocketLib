@@ -18,7 +18,8 @@ import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/
 
 @Component({
 	selector: 'pocketlib-author-book-page',
-	templateUrl: './author-book-page.component.html'
+	templateUrl: './author-book-page.component.html',
+	styleUrls: ['./author-book-page.component.scss']
 })
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
