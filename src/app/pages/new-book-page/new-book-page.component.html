@@ -2,7 +2,7 @@
 <div
 	class="container ms-motion-slideUpIn"
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
-	*ngIf="!loadingScreenVisible && !dualScreenLayout">
+	*ngIf="!dualScreenLayout">
 
 	<div class="mt-3 mb-4">
 		<pocketlib-header
@@ -109,7 +109,7 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="!loadingScreenVisible && dualScreenLayout">
+	*ngIf="dualScreenLayout">
 
 	<!-- Left screen -->
 	<div
@@ -221,7 +221,7 @@
 
 <div
 	class="ms-motion-slideUpIn"
-	style="background-color: var(--primary); color: white"
+	style="background-color: var(--primary); color: white; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 3"
 	[style.height.px]="height"
 	*ngIf="loadingScreenVisible">
 

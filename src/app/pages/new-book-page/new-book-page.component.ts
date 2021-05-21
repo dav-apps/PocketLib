@@ -266,8 +266,8 @@ export class NewBookPageComponent {
 
 	NavigateToSection(index: number) {
 		this.forwardNavigation = index > this.section
-
 		this.section = index
+		this.errorMessage = ""
 
 		setTimeout(() => {
 			this.visibleSection = index
@@ -379,10 +379,11 @@ export class NewBookPageComponent {
 
 	//#region Loading Screen functions
 	ShowLoadingScreen() {
-		this.dataService.navbarVisible = false
 		this.loadingScreenVisible = true
 
 		setTimeout(() => {
+			this.dataService.navbarVisible = false
+
 			// Set the color of the progress ring
 			let progress = document.getElementsByTagName('circle')
 			if (progress.length > 0) {
