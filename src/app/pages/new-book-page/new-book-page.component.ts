@@ -399,45 +399,18 @@ export class NewBookPageComponent {
 
 	async Finish() {
 		this.ShowLoadingScreen()
-		let collectionUuid = ""
+		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
+		let collectionUuid = null
 
 		this.loadingScreenMessage = this.locale.loadingScreen.creatingBook
 
-		if (this.noCollections || this.selectedCollection == -1) {
-			// Create the collection with the given name and the selected language
-			let createCollectionResponse = await this.apiService.CreateStoreBookCollection({
-				author: this.dataService.userIsAdmin ? this.author.uuid : null,
-				name: this.title,
-				language: this.language
-			})
-
-			if (createCollectionResponse.status != 201) {
-				this.errorMessage = this.locale.errorMessage
-				this.HideLoadingScreen()
-				return
-			}
-
-			collectionUuid = createCollectionResponse.data.uuid
-		} else {
+		if (!this.noCollections && this.selectedCollection > -1) {
 			collectionUuid = this.collections[this.selectedCollection].uuid
-
-			// Check if the selected collection has already a name in the given language
-			let originalCollection = this.author.collections.find(c => c.uuid = collectionUuid)
-
-			let nameIndex = originalCollection.names.findIndex(name => name.language == this.language)
-
-			if (nameIndex == -1) {
-				// Add the new name to the collection
-				await this.apiService.SetStoreBookCollectionName({
-					uuid: collectionUuid,
-					language: this.language,
-					name: this.title
-				})
-			}
 		}
 
 		// Create the store book with collection, title and language
 		let createStoreBookResponse = await this.apiService.CreateStoreBook({
+			author: authorUuid,
 			collection: collectionUuid,
 			description: this.description,
 			title: this.title,
@@ -476,6 +449,9 @@ export class NewBookPageComponent {
 			})
 		}
 
+		// Remove GetStoreBookCollection responses from ApiService cache
+		this.apiService.ClearCache(this.apiService.GetStoreBookCollection.name)
+
 		// Reload the author of the user
 		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData
 		await this.dataService.LoadAuthorOfUser()
@@ -485,8 +461,4 @@ export class NewBookPageComponent {
 		this.router.navigate(["author", "book", createStoreBookResponse.data.uuid])
 	}
 	//#endregion
-
-	RandomInteger(min, max) {
-		return Math.floor(Math.random() * (max - min + 1)) + min
-	}
 }

@@ -501,7 +501,8 @@ export class ApiService {
 
 	//#region StoreBook
 	async CreateStoreBook(params: {
-		collection: string,
+		author?: string,
+		collection?: string,
 		title: string,
 		description?: string,
 		language: string,
@@ -513,6 +514,7 @@ export class ApiService {
 
 		try {
 			let data = {}
+			if (params.author) data["author"] = params.author
 			if (params.collection) data["collection"] = params.collection
 			if (params.title) data["title"] = params.title
 			if (params.description) data["description"] = params.description
@@ -936,5 +938,11 @@ export class ApiService {
 		}
 
 		return apiRequestCacheKey
+	}
+
+	ClearCache(functionName: string) {
+		for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
+			delete this.apiRequestCache[selectedKey]
+		}
 	}
 }
