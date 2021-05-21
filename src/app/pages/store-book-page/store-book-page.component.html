@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	#container
-	class="container ms-motion-slideUpIn row mt-4 mb-3"
+	class="ms-motion-slideUpIn row mt-4 mb-3"
 	*ngIf="!showMobileLayout && !dualScreenLayout">
 
 	<div class="col-4 mt-2 d-flex">
@@ -69,25 +69,27 @@
 
 	<!-- Title and back button -->
 	<div class="col-8">
-		<div class="mb-4">
+		<div class="mb-4 px-4">
 			<pocketlib-header
 				[title]="book.title"
 				(backButtonClick)="GoBack()">
 			</pocketlib-header>
 		</div>
 
-		<!-- Description -->
-		<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
+		<div style="max-width: 600px" class="mx-auto px-4">
+			<!-- Description -->
+			<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
 
-		<!-- Categories -->
-		<span
-			class="badge badge-pill mr-2 cursor"
-			[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
-			style="font-size: 13px"
-			*ngFor="let category of book.categories; let i = index"
-			(click)="NavigateToCategory(category.key)">
-			{{ category.name }}
-		</span>
+			<!-- Categories -->
+			<span
+				class="badge badge-pill mr-2 cursor"
+				[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+				style="font-size: 13px"
+				*ngFor="let category of book.categories; let i = index"
+				(click)="NavigateToCategory(category.key)">
+				{{ category.name }}
+			</span>
+		</div>
 	</div>
 </div>
 
