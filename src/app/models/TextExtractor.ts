@@ -33,6 +33,11 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) spanElement.id = textElement.Id
 			if (textElement.Content) spanElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
 			return spanElement
+		case TextElementType.I:
+			let iElement = document.createElement("i") as HTMLElement
+			if (textElement.Id) iElement.id = textElement.Id
+			if (textElement.Content) iElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			return iElement
 		case TextElementType.EM:
 			let emElement = document.createElement("em") as HTMLElement
 			if (textElement.Id) emElement.id = textElement.Id
@@ -228,6 +233,19 @@ export function ExtractTextElements(
 						Type: TextElementType.SPAN,
 						Id: spanElement.id,
 						Content: spanTextContent,
+						ParentElement: parentElement
+					})
+				}
+				break
+			case "I":
+				let iElement = node as HTMLElement
+				let iTextContent = iElement.textContent.trim()
+
+				if (iTextContent.length > 0) {
+					textElements.push({
+						Type: TextElementType.I,
+						Id: iElement.id,
+						Content: iTextContent,
 						ParentElement: parentElement
 					})
 				}
@@ -495,6 +513,7 @@ export enum TextElementType {
 	H6 = "H6",
 	P = "P",
 	SPAN = "SPAN",
+	I = "I",
 	EM = "EM",
 	B = "B",
 	STRONG = "STRONG",
@@ -510,6 +529,7 @@ export enum TextElementType {
 
 const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -520,6 +540,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -532,6 +553,7 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -542,6 +564,7 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 
 const allowedTypesForAnchorElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -557,6 +580,7 @@ const allowedTypesForListElement: TextElementType[] = [
 const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
