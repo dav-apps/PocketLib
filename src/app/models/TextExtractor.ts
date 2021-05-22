@@ -56,7 +56,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.BLOCKQUOTE:
 			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
 			if (textElement.Id) blockquoteElement.id = textElement.Id
-			
+
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					blockquoteElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
@@ -130,6 +130,57 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			let brElement = document.createElement("br") as HTMLBRElement
 			if (textElement.Id) brElement.id = textElement.Id
 			return brElement
+		case TextElementType.TABLE:
+			let tableElement = document.createElement("table") as HTMLTableElement
+			if (textElement.Id) tableElement.id = textElement.Id
+			tableElement.setAttribute("style", "border-spacing: 1em")
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					tableElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return tableElement
+		case TextElementType.TR:
+			let trElement = document.createElement("tr") as HTMLTableRowElement
+			if (textElement.Id) trElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					trElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return trElement
+		case TextElementType.TH:
+			let thElement = document.createElement("th") as HTMLTableHeaderCellElement
+			if (textElement.Id) thElement.id = textElement.Id
+			if (textElement.Colspan) thElement.colSpan = textElement.Colspan
+			if (textElement.Rowspan) thElement.rowSpan = textElement.Rowspan
+			thElement.setAttribute("style", "text-align: right; vertical-align: top")
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					thElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return thElement
+		case TextElementType.TD:
+			let tdElement = document.createElement("td") as HTMLTableDataCellElement
+			if (textElement.Id) tdElement.id = textElement.Id
+			if (textElement.Colspan) tdElement.colSpan = textElement.Colspan
+			if (textElement.Rowspan) tdElement.rowSpan = textElement.Rowspan
+			tdElement.setAttribute("style", "text-align: right; vertical-align: top")
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					tdElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+				}
+			}
+
+			return tdElement
 	}
 }
 
@@ -266,7 +317,7 @@ export function ExtractTextElements(
 			case "B":
 				let bElement = node as HTMLElement
 				let bTextContent = bElement.textContent.trim()
-				
+
 				if (bTextContent.length > 0) {
 					textElements.push({
 						Type: TextElementType.B,
@@ -380,6 +431,54 @@ export function ExtractTextElements(
 					Id: (node as HTMLBRElement).id,
 					ParentElement: parentElement
 				})
+				break
+			case "TABLE":
+				let tableElement = node as HTMLTableElement
+				let tableTextElement: TextElement = {
+					Type: TextElementType.TABLE,
+					Id: tableElement.id,
+					ParentElement: parentElement
+				}
+
+				tableTextElement.TextElements = GetInnerTextElements(tableElement, tableTextElement, allowedTypesForTableElement)
+				textElements.push(tableTextElement)
+				break
+			case "TR":
+				let trElement = node as HTMLTableRowElement
+				let trTextElement: TextElement = {
+					Type: TextElementType.TR,
+					Id: trElement.id,
+					ParentElement: parentElement
+				}
+
+				trTextElement.TextElements = GetInnerTextElements(trElement, trTextElement, allowedTypesForTableRowElement)
+				textElements.push(trTextElement)
+				break
+			case "TH":
+				let thElement = node as HTMLTableHeaderCellElement
+				let thTextElement: TextElement = {
+					Type: TextElementType.TH,
+					Id: thElement.id,
+					Colspan: thElement.colSpan,
+					Rowspan: thElement.rowSpan,
+					ParentElement: parentElement
+				}
+
+				thTextElement.TextElements = GetInnerTextElements(thElement, thTextElement, allowedTypesForTableCellElement)
+				textElements.push(thTextElement)
+				break
+			case "TD":
+				let tdElement = node as HTMLTableDataCellElement
+				let tdTextElement: TextElement = {
+					Type: TextElementType.TD,
+					Id: tdElement.id,
+					Colspan: tdElement.colSpan,
+					Rowspan: tdElement.rowSpan,
+					ParentElement: parentElement
+				}
+
+				tdTextElement.TextElements = GetInnerTextElements(tdElement, tdTextElement, allowedTypesForTableCellElement)
+				textElements.push(tdTextElement)
 				break
 			default:
 				let element = node as HTMLElement
@@ -500,6 +599,8 @@ export interface TextElement {
 	Href?: string
 	Source?: string
 	Alt?: string
+	Colspan?: number
+	Rowspan?: number
 	TextElements?: TextElement[],
 	ParentElement?: TextElement
 }
@@ -524,7 +625,12 @@ export enum TextElementType {
 	OL = "OL",
 	LI = "LI",
 	HR = "HR",
-	BR = "BR"
+	BR = "BR",
+	TABLE = "TABLE",
+	TBODY = "TBODY",
+	TR = "TR",
+	TH = "TH",
+	TD = "TD"
 }
 
 const allowedTypesForHeaderElement: TextElementType[] = [
@@ -579,6 +685,26 @@ const allowedTypesForListElement: TextElementType[] = [
 
 const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForTableElement: TextElementType[] = [
+	TextElementType.TBODY,
+	TextElementType.TR,
+]
+
+const allowedTypesForTableRowElement: TextElementType[] = [
+	TextElementType.TH,
+	TextElementType.TD
+]
+
+const allowedTypesForTableCellElement: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.I,
 	TextElementType.EM,
