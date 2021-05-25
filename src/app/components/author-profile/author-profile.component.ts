@@ -565,7 +565,7 @@ export class AuthorProfileComponent {
 		let response: ApiResponse<any> = await this.apiService.GetAuthor({
 			uuid: this.uuid,
 			books: true,
-			language: this.dataService.supportedLocale
+			languages: await this.dataService.GetStoreLanguages()
 		})
 
 		if (response.status == 200) {

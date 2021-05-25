@@ -70,18 +70,18 @@ export class ApiService {
 	async GetAuthor(params: {
 		uuid: string,
 		books?: boolean,
-		language?: string
+		languages?: string[]
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 		let uuid = params.uuid
 		let books = params.books != null ? params.books : true
-		let language = params.language != null ? params.language : "en"
+		let languages = params.languages != null ? params.languages.join(',') : "en"
 
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetAuthor.name, {
 			uuid,
 			books,
-			language
+			languages
 		})
 		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
@@ -92,7 +92,7 @@ export class ApiService {
 				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}`,
 				params: {
 					books,
-					language
+					languages
 				}
 			})
 
