@@ -6,6 +6,8 @@ import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
+const maxVisibleStoreBooks = 10
+
 @Component({
 	selector: 'pocketlib-horizontal-book-list',
 	templateUrl: './horizontal-book-list.component.html'
@@ -14,6 +16,7 @@ export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
 	books: BookListItem[] = []
 	hoveredBookIndex: number = -1
+	showAllHovered: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -61,6 +64,7 @@ export class HorizontalBookListComponent {
 			})
 
 			this.books.push(bookItem)
+			if(this.books.length >= maxVisibleStoreBooks) break
 		}
 	}
 

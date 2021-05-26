@@ -2,7 +2,7 @@
 	<h4 class="ml-3 font-weight-light text-color">{{ locale.recentlyPublished }}</h4>
 
 	<div class="horizontal-store-list" style="height: 250px; overflow-x: scroll; overflow-y: hidden">
-		<div class="mb-3 pl-4" style="width: max-content">
+		<div class="d-flex mb-3 pl-4" style="width: max-content">
 			<div
 				class="card cursor mx-2 my-3 theme-background-color-secondary"
 				[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
@@ -21,6 +21,25 @@
 					[height]="book.coverHeight"
 					fillWidth="true">
 				</pocketlib-blurhash-image>
+			</div>
+
+			<div
+				class="mx-2 my-3"
+				style="display: inline-flex; width: 100px"
+				*ngIf="books.length > 0">
+
+				<div
+					class="d-flex mx-auto my-auto align-items-center justify-content-center cursor"
+					[ngClass]="showAllHovered ? 'shadow' : 'shadow-sm'"
+					style="width: 50px; height: 50px; border-radius: 50%; transition: 0.12s"
+					(mouseover)="showAllHovered = true"
+					(mouseout)="showAllHovered = false">
+					
+					<i class="ms-Icon ms-Icon--Forward text-color"
+						aria-hidden="true"
+						style="font-size: 22px">
+					</i>
+				</div>
 			</div>
 		</div>
 	</div>
