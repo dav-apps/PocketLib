@@ -51,7 +51,7 @@ export class StorePageComponent {
 	}
 
 	ShowCategory(key: string) {
-		this.router.navigate(["store", "books", key])
+		this.router.navigate(["store", "category", key])
 		if (this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 
