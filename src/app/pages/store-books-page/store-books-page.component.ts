@@ -5,6 +5,7 @@ import { DataService, Category } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'store-books-page',
@@ -12,7 +13,8 @@ import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
 })
 export class StoreBooksPageComponent {
 	@ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>
-	category: Category = { key: "", name: "", language: "" }
+	locale = enUS.storeBooksPage
+	header: string = ""
 	books: BookListItem[] = []
 	leftScreenBooks: BookListItem[] = []
 	rightScreenBooks: BookListItem[] = []
@@ -27,14 +29,29 @@ export class StoreBooksPageComponent {
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
+		this.locale = this.dataService.GetLocale().storeBooksPage
+
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		this.activatedRoute.url.subscribe(async () => {
-			let key = this.activatedRoute.snapshot.paramMap.get('key')
-			await this.UpdateView(key)
+			let urlSegments = this.activatedRoute.snapshot.url
+			if (urlSegments.length == 0) return
+
+			switch (urlSegments[0].path) {
+				case "category":
+					// Show the selected category
+					let key = this.activatedRoute.snapshot.paramMap.get('key')
+					await this.UpdateView(StoreBooksPageContext.Category, key)
+					break
+				default:
+					// Show all books
+					await this.UpdateView(StoreBooksPageContext.AllBooks)
+					break
+			}
+
 			setTimeout(() => {
 				this.setSize()
 			}, 1)
@@ -51,22 +68,44 @@ export class StoreBooksPageComponent {
 		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
-	async UpdateView(key: string) {
-		// Get the selected category
-		await this.dataService.categoriesPromiseHolder.AwaitResult()
-		this.category = this.dataService.categories.find(c => c.key == key)
+	async UpdateView(context: StoreBooksPageContext, key?: string) {
+		if (context == StoreBooksPageContext.Category) {
+			// Get the selected category
+			await this.dataService.categoriesPromiseHolder.AwaitResult()
+			let category = this.dataService.categories.find(c => c.key == key)
+			if (!category) return
 
-		// Get the books of the category
+			this.header = category.name
+		} else {
+			this.header = this.locale.allBooksHeader
+		}
+
+		// Get the books of the appropriate context
 		this.books = []
 		this.leftScreenBooks = []
 		this.rightScreenBooks = []
-		let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
-			key,
-			languages: await this.dataService.GetStoreLanguages()
-		})
+		let responseBooks: any[] = []
+
+		switch (context) {
+			case StoreBooksPageContext.Category:
+				// Show the selected category
+				let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
+					key,
+					languages: await this.dataService.GetStoreLanguages()
+				})
+				if (getStoreBooksByCategoryResponse.status != 200) return
+				responseBooks = getStoreBooksByCategoryResponse.data.books
+				break
+			default:
+				// Show all books
+				let latestStoreBooksResponse: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({ languages: await this.dataService.GetStoreLanguages() })
+				if (latestStoreBooksResponse.status != 200) return
+				responseBooks = latestStoreBooksResponse.data.books
+				break
+		}
 
 		let i = 0
-		for (let storeBook of getStoreBooksByCategoryResponse.data.books) {
+		for (let storeBook of responseBooks) {
 			// Calculate the width and height
 			let width = 178
 			let height = 270
@@ -105,7 +144,7 @@ export class StoreBooksPageComponent {
 				} else {
 					this.rightScreenBooks.push(bookItem)
 				}
-				
+
 				i++
 			} else {
 				this.books.push(bookItem)
@@ -116,4 +155,9 @@ export class StoreBooksPageComponent {
 	NavigateToStoreBook(uuid: string) {
 		this.router.navigate(["store", "book", uuid])
 	}
+}
+
+enum StoreBooksPageContext {
+	Category,
+	AllBooks
 }

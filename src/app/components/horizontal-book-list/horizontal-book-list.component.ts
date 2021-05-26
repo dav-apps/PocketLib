@@ -71,4 +71,8 @@ export class HorizontalBookListComponent {
 	NavigateToStoreBook(uuid: string) {
 		this.router.navigate(["store", "book", uuid])
 	}
+
+	NavigateToAllBooks() {
+		this.router.navigate(["store", "books", "all"])
+	}
 }

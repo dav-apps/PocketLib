@@ -33,7 +33,8 @@ const routes: Routes = [
 			{ path: "", component: StoreStartPageComponent },
 			{ path: "author/:uuid", component: StoreAuthorPageComponent },
 			{ path: "book/:uuid", component: StoreBookPageComponent },
-			{ path: "category/:key", component: StoreBooksPageComponent }
+			{ path: "category/:key", component: StoreBooksPageComponent },
+			{ path: "books/all", component: StoreBooksPageComponent }
 		]
 	}
 ]

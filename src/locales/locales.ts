@@ -267,6 +267,9 @@ const enDefaults = {
 		},
 		back: "Back"
 	},
+	storeBooksPage: {
+		allBooksHeader: "All books"
+	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "The name of your collection in {0}",
 		addLanguageDropdownLabel: "Add language",
@@ -661,6 +664,9 @@ const deDefaults = {
 			ok: "Ok"
 		},
 		back: "Zurück"
+	},
+	storeBooksPage: {
+		allBooksHeader: "Alle Bücher"
 	},
 	editCollectionNames: {
 		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
