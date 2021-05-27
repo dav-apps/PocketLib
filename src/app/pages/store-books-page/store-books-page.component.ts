@@ -1,14 +1,13 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ApiResponse } from 'dav-js'
-import { DataService, Category } from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
-	selector: 'store-books-page',
 	templateUrl: './store-books-page.component.html'
 })
 export class StoreBooksPageComponent {
@@ -44,11 +43,16 @@ export class StoreBooksPageComponent {
 				case "category":
 					// Show the selected category
 					let key = this.activatedRoute.snapshot.paramMap.get('key')
-					await this.UpdateView(StoreBooksPageContext.Category, key)
+					await this.UpdateView(StoreBooksPageContext.Category, { key })
 					break
 				default:
+					let page = 1
+					if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
+						page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+					}
+
 					// Show all books
-					await this.UpdateView(StoreBooksPageContext.AllBooks)
+					await this.UpdateView(StoreBooksPageContext.AllBooks, { page })
 					break
 			}
 
@@ -68,16 +72,22 @@ export class StoreBooksPageComponent {
 		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
-	async UpdateView(context: StoreBooksPageContext, key?: string) {
+	async UpdateView(context: StoreBooksPageContext, params: {
+		key?: string,
+		page?: number
+	}) {
 		if (context == StoreBooksPageContext.Category) {
+			if (!params.key) return
+
 			// Get the selected category
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
-			let category = this.dataService.categories.find(c => c.key == key)
+			let category = this.dataService.categories.find(c => c.key == params.key)
 			if (!category) return
 
 			this.header = category.name
 		} else {
-			this.header = this.locale.allBooksHeader
+			if (!params.page) return
+			this.header = this.locale.allBooksTitle
 		}
 
 		// Get the books of the appropriate context
@@ -90,7 +100,7 @@ export class StoreBooksPageComponent {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
 				let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
-					key,
+					key: params.key,
 					languages: await this.dataService.GetStoreLanguages()
 				})
 				if (getStoreBooksByCategoryResponse.status != 200) return
@@ -98,7 +108,11 @@ export class StoreBooksPageComponent {
 				break
 			default:
 				// Show all books
-				let latestStoreBooksResponse: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({ languages: await this.dataService.GetStoreLanguages() })
+				let latestStoreBooksResponse: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({
+					languages: await this.dataService.GetStoreLanguages(),
+					page: params.page
+				})
+
 				if (latestStoreBooksResponse.status != 200) return
 				responseBooks = latestStoreBooksResponse.data.books
 				break
