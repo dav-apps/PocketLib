@@ -186,11 +186,15 @@ export class EpubChapter {
 		// Inject the images directly into the html
 		// Get the img tags with src attribute
 		let imgTags = chapterBody.getElementsByTagName("img")
+
 		for (let i = 0; i < imgTags.length; i++) {
 			let imageTag = imgTags[i]
 			let src = imageTag.getAttribute("src")
 			let newSrc = await this.GetRawImageSource(src)
 			if (newSrc == null) continue
+
+			let alt = imageTag.getAttribute("alt")
+			let title = imageTag.getAttribute("title")
 
 			// Create the new image tag with the new src
 			let newImageTag = document.createElement("img")
@@ -206,6 +210,8 @@ export class EpubChapter {
 			// Set the width and height attributes
 			newImageTag.setAttribute("height", newImageTag.naturalHeight.toString())
 			newImageTag.setAttribute("width", newImageTag.naturalWidth.toString())
+			if (alt) newImageTag.setAttribute("alt", alt)
+			if (title) newImageTag.setAttribute("title", title)
 
 			// Replace the old image tag with the new one
 			imageTag.parentNode.replaceChild(newImageTag, imageTag)

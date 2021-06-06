@@ -131,6 +131,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) imgElement.id = textElement.Id
 			imgElement.setAttribute("src", textElement.Source)
 			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
+			if (textElement.Title) imgElement.setAttribute("title", textElement.Title)
 			imgElement.setAttribute("style", "text-align: center")
 
 			let imgContainerElement = document.createElement("div")
@@ -446,6 +447,7 @@ export function ExtractTextElements(
 					Id: imgElement.id,
 					Source: imgElement.getAttribute("src"),
 					Alt: imgElement.getAttribute("alt"),
+					Title: imgElement.getAttribute("title"),
 					ParentElement: parentElement
 				})
 				break
@@ -666,6 +668,7 @@ export interface TextElement {
 	Href?: string
 	Source?: string
 	Alt?: string
+	Title?: string
 	Colspan?: number
 	Rowspan?: number
 	TextElements?: TextElement[],
