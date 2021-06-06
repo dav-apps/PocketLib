@@ -38,22 +38,50 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.I:
 			let iElement = document.createElement("i") as HTMLElement
 			if (textElement.Id) iElement.id = textElement.Id
-			if (textElement.Content) iElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let iChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (iChild) iElement.appendChild(iChild)
+				}
+			}
+
 			return iElement
 		case TextElementType.EM:
 			let emElement = document.createElement("em") as HTMLElement
 			if (textElement.Id) emElement.id = textElement.Id
-			if (textElement.Content) emElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let emChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (emChild) emElement.appendChild(emChild)
+				}
+			}
+
 			return emElement
 		case TextElementType.B:
 			let bElement = document.createElement("b") as HTMLElement
 			if (textElement.Id) bElement.id = textElement.Id
-			if (textElement.Content) bElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let bChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (bChild) bElement.appendChild(bChild)
+				}
+			}
+
 			return bElement
 		case TextElementType.STRONG:
 			let strongElement = document.createElement("strong") as HTMLElement
 			if (textElement.Id) strongElement.id = textElement.Id
-			if (textElement.Content) strongElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let strongChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (strongChild) strongElement.appendChild(strongChild)
+				}
+			}
+
 			return strongElement
 		case TextElementType.BLOCKQUOTE:
 			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
@@ -318,55 +346,51 @@ export function ExtractTextElements(
 				break
 			case "I":
 				let iElement = node as HTMLElement
-				let iTextContent = iElement.textContent.trim()
 
-				if (iTextContent.length > 0) {
-					textElements.push({
-						Type: TextElementType.I,
-						Id: iElement.id,
-						Content: iTextContent,
-						ParentElement: parentElement
-					})
+				let iTextElement: TextElement = {
+					Type: TextElementType.I,
+					Id: iElement.id,
+					ParentElement: parentElement
 				}
+
+				iTextElement.TextElements = GetInnerTextElements(iElement, iTextElement, allowedTypesForIElement)
+				textElements.push(iTextElement)
 				break
 			case "EM":
 				let emElement = node as HTMLElement
-				let emTextContent = emElement.textContent.trim()
 
-				if (emTextContent.length > 0) {
-					textElements.push({
-						Type: TextElementType.EM,
-						Id: emElement.id,
-						Content: emTextContent,
-						ParentElement: parentElement
-					})
+				let emTextElement: TextElement = {
+					Type: TextElementType.EM,
+					Id: emElement.id,
+					ParentElement: parentElement
 				}
+
+				emTextElement.TextElements = GetInnerTextElements(emElement, emTextElement, allowedTypesForEmElement)
+				textElements.push(emTextElement)
 				break
 			case "B":
 				let bElement = node as HTMLElement
-				let bTextContent = bElement.textContent.trim()
 
-				if (bTextContent.length > 0) {
-					textElements.push({
-						Type: TextElementType.B,
-						Id: bElement.id,
-						Content: bTextContent,
-						ParentElement: parentElement
-					})
+				let bTextElement: TextElement = {
+					Type: TextElementType.B,
+					Id: bElement.id,
+					ParentElement: parentElement
 				}
+
+				bTextElement.TextElements = GetInnerTextElements(bElement, bTextElement, allowedTypesForBElement)
+				textElements.push(bTextElement)
 				break
 			case "STRONG":
 				let strongElement = node as HTMLElement
-				let strongTextContent = strongElement.textContent.trim()
 
-				if (strongTextContent.length > 0) {
-					textElements.push({
-						Type: TextElementType.STRONG,
-						Id: strongElement.id,
-						Content: strongTextContent,
-						ParentElement: parentElement
-					})
+				let strongTextElement: TextElement = {
+					Type: TextElementType.STRONG,
+					Id: strongElement.id,
+					ParentElement: parentElement
 				}
+
+				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement, allowedTypesForStrongElement)
+				textElements.push(strongTextElement)
 				break
 			case "BLOCKQUOTE":
 				let blockquoteElement = node as HTMLQuoteElement
@@ -622,8 +646,11 @@ function NodeContainsText(node: Node): boolean {
 			childNode.nodeType == Node.ELEMENT_NODE
 			&& (
 				childNode.nodeName == "SPAN"
+				|| childNode.nodeName == "I"
 				|| childNode.nodeName == "EM"
+				|| childNode.nodeName == "B"
 				|| childNode.nodeName == "STRONG"
+				|| childNode.nodeName == "A"
 			)
 			&& childNode.textContent.trim().length > 0
 		) return true
@@ -695,6 +722,42 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.A,
 	TextElementType.BR,
 	TextElementType.IMG
+]
+
+const allowedTypesForIElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForEmElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.I,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForBElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForStrongElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.A,
+	TextElementType.BR
 ]
 
 const allowedTypesForBlockquoteElement: TextElementType[] = [
