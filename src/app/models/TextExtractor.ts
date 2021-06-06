@@ -12,7 +12,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					headerElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let headerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (headerChild) headerElement.appendChild(headerChild)
 				}
 			}
 
@@ -23,7 +24,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					pElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let pChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (pChild) pElement.appendChild(pChild)
 				}
 			}
 
@@ -59,11 +61,30 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					blockquoteElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let childElement = CreateHtmlElementFromTextElement(innerTextElement)
+					if (childElement == null) continue
+
+					if (innerTextElement.Type == TextElementType.FOOTER) {
+						childElement.setAttribute("style", "text-align: right")
+					}
+
+					blockquoteElement.appendChild(childElement)
 				}
 			}
 
 			return blockquoteElement
+		case TextElementType.FOOTER:
+			let footerElement = document.createElement("footer") as HTMLElement
+			if (textElement.Id) footerElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let footerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (footerChild) footerElement.appendChild(footerChild)
+				}
+			}
+
+			return footerElement
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
@@ -71,7 +92,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					aElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let aChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (aChild) aElement.appendChild(aChild)
 				}
 			}
 
@@ -105,7 +127,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					listElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let listChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (listChild) listElement.appendChild(listChild)
 				}
 			}
 
@@ -116,11 +139,12 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					liElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let liChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (liChild) liElement.appendChild(liChild)
 				}
 			}
 
-			return liElement
+			return liElement.childElementCount > 0 ? liElement : null
 		case TextElementType.HR:
 			let hrElement = document.createElement("hr") as HTMLHRElement
 			if (textElement.Id) hrElement.id = textElement.Id
@@ -137,7 +161,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					tableElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let tableChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (tableChild) tableElement.appendChild(tableChild)
 				}
 			}
 
@@ -148,7 +173,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					trElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let trChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (trChild) trElement.appendChild(trChild)
 				}
 			}
 
@@ -158,11 +184,12 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) thElement.id = textElement.Id
 			if (textElement.Colspan) thElement.colSpan = textElement.Colspan
 			if (textElement.Rowspan) thElement.rowSpan = textElement.Rowspan
-			thElement.setAttribute("style", "text-align: right; vertical-align: top")
+			thElement.setAttribute("style", "vertical-align: top")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					thElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let thChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (thChild) thElement.appendChild(thChild)
 				}
 			}
 
@@ -172,11 +199,12 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) tdElement.id = textElement.Id
 			if (textElement.Colspan) tdElement.colSpan = textElement.Colspan
 			if (textElement.Rowspan) tdElement.rowSpan = textElement.Rowspan
-			tdElement.setAttribute("style", "text-align: right; vertical-align: top")
+			tdElement.setAttribute("style", "vertical-align: top")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					tdElement.appendChild(CreateHtmlElementFromTextElement(innerTextElement))
+					let tdChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (tdChild) tdElement.appendChild(tdChild)
 				}
 			}
 
@@ -351,6 +379,18 @@ export function ExtractTextElements(
 
 				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement, allowedTypesForBlockquoteElement)
 				textElements.push(blockquoteTextElement)
+				break
+			case "FOOTER":
+				let footerElement = node as HTMLElement
+
+				let footerTextElement: TextElement = {
+					Type: TextElementType.FOOTER,
+					Id: footerElement.id,
+					ParentElement: parentElement
+				}
+
+				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement, allowedTypesForFooterElement)
+				textElements.push(footerTextElement)
 				break
 			case "A":
 				let aElement = node as HTMLAnchorElement
@@ -619,6 +659,7 @@ export enum TextElementType {
 	B = "B",
 	STRONG = "STRONG",
 	BLOCKQUOTE = "BLOCKQUOTE",
+	FOOTER = "FOOTER",
 	A = "A",
 	IMG = "IMG",
 	UL = "UL",
@@ -664,6 +705,18 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.FOOTER,
+	TextElementType.A,
+	TextElementType.BR
+]
+
+const allowedTypesForFooterElement: TextElementType[] = [
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
 	TextElementType.A,
 	TextElementType.BR
 ]

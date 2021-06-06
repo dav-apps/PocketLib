@@ -175,7 +175,8 @@ export class EpubChapter {
 		let textElements: TextElement[] = ExtractTextElements(chapterBody)
 
 		for (let textElement of textElements) {
-			body.appendChild(CreateHtmlElementFromTextElement(textElement))
+			let child = CreateHtmlElementFromTextElement(textElement)
+			if (child) body.appendChild(child)
 		}
 
 		return html
