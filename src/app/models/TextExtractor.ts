@@ -238,6 +238,25 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return tdElement
+		case TextElementType.PRE:
+			let preElement = document.createElement("pre") as HTMLPreElement
+			if (textElement.Id) preElement.id = textElement.Id
+			preElement.setAttribute("style", "white-space: pre-wrap")
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let preChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (preChild) preElement.appendChild(preChild)
+				}
+			}
+
+			return preElement
+		case TextElementType.CODE:
+			let codeElement = document.createElement("code") as HTMLElement
+			if (textElement.Id) codeElement.id = textElement.Id
+			codeElement.innerText = textElement.Content
+
+			return codeElement
 	}
 }
 
@@ -546,6 +565,28 @@ export function ExtractTextElements(
 				tdTextElement.TextElements = GetInnerTextElements(tdElement, tdTextElement, allowedTypesForTableCellElement)
 				textElements.push(tdTextElement)
 				break
+			case "PRE":
+				let preElement = node as HTMLPreElement
+				let preTextElement: TextElement = {
+					Type: TextElementType.PRE,
+					Id: preElement.id,
+					ParentElement: parentElement
+				}
+
+				preTextElement.TextElements = GetInnerTextElements(preElement, preTextElement)
+				textElements.push(preTextElement)
+				break
+			case "CODE":
+				let codeElement = node as HTMLElement
+				let codeTextElement: TextElement = {
+					Type: TextElementType.CODE,
+					Id: codeElement.id,
+					Content: codeElement.textContent,
+					ParentElement: parentElement
+				}
+
+				textElements.push(codeTextElement)
+				break
 			default:
 				let element = node as HTMLElement
 				if (element.id) {
@@ -571,7 +612,7 @@ export function ExtractTextElements(
 function GetInnerTextElements(
 	node: Node,
 	parentElement: TextElement,
-	allowedTypes: TextElementType[] = []
+	allowedTypes?: TextElementType[]
 ): TextElement[] {
 	let textElements: TextElement[] = []
 
@@ -701,7 +742,9 @@ export enum TextElementType {
 	TBODY = "TBODY",
 	TR = "TR",
 	TH = "TH",
-	TD = "TD"
+	TD = "TD",
+	PRE = "PRE",
+	CODE = "CODE"
 }
 
 const allowedTypesForHeaderElement: TextElementType[] = [
@@ -724,7 +767,8 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.BLOCKQUOTE,
 	TextElementType.A,
 	TextElementType.BR,
-	TextElementType.IMG
+	TextElementType.IMG,
+	TextElementType.CODE
 ]
 
 const allowedTypesForIElement: TextElementType[] = [
