@@ -33,8 +33,19 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.SPAN:
 			let spanElement = document.createElement("span") as HTMLSpanElement
 			if (textElement.Id) spanElement.id = textElement.Id
-			if (textElement.Content) spanElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let spanChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (spanChild) spanElement.appendChild(spanChild)
+				}
+			}
+
 			return spanElement
+		case TextElementType.TEXT:
+			let spanTextElement = document.createElement("span") as HTMLSpanElement
+			if (textElement.Content) spanTextElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			return spanTextElement
 		case TextElementType.I:
 			let iElement = document.createElement("i") as HTMLElement
 			if (textElement.Id) iElement.id = textElement.Id
@@ -89,14 +100,14 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let childElement = CreateHtmlElementFromTextElement(innerTextElement)
-					if (childElement == null) continue
+					let blockquoteChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (blockquoteChild == null) continue
 
 					if (innerTextElement.Type == TextElementType.FOOTER) {
-						childElement.setAttribute("style", "text-align: right")
+						blockquoteChild.setAttribute("style", "text-align: right")
 					}
 
-					blockquoteElement.appendChild(childElement)
+					blockquoteElement.appendChild(blockquoteChild)
 				}
 			}
 
@@ -233,7 +244,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let tdChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (tdChild) tdElement.appendChild(tdChild)
+					if (tdChild == null) continue
+
+					if (innerTextElement.Type == TextElementType.P) {
+						tdChild.setAttribute("style", "margin: 0px")
+					}
+
+					tdElement.appendChild(tdChild)
 				}
 			}
 
@@ -278,7 +295,7 @@ export function ExtractTextElements(
 
 		if (textContent.trim().length > 0) {
 			textElements.push({
-				Type: TextElementType.SPAN,
+				Type: TextElementType.TEXT,
 				Content: textContent,
 				ParentElement: parentElement
 			})
@@ -353,16 +370,15 @@ export function ExtractTextElements(
 				break
 			case "SPAN":
 				let spanElement = node as HTMLSpanElement
-				let spanTextContent = spanElement.textContent
 
-				if (spanTextContent.trim().length > 0) {
-					textElements.push({
-						Type: TextElementType.SPAN,
-						Id: spanElement.id,
-						Content: spanTextContent,
-						ParentElement: parentElement
-					})
+				let spanTextElement: TextElement = {
+					Type: TextElementType.SPAN,
+					Id: spanElement.id,
+					ParentElement: parentElement
 				}
+
+				spanTextElement.TextElements = GetInnerTextElements(spanElement, spanTextElement, allowedTypesForSpanElement)
+				textElements.push(spanTextElement)
 				break
 			case "I":
 				let iElement = node as HTMLElement
@@ -627,36 +643,42 @@ function GetInnerTextElements(
 		)
 	}
 
-	// Merge adjacent text elements
-	let mergedTextElements: TextElement[] = []
+	// Merge adjacent span elements
+	let mergedSpanElements: TextElement[] = []
 
 	while (textElements.length > 0) {
 		let currentElement = textElements[0]
 
 		if (currentElement.Type == TextElementType.SPAN) {
 			if (
-				mergedTextElements.length > 0
-				&& mergedTextElements[mergedTextElements.length - 1].Type == TextElementType.SPAN
+				mergedSpanElements.length > 0
+				&& mergedSpanElements[mergedSpanElements.length - 1].Type == TextElementType.SPAN
 			) {
-				// Add the text of the current selected element to the last element of mergedTextElements
-				mergedTextElements[mergedTextElements.length - 1].Content += " " + currentElement.Content
-			} else {
-				// Add new text element
-				mergedTextElements.push({
-					Type: TextElementType.SPAN,
-					Id: currentElement.Id,
-					Content: currentElement.Content,
-					ParentElement: parentElement
+				let previousElement = mergedSpanElements[mergedSpanElements.length - 1]
+
+				// Add the text elements of the current selected element to the last element of mergedSpanElements
+				previousElement.TextElements.push({
+					Type: TextElementType.TEXT,
+					ParentElement: previousElement,
+					Content: " "
 				})
+
+				for (let el of currentElement.TextElements) {
+					el.ParentElement = previousElement
+					previousElement.TextElements.push(el)
+				}
+			} else {
+				// Add new span element
+				mergedSpanElements.push(currentElement)
 			}
 		} else {
-			mergedTextElements.push(currentElement)
+			mergedSpanElements.push(currentElement)
 		}
 
 		textElements.splice(0, 1)
 	}
 
-	return mergedTextElements
+	return mergedSpanElements
 }
 
 function IsTextElementNestedWithinType(textElement: TextElement, elementType: TextElementType): boolean {
@@ -725,6 +747,7 @@ export enum TextElementType {
 	H6 = "H6",
 	P = "P",
 	SPAN = "SPAN",
+	TEXT = "TEXT",
 	I = "I",
 	EM = "EM",
 	B = "B",
@@ -749,6 +772,7 @@ export enum TextElementType {
 
 const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -760,6 +784,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -771,8 +796,20 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.CODE
 ]
 
+const allowedTypesForSpanElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.BR
+]
+
 const allowedTypesForIElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -782,6 +819,7 @@ const allowedTypesForIElement: TextElementType[] = [
 
 const allowedTypesForEmElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.B,
 	TextElementType.STRONG,
@@ -791,6 +829,7 @@ const allowedTypesForEmElement: TextElementType[] = [
 
 const allowedTypesForBElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.STRONG,
@@ -800,6 +839,7 @@ const allowedTypesForBElement: TextElementType[] = [
 
 const allowedTypesForStrongElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -810,6 +850,7 @@ const allowedTypesForStrongElement: TextElementType[] = [
 const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -823,6 +864,7 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 const allowedTypesForFooterElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -833,6 +875,7 @@ const allowedTypesForFooterElement: TextElementType[] = [
 
 const allowedTypesForAnchorElement: TextElementType[] = [
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -849,6 +892,7 @@ const allowedTypesForListElement: TextElementType[] = [
 const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
@@ -868,7 +912,9 @@ const allowedTypesForTableRowElement: TextElementType[] = [
 ]
 
 const allowedTypesForTableCellElement: TextElementType[] = [
+	TextElementType.P,
 	TextElementType.SPAN,
+	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
