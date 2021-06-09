@@ -589,16 +589,22 @@ export class ApiService {
 
 	async GetStoreBooksByCategory(params: {
 		key: string,
-		languages?: string[]
+		languages?: string[],
+		limit?: number,
+		page?: number
 	}): Promise<ApiResponse<any>> {
 		var result: ApiResponse<any> = { status: -1, data: {} }
 		let key = params.key
 		let languages = params.languages != null ? params.languages.join(',') : "en"
+		let limit = params.limit != null ? params.limit : 50
+		let page = params.page != null ? params.page : 1
 
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBooksByCategory.name, {
 			key,
-			languages
+			languages,
+			limit,
+			page
 		})
 		let cachedResponse = this.apiRequestCache[cacheResponseKey]
 		if (cachedResponse) return cachedResponse
@@ -608,7 +614,9 @@ export class ApiService {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${params.key}`,
 				params: {
-					languages
+					languages,
+					limit,
+					page
 				}
 			})
 

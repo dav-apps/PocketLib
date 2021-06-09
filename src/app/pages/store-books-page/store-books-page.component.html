@@ -16,6 +16,7 @@
 
 	<div class="mt-4 d-flex justify-content-center">
 		<ngb-pagination
+			[page]="page"
 			[collectionSize]="paginationCollectionSize"
 			[pageSize]="maxVisibleBooks"
 			(pageChange)="PageChange($event)"

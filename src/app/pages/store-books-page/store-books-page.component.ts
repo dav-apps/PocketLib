@@ -51,6 +51,12 @@ export class StoreBooksPageComponent {
 			let urlSegments = this.activatedRoute.snapshot.url
 			if (urlSegments.length == 0) return
 
+			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
+				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+			} else {
+				this.page = 1
+			}
+
 			switch (urlSegments[0].path) {
 				case "category":
 					// Show the selected category
@@ -59,10 +65,6 @@ export class StoreBooksPageComponent {
 					await this.UpdateView()
 					break
 				default:
-					if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
-						this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
-					}
-
 					// Show all books
 					this.context = StoreBooksPageContext.AllBooks
 					await this.UpdateView()
@@ -104,32 +106,34 @@ export class StoreBooksPageComponent {
 		this.books = []
 		this.leftScreenBooks = []
 		this.rightScreenBooks = []
+
+		let response: ApiResponse<any>
 		let responseBooks: any[] = []
 
 		switch (this.context) {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
-				let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
+				response = await this.apiService.GetStoreBooksByCategory({
 					key: this.key,
-					languages: await this.dataService.GetStoreLanguages()
-				})
-				if (getStoreBooksByCategoryResponse.status != 200) return
-				responseBooks = getStoreBooksByCategoryResponse.data.books
-				break
-			default:
-				// Show all books
-				let latestStoreBooksResponse: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({
 					languages: await this.dataService.GetStoreLanguages(),
 					limit: this.maxVisibleBooks,
 					page: this.page
 				})
-
-				if (latestStoreBooksResponse.status != 200) return
-				responseBooks = latestStoreBooksResponse.data.books
-				this.pages = latestStoreBooksResponse.data.pages
-				this.paginationCollectionSize = this.pages * this.maxVisibleBooks
+				break
+			default:
+				// Show all books
+				response = await this.apiService.GetLatestStoreBooks({
+					languages: await this.dataService.GetStoreLanguages(),
+					limit: this.maxVisibleBooks,
+					page: this.page
+				})
 				break
 		}
+
+		if (response.status != 200) return
+		responseBooks = response.data.books
+		this.pages = response.data.pages
+		this.paginationCollectionSize = this.pages * this.maxVisibleBooks
 
 		let i = 0
 		for (let storeBook of responseBooks) {
@@ -185,6 +189,7 @@ export class StoreBooksPageComponent {
 
 	PageChange(page: number) {
 		this.page = page
+		this.router.navigate([], { queryParams: { page } })
 		this.UpdateView()
 	}
 }
