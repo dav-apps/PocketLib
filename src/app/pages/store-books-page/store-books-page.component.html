@@ -13,6 +13,15 @@
 			*ngFor="let book of books">
 		</pocketlib-store-books-page-book-card>
 	</div>
+
+	<div class="mt-4 d-flex justify-content-center">
+		<ngb-pagination
+			[collectionSize]="paginationCollectionSize"
+			[pageSize]="maxVisibleBooks"
+			(pageChange)="PageChange($event)"
+			*ngIf="pages > 1">
+		</ngb-pagination>
+	</div>
 </div>
 
 <!-- Dual-Screen layout -->

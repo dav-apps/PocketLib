@@ -22,6 +22,18 @@ export class StoreBooksPageComponent {
 	dualScreenFoldMargin: number = 0
 	hoveredBookIndex: number = -1
 
+	//#region Variables for pagination
+	pages: number = 1
+	paginationCollectionSize: number = 1
+	maxVisibleBooks: number = 25
+	//#endregion
+
+	//#region Variables for UpdateView
+	context: StoreBooksPageContext = StoreBooksPageContext.Category
+	key: string = ""
+	page: number = 1
+	//#endregion
+
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
@@ -42,17 +54,18 @@ export class StoreBooksPageComponent {
 			switch (urlSegments[0].path) {
 				case "category":
 					// Show the selected category
-					let key = this.activatedRoute.snapshot.paramMap.get('key')
-					await this.UpdateView(StoreBooksPageContext.Category, { key })
+					this.key = this.activatedRoute.snapshot.paramMap.get('key')
+					this.context = StoreBooksPageContext.Category
+					await this.UpdateView()
 					break
 				default:
-					let page = 1
 					if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
-						page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+						this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
 					}
 
 					// Show all books
-					await this.UpdateView(StoreBooksPageContext.AllBooks, { page })
+					this.context = StoreBooksPageContext.AllBooks
+					await this.UpdateView()
 					break
 			}
 
@@ -72,21 +85,18 @@ export class StoreBooksPageComponent {
 		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
-	async UpdateView(context: StoreBooksPageContext, params: {
-		key?: string,
-		page?: number
-	}) {
-		if (context == StoreBooksPageContext.Category) {
-			if (!params.key) return
+	async UpdateView() {
+		if (this.context == StoreBooksPageContext.Category) {
+			if (!this.key) return
 
 			// Get the selected category
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
-			let category = this.dataService.categories.find(c => c.key == params.key)
+			let category = this.dataService.categories.find(c => c.key == this.key)
 			if (!category) return
 
 			this.header = category.name
 		} else {
-			if (!params.page) return
+			if (!this.page) return
 			this.header = this.locale.allBooksTitle
 		}
 
@@ -96,11 +106,11 @@ export class StoreBooksPageComponent {
 		this.rightScreenBooks = []
 		let responseBooks: any[] = []
 
-		switch (context) {
+		switch (this.context) {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
 				let getStoreBooksByCategoryResponse: ApiResponse<any> = await this.apiService.GetStoreBooksByCategory({
-					key: params.key,
+					key: this.key,
 					languages: await this.dataService.GetStoreLanguages()
 				})
 				if (getStoreBooksByCategoryResponse.status != 200) return
@@ -110,11 +120,14 @@ export class StoreBooksPageComponent {
 				// Show all books
 				let latestStoreBooksResponse: ApiResponse<any> = await this.apiService.GetLatestStoreBooks({
 					languages: await this.dataService.GetStoreLanguages(),
-					page: params.page
+					limit: this.maxVisibleBooks,
+					page: this.page
 				})
 
 				if (latestStoreBooksResponse.status != 200) return
 				responseBooks = latestStoreBooksResponse.data.books
+				this.pages = latestStoreBooksResponse.data.pages
+				this.paginationCollectionSize = this.pages * this.maxVisibleBooks
 				break
 		}
 
@@ -168,6 +181,11 @@ export class StoreBooksPageComponent {
 
 	NavigateToStoreBook(uuid: string) {
 		this.router.navigate(["store", "book", uuid])
+	}
+
+	PageChange(page: number) {
+		this.page = page
+		this.UpdateView()
 	}
 }
 
