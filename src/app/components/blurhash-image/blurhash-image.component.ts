@@ -16,6 +16,8 @@ export class BlurhashImageComponent{
 	@Input() src: string = ""
 	@Input() fallback: string = ""
 	@Input() blurhash: string = null
+	@Input() title: string = ""
+	@Input() alt: string = ""
 	@Input() width: number = 0
 	@Input() height: number = 0
 	@Input() fillWidth: boolean = false			// If true, the entire width will be used by the image

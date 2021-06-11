@@ -12,6 +12,7 @@ export class HorizontalBookCardComponent {
 	@Output() click = new EventEmitter()
 	hovered: boolean = false
 	fontSize: number = 20
+	alt: string = ""
 
 	constructor(
 		public dataService: DataService
@@ -19,6 +20,7 @@ export class HorizontalBookCardComponent {
 
 	ngOnInit() {
 		this.setSize()
+		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.title)
 	}
 
 	@HostListener('window:resize')

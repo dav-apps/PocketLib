@@ -387,7 +387,9 @@ const enDefaults = {
 		languages: {
 			en: "English",
 			de: "German"
-		}
+		},
+		bookCoverAlt: "The cover of the ebook {0}",
+		authorProfileImageAlt: "The profile image of the author {0}"
 	}
 }
 
@@ -785,7 +787,9 @@ const deDefaults = {
 		languages: {
 			en: "Englisch",
 			de: "Deutsch"
-		}
+		},
+		bookCoverAlt: "Das Cover des Ebooks {0}",
+		authorProfileImageAlt: "Das Profilbild des Autors {0}"
 	}
 }
 

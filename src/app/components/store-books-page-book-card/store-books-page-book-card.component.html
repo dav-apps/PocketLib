@@ -11,15 +11,10 @@
 		[src]="book.coverContent"
 		[fallback]="dataService.defaultStoreBookCover"
 		[blurhash]="book.coverBlurhash"
+		[title]="book.title"
+		[alt]="alt"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
 		fillWidth="true">
 	</pocketlib-blurhash-image>
-
-	<div class="card-body">
-		<p class="card-text text-center text-color"
-			style="font-size: 15px">
-			{{ book.title }}
-		</p>
-	</div>
 </div>
