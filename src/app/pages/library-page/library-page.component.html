@@ -37,7 +37,7 @@
 				(mouseover)="addBookHover = true"
 				(mouseout)="addBookHover = false"
 				*ngIf="dataService.books.length > 0">
-				
+
 				<div class="card-body d-flex justify-content-center align-items-center">
 					<i class="ms-Icon ms-Icon--Add text-color"
 						aria-hidden="true"
@@ -66,7 +66,7 @@
 	<div
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
-	
+
 		<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
 
 		<div class="mx-auto px-5">
@@ -82,7 +82,7 @@
 	<div
 		class="w-50"
 		[style.marginLeft.px]="dualScreenFoldMargin">
-		
+
 		<div
 			class="row justify-content-center pt-3"
 			style="overflow: scroll"
@@ -149,7 +149,7 @@
 			{{ locale.bookContextMenuRename }}
 		</span>
 	</div>
-	
+
 	<!-- Remove -->
 	<div
 		class="dropdown-item d-flex cursor"

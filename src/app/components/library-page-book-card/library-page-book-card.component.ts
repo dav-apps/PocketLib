@@ -13,6 +13,7 @@ export class LibraryPageBookCardComponent {
 	@Output() contextMenu = new EventEmitter()
 	hovered: boolean = false
 	cover: string = ""
+	alt: string = ""
 
 	constructor(
 		public dataService: DataService
@@ -24,6 +25,8 @@ export class LibraryPageBookCardComponent {
 		} else {
 			this.cover = this.dataService.defaultStoreBookCover
 		}
+
+		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 	}
 
 	Click() {
