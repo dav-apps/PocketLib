@@ -20,12 +20,12 @@ export class StoreBooksPageComponent {
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	hoveredBookIndex: number = -1
+	loading: boolean = false
 
 	//#region Variables for pagination
 	pages: number = 1
 	paginationCollectionSize: number = 1
-	maxVisibleBooks: number = 25
+	maxVisibleBooks: number = 20
 	//#endregion
 
 	//#region Variables for UpdateView
@@ -106,6 +106,7 @@ export class StoreBooksPageComponent {
 		this.books = []
 		this.leftScreenBooks = []
 		this.rightScreenBooks = []
+		this.loading = true
 
 		let response: ApiResponse<any>
 		let responseBooks: any[] = []
@@ -129,6 +130,8 @@ export class StoreBooksPageComponent {
 				})
 				break
 		}
+
+		this.loading = false
 
 		if (response.status != 200) return
 		responseBooks = response.data.books

@@ -14,13 +14,13 @@
 		</pocketlib-store-book-card>
 	</div>
 
-	<div class="mt-4 d-flex justify-content-center">
+	<div class="mt-5 d-flex justify-content-center">
 		<ngb-pagination
 			[page]="page"
 			[collectionSize]="paginationCollectionSize"
 			[pageSize]="maxVisibleBooks"
 			(pageChange)="PageChange($event)"
-			*ngIf="pages > 1">
+			*ngIf="pages > 1 && !loading">
 		</ngb-pagination>
 	</div>
 </div>
@@ -54,6 +54,16 @@
 				(click)="NavigateToStoreBook(book.uuid)"
 				*ngFor="let book of rightScreenBooks">
 			</pocketlib-store-book-card>
+		</div>
+
+		<div class="mt-5 d-flex justify-content-center">
+			<ngb-pagination
+				[page]="page"
+				[collectionSize]="paginationCollectionSize"
+				[pageSize]="maxVisibleBooks"
+				(pageChange)="PageChange($event)"
+				*ngIf="pages > 1 && !loading">
+			</ngb-pagination>
 		</div>
 	</div>
 </div>
