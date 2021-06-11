@@ -15,7 +15,6 @@ const maxVisibleStoreBooks = 10
 export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
 	books: BookListItem[] = []
-	hoveredBookIndex: number = -1
 	showAllHovered: boolean = false
 
 	constructor(
