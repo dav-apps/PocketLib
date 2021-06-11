@@ -67,7 +67,9 @@ export class StoreBookPageComponent {
 		profileImageBlurhash: null
 	}
 	coverContent: string
+	coverAlt: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
+	authorProfileImageAlt: string = ""
 	addToLibraryButtonDisabled: boolean = false
 	davProRequiredDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
@@ -175,6 +177,7 @@ export class StoreBookPageComponent {
 			this.book.coverBlurhash = response.data.cover_blurhash
 			this.book.inLibrary = response.data.in_library
 			this.book.purchased = response.data.purchased
+			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 
 			this.addToLibraryButtonDisabled = this.book.inLibrary
 
@@ -245,6 +248,7 @@ export class StoreBookPageComponent {
 			this.author.collections = response.data.collections
 			this.author.profileImage = response.data.profile_image
 			this.author.profileImageBlurhash = response.data.profile_image_blurhash
+			this.authorProfileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 
 			if (this.author.profileImage) {
 				this.authorProfileImageContent = (await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })).data

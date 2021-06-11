@@ -10,6 +10,8 @@
 				[src]="profileImageContent"
 				[fallback]="dataService.defaultProfileImageUrl"
 				[blurhash]="author.profileImageBlurhash"
+				[title]="author.firstName + ' ' + author.lastName"
+				[alt]="profileImageAlt"
 				[width]="profileImageWidth"
 				[height]="profileImageWidth"
 				margin="0 0 1rem 0"
@@ -30,7 +32,7 @@
 
 			<h4 class="mt-3 text-color">
 				{{ author.firstName }} {{ author.lastName }}
-				
+
 				<button
 					type="button"
 					class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
@@ -169,6 +171,8 @@
 					[src]="profileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
 					[blurhash]="author.profileImageBlurhash"
+					[title]="author.firstName + ' ' + author.lastName"
+					[alt]="profileImageAlt"
 					[width]="profileImageWidth"
 					[height]="profileImageWidth"
 					margin="0 0 1rem 0"

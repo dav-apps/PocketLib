@@ -79,6 +79,7 @@ export class AuthorProfileComponent {
 	}[] = []
 	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
+	profileImageAlt: string = ""
 	hoveredBookIndex: number = -1
 	bookTitleFontSize: number = 20
 	messageBarType: MessageBarType = MessageBarType.warning
@@ -179,6 +180,7 @@ export class AuthorProfileComponent {
 		}
 
 		this.SetupBioLanguageDropdown()
+		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 		this.loaded.emit()
 	}
 

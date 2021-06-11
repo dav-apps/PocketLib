@@ -17,7 +17,8 @@ export class HorizontalAuthorListComponent {
 		lastName: string,
 		profileImage: boolean,
 		profileImageContent: string,
-		profileImageBlurhash: string
+		profileImageBlurhash: string,
+		profileImageAlt: string
 	}[] = []
 
 	constructor(
@@ -33,6 +34,7 @@ export class HorizontalAuthorListComponent {
 		this.authors = []
 		let response: ApiResponse<any> = await this.apiService.GetLatestAuthors()
 		if (response.status != 200) return
+		let profileImageAltTemplate = this.dataService.GetLocale().misc.authorProfileImageAlt
 
 		for (let author of response.data.authors) {
 			let authorItem = {
@@ -41,7 +43,8 @@ export class HorizontalAuthorListComponent {
 				lastName: author.last_name,
 				profileImage: author.profile_image,
 				profileImageContent: null,
-				profileImageBlurhash: author.profile_image_blurhash
+				profileImageBlurhash: author.profile_image_blurhash,
+				profileImageAlt: profileImageAltTemplate.replace('{0}', `${author.first_name} ${author.last_name}`)
 			}
 
 			if (authorItem.profileImage) {
