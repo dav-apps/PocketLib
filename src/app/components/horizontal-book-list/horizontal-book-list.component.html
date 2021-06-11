@@ -3,11 +3,11 @@
 
 	<div class="horizontal-store-list" style="height: 250px; overflow-x: scroll; overflow-y: hidden">
 		<div class="d-flex mb-3 pl-4" style="width: max-content">
-			<pocketlib-store-books-page-book-card
+			<pocketlib-store-book-card
 				[book]="book"
 				(click)="NavigateToStoreBook(book.uuid)"
 				*ngFor="let book of books">
-			</pocketlib-store-books-page-book-card>
+			</pocketlib-store-book-card>
 
 			<div
 				class="mx-2 my-3"

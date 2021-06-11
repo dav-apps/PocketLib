@@ -51,6 +51,7 @@ import { AuthorProfileComponent } from './components/author-profile/author-profi
 import { CollectionViewComponent } from './components/collection-view/collection-view.component'
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component'
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component'
+import { StoreBookCardComponent } from './components/store-book-card/store-book-card.component'
 import { LanguageDropdownComponent } from './components/language-dropdown/language-dropdown.component'
 import { CategoriesSelectionComponent } from './components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from './components/price-input/price-input.component'
@@ -65,7 +66,6 @@ import { DavProCardComponent } from './components/dav-pro-card/dav-pro-card.comp
 import { HorizontalBookCardComponent } from './components/horizontal-book-card/horizontal-book-card.component'
 import { LibraryPageCardsComponent } from './components/library-page-cards/library-page-cards.component'
 import { LibraryPageBookCardComponent } from './components/library-page-book-card/library-page-book-card.component'
-import { StoreBooksPageBookCardComponent } from './components/store-books-page-book-card/store-books-page-book-card.component'
 import { NewBookPageTitleSectionComponent } from './components/new-book-page-title-section/new-book-page-title-section.component'
 import { NewBookPageCollectionSectionComponent } from './components/new-book-page-collection-section/new-book-page-collection-section.component'
 import { NewBookPageDescriptionSectionComponent } from './components/new-book-page-description-section/new-book-page-description-section.component'
@@ -104,6 +104,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		CollectionViewComponent,
 		HorizontalBookListComponent,
 		HorizontalAuthorListComponent,
+		StoreBookCardComponent,
 		LanguageDropdownComponent,
 		CategoriesSelectionComponent,
 		PriceInputComponent,
@@ -118,7 +119,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		HorizontalBookCardComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
-		StoreBooksPageBookCardComponent,
 		NewBookPageTitleSectionComponent,
 		NewBookPageCollectionSectionComponent,
 		NewBookPageDescriptionSectionComponent,
