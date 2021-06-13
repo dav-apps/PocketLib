@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
 import { transition, trigger, state, style, animate } from '@angular/animations'
-import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
+import { IDialogContentProps, IButtonStyles, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { DataService } from 'src/app/services/data-service'
 import { Book } from 'src/app/models/Book'
@@ -52,6 +52,8 @@ export class LibraryPageComponent {
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
 	addBookHover: boolean = false
+	loading: boolean = true
+	spinnerSize: SpinnerSize = SpinnerSize.large
 
 	renameBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.renameBookDialog.title
@@ -106,6 +108,11 @@ export class LibraryPageComponent {
 				this.contextMenuVisible = false
 			}
 		}
+	}
+
+	async ngOnInit() {
+		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
+		this.loading = false
 	}
 
 	async AddBookFilePick(file: ReadFile) {

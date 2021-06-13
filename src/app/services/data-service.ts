@@ -44,6 +44,7 @@ export class DataService {
 	settings: Settings
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>()
 	settingsSyncPromiseHolder = new PromiseHolder<Settings>()
+	allBooksInitialLoadPromiseHolder = new PromiseHolder()
 	syncFinished: boolean = false
 	userPromiseHolder = new PromiseHolder()
 	userAuthor: Author = null

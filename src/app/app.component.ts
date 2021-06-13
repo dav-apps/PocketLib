@@ -66,7 +66,9 @@ export class AppComponent {
 		}
 
 		// Load the books
-		this.dataService.LoadAllBooks()
+		this.dataService.LoadAllBooks().then(() => {
+			this.dataService.allBooksInitialLoadPromiseHolder.Resolve()
+		})
 
 		// Load the author
 		await this.dataService.LoadAuthorOfUser()
