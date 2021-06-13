@@ -25,10 +25,9 @@
 			</div>
 		</div>
 
-		<div class="row justify-content-center">
-			<!-- Card for adding new book -->
+		<div *ngIf="dataService.books.length > 0">
 			<div
-				class="card cursor m-2 theme-background-color-secondary"
+				class="card cursor my-3 mx-auto theme-background-color-secondary"
 				style="width: 180px; transition: 0.12s" 
 				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
 				ngxFilePicker
@@ -47,12 +46,14 @@
 				</div>
 			</div>
 
-			<pocketlib-library-page-book-card
-				*ngFor="let book of dataService.books; let i = index"
-				[book]="book"
-				(click)="ShowBook(book)"
-				(contextMenu)="BookContextMenu($event, book)">
-			</pocketlib-library-page-book-card>
+			<div class="row justify-content-center">
+				<pocketlib-library-page-book-card
+					*ngFor="let book of dataService.books; let i = index"
+					[book]="book"
+					(click)="ShowBook(book)"
+					(contextMenu)="BookContextMenu($event, book)">
+				</pocketlib-library-page-book-card>
+			</div>
 		</div>
 	</div>
 </div>

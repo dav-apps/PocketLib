@@ -51,6 +51,7 @@ export class LibraryPageComponent {
 	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
+	addBookHover: boolean = false
 
 	renameBookDialogContentProps: IDialogContentProps = {
 		title: this.locale.renameBookDialog.title
