@@ -6,20 +6,29 @@ import {
 } from './TextExtractor'
 
 export class EpubReader {
+	private initialized: boolean = false
+	private metadataLoaded: boolean = false
+	private chaptersLoaded: boolean = false
+
+	//#region Metadata variables
 	title: string
 	author: string
 	language: string
 	cover: EpubManifestItem
 	coverSrc: string
+	//#endregion
+
+	private opfDoc: Document
+	private opfFilePath: string
+	private opfFileDir: string
+
+	entries: { [key: string]: JSZip.JSZipObject } = {}
 	chapters: EpubChapter[] = []
-	entries: { [key: string]: JSZip.JSZipObject }
 	manifestItems: EpubManifestItem[] = []
 	toc: EpubTocItem[] = []
 
-	async ReadEpubFile(zipFile: Blob): Promise<boolean> {
-		this.chapters = []
-		this.entries = {}
-		this.manifestItems = []
+	async Init(zipFile: Blob): Promise<boolean> {
+		if (this.initialized) return false
 
 		// Load the entries of the zip file
 		this.entries = (await JSZip.loadAsync(zipFile)).files
@@ -32,11 +41,11 @@ export class EpubReader {
 		}
 
 		// Get the content of the container file
-		let opfFilePath = await GetOpfFilePath(containerEntry)
-		let opfFileDirectory = GetFileDirectory(opfFilePath)
+		this.opfFilePath = await GetOpfFilePath(containerEntry)
+		this.opfFileDir = GetFileDirectory(this.opfFilePath)
 
 		// Get the opf file
-		let opfFileEntry = this.entries[opfFilePath]
+		let opfFileEntry = this.entries[this.opfFilePath]
 		if (!opfFileEntry) {
 			// The epub file is invalid
 			return false
@@ -47,19 +56,27 @@ export class EpubReader {
 
 		// Read the OPF file content
 		let parser = new DOMParser()
-		let opfDoc = parser.parseFromString(opfContent, "text/xml")
+		this.opfDoc = parser.parseFromString(opfContent, "text/xml")
+
+		this.initialized = true
+		return true
+	}
+
+	async LoadMetadata(): Promise<boolean> {
+		if (!this.initialized) return false
+		if (this.metadataLoaded) return false
 
 		// Get the manifest items
-		let manifestTag = opfDoc.getElementsByTagName("manifest")[0]
+		let manifestTag = this.opfDoc.getElementsByTagName("manifest")[0]
 		let manifestItemTags = manifestTag.getElementsByTagName("item")
 
 		for (let i = 0; i < manifestItemTags.length; i++) {
 			let manifestItemTag = manifestItemTags[i]
-			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), opfFileDirectory + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")))
+			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), this.opfFileDir + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")))
 		}
 
 		// Get the metadata content
-		let metadataTag = opfDoc.getElementsByTagName("metadata")[0]
+		let metadataTag = this.opfDoc.getElementsByTagName("metadata")[0]
 		let titleItem = metadataTag.getElementsByTagName("dc:title").item(0)
 		if (titleItem) this.title = titleItem.innerHTML
 		let authorItem = metadataTag.getElementsByTagName("dc:creator").item(0)
@@ -91,11 +108,24 @@ export class EpubReader {
 			}
 		}
 
-		// Get the spine content
-		let spineTag = opfDoc.getElementsByTagName("spine")[0]
-		this.chapters = []
+		this.metadataLoaded = true
+		return true
+	}
 
+	async LoadChapters(): Promise<boolean> {
+		if (!this.initialized) return false
+		if (this.chaptersLoaded) return false
+
+		// Make sure the metadata is loaded
+		if (
+			!this.metadataLoaded
+			&& !await this.LoadMetadata()
+		) return false
+
+		// Get the spine content
+		let spineTag = this.opfDoc.getElementsByTagName("spine")[0]
 		let spineItemTags = spineTag.getElementsByTagName("itemref")
+
 		for (let i = 0; i < spineItemTags.length; i++) {
 			let idref = spineItemTags[i].getAttribute("idref")
 
@@ -118,8 +148,8 @@ export class EpubReader {
 		let tocFilePath = "toc.ncx"
 		let tocDirectory = ""
 
-		if (opfFilePath.includes('/')) {
-			tocDirectory = opfFilePath.slice(0, opfFilePath.lastIndexOf('/')) + "/"
+		if (this.opfFilePath.includes('/')) {
+			tocDirectory = this.opfFilePath.slice(0, this.opfFilePath.lastIndexOf('/')) + "/"
 			tocFilePath = tocDirectory + "toc.ncx"
 		}
 
@@ -132,9 +162,12 @@ export class EpubReader {
 		// Get the content of the toc file
 		let tocContent = await tocEntry.async("text")
 
+		let parser = new DOMParser()
 		let tocDoc = parser.parseFromString(tocContent, "text/xml")
 		let navMap = tocDoc.getElementsByTagName("navMap")[0]
 		this.toc = GetTocItems(navMap, tocDirectory)
+
+		this.chaptersLoaded = true
 		return true
 	}
 }

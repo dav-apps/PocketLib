@@ -43,7 +43,7 @@ export class EpubBook extends Book {
 
 		// Check if the file is a valid epub file
 		let epubReader = new EpubReader()
-		if(!await epubReader.ReadEpubFile(fileBlob)) return null
+		if(!await epubReader.Init(fileBlob)) return null
 
 		// Create and save the epub book
 		let book = new EpubBook(fileBlob, null, true, null)

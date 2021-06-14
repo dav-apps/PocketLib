@@ -203,7 +203,10 @@ export class EpubViewerComponent {
 		this.dualScreenLayout = GetDualScreenSettings().dualScreenLayout
 
 		// Load the ebook
-		await this.book.ReadEpubFile(this.dataService.currentBook.file)
+		if (
+			!await this.book.Init(this.dataService.currentBook.file)
+			|| !await this.book.LoadChapters()
+		) return
 
 		// Create a chapter for each chapter of the book
 		this.chapters = []

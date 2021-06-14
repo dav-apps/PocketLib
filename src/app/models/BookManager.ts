@@ -7,8 +7,8 @@ import { PdfBook } from './PdfBook'
 import { EpubReader } from './EpubReader'
 import { EpubBookmark, GetEpubBookmark } from './EpubBookmark'
 
-const epubType = "application/epub+zip";
-const pdfType = "application/pdf";
+const epubType = "application/epub+zip"
+const pdfType = "application/pdf"
 
 export async function GetBook(uuid: string): Promise<Book> {
 	let tableObject = await GetTableObject(uuid)
@@ -57,7 +57,10 @@ async function LoadEpubBookDetails(book: EpubBook) {
 	if (book.file.type != epubType) return
 
 	let epubReader = new EpubReader()
-	await epubReader.ReadEpubFile(book.file)
+	if (
+		!await epubReader.Init(book.file)
+		|| !await epubReader.LoadMetadata()
+	) return
 
 	book.title = epubReader.title
 	book.author = epubReader.author
