@@ -26,23 +26,54 @@
 		</div>
 
 		<div *ngIf="dataService.books.length > 0">
-			<div
-				class="card cursor my-3 mx-auto theme-background-color-secondary"
-				style="width: 180px; transition: 0.12s" 
-				[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
-				ngxFilePicker
-				accept="application/epub+zip,application/pdf"
-				(filePick)="AddBookFilePick($event)"
-				(mouseover)="addBookHover = true"
-				(mouseout)="addBookHover = false"
-				*ngIf="dataService.books.length > 0">
+			<div class="d-flex justify-content-center my-3">
+				<div
+					class="card cursor mx-3 theme-background-color-secondary"
+					style="width: 140px; transition: 0.12s"
+					[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+					ngxFilePicker
+					accept="application/epub+zip,application/pdf"
+					(filePick)="AddBookFilePick($event)"
+					(mouseover)="addBookHover = true"
+					(mouseout)="addBookHover = false"
+					*ngIf="dataService.books.length > 0">
 
-				<div class="card-body d-flex justify-content-center align-items-center">
-					<i class="ms-Icon ms-Icon--Add text-color"
-						aria-hidden="true"
-						style="font-size: 22px"
-						[@addBookHover]="addBookHover">
-					</i>
+					<div class="card-body d-flex justify-content-center align-items-center">
+						<i class="ms-Icon ms-Icon--Add text-color"
+							aria-hidden="true"
+							style="font-size: 22px">
+						</i>
+					</div>
+				</div>
+
+				<div
+					class="card cursor mx-3 theme-background-color-secondary"
+					style="width: 140px; transition: 0.12s"
+					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
+					(mouseover)="discoverBooksHover = true"
+					(mouseout)="discoverBooksHover = false"
+					(click)="NavigateToStorePage()">
+
+					<div class="card-body d-flex justify-content-center align-items-center">
+						<i class="ms-Icon ms-Icon--Shop text-color"
+							aria-hidden="true"
+							style="font-size: 22px">
+						</i>
+					</div>
+				</div>
+
+				<div
+					class="card cursor mx-3 theme-background-color-secondary"
+					style="width: 140px; transition: 0.12s"
+					[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
+					*ngIf="dataService.userAuthor || dataService.userIsAdmin"
+					(mouseover)="goToAuthorPageHover = true"
+					(mouseout)="goToAuthorPageHover = false"
+					(click)="NavigateToAuthorPage()">
+
+					<div class="card-body d-flex justify-content-center align-items-center">
+						<fa-icon [icon]="faAddressCard" class="text-color" style="font-size: 22px"></fa-icon>
+					</div>
 				</div>
 			</div>
 

@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { transition, trigger, state, style, animate } from '@angular/animations'
 import { IDialogContentProps, IButtonStyles, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
+import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
@@ -37,6 +38,7 @@ const pdfType = "application/pdf"
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
 	@ViewChild('contextMenu', { static: true }) contextMenu: ElementRef
+	faAddressCard = faAddressCard
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -52,6 +54,8 @@ export class LibraryPageComponent {
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
 	addBookHover: boolean = false
+	discoverBooksHover: boolean = false
+	goToAuthorPageHover: boolean = false
 	loading: boolean = true
 	spinnerSize: SpinnerSize = SpinnerSize.large
 
