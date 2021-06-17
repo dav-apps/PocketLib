@@ -5,7 +5,6 @@
 		<div class="d-flex mb-3 pl-4" style="width: max-content">
 			<pocketlib-store-book-card
 				[book]="book"
-				(click)="NavigateToStoreBook(book.uuid)"
 				*ngFor="let book of books">
 			</pocketlib-store-book-card>
 
@@ -14,19 +13,21 @@
 				style="display: inline-flex; width: 100px"
 				*ngIf="books.length > 0">
 
-				<div
+				<a
 					class="d-flex mx-auto my-auto align-items-center justify-content-center cursor"
 					[ngClass]="showAllHovered ? 'shadow' : 'shadow-sm'"
 					style="width: 50px; height: 50px; border-radius: 50%; transition: 0.12s"
-					(click)="NavigateToAllBooks()"
+					routerLink="/store/books/all"
 					(mouseover)="showAllHovered = true"
-					(mouseout)="showAllHovered = false">
-					
+					(mouseout)="showAllHovered = false"
+					(focusin)="showAllHovered = true"
+					(focusout)="showAllHovered = false">
+
 					<i class="ms-Icon ms-Icon--Forward text-color"
 						aria-hidden="true"
 						style="font-size: 22px">
 					</i>
-				</div>
+				</a>
 			</div>
 		</div>
 	</div>

@@ -188,10 +188,6 @@ export class StoreBooksPageComponent {
 		}
 	}
 
-	NavigateToStoreBook(uuid: string) {
-		this.router.navigate(["store", "book", uuid])
-	}
-
 	PageChange(page: number) {
 		this.page = page
 		this.router.navigate([], { queryParams: { page } })

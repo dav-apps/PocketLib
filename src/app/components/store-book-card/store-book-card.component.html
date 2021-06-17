@@ -1,11 +1,13 @@
-<div
+<a
 	class="card cursor m-2 theme-background-color-secondary"
 	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
 	style="transition: 0.12s"
 	[style.width.px]="book.coverWidth"
-	(click)="Click()"
+	[routerLink]="link"
 	(mouseover)="hovered = true"
-	(mouseout)="hovered = false">
+	(mouseout)="hovered = false"
+	(focusin)="hovered = true"
+	(focusout)="hovered = false">
 
 	<pocketlib-blurhash-image
 		[src]="book.coverContent"
@@ -17,4 +19,4 @@
 		[height]="book.coverHeight"
 		fillWidth="true">
 	</pocketlib-blurhash-image>
-</div>
+</a>

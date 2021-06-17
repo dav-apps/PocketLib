@@ -12,7 +12,6 @@
 
 		<pocketlib-store-book-card
 			[book]="book"
-			(click)="NavigateToStoreBook(book.uuid)"
 			*ngFor="let book of books">
 		</pocketlib-store-book-card>
 	</div>
@@ -52,7 +51,6 @@
 
 			<pocketlib-store-book-card
 				[book]="book"
-				(click)="NavigateToStoreBook(book.uuid)"
 				*ngFor="let book of leftScreenBooks">
 			</pocketlib-store-book-card>
 		</div>
@@ -67,7 +65,6 @@
 		<div class="d-flex flex-wrap justify-content-center" style="margin-top: 72px">
 			<pocketlib-store-book-card
 				[book]="book"
-				(click)="NavigateToStoreBook(book.uuid)"
 				*ngFor="let book of rightScreenBooks">
 			</pocketlib-store-book-card>
 		</div>

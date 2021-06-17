@@ -8,9 +8,9 @@ import { BookListItem } from 'src/app/misc/types'
 })
 export class StoreBookCardComponent {
 	@Input() book: BookListItem
-	@Output() click = new EventEmitter()
 	hovered: boolean = false
 	alt: string = ""
+	link: string = ""
 
 	constructor(
 		public dataService: DataService
@@ -18,9 +18,6 @@ export class StoreBookCardComponent {
 
 	ngOnInit() {
 		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
-	}
-
-	Click() {
-		this.click.emit()
+		this.link = `/store/book/${this.book.uuid}`
 	}
 }
