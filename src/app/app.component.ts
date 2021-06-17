@@ -127,25 +127,4 @@ export class AppComponent {
 		this.dataService.LoadAllBooks()
 	}
 	//#endregion
-
-	ShowLibraryPage() {
-		this.routingService.NavigateToLibraryPage()
-		return false
-	}
-
-	ShowAuthorPage() {
-		this.routingService.NavigateToAuthorPage()
-	}
-
-	ShowStorePage() {
-		this.routingService.NavigateToStorePage()
-	}
-
-	ShowAccountPage() {
-		this.routingService.NavigateToAccountPage()
-	}
-
-	ShowSettingsPage() {
-		this.routingService.NavigateToSettingsPage()
-	}
 }
