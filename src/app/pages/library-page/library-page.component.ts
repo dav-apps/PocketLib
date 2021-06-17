@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
-import { transition, trigger, state, style, animate } from '@angular/animations'
 import { IDialogContentProps, IButtonStyles, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
@@ -14,26 +13,7 @@ import { enUS } from 'src/locales/locales'
 const pdfType = "application/pdf"
 
 @Component({
-	selector: "pocketlib-library-page",
-	templateUrl: "./library-page.component.html",
-	animations: [
-		trigger('addBookHover', [
-			state('false', style({
-				transform: 'rotateZ(0deg)',
-				fontSize: '22px'
-			})),
-			state('true', style({
-				transform: 'rotateZ(90deg)',
-				fontSize: '28px'
-			})),
-			transition('true => false', [
-				animate('0.18s ease-in')
-			]),
-			transition('false => true', [
-				animate('0.18s ease-out')
-			])
-		])
-	]
+	templateUrl: "./library-page.component.html"
 })
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
@@ -135,14 +115,6 @@ export class LibraryPageComponent {
 		}
 
 		await this.dataService.LoadAllBooks()
-	}
-
-	NavigateToStorePage() {
-		this.router.navigate(['store'])
-	}
-
-	NavigateToAuthorPage() {
-		this.router.navigate(['author'])
 	}
 
 	async ShowBook(book: Book) {

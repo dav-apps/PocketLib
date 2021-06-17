@@ -10,9 +10,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class LibraryPageCardsComponent{
 	locale = enUS.libraryPageCards
-	@Output() discoverBooksClick = new EventEmitter()
 	@Output() addBookFilePick = new EventEmitter()
-	@Output() goToAuthorPageClick = new EventEmitter()
 	faAddressCard = faAddressCard
 	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
 	addBookHover: boolean = false					// Indicator for if the mouse is hovering the add book card
@@ -24,15 +22,7 @@ export class LibraryPageCardsComponent{
 		this.locale = this.dataService.GetLocale().libraryPageCards
 	}
 
-	DiscoverBooksClick() {
-		this.discoverBooksClick.emit()
-	}
-
 	AddBookFilePick(file: ReadFile) {
 		this.addBookFilePick.emit(file)
-	}
-
-	GoToAuthorPageClick() {
-		this.goToAuthorPageClick.emit()
 	}
 }

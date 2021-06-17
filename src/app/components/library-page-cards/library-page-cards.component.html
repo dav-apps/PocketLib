@@ -1,62 +1,62 @@
 <!-- Card for discovering books in the Store -->
-<div
-	class="card cursor theme-background-color-secondary"
-	style="width: 100%; transition: 0.12s; margin-top: 28px; margin-bottom: 28px" 
+<a
+	class="card cursor d-flex justify-content-center align-items-center theme-background-color-secondary"
+	style="width: 100%; transition: 0.12s; margin-top: 28px; margin-bottom: 28px; text-decoration: none;"
 	[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
+	routerLink="/store"
 	(mouseover)="discoverBooksHover = true"
 	(mouseout)="discoverBooksHover = false"
-	(click)="DiscoverBooksClick()">
+	(focusin)="discoverBooksHover = true"
+	(focusout)="discoverBooksHover = false">
 
-	<div class="card-body d-flex">
-		<div class="mx-auto text-center">
-			<i class="ms-Icon ms-Icon--Shop text-color"
-				aria-hidden="true"
-				style="font-size: 28px">
-			</i>
+	<div class="card-body text-center">
+		<i class="ms-Icon ms-Icon--Shop text-color"
+			aria-hidden="true"
+			style="font-size: 28px">
+		</i>
 
-			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.discoverBooks }}</p>
-		</div>
+		<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.discoverBooks }}</p>
 	</div>
-</div>
+</a>
 
 <!-- Card for adding new book if the library is empty -->
-<div
-	class="card cursor theme-background-color-secondary"
+<button
+	class="card cursor d-flex justify-content-center align-items-center theme-background-color-secondary"
 	style="width: 100%; transition: 0.12s; margin-bottom: 28px"
 	[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
 	ngxFilePicker
 	accept="application/epub+zip,application/pdf"
 	(filePick)="AddBookFilePick($event)"
 	(mouseover)="addBookHover = true"
-	(mouseout)="addBookHover = false">
+	(mouseout)="addBookHover = false"
+	(focusin)="addBookHover = true"
+	(focusout)="addBookHover = false">
 
-	<div class="card-body d-flex">
-		<div class="mx-auto text-center">
-			<i class="ms-Icon ms-Icon--Add text-color"
-				aria-hidden="true"
-				style="font-size: 28px">
-			</i>
+	<div class="card-body text-center">
+		<i class="ms-Icon ms-Icon--Add text-color"
+			aria-hidden="true"
+			style="font-size: 28px">
+		</i>
 
-			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.addBook }}</p>
-		</div>
+		<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.addBook }}</p>
 	</div>
-</div>
+</button>
 
 <!-- Card for going to the author page, if the user is an author -->
-<div
-	class="card cursor theme-background-color-secondary"
-	style="width: 100%; transition: 0.12s"
+<a
+	class="card cursor d-flex justify-content-center align-items-center theme-background-color-secondary"
+	style="width: 100%; transition: 0.12s; text-decoration: none"
 	[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
+	routerlink="/author"
 	*ngIf="dataService.userAuthor || dataService.userIsAdmin"
 	(mouseover)="goToAuthorPageHover = true"
 	(mouseout)="goToAuthorPageHover = false"
-	(click)="GoToAuthorPageClick()">
+	(focusin)="goToAuthorPageHover = true"
+	(focusout)="goToAuthorPageHover = false">
 
-	<div class="card-body d-flex">
-		<div class="mx-auto text-center">
-			<fa-icon [icon]="faAddressCard" class="text-color" style="font-size: 28px"></fa-icon>
+	<div class="card-body text-center">
+		<fa-icon [icon]="faAddressCard" class="text-color" style="font-size: 28px"></fa-icon>
 
-			<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.goToAuthorPage }}</p>
-		</div>
+		<p class="mb-0 text-color" style="font-size: 18px; margin-top: 12px">{{ locale.goToAuthorPage }}</p>
 	</div>
-</div>
+</a>
