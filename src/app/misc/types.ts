@@ -7,3 +7,13 @@ export interface BookListItem {
 	coverWidth?: number
 	coverHeight?: number
 }
+
+export interface AuthorListItem {
+	uuid: string
+	firstName: string
+	lastName: string
+	profileImage: boolean
+	profileImageContent: string
+	profileImageBlurhash: string
+	profileImageAlt: string
+}

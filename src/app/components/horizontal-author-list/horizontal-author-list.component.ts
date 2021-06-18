@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { AuthorListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -11,15 +12,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class HorizontalAuthorListComponent {
 	locale = enUS.horizontalAuthorList
-	authors: {
-		uuid: string,
-		firstName: string,
-		lastName: string,
-		profileImage: boolean,
-		profileImageContent: string,
-		profileImageBlurhash: string,
-		profileImageAlt: string
-	}[] = []
+	authors: AuthorListItem[] = []
 
 	constructor(
 		public dataService: DataService,

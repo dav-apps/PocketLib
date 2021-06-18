@@ -97,19 +97,27 @@ export class BlurhashImageComponent{
 		if (!this.shadowOnHover) return
 
 		if (hover) {
-			// Remove shadow-sm
-			let i = this.classes.indexOf("shadow-sm")
-			if (i != -1) this.classes.splice(i, 1)
-			
-			// Add shadow
-			this.classes.push('shadow')
+			this.AddShadow()
 		} else {
-			// Remove shadow
-			let i = this.classes.indexOf("shadow")
-			if (i != -1) this.classes.splice(i, 1)
-			
-			// Add shadow-sm
-			this.classes.push('shadow-sm')
+			this.RemoveShadow()
 		}
+	}
+
+	AddShadow() {
+		// Remove shadow-sm
+		let i = this.classes.indexOf("shadow-sm")
+		if (i != -1) this.classes.splice(i, 1)
+		
+		// Add shadow
+		this.classes.push('shadow')
+	}
+
+	RemoveShadow() {
+		// Remove shadow
+		let i = this.classes.indexOf("shadow")
+		if (i != -1) this.classes.splice(i, 1)
+		
+		// Add shadow-sm
+		this.classes.push('shadow-sm')
 	}
 }
