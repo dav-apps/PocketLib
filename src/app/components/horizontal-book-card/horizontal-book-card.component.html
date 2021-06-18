@@ -1,11 +1,13 @@
-<div
+<a
 	id="book-card-parent"
 	class="card my-4 cursor book-list-item theme-background-color-secondary"
 	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
-	style="transition: 0.12s"
-	(click)="Click()"
+	style="text-decoration: none; transition: 0.12s"
+	[routerLink]="link"
 	(mouseover)="hovered = true"
-	(mouseout)="hovered = false">
+	(mouseout)="hovered = false"
+	(focusin)="hovered = true"
+	(focusout)="hovered = false">
 
 	<div class="row no-gutters">
 		<div class="col-4">
@@ -30,4 +32,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</a>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { Router } from '@angular/router'
 import { ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -19,8 +18,7 @@ export class HorizontalBookListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
-		private router: Router
+		private apiService: ApiService
 	) {
 		this.locale = this.dataService.GetLocale().horizontalBookList
 	}

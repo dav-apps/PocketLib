@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input } from '@angular/core'
-import { Router, NavigationExtras } from '@angular/router'
+import { Router } from '@angular/router'
 import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-js'
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component'
@@ -149,10 +149,6 @@ export class CollectionViewComponent {
 		} else {
 			this.router.navigate(["author"])
 		}
-	}
-
-	NavigateToBook(uuid: string) {
-		this.router.navigate(["author", "book", uuid])
 	}
 
 	ShowCollectionNamesDialog() {

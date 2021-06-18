@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core'
-import { Router, NavigationExtras } from '@angular/router'
 import {
 	IDropdownOption,
 	DropdownMenuItemType,
@@ -83,7 +82,6 @@ export class AuthorProfileComponent {
 	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	profileImageAlt: string = ""
-	hoveredBookIndex: number = -1
 	bookTitleFontSize: number = 20
 	messageBarType: MessageBarType = MessageBarType.warning
 	showProviderMessage: boolean = false
@@ -125,8 +123,7 @@ export class AuthorProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
-		private router: Router
+		private apiService: ApiService
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
 
@@ -216,18 +213,6 @@ export class AuthorProfileComponent {
 	SelectDefaultBio() {
 		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.supportedLocale, this.author.bios)
 		if (this.bioLanguageDropdownSelectedIndex < 0) this.bioLanguageDropdownSelectedIndex = 0
-	}
-
-	NavigateToCollection(uuid: string) {
-		this.router.navigate(["author", "collection", uuid])
-	}
-
-	NavigateToAuthorStoreBook(uuid: string) {
-		this.router.navigate(["author", "book", uuid])
-	}
-
-	NavigateToStoreBook(uuid: string) {
-		this.router.navigate(["store", "book", uuid])
 	}
 
 	SetupBioLanguageDropdown() {

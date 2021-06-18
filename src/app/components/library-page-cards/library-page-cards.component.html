@@ -47,7 +47,7 @@
 	class="card cursor d-flex justify-content-center align-items-center theme-background-color-secondary"
 	style="width: 100%; transition: 0.12s; text-decoration: none"
 	[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
-	routerlink="/author"
+	routerLink="/author"
 	*ngIf="dataService.userAuthor || dataService.userIsAdmin"
 	(mouseover)="goToAuthorPageHover = true"
 	(mouseout)="goToAuthorPageHover = false"

@@ -30,7 +30,7 @@
 			[title]="book.title"
 			[coverContent]="book.coverContent"
 			[coverBlurhash]="book.coverBlurhash"
-			(click)="NavigateToBook(book.uuid)"
+			[link]="'/author/book/' + book.uuid"
 			*ngFor="let book of collection.books">
 		</pocketlib-horizontal-book-card>
 	</div>
@@ -72,7 +72,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				(click)="NavigateToBook(book.uuid)"
+				[link]="'/author/book/' + book.uuid"
 				*ngFor="let book of collection.leftScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>
@@ -88,7 +88,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				(click)="NavigateToBook(book.uuid)"
+				[link]="'/author/book/' + book.uuid"
 				*ngFor="let book of collection.rightScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>

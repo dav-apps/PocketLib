@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core'
+import { Component, Input, HostListener } from '@angular/core'
 import { DataService } from 'src/app/services/data-service'
 
 @Component({
@@ -9,7 +9,7 @@ export class HorizontalBookCardComponent {
 	@Input() title: string = ""
 	@Input() coverContent: string = ""
 	@Input() coverBlurhash: string = ""
-	@Output() click = new EventEmitter()
+	@Input() link: string = ""
 	hovered: boolean = false
 	fontSize: number = 20
 	alt: string = ""
@@ -41,9 +41,5 @@ export class HorizontalBookCardComponent {
 		} else {
 			this.fontSize = 20
 		}
-	}
-
-	Click() {
-		this.click.emit()
 	}
 }

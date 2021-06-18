@@ -135,7 +135,7 @@
 				[title]="collection.name"
 				[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
 				[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-				(click)="collection.books.length == 1 ? NavigateToAuthorStoreBook(collection.books[0].uuid) : NavigateToCollection(collection.uuid)"
+				[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
 				*ngFor="let collection of collections">
 			</pocketlib-horizontal-book-card>
 		</div>
@@ -146,7 +146,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				(click)="NavigateToStoreBook(book.uuid)"
+				[link]="'/store/book/' + book.uuid"
 				*ngFor="let book of books">
 			</pocketlib-horizontal-book-card>
 		</div>
@@ -305,71 +305,24 @@
 					[linkParams]="newBookPageLink.params">
 				</pocketlib-add-list-item>
 
-				<div
-					class="card my-4 cursor book-list-item theme-background-color-secondary"
-					[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
-					style="transition: 0.12s"
-					*ngFor="let collection of collections; let i = index"
-					(click)="collection.books.length == 1 ? NavigateToAuthorStoreBook(collection.books[0].uuid) : NavigateToCollection(collection.uuid)"
-					(mouseover)="hoveredBookIndex = i"
-					(mouseout)="hoveredBookIndex = -1">
-					
-					<div class="row no-gutters">
-						<div class="col-4">
-							<pocketlib-blurhash-image
-								[src]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
-								[fallback]="dataService.defaultStoreBookCover"
-								[blurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-								width="100"
-								height="160">
-							</pocketlib-blurhash-image>
-						</div>
-
-						<div class="col-8 my-auto">
-							<div class="card-body">
-								<h5
-									[style.fontSize.px]="bookTitleFontSize"
-									class="card-title my-auto text-color">
-									{{ collection.name }}
-								</h5>
-							</div>
-						</div>
-					</div>
-				</div>
+				<pocketlib-horizontal-book-card
+					[title]="collection.name"
+					[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
+					[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
+					[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
+					*ngFor="let collection of collections">
+				</pocketlib-horizontal-book-card>
 			</div>
 
 			<div *ngIf="authorMode == 0">
 				<!-- List of books -->
-				<div
-					class="card my-4 cursor book-list-item theme-background-color-secondary"
-					[ngClass]="hoveredBookIndex == i ? 'shadow' : 'shadow-sm'"
-					style="transition: 0.12s"
-					*ngFor="let book of books; let i = index"
-					(click)="NavigateToStoreBook(book.uuid)"
-					(mouseover)="hoveredBookIndex = i"
-					(mouseout)="hoveredBookIndex = -1">
-					<div class="row no-gutters">
-						<div class="col-4">
-							<pocketlib-blurhash-image
-								[src]="book.coverContent"
-								[fallback]="dataService.defaultStoreBookCover"
-								[blurhash]="book.coverBlurhash"
-								[width]="100"
-								[height]="160">
-							</pocketlib-blurhash-image>
-						</div>
-
-						<div class="col-8 my-auto">
-							<div class="card-body">
-								<h5
-									[style.fontSize.px]="bookTitleFontSize"
-									class="card-title my-auto text-color">
-									{{ book.title }}
-								</h5>
-							</div>
-						</div>
-					</div>
-				</div>
+				<pocketlib-horizontal-book-card
+					[title]="book.title"
+					[coverContent]="book.coverContent"
+					[coverBlurhash]="book.coverBlurhash"
+					[link]="'/store/book/' + book.uuid"
+					*ngFor="let book of books">
+				</pocketlib-horizontal-book-card>
 			</div>
 		</div>
 	</div>
