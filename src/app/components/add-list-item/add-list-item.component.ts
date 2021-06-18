@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { transition, trigger, state, style, animate } from '@angular/animations'
 
 @Component({
@@ -24,10 +24,7 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 	]
 })
 export class AddListItemComponent{
-	@Output() click = new EventEmitter()
+	@Input() link: string = ""
+	@Input() linkParams = {}
 	hover: boolean = false
-
-	ItemClick() {
-		this.click.emit()
-	}
 }

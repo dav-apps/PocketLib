@@ -88,6 +88,10 @@ export class AuthorProfileComponent {
 	messageBarType: MessageBarType = MessageBarType.warning
 	showProviderMessage: boolean = false
 	providerMessage: string = ""
+	newBookPageLink: {
+		path: string,
+		params: any
+	} = { path: "/author/book/new", params: {} }
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -183,6 +187,9 @@ export class AuthorProfileComponent {
 				books: collection.books
 			})
 		}
+
+		// Set the new book page link
+		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.author.uuid
 
 		this.SetupBioLanguageDropdown()
 		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
@@ -415,18 +422,6 @@ export class AuthorProfileComponent {
 		if (this.dualScreenLayout) {
 			UpdateDialogForDualScreenLayout()
 		}
-	}
-
-	NavigateToNewBookPage() {
-		let extras: NavigationExtras = {}
-
-		if (this.dataService.userIsAdmin) {
-			extras.queryParams = {
-				author: this.author.uuid
-			}
-		}
-
-		this.router.navigate(["author", "book", "new"], extras)
 	}
 
 	async SaveProfile() {

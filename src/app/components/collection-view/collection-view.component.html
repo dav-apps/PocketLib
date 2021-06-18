@@ -21,7 +21,8 @@
 
 	<div class="col-12 col-md-6 mx-auto">
 		<pocketlib-add-list-item
-			(click)="NavigateToNewBookPage()"
+			[link]="newBookPageLink.path"
+			[linkParams]="newBookPageLink.params"
 			*ngIf="collection.books.length > 0">
 		</pocketlib-add-list-item>
 
@@ -62,7 +63,8 @@
 
 		<div class="mx-auto px-5">
 			<pocketlib-add-list-item
-				(click)="NavigateToNewBookPage()"
+				[link]="newBookPageLink.path"
+				[linkParams]="newBookPageLink.params"
 				*ngIf="collection.leftScreenBooks.length > 0 || collection.rightScreenBooks.length > 0">
 			</pocketlib-add-list-item>
 	

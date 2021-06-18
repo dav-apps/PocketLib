@@ -36,6 +36,10 @@ export class CollectionViewComponent {
 	collectionNamesDialogVisible: boolean = false
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	showAddLanguageButton: boolean = false
+	newBookPageLink: {
+		path: string,
+		params: any
+	} = { path: "/author/book/new", params: {} }
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -133,6 +137,10 @@ export class CollectionViewComponent {
 		) {
 			this.authorMode = AuthorMode.AuthorOfUser
 		}
+
+		// Set the links
+		this.newBookPageLink.params["collection"] = this.uuid
+		if(this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.collection.author
 	}
 
 	GoBack() {
@@ -141,18 +149,6 @@ export class CollectionViewComponent {
 		} else {
 			this.router.navigate(["author"])
 		}
-	}
-
-	NavigateToNewBookPage() {
-		let extras: NavigationExtras = {
-			queryParams: { collection: this.uuid }
-		}
-
-		if (this.dataService.userIsAdmin) {
-			extras.queryParams.author = this.collection.author
-		}
-
-		this.router.navigate(["author", "book", "new"], extras)
 	}
 
 	NavigateToBook(uuid: string) {

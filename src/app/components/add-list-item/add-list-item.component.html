@@ -1,10 +1,13 @@
-<div
+<a
 	class="card cursor my-4 theme-background-color-secondary"
 	[ngClass]="hover ? 'shadow' : 'shadow-sm'"
-	style="transition: 0.12s"
-	(click)="ItemClick()"
+	style="text-decoration: none; transition: 0.12s"
+	[routerLink]="[link]"
+	[queryParams]="linkParams"
 	(mouseover)="hover = true"
-	(mouseout)="hover = false">
+	(mouseout)="hover = false"
+	(focusin)="hover = true"
+	(focusout)="hover = false">
 
 	<div class="card-body d-flex justify-content-center align-items-center">
 		<i class="ms-Icon ms-Icon--Add text-color"
@@ -13,4 +16,4 @@
 			[@hover]="hover">
 		</i>
 	</div>
-</div>
+</a>

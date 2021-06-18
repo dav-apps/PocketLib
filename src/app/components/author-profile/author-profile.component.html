@@ -127,7 +127,8 @@
 			</h3>
 
 			<pocketlib-add-list-item
-				(click)="NavigateToNewBookPage()">
+				[link]="newBookPageLink.path"
+				[linkParams]="newBookPageLink.params">
 			</pocketlib-add-list-item>
 
 			<pocketlib-horizontal-book-card
@@ -300,7 +301,8 @@
 				</h3>
 
 				<pocketlib-add-list-item
-					(click)="NavigateToNewBookPage()">
+					[link]="newBookPageLink.path"
+					[linkParams]="newBookPageLink.params">
 				</pocketlib-add-list-item>
 
 				<div
