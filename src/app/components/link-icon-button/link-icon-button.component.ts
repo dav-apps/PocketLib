@@ -1,14 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input } from '@angular/core'
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
 	selector: 'pocketlib-link-icon-button',
 	templateUrl: './link-icon-button.component.html'
 })
 export class LinkIconButtonComponent{
-	@Input() icon
-	@Output() click = new EventEmitter()
-
-	Click() {
-		this.click.emit()
-	}
+	@Input() icon: IconDefinition
+	@Input() link: string = ""
 }

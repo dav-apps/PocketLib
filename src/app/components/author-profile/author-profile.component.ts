@@ -54,6 +54,9 @@ export class AuthorProfileComponent {
 		profileImage: false,
 		profileImageBlurhash: null
 	}
+	facebookLink: string = ""
+	instagramLink: string = ""
+	twitterLink: string = ""
 	books: BookListItem[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownSelectedIndex: number = 0
@@ -150,9 +153,11 @@ export class AuthorProfileComponent {
 		if (this.authorMode == AuthorMode.AuthorOfAdmin) {
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
+			this.UpdateSocialMediaLinks()
 			this.SelectDefaultBio()
 		} else if (this.authorMode == AuthorMode.AuthorOfUser) {
 			this.author = this.dataService.userAuthor
+			this.UpdateSocialMediaLinks()
 			this.SelectDefaultBio()
 
 			// Set the text and visibility for the provider message
@@ -476,6 +481,8 @@ export class AuthorProfileComponent {
 				this.dataService.userAuthor.instagramUsername = response.data.instagram_username
 				this.dataService.userAuthor.twitterUsername = response.data.twitter_username
 			}
+
+			this.UpdateSocialMediaLinks()
 		} else {
 			for (let error of response.data.errors) {
 				switch (error.code) {
@@ -606,28 +613,30 @@ export class AuthorProfileComponent {
 			}
 
 			this.bioMode = BioMode.Normal
+			this.UpdateSocialMediaLinks()
 			this.SelectDefaultBio()
 		}
 	}
 
-	NavigateToWebsite() {
-		if (!this.author.websiteUrl) return
-		window.open(this.author.websiteUrl, 'blank')
+	UpdateSocialMediaLinks() {
+		this.facebookLink = this.GenerateFacebookLink(this.author.facebookUsername)
+		this.instagramLink = this.GenerateInstagramLink(this.author.instagramUsername)
+		this.twitterLink = this.GenerateTwitterLink(this.author.twitterUsername)
 	}
 
-	NavigateToFacebook() {
-		if (!this.author.facebookUsername) return
-		window.open(`https://facebook.com/${this.author.facebookUsername}`, 'blank')
+	GenerateFacebookLink(facebookUsername: string): string {
+		if (!facebookUsername) return ""
+		return `https://facebook.com/${facebookUsername}`
 	}
 
-	NavigateToInstagram() {
-		if (!this.author.instagramUsername) return
-		window.open(`https://instagram.com/${this.author.instagramUsername}`, 'blank')
+	GenerateInstagramLink(instagramUsername: string): string {
+		if (!instagramUsername) return ""
+		return `https://instagram.com/${instagramUsername}`
 	}
 
-	NavigateToTwitter() {
-		if (!this.author.twitterUsername) return
-		window.open(`https://twitter.com/${this.author.twitterUsername}`, 'blank')
+	GenerateTwitterLink(twitterUsername: string): string {
+		if (!twitterUsername) return ""
+		return `https://twitter.com/${twitterUsername}`
 	}
 }
 
