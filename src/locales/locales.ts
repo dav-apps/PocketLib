@@ -58,7 +58,8 @@ const enDefaults = {
 		openLastReadBook: "Open the last read book at startup",
 		news: "News and updates",
 		github: "PocketLib on GitHub",
-      privacy: "Privacy Policy"
+		privacy: "Privacy Policy",
+		installUpdate: "Install update"
    },
    developerPage: {
       landingHeader1: "Build on PocketLib",
@@ -458,7 +459,8 @@ const deDefaults = {
 		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten",
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
-      privacy: "Datenschutzerklärung"
+		privacy: "Datenschutzerklärung",
+		installUpdate: "Update installieren"
 	},
 	developerPage: {
       landingHeader1: "Baue auf PocketLib",

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { SwUpdate } from '@angular/service-worker'
 import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
@@ -18,9 +19,11 @@ export class SettingsPageComponent {
 	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
 	selectedTheme: string
 	openLastReadBook: boolean = false
+	updateAvailable: boolean = false
 
 	constructor(
-		public dataService: DataService
+		public dataService: DataService,
+		private swUpdate: SwUpdate
 	) {
 		this.locale = this.dataService.GetLocale().settingsPage
 
@@ -40,6 +43,11 @@ export class SettingsPageComponent {
 		// Increase the font size of the toggle label
 		let labels = document.getElementsByClassName('ms-Toggle-label')
 		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
+
+		// Check for updates
+		this.swUpdate.available.subscribe(event => {
+			this.updateAvailable = true
+		})
 	}
 
 	onThemeRadioButtonSelected(event: MatRadioChange) {
@@ -51,5 +59,9 @@ export class SettingsPageComponent {
 	onOpenLastReadBookToggleChange(event: { checked: boolean }) {
 		this.openLastReadBook = event.checked
 		this.dataService.SetOpenLastReadBook(event.checked)
+	}
+
+	InstallUpdate() {
+		window.location.reload()
 	}
 }

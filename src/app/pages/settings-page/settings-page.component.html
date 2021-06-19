@@ -50,6 +50,12 @@
 				Version {{ version }}<br>
 				Copyright &copy; {{ year }} by dav
 			</p>
+
+			<fab-primary-button
+				(onClick)="InstallUpdate()"
+				*ngIf="updateAvailable">
+				{{ locale.installUpdate }}
+			</fab-primary-button>
 		</div>
 	</div>
 </div>
@@ -110,6 +116,12 @@
 					Version {{ version }}<br>
 					Copyright &copy; {{ year }} by dav
 				</p>
+
+				<fab-primary-button
+					(onClick)="InstallUpdate()"
+					*ngIf="updateAvailable">
+					{{ locale.installUpdate }}
+				</fab-primary-button>
 			</div>
 		</div>
 	</div>
