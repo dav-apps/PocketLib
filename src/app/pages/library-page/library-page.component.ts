@@ -141,7 +141,7 @@ export class LibraryPageComponent {
 		this.router.navigate(["book"])
 	}
 
-	BookContextMenu(event: MouseEvent, book: Book) {
+	async BookContextMenu(event: MouseEvent, book: Book) {
 		this.selectedBook = book
 		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
 		this.showExportBookOption = book.belongsToUser || book.purchase != null
@@ -152,12 +152,15 @@ export class LibraryPageComponent {
 
 		if (this.contextMenuVisible) {
 			this.contextMenuVisible = false
-			setTimeout(() => {
-				this.contextMenuVisible = true
-			}, 60)
-		} else {
-			this.contextMenuVisible = true
+
+			await new Promise((resolve: Function) => {
+				setTimeout(() => {
+					resolve()
+				}, 60)
+			})
 		}
+
+		this.contextMenuVisible = true
 	}
 
 	async DownloadBook() {

@@ -148,7 +148,7 @@
 	[style.top.px]="contextMenuPositionY">
 
 	<!-- Export -->
-	<div
+	<button
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
 		*ngIf="showExportBookOption"
@@ -164,7 +164,7 @@
 			style="margin-top: 3px; margin-bottom: 2px">
 			{{ locale.bookContextMenuExport }}
 		</span>
-	</div>
+	</button>
 
 	<div
 		class="mx-2 my-1"
@@ -173,7 +173,7 @@
 	</div>
 
 	<!-- Rename -->
-	<div
+	<button
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
 		*ngIf="showRenameBookOption"
@@ -189,10 +189,10 @@
 			style="margin-top: 3px; margin-bottom: 2px">
 			{{ locale.bookContextMenuRename }}
 		</span>
-	</div>
+	</button>
 
 	<!-- Remove -->
-	<div
+	<button
 		class="dropdown-item d-flex cursor"
 		style="padding-left: 10px; padding-right: 10px"
 		(click)="ShowRemoveBookDialog()">
@@ -207,7 +207,7 @@
 			style="margin-top: 3px; margin-bottom: 2px">
 			{{ locale.bookContextMenuRemove }}
 		</span>
-	</div>
+	</button>
 </div>
 
 <fab-dialog
