@@ -200,7 +200,7 @@ export class LibraryPageComponent {
 			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleMissing
 		} else if (this.renameBookDialogTitle.length < 2) {
 			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooShort
-		} else if (this.renameBookDialogTitle.length > 100) {
+		} else if (this.renameBookDialogTitle.length > 50) {
 			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooLong
 		} else {
 			await (this.selectedBook as PdfBook).SetTitle(this.renameBookDialogTitle)
