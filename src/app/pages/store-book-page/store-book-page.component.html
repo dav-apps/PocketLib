@@ -76,7 +76,8 @@
 		<div class="mb-4 px-4">
 			<pocketlib-header
 				[title]="book.title"
-				(backButtonClick)="GoBack()">
+				[backButtonLink]="backButtonLink"
+				(backButtonClick)="BackButtonClick()">
 			</pocketlib-header>
 		</div>
 
@@ -188,7 +189,8 @@
 			<div class="mb-4">
 				<pocketlib-header
 					[title]="book.title"
-					(backButtonClick)="GoBack()">
+					[backButtonLink]="backButtonLink"
+					(backButtonClick)="BackButtonClick()">
 				</pocketlib-header>
 			</div>
 
@@ -218,7 +220,8 @@
 	<div class="mt-3 mb-4">
 		<pocketlib-header
 			[title]="book.title"
-			(backButtonClick)="GoBack()">
+			[backButtonLink]="backButtonLink"
+			(backButtonClick)="BackButtonClick()">
 		</pocketlib-header>
 	</div>
 

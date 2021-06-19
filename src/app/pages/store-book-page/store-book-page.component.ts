@@ -75,6 +75,7 @@ export class StoreBookPageComponent {
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
+	backButtonLink: string = ""
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -114,6 +115,9 @@ export class StoreBookPageComponent {
 		this.setSize()
 		await this.dataService.userPromiseHolder.AwaitResult()
 
+		// Set the link of the back button
+		this.backButtonLink = this.routingService.GetLastVisitedRoute("/store")
+
 		// Get the store book cover
 		this.coverContent = (await this.apiService.GetStoreBookCover({ uuid: this.uuid })).data
 
@@ -132,8 +136,8 @@ export class StoreBookPageComponent {
 		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
-	GoBack() {
-		this.routingService.NavigateBack("/store")
+	BackButtonClick() {
+		this.routingService.RevertLastNavigation()
 	}
 
 	NavigateToAuthor() {

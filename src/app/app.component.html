@@ -23,26 +23,29 @@
 
 		<span style="flex: 1 1 auto"></span>
 
-		<a
+		<button
 			class="btn btn-primary mr-2 cursor"
 			style="width: 50px; height: 50px"
-			routerLink="/store"
+			role="link"
+			(click)="routingService.NavigateToStorePage()"
 			*ngIf="!dataService.smallWindow">
 
 			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
-		</a>
-		<a
-			class="btn btn-primary mr-2 cursor d-flex justify-content-center"
+		</button>
+		<button
+			class="btn btn-primary mr-2 cursor"
 			style="width: 50px; height: 50px"
-			routerLink="/author"
+			role="link"
+			(click)="routingService.NavigateToAuthorPage()"
 			*ngIf="(dataService.userAuthor || dataService.userIsAdmin) && !dataService.smallWindow">
 
 			<fa-icon [icon]="faAddressCardLight" class="d-flex align-items-center" style="font-size: 24px"></fa-icon>
-		</a>
-		<a
+		</button>
+		<button
 			class="btn btn-primary mr-2 cursor"
 			style="width: 50px; height: 50px"
-			routerLink="/account">
+			role="link"
+			(click)="routingService.NavigateToAccountPage()">
 
          <i class="material-icons" style="margin-top: 6px; font-size: 25px" *ngIf="!dataService.dav.isLoggedIn">account_circle</i>
 			<img
@@ -51,14 +54,15 @@
          	class="rounded-circle" 
          	height="28" width="28"
          	style="margin-top: 4px; margin-left: -2px">
-		</a>
-		<a
+		</button>
+		<button
 			class="btn btn-primary cursor"
 			style="width: 50px; height: 50px"
-			routerLink="/settings">
+			role="link"
+			(click)="routingService.NavigateToSettingsPage()">
 
 			<i class="material-icons" style="margin-top: 6px; font-size: 25px">settings</i>
-		</a>
+		</button>
 	</mat-toolbar-row>
 </mat-toolbar>
 
@@ -70,19 +74,21 @@
 	style="z-index: 1"
 	*ngIf="dataService.bottomToolbarVisible">
 
-	<a
+	<button
 		mat-flat-button
 		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		routerLink="/">
+		role="link"
+		(click)="routingService.NavigateToLibraryPage()">
 
 		<i class="ms-Icon ms-Icon--Home" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl != '/'"></i>
 		<i class="ms-Icon ms-Icon--HomeSolid" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl == '/'"></i>
-	</a>
+	</button>
 
-	<a
+	<button
 		mat-flat-button
 		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		routerLink="/store">
+		role="link"
+		(click)="routingService.NavigateToStorePage()">
 		
 		<div class="d-flex justify-content-center">
 			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
@@ -91,15 +97,16 @@
 				*ngIf="bottomToolbarStoreEntryActive">
 			</div>
 		</div>
-	</a>
+	</button>
 
-	<a
+	<button
 		mat-flat-button
 		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		routerLink="/author"
+		role="link"
+		(click)="routingService.NavigateToAuthorPage()"
 		*ngIf="dataService.userAuthor || dataService.userIsAdmin">
 
 		<fa-icon [icon]="faAddressCardSolid" style="font-size: 24px" *ngIf="bottomToolbarAuthorEntryActive"></fa-icon>
 		<fa-icon [icon]="faAddressCardLight" style="font-size: 24px" *ngIf="!bottomToolbarAuthorEntryActive"></fa-icon>
-	</a>
+	</button>
 </div>

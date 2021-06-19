@@ -4,9 +4,9 @@ import { DataService } from './data-service'
 
 @Injectable()
 export class RoutingService {
-	private history: string[] = [];
-	public showsStore: boolean = false;
-	public toolbarNavigationEvent: Function;
+	private history: string[] = []
+	public showsStore: boolean = false
+	public toolbarNavigationEvent: Function
 
 	constructor(
 		private dataService: DataService,
@@ -39,6 +39,24 @@ export class RoutingService {
 			this.router.navigateByUrl(this.history.pop())
 		} else {
 			this.router.navigateByUrl(alternativeRoute)
+		}
+	}
+
+	GetLastVisitedRoute(alternativeRoute: string) {
+		if (this.history.length > 1) {
+			// Return the second-last route in the history
+			return this.history[this.history.length - 2]
+		} else {
+			return alternativeRoute
+		}
+	}
+
+	RevertLastNavigation() {
+		// Remove the current url
+		this.history.pop()
+
+		if (this.history.length > 0) {
+			this.history.pop()
 		}
 	}
 
