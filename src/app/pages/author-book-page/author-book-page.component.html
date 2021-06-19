@@ -8,7 +8,7 @@
 		<pocketlib-header
 			[title]="book.title"
 			editButtonVisible="true"
-			(backButtonClick)="GoBack()"
+			[backButtonLink]="backButtonLink"
 			(editButtonClick)="ShowEditTitleDialog()">
 		</pocketlib-header>
 	</div>
@@ -210,7 +210,7 @@
 			<pocketlib-header
 				[title]="book.title"
 				editButtonVisible="true"
-				(backButtonClick)="GoBack()"
+				[backButtonLink]="backButtonLink"
 				(editButtonClick)="ShowEditTitleDialog()">
 			</pocketlib-header>
 		</div>

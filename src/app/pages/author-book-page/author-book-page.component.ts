@@ -17,7 +17,6 @@ import { enUS } from 'src/locales/locales'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 
 @Component({
-	selector: 'pocketlib-author-book-page',
 	templateUrl: './author-book-page.component.html',
 	styleUrls: ['./author-book-page.component.scss']
 })
@@ -73,6 +72,7 @@ export class AuthorBookPageComponent {
 	priceUpdating: boolean = false
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
+	backButtonLink: string = ""
 
 	spinnerSize: SpinnerSize = SpinnerSize.small
 	dialogPrimaryButtonStyles: IButtonStyles = {
@@ -153,9 +153,11 @@ export class AuthorBookPageComponent {
 			// Redirect back to the author page
 			this.router.navigate(['author'])
 		}
+
+		this.LoadBackButtonLink()
 	}
 
-	GoBack() {
+	LoadBackButtonLink() {
 		// Check if this is the only book in the collection
 		let skipCollection = false
 		let authorUuid: string
@@ -185,11 +187,11 @@ export class AuthorBookPageComponent {
 		}
 
 		if (skipCollection && this.dataService.userIsAdmin) {
-			this.router.navigate(["author", authorUuid])
+			this.backButtonLink = `/author/${authorUuid}`
 		} else if (skipCollection) {
-			this.router.navigate(["author"])
+			this.backButtonLink = "/author"
 		} else {
-			this.router.navigate(["author", "collection", this.book.collection])
+			this.backButtonLink = `/author/collection/${this.book.collection}`
 		}
 	}
 

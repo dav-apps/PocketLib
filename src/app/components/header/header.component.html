@@ -3,9 +3,18 @@
 		type="button"
 		class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 		style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
-		(click)="backButtonClick.emit()">
+		(click)="backButtonClick.emit()"
+		*ngIf="!backButtonLink">
 		<fab-icon iconName="Back"></fab-icon>
 	</button>
+	<a
+		class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+		style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
+		[routerLink]="backButtonLink"
+		(click)="backButtonClick.emit()"
+		*ngIf="backButtonLink">
+		<fab-icon iconName="Back"></fab-icon>
+	</a>
 	{{ title }}
 	<button
 		type="button"

@@ -40,6 +40,7 @@ export class CollectionViewComponent {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
+	backButtonLink: string = ""
 
 	backButtonIconStyles: IIconStyles = {
 		root: {
@@ -140,15 +141,8 @@ export class CollectionViewComponent {
 
 		// Set the links
 		this.newBookPageLink.params["collection"] = this.uuid
-		if(this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.collection.author
-	}
-
-	GoBack() {
-		if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.collection.author])
-		} else {
-			this.router.navigate(["author"])
-		}
+		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.collection.author
+		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.collection.author}` : "/author"
 	}
 
 	ShowCollectionNamesDialog() {
