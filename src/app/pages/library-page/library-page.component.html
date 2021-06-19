@@ -39,10 +39,10 @@
 					(focusout)="addBookHover = false"
 					*ngIf="dataService.books.length > 0">
 
-					<div class="card-body">
+					<div class="card-body d-flex align-items-center" style="padding: 1rem">
 						<i class="ms-Icon ms-Icon--Add text-color"
 							aria-hidden="true"
-							style="font-size: 22px">
+							style="font-size: 24px">
 						</i>
 					</div>
 				</button>
@@ -50,7 +50,7 @@
 				<!-- Card for discovering books in the Store -->
 				<a
 					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
-					style="width: 140px; transition: 0.12s"
+					style="width: 140px; text-decoration: none; transition: 0.12s"
 					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
 					routerLink="/store"
 					(mouseover)="discoverBooksHover = true"
@@ -58,10 +58,10 @@
 					(focusin)="discoverBooksHover = true"
 					(focusout)="discoverBooksHover = false">
 
-					<div class="card-body">
+					<div class="card-body d-flex align-items-center" style="padding: 1rem">
 						<i class="ms-Icon ms-Icon--Shop text-color"
 							aria-hidden="true"
-							style="font-size: 22px">
+							style="font-size: 24px">
 						</i>
 					</div>
 				</a>
@@ -69,7 +69,7 @@
 				<!-- Card for going to the author page, if the user is an author -->
 				<a
 					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
-					style="width: 140px; transition: 0.12s"
+					style="width: 140px; text-decoration: none; transition: 0.12s"
 					[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
 					routerLink="/author"
 					*ngIf="dataService.userAuthor || dataService.userIsAdmin"
@@ -78,8 +78,12 @@
 					(focusin)="goToAuthorPageHover = true"
 					(focusout)="goToAuthorPageHover = false">
 
-					<div class="card-body">
-						<fa-icon [icon]="faAddressCard" class="text-color" style="font-size: 22px"></fa-icon>
+					<div class="card-body d-flex align-items-center" style="padding: 1rem">
+						<fa-icon
+							class="text-color"
+							style="font-size: 24px"
+							[icon]="faAddressCard">
+						</fa-icon>
 					</div>
 				</a>
 			</div>
