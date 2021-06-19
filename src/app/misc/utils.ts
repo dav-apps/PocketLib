@@ -10,7 +10,7 @@ export function FindPositionsInHtmlElement(element: Element, positions: number[]
 		FindPositionsInHtmlElement(child, positions)
 
 		let childPosition = child.getBoundingClientRect()
-		let yPos = childPosition.height + childPosition.top + 2
+		let yPos = childPosition.height + childPosition.top
 
 		if (positions.length == 0 || (positions.length > 0 && positions[positions.length - 1] != yPos)) {
 			positions.push(yPos)

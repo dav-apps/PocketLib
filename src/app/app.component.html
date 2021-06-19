@@ -9,6 +9,7 @@
 		</button>
 
 		<a mat-icon-button
+			class="d-flex justify-content-center align-items-center"
 			routerLink="/"
 			*ngIf="routingService.showsStore && !dataService.smallWindow">
 
@@ -42,26 +43,25 @@
 			<fa-icon [icon]="faAddressCardLight" class="d-flex align-items-center" style="font-size: 24px"></fa-icon>
 		</button>
 		<button
-			class="btn btn-primary mr-2 cursor"
+			class="btn btn-primary mr-2 cursor d-flex justify-content-center align-items-center"
 			style="width: 50px; height: 50px"
 			role="link"
 			(click)="routingService.NavigateToAccountPage()">
 
-         <i class="material-icons" style="margin-top: 6px; font-size: 25px" *ngIf="!dataService.dav.isLoggedIn">account_circle</i>
+         <i class="material-icons" style="font-size: 25px" *ngIf="!dataService.dav.isLoggedIn">account_circle</i>
 			<img
 				*ngIf="dataService.dav.isLoggedIn" 
          	[src]="dataService.dav.user.ProfileImage" 
          	class="rounded-circle" 
-         	height="28" width="28"
-         	style="margin-top: 4px; margin-left: -2px">
+         	height="28" width="28">
 		</button>
 		<button
-			class="btn btn-primary cursor"
+			class="btn btn-primary cursor d-flex justify-content-center align-items-center"
 			style="width: 50px; height: 50px"
 			role="link"
 			(click)="routingService.NavigateToSettingsPage()">
 
-			<i class="material-icons" style="margin-top: 6px; font-size: 25px">settings</i>
+			<i class="material-icons" style="font-size: 25px">settings</i>
 		</button>
 	</mat-toolbar-row>
 </mat-toolbar>

@@ -297,6 +297,9 @@ export class StoreBookPageComponent {
 			// Download the table objects
 			await DownloadTableObject(response.data.uuid)
 			await DownloadTableObject(response.data.file)
+
+			// Clear the ApiCache for GetStoreBook
+			this.apiService.ClearCache(this.apiService.GetStoreBook.name)
 		} else {
 			// Show error
 			this.ShowErrorDialog()
@@ -314,6 +317,9 @@ export class StoreBookPageComponent {
 
 				if (createPurchaseResponse.status == 201) {
 					this.book.purchased = true
+
+					// Clear the ApiCache for GetStoreBook
+					this.apiService.ClearCache(this.apiService.GetStoreBook.name)
 				} else {
 					// Show error
 					this.ShowErrorDialog()
@@ -372,5 +378,8 @@ export class StoreBookPageComponent {
 			status: "published"
 		})
 		if (response.status == 200) this.book.status = BookStatus.Published
+
+		// Clear the ApiCache for GetStoreBook
+		this.apiService.ClearCache(this.apiService.GetStoreBook.name)
 	}
 }

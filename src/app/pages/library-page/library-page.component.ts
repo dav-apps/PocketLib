@@ -4,6 +4,7 @@ import { IDialogContentProps, IButtonStyles, SpinnerSize } from 'office-ui-fabri
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
@@ -71,6 +72,7 @@ export class LibraryPageComponent {
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().libraryPage
@@ -212,5 +214,8 @@ export class LibraryPageComponent {
 		this.removeBookDialogVisible = false
 		await this.selectedBook.Delete()
 		await this.dataService.LoadAllBooks()
+
+		// Clear the ApiCache for GetStoreBook
+		this.apiService.ClearCache(this.apiService.GetStoreBook.name)
 	}
 }
