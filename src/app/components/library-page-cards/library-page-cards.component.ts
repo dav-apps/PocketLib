@@ -12,8 +12,8 @@ export class LibraryPageCardsComponent{
 	locale = enUS.libraryPageCards
 	@Output() addBookFilePick = new EventEmitter()
 	faAddressCard = faAddressCard
-	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
 	addBookHover: boolean = false					// Indicator for if the mouse is hovering the add book card
+	discoverBooksHover: boolean = false			// Indicator for if the mouse is hovering the discover books card
 	goToAuthorPageHover: boolean = false		// Indicator for if the mouse is hovering the card for going to the author page
 
 	constructor(
