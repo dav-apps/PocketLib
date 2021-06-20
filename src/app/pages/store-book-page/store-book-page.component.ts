@@ -140,10 +140,6 @@ export class StoreBookPageComponent {
 		this.routingService.RevertLastNavigation()
 	}
 
-	NavigateToAuthor() {
-		this.router.navigate(['store', 'author', this.author.uuid])
-	}
-
 	ShowErrorDialog() {
 		this.errorDialogContentProps.title = this.locale.errorDialog.title
 		this.errorDialogVisible = true
@@ -346,10 +342,6 @@ export class StoreBookPageComponent {
 
 	NavigateToAccountPage() {
 		this.router.navigate(['account'])
-	}
-
-	NavigateToCategory(key: string) {
-		this.router.navigate(["store", "books", key])
 	}
 
 	async NavigateToPurchasePage() {

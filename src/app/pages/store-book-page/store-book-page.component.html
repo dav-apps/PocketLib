@@ -19,7 +19,10 @@
 			</pocketlib-blurhash-image>
 
 			<!-- Author profile image and name -->
-			<div class="d-flex my-3">
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/author/' + author.uuid">
+
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
@@ -30,16 +33,14 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true"
-					(click)="NavigateToAuthor()">
+					cursor="true">
 				</pocketlib-blurhash-image>
 
 				<p class="font-weight-light my-auto cursor text-color"
-					style="font-size: 18px; margin-left: 13px"
-					(click)="NavigateToAuthor()">
+					style="font-size: 18px; margin-left: 13px">
 					{{ author.firstName }} {{ author.lastName }}
 				</p>
-			</div>
+			</a>
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
@@ -86,14 +87,14 @@
 			<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
 
 			<!-- Categories -->
-			<span
+			<a
 				class="badge badge-pill mr-2 cursor"
 				[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
 				style="font-size: 13px"
-				*ngFor="let category of book.categories; let i = index"
-				(click)="NavigateToCategory(category.key)">
+				[routerLink]="'/store/category/' + category.key"
+				*ngFor="let category of book.categories; let i = index">
 				{{ category.name }}
-			</span>
+			</a>
 		</div>
 	</div>
 </div>
@@ -126,7 +127,10 @@
 			</pocketlib-blurhash-image>
 
 			<!-- Author profile image and name -->
-			<div class="d-flex my-3">
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/author/' + author.uuid">
+
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
@@ -137,16 +141,14 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true"
-					(click)="NavigateToAuthor()">
+					cursor="true">
 				</pocketlib-blurhash-image>
 
 				<p class="font-weight-light my-auto cursor text-color"
-					style="font-size: 18px; margin-left: 13px"
-					(click)="NavigateToAuthor()">
+					style="font-size: 18px; margin-left: 13px">
 					{{ author.firstName }} {{ author.lastName }}
 				</p>
-			</div>
+			</a>
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
@@ -198,14 +200,14 @@
 			<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
 
 			<!-- Categories -->
-			<span
+			<a
 				class="badge badge-pill mr-2 cursor"
 				[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
 				style="font-size: 13px"
-				*ngFor="let category of book.categories; let i = index"
-				(click)="NavigateToCategory(category.key)">
+				[routerLink]="'/store/category/' + category.key"
+				*ngFor="let category of book.categories; let i = index">
 				{{ category.name }}
-			</span>
+			</a>
 		</div>
 	</div>
 </div>
@@ -240,7 +242,10 @@
 			</pocketlib-blurhash-image>
 
 			<!-- Author profile image and name -->
-			<div class="d-flex my-3">
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/author/' + author.uuid">
+
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
@@ -251,16 +256,14 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true"
-					(click)="NavigateToAuthor()">
+					cursor="true">
 				</pocketlib-blurhash-image>
 
 				<p class="font-weight-light my-auto cursor text-color"
-					style="font-size: 18px; margin-left: 13px"
-					(click)="NavigateToAuthor()">
+					style="font-size: 18px; margin-left: 13px">
 					{{ author.firstName }} {{ author.lastName }}
 				</p>
-			</div>
+			</a>
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
@@ -296,14 +299,14 @@
 	<p class="mt-4 mb-1 text-color" style="white-space: pre-line">{{ book.description }}</p>
 
 	<!-- Categories -->
-	<span
+	<a
 		class="badge badge-pill mr-2 cursor"
 		[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
 		style="font-size: 13px"
-		*ngFor="let category of book.categories; let i = index"
-		(click)="NavigateToCategory(category.key)">
+		[routerLink]="'/store/category/' + category.key"
+		*ngFor="let category of book.categories; let i = index">
 		{{ category.name }}
-	</span>
+	</a>
 </div>
 
 <fab-dialog

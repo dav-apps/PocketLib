@@ -207,35 +207,35 @@
 			</h4>
 	
 			<div
-				style="display: inline-block"
+				class="d-flex justify-content-center"
 				*ngIf="author.websiteUrl || author.facebookUsername || author.instagramUsername || author.twitterUsername">
 				
 				<!-- Website -->
 				<pocketlib-link-icon-button
 					[icon]="faGlobe"
-					*ngIf="author.websiteUrl"
-					(click)="NavigateToWebsite()">
+					[link]="author.websiteUrl"
+					*ngIf="author.websiteUrl">
 				</pocketlib-link-icon-button>
 	
 				<!-- Facebook -->
 				<pocketlib-link-icon-button
 					[icon]="faFacebook"
-					*ngIf="author.facebookUsername"
-					(click)="NavigateToFacebook()">
+					[link]="facebookLink"
+					*ngIf="author.facebookUsername">
 				</pocketlib-link-icon-button>
 	
 				<!-- Instagram -->
 				<pocketlib-link-icon-button
 					[icon]="faInstagram"
-					*ngIf="author.instagramUsername"
-					(click)="NavigateToInstagram()">
+					[link]="instagramLink"
+					*ngIf="author.instagramUsername">
 				</pocketlib-link-icon-button>
 	
 				<!-- Twitter -->
 				<pocketlib-link-icon-button
 					[icon]="faTwitter"
-					*ngIf="author.twitterUsername"
-					(click)="NavigateToTwitter()">
+					[link]="twitterLink"
+					*ngIf="author.twitterUsername">
 				</pocketlib-link-icon-button>
 			</div>
 
