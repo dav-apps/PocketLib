@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core'
 import * as axios from 'axios'
-import { Dav, ApiResponse, BlobToBase64 } from 'dav-js'
+import {
+	Dav,
+	ApiResponse,
+	ApiErrorResponse,
+	BlobToBase64,
+	ConvertErrorToApiErrorResponse,
+	HandleApiError
+} from 'dav-js'
 import { environment } from 'src/environments/environment'
 
 @Injectable()
@@ -13,9 +20,7 @@ export class ApiService {
 	async CreateAuthor(params: {
 		firstName: string,
 		lastName: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.firstName != null) data["first_name"] = params.firstName
@@ -31,21 +36,19 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.CreateAuthor(params)
+		}
 	}
 
-	async GetAuthorOfUser(): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	async GetAuthorOfUser(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'get',
@@ -55,24 +58,23 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.GetAuthorOfUser()
+		}
 	}
 
 	async GetAuthor(params: {
 		uuid: string,
 		books?: boolean,
 		languages?: string[]
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let uuid = params.uuid
 		let books = params.books != null ? params.books : true
 		let languages = params.languages != null ? params.languages.join(',') : "en"
@@ -96,24 +98,20 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 
-	async GetLatestAuthors(): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	async GetLatestAuthors(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
 		let cachedResponse = this.apiRequestCache[cacheResponseKey]
@@ -125,19 +123,17 @@ export class ApiService {
 				url: `${environment.pocketlibApiBaseUrl}/authors/latest`
 			})
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 
 	async UpdateAuthorOfUser(params: {
@@ -147,9 +143,7 @@ export class ApiService {
 		facebookUsername?: string,
 		instagramUsername?: string,
 		twitterUsername?: string
-	}): Promise<ApiResponse<any>> {
-		let result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.firstName != null) data["first_name"] = params.firstName
@@ -169,16 +163,16 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.UpdateAuthorOfUser(params)
+		}
 	}
 
 	async UpdateAuthor(params: {
@@ -189,9 +183,7 @@ export class ApiService {
 		facebookUsername?: string,
 		instagramUsername?: string,
 		twitterUsername?: string
-	}): Promise<ApiResponse<any>> {
-		let result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.firstName != null) data["first_name"] = params.firstName
@@ -211,16 +203,16 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.UpdateAuthor(params)
+		}
 	}
 	//#endregion
 
@@ -228,9 +220,7 @@ export class ApiService {
 	async SetBioOfAuthorOfUser(params: {
 		language: string,
 		bio: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.bio != null) data["bio"] = params.bio
@@ -245,25 +235,23 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetBioOfAuthorOfUser(params)
+		}
 	}
 
 	async SetBioOfAuthor(params: {
 		uuid: string,
 		language: string,
 		bio: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.bio != null) data["bio"] = params.bio
@@ -278,16 +266,16 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetBioOfAuthor(params)
+		}
 	}
 	//#endregion
 
@@ -295,9 +283,7 @@ export class ApiService {
 	async SetProfileImageOfAuthorOfUser(params: {
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'put',
@@ -309,25 +295,23 @@ export class ApiService {
 				data: params.file
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetProfileImageOfAuthorOfUser(params)
+		}
 	}
 
 	async SetProfileImageOfAuthor(params: {
 		uuid: string,
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'put',
@@ -339,22 +323,21 @@ export class ApiService {
 				data: params.file
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetProfileImageOfAuthor(params)
+		}
 	}
 
 	async GetProfileImageOfAuthor(params: {
 		uuid: string
-	}): Promise<ApiResponse<string>> {
-		var result: ApiResponse<string> = { status: -1, data: null }
+	}): Promise<ApiResponse<string> | ApiErrorResponse> {
 		let uuid = params.uuid
 
 		// Check if the response is cached
@@ -371,18 +354,19 @@ export class ApiService {
 				responseType: 'blob'
 			})
 
-			result.status = response.status
+			let result = {
+				status: response.status,
+				data: null
+			}
+
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 	//#endregion
 
@@ -391,9 +375,7 @@ export class ApiService {
 		author?: string,
 		name: string,
 		language: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.name != null) data["name"] = params.name
@@ -410,22 +392,21 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.CreateStoreBookCollection(params)
+		}
 	}
 
 	async GetStoreBookCollection(params: {
 		uuid: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let uuid = params.uuid
 
 		// Check if the response is cached
@@ -449,19 +430,24 @@ export class ApiService {
 
 			let response = await axios.default(options)
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cachedResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			if (Dav.accessToken == null) {
+				return ConvertErrorToApiErrorResponse(error)
 			}
-		}
 
-		return result
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.GetStoreBookCollection(params)
+		}
 	}
 	//#endregion
 
@@ -470,9 +456,7 @@ export class ApiService {
 		uuid: string,
 		language: string,
 		name: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'put',
@@ -486,16 +470,16 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetStoreBookCollectionName(params)
+		}
 	}
 	//#endregion
 
@@ -509,9 +493,7 @@ export class ApiService {
 		price?: number,
 		isbn?: string,
 		categories?: string[]
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.author) data["author"] = params.author
@@ -533,22 +515,21 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.CreateStoreBook(params)
+		}
 	}
 
 	async GetStoreBook(params: {
 		uuid: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let uuid = params.uuid
 
 		// Check if the response is cached
@@ -572,19 +553,24 @@ export class ApiService {
 
 			let response = await axios.default(options)
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			if (Dav.accessToken == null) {
+				return ConvertErrorToApiErrorResponse(error)
 			}
-		}
 
-		return result
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.GetStoreBook(params)
+		}
 	}
 
 	async GetStoreBooksByCategory(params: {
@@ -592,8 +578,7 @@ export class ApiService {
 		languages?: string[],
 		limit?: number,
 		page?: number
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let key = params.key
 		let languages = params.languages != null ? params.languages.join(',') : "en"
 		let limit = params.limit != null ? params.limit : 50
@@ -620,27 +605,24 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 
 	async GetLatestStoreBooks(params: {
 		languages?: string[],
 		limit?: number,
 		page?: number
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let languages = params.languages != null ? params.languages.join(',') : "en"
 		let limit = params.limit != null ? params.limit : 50
 		let page = params.page != null ? params.page : 1
@@ -665,24 +647,20 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 
-	async GetStoreBooksInReview(): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	async GetStoreBooksInReview(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'get',
@@ -692,16 +670,16 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.GetStoreBooksInReview()
+		}
 	}
 
 	async UpdateStoreBook(params: {
@@ -714,9 +692,7 @@ export class ApiService {
 		published?: boolean,
 		status?: string,
 		categories?: string[]
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.title != null) data["title"] = params.title
@@ -738,24 +714,22 @@ export class ApiService {
 				data
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.UpdateStoreBook(params)
+		}
 	}
 
 	async CreatePurchaseForStoreBook(params: {
 		uuid: string,
 		currency: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'post',
@@ -769,16 +743,16 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.CreatePurchaseForStoreBook(params)
+		}
 	}
 	//#endregion
 
@@ -787,9 +761,7 @@ export class ApiService {
 		uuid: string,
 		type: string,
 		file: any
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'put',
@@ -801,22 +773,21 @@ export class ApiService {
 				data: params.file
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetStoreBookCover(params)
+		}
 	}
 
 	async GetStoreBookCover(params: {
 		uuid: string
-	}): Promise<ApiResponse<string>> {
-		var result: ApiResponse<string> = { status: -1, data: null }
+	}): Promise<ApiResponse<string> | ApiErrorResponse> {
 		let uuid = params.uuid
 
 		// Check if the response is cached
@@ -833,18 +804,19 @@ export class ApiService {
 				responseType: 'blob'
 			})
 
-			result.status = response.status
+			let result = {
+				status: response.status,
+				data: null
+			}
+
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 	//#endregion
 
@@ -854,9 +826,7 @@ export class ApiService {
 		type: string,
 		name: string,
 		file: any
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'put',
@@ -869,25 +839,23 @@ export class ApiService {
 				data: params.file
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.SetStoreBookFile(params)
+		}
 	}
 	//#endregion
 
 	//#region Book
 	async CreateBook(params: {
 		storeBook: string
-	}): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios.default({
 				method: 'post',
@@ -901,23 +869,21 @@ export class ApiService {
 				}
 			})
 
-			result.status = response.status
-			result.data = response.data
-		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
+			return {
+				status: response.status,
+				data: response.data
 			}
-		}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
 
-		return result
+			return await this.CreateBook(params)
+		}
 	}
 	//#endregion
 
 	//#region Category
-	async GetCategories(): Promise<ApiResponse<any>> {
-		var result: ApiResponse<any> = { status: -1, data: {} }
-
+	async GetCategories(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetCategories.name, {})
 		let cachedResponse = this.apiRequestCache[cacheResponseKey]
@@ -929,19 +895,17 @@ export class ApiService {
 				url: `${environment.pocketlibApiBaseUrl}/store/categories`
 			})
 
-			result.status = response.status
-			result.data = response.data
+			let result = {
+				status: response.status,
+				data: response.data
+			}
 
 			// Add the response to the cache
 			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
-			if (error.response) {
-				result.status = error.response.status
-				result.data = error.response.data
-			}
+			return ConvertErrorToApiErrorResponse(error)
 		}
-
-		return result
 	}
 	//#endregion
 
