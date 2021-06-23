@@ -9,7 +9,7 @@ import {
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { Dav, ApiResponse } from 'dav-js'
+import { Dav, ApiResponse, ApiErrorResponse } from 'dav-js'
 import {
 	DataService,
 	FindAppropriateLanguage,
@@ -171,7 +171,8 @@ export class AuthorProfileComponent {
 
 		if (this.author.profileImage) {
 			// Set the author profile image
-			this.profileImageContent = (await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })).data
+			let profileImageResponse = await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })
+			if (profileImageResponse.status == 200) this.profileImageContent = (profileImageResponse as ApiResponse<any>).data
 		}
 
 		// Get the appropriate language of each collection
@@ -364,7 +365,7 @@ export class AuthorProfileComponent {
 		this.profileImageContent = file.content
 
 		// Upload the image
-		let response: ApiResponse<any>
+		let response: ApiResponse<any> | ApiErrorResponse
 
 		if (this.authorMode == AuthorMode.AuthorOfUser) {
 			response = await this.apiService.SetProfileImageOfAuthorOfUser({
@@ -417,7 +418,8 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response: ApiResponse<any>
+		let response: ApiResponse<any> | ApiErrorResponse
+
 		if (this.dataService.userIsAdmin) {
 			response = await this.apiService.UpdateAuthor({
 				uuid: this.author.uuid,
@@ -440,31 +442,33 @@ export class AuthorProfileComponent {
 		}
 
 		if (response.status == 200) {
+			let responseData = (response as ApiResponse<any>).data
+
 			// Close the dialog and update the values in the appropriate author
 			this.editProfileDialogVisible = false
 
 			if (this.dataService.userIsAdmin) {
-				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == response.data.uuid)
+				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == responseData.uuid)
 				if (i == -1) return
 
-				this.dataService.adminAuthors[i].firstName = response.data.first_name
-				this.dataService.adminAuthors[i].lastName = response.data.last_name
-				this.dataService.adminAuthors[i].websiteUrl = response.data.website_url
-				this.dataService.adminAuthors[i].facebookUsername = response.data.facebook_username
-				this.dataService.adminAuthors[i].instagramUsername = response.data.instagram_username
-				this.dataService.adminAuthors[i].twitterUsername = response.data.twitter_username
+				this.dataService.adminAuthors[i].firstName = responseData.first_name
+				this.dataService.adminAuthors[i].lastName = responseData.last_name
+				this.dataService.adminAuthors[i].websiteUrl = responseData.website_url
+				this.dataService.adminAuthors[i].facebookUsername = responseData.facebook_username
+				this.dataService.adminAuthors[i].instagramUsername = responseData.instagram_username
+				this.dataService.adminAuthors[i].twitterUsername = responseData.twitter_username
 			} else {
-				this.dataService.userAuthor.firstName = response.data.first_name
-				this.dataService.userAuthor.lastName = response.data.last_name
-				this.dataService.userAuthor.websiteUrl = response.data.website_url
-				this.dataService.userAuthor.facebookUsername = response.data.facebook_username
-				this.dataService.userAuthor.instagramUsername = response.data.instagram_username
-				this.dataService.userAuthor.twitterUsername = response.data.twitter_username
+				this.dataService.userAuthor.firstName = responseData.first_name
+				this.dataService.userAuthor.lastName = responseData.last_name
+				this.dataService.userAuthor.websiteUrl = responseData.website_url
+				this.dataService.userAuthor.facebookUsername = responseData.facebook_username
+				this.dataService.userAuthor.instagramUsername = responseData.instagram_username
+				this.dataService.userAuthor.twitterUsername = responseData.twitter_username
 			}
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			for (let error of response.data.errors) {
+			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
@@ -503,11 +507,13 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	ProcessSetBioResponse(response: ApiResponse<any>) {
+	ProcessSetBioResponse(response: ApiResponse<any> | ApiErrorResponse) {
 		if (response.status == 200) {
+			let responseData = (response as ApiResponse<any>).data
+
 			if (this.bioMode == BioMode.New) {
 				// Add the new bio to the bios
-				this.author.bios.push(response.data)
+				this.author.bios.push(responseData)
 
 				// Update the dropdown
 				this.bioMode = BioMode.Normal
@@ -516,15 +522,15 @@ export class AuthorProfileComponent {
 				this.SetupBioLanguageDropdown()
 
 				// Show the bio in the language that was just added
-				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == response.data.language)
+				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == responseData.language)
 				if (i != -1) {
 					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i].key as number
 				}
 			} else {
 				// Find and update the edited bio
-				let i = this.author.bios.findIndex(bio => bio.language == response.data.language)
+				let i = this.author.bios.findIndex(bio => bio.language == responseData.language)
 				if (i != -1) {
-					this.author.bios[i].bio = response.data.bio
+					this.author.bios[i].bio = responseData.bio
 				}
 
 				this.newBio = ""
@@ -532,7 +538,7 @@ export class AuthorProfileComponent {
 				this.bioMode = BioMode.Normal
 			}
 		} else {
-			let errorCode = response.data.errors[0].code
+			let errorCode = (response as ApiErrorResponse).errors[0].code
 
 			switch (errorCode) {
 				case ErrorCodes.BioTooShort:
@@ -551,28 +557,30 @@ export class AuthorProfileComponent {
 	}
 
 	async LoadAuthor() {
-		let response: ApiResponse<any> = await this.apiService.GetAuthor({
+		let response = await this.apiService.GetAuthor({
 			uuid: this.uuid,
 			books: true,
 			languages: await this.dataService.GetStoreLanguages()
 		})
 
 		if (response.status == 200) {
+			let responseData = (response as ApiResponse<any>).data
+
 			this.author = {
-				uuid: response.data.uuid,
-				firstName: response.data.first_name,
-				lastName: response.data.last_name,
-				websiteUrl: response.data.website_url,
-				facebookUsername: response.data.facebook_username,
-				instagramUsername: response.data.instagram_username,
-				twitterUsername: response.data.twitter_username,
-				bios: response.data.bios,
+				uuid: responseData.uuid,
+				firstName: responseData.first_name,
+				lastName: responseData.last_name,
+				websiteUrl: responseData.website_url,
+				facebookUsername: responseData.facebook_username,
+				instagramUsername: responseData.instagram_username,
+				twitterUsername: responseData.twitter_username,
+				bios: responseData.bios,
 				collections: [],
-				profileImage: response.data.profile_image,
-				profileImageBlurhash: response.data.profile_image_blurhash
+				profileImage: responseData.profile_image,
+				profileImageBlurhash: responseData.profile_image_blurhash
 			}
 
-			for (let book of response.data.books) {
+			for (let book of responseData.books) {
 				let bookItem: BookListItem = {
 					uuid: book.uuid,
 					title: book.title,

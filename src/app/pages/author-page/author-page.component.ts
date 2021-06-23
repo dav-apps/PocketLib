@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
@@ -70,12 +70,12 @@ export class AuthorPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		if (this.dataService.userIsAdmin && !this.uuid) {
 			// Get the books in review
-			let response: ApiResponse<any> = await this.apiService.GetStoreBooksInReview()
+			let response = await this.apiService.GetStoreBooksInReview()
 
 			if (response.status == 200) {
 				this.booksInReview = []
 
-				for (let book of response.data.books) {
+				for (let book of (response as ApiResponse<any>).data.books) {
 					this.booksInReview.push({
 						uuid: book.uuid,
 						title: book.title
@@ -156,33 +156,35 @@ export class AuthorPageComponent {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastNameError = ""
 
-		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
+		let response = await this.apiService.CreateAuthor({
 			firstName: this.createAuthorDialogFirstName,
 			lastName: this.createAuthorDialogLastName
 		})
 
 		if (response.status == 201) {
+			let responseData = (response as ApiResponse<any>).data
+			
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push({
-				uuid: response.data.uuid,
-				firstName: response.data.first_name,
-				lastName: response.data.last_name,
-				websiteUrl: response.data.website_url,
-				facebookUsername: response.data.facebook_username,
-				instagramUsername: response.data.instagram_username,
-				twitterUsername: response.data.twitter_username,
-				bios: response.data.bios,
-				collections: response.data.collections,
-				profileImage: response.data.profile_image,
-				profileImageBlurhash: response.data.profile_image_blurhash
+				uuid: responseData.uuid,
+				firstName: responseData.first_name,
+				lastName: responseData.last_name,
+				websiteUrl: responseData.website_url,
+				facebookUsername: responseData.facebook_username,
+				instagramUsername: responseData.instagram_username,
+				twitterUsername: responseData.twitter_username,
+				bios: responseData.bios,
+				collections: responseData.collections,
+				profileImage: responseData.profile_image,
+				profileImageBlurhash: responseData.profile_image_blurhash
 			})
 
 			this.createAuthorDialogVisible = false
 
 			// Redirect to the author page of the new author
-			this.router.navigate(['author', response.data.uuid])
+			this.router.navigate(['author', responseData.uuid])
 		} else {
-			for (let error of response.data.errors) {
+			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameMissing:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing

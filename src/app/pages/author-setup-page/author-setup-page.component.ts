@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
@@ -70,21 +70,23 @@ export class AuthorSetupPageComponent {
 		this.lastNameError = ""
 		this.loading = true
 
-		let response: ApiResponse<any> = await this.apiService.CreateAuthor({
+		let response = await this.apiService.CreateAuthor({
 			firstName: this.firstName,
 			lastName: this.lastName
 		})
 
 		if (response.status == 201) {
+			let responseData = (response as ApiResponse<any>).data
+			
 			// Set the author in DataService
 			this.dataService.userAuthor = {
-				uuid: response.data.uuid,
-				firstName: response.data.first_name,
-				lastName: response.data.last_name,
-				websiteUrl: response.data.website_url,
-				facebookUsername: response.data.facebook_username,
-				instagramUsername: response.data.instagram_username,
-				twitterUsername: response.data.twitter_username,
+				uuid: responseData.uuid,
+				firstName: responseData.first_name,
+				lastName: responseData.last_name,
+				websiteUrl: responseData.website_url,
+				facebookUsername: responseData.facebook_username,
+				instagramUsername: responseData.instagram_username,
+				twitterUsername: responseData.twitter_username,
 				bios: [],
 				collections: [],
 				profileImage: false,
@@ -97,7 +99,7 @@ export class AuthorSetupPageComponent {
 		} else {
 			this.loading = false
 
-			for (let error of response.data.errors) {
+			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameMissing:
 						this.firstNameError = this.locale.errors.firstNameMissing

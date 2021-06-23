@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { IDropdownOption } from 'office-ui-fabric-react'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
@@ -68,7 +68,7 @@ export class EditCollectionNamesComponent {
 		collectionName.errorMessage = ""
 
 		// Update the collection name on the server
-		let setCollectionNameResponse: ApiResponse<any> = await this.apiService.SetStoreBookCollectionName({
+		let setCollectionNameResponse = await this.apiService.SetStoreBookCollectionName({
 			uuid: this.uuid,
 			language: collectionName.language,
 			name: collectionName.name
@@ -76,9 +76,9 @@ export class EditCollectionNamesComponent {
 
 		if (setCollectionNameResponse.status == 200) {
 			collectionName.edit = false
-			this.update.emit(setCollectionNameResponse.data)
+			this.update.emit((setCollectionNameResponse as ApiResponse<any>).data)
 		} else {
-			switch (setCollectionNameResponse.data.errors[0].code) {
+			switch ((setCollectionNameResponse as ApiErrorResponse).errors[0].code) {
 				case ErrorCodes.NameMissing:
 					collectionName.errorMessage = this.locale.errors.nameMissing
 					break

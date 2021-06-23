@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { IButtonStyles, IDialogContentProps, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import {
 	DataService,
 	BookStatus,
@@ -123,31 +123,34 @@ export class AuthorBookPageComponent {
 		}
 
 		// Get the store book
-		let response: ApiResponse<any> = await this.apiService.GetStoreBook({
+		let response = await this.apiService.GetStoreBook({
 			uuid: this.uuid
 		})
 
 		if (response.status == 200) {
-			this.book.collection = response.data.collection
-			this.book.title = response.data.title
-			this.book.description = response.data.description
-			this.book.language = response.data.language
-			this.book.price = response.data.price
-			this.book.isbn = response.data.isbn ? response.data.isbn : ""
-			this.book.status = GetBookStatusByString(response.data.status)
-			this.book.coverBlurhash = response.data.cover_blurhash
-			this.book.fileName = response.data.file_name
-			this.bookFileUploaded = response.data.file
+			let responseData = (response as ApiResponse<any>).data
+
+			this.book.collection = responseData.collection
+			this.book.title = responseData.title
+			this.book.description = responseData.description
+			this.book.language = responseData.language
+			this.book.price = responseData.price
+			this.book.isbn = responseData.isbn ? responseData.isbn : ""
+			this.book.status = GetBookStatusByString(responseData.status)
+			this.book.coverBlurhash = responseData.cover_blurhash
+			this.book.fileName = responseData.file_name
+			this.bookFileUploaded = responseData.file
 
 			// Get the categories
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
-			this.LoadCategories(response.data.categories)
+			this.LoadCategories(responseData.categories)
 
 			this.priceInput.SetPrice(this.book.price)
 			this.isbnInput.SetIsbn(this.book.isbn)
 
-			if (response.data.cover) {
-				this.coverContent = (await this.apiService.GetStoreBookCover({ uuid: this.uuid })).data
+			if (responseData.cover) {
+				let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
+				if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
 			}
 		} else {
 			// Redirect back to the author page
@@ -365,7 +368,7 @@ export class AuthorBookPageComponent {
 		this.bookFileLoading = true
 
 		// Upload the file
-		let response: ApiResponse<any> = await this.apiService.SetStoreBookFile({
+		let response = await this.apiService.SetStoreBookFile({
 			uuid: this.uuid,
 			type: file.type,
 			name: file.name,
@@ -392,14 +395,14 @@ export class AuthorBookPageComponent {
 		)
 	}
 
-	UpdateStoreBookResponse(response: ApiResponse<any>) {
+	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
 		if (this.editDescription) {
 			// The description was updated
 			if (response.status == 200) {
-				this.book.description = response.data.description
+				this.book.description = (response as ApiResponse<any>).data.description
 				this.editDescription = false
 			} else {
-				let errorCode = response.data.errors[0].code
+				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.DescriptionTooShort:
@@ -419,17 +422,17 @@ export class AuthorBookPageComponent {
 			this.updateLanguage = false
 
 			if (response.status == 200) {
-				this.book.language = response.data.language
+				this.book.language = (response as ApiResponse<any>).data.language
 			}
 		} else if (this.priceUpdating) {
 			this.priceUpdating = false
 
 			// The price was updated
 			if (response.status == 200) {
-				this.book.price = response.data.price
+				this.book.price = (response as ApiResponse<any>).data.price
 				this.priceInput.SetPrice(this.book.price)
 			} else {
-				let errorCode = response.data.errors[0].code
+				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.PriceInvalid:
@@ -445,10 +448,11 @@ export class AuthorBookPageComponent {
 
 			// The ISBN was updated
 			if (response.status == 200) {
-				this.book.isbn = response.data.isbn ? response.data.isbn : ""
+				let responseData = (response as ApiResponse<any>).data
+				this.book.isbn = responseData.isbn ? responseData.isbn : ""
 				this.isbnInput.SetIsbn(this.book.isbn)
 			} else {
-				let errorCode = response.data.errors[0].code
+				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.IsbnInvalid:
@@ -464,15 +468,15 @@ export class AuthorBookPageComponent {
 			this.statusLoading = false
 
 			if (response.status == 200) {
-				this.book.status = GetBookStatusByString(response.data.status)
+				this.book.status = GetBookStatusByString((response as ApiResponse<any>).data.status)
 			}
 		} else {
 			// The title was updated
 			if (response.status == 200) {
-				this.book.title = response.data.title
+				this.book.title = (response as ApiResponse<any>).data.title
 				this.editTitleDialogVisible = false
 			} else {
-				let errorCode = response.data.errors[0].code
+				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.TitleTooShort:

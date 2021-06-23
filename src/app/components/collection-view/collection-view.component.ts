@@ -71,15 +71,17 @@ export class CollectionViewComponent {
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
 		// Get the collection
-		let getCollectionResponse: ApiResponse<any> = await this.apiService.GetStoreBookCollection({
+		let getCollectionResponse = await this.apiService.GetStoreBookCollection({
 			uuid: this.uuid
 		})
 
 		if (getCollectionResponse.status == 200) {
+			let getCollectionResponseData = (getCollectionResponse as ApiResponse<any>).data
+
 			this.collection = {
-				uuid: getCollectionResponse.data.uuid,
-				author: getCollectionResponse.data.author,
-				names: getCollectionResponse.data.names,
+				uuid: getCollectionResponseData.uuid,
+				author: getCollectionResponseData.author,
+				names: getCollectionResponseData.names,
 				books: [],
 				leftScreenBooks: [],
 				rightScreenBooks: []
@@ -90,7 +92,7 @@ export class CollectionViewComponent {
 			if (i != -1) this.collectionName = this.collection.names[i]
 
 			let j = 0
-			for (let responseBook of getCollectionResponse.data.books) {
+			for (let responseBook of getCollectionResponseData.books) {
 				let bookItem: BookListItem = {
 					uuid: responseBook.uuid,
 					title: responseBook.title,

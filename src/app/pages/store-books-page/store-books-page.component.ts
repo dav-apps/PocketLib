@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { SpinnerSize } from 'office-ui-fabric-react'
-import { ApiResponse } from 'dav-js'
+import { ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
@@ -110,7 +110,7 @@ export class StoreBooksPageComponent {
 		this.rightScreenBooks = []
 		this.loading = true
 
-		let response: ApiResponse<any>
+		let response: ApiResponse<any> | ApiErrorResponse
 		let responseBooks: any[] = []
 
 		switch (this.context) {
@@ -136,8 +136,10 @@ export class StoreBooksPageComponent {
 		this.loading = false
 
 		if (response.status != 200) return
-		responseBooks = response.data.books
-		this.pages = response.data.pages
+		let responseData = (response as ApiResponse<any>).data
+
+		responseBooks = responseData.books
+		this.pages = responseData.pages
 		this.paginationCollectionSize = this.pages * this.maxVisibleBooks
 
 		let i = 0

@@ -74,13 +74,15 @@ export class DataService {
 	async LoadAuthorOfUser() {
 		await this.userPromiseHolder.AwaitResult()
 		if (this.dav.isLoggedIn) {
-			let response: ApiResponse<any> = await this.apiService.GetAuthorOfUser()
+			let response = await this.apiService.GetAuthorOfUser()
 
 			if (response.status == 200) {
-				if (response.data.authors) {
+				let responseData = (response as ApiResponse<any>).data
+
+				if (responseData.authors) {
 					this.adminAuthors = []
 
-					for (let author of response.data.authors) {
+					for (let author of responseData.authors) {
 						let newAuthor = {
 							uuid: author.uuid,
 							firstName: author.first_name,
@@ -104,22 +106,22 @@ export class DataService {
 					}
 				} else {
 					this.userAuthor = {
-						uuid: response.data.uuid,
-						firstName: response.data.first_name,
-						lastName: response.data.last_name,
-						websiteUrl: response.data.website_url,
-						facebookUsername: response.data.facebook_username,
-						instagramUsername: response.data.instagram_username,
-						twitterUsername: response.data.twitter_username,
-						bios: response.data.bios,
+						uuid: responseData.uuid,
+						firstName: responseData.first_name,
+						lastName: responseData.last_name,
+						websiteUrl: responseData.website_url,
+						facebookUsername: responseData.facebook_username,
+						instagramUsername: responseData.instagram_username,
+						twitterUsername: responseData.twitter_username,
+						bios: responseData.bios,
 						collections: [],
-						profileImage: response.data.profile_image,
-						profileImageBlurhash: response.data.profile_image_blurhash
+						profileImage: responseData.profile_image,
+						profileImageBlurhash: responseData.profile_image_blurhash
 					}
 
 					// Get the collections and store books
 					this.userAuthor.collections.push(
-						...await this.LoadCollections(response.data.collections)
+						...await this.LoadCollections(responseData.collections)
 					)
 				}
 			} else {
@@ -181,19 +183,22 @@ export class DataService {
 
 	async LoadCategories() {
 		// Get the categories
-		let getCategoriesResponse: ApiResponse<any> = await this.apiService.GetCategories()
+		let getCategoriesResponse = await this.apiService.GetCategories()
 		this.categories = []
 
-		// Get the names in the appropriate language
-		for (let category of getCategoriesResponse.data.categories) {
-			let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names)
-			let currentLanguage = category.names[currentLanguageIndex]
+		if (getCategoriesResponse.status == 200) {
+			let getCategoriesResponseData = (getCategoriesResponse as ApiResponse<any>).data
 
-			this.categories.push({
-				key: category.key,
-				name: currentLanguage.name,
-				language: currentLanguage.language
-			})
+			for (let category of getCategoriesResponseData.categories) {
+				let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names)
+				let currentLanguage = category.names[currentLanguageIndex]
+	
+				this.categories.push({
+					key: category.key,
+					name: currentLanguage.name,
+					language: currentLanguage.language
+				})
+			}
 		}
 
 		this.categoriesPromiseHolder.Resolve()

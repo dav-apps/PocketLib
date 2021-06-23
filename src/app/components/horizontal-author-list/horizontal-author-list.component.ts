@@ -25,11 +25,12 @@ export class HorizontalAuthorListComponent {
 	async ngOnInit() {
 		// Get the latest authors
 		this.authors = []
-		let response: ApiResponse<any> = await this.apiService.GetLatestAuthors()
+		let response = await this.apiService.GetLatestAuthors()
 		if (response.status != 200) return
 		let profileImageAltTemplate = this.dataService.GetLocale().misc.authorProfileImageAlt
+		let responseData = (response as ApiResponse<any>).data
 
-		for (let author of response.data.authors) {
+		for (let author of responseData.authors) {
 			let authorItem = {
 				uuid: author.uuid,
 				firstName: author.first_name,

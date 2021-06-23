@@ -6,7 +6,7 @@ import {
 	IDialogContentProps,
 	MessageBarType
 } from 'office-ui-fabric-react'
-import { PromiseHolder } from 'dav-js'
+import { PromiseHolder, ApiResponse } from 'dav-js'
 import {
 	DataService,
 	Author,
@@ -427,12 +427,14 @@ export class NewBookPageComponent {
 			return
 		}
 
+		let createStoreBookResponseData = (createStoreBookResponse as ApiResponse<any>).data
+
 		if (this.coverContent) {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
 
 			// Upload the cover
 			await this.apiService.SetStoreBookCover({
-				uuid: createStoreBookResponse.data.uuid,
+				uuid: createStoreBookResponseData.uuid,
 				type: this.coverType,
 				file: this.coverContent
 			})
@@ -443,7 +445,7 @@ export class NewBookPageComponent {
 
 			// Upload the book file
 			await this.apiService.SetStoreBookFile({
-				uuid: createStoreBookResponse.data.uuid,
+				uuid: createStoreBookResponseData.uuid,
 				type: this.bookFileType,
 				name: this.bookFileName,
 				file: this.bookFileContent
@@ -459,7 +461,7 @@ export class NewBookPageComponent {
 
 		// Redirect to the AuthorBookPage
 		this.dataService.navbarVisible = true
-		this.router.navigate(["author", "book", createStoreBookResponse.data.uuid])
+		this.router.navigate(["author", "book", createStoreBookResponseData.uuid])
 	}
 	//#endregion
 }
