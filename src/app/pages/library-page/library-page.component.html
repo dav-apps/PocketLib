@@ -92,6 +92,7 @@
 				<pocketlib-library-page-book-card
 					*ngFor="let book of dataService.books; let i = index"
 					[book]="book"
+					[maxWidth]="bookMaxWidth"
 					(click)="ShowBook(book)"
 					(contextMenu)="BookContextMenu($event, book)">
 				</pocketlib-library-page-book-card>
