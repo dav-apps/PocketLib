@@ -45,9 +45,13 @@ export class SettingsPageComponent {
 		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
 
 		// Check for updates
-		this.swUpdate.available.subscribe(event => {
+		this.swUpdate.available.subscribe(() => {
 			this.updateAvailable = true
 		})
+
+		if (this.swUpdate.isEnabled) {
+			this.swUpdate.checkForUpdate()
+		}
 	}
 
 	onThemeRadioButtonSelected(event: MatRadioChange) {
