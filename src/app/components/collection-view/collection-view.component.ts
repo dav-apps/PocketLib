@@ -5,12 +5,11 @@ import { ApiResponse } from 'dav-js'
 import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component'
 import {
 	DataService,
-	FindAppropriateLanguage,
-	AuthorMode
+	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
-import { BookListItem } from 'src/app/misc/types'
+import { BookListItem, AuthorMode } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({

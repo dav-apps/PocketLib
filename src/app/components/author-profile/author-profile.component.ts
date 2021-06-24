@@ -12,14 +12,11 @@ import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg
 import { Dav, ApiResponse, ApiErrorResponse } from 'dav-js'
 import {
 	DataService,
-	FindAppropriateLanguage,
-	Author,
-	AuthorMode,
-	BookStatus
+	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
-import { BookListItem } from 'src/app/misc/types'
+import { BookListItem, Author, AuthorMode, BookStatus } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 

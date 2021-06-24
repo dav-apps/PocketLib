@@ -7,10 +7,10 @@ import {
 	PromiseHolder
 } from 'dav-js'
 import { ApiService } from './api-service'
-import * as locales from 'src/locales/locales'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
+import * as locales from 'src/locales/locales'
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -18,6 +18,7 @@ import {
 } from 'src/constants/constants'
 import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
+import { Author, Category, BookStatus } from 'src/app/misc/types'
 
 @Injectable()
 export class DataService {
@@ -73,6 +74,7 @@ export class DataService {
 
 	async LoadAuthorOfUser() {
 		await this.userPromiseHolder.AwaitResult()
+
 		if (this.dav.isLoggedIn) {
 			let response = await this.apiService.GetAuthorOfUser()
 
@@ -143,7 +145,7 @@ export class DataService {
 			})
 
 			if (c.status == 200) {
-				let collectionResponseData = (c as ApiResponse<any>).data;
+				let collectionResponseData = (c as ApiResponse<any>).data
 
 				let newCollection = {
 					uuid: collectionResponseData.uuid,
@@ -347,59 +349,6 @@ export class DataService {
 		return value
 	}
 	//#endregion
-}
-
-export interface Author {
-	uuid: string
-	firstName: string
-	lastName: string
-	websiteUrl: string
-	facebookUsername: string
-	instagramUsername: string
-	twitterUsername: string
-	bios: {
-		bio: string,
-		language: string
-	}[]
-	collections: {
-		uuid: string,
-		names: {
-			name: string,
-			language: string
-		}[],
-		books: {
-			uuid: string,
-			title: string,
-			description: string,
-			language: string,
-			status: BookStatus,
-			cover: boolean,
-			coverContent: string,
-			coverBlurhash: string,
-			file: boolean
-		}[]
-	}[]
-	profileImage: boolean
-	profileImageBlurhash: string
-}
-
-export interface Category {
-	key: string;
-	name: string;
-	language: string;
-}
-
-export enum AuthorMode {
-	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
-	AuthorOfUser = 1,	// If the author belongs to the user
-	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
-}
-
-export enum BookStatus {
-	Unpublished = 0,
-	Review = 1,
-	Published = 2,
-	Hidden = 3
 }
 
 export function FindElement(currentElement: Element, tagName: string): Element {

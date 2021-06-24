@@ -5,7 +5,6 @@ import { ReadFile } from 'ngx-file-helpers'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import {
 	DataService,
-	BookStatus,
 	GetBookStatusByString
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -13,8 +12,9 @@ import { CategoriesSelectionComponent } from 'src/app/components/categories-sele
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { enUS } from 'src/locales/locales'
+import { BookStatus } from 'src/app/misc/types'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { enUS } from 'src/locales/locales'
 
 @Component({
 	templateUrl: './author-book-page.component.html',

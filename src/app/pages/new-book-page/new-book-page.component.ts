@@ -9,11 +9,11 @@ import {
 import { PromiseHolder, ApiResponse } from 'dav-js'
 import {
 	DataService,
-	Author,
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
+import { Author } from 'src/app/misc/types'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
