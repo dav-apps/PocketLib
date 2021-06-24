@@ -126,18 +126,24 @@
 				{{ locale.yourBooks }}
 			</h3>
 
-			<pocketlib-add-list-item
-				[link]="newBookPageLink.path"
-				[linkParams]="newBookPageLink.params">
-			</pocketlib-add-list-item>
+			<div style="margin-top: 36px" *ngIf="!collectionsLoaded">
+				<fab-spinner [size]="spinnerSize"></fab-spinner>
+			</div>
 
-			<pocketlib-horizontal-book-card
-				[title]="collection.name"
-				[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
-				[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-				[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
-				*ngFor="let collection of collections">
-			</pocketlib-horizontal-book-card>
+			<div *ngIf="collectionsLoaded">
+				<pocketlib-add-list-item
+					[link]="newBookPageLink.path"
+					[linkParams]="newBookPageLink.params">
+				</pocketlib-add-list-item>
+
+				<pocketlib-horizontal-book-card
+					[title]="collection.name"
+					[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
+					[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
+					[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
+					*ngFor="let collection of collections">
+				</pocketlib-horizontal-book-card>
+			</div>
 		</div>
 
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="authorMode == 0">
@@ -300,18 +306,24 @@
 					{{ locale.yourBooks }}
 				</h3>
 
-				<pocketlib-add-list-item
-					[link]="newBookPageLink.path"
-					[linkParams]="newBookPageLink.params">
-				</pocketlib-add-list-item>
+				<div style="margin-top: 36px" *ngIf="!collectionsLoaded">
+					<fab-spinner [size]="spinnerSize"></fab-spinner>
+				</div>
 
-				<pocketlib-horizontal-book-card
-					[title]="collection.name"
-					[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
-					[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-					[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
-					*ngFor="let collection of collections">
-				</pocketlib-horizontal-book-card>
+				<div *ngIf="collectionsLoaded">
+					<pocketlib-add-list-item
+						[link]="newBookPageLink.path"
+						[linkParams]="newBookPageLink.params">
+					</pocketlib-add-list-item>
+
+					<pocketlib-horizontal-book-card
+						[title]="collection.name"
+						[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
+						[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
+						[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
+						*ngFor="let collection of collections">
+					</pocketlib-horizontal-book-card>
+				</div>
 			</div>
 
 			<div *ngIf="authorMode == 0">

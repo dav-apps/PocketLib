@@ -4,7 +4,8 @@ import {
 	DropdownMenuItemType,
 	IButtonStyles,
 	IDialogContentProps,
-	MessageBarType
+	MessageBarType,
+	SpinnerSize
 } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +16,7 @@ import {
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetBookStatusByString } from 'src/app/misc/utils'
 import { BookListItem, Author, AuthorMode, BookStatus } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -32,6 +33,7 @@ export class AuthorProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	@Output() loaded = new EventEmitter()
+	collectionsLoaded: boolean = false
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -87,6 +89,7 @@ export class AuthorProfileComponent {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
+	spinnerSize: SpinnerSize = SpinnerSize.large
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -172,6 +175,20 @@ export class AuthorProfileComponent {
 			if (profileImageResponse.status == 200) this.profileImageContent = (profileImageResponse as ApiResponse<any>).data
 		}
 
+		// Set the new book page link
+		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.author.uuid
+
+		this.SetupBioLanguageDropdown()
+		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
+
+		if (
+			this.authorMode == AuthorMode.AuthorOfAdmin
+			|| this.authorMode == AuthorMode.AuthorOfUser
+		) {
+			// Loads the collections, if necessary
+			await this.LoadCollections()
+		}
+
 		// Get the appropriate language of each collection
 		for (let collection of this.author.collections) {
 			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
@@ -183,11 +200,7 @@ export class AuthorProfileComponent {
 			})
 		}
 
-		// Set the new book page link
-		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.author.uuid
-
-		this.SetupBioLanguageDropdown()
-		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
+		this.collectionsLoaded = true
 		this.loaded.emit()
 	}
 
@@ -600,6 +613,46 @@ export class AuthorProfileComponent {
 			this.bioMode = BioMode.Normal
 			this.UpdateSocialMediaLinks()
 			this.SelectDefaultBio()
+		}
+	}
+
+	private async LoadCollections() {
+		for (let collection of this.author.collections) {
+			// If collection.books is empty, load the books of the collection
+			if (collection.books != null) continue
+
+			let collectionResponse = await this.apiService.GetStoreBookCollection({
+				uuid: collection.uuid
+			})
+			if (collectionResponse.status != 200) continue
+
+			let collectionResponseData = (collectionResponse as ApiResponse<any>).data
+			let collectionBooks = []
+
+			// Get the books
+			for (let book of collectionResponseData.books) {
+				let newBook = {
+					uuid: book.uuid,
+					title: book.title,
+					description: book.description,
+					language: book.language,
+					price: book.price ? parseInt(book.price) : 0,
+					status: GetBookStatusByString(book.status),
+					cover: book.cover,
+					coverContent: null,
+					file: book.file
+				}
+
+				if (book.cover) {
+					this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
+						newBook.coverContent = result.data
+					})
+				}
+
+				collectionBooks.push(newBook)
+			}
+
+			collection.books = collectionBooks
 		}
 	}
 

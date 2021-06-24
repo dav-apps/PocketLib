@@ -3,13 +3,15 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
-import {
-	DataService,
-	GetBookStatusByString
-} from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetElementHeight } from 'src/app/misc/utils'
+import {
+	GetDualScreenSettings,
+	UpdateDialogForDualScreenLayout,
+	GetElementHeight,
+	GetBookStatusByString
+} from 'src/app/misc/utils'
 import { Author, BookStatus } from 'src/app/misc/types'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'

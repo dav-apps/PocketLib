@@ -85,7 +85,7 @@ export class DataService {
 					this.adminAuthors = []
 
 					for (let author of responseData.authors) {
-						let newAuthor = {
+						this.adminAuthors.push({
 							uuid: author.uuid,
 							firstName: author.first_name,
 							lastName: author.last_name,
@@ -94,17 +94,10 @@ export class DataService {
 							instagramUsername: author.instagram_username,
 							twitterUsername: author.twitter_username,
 							bios: author.bios,
-							collections: [],
+							collections: author.collections,
 							profileImage: author.profile_image,
 							profileImageBlurhash: author.profile_image_blurhash
-						}
-
-						// Get the collections of the store books
-						newAuthor.collections.push(
-							...await this.LoadCollections(author.collections)
-						)
-
-						this.adminAuthors.push(newAuthor)
+						})
 					}
 				} else {
 					this.userAuthor = {
@@ -116,15 +109,10 @@ export class DataService {
 						instagramUsername: responseData.instagram_username,
 						twitterUsername: responseData.twitter_username,
 						bios: responseData.bios,
-						collections: [],
+						collections: responseData.collections,
 						profileImage: responseData.profile_image,
 						profileImageBlurhash: responseData.profile_image_blurhash
 					}
-
-					// Get the collections and store books
-					this.userAuthor.collections.push(
-						...await this.LoadCollections(responseData.collections)
-					)
 				}
 			} else {
 				this.userAuthor = null
@@ -134,53 +122,6 @@ export class DataService {
 
 		this.userAuthorPromiseHolder.Resolve(this.userAuthor)
 		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors)
-	}
-
-	private async LoadCollections(collectionData: any): Promise<any[]> {
-		let collections: any[] = []
-
-		for (let collection of collectionData) {
-			let c = await this.apiService.GetStoreBookCollection({
-				uuid: collection.uuid
-			})
-
-			if (c.status == 200) {
-				let collectionResponseData = (c as ApiResponse<any>).data
-
-				let newCollection = {
-					uuid: collectionResponseData.uuid,
-					names: collectionResponseData.names,
-					books: []
-				}
-
-				// Get the books
-				for (let book of collectionResponseData.books) {
-					let newBook = {
-						uuid: book.uuid,
-						title: book.title,
-						description: book.description,
-						language: book.language,
-						price: book.price ? parseInt(book.price) : 0,
-						status: GetBookStatusByString(book.status),
-						cover: book.cover,
-						coverContent: null,
-						file: book.file
-					}
-
-					if (book.cover) {
-						this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
-							newBook.coverContent = result.data
-						})
-					}
-
-					newCollection.books.push(newBook)
-				}
-
-				collections.push(newCollection)
-			}
-		}
-
-		return collections
 	}
 
 	async LoadCategories() {
@@ -395,17 +336,4 @@ export function FindAppropriateLanguage(targetLanguage: string, objects: { langu
 
 export function GetContentAsInlineSource(content: string, contentType: string): string {
 	return `data:${contentType};base64,${btoa(content)}`
-}
-
-export function GetBookStatusByString(status: string): BookStatus {
-	switch (status) {
-		case "published":
-			return BookStatus.Published
-		case "review":
-			return BookStatus.Review
-		case "hidden":
-			return BookStatus.Hidden
-		default:
-			return BookStatus.Unpublished
-	}
 }

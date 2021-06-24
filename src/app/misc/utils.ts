@@ -1,3 +1,5 @@
+import { BookStatus } from './types'
+
 /**
  * Recursively finds all positions in the given element and adds them to the array
  * @param element 
@@ -142,4 +144,17 @@ export function GetElementHeight(element: HTMLElement): number {
 	return element.offsetHeight
 		+ parseInt(document.defaultView.getComputedStyle(element).marginTop)
 		+ parseInt(document.defaultView.getComputedStyle(element).marginBottom)
+}
+
+export function GetBookStatusByString(status: string): BookStatus {
+	switch (status) {
+		case "published":
+			return BookStatus.Published
+		case "review":
+			return BookStatus.Review
+		case "hidden":
+			return BookStatus.Hidden
+		default:
+			return BookStatus.Unpublished
+	}
 }

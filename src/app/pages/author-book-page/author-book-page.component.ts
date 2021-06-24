@@ -3,17 +3,14 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { IButtonStyles, IDialogContentProps, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
-import {
-	DataService,
-	GetBookStatusByString
-} from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { BookStatus } from 'src/app/misc/types'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
