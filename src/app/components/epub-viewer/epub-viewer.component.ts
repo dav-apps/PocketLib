@@ -551,7 +551,7 @@ export class EpubViewerComponent {
 		}
 
 		// Scroll the left viewer
-		nextViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage])
+		nextViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage] + 2)
 		if (this.showSecondPage && chapterPageBreakPositions[nextPage + 1]) {
 			// Scroll the right viewer
 			nextViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage + 1])
@@ -627,7 +627,7 @@ export class EpubViewerComponent {
 		}
 
 		// Scroll the left viewer
-		previousViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage])
+		previousViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage] + 2)
 		if (this.showSecondPage && chapterPageBreakPositions[previousPage + 1]) {
 			// Scroll the right viewer
 			previousViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage + 1])
@@ -701,7 +701,7 @@ export class EpubViewerComponent {
 		}
 
 		// Scroll the left viewer
-		viewer.left.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage])
+		viewer.left.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage] + 2)
 		if (this.showSecondPage && pageBreakPositions[this.currentPage + 1]) {
 			// Scroll the right viewer
 			viewer.right.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage + 1])
