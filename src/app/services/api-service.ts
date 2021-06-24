@@ -661,6 +661,11 @@ export class ApiService {
 	}
 
 	async GetStoreBooksInReview(): Promise<ApiResponse<any> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBooksInReview.name, {})
+		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		if (cachedResponse) return cachedResponse
+
 		try {
 			let response = await axios.default({
 				method: 'get',
