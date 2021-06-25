@@ -19,7 +19,7 @@
 			<div id="book-details-cover-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
 			</div>
-	
+
 			<div id="book-details-cover-data" class="book-details-data">
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
@@ -33,7 +33,7 @@
 					</pocketlib-blurhash-image>
 				</div>
 	
-				<fab-primary-button 
+				<fab-primary-button
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
@@ -148,7 +148,7 @@
 				<div class="d-flex">
 					<fab-primary-button
 						ngxFilePicker
-						accept="application/epub+zip,application/pdf"
+						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
 						*ngIf="book.status == 0 || book.status == 1">
@@ -360,7 +360,7 @@
 					<div class="d-flex">
 						<fab-primary-button
 							ngxFilePicker
-							accept="application/epub+zip,application/pdf"
+							accept="application/epub+zip"
 							[disabled]="bookFileLoading"
 							(filePick)="BookFileUpload($event)"
 							*ngIf="book.status == 0 || book.status == 1">

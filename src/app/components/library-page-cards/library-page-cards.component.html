@@ -4,7 +4,7 @@
 	style="width: 100%; transition: 0.12s; margin-top: 28px; margin-bottom: 28px"
 	[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
 	ngxFilePicker
-	accept="application/epub+zip,application/pdf"
+	accept="application/epub+zip"
 	(filePick)="AddBookFilePick($event)"
 	(mouseover)="addBookHover = true"
 	(mouseout)="addBookHover = false"
