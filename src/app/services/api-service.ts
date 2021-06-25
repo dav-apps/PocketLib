@@ -675,10 +675,14 @@ export class ApiService {
 				}
 			})
 
-			return {
+			let result = {
 				status: response.status,
 				data: response.data
 			}
+
+			// Add the response to the cache
+			this.apiRequestCache[cacheResponseKey] = result
+			return result
 		} catch (error) {
 			let renewSessionError = await HandleApiError(error)
 			if (renewSessionError != null) return renewSessionError
