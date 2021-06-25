@@ -348,7 +348,7 @@ export class StoreBookPageComponent {
 	}
 
 	NavigateToAccountPage() {
-		this.router.navigate(['account'])
+		this.router.navigate(['account'], { queryParams: { redirect: `store/book/${this.uuid}` } })
 	}
 
 	async NavigateToPurchasePage() {
