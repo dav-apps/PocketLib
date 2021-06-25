@@ -23,7 +23,7 @@ export class LibraryPageComponent {
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
-	bookMaxWidth: number = 180
+	bookCoverWidth: number = 180
 	selectedBook: Book
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -105,11 +105,11 @@ export class LibraryPageComponent {
 	@HostListener('window:resize')
 	setSize() {
 		if (window.innerWidth > 400) {
-			this.bookMaxWidth = 180
+			this.bookCoverWidth = 180
 		} else if (window.innerWidth > 360) {
-			this.bookMaxWidth = 160
+			this.bookCoverWidth = 160
 		} else {
-			this.bookMaxWidth = 140
+			this.bookCoverWidth = 140
 		}
 	}
 

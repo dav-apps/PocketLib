@@ -9,7 +9,7 @@ import { DataService } from 'src/app/services/data-service'
 })
 export class LibraryPageBookCardComponent {
 	@Input() book: EpubBook | PdfBook = new EpubBook(null, null, true, null)
-	@Input() maxWidth: number = 180
+	@Input() width: number = 180
 	@Output() click = new EventEmitter()
 	@Output() contextMenu = new EventEmitter()
 	hovered: boolean = false
