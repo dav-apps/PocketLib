@@ -16,7 +16,7 @@ import {
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetBookStatusByString } from 'src/app/misc/utils'
+import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
 import { BookListItem, Author, AuthorMode, BookStatus } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -186,7 +186,7 @@ export class AuthorProfileComponent {
 			|| this.authorMode == AuthorMode.AuthorOfUser
 		) {
 			// Loads the collections, if necessary
-			await this.LoadCollections()
+			await this.apiService.LoadCollectionsOfAuthor(this.author)
 		}
 
 		// Get the appropriate language of each collection
@@ -613,46 +613,6 @@ export class AuthorProfileComponent {
 			this.bioMode = BioMode.Normal
 			this.UpdateSocialMediaLinks()
 			this.SelectDefaultBio()
-		}
-	}
-
-	private async LoadCollections() {
-		for (let collection of this.author.collections) {
-			// If collection.books is empty, load the books of the collection
-			if (collection.books != null) continue
-
-			let collectionResponse = await this.apiService.GetStoreBookCollection({
-				uuid: collection.uuid
-			})
-			if (collectionResponse.status != 200) continue
-
-			let collectionResponseData = (collectionResponse as ApiResponse<any>).data
-			let collectionBooks = []
-
-			// Get the books
-			for (let book of collectionResponseData.books) {
-				let newBook = {
-					uuid: book.uuid,
-					title: book.title,
-					description: book.description,
-					language: book.language,
-					price: book.price ? parseInt(book.price) : 0,
-					status: GetBookStatusByString(book.status),
-					cover: book.cover,
-					coverContent: null,
-					file: book.file
-				}
-
-				if (book.cover) {
-					this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
-						newBook.coverContent = result.data
-					})
-				}
-
-				collectionBooks.push(newBook)
-			}
-
-			collection.books = collectionBooks
 		}
 	}
 

@@ -9,6 +9,8 @@ import {
 	HandleApiError
 } from 'dav-js'
 import { environment } from 'src/environments/environment'
+import { Author } from 'src/app/misc/types'
+import { GetBookStatusByString } from 'src/app/misc/utils'
 
 @Injectable()
 export class ApiService {
@@ -918,6 +920,7 @@ export class ApiService {
 	}
 	//#endregion
 
+	//#region Api Cache functions
 	private GetApiRequestCacheKey(functionName: string, params: object): string {
 		let apiRequestCacheKey = `${functionName}`
 
@@ -934,4 +937,47 @@ export class ApiService {
 			delete this.apiRequestCache[selectedKey]
 		}
 	}
+	//#endregion
+
+	//#region Other functions
+	async LoadCollectionsOfAuthor(author: Author) {
+		for (let collection of author.collections) {
+			// If collection.books is empty, load the books of the collection
+			if (collection.books != null) continue
+	
+			let collectionResponse = await this.GetStoreBookCollection({
+				uuid: collection.uuid
+			})
+			if (collectionResponse.status != 200) continue
+	
+			let collectionResponseData = (collectionResponse as ApiResponse<any>).data
+			let collectionBooks = []
+	
+			// Get the books
+			for (let book of collectionResponseData.books) {
+				let newBook = {
+					uuid: book.uuid,
+					title: book.title,
+					description: book.description,
+					language: book.language,
+					price: book.price ? parseInt(book.price) : 0,
+					status: GetBookStatusByString(book.status),
+					cover: book.cover,
+					coverContent: null,
+					file: book.file
+				}
+	
+				if (book.cover) {
+					this.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
+						newBook.coverContent = result.data
+					})
+				}
+	
+				collectionBooks.push(newBook)
+			}
+	
+			collection.books = collectionBooks
+		}
+	}
+	//#endregion
 }

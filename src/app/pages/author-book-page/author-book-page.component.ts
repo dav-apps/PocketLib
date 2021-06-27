@@ -154,10 +154,10 @@ export class AuthorBookPageComponent {
 			this.router.navigate(['author'])
 		}
 
-		this.LoadBackButtonLink()
+		await this.LoadBackButtonLink()
 	}
 
-	LoadBackButtonLink() {
+	async LoadBackButtonLink() {
 		// Check if this is the only book in the collection
 		let skipCollection = false
 		let authorUuid: string
@@ -166,6 +166,8 @@ export class AuthorBookPageComponent {
 			let collectionFound = false
 
 			for (let author of this.dataService.adminAuthors) {
+				await this.apiService.LoadCollectionsOfAuthor(author)
+
 				for (let collection of author.collections) {
 					if (collection.uuid == this.book.collection) {
 						collectionFound = true

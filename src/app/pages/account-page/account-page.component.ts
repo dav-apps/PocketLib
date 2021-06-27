@@ -69,8 +69,11 @@ export class AccountPageComponent {
 
 	ShowLoginPage() {
 		if (
-			this.redirect == "author/setup"
-			|| this.redirect.startsWith("store/book/")
+			this.redirect != null
+			&& (
+				this.redirect == "author/setup"
+				|| this.redirect.startsWith("store/book/")
+			)
 		) {
 			Dav.ShowLoginPage(environment.apiKey, `${environment.baseUrl}/${this.redirect}`)
 		} else {
@@ -80,8 +83,11 @@ export class AccountPageComponent {
 
 	ShowSignupPage() {
 		if (
-			this.redirect == "author/setup"
-			|| this.redirect.startsWith("store/book/")
+			this.redirect != null
+			&& (
+				this.redirect == "author/setup"
+				|| this.redirect.startsWith("store/book/")
+			)
 		) {
 			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/${this.redirect}`)
 		} else {
