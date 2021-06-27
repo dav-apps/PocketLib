@@ -9,7 +9,7 @@ import { CategoriesSelectionComponent } from 'src/app/components/categories-sele
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { BookStatus } from 'src/app/misc/types'
+import { Author, BookStatus } from 'src/app/misc/types'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -158,42 +158,33 @@ export class AuthorBookPageComponent {
 	}
 
 	async LoadBackButtonLink() {
-		// Check if this is the only book in the collection
-		let skipCollection = false
-		let authorUuid: string
+		let author: Author
+		let singleBookInCollection = true
 
+		// Try to find the author of the collection of the book
 		if (this.dataService.userIsAdmin) {
-			let collectionFound = false
-
-			for (let author of this.dataService.adminAuthors) {
-				await this.apiService.LoadCollectionsOfAuthor(author)
-
-				for (let collection of author.collections) {
-					if (collection.uuid == this.book.collection) {
-						collectionFound = true
-						skipCollection = collection.books.length == 1
-						authorUuid = author.uuid
-						break
-					}
-				}
-
-				if (collectionFound) break
-			}
+			author = this.dataService.adminAuthors.find(author => author.collections.findIndex(collection => collection.uuid == this.book.collection) != -1)
 		} else {
-			for (let collection of this.dataService.userAuthor.collections) {
-				if (collection.uuid == this.book.collection) {
-					skipCollection = collection.books.length == 1
-					break
-				}
-			}
+			author = this.dataService.userAuthor
 		}
 
-		if (skipCollection && this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${authorUuid}`
-		} else if (skipCollection) {
-			this.backButtonLink = "/author"
+		if (author != null) {
+			// Load the books of the collections
+			await this.apiService.LoadCollectionsOfAuthor(author)
+
+			// Find the collection of the current book
+			let collection = author.collections.find(c => c.uuid == this.book.collection)
+			singleBookInCollection = collection.books.length == 1
+
+			if (singleBookInCollection && this.dataService.userIsAdmin) {
+				this.backButtonLink = `/author/${author.uuid}`
+			} else if (singleBookInCollection) {
+				this.backButtonLink = "/author"
+			} else {
+				this.backButtonLink = `/author/collection/${this.book.collection}`
+			}
 		} else {
-			this.backButtonLink = `/author/collection/${this.book.collection}`
+			this.backButtonLink = "/author"
 		}
 	}
 
