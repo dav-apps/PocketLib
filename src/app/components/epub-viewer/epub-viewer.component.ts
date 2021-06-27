@@ -45,9 +45,7 @@ const doubleTapToleranceTime = 400
 @Component({
 	selector: 'pocketlib-epub-viewer',
 	templateUrl: './epub-viewer.component.html',
-	styleUrls: [
-		'./epub-viewer.component.scss'
-	]
+	styleUrls: ['./epub-viewer.component.scss']
 })
 export class EpubViewerComponent {
 	locale = enUS.epubViewer
@@ -875,22 +873,6 @@ export class EpubViewerComponent {
 	CloseBottomToolbar() {
 		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
 		this.bottomToolbarOpened = false
-	}
-
-	OpenChaptersPanel() {
-		this.showChaptersPanel = true
-
-		// Remove outline of the panel close button
-		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0]
-		closeButton.setAttribute("style", `outline: none; color: ${this.dataService.darkTheme ? 'white' : 'black'}`)
-	}
-
-	OpenBookmarksPanel() {
-		this.showBookmarksPanel = true
-
-		// Remove outline of the panel close button
-		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0]
-		closeButton.setAttribute("style", `outline: none; color: ${this.dataService.darkTheme ? 'white' : 'black'}`)
 	}
 
 	ClosePanel() {
