@@ -281,11 +281,20 @@ export class EpubChapter {
 
 		// Update links with absolute paths
 		let aTags = chapterBody.getElementsByTagName("a")
+
 		for (let i = 0; i < aTags.length; i++) {
 			let aTag = aTags[i]
 
 			// Get the href
 			let href = aTag.getAttribute("href")
+
+			// Check if the link is a local file
+			if (
+				href.startsWith('http://')
+				|| href.startsWith('https://')
+				|| href.startsWith('www.')
+				|| href.startsWith('mailto:')
+			) continue
 
 			// Update the href with the absolute path
 			if (href) aTag.setAttribute("href", MergePaths(this.currentPath, href))

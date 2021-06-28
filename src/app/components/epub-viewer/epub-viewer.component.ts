@@ -1581,6 +1581,10 @@ export class BookChapter {
 				max-width: {3}px;
 				max-height: {4}px;
 			}
+
+			a {
+				color: {5};
+			}
 		`
 
 		let headElement = html.getElementsByTagName("head")[0] as HTMLHeadElement
@@ -1616,6 +1620,7 @@ export class BookChapter {
 			.replace('{2}', darkTheme ? 'white !important' : 'black !important')
 			.replace('{3}', width.toString())
 			.replace('{4}', height.toString())
+			.replace('{5}', darkTheme ? '#7eade8' : '#0000ee')
 
 		return updatedHtml
 	}

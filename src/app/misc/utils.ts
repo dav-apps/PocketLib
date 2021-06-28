@@ -83,10 +83,10 @@ export function AdaptLinkTag(tag: Node, callback: Function) {
 	if (link == null) return
 
 	if (
-		link.indexOf('http://') == 0
-		|| link.indexOf('https://') == 0
-		|| link.indexOf('www.') == 0)
-	{
+		link.startsWith('http://')
+		|| link.startsWith('https://')
+		|| link.startsWith('www.')
+	) {
 		// Set target = blank
 		linkTag.setAttribute("target", "blank")
 	} else if (link.indexOf('mailto:') != 0) {
