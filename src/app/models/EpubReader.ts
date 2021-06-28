@@ -154,18 +154,15 @@ export class EpubReader {
 		}
 
 		let tocEntry = this.entries[tocFilePath]
-		if (!tocEntry) {
-			// toc file does not exist
-			return false
+		if (tocEntry) {
+			// Get the content of the toc file
+			let tocContent = await tocEntry.async("text")
+
+			let parser = new DOMParser()
+			let tocDoc = parser.parseFromString(tocContent, "text/xml")
+			let navMap = tocDoc.getElementsByTagName("navMap")[0]
+			this.toc = GetTocItems(navMap, tocDirectory)
 		}
-
-		// Get the content of the toc file
-		let tocContent = await tocEntry.async("text")
-
-		let parser = new DOMParser()
-		let tocDoc = parser.parseFromString(tocContent, "text/xml")
-		let navMap = tocDoc.getElementsByTagName("navMap")[0]
-		this.toc = GetTocItems(navMap, tocDirectory)
 
 		this.chaptersLoaded = true
 		return true
