@@ -36,6 +36,7 @@ export class LoadingPageComponent {
 	ngAfterViewInit() {
 		// Set the color of the progress ring
 		let progress = document.getElementsByTagName('circle')
+
 		if (progress.length > 0) {
 			let item = progress.item(0)
 			item.setAttribute('style', item.getAttribute('style') + ' stroke: white')

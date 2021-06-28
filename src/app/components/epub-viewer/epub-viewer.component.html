@@ -95,7 +95,18 @@
 		<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
 	</button>
 
-	<div style="float: right">
+	<div class="d-flex" style="float: right">
+		<div
+			class="d-flex justify-content-center align-items-center"
+			style="width: 40px; height: 40px">
+
+			<mat-progress-spinner
+				[style.display]="progressRingVisible ? '' : 'none'"
+				mode="indeterminate"
+				diameter="18"
+				strokeWidth="1.3">
+			</mat-progress-spinner>
+		</div>
 		<button mat-button class="book-toolbar-button text-color" (click)="AddOrRemoveBookmark()">
 			<i class="ms-Icon" [ngClass]="currentPageBookmark ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
 		</button>
@@ -164,6 +175,21 @@
 	[style.transform]="'scaleX(' + width * totalProgress + ')'">
 </div>
 
+<!-- Progress ring for small window -->
+<div
+	class="d-flex justify-content-center align-items-center"
+	style="position: absolute; bottom: 0; right: 0; width: 40px; height: 40px"
+	[style.visibility]="showBottomToolbar ? '' : 'hidden'">
+
+	<mat-progress-spinner
+		[style.display]="progressRingVisible ? '' : 'none'"
+		mode="indeterminate"
+		diameter="18"
+		strokeWidth="1.3">
+	</mat-progress-spinner>
+</div>
+
+<!-- Panel for TOC and Bookmarks -->
 <fab-panel 
 	[isOpen]="showChaptersPanel || showBookmarksPanel" 
    isLightDismiss="true" 

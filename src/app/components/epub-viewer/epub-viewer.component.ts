@@ -123,8 +123,12 @@ export class EpubViewerComponent {
 	lastPage: boolean = false		// If true, hides the next button
 	showSecondPage: boolean = false	// If true, the right viewers are visible
 	dualScreenLayout: boolean = false	// If true, the app is displayed on a dual-screen like Surface Duo with a vertical fold
+	progressRingVisible: boolean = false	// If true, the progress ring is visible
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
 	showPageRunning: boolean = false		// If true, ShowPage is currently executing
+	isRenderingNextOrPrevPage: boolean = false		// If true, ShowPage is currently preparing the next and previous pages
+	renderPrevPageAfterShowPage: boolean = false		// If true, the viewer will navigate to the previous page after ShowPage
+	renderNextPageAfterShowPage: boolean = false		// If true, the viewer will navigate to the next page after ShowPage
 	navigationHistory: { chapter: number, page: number }[] = []		// The history of visited pages; is used when clicking a link
 
 	//#region Variables for touch events
@@ -228,6 +232,7 @@ export class EpubViewerComponent {
 		this.initialized = true
 		this.showPageRunning = true
 		await this.ShowPage(NavigationDirection.None, progress)
+		this.SetProgressRingColor()
 
 		this.chapterTree.Init(this.book.toc)
 
@@ -315,7 +320,16 @@ export class EpubViewerComponent {
 	}
 
 	async PrevPage() {
-		if (this.showPageRunning) return
+		if (this.firstPage) {
+			return
+		} else if (this.isRenderingNextOrPrevPage) {
+			this.progressRingVisible = true
+			this.renderPrevPageAfterShowPage = true
+			this.renderNextPageAfterShowPage = false
+			return
+		} else if (this.showPageRunning) {
+			return
+		}
 		this.showPageRunning = true
 
 		if (
@@ -338,10 +352,18 @@ export class EpubViewerComponent {
 		}
 
 		await this.ShowPage(NavigationDirection.Back)
+		await this.HandleRenderPrevOrNextPageAfterShowPage()
 	}
 
 	async NextPage() {
-		if (this.showPageRunning) return
+		if (this.isRenderingNextOrPrevPage) {
+			this.progressRingVisible = true
+			this.renderPrevPageAfterShowPage = false
+			this.renderNextPageAfterShowPage = true
+			return
+		} else if (this.showPageRunning) {
+			return
+		}
 		this.showPageRunning = true
 
 		// Check if this is the last chapter and the last page
@@ -374,6 +396,7 @@ export class EpubViewerComponent {
 		}
 
 		await this.ShowPage(NavigationDirection.Forward)
+		await this.HandleRenderPrevOrNextPageAfterShowPage()
 	}
 
 	/**
@@ -481,6 +504,8 @@ export class EpubViewerComponent {
 			}
 		}
 
+		this.isRenderingNextOrPrevPage = true
+
 		if (direction == NavigationDirection.Forward) {
 			// Check if the next page is the last page
 			if (this.lastPage) {
@@ -508,6 +533,8 @@ export class EpubViewerComponent {
 			this.SetEventListeners(ViewerPosition.Previous)
 		}
 
+		this.isRenderingNextOrPrevPage = false
+		this.progressRingVisible = false
 		this.showPageRunning = false
 	}
 
@@ -552,7 +579,7 @@ export class EpubViewerComponent {
 		nextViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage] + 2)
 		if (this.showSecondPage && chapterPageBreakPositions[nextPage + 1]) {
 			// Scroll the right viewer
-			nextViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage + 1])
+			nextViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[nextPage + 1] + 2)
 		}
 
 		// Update the height of the left viewer
@@ -628,7 +655,7 @@ export class EpubViewerComponent {
 		previousViewer.left.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage] + 2)
 		if (this.showSecondPage && chapterPageBreakPositions[previousPage + 1]) {
 			// Scroll the right viewer
-			previousViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage + 1])
+			previousViewer.right.iframe.contentWindow.scrollTo(0, chapterPageBreakPositions[previousPage + 1] + 2)
 		}
 
 		// Update the height of the left viewer
@@ -702,7 +729,7 @@ export class EpubViewerComponent {
 		viewer.left.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage] + 2)
 		if (this.showSecondPage && pageBreakPositions[this.currentPage + 1]) {
 			// Scroll the right viewer
-			viewer.right.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage + 1])
+			viewer.right.iframe.contentWindow.scrollTo(0, pageBreakPositions[this.currentPage + 1] + 2)
 		}
 
 		// Update the height of the left viewer
@@ -724,6 +751,16 @@ export class EpubViewerComponent {
 				let newViewerRightHeight = (pageBreakPositions[this.currentPage + 2] - pageBreakPositions[this.currentPage + 1])
 				this.SetHeightOfViewer(position, (newViewerRightHeight < 0 || isNaN(newViewerRightHeight)) ? this.viewerHeight - 8 : newViewerRightHeight, true)
 			}
+		}
+	}
+
+	async HandleRenderPrevOrNextPageAfterShowPage() {
+		if (this.renderNextPageAfterShowPage) {
+			this.renderNextPageAfterShowPage = false
+			await this.NextPage()
+		} else if (this.renderPrevPageAfterShowPage) {
+			this.renderPrevPageAfterShowPage = false
+			await this.PrevPage()
 		}
 	}
 
@@ -788,7 +825,22 @@ export class EpubViewerComponent {
 
 			if (this.swipeDirection == SwipeDirection.Horizontal) {
 				// Disable horizontal swiping until the next and previous pages are fully rendered
-				if (this.showPageRunningWhenSwipeStarted) return
+				if (this.showPageRunningWhenSwipeStarted) {
+					if (this.isRenderingNextOrPrevPage) {
+						// Show the progress ring and navigate to the next or previous page after ShowPage
+						this.progressRingVisible = true
+
+						if (this.touchDiffX > this.width * 0.15) {
+							this.renderNextPageAfterShowPage = true
+							this.renderPrevPageAfterShowPage = false
+						} else if (-this.touchDiffX > this.width * 0.2) {
+							this.renderNextPageAfterShowPage = false
+							this.renderPrevPageAfterShowPage = true
+						}
+					}
+
+					return
+				}
 
 				if (this.touchDiffX > 0) {
 					// If the page was swiped wide enough, show the next page
@@ -921,6 +973,16 @@ export class EpubViewerComponent {
 
 			// Create the bookmark
 			this.currentPageBookmark = await this.currentBook.AddBookmark(chapterTitle, this.currentChapter, progress)
+		}
+	}
+
+	SetProgressRingColor() {
+		let circles = document.getElementsByTagName('circle')
+
+		for (let i = 0; i < circles.length; i++){
+			let circle = circles.item(i)
+			let color = this.dataService.darkTheme ? 'white' : 'black'
+			circle.setAttribute('style', circle.getAttribute('style') + ` stroke: ${color}`)
 		}
 	}
 
