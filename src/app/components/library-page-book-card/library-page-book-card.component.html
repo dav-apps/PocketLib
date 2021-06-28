@@ -16,9 +16,9 @@
 		[style.height.px]="width * 1.5"
 		[title]="book.title"
 		[alt]="alt"
-		*ngIf="!pdfBook">
+		*ngIf="!showDefaultCover">
 
-	<div *ngIf="pdfBook">
+	<div *ngIf="showDefaultCover">
 		<img
 			[src]="cover"
 			style="object-fit: cover; border-radius: 0.25rem; transition: 0.12s"

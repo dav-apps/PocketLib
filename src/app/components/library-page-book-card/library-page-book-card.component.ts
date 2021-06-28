@@ -15,7 +15,7 @@ export class LibraryPageBookCardComponent {
 	hovered: boolean = false
 	cover: string = ""
 	alt: string = ""
-	pdfBook: boolean = false
+	showDefaultCover: boolean = false
 
 	constructor(
 		public dataService: DataService
@@ -24,12 +24,13 @@ export class LibraryPageBookCardComponent {
 	ngOnInit() {
 		if (this.book instanceof EpubBook && this.book.cover != null) {
 			this.cover = this.book.cover
+			this.showDefaultCover = false
 		} else {
 			this.cover = this.dataService.defaultStoreBookCover
+			this.showDefaultCover = true
 		}
 
 		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
-		this.pdfBook = this.book instanceof PdfBook
 	}
 
 	Click() {
