@@ -2,13 +2,13 @@
 
 PocketLib is a simple and modern ebook reader.
 
-📖 Read any epub file
+📖 Read any epub file\
 Add any local epub file to your library. PocketLib automatically saves your reading progress, so you can go directly to the last page you read when you open the app.
 
-📚 Discover a wide range of literature
+📚 Discover a wide range of literature\
 The PocketLib Store contains a large collection of literature in the public domain, carefully selected and produced for the true book lover. Just log in to get free access to all these books.
 
-☁ Save your data and read on any device
+☁ Save your data and read on any device\
 Log in with your dav Account to save your library and reading progress in the cloud. Read on any device, wherever and whenever you want.
 
 <img src="https://am3pap001files.storage.live.com/y4mNpd764ydZfBAtIrI_nj06vnmvfuEgN3Z8ozPNZjPEosGxIBPXZraRO5nRWPd1EhRV_V6VOG8jCARUcsoT5bP068VLgPVZwpQlvkr9bfToe5ZbJZJMX3cb4Rn6TwCKJwCFuVooEmBVRE5Jwd6VO0TZIMvSCen9KZ24ea4lymWE5Ru8fTJOj5E9j4DVznp3gN8?width=321&height=660&cropmode=none" alt="PocketLib Screenshot" width="320" />
