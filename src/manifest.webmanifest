@@ -98,5 +98,36 @@
 			"purpose": "maskable"
 		}
 	],
-	"screenshots": []
+	"screenshots": [
+		{
+			"src": "assets/screenshots/screenshot1.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/screenshots/screenshot2.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/screenshots/screenshot3.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/screenshots/screenshot4.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/screenshots/screenshot5.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/screenshots/screenshot6.png",
+			"sizes": "1080x1920",
+			"type": "image/png"
+		}
+	]
 }
