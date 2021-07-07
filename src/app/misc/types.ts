@@ -58,6 +58,12 @@ export interface Category {
 	language: string
 }
 
+export interface Route {
+	url: string,
+	fullUrl?: string,
+	params: { [key: string]: any }
+}
+
 export enum AuthorMode {
 	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
 	AuthorOfUser = 1,	// If the author belongs to the user

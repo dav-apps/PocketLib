@@ -8,6 +8,7 @@ export class HeaderComponent {
 	@Input() title: string = ""
 	@Input() editButtonVisible: boolean = false
 	@Input() backButtonLink: string = ""
+	@Input() backButtonLinkParams = {}
 	@Output() backButtonClick = new EventEmitter()
 	@Output() editButtonClick = new EventEmitter()
 }

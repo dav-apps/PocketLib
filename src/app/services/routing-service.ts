@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core'
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'
 import { DataService } from './data-service'
+import { Route } from 'src/app/misc/types'
 
 @Injectable()
 export class RoutingService {
-	private history: string[] = []
+	private history: Route[] = []
 	public showsStore: boolean = false
 	public toolbarNavigationEvent: Function
 
@@ -24,30 +25,40 @@ export class RoutingService {
 
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
-				this.showsStore = event.url.startsWith('/store')
-				this.history.push(event.url)
+				let url = event.url.includes('?') ? event.url.substring(0, event.url.indexOf("?")) : event.url
+				this.showsStore = url.startsWith('/store')
+				
+				this.history.push({
+					url,
+					fullUrl: event.url,
+					params: this.activatedRoute.snapshot.queryParams
+				})
 			}
 		})
 	}
 
 	NavigateBack(alternativeRoute: string) {
-		// Remove the current url
+		// Remove the current route
 		this.history.pop()
 
 		// Navigate to the last url or the alternative route
 		if (this.history.length > 0) {
-			this.router.navigateByUrl(this.history.pop())
+			let historyItem = this.history.pop()
+			this.router.navigateByUrl(historyItem.url, { queryParams: historyItem.params })
 		} else {
 			this.router.navigateByUrl(alternativeRoute)
 		}
 	}
 
-	GetLastVisitedRoute(alternativeRoute: string) {
+	GetLastVisitedRoute(alternativeRoute: string): Route {
 		if (this.history.length > 1) {
 			// Return the second-last route in the history
 			return this.history[this.history.length - 2]
 		} else {
-			return alternativeRoute
+			return {
+				url: alternativeRoute,
+				params: {}
+			}
 		}
 	}
 

@@ -77,6 +77,7 @@ export class StoreBookPageComponent {
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
 	backButtonLink: string = ""
+	backButtonLinkParams: { [key: string]: any } = {}
 
 	dialogPrimaryButtonStyles: IButtonStyles = {
 		root: {
@@ -117,7 +118,9 @@ export class StoreBookPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		// Set the link of the back button
-		this.backButtonLink = this.routingService.GetLastVisitedRoute("/store")
+		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")
+		this.backButtonLink = lastVisitedRoute.url
+		this.backButtonLinkParams = lastVisitedRoute.params
 
 		// Get the store book cover
 		let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })

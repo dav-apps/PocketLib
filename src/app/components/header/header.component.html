@@ -11,6 +11,7 @@
 		class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 		style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
 		[routerLink]="backButtonLink"
+		[queryParams]="backButtonLinkParams"
 		(click)="backButtonClick.emit()"
 		*ngIf="backButtonLink">
 		<fab-icon iconName="Back"></fab-icon>
