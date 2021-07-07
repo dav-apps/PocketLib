@@ -297,6 +297,14 @@ export class StoreBookPageComponent {
 			// Show Snackbar
 			this.snackBar.open(this.locale.snackbarMessageAdded, null, { duration: 5000 })
 
+			if (this.dataService.smallWindow) {
+				// Move the snackbar above the bottom toolbar
+				setTimeout(() => {
+					let snackbarOverlay = document.getElementById("cdk-overlay-0")
+					snackbarOverlay.style.marginBottom = "56px"
+				}, 1)
+			}
+
 			// Download the table objects
 			await DownloadTableObject(responseData.uuid)
 			await DownloadTableObject(responseData.file)
