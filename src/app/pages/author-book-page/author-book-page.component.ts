@@ -383,6 +383,10 @@ export class AuthorBookPageComponent {
 				published
 			})
 		)
+
+		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
+		this.apiService.ClearCache(this.apiService.GetStoreBook.name)
+		this.apiService.ClearCache(this.apiService.GetStoreBooksInReview.name)
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {

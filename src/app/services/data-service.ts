@@ -18,7 +18,7 @@ import {
 } from 'src/constants/constants'
 import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
-import { Author, Category, BookStatus } from 'src/app/misc/types'
+import { Author, Category } from 'src/app/misc/types'
 
 @Injectable()
 export class DataService {
