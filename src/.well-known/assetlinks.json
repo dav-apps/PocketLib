@@ -1,5 +1,13 @@
-[{
-   "relation": ["delegate_permission/common.handle_all_urls"],
-   "target" : { "namespace": "android_app", "package_name": "app.dav.pocketlib",
-                "sha256_cert_fingerprints": ["2A:6C:4D:A5:68:A6:38:3E:CC:34:F9:7B:7E:DF:EE:09:73:F5:B5:2C:CF:80:86:7A:C8:7B:9D:E8:38:32:B9:D1"] }
- }]
+[
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "app.dav.pocketlib",
+			"sha256_cert_fingerprints": [
+				"2A:6C:4D:A5:68:A6:38:3E:CC:34:F9:7B:7E:DF:EE:09:73:F5:B5:2C:CF:80:86:7A:C8:7B:9D:E8:38:32:B9:D1",
+				"A8:76:26:5C:4A:12:43:BF:5D:76:44:D6:92:6B:18:B6:10:4E:09:2E:94:E3:9C:AD:45:B6:6C:AA:60:83:1F:7D"
+			]
+		}
+	}
+]
