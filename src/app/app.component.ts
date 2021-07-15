@@ -51,6 +51,7 @@ export class AppComponent {
 				UpdateAllOfTable: (tableId: number, changed: boolean) => this.UpdateAllOfTable(tableId, changed),
 				UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => this.UpdateTableObject(tableObject, fileDownloaded),
 				UserLoaded: () => this.UserLoaded(),
+				UserDownloaded: () => this.UserDownloaded(),
 				SyncFinished: () => this.SyncFinished()
 			}
 		})
@@ -69,9 +70,6 @@ export class AppComponent {
 		this.dataService.LoadAllBooks().then(() => {
 			this.dataService.allBooksInitialLoadPromiseHolder.Resolve()
 		})
-
-		// Load the author
-		await this.dataService.LoadAuthorOfUser()
 
 		// Load the categories
 		await this.dataService.LoadCategories()
@@ -118,12 +116,18 @@ export class AppComponent {
 		this.dataService.userPromiseHolder.Resolve()
 	}
 
+	UserDownloaded() {
+		// Load the author
+		this.dataService.LoadAuthorOfUser()
+	}
+
 	SyncFinished() {
 		this.dataService.syncFinished = true
 
 		// Resolve the settings synced promise
 		this.dataService.settingsSyncPromiseHolder.Resolve(this.dataService.settings)
 
+		// Reload the books in the library
 		this.dataService.LoadAllBooks()
 	}
 	//#endregion
