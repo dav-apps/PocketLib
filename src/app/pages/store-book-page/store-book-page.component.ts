@@ -303,8 +303,13 @@ export class StoreBookPageComponent {
 			if (this.dataService.smallWindow) {
 				// Move the snackbar above the bottom toolbar
 				setTimeout(() => {
-					let snackbarOverlay = document.getElementById("cdk-overlay-0")
-					snackbarOverlay.style.marginBottom = "56px"
+					let snackbarContainerList = document.getElementsByTagName("snack-bar-container")
+
+					for (let i = 0; i < snackbarContainerList.length; i++) {
+						let snackbarContainer = snackbarContainerList.item(i)
+						let snackbarOverlay = snackbarContainer.parentElement
+						snackbarOverlay.style.marginBottom = "56px"
+					}
 				}, 1)
 			}
 

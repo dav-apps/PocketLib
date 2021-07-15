@@ -20,25 +20,27 @@
 				{{ category.name }}
 			</mat-list-item>
 
+			<!--
 			<div class="mt-auto">
 				<div
 					class="m-2"
 					style="border-top: 1px solid"
 					[style.borderTopColor]="dataService.darkTheme ? '#7b7b7b' : '#e0e0e0'"></div>
-				<!--
+				
 				<mat-list-item
 					[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
 					*ngIf="dataService.userAuthor == null && !dataService.userIsAdmin"
 					(click)="ShowAuthorPage()">
 					{{ locale.publish }}
 				</mat-list-item>
-				-->
+
 				<mat-list-item
 					[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
 					(click)="ShowLanguagesDialog()">
 					{{ locale.languages }}
 				</mat-list-item>
 			</div>
+			-->
 		</mat-nav-list>
 	</mat-drawer>
 
