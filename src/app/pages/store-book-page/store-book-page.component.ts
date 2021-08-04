@@ -5,6 +5,7 @@ import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import {
 	GetDualScreenSettings,
@@ -97,6 +98,7 @@ export class StoreBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private routingService: RoutingService,
 		private snackBar: MatSnackBar,
 		private router: Router,
@@ -318,7 +320,7 @@ export class StoreBookPageComponent {
 			await DownloadTableObject(responseData.file)
 
 			// Clear the ApiCache for GetStoreBook
-			this.apiService.ClearCache(this.apiService.GetStoreBook.name)
+			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 		} else {
 			// Show error
 			this.ShowErrorDialog()
@@ -338,7 +340,7 @@ export class StoreBookPageComponent {
 					this.book.purchased = true
 
 					// Clear the ApiCache for GetStoreBook
-					this.apiService.ClearCache(this.apiService.GetStoreBook.name)
+					this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 				} else {
 					// Show error
 					this.ShowErrorDialog()
@@ -395,7 +397,7 @@ export class StoreBookPageComponent {
 		if (response.status == 200) this.book.status = BookStatus.Published
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.apiService.ClearCache(this.apiService.GetStoreBook.name)
-		this.apiService.ClearCache(this.apiService.GetStoreBooksInReview.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBooksInReview.name)
 	}
 }

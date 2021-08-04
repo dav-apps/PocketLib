@@ -8,15 +8,16 @@ import {
 	ConvertErrorToApiErrorResponse,
 	HandleApiError
 } from 'dav-js'
+import { CachingService } from './caching-service'
 import { environment } from 'src/environments/environment'
 import { Author } from 'src/app/misc/types'
 import { GetBookStatusByString } from 'src/app/misc/utils'
 
 @Injectable()
 export class ApiService {
-	apiRequestCache: {
-		[key: string]: ApiResponse<any>
-	} = {}
+	constructor(
+		private cachingService: CachingService
+	) { }
 
 	//#region Author functions
 	async CreateAuthor(params: {
@@ -82,12 +83,12 @@ export class ApiService {
 		let languages = params.languages != null ? params.languages.join(',') : "en"
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetAuthor.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetAuthor.name, {
 			uuid,
 			books,
 			languages
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -106,7 +107,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -115,8 +116,8 @@ export class ApiService {
 
 	async GetLatestAuthors(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -131,7 +132,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -343,10 +344,10 @@ export class ApiService {
 		let uuid = params.uuid
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetProfileImageOfAuthor.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetProfileImageOfAuthor.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -364,7 +365,7 @@ export class ApiService {
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -412,10 +413,10 @@ export class ApiService {
 		let uuid = params.uuid
 
 		// Check if the response is cached
-		let cachedResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCollection.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBookCollection.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCache[cachedResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -438,7 +439,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cachedResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			if (Dav.accessToken == null) {
@@ -535,10 +536,10 @@ export class ApiService {
 		let uuid = params.uuid
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBook.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBook.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -561,7 +562,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			if (Dav.accessToken == null) {
@@ -587,13 +588,13 @@ export class ApiService {
 		let page = params.page != null ? params.page : 1
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBooksByCategory.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBooksByCategory.name, {
 			key,
 			languages,
 			limit,
 			page
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -613,7 +614,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -630,12 +631,12 @@ export class ApiService {
 		let page = params.page != null ? params.page : 1
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetLatestStoreBooks.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetLatestStoreBooks.name, {
 			languages,
 			limit,
 			page
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -655,7 +656,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -664,8 +665,8 @@ export class ApiService {
 
 	async GetStoreBooksInReview(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBooksInReview.name, {})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBooksInReview.name, {})
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -683,7 +684,7 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			let renewSessionError = await HandleApiError(error)
@@ -802,10 +803,10 @@ export class ApiService {
 		let uuid = params.uuid
 
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetStoreBookCover.name, {
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBookCover.name, {
 			uuid
 		})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -823,7 +824,7 @@ export class ApiService {
 			if (response.data.size > 0) result.data = await BlobToBase64(response.data)
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
@@ -896,8 +897,8 @@ export class ApiService {
 	//#region Category
 	async GetCategories(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
-		let cacheResponseKey = this.GetApiRequestCacheKey(this.GetCategories.name, {})
-		let cachedResponse = this.apiRequestCache[cacheResponseKey]
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetCategories.name, {})
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		try {
@@ -912,29 +913,10 @@ export class ApiService {
 			}
 
 			// Add the response to the cache
-			this.apiRequestCache[cacheResponseKey] = result
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
 			return result
 		} catch (error) {
 			return ConvertErrorToApiErrorResponse(error)
-		}
-	}
-	//#endregion
-
-	//#region Api Cache functions
-	private GetApiRequestCacheKey(functionName: string, params: object): string {
-		let apiRequestCacheKey = functionName
-
-		for (let key of Object.keys(params)) {
-			let value = params[key]
-			apiRequestCacheKey += `,${key}:${value}`
-		}
-
-		return apiRequestCacheKey
-	}
-
-	ClearCache(functionName: string) {
-		for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
-			delete this.apiRequestCache[selectedKey]
 		}
 	}
 	//#endregion

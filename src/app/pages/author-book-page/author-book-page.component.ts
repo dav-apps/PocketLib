@@ -5,6 +5,7 @@ import { ReadFile } from 'ngx-file-helpers'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
@@ -94,6 +95,7 @@ export class AuthorBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -385,8 +387,8 @@ export class AuthorBookPageComponent {
 		)
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.apiService.ClearCache(this.apiService.GetStoreBook.name)
-		this.apiService.ClearCache(this.apiService.GetStoreBooksInReview.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBooksInReview.name)
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {

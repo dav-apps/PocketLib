@@ -12,6 +12,7 @@ import {
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { Author } from 'src/app/misc/types'
 import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
@@ -119,6 +120,7 @@ export class NewBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -453,7 +455,7 @@ export class NewBookPageComponent {
 		}
 
 		// Remove GetStoreBookCollection responses from ApiService cache
-		this.apiService.ClearCache(this.apiService.GetStoreBookCollection.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBookCollection.name)
 
 		// Reload the author of the user
 		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData
