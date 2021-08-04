@@ -7,6 +7,7 @@ import {
 	SimpleChanges
 } from '@angular/core'
 import { decode } from 'blurhash'
+import { CachingService } from 'src/app/services/caching-service'
 
 @Component({
 	selector: 'pocketlib-blurhash-image',
@@ -32,6 +33,10 @@ export class BlurhashImageComponent{
 
 	classes: string[] = []
 	hover: boolean = false
+
+	constructor(
+		private cachingService: CachingService
+	) { }
 
 	ngOnInit() {
 		this.Init()
@@ -59,20 +64,34 @@ export class BlurhashImageComponent{
 		}
 
 		let fallbackSrc = this.fallback
-		let canvas = document.createElement("canvas")
-		canvas.width = this.width
-		canvas.height = this.height
 
-		if (canvas.getContext && this.blurhash != null) {
-			// Decode the blurhash and set the canvas
-			let ctx = canvas.getContext('2d')
-			let pixels = decode(this.blurhash, this.width, this.height)
-			let imageData = ctx.createImageData(this.width, this.height)
-			imageData.data.set(pixels)
-			ctx.putImageData(imageData, 0, 0)
+		if (this.blurhash != null) {
+			let cacheKey = this.cachingService.GetBlurhashImageCacheKey(this.blurhash, this.width, this.height)
+			let cacheItem = this.cachingService.GetBlurhashImageCacheItem(cacheKey)
 
-			//  Convert the canvas content to base64 url
-			fallbackSrc = canvas.toDataURL()
+			if (cacheItem != null) {
+				fallbackSrc = cacheItem
+			} else {
+				// Generate the blurhash
+				let canvas = document.createElement("canvas")
+				canvas.width = this.width
+				canvas.height = this.height
+
+				if (canvas.getContext) {
+					// Decode the blurhash and set the canvas
+					let ctx = canvas.getContext('2d')
+					let pixels = decode(this.blurhash, this.width, this.height)
+					let imageData = ctx.createImageData(this.width, this.height)
+					imageData.data.set(pixels)
+					ctx.putImageData(imageData, 0, 0)
+
+					//  Convert the canvas content to base64 url
+					fallbackSrc = canvas.toDataURL()
+
+					// Save the blurhash in the cache
+					this.cachingService.SetBlurhashImageCacheItem(cacheKey, fallbackSrc)
+				}
+			}
 		}
 
 		// Show the fallback image or the blurhash, if there is one
