@@ -922,7 +922,7 @@ export class ApiService {
 
 	//#region Api Cache functions
 	private GetApiRequestCacheKey(functionName: string, params: object): string {
-		let apiRequestCacheKey = `${functionName}`
+		let apiRequestCacheKey = functionName
 
 		for (let key of Object.keys(params)) {
 			let value = params[key]
