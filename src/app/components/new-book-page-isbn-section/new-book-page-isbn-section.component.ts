@@ -17,7 +17,7 @@ export class NewBookPageIsbnSectionComponent{
 	@Output() setIsbn = new EventEmitter()
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
-	@ViewChild('isbnInput', { static: false }) isbnInput: IsbnInputComponent
+	@ViewChild('isbnInput') isbnInput: IsbnInputComponent
 	isbn: string = ""
 	spinnerSize: SpinnerSize = SpinnerSize.small
 

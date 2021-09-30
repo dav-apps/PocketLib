@@ -17,7 +17,7 @@ export class NewBookPagePriceSectionComponent {
 	@Output() setPrice = new EventEmitter()
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
-	@ViewChild('priceInput', { static: false }) priceInput: PriceInputComponent
+	@ViewChild('priceInput') priceInput: PriceInputComponent
 	price: number = 0
 	spinnerSize: SpinnerSize = SpinnerSize.small
 

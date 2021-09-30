@@ -12,7 +12,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-books-page.component.html'
 })
 export class StoreBooksPageComponent {
-	@ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>
+	@ViewChild('container') container: ElementRef<HTMLDivElement>
 	locale = enUS.storeBooksPage
 	header: string = ""
 	books: BookListItem[] = []

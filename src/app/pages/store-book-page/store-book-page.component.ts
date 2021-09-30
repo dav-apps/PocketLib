@@ -22,7 +22,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-book-page.component.html'
 })
 export class StoreBookPageComponent {
-	@ViewChild('container', { static: false }) container: ElementRef<HTMLDivElement>
+	@ViewChild('container') container: ElementRef<HTMLDivElement>
 	locale = enUS.storeBookPage
 	width: number = 500
 	showMobileLayout: boolean = false

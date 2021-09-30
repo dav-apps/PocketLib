@@ -20,9 +20,9 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
-	@ViewChild('categoriesSelection', { static: false }) categoriesSelectionComponent: CategoriesSelectionComponent
-	@ViewChild('priceInput', { static: false }) priceInput: PriceInputComponent
-	@ViewChild('isbnInput', { static: false }) isbnInput: IsbnInputComponent
+	@ViewChild('categoriesSelection') categoriesSelectionComponent: CategoriesSelectionComponent
+	@ViewChild('priceInput') priceInput: PriceInputComponent
+	@ViewChild('isbnInput') isbnInput: IsbnInputComponent
 	showMobileLayout: boolean = false
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
