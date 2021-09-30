@@ -51,7 +51,7 @@
     "jszip": "^3.7.0",
     "localforage": "^1.9.0",
     "ng2-pdf-viewer": "^6.4.1",
-    "ngx-file-helpers": "^2.0.0",
+    "ngx-file-helpers": "^4.0.1",
     "office-ui-fabric-core": "^10.1.0",
     "office-ui-fabric-react": "^6.214.1",
     "pocketlib-server": "file:server",
