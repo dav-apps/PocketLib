@@ -6,7 +6,7 @@ import { AngularReactBrowserModule } from '@angular-react/core'
 import { AppRoutingModule } from './app-routing.module'
 import { NgxFileHelpersModule } from 'ngx-file-helpers'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { MatToolbarModule } from '@angular/material'
+import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatButtonModule } from '@angular/material/button'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatInputModule } from '@angular/material/input'
@@ -186,10 +186,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		CachingService,
 		RoutingService
    ],
-   bootstrap: [AppComponent],
-   entryComponents: [
-      EpubViewerComponent,
-      PdfViewerComponent
-   ]
+   bootstrap: [AppComponent]
 })
 export class AppModule { }
