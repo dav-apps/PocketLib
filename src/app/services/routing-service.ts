@@ -44,7 +44,7 @@ export class RoutingService {
 		// Navigate to the last url or the alternative route
 		if (this.history.length > 0) {
 			let historyItem = this.history.pop()
-			this.router.navigateByUrl(historyItem.url, { queryParams: historyItem.params })
+			this.router.navigateByUrl(historyItem.url, /* Removed unsupported properties by Angular migration: queryParams. */ {})
 		} else {
 			this.router.navigateByUrl(alternativeRoute)
 		}
