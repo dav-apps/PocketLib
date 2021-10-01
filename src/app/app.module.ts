@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import { environment } from '../environments/environment'
 
 // Modules
-import { AngularReactBrowserModule } from '@angular-react/core'
 import { AppRoutingModule } from './app-routing.module'
 import { NgxFileHelpersModule } from 'ngx-file-helpers'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -147,8 +147,8 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		StoreBookPageComponent,
 		StoreBooksPageComponent
   	],
-  	imports: [
-   	AngularReactBrowserModule,
+	imports: [
+		BrowserModule,
       AppRoutingModule,
       NgxFileHelpersModule,
       BrowserAnimationsModule,
@@ -186,6 +186,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		CachingService,
 		RoutingService
    ],
-   bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

@@ -4,6 +4,7 @@ import { initializeIcons } from 'office-ui-fabric-react/lib/Icons'
 import { faAddressCard as faAddressCardSolid } from '@fortawesome/free-solid-svg-icons'
 import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
+import * as DavUIComponents from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { RoutingService } from './services/routing-service'
 import { GetSettings } from 'src/app/models/Settings'
@@ -28,6 +29,8 @@ export class AppComponent {
 		public routingService: RoutingService,
 		private router: Router
 	) {
+		DavUIComponents.setLocale(this.dataService.locale)
+
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
 				// Update the updated todo lists
