@@ -19,20 +19,6 @@ import { MatListModule } from '@angular/material/list'
 import { PortalModule } from '@angular/cdk/portal'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
-import { 
-   FabTextFieldModule, 
-   FabButtonModule,
-   FabMessageBarModule,
-   FabIconModule,
-   FabPanelModule,
-   FabCalloutModule,
-   FabSliderModule,
-	FabToggleModule,
-	FabSpinnerModule,
-	FabDialogModule,
-	FabDropdownModule,
-	FabCheckboxModule
-} from '@angular-react/fabric'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { ServiceWorkerModule } from '@angular/service-worker'
 
@@ -165,18 +151,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
       PortalModule,
 		NgbModule,
 		PdfViewerModule,
-      FabTextFieldModule,
-      FabButtonModule,
-      FabMessageBarModule,
-      FabIconModule,
-      FabPanelModule,
-      FabCalloutModule,
-		FabSliderModule,
-		FabToggleModule,
-		FabSpinnerModule,
-		FabDialogModule,
-		FabDropdownModule,
-		FabCheckboxModule,
 		FontAwesomeModule,
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],

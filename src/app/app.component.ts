@@ -1,6 +1,5 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, NavigationStart } from '@angular/router'
-import { initializeIcons } from 'office-ui-fabric-react/lib/Icons'
 import { faAddressCard as faAddressCardSolid } from '@fortawesome/free-solid-svg-icons'
 import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
@@ -44,7 +43,6 @@ export class AppComponent {
 	async ngOnInit() {
 		this.setSize()
 		this.dataService.ApplyTheme()
-		initializeIcons()
 
 		new Dav({
 			environment: environment.production ? Environment.Production : Environment.Development,
