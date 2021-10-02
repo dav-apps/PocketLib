@@ -1,8 +1,7 @@
 import { Component, HostListener } from '@angular/core'
 import { Router } from '@angular/router'
-import { IDialogContentProps } from 'office-ui-fabric-react'
 import { DataService } from 'src/app/services/data-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { smallWindowMaxSize } from 'src/constants/constants'
 import { enUS } from 'src/locales/locales'
 
@@ -15,11 +14,7 @@ export class StorePageComponent {
 	sideNavHidden: boolean = false
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	selectLanguagesDialogVisible: boolean = false
-
-	selectLanguagesDialogContentProps: IDialogContentProps = {
-		title: this.locale.selectLanguagesDialog.title
-	}
+	selectLanguagesDialogVisible: boolean = true
 
 	constructor(
 		public dataService: DataService,
@@ -58,14 +53,5 @@ export class StorePageComponent {
 	ShowAuthorPage() {
 		this.router.navigate(["author"])
 		if (this.sideNavHidden) this.dataService.sideNavOpened = false
-	}
-
-	async ShowLanguagesDialog() {
-		this.selectLanguagesDialogContentProps.title = this.locale.selectLanguagesDialog.title
-		this.selectLanguagesDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 }

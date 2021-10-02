@@ -36,7 +36,7 @@
 
 				<mat-list-item
 					[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-					(click)="ShowLanguagesDialog()">
+					(click)="selectLanguagesDialogVisible = true">
 					{{ locale.languages }}
 				</mat-list-item>
 			</div>
@@ -49,16 +49,14 @@
 	</mat-drawer-content>
 </mat-drawer-container>
 
-<fab-dialog
-	[hidden]="!selectLanguagesDialogVisible"
-	[dialogContentProps]="selectLanguagesDialogContentProps"
-	(onDismiss)="selectLanguagesDialogVisible = false">
+<dav-dialog
+	[title]="locale.selectLanguagesDialog.title"
+	[defaultButtonText]="locale.selectLanguagesDialog.close"
+	(dismiss)="selectLanguagesDialogVisible = false"
+	(defaultButtonClick)="selectLanguagesDialogVisible = false"
+	*ngIf="selectLanguagesDialogVisible">
 
 	<p>{{ locale.selectLanguagesDialog.description }}</p>
 
 	<pocketlib-languages-selection></pocketlib-languages-selection>
-
-	<fab-dialog-footer>
-		<fab-default-button (click)="selectLanguagesDialogVisible = false">{{ locale.selectLanguagesDialog.close }}</fab-default-button>
-	</fab-dialog-footer>
-</fab-dialog>
+</dav-dialog>
