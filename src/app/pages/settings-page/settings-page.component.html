@@ -9,11 +9,11 @@
    <div class="mx-auto mt-4" style="max-width: 240px">
       <!-- Open last read book -->
 		<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
-		
-		<fab-toggle 
-			[(checked)]="openLastReadBook"
-			(onChange)="onOpenLastReadBookToggleChange($event)">
-		</fab-toggle>
+
+		<dav-toggle
+			[checked]="openLastReadBook"
+			(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
+		</dav-toggle>
    </div>
 
    <div class="mx-auto mt-4" style="max-width: 170px">
@@ -51,11 +51,12 @@
 				Copyright &copy; {{ year }} by dav
 			</p>
 
-			<fab-primary-button
-				(onClick)="InstallUpdate()"
+			<dav-button
+				type="accent"
+				(click)="InstallUpdate()"
 				*ngIf="updateAvailable">
 				{{ locale.installUpdate }}
-			</fab-primary-button>
+			</dav-button>
 		</div>
 	</div>
 </div>
@@ -76,10 +77,10 @@
 			<!-- Open last read book -->
 			<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
 			
-			<fab-toggle 
-				[(checked)]="openLastReadBook"
-				(onChange)="onOpenLastReadBookToggleChange($event)">
-			</fab-toggle>
+			<dav-toggle
+				[checked]="openLastReadBook"
+				(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
+			</dav-toggle>
 		</div>
 
 		<div class="mx-auto mt-4" style="max-width: 170px">
@@ -117,11 +118,12 @@
 					Copyright &copy; {{ year }} by dav
 				</p>
 
-				<fab-primary-button
-					(onClick)="InstallUpdate()"
+				<dav-button
+					type="accent"
+					(click)="InstallUpdate()"
 					*ngIf="updateAvailable">
 					{{ locale.installUpdate }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 		</div>
 	</div>

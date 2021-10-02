@@ -60,9 +60,9 @@ export class SettingsPageComponent {
 		this.dataService.ApplyTheme(event.value)
 	}
 
-	onOpenLastReadBookToggleChange(event: { checked: boolean }) {
-		this.openLastReadBook = event.checked
-		this.dataService.SetOpenLastReadBook(event.checked)
+	onOpenLastReadBookToggleChange(checked: boolean) {
+		this.openLastReadBook = !checked
+		this.dataService.SetOpenLastReadBook(!checked)
 	}
 
 	InstallUpdate() {
