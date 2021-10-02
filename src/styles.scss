@@ -101,6 +101,14 @@ body{
 	border-radius: 10px;
 }
 
+.text-field-error{
+	max-width: 200px;
+	margin: -2px 0px 0px 0px;
+	color: #A80000;
+	font-size: 12.5px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 // Custom Acrylic styles
 $saturation: 80%;
 $blurring: 3px;

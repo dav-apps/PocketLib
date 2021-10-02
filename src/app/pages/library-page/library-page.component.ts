@@ -1,6 +1,5 @@
 import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
-import { IDialogContentProps, IButtonStyles, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
@@ -40,37 +39,6 @@ export class LibraryPageComponent {
 	discoverBooksHover: boolean = false
 	goToAuthorPageHover: boolean = false
 	loading: boolean = true
-	spinnerSize: SpinnerSize = SpinnerSize.large
-
-	renameBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.renameBookDialog.title
-	}
-	removeBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.removeBookDialog.title
-	}
-	loginToAccessBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.loginToAccessBookDialog.title
-	}
-	addBookErrorDialogContentProps: IDialogContentProps = {
-		title: this.locale.addBookErrorDialog.title
-	}
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	removeBookDialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10,
-			backgroundColor: "#dc3545"
-		},
-		rootHovered: {
-			backgroundColor: "#c82333"
-		},
-		rootPressed: {
-			backgroundColor: "#c82333"
-		}
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -124,7 +92,6 @@ export class LibraryPageComponent {
 
 			if (uuid == null) {
 				// Show error dialog
-				this.addBookErrorDialogContentProps.title = this.locale.addBookErrorDialog.title
 				this.addBookErrorDialogVisible = true
 				return
 			}
@@ -136,7 +103,6 @@ export class LibraryPageComponent {
 	async ShowBook(book: Book) {
 		// Check if the user can access the book
 		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
-			this.loginToAccessBookDialogContentProps.title = this.locale.loginToAccessBookDialog.title
 			this.loginToAccessBookDialogVisible = true
 
 			if (this.dualScreenLayout) {
@@ -190,8 +156,6 @@ export class LibraryPageComponent {
 		this.contextMenuVisible = false
 		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
 		this.renameBookDialogError = ""
-
-		this.renameBookDialogContentProps.title = this.locale.renameBookDialog.title
 		this.renameBookDialogVisible = true
 
 		if (this.dualScreenLayout) {
@@ -201,7 +165,6 @@ export class LibraryPageComponent {
 
 	ShowRemoveBookDialog() {
 		this.contextMenuVisible = false
-		this.removeBookDialogContentProps.title = this.locale.removeBookDialog.title
 		this.removeBookDialogVisible = true
 
 		if (this.dualScreenLayout) {

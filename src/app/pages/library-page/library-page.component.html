@@ -100,9 +100,11 @@
 		</div>
 	</div>
 
-	<div style="margin-top: 36px" *ngIf="loading">
-		<fab-spinner [size]="spinnerSize"></fab-spinner>
-	</div>
+	<fluent-progress-ring
+		class="mx-auto"
+		style="width: 32px; height: 32px; margin-top: 36px"
+		*ngIf="loading">
+	</fluent-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
@@ -215,62 +217,65 @@
 	</button>
 </div>
 
-<fab-dialog
-	[hidden]="!renameBookDialogVisible"
-	[dialogContentProps]="renameBookDialogContentProps"
-	(onDismiss)="renameBookDialogVisible = false">
+<dav-dialog
+	[title]="locale.renameBookDialog.title"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	(dismiss)="renameBookDialogVisible = false"
+	(primaryButtonClick)="RenameBook()"
+	(defaultButtonClick)="renameBookDialogVisible = false"
+	*ngIf="renameBookDialogVisible">
 
 	<!-- Title -->
-	<div class="mb-4">
-		<fab-text-field
-			[(value)]="renameBookDialogTitle"
-			[label]="locale.renameBookDialog.titleTextfieldLabel"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="renameBookDialogTitle"
+			type="text"
 			[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
-			[errorMessage]="renameBookDialogError"
-			(onChange)="renameBookDialogError = ''"
+			(input)="renameBookDialogTitle = $event.target.value; renameBookDialogError = ''"
 			(keydown.enter)="RenameBook()">
-		</fab-text-field>
+			{{ locale.renameBookDialog.titleTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="renameBookDialogError.length > 0">
+			{{ renameBookDialogError }}
+		</p>
 	</div>
+</dav-dialog>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="renameBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="RenameBook()">{{ locale.save }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
-
-<fab-dialog
-	[hidden]="!removeBookDialogVisible"
-	[dialogContentProps]="removeBookDialogContentProps"
-	(onDismiss)="removeBookDialogVisible = false">
+<dav-dialog
+	[title]="locale.removeBookDialog.title"
+	[primaryButtonText]="locale.remove"
+	[defaultButtonText]="locale.cancel"
+	primaryButtonType="danger"
+	[maxWidth]="340"
+	(dismiss)="removeBookDialogVisible = false"
+	(primaryButtonClick)="RemoveBook()"
+	(defaultButtonClick)="removeBookDialogVisible = false"
+	*ngIf="removeBookDialogVisible">
 
 	<p>{{ locale.removeBookDialog.description }}</p>
+</dav-dialog>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="removeBookDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="removeBookDialogPrimaryButtonStyles" (onClick)="RemoveBook()">{{ locale.remove }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
-
-<fab-dialog
-	[hidden]="!loginToAccessBookDialogVisible"
-	[dialogContentProps]="loginToAccessBookDialogContentProps"
-	(onDismiss)="loginToAccessBookDialogVisible = false">
+<dav-dialog
+	[title]="locale.loginToAccessBookDialog.title"
+	[primaryButtonText]="locale.ok"
+	[maxWidth]="340"
+	(dismiss)="loginToAccessBookDialogVisible = false"
+	(primaryButtonClick)="loginToAccessBookDialogVisible = false"
+	*ngIf="loginToAccessBookDialogVisible">
 
 	<p>{{ locale.loginToAccessBookDialog.description }}</p>
+</dav-dialog>
 
-	<fab-dialog-footer>
-		<fab-primary-button (onClick)="loginToAccessBookDialogVisible = false">{{ locale.ok }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
-
-<fab-dialog
-	[hidden]="!addBookErrorDialogVisible"
-	[dialogContentProps]="addBookErrorDialogContentProps"
-	(onDismiss)="addBookErrorDialogVisible = false">
+<dav-dialog
+	[title]="locale.addBookErrorDialog.title"
+	[primaryButtonText]="locale.ok"
+	[maxWidth]="340"
+	(dismiss)="addBookErrorDialogVisible = false"
+	(primaryButtonClick)="addBookErrorDialogVisible = false"
+	*ngIf="addBookErrorDialogVisible">
 
 	<p>{{ locale.addBookErrorDialog.description }}</p>
-
-	<fab-dialog-footer>
-		<fab-primary-button (onClick)="addBookErrorDialogVisible = false">{{ locale.ok }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+</dav-dialog>
