@@ -249,7 +249,7 @@
 	[primaryButtonText]="locale.remove"
 	[defaultButtonText]="locale.cancel"
 	primaryButtonType="danger"
-	[maxWidth]="340"
+	maxWidth="340"
 	(dismiss)="removeBookDialogVisible = false"
 	(primaryButtonClick)="RemoveBook()"
 	(defaultButtonClick)="removeBookDialogVisible = false"
@@ -261,7 +261,7 @@
 <dav-dialog
 	[title]="locale.loginToAccessBookDialog.title"
 	[primaryButtonText]="locale.ok"
-	[maxWidth]="340"
+	maxWidth="340"
 	(dismiss)="loginToAccessBookDialogVisible = false"
 	(primaryButtonClick)="loginToAccessBookDialogVisible = false"
 	*ngIf="loginToAccessBookDialogVisible">
@@ -272,7 +272,7 @@
 <dav-dialog
 	[title]="locale.addBookErrorDialog.title"
 	[primaryButtonText]="locale.ok"
-	[maxWidth]="340"
+	maxWidth="340"
 	(dismiss)="addBookErrorDialogVisible = false"
 	(primaryButtonClick)="addBookErrorDialogVisible = false"
 	*ngIf="addBookErrorDialogVisible">

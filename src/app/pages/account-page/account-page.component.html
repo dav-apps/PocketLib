@@ -111,7 +111,7 @@
    
    <pocketlib-user-profile
 		[compact]="width < 410"
-		(logoutClick)="ShowLogoutDialog()">
+		(logoutClick)="logoutDialogVisible = true">
 	</pocketlib-user-profile>
 
 	<!--
@@ -137,7 +137,7 @@
 
 		<pocketlib-user-profile
 			[compact]="width < 410"
-			(logoutClick)="ShowLogoutDialog()">
+			(logoutClick)="logoutDialogVisible = true">
 		</pocketlib-user-profile>
 	</div>
 
@@ -156,15 +156,16 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!logoutDialogVisible"
-	[dialogContentProps]="logoutDialogContentProps"
-	(onDismiss)="logoutDialogVisible = false">
+<dav-dialog
+	[title]="locale.logoutDialog.title"
+	[primaryButtonText]="locale.logout"
+	[defaultButtonText]="locale.cancel"
+	primaryButtonType="danger"
+	maxWidth="340"
+	(dismiss)="logoutDialogVisible = false"
+	(primaryButtonClick)="Logout()"
+	(defaultButtonClick)="logoutDialogVisible = false"
+	*ngIf="logoutDialogVisible">
 
 	<p>{{ locale.logoutDialog.description }}</p>
-
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="logoutDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="logoutDialogPrimaryButtonStyles" (onClick)="Logout()">{{ locale.logout }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+</dav-dialog>

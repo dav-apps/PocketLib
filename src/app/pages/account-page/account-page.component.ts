@@ -1,11 +1,10 @@
 import { Component, HostListener } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { IDialogContentProps, IButtonStyles } from 'office-ui-fabric-react'
 import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: "pocketlib-account-page",
@@ -20,22 +19,6 @@ export class AccountPageComponent {
 	dualScreenFoldMargin: number = 0
 	logoutDialogVisible: boolean = false
 	redirect: string
-
-	logoutDialogContentProps: IDialogContentProps = {
-		title: this.locale.logoutDialog.title
-	}
-	logoutDialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10,
-			backgroundColor: "#dc3545"
-		},
-		rootHovered: {
-			backgroundColor: "#c82333"
-		},
-		rootPressed: {
-			backgroundColor: "#c82333"
-		}
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -92,15 +75,6 @@ export class AccountPageComponent {
 			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/${this.redirect}`)
 		} else {
 			Dav.ShowSignupPage(environment.apiKey, environment.baseUrl)
-		}
-	}
-
-	ShowLogoutDialog() {
-		this.logoutDialogContentProps.title = this.locale.logoutDialog.title
-		this.logoutDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
 		}
 	}
 
