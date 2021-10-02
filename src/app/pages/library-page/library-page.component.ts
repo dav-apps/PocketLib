@@ -8,7 +8,7 @@ import { CachingService } from 'src/app/services/caching-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 const pdfType = "application/pdf"
@@ -104,10 +104,6 @@ export class LibraryPageComponent {
 		// Check if the user can access the book
 		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
 			this.loginToAccessBookDialogVisible = true
-
-			if (this.dualScreenLayout) {
-				UpdateDialogForDualScreenLayout()
-			}
 			return
 		}
 
@@ -157,19 +153,11 @@ export class LibraryPageComponent {
 		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
 		this.renameBookDialogError = ""
 		this.renameBookDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	ShowRemoveBookDialog() {
 		this.contextMenuVisible = false
 		this.removeBookDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	async RenameBook() {
