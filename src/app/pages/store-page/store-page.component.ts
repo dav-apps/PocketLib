@@ -14,7 +14,7 @@ export class StorePageComponent {
 	sideNavHidden: boolean = false
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	selectLanguagesDialogVisible: boolean = true
+	selectLanguagesDialogVisible: boolean = false
 
 	constructor(
 		public dataService: DataService,

@@ -44,30 +44,31 @@
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
-				<fab-default-button
-					(onClick)="BuyBook()">
+				<dav-button
+					(click)="BuyBook()">
 					{{ price }}
-				</fab-default-button>
+				</dav-button>
 			</div>
 
 			<!-- Add to library button -->
 			<div class="mt-2" style="min-width: 194px" *ngIf="!(book.price == 0 && !this.book.purchased)">
-				<fab-primary-button
-					(onClick)="AddToLibrary()"
-					[disabled]="addToLibraryButtonDisabled">
+				<dav-button
+					type="accent"
+					[disabled]="addToLibraryButtonDisabled"
+					(click)="AddToLibrary()">
 					{{ locale.addToLibrary }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 
 			<!-- Status and Publish button (only for admins) -->
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<fab-primary-button
-					*ngIf="book.status == 1"
-					(onClick)="PublishStoreBook()">
+				<dav-button
+					(click)="PublishStoreBook()"
+					*ngIf="book.status == 1">
 					{{ locale.publish }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 		</div>
 	</div>
@@ -153,30 +154,31 @@
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
-				<fab-default-button
-					(onClick)="BuyBook()">
+				<dav-button
+					(click)="BuyBook()">
 					{{ price }}
-				</fab-default-button>
+				</dav-button>
 			</div>
 
 			<!-- Add to library button -->
 			<div class="mt-2" style="min-width: 194px" *ngIf="!(book.price == 0 && !this.book.purchased)">
-				<fab-primary-button
-					(onClick)="AddToLibrary()"
-					[disabled]="addToLibraryButtonDisabled">
+				<dav-button
+					type="accent"
+					[disabled]="addToLibraryButtonDisabled"
+					(click)="AddToLibrary()">
 					{{ locale.addToLibrary }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 
 			<!-- Status and Publish button (only for admins) -->
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<fab-primary-button
-					*ngIf="book.status == 1"
-					(onClick)="PublishStoreBook()">
+				<dav-button
+					(click)="PublishStoreBook()"
+					*ngIf="book.status == 1">
 					{{ locale.publish }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 		</div>
 	</div>
@@ -270,30 +272,31 @@
 
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased">
-				<fab-default-button
-					(onClick)="BuyBook()">
+				<dav-button
+					(click)="BuyBook()">
 					{{ price }}
-				</fab-default-button>
+				</dav-button>
 			</div>
 
 			<!-- Add to library button -->
 			<div class="mt-2" style="min-width: 194px"  *ngIf="!(book.price == 0 && !this.book.purchased)">
-				<fab-primary-button
-					(onClick)="AddToLibrary()"
-					[disabled]="addToLibraryButtonDisabled">
+				<dav-button
+					type="accent"
+					[disabled]="addToLibraryButtonDisabled"
+					(click)="AddToLibrary()">
 					{{ locale.addToLibrary }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 
 			<!-- Status and Publish button (only for admins) -->
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<fab-primary-button
-					*ngIf="book.status == 1"
-					(onClick)="PublishStoreBook()">
+				<dav-button
+					(click)="PublishStoreBook()"
+					*ngIf="book.status == 1">
 					{{ locale.publish }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 		</div>
 	</div>
@@ -312,45 +315,39 @@
 	</a>
 </div>
 
-<fab-dialog
-	[hidden]="!davProRequiredDialogVisible"
-	[dialogContentProps]="davProRequiredDialogContentProps"
-	(onDismiss)="davProRequiredDialogVisible = false">
+<dav-dialog
+	[title]="locale.davProRequiredDialog.title"
+	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
+	[defaultButtonText]="locale.back"
+	maxWidth="340"
+	(dismiss)="davProRequiredDialogVisible = false"
+	(primaryButtonClick)="NavigateToAccountPage()"
+	(defaultButtonClick)="davProRequiredDialogVisible = false"
+	*ngIf="davProRequiredDialogVisible">
 
-	<p>
-		{{ locale.davProRequiredDialog.description }}
-	</p>
+	<p>{{ locale.davProRequiredDialog.description }}</p>
+</dav-dialog>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="davProRequiredDialogVisible = false">{{ locale.back }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="NavigateToAccountPage()">{{ locale.davProRequiredDialog.learnMore }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+<dav-dialog
+	[title]="book.price == 0 ? locale.buyBookDialog.loginRequired.titleFree : locale.buyBookDialog.title"
+	[primaryButtonText]="locale.buyBookDialog.continue"
+	[defaultButtonText]="locale.back"
+	maxWidth="400"
+	(dismiss)="buyBookDialogVisible = false"
+	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
+	(defaultButtonClick)="buyBookDialogVisible = false"
+	*ngIf="buyBookDialogVisible">
 
-<fab-dialog
-	[hidden]="!buyBookDialogVisible"
-	[dialogContentProps]="buyBookDialogContentProps"
-	(onDismiss)="buyBookDialogVisible = false">
+	<p [innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description"></p>
+</dav-dialog>
 
-	<p [innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description">
-	</p>
+<dav-dialog
+	[title]="locale.errorDialog.title"
+	[defaultButtonText]="locale.errorDialog.ok"
+	maxWidth="340"
+	(dismiss)="errorDialogVisible = false"
+	(defaultButtonClick)="errorDialogVisible = false"
+	*ngIf="errorDialogVisible">
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="buyBookDialogVisible = false">{{ locale.back }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()">{{ locale.buyBookDialog.continue }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
-
-<fab-dialog
-	[hidden]="!errorDialogVisible"
-	[dialogContentProps]="errorDialogContentProps"
-	(onDismiss)="errorDialogVisible = false">
-
-	<p>
-		{{ locale.errorDialog.description }}
-	</p>
-
-	<fab-dialog-footer>
-		<fab-primary-button (onClick)="errorDialogVisible = false">{{ locale.errorDialog.ok }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+	<p>{{ locale.errorDialog.description }}</p>
+</dav-dialog>

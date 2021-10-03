@@ -1,7 +1,6 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -9,7 +8,6 @@ import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import {
 	GetDualScreenSettings,
-	UpdateDialogForDualScreenLayout,
 	GetElementHeight,
 	GetBookStatusByString
 } from 'src/app/misc/utils'
@@ -80,21 +78,6 @@ export class StoreBookPageComponent {
 	backButtonLink: string = ""
 	backButtonLinkParams: { [key: string]: any } = {}
 
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	davProRequiredDialogContentProps: IDialogContentProps = {
-		title: this.locale.davProRequiredDialog.title
-	}
-	buyBookDialogContentProps: IDialogContentProps = {
-		title: this.locale.buyBookDialog.title
-	}
-	errorDialogContentProps: IDialogContentProps = {
-		title: this.locale.errorDialog.title
-	}
-
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
@@ -145,15 +128,6 @@ export class StoreBookPageComponent {
 
 	BackButtonClick() {
 		this.routingService.RevertLastNavigation()
-	}
-
-	ShowErrorDialog() {
-		this.errorDialogContentProps.title = this.locale.errorDialog.title
-		this.errorDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	async GetData() {
@@ -281,12 +255,7 @@ export class StoreBookPageComponent {
 			&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
 		) {
 			// Show dav Pro dialog
-			this.davProRequiredDialogContentProps.title = this.locale.davProRequiredDialog.title
 			this.davProRequiredDialogVisible = true
-
-			if (this.dualScreenLayout) {
-				UpdateDialogForDualScreenLayout()
-			}
 			return
 		}
 
@@ -323,7 +292,7 @@ export class StoreBookPageComponent {
 			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 		} else {
 			// Show error
-			this.ShowErrorDialog()
+			this.errorDialogVisible = true
 		}
 	}
 
@@ -343,7 +312,7 @@ export class StoreBookPageComponent {
 					this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 				} else {
 					// Show error
-					this.ShowErrorDialog()
+					this.errorDialogVisible = true
 				}
 			} else {
 				// Show dialog for buying the book
@@ -356,13 +325,8 @@ export class StoreBookPageComponent {
 	}
 
 	ShowBuyBookDialog(loginRequired: boolean) {
-		this.buyBookDialogContentProps.title = this.book.price == 0 ? this.locale.buyBookDialog.loginRequired.titleFree : this.locale.buyBookDialog.title
 		this.buyBookDialogLoginRequired = loginRequired
 		this.buyBookDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	NavigateToAccountPage() {
@@ -385,7 +349,7 @@ export class StoreBookPageComponent {
 			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseUuid}?redirectUrl=${url}`
 		} else {
 			// Show error
-			this.ShowErrorDialog()
+			this.errorDialogVisible = true
 		}
 	}
 
