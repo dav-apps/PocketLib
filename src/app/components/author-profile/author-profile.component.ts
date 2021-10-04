@@ -97,15 +97,6 @@ export class AuthorProfileComponent {
 	editProfileDialogTwitterUsernameError: string = ""
 	//#endregion
 
-	cancelButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	editProfileDialogContentProps = {
-		title: this.locale.editProfileDialog.title
-	}
-
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService
@@ -396,8 +387,6 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsername = this.author.twitterUsername
 		this.editProfileDialogTwitterUsernameError = ""
-
-		this.editProfileDialogContentProps.title = this.locale.editProfileDialog.title
 		this.editProfileDialogVisible = true
 	}
 

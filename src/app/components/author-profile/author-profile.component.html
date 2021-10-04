@@ -388,110 +388,108 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!editProfileDialogVisible"
-	[dialogContentProps]="editProfileDialogContentProps"
-	(onDismiss)="editProfileDialogVisible = false">
+<dav-dialog
+	[title]="locale.editProfileDialog.title"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	(dismiss)="editProfileDialogVisible = false"
+	(primaryButtonClick)="SaveProfile()"
+	(defaultButtonClick)="editProfileDialogVisible = false"
+	*ngIf="editProfileDialogVisible">
 
 	<!-- First name -->
-	<div class="form-group">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.firstNameTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			[(value)]="editProfileDialogFirstName"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogFirstName"
 			placeholder="Monty"
-			[errorMessage]="editProfileDialogFirstNameError"
+			(input)="editProfileDialogFirstName = $event.target.value; editProfileDialogFirstNameError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
+			{{ locale.editProfileDialog.firstNameTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editProfileDialogFirstNameError.length > 0">
+			{{ editProfileDialogFirstNameError }}
+		</p>
 	</div>
 
 	<!-- Last name -->
-	<div class="form-group mt-3">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.lastNameTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			[(value)]="editProfileDialogLastName"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogLastName"
 			placeholder="Kensicle"
-			[errorMessage]="editProfileDialogLastNameError"
+			(input)="editProfileDialogLastName = $event.target.value; editProfileDialogLastNameError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
+			{{ locale.editProfileDialog.lastNameTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editProfileDialogLastNameError.length > 0">
+			{{ editProfileDialogLastNameError }}
+		</p>
 	</div>
 
 	<!-- Website url -->
-	<div class="form-group mt-3">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.websiteUrlTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			type="url"
-			[(value)]="editProfileDialogWebsiteUrl"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogWebsiteUrl"
 			[placeholder]="locale.editProfileDialog.websiteUrlTextfieldPlaceholder"
-			[errorMessage]="editProfileDialogWebsiteUrlError"
+			(input)="editProfileDialogWebsiteUrl = $event.target.value; editProfileDialogWebsiteUrlError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
+			{{ locale.editProfileDialog.websiteUrlTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editProfileDialogWebsiteUrlError.length > 0">
+			{{ editProfileDialogWebsiteUrlError }}
+		</p>
 	</div>
 
 	<!-- Facebook username -->
-	<div class="form-group mt-3">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.facebookUsernameTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			[(value)]="editProfileDialogFacebookUsername"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogFacebookUsername"
 			[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
-			[errorMessage]="editProfileDialogFacebookUsernameError"
+			(input)="editProfileDialogFacebookUsername = $event.target.value; editProfileDialogFacebookUsernameError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
+			{{ locale.editProfileDialog.facebookUsernameTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editProfileDialogFacebookUsernameError.length > 0">
+			{{ editProfileDialogFacebookUsernameError }}
+		</p>
 	</div>
 
 	<!-- Instagram username -->
-	<div class="form-group mt-3">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.instagramUsernameTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			[(value)]="editProfileDialogInstagramUsername"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogInstagramUsername"
 			[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
-			[errorMessage]="editProfileDialogInstagramUsernameError"
+			(input)="editProfileDialogInstagramUsername = $event.target.value; editProfileDialogInstagramUsernameError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
+			{{ locale.editProfileDialog.instagramUsernameTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editProfileDialogInstagramUsernameError.length > 0">
+			{{ editProfileDialogInstagramUsernameError }}
+		</p>
 	</div>
 
 	<!-- Twitter username -->
-	<div class="form-group mt-3">
-		<label
-			class="col-form-label"
-			style="font-size: 15px">
-			{{ locale.editProfileDialog.twitterUsernameTextfieldLabel }}
-		</label>
-
-		<fab-text-field
-			[(value)]="editProfileDialogTwitterUsername"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editProfileDialogTwitterUsername"
 			[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
-			[errorMessage]="editProfileDialogTwitterUsernameError"
+			(input)="editProfileDialogTwitterUsername = $event.target.value; editProfileDialogTwitterUsernameError = ''"
 			(keydown.enter)="SaveProfile()">
-		</fab-text-field>
-	</div>
+			{{ locale.editProfileDialog.twitterUsernameTextfieldLabel }}
+		</fluent-text-field>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="editProfileDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="cancelButtonStyles" (onClick)="SaveProfile()">{{ locale.save }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+		<p class="text-field-error" *ngIf="editProfileDialogTwitterUsernameError.length > 0">
+			{{ editProfileDialogTwitterUsernameError }}
+		</p>
+	</div>
+</dav-dialog>
