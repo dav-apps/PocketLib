@@ -1,12 +1,4 @@
 import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core'
-import {
-	IDropdownOption,
-	DropdownMenuItemType,
-	IButtonStyles,
-	IDialogContentProps,
-	MessageBarType,
-	SpinnerSize
-} from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -16,7 +8,7 @@ import {
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { BookListItem, Author, AuthorMode, BookStatus } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -58,7 +50,7 @@ export class AuthorProfileComponent {
 	books: BookListItem[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownSelectedIndex: number = 0
-	bioLanguageDropdownOptions: IDropdownOption[] = []
+	bioLanguageDropdownOptions: object[] = []
 	bioMode: BioMode = BioMode.None
 	newBio: string = ""
 	newBioError: string = ""
@@ -82,14 +74,12 @@ export class AuthorProfileComponent {
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	profileImageAlt: string = ""
 	bookTitleFontSize: number = 20
-	messageBarType: MessageBarType = MessageBarType.warning
 	showProviderMessage: boolean = false
 	providerMessage: string = ""
 	newBookPageLink: {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
-	spinnerSize: SpinnerSize = SpinnerSize.large
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -107,17 +97,12 @@ export class AuthorProfileComponent {
 	editProfileDialogTwitterUsernameError: string = ""
 	//#endregion
 
-	bioTextfieldStyles = {
-		root: {
-			marginTop: "10px"
-		}
-	}
-	cancelButtonStyles: IButtonStyles = {
+	cancelButtonStyles = {
 		root: {
 			marginLeft: 10
 		}
 	}
-	editProfileDialogContentProps: IDialogContentProps = {
+	editProfileDialogContentProps = {
 		title: this.locale.editProfileDialog.title
 	}
 
@@ -273,16 +258,16 @@ export class AuthorProfileComponent {
 			}
 		} else {
 			// Add a divider and all possible languages to add
-			let newOptions: IDropdownOption[] = [{
+			let newOptions: object[] = [{
 				key: "header",
 				text: this.locale.additionalLanguages,
-				itemType: DropdownMenuItemType.Header
+				//itemType: DropdownMenuItemType.Header
 			}]
 
 			let languages = this.dataService.GetLocale().misc.languages
 			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
-				let index = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == language)
+				let index = this.bioLanguageDropdownOptions.findIndex(option => option["data"].language == language)
 
 				if (index == -1) {
 					// There is no bio in that language
@@ -322,7 +307,7 @@ export class AuthorProfileComponent {
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthorOfUser({
-						language: selectedOption.data.language,
+						language: selectedOption["data"].language,
 						bio: this.newBio
 					})
 				)
@@ -330,7 +315,7 @@ export class AuthorProfileComponent {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthor({
 						uuid: this.uuid,
-						language: selectedOption.data.language,
+						language: selectedOption["data"].language,
 						bio: this.newBio
 					})
 				)
@@ -414,10 +399,6 @@ export class AuthorProfileComponent {
 
 		this.editProfileDialogContentProps.title = this.locale.editProfileDialog.title
 		this.editProfileDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	async SaveProfile() {
@@ -532,9 +513,9 @@ export class AuthorProfileComponent {
 				this.SetupBioLanguageDropdown()
 
 				// Show the bio in the language that was just added
-				let i = this.bioLanguageDropdownOptions.findIndex(option => option.data.language == responseData.language)
+				let i = this.bioLanguageDropdownOptions.findIndex(option => option["data"].language == responseData.language)
 				if (i != -1) {
-					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i].key as number
+					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i]["key"] as number
 				}
 			} else {
 				// Find and update the edited bio
