@@ -299,7 +299,6 @@ const enDefaults = {
 		addYourBio: "Add your biography",
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
-		additionalLanguages: "Additional languages",
 		editProfileDialog: {
 			title: "Edit your profile",
 			firstNameTextfieldLabel: "First name",
@@ -700,7 +699,6 @@ const deDefaults = {
 		addYourBio: "Biographie angeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
-		additionalLanguages: "Weitere Sprachen",
 		editProfileDialog: {
 			title: "Profil bearbeiten",
 			firstNameTextfieldLabel: "Vorname",

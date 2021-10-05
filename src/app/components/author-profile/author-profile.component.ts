@@ -3,6 +3,7 @@ import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { Dav, ApiResponse, ApiErrorResponse } from 'dav-js'
+import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import {
 	DataService,
 	FindAppropriateLanguage
@@ -49,9 +50,10 @@ export class AuthorProfileComponent {
 	twitterLink: string = ""
 	books: BookListItem[] = []
 	profileImageWidth: number = 200
-	bioLanguageDropdownSelectedIndex: number = 0
-	bioLanguageDropdownOptions: object[] = []
+	bioLanguageDropdownOptions: DropdownOption[] = []
+	bioLanguageDropdownSelectedKey: string = "en"
 	bioMode: BioMode = BioMode.None
+	currentBio: string = ""
 	newBio: string = ""
 	newBioError: string = ""
 	bioLoading: boolean = false
@@ -198,8 +200,27 @@ export class AuthorProfileComponent {
 	}
 
 	SelectDefaultBio() {
-		this.bioLanguageDropdownSelectedIndex = FindAppropriateLanguage(this.dataService.supportedLocale, this.author.bios)
-		if (this.bioLanguageDropdownSelectedIndex < 0) this.bioLanguageDropdownSelectedIndex = 0
+		let i = this.author.bios.findIndex(bio => bio.language == this.dataService.supportedLocale)
+
+		if (i != -1) {
+			this.bioLanguageDropdownSelectedKey = this.dataService.supportedLocale
+		} else if (this.author.bios.length > 0) {
+			this.bioLanguageDropdownSelectedKey = this.author.bios[0].language
+		} else {
+			this.bioLanguageDropdownSelectedKey = "default"
+		}
+
+		this.UpdateCurrentBio()
+	}
+
+	UpdateCurrentBio() {
+		let i = this.author.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+
+		if (i == -1) {
+			this.currentBio = ""
+		} else {
+			this.currentBio = this.author.bios[i].bio
+		}
 	}
 
 	SetupBioLanguageDropdown() {
@@ -207,19 +228,13 @@ export class AuthorProfileComponent {
 
 		// Prepare the Bio language dropdown
 		this.bioLanguageDropdownOptions = []
-		let i = 0
 
 		for (let lang of this.author.bios) {
 			this.bioLanguageDropdownOptions.push({
-				key: i,
-				text: this.dataService.GetFullLanguage(lang.language),
-				data: {
-					language: lang.language,
-					added: true
-				}
+				key: lang.language,
+				value: this.dataService.GetFullLanguage(lang.language),
+				type: DropdownOptionType.option
 			})
-
-			i++
 		}
 
 		if (this.bioLanguageDropdownOptions.length == 0) {
@@ -227,52 +242,41 @@ export class AuthorProfileComponent {
 
 			// Add default item
 			this.bioLanguageDropdownOptions.push({
-				key: 0,
-				text: this.locale.addYourBio
+				key: "default",
+				value: this.locale.addYourBio,
+				type: DropdownOptionType.option
 			})
-
-			i++
 
 			// Add each supported language
 			let languages = this.dataService.GetLocale().misc.languages
 			for (let language of Object.keys(languages)) {
 				this.bioLanguageDropdownOptions.push({
-					key: i,
-					text: languages[language],
-					data: {
-						language,
-						added: false
-					}
+					key: language,
+					value: languages[language],
+					type: DropdownOptionType.option
 				})
-
-				i++
 			}
 		} else {
 			// Add a divider and all possible languages to add
-			let newOptions: object[] = [{
-				key: "header",
-				text: this.locale.additionalLanguages,
-				//itemType: DropdownMenuItemType.Header
+			let newOptions: DropdownOption[] = [{
+				key: "divider",
+				value: null,
+				type: DropdownOptionType.divider
 			}]
 
 			let languages = this.dataService.GetLocale().misc.languages
 			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
-				let index = this.bioLanguageDropdownOptions.findIndex(option => option["data"].language == language)
+				let index = this.bioLanguageDropdownOptions.findIndex(option => option.key == language)
 
 				if (index == -1) {
 					// There is no bio in that language
 					// Add an option to add that language
 					newOptions.push({
-						key: i,
-						text: languages[language],
-						data: {
-							language,
-							added: false
-						}
+						key: language,
+						value: languages[language],
+						type: DropdownOptionType.option
 					})
-
-					i++
 				}
 			}
 
@@ -293,12 +297,10 @@ export class AuthorProfileComponent {
 			this.bioLoading = true
 
 			// Save the new bio on the server
-			let selectedOption = this.bioLanguageDropdownOptions[this.bioLanguageDropdownSelectedIndex + (this.bioMode == BioMode.New && this.author.bios.length > 0 ? 1 : 0)]
-
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthorOfUser({
-						language: selectedOption["data"].language,
+						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
 					})
 				)
@@ -306,33 +308,41 @@ export class AuthorProfileComponent {
 				this.ProcessSetBioResponse(
 					await this.apiService.SetBioOfAuthor({
 						uuid: this.uuid,
-						language: selectedOption["data"].language,
+						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
 					})
 				)
 			}
 		} else {
-			this.newBio = this.author.bios[this.bioLanguageDropdownSelectedIndex].bio
+			this.newBio = this.currentBio
 			this.newBioError = ""
 			this.bioMode = BioMode.NormalEdit
 		}
 	}
 
 	CancelEditBio() {
-		this.bioMode = 2
+		this.bioMode = BioMode.Normal
 		this.newBio = ""
 		this.newBioError = ""
 	}
 
-	BioLanguageDropdownChange(e: { event: MouseEvent, option: { key: number, text: string, data: any }, index: number }) {
-		this.bioLanguageDropdownSelectedIndex = e.option.key
+	BioLanguageDropdownChange(event: CustomEvent) {
+		this.bioLanguageDropdownSelectedKey = event.detail.key
 		this.newBioError = ""
 
-		if (!e.option.data) {
+		if (this.bioLanguageDropdownSelectedKey == "default") {
 			this.bioMode = BioMode.None
 		} else {
-			this.bioMode = e.option.data.added ? BioMode.Normal : BioMode.New
+			let i = this.author.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+
+			if (i == -1) {
+				this.bioMode = BioMode.New
+			} else {
+				this.bioMode = BioMode.Normal
+			}
 		}
+
+		this.UpdateCurrentBio()
 	}
 
 	async UploadProfileImage(file: ReadFile) {
@@ -500,12 +510,6 @@ export class AuthorProfileComponent {
 				this.newBio = ""
 				this.newBioError = ""
 				this.SetupBioLanguageDropdown()
-
-				// Show the bio in the language that was just added
-				let i = this.bioLanguageDropdownOptions.findIndex(option => option["data"].language == responseData.language)
-				if (i != -1) {
-					this.bioLanguageDropdownSelectedIndex = this.bioLanguageDropdownOptions[i]["key"] as number
-				}
 			} else {
 				// Find and update the edited bio
 				let i = this.author.bios.findIndex(bio => bio.language == responseData.language)
@@ -517,6 +521,8 @@ export class AuthorProfileComponent {
 				this.newBioError = ""
 				this.bioMode = BioMode.Normal
 			}
+
+			this.UpdateCurrentBio()
 		} else {
 			let errorCode = (response as ApiErrorResponse).errors[0].code
 
