@@ -28,9 +28,10 @@
 		</ngb-pagination>
 	</div>
 
-	<div style="margin-top: 36px" *ngIf="loading">
-		<fab-spinner [size]="spinnerSize"></fab-spinner>
-	</div>
+	<fluent-progress-ring
+		class="mx-auto"
+		style="margin-top: 36px; width: 28px; height: 28px" *ngIf="loading">
+	</fluent-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
@@ -55,9 +56,10 @@
 			</pocketlib-store-book-card>
 		</div>
 
-		<div style="margin-top: 36px" *ngIf="loading">
-			<fab-spinner [size]="spinnerSize"></fab-spinner>
-		</div>
+		<fluent-progress-ring
+			class="mx-auto"
+			style="margin-top: 36px; width: 28px; height: 28px" *ngIf="loading">
+		</fluent-progress-ring>
 	</div>
 
 	<!-- Right screen -->

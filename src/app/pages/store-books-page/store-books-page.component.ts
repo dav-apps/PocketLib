@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { SpinnerSize } from 'office-ui-fabric-react'
 import { ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -22,7 +21,6 @@ export class StoreBooksPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	loading: boolean = false
-	spinnerSize: SpinnerSize = SpinnerSize.large
 
 	//#region Variables for pagination
 	pages: number = 1
