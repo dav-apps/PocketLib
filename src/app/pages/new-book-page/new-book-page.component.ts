@@ -1,11 +1,5 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import {
-	SpinnerSize,
-	IButtonStyles,
-	IDialogContentProps,
-	MessageBarType
-} from 'office-ui-fabric-react'
 import { PromiseHolder, ApiResponse } from 'dav-js'
 import {
 	DataService,
@@ -15,7 +9,7 @@ import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { Author } from 'src/app/misc/types'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -27,7 +21,6 @@ export class NewBookPageComponent {
 	section: number = 0
 	visibleSection: number = 0
 	forwardNavigation: boolean = true
-	spinnerSize: SpinnerSize = SpinnerSize.small
 	loading: boolean = false
 	//#endregion
 
@@ -49,18 +42,8 @@ export class NewBookPageComponent {
 		profileImageBlurhash: null
 	}
 	leavePageDialogVisible: boolean = false
-	errorMessageBarType: MessageBarType = MessageBarType.error
-	errorMessage: string = ""
+	errorMessage: string = "Hello World"
 	navigationEventPromiseHolder = new PromiseHolder<boolean>()
-
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	leavePageDialogContentProps: IDialogContentProps = {
-		title: this.locale.leavePageDialog.title
-	}
 	//#endregion
 
 	//#region Title variables
@@ -213,7 +196,7 @@ export class NewBookPageComponent {
 		this.navigationEventPromiseHolder.Setup()
 
 		// Show the leave page dialog
-		this.ShowLeavePageDialog()
+		this.leavePageDialogVisible = true
 
 		return await this.navigationEventPromiseHolder.AwaitResult()
 	}
@@ -222,19 +205,10 @@ export class NewBookPageComponent {
 		this.navigationEventPromiseHolder.Setup()
 
 		// Show the leave page dialog
-		this.ShowLeavePageDialog()
+		this.leavePageDialogVisible = true
 
 		if (await this.navigationEventPromiseHolder.AwaitResult()) {
 			this.routingService.NavigateBack("/author")
-		}
-	}
-
-	ShowLeavePageDialog() {
-		this.leavePageDialogContentProps.title = this.locale.leavePageDialog.title
-		this.leavePageDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
 		}
 	}
 

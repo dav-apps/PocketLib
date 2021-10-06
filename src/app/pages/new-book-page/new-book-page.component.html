@@ -17,10 +17,10 @@
 	<div
 		class="mb-3 mx-auto"
 		style="max-width: 300px"
-		*ngIf="errorMessage">
-		<fab-message-bar [messageBarType]="errorMessageBarType">
+		*ngIf="errorMessage.length > 0">
+		<dav-message-bar type="danger">
 			{{ errorMessage }}
-		</fab-message-bar>
+		</dav-message-bar>
 	</div>
 
 	<!-- Title -->
@@ -65,7 +65,6 @@
 
 	<!-- Price -->
 	<pocketlib-new-book-page-price-section
-		[loading]="loading"
 		[section]="section"
 		[visibleSection]="visibleSection"
 		[forwardNavigation]="forwardNavigation"
@@ -76,7 +75,6 @@
 
 	<!-- ISBN -->
 	<pocketlib-new-book-page-isbn-section
-		[loading]="loading"
 		[section]="section"
 		[visibleSection]="visibleSection"
 		[forwardNavigation]="forwardNavigation"
@@ -129,10 +127,10 @@
 		<div
 			class="mb-3 mx-auto"
 			style="max-width: 300px"
-			*ngIf="errorMessage">
-			<fab-message-bar [messageBarType]="errorMessageBarType">
+			*ngIf="errorMessage.length > 0">
+			<dav-message-bar type="danger">
 				{{ errorMessage }}
-			</fab-message-bar>
+			</dav-message-bar>
 		</div>
 
 		<!-- Title -->
@@ -177,7 +175,6 @@
 
 		<!-- Price -->
 		<pocketlib-new-book-page-price-section
-			[loading]="loading"
 			[section]="section"
 			[visibleSection]="visibleSection"
 			[forwardNavigation]="forwardNavigation"
@@ -188,7 +185,6 @@
 
 		<!-- ISBN -->
 		<pocketlib-new-book-page-isbn-section
-			[loading]="loading"
 			[section]="section"
 			[visibleSection]="visibleSection"
 			[forwardNavigation]="forwardNavigation"
@@ -247,15 +243,15 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!leavePageDialogVisible"
-	[dialogContentProps]="leavePageDialogContentProps"
-	(onDismiss)="LeavePageDialogCancel()">
+<dav-dialog
+	[title]="locale.leavePageDialog.title"
+	[primaryButtonText]="locale.leavePageDialog.leave"
+	[defaultButtonText]="locale.leavePageDialog.cancel"
+	maxWidth="340"
+	(dismiss)="LeavePageDialogCancel()"
+	(primaryButtonClick)="LeavePageDialogLeave()"
+	(defaultButtonClick)="LeavePageDialogCancel()"
+	*ngIf="leavePageDialogVisible">
 
 	<p>{{ locale.leavePageDialog.description }}</p>
-
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="LeavePageDialogCancel()">{{ locale.leavePageDialog.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="LeavePageDialogLeave()">{{ locale.leavePageDialog.leave }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+</dav-dialog>
