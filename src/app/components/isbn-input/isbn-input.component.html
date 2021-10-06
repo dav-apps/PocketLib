@@ -2,36 +2,43 @@
 	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ isbn }}</p>
 
 	<p class="font-weight-light font-italic text-color"
-		style="margin-top: 3px"
+		style="margin-top: 3px; margin-bottom: 3px"
 		*ngIf="!edit && isbn.length == 0">
 		{{ locale.noIsbn }}
 	</p>
 
 	<div class="d-flex" *ngIf="edit">
-		<fab-text-field
-			[(value)]="isbn"
-			label="ISBN"
-			placeholder="9780064407663"
-			[errorMessage]="errorMessage"
-			(keydown.enter)="UpdateValue()">
-		</fab-text-field>
+		<div>
+			<fluent-text-field
+				style="width: 100%"
+				[value]="isbn"
+				placeholder="9780064407663"
+				(input)="isbn = $event.target.value; errorMessage = ''"
+				(keydown.enter)="UpdateValue()">
+				ISBN
+			</fluent-text-field>
+
+			<p class="text-field-error" *ngIf="errorMessage.length > 0">
+				{{ errorMessage }}
+			</p>
+		</div>
 
 		<button
 			type="button"
 			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px;"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
 			(click)="UpdateValue()">
 			
-			<fab-icon iconName="Save"></fab-icon>
+			<i class="ms-Icon ms-Icon--Save" style="font-size: 16px" aria-hidden="true"></i>
 		</button>
 
 		<button
 			type="button"
 			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px"
 			(click)="Cancel()">
 
-			<fab-icon iconName="Clear"></fab-icon>
+			<i class="ms-Icon ms-Icon--Clear" style="font-size: 16px" aria-hidden="true"></i>
 		</button>
 	</div>
 
@@ -42,6 +49,6 @@
 		*ngIf="!edit && canEdit"
 		(click)="EnableEditing()">
 
-		<fab-icon iconName="Edit"></fab-icon>
+		<i class="ms-Icon ms-Icon--Edit" style="font-size: 16px" aria-hidden="true"></i>
 	</button>
 </div>

@@ -1,9 +1,6 @@
-<fab-dropdown
+<dav-dropdown
+	[options]="options"
 	[selectedKey]="language"
 	[disabled]="disabled"
-	(onChange)="SetLanguage($event)">
-	<options>
-		<fab-dropdown-option optionKey="en" [text]="languages.en"></fab-dropdown-option>
-		<fab-dropdown-option optionKey="de" [text]="languages.de"></fab-dropdown-option>
-	</options>
-</fab-dropdown>
+	(change)="SetLanguage($event)">
+</dav-dropdown>

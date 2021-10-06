@@ -2,24 +2,25 @@
 	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ formattedPrice }}</p>
 
 	<div class="d-flex" *ngIf="edit">
-		<fab-text-field
+		<fluent-text-field
+			style="width: 100%"
 			type="number"
 			min="0"
 			max="100000"
-			[(value)]="price"
-			[label]="locale.priceTextfieldLabel"
+			[value]="price"
 			[placeholder]="locale.priceTextfieldPlaceholder"
-			[errorMessage]="errorMessage"
+			(input)="price = $event.target.value"
 			(keydown.enter)="UpdatePrice()">
-		</fab-text-field>
+			{{ locale.priceTextfieldLabel }}
+		</fluent-text-field>
 
 		<button
 			type="button"
 			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 32px;"
+			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
 			(click)="UpdatePrice()">
-			
-			<fab-icon iconName="Save"></fab-icon>
+
+			<i class="ms-Icon ms-Icon--Save" style="font-size: 16px" aria-hidden="true"></i>
 		</button>
 	</div>
 
@@ -30,6 +31,6 @@
 		*ngIf="canEdit && !edit"
 		(click)="ShowEditPrice()">
 
-		<fab-icon iconName="Edit"></fab-icon>
+		<i class="ms-Icon ms-Icon--Edit" style="font-size: 16px" aria-hidden="true"></i>
 	</button>
 </div>
