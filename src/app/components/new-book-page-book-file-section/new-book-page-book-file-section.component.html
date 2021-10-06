@@ -1,5 +1,5 @@
 <div
-	class="mx-auto"
+	class="mx-auto mb-4"
 	[ngClass]="section != 7 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 	style="max-width: 300px"
 	[style.display]="visibleSection != 7 ? 'none' : null">
@@ -12,25 +12,24 @@
 			{{ bookFileName }}
 		</p>
 
-		<fab-primary-button
+		<dav-button
+			type="accent"
 			ngxFilePicker
 			accept="application/epub+zip"
 			(filePick)="BookFileUpload($event)">
 			{{ locale.bookFileSection.uploadButtonText }}
-		</fab-primary-button>
+		</dav-button>
 	</div>
 
-	<div style="float: left">
-		<fab-default-button
-			(onClick)="Previous()">
-			{{ locale.previous }}
-		</fab-default-button>
-	</div>
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
 
-	<div style="float: right">
-		<fab-primary-button
-			(onClick)="Finish()">
-			{{ locale.finish }}
-		</fab-primary-button>
-	</div>
+	<dav-button
+		style="float: right"
+		type="accent"
+		(click)="Finish()">
+		{{ locale.finish }}
+	</dav-button>
 </div>

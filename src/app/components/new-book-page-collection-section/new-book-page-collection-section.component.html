@@ -1,5 +1,5 @@
 <div
-	class="mx-auto"
+	class="mx-auto mb-4"
 	[ngClass]="section != 1 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 	style="max-width: 500px"
 	[style.display]="visibleSection != 1 ? 'none' : null">
@@ -41,18 +41,16 @@
 		</div>
 	</div>
 
-	<div class="mb-4" style="float: left">
-		<fab-default-button
-			(onClick)="Previous()">
-			{{ locale.previous }}
-		</fab-default-button>
-	</div>
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
 
-	<div class="mb-4" style="float: right">
-		<fab-primary-button
-			[disabled]="selectedCollection == -2"
-			(onClick)="Submit()">
-			{{ locale.next }}
-		</fab-primary-button>
-	</div>
+	<dav-button
+		style="float: right"
+		type="accent"
+		[disabled]="selectedCollection == -2"
+		(click)="Submit()">
+		{{ locale.next }}
+	</dav-button>
 </div>

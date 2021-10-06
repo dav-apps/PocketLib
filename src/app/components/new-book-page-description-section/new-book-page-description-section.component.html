@@ -1,5 +1,5 @@
 <div
-	class="mx-auto"
+	class="mx-auto mb-4"
 	[ngClass]="section != 2 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 	style="max-width: 300px"
 	[style.display]="visibleSection != 2 ? 'none' : null">
@@ -18,25 +18,23 @@
 			</pocketlib-language-dropdown>
 		</div>
 
-		<fab-text-field
-			[(value)]="description"
+		<fluent-text-area
+			style="width: 100%"
+			[value]="description"
 			[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
-			multiline="true"
-			autoAdjustHeight="true">
-		</fab-text-field>
+			(input)="description = $event.target.value">
+		</fluent-text-area>
 	</div>
 
-	<div style="float: left">
-		<fab-default-button
-			(onClick)="Previous()">
-			{{ locale.previous }}
-		</fab-default-button>
-	</div>
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
 
-	<div style="float: right">
-		<fab-primary-button
-			(onClick)="Submit()">
-			{{ locale.next }}
-		</fab-primary-button>
-	</div>
+	<dav-button
+		style="float: right"
+		type="accent"
+		(click)="Submit()">
+		{{ locale.next }}
+	</dav-button>
 </div>

@@ -1,5 +1,5 @@
 <div
-	class="mx-auto"
+	class="mx-auto mb-4"
 	[ngClass]="section != 3 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 	style="max-width: 300px"
 	[style.display]="visibleSection != 3 ? 'none' : null">
@@ -10,17 +10,15 @@
 		<pocketlib-categories-selection #categoriesSelection></pocketlib-categories-selection>
 	</div>
 
-	<div style="float: left">
-		<fab-default-button
-			(onClick)="Previous()">
-			{{ locale.previous }}
-		</fab-default-button>
-	</div>
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
 
-	<div style="float: right">
-		<fab-primary-button
-			(onClick)="Submit()">
-			{{ locale.next }}
-		</fab-primary-button>
-	</div>
+	<dav-button
+		style="float: right"
+		type="accent"
+		(click)="Submit()">
+		{{ locale.next }}
+	</dav-button>
 </div>

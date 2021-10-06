@@ -5,7 +5,7 @@
 		style="height: 35px; width: 40px; font-size: 18px; margin-top: -6px; padding: 2px 0px 0px 0px"
 		(click)="backButtonClick.emit()"
 		*ngIf="!backButtonLink">
-		<fab-icon iconName="Back"></fab-icon>
+		<i class="ms-Icon ms-Icon--Back" style="font-size: 18px" aria-hidden="true"></i>
 	</button>
 	<a
 		class="btn mr-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
@@ -14,7 +14,7 @@
 		[queryParams]="backButtonLinkParams"
 		(click)="backButtonClick.emit()"
 		*ngIf="backButtonLink">
-		<fab-icon iconName="Back"></fab-icon>
+		<i class="ms-Icon ms-Icon--Back" style="font-size: 18px" aria-hidden="true"></i>
 	</a>
 	{{ title }}
 	<button
@@ -23,6 +23,6 @@
 		style="height: 35px; font-size: 18px; margin-top: -6px; padding: 0px 6px"
 		(click)="editButtonClick.emit()"
 		*ngIf="editButtonVisible">
-		<fab-icon iconName="Edit"></fab-icon>
+		<i class="ms-Icon ms-Icon--Edit" style="font-size: 18px" aria-hidden="true"></i>
 	</button>
 </h2>

@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { SpinnerSize } from 'office-ui-fabric-react'
 import { DataService } from 'src/app/services/data-service'
 import { enUS } from 'src/locales/locales'
 
@@ -15,7 +14,6 @@ export class NewBookPageTitleSectionComponent{
 	@Input() forwardNavigation: boolean = false
 	@Output() submit = new EventEmitter()
 	title: string = ""
-	spinnerSize: SpinnerSize = SpinnerSize.small
 
 	constructor(
 		public dataService: DataService

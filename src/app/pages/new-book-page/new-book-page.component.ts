@@ -42,7 +42,7 @@ export class NewBookPageComponent {
 		profileImageBlurhash: null
 	}
 	leavePageDialogVisible: boolean = false
-	errorMessage: string = "Hello World"
+	errorMessage: string = ""
 	navigationEventPromiseHolder = new PromiseHolder<boolean>()
 	//#endregion
 

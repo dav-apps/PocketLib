@@ -1,5 +1,5 @@
 <div
-	class="mx-auto"
+	class="mx-auto mb-4"
 	[ngClass]="section != 4 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
 	style="max-width: 300px"
 	[style.display]="visibleSection != 4 ? 'none' : null">
@@ -14,23 +14,15 @@
 		</pocketlib-price-input>
 	</div>
 
-	<div style="float: left">
-		<fab-default-button
-			(onClick)="Previous()">
-			{{ locale.previous }}
-		</fab-default-button>
-	</div>
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
 
-	<div class="d-flex" style="float: right">
-		<div
-			style="margin-top: 8px; margin-right: 14px"
-			*ngIf="loading">
-			<fab-spinner [size]="spinnerSize"></fab-spinner>
-		</div>
-
-		<fab-primary-button
-			(onClick)="Submit()">
-			{{ locale.next }}
-		</fab-primary-button>
-	</div>
+	<dav-button
+		style="float: right"
+		type="accent"
+		(click)="Submit()">
+		{{ locale.next }}
+	</dav-button>
 </div>

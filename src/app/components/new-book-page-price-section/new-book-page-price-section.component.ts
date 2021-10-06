@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core'
-import { SpinnerSize } from 'office-ui-fabric-react'
 import { DataService } from 'src/app/services/data-service'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { enUS } from 'src/locales/locales'
@@ -10,7 +9,6 @@ import { enUS } from 'src/locales/locales'
 })
 export class NewBookPagePriceSectionComponent {
 	locale = enUS.newBookPage
-	@Input() loading: boolean = false
 	@Input() section: number = 0
 	@Input() visibleSection: number = 0
 	@Input() forwardNavigation: boolean = false
@@ -19,7 +17,6 @@ export class NewBookPagePriceSectionComponent {
 	@Output() submit = new EventEmitter()
 	@ViewChild('priceInput') priceInput: PriceInputComponent
 	price: number = 0
-	spinnerSize: SpinnerSize = SpinnerSize.small
 
 	constructor(
 		public dataService: DataService
