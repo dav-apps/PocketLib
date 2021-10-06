@@ -32,21 +32,22 @@
 						[loading]="coverLoading">
 					</pocketlib-blurhash-image>
 				</div>
-	
-				<fab-primary-button
+
+				<dav-button
+					type="accent"
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
 					(filePick)="CoverUpload($event)">
 					{{ locale.uploadCover }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
-	
+
 			<!-- Description -->
 			<div id="book-details-description-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
-	
+
 			<div id="book-details-description-data" class="book-details-data">
 				<p class="text-color"
 					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
@@ -54,26 +55,45 @@
 					{{ book.description }}
 				</p>
 				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
-	
-				<fab-text-field 
-					[styles]="descriptionTextfieldStyles"
-					[(value)]="newDescription"
-					[placeholder]="locale.descriptionTextfieldPlaceholder"
-					[errorMessage]="newDescriptionError"
-					multiline="true"
-					autoAdjustHeight="true"
+
+				<div
+					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
 					*ngIf="editDescription">
-				</fab-text-field>
-				
-				<fab-primary-button (click)="EditDescription()" [disabled]="descriptionLoading">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
-				<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription" [disabled]="descriptionLoading">{{ locale.cancel }}</fab-default-button>
+
+					<fluent-text-area
+						style="width: 100%"
+						resize="vertical"
+						[value]="newDescription"
+						[placeholder]="locale.descriptionTextfieldPlaceholder"
+						(input)="newDescription = $event.target.value; newDescriptionError = ''">
+					</fluent-text-area>
+
+					<p class="text-field-error" *ngIf="newDescriptionError.length > 0">
+						{{ newDescriptionError }}
+					</p>
+				</div>
+
+				<dav-button
+					type="accent"
+					[disabled]="descriptionLoading"
+					(click)="EditDescription()">
+					{{ editDescription ? locale.save : locale.edit }}
+				</dav-button>
+
+				<dav-button
+					style="margin-left: 10px"
+					[disabled]="descriptionLoading"
+					(click)="editDescription = false"
+					*ngIf="editDescription">
+					{{ locale.cancel }}
+				</dav-button>
 			</div>
-	
+
 			<!-- Language -->
 			<div id="book-details-language-label">
 				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
 			</div>
-	
+
 			<div id="book-details-language-data" class="d-flex book-details-data">
 				<pocketlib-language-dropdown
 					[language]="book.language"
@@ -101,9 +121,9 @@
 
 					<button type="button" 
 						class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
-						style="height: 35px; padding: 3px 6px; font-size: 18px"
+						style="height: 35px; padding: 3px 6px; font-size: 16px"
 						(click)="ShowCategoriesDialog()">
-						<fab-icon iconName="Edit"></fab-icon>
+						<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
 					</button>
 				</div>
 			</div>
@@ -146,16 +166,20 @@
 				<p class="font-weight-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
 
 				<div class="d-flex">
-					<fab-primary-button
+					<dav-button
+						type="accent"
 						ngxFilePicker
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
 						*ngIf="book.status == 0 || book.status == 1">
 						{{ locale.uploadBookFile }}
-					</fab-primary-button>
+					</dav-button>
 
-					<div style="margin-top: 8px; margin-left: 14px" *ngIf="bookFileLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+					<fluent-progress-ring
+						style="width: 16px; height: 16px; margin: 8px 0px 0px 14px;"
+						*ngIf="bookFileLoading">
+					</fluent-progress-ring>
 				</div>
 			</div>
 
@@ -169,8 +193,17 @@
 					<p class="text-color">{{ locale.unpublished }}</p>
 
 					<div class="d-flex">
-						<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading">{{ locale.publish }}</fab-primary-button>
-						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+						<dav-button
+							type="accent"
+							[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
+							(click)="PublishOrUnpublishBook(true)">
+							{{ locale.publish }}
+						</dav-button>
+
+						<fluent-progress-ring
+							style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+							*ngIf="statusLoading">
+						</fluent-progress-ring>
 					</div>
 				</div>
 
@@ -178,8 +211,17 @@
 					<p class="text-color">{{ locale.inReview }}</p>
 
 					<div class="d-flex">
-						<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
-						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+						<dav-button
+							type="accent"
+							[disabled]="statusLoading"
+							(click)="PublishOrUnpublishBook(false)">
+							{{ locale.unpublish }}
+						</dav-button>
+
+						<fluent-progress-ring
+							style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+							*ngIf="statusLoading">
+						</fluent-progress-ring>
 					</div>
 				</div>
 
@@ -187,8 +229,17 @@
 					<p class="text-color">{{ locale.published }}</p>
 
 					<div class="d-flex">
-						<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
-						<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+						<dav-button
+							type="accent"
+							[disabled]="statusLoading"
+							(click)="PublishOrUnpublishBook(false)">
+							{{ locale.unpublish }}
+						</dav-button>
+
+						<fluent-progress-ring
+							style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+							*ngIf="statusLoading">
+						</fluent-progress-ring>
 					</div>
 				</div>
 			</div>
@@ -234,14 +285,15 @@
 							[loading]="coverLoading">
 						</pocketlib-blurhash-image>
 					</div>
-		
-					<fab-primary-button 
+
+					<dav-button
+						type="accent"
 						ngxFilePicker
 						accept="image/png,image/jpeg"
 						[disabled]="coverLoading"
 						(filePick)="CoverUpload($event)">
 						{{ locale.uploadCover }}
-					</fab-primary-button>
+					</dav-button>
 				</div>
 
 				<!-- Description -->
@@ -256,19 +308,38 @@
 						{{ book.description }}
 					</p>
 					<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
-		
-					<fab-text-field 
-						[styles]="descriptionTextfieldStyles"
-						[(value)]="newDescription"
-						[placeholder]="locale.descriptionTextfieldPlaceholder"
-						[errorMessage]="newDescriptionError"
-						multiline="true"
-						autoAdjustHeight="true"
+
+					<div
+						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
 						*ngIf="editDescription">
-					</fab-text-field>
-					
-					<fab-primary-button (click)="EditDescription()" [disabled]="descriptionLoading">{{ editDescription ? locale.save : locale.edit }}</fab-primary-button>
-					<fab-default-button [styles]="dialogPrimaryButtonStyles" (click)="editDescription = false" *ngIf="editDescription" [disabled]="descriptionLoading">{{ locale.cancel }}</fab-default-button>
+
+						<fluent-text-area
+							style="width: 100%"
+							resize="vertical"
+							[value]="newDescription"
+							[placeholder]="locale.descriptionTextfieldPlaceholder"
+							(input)="newDescription = $event.target.value; newDescriptionError = ''">
+						</fluent-text-area>
+
+						<p class="text-field-error" *ngIf="newDescriptionError.length > 0">
+							{{ newDescriptionError }}
+						</p>
+					</div>
+
+					<dav-button
+						type="accent"
+						[disabled]="descriptionLoading"
+						(click)="EditDescription()">
+						{{ editDescription ? locale.save : locale.edit }}
+					</dav-button>
+
+					<dav-button
+						style="margin-left: 10px"
+						[disabled]="descriptionLoading"
+						(click)="editDescription = false"
+						*ngIf="editDescription">
+						{{ locale.cancel }}
+					</dav-button>
 				</div>
 			</div>
 		</div>
@@ -313,9 +384,9 @@
 
 						<button type="button" 
 							class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
-							style="height: 35px; padding: 3px 6px; font-size: 18px"
+							style="height: 35px; padding: 3px 6px; font-size: 16px"
 							(click)="ShowCategoriesDialog()">
-							<fab-icon iconName="Edit"></fab-icon>
+							<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
 						</button>
 					</div>
 				</div>
@@ -358,16 +429,20 @@
 					<p class="font-weight-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
 
 					<div class="d-flex">
-						<fab-primary-button
+						<dav-button
+							type="accent"
 							ngxFilePicker
 							accept="application/epub+zip"
 							[disabled]="bookFileLoading"
 							(filePick)="BookFileUpload($event)"
 							*ngIf="book.status == 0 || book.status == 1">
 							{{ locale.uploadBookFile }}
-						</fab-primary-button>
+						</dav-button>
 
-						<div style="margin-top: 8px; margin-left: 14px" *ngIf="bookFileLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+						<fluent-progress-ring
+							style="width: 16px; height: 16px; margin: 8px 0px 0px 14px;"
+							*ngIf="bookFileLoading">
+						</fluent-progress-ring>
 					</div>
 				</div>
 
@@ -381,8 +456,17 @@
 						<p class="text-color">{{ locale.unpublished }}</p>
 
 						<div class="d-flex">
-							<fab-primary-button (onClick)="PublishOrUnpublishBook(true)" [disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading">{{ locale.publish }}</fab-primary-button>
-							<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+							<dav-button
+								type="accent"
+								[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
+								(click)="PublishOrUnpublishBook(true)">
+								{{ locale.publish }}
+							</dav-button>
+
+							<fluent-progress-ring
+								style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+								*ngIf="statusLoading">
+							</fluent-progress-ring>
 						</div>
 					</div>
 
@@ -390,8 +474,17 @@
 						<p class="text-color">{{ locale.inReview }}</p>
 
 						<div class="d-flex">
-							<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
-							<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+							<dav-button
+								type="accent"
+								[disabled]="statusLoading"
+								(click)="PublishOrUnpublishBook(false)">
+								{{ locale.unpublish }}
+							</dav-button>
+
+							<fluent-progress-ring
+								style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+								*ngIf="statusLoading">
+							</fluent-progress-ring>
 						</div>
 					</div>
 
@@ -399,8 +492,17 @@
 						<p class="text-color">{{ locale.published }}</p>
 
 						<div class="d-flex">
-							<fab-primary-button (onClick)="PublishOrUnpublishBook(false)" [disabled]="statusLoading">{{ locale.unpublish }}</fab-primary-button>
-							<div style="margin-top: 8px; margin-left: 14px" *ngIf="statusLoading"><fab-spinner [size]="spinnerSize"></fab-spinner></div>
+							<dav-button
+								type="accent"
+								[disabled]="statusLoading"
+								(click)="PublishOrUnpublishBook(false)">
+								{{ locale.unpublish }}
+							</dav-button>
+
+							<fluent-progress-ring
+								style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+								*ngIf="statusLoading">
+							</fluent-progress-ring>
 						</div>
 					</div>
 				</div>
@@ -409,38 +511,44 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!editTitleDialogVisible"
-	[dialogContentProps]="editTitleDialogContentProps"
-	(onDismiss)="editTitleDialogVisible = false">
+<dav-dialog
+	[title]="locale.editTitleDialog.title"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	(dismiss)="editTitleDialogVisible = false"
+	(primaryButtonClick)="UpdateTitle()"
+	(defaultButtonClick)="editTitleDialogVisible = false"
+	*ngIf="editTitleDialogVisible">
 
 	<!-- Title -->
-	<div class="mb-4">
-		<fab-text-field 
-			[(value)]="editTitleDialogTitle"
-			[label]="locale.editTitleDialog.titleTextfieldLabel"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="editTitleDialogTitle"
 			[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
-			[errorMessage]="editTitleDialogTitleError"
+			(input)="editTitleDialogTitle = $event.target.value; editTitleDialogTitleError = ''"
 			(keydown.enter)="UpdateTitle()">
-		</fab-text-field>
+			{{ locale.editTitleDialog.titleTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="editTitleDialogTitleError.length > 0">
+			{{ editTitleDialogTitleError }}
+		</p>
 	</div>
+</dav-dialog>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="editTitleDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateTitle()">{{ locale.save }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+<dav-dialog
+	[title]="locale.categoriesSelectionDialog.title"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	(dismiss)="categoriesSelectionDialogVisible = false"
+	(primaryButtonClick)="UpdateCategories()"
+	(defaultButtonClick)="categoriesSelectionDialogVisible = false"
+	*ngIf="categoriesSelectionDialogVisible">
 
-<fab-dialog
-	[hidden]="!categoriesSelectionDialogVisible"
-	[dialogContentProps]="categoriesSelectionDialogContentProps"
-	(onDismiss)="categoriesSelectionDialogVisible = false">
-
-	<pocketlib-categories-selection #categoriesSelection>
-	</pocketlib-categories-selection>
-
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="categoriesSelectionDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="UpdateCategories()">{{ locale.save }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+	<div class="mb-3">
+		<pocketlib-categories-selection
+			#categoriesSelection>
+		</pocketlib-categories-selection>
+	</div>
+</dav-dialog>

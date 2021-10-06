@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { IButtonStyles, IDialogContentProps, SpinnerSize } from 'office-ui-fabric-react'
 import { ReadFile } from 'ngx-file-helpers'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
@@ -11,7 +10,7 @@ import { PriceInputComponent } from 'src/app/components/price-input/price-input.
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { Author, BookStatus } from 'src/app/misc/types'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout, GetBookStatusByString } from 'src/app/misc/utils'
+import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -71,26 +70,6 @@ export class AuthorBookPageComponent {
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
 	backButtonLink: string = ""
-
-	spinnerSize: SpinnerSize = SpinnerSize.small
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	editTitleDialogContentProps: IDialogContentProps = {
-		title: this.locale.editTitleDialog.title
-	}
-	categoriesSelectionDialogContentProps: IDialogContentProps = {
-		title: this.locale.categoriesSelectionDialog.title
-	}
-	descriptionTextfieldStyles = {
-		root: {
-			marginTop: "3px",
-			marginBottom: "16px",
-			minWidth: "300px"
-		}
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -209,13 +188,7 @@ export class AuthorBookPageComponent {
 	ShowEditTitleDialog() {
 		this.editTitleDialogTitle = this.book.title
 		this.editTitleDialogTitleError = ""
-
-		this.editTitleDialogContentProps.title = this.locale.editTitleDialog.title
 		this.editTitleDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	async UpdateTitle() {
@@ -258,17 +231,14 @@ export class AuthorBookPageComponent {
 	}
 
 	ShowCategoriesDialog() {
-		// Get the category keys of the book
-		let keys: string[] = []
-		this.book.categories.forEach(c => keys.push(c.key))
-		this.categoriesSelectionComponent.SetSelectedCategories(keys)
-
-		this.categoriesSelectionDialogContentProps.title = this.locale.categoriesSelectionDialog.title
 		this.categoriesSelectionDialogVisible = true
 
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
+		setTimeout(() => {
+			// Get the category keys of the book
+			let keys: string[] = []
+			this.book.categories.forEach(c => keys.push(c.key))
+			this.categoriesSelectionComponent.SetSelectedCategories(keys)
+		}, 10)
 	}
 
 	async UpdateCategories() {
