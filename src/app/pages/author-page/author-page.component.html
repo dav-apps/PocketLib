@@ -17,11 +17,12 @@
 			<h1 style="font-size: 46px">{{ locale.landingSection1Header }}</h1>
 			<h4 class="mt-2">{{ locale.landingSection1Subheader }}</h4>
 
-			<div
-				class="mt-4 mr-2">
-				<fab-primary-button (onClick)="createProfileButtonClick()">
+			<div class="mt-4 mr-2">
+				<dav-button
+					type="accent"
+					(click)="createProfileButtonClick()">
 					{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
-				</fab-primary-button>
+				</dav-button>
 			</div>
 		</div>
 
@@ -34,16 +35,17 @@
 				<h1 style="font-size: 46px">{{ locale.landingSection1Header }}</h1>
 				<h4 class="mt-2">{{ locale.landingSection1Subheader }}</h4>
 
-				<div
-					class="mt-4 mr-2">
-					<fab-primary-button (onClick)="createProfileButtonClick()">
+				<div class="mt-4 mr-2">
+					<dav-button
+						type="accent"
+						(click)="createProfileButtonClick()">
 						{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
-					</fab-primary-button>
+					</dav-button>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<div
 		id="author-landing-section-2"
 		class="row"
@@ -84,9 +86,11 @@
 		<div class="text-center" [ngClass]="dualScreenLayout ? 'w-50' : 'w-100'">
 			<h4 class="pt-5 mb-4">{{ locale.landingSection4Header }}</h4>
 
-			<fab-primary-button (onClick)="createProfileButtonClick()">
+			<dav-button
+				type="accent"
+				(click)="createProfileButtonClick()">
 				{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
-			</fab-primary-button>
+			</dav-button>
 		</div>
 	</div>
 </div>
@@ -164,7 +168,7 @@
 			</p>
 		</div>
 	</div>
-	
+
 	<!-- Right screen -->
 	<div
 		class="w-50 text-center"
@@ -185,34 +189,44 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!createAuthorDialogVisible"
-	[dialogContentProps]="createAuthorDialogContentProps"
-	(onDismiss)="createAuthorDialogVisible = false">
+<dav-dialog
+	[title]="locale.createAuthorDialog.title"
+	[primaryButtonText]="locale.create"
+	[defaultButtonText]="locale.cancel"
+	maxWidth="340"
+	(dismiss)="createAuthorDialogVisible = false"
+	(primaryButtonClick)="CreateAuthor()"
+	(defaultButtonClick)="createAuthorDialogVisible = false"
+	*ngIf="createAuthorDialogVisible">
 
 	<!-- First name -->
-	<div class="mb-4">
-		<fab-text-field
-			[(value)]="createAuthorDialogFirstName"
-			[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="createAuthorDialogFirstName"
 			placeholder="Monty"
-			[errorMessage]="createAuthorDialogFirstNameError">
-		</fab-text-field>
+			(input)="createAuthorDialogFirstName = $event.target.value; createAuthorDialogFirstNameError = ''">
+			{{ locale.createAuthorDialog.firstNameTextfieldLabel }}
+		</fluent-text-field>
+
+		<p class="text-field-error" *ngIf="createAuthorDialogFirstNameError.length > 0">
+			{{ createAuthorDialogFirstNameError }}
+		</p>
 	</div>
 
 	<!-- Last name -->
-	<div class="mb-4">
-		<fab-text-field
-			[(value)]="createAuthorDialogLastName"
-			[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
+	<div class="mb-3">
+		<fluent-text-field
+			style="width: 100%"
+			[value]="createAuthorDialogLastName"
 			placeholder="Kensicle"
-			[errorMessage]="createAuthorDialogLastNameError"
+			(input)="createAuthorDialogLastName = $event.target.value; createAuthorDialogLastNameError = ''"
 			(keydown.enter)="CreateAuthor()">
-		</fab-text-field>
-	</div>
+			{{ locale.createAuthorDialog.lastNameTextfieldLabel }}
+		</fluent-text-field>
 
-	<fab-dialog-footer>
-		<fab-default-button (onClick)="createAuthorDialogVisible = false">{{ locale.cancel }}</fab-default-button>
-		<fab-primary-button [styles]="dialogPrimaryButtonStyles" (onClick)="CreateAuthor()">{{ locale.create }}</fab-primary-button>
-	</fab-dialog-footer>
-</fab-dialog>
+		<p class="text-field-error" *ngIf="createAuthorDialogLastNameError.length > 0">
+			{{ createAuthorDialogLastNameError }}
+		</p>
+	</div>
+</dav-dialog>

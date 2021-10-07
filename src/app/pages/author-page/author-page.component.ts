@@ -1,12 +1,11 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { IButtonStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -37,15 +36,6 @@ export class AuthorPageComponent {
 		uuid: string,
 		title: string
 	}[] = []
-
-	dialogPrimaryButtonStyles: IButtonStyles = {
-		root: {
-			marginLeft: 10
-		}
-	}
-	createAuthorDialogContentProps: IDialogContentProps = {
-		title: this.locale.createAuthorDialog.title
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -139,13 +129,7 @@ export class AuthorPageComponent {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastName = ""
 		this.createAuthorDialogLastNameError = ""
-
-		this.createAuthorDialogContentProps.title = this.locale.createAuthorDialog.title
 		this.createAuthorDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
 	}
 
 	ShowBook(uuid: string) {
