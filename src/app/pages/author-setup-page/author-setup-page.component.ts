@@ -1,9 +1,8 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-import { MessageBarType, SpinnerSize } from 'office-ui-fabric-react'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
-import { DataService, SetTextFieldAutocomplete } from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
@@ -25,8 +24,6 @@ export class AuthorSetupPageComponent {
 	lastNameError: string = ""
 	terms: SafeHtml = ""
 	loading: boolean = false
-	messageBarType: MessageBarType = MessageBarType.error
-	spinnerSize: SpinnerSize = SpinnerSize.small
 
 	constructor(
 		public dataService: DataService,
@@ -54,14 +51,6 @@ export class AuthorSetupPageComponent {
 				.replace('{0}', environment.websiteBaseUrl)
 				.replace('{1}', this.dataService.darkTheme ? `style="color: #74aaff"` : "")
 		)
-	}
-
-	ngAfterViewInit() {
-		// Set the autocomplete attributes for the input elements
-		setTimeout(() => {
-			SetTextFieldAutocomplete('first-name-textfield', 'given-name', true)
-			SetTextFieldAutocomplete('last-name-textfield', 'family-name', false)
-		}, 1)
 	}
 
 	async Submit() {
