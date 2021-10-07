@@ -1,14 +1,12 @@
-import { Component, ViewChild, Input } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { Router } from '@angular/router'
-import { IIconStyles, IDialogContentProps } from 'office-ui-fabric-react'
 import { ApiResponse } from 'dav-js'
-import { EditCollectionNamesComponent } from 'src/app/components/edit-collection-names/edit-collection-names.component'
 import {
 	DataService,
 	FindAppropriateLanguage
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings, UpdateDialogForDualScreenLayout } from 'src/app/misc/utils'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { BookListItem, AuthorMode } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
@@ -18,7 +16,6 @@ import { enUS } from 'src/locales/locales'
 })
 export class CollectionViewComponent {
 	locale = enUS.collectionView
-	@ViewChild(EditCollectionNamesComponent, { static: true }) editCollectionNamesComponent: EditCollectionNamesComponent
 	@Input() uuid: string
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -40,15 +37,6 @@ export class CollectionViewComponent {
 		params: any
 	} = { path: "/author/book/new", params: {} }
 	backButtonLink: string = ""
-
-	backButtonIconStyles: IIconStyles = {
-		root: {
-			fontSize: 18
-		}
-	}
-	collectionNamesDialogContentProps: IDialogContentProps = {
-		title: this.locale.collectionNamesDialog.title
-	}
 
 	constructor(
 		public dataService: DataService,
@@ -160,16 +148,7 @@ export class CollectionViewComponent {
 			})
 		}
 
-		this.collectionNamesDialogContentProps.title = this.locale.collectionNamesDialog.title
 		this.collectionNamesDialogVisible = true
-
-		if (this.dualScreenLayout) {
-			UpdateDialogForDualScreenLayout()
-		}
-
-		setTimeout(() => {
-			this.editCollectionNamesComponent.Init()
-		}, 1)
 	}
 
 	UpdateCollectionName(collectionName: { name: string, language: string }) {
@@ -190,9 +169,5 @@ export class CollectionViewComponent {
 				this.collection.names[i].name = collectionName.name
 			}
 		}
-	}
-
-	AddLanguage() {
-		this.editCollectionNamesComponent.AddLanguage()
 	}
 }

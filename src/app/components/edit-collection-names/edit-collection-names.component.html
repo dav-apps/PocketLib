@@ -7,29 +7,62 @@
 		</div>
 
 		<div style="width: 80%" *ngIf="collectionName.edit">
-			<fab-text-field
-				[(value)]="collectionName.name"
-				[placeholder]="locale.nameTextfieldPlaceholder.replace('{0}', collectionName.fullLanguage)"
-				[errorMessage]="collectionName.errorMessage"
+			<fluent-text-field
+				[value]="collectionName.name"
+				[placeholder]="locale.nameTextfieldPlaceholder"
+				(input)="collectionName.name = $event.target.value; collectionName.errorMessage = ''"
 				(keydown.enter)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
-			</fab-text-field>
+			</fluent-text-field>
+
+			<p class="text-field-error" *ngIf="collectionName.errorMessage && collectionName.errorMessage.length > 0">
+				{{ collectionName.errorMessage }}
+			</p>
 		</div>
 
-		<button 
-			type="button" 
-			class="btn btn-sm ml-2" 
+		<button
+			type="button"
+			class="btn btn-sm ml-2"
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
 			(click)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
-			<fab-icon [iconName]="collectionName.edit ? 'Save' : 'Edit'"></fab-icon>
+			<i class="ms-Icon ms-Icon--Save" aria-hidden="true" *ngIf="collectionName.edit"></i>
+			<i class="ms-Icon ms-Icon--Edit" aria-hidden="true" *ngIf="!collectionName.edit"></i>
 		</button>
 	</div>
 </div>
 
 <div *ngIf="addLanguageOptions.length > 1">
-	<fab-dropdown
-		[label]="locale.addLanguageDropdownLabel"
-		[selectedKey]="addLanguageSelectedKey"
-		[options]="addLanguageOptions"
-		(onChange)="AddLanguageDropdownChange($event)">
-	</fab-dropdown>
+	<div class="mb-3">
+		<dav-dropdown
+			[label]="locale.addLanguageDropdownLabel"
+			[options]="addLanguageOptions"
+			[selectedKey]="addLanguageSelectedKey"
+			(change)="AddLanguageDropdownChange($event)">
+		</dav-dropdown>
+	</div>
+
+	<div
+		class="d-flex mb-3"
+		*ngIf="addLanguageSelectedKey != 'default'">
+
+		<div style="width: 80%">
+			<fluent-text-field
+				[value]="newLanguageName"
+				[placeholder]="locale.nameTextfieldPlaceholder"
+				(input)="newLanguageName = $event.target.value; newLanguageNameError = ''"
+				(keydown.enter)="AddLanguage()">
+			</fluent-text-field>
+
+			<p class="text-field-error" *ngIf="newLanguageNameError.length > 0">
+				{{ newLanguageNameError }}
+			</p>
+		</div>
+
+		<button
+			type="button"
+			class="btn btn-sm ml-2"
+			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
+			(click)="AddLanguage()">
+			<i class="ms-Icon ms-Icon--Save" aria-hidden="true"></i>
+		</button>
+	</div>
 </div>

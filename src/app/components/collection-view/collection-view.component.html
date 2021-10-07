@@ -95,23 +95,17 @@
 	</div>
 </div>
 
-<fab-dialog
-	[hidden]="!collectionNamesDialogVisible"
-	[dialogContentProps]="collectionNamesDialogContentProps"
-	minWidth="350px"
-	(onDismiss)="collectionNamesDialogVisible = false">
-	
+<dav-dialog
+	[title]="locale.collectionNamesDialog.title"
+	[defaultButtonText]="locale.close"
+	(dismiss)="collectionNamesDialogVisible = false"
+	(defaultButtonClick)="collectionNamesDialogVisible = false"
+	*ngIf="collectionNamesDialogVisible">
+
 	<!-- Names -->
 	<pocketlib-edit-collection-names 
 		[collectionNames]="collectionNames" 
 		[uuid]="uuid" 
-		(update)="UpdateCollectionName($event)"
-		(showAddLanguageButton)="showAddLanguageButton = true"
-		(hideAddLanguageButton)="showAddLanguageButton = false">
+		(update)="UpdateCollectionName($event)">
 	</pocketlib-edit-collection-names>
-
-	<fab-dialog-footer>
-		<div style="float: left" *ngIf="showAddLanguageButton" (click)="AddLanguage()"><fab-default-button>Hinzufügen</fab-default-button></div>
-		<fab-default-button (click)="collectionNamesDialogVisible = false">{{ locale.close }}</fab-default-button>
-	</fab-dialog-footer>
-</fab-dialog>
+</dav-dialog>
