@@ -160,12 +160,12 @@
 	[title]="locale.logoutDialog.title"
 	[primaryButtonText]="locale.logout"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="logoutDialogVisible"
 	primaryButtonType="danger"
 	maxWidth="340"
 	(dismiss)="logoutDialogVisible = false"
 	(primaryButtonClick)="Logout()"
-	(defaultButtonClick)="logoutDialogVisible = false"
-	*ngIf="logoutDialogVisible">
+	(defaultButtonClick)="logoutDialogVisible = false">
 
 	<p>{{ locale.logoutDialog.description }}</p>
 </dav-dialog>

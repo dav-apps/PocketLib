@@ -394,10 +394,10 @@
 	[title]="locale.editProfileDialog.title"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="editProfileDialogVisible"
 	(dismiss)="editProfileDialogVisible = false"
 	(primaryButtonClick)="SaveProfile()"
-	(defaultButtonClick)="editProfileDialogVisible = false"
-	*ngIf="editProfileDialogVisible">
+	(defaultButtonClick)="editProfileDialogVisible = false">
 
 	<!-- First name -->
 	<div class="mb-3">

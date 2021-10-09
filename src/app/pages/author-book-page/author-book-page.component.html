@@ -515,10 +515,10 @@
 	[title]="locale.editTitleDialog.title"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="editTitleDialogVisible"
 	(dismiss)="editTitleDialogVisible = false"
 	(primaryButtonClick)="UpdateTitle()"
-	(defaultButtonClick)="editTitleDialogVisible = false"
-	*ngIf="editTitleDialogVisible">
+	(defaultButtonClick)="editTitleDialogVisible = false">
 
 	<!-- Title -->
 	<div class="mb-3">
@@ -541,10 +541,10 @@
 	[title]="locale.categoriesSelectionDialog.title"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="categoriesSelectionDialogVisible"
 	(dismiss)="categoriesSelectionDialogVisible = false"
 	(primaryButtonClick)="UpdateCategories()"
-	(defaultButtonClick)="categoriesSelectionDialogVisible = false"
-	*ngIf="categoriesSelectionDialogVisible">
+	(defaultButtonClick)="categoriesSelectionDialogVisible = false">
 
 	<div class="mb-3">
 		<pocketlib-categories-selection

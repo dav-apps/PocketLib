@@ -193,11 +193,11 @@
 	[title]="locale.createAuthorDialog.title"
 	[primaryButtonText]="locale.create"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="createAuthorDialogVisible"
 	maxWidth="340"
 	(dismiss)="createAuthorDialogVisible = false"
 	(primaryButtonClick)="CreateAuthor()"
-	(defaultButtonClick)="createAuthorDialogVisible = false"
-	*ngIf="createAuthorDialogVisible">
+	(defaultButtonClick)="createAuthorDialogVisible = false">
 
 	<!-- First name -->
 	<div class="mb-3">

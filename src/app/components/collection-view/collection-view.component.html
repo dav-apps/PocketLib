@@ -98,9 +98,9 @@
 <dav-dialog
 	[title]="locale.collectionNamesDialog.title"
 	[defaultButtonText]="locale.close"
+	[isVisible]="collectionNamesDialogVisible"
 	(dismiss)="collectionNamesDialogVisible = false"
-	(defaultButtonClick)="collectionNamesDialogVisible = false"
-	*ngIf="collectionNamesDialogVisible">
+	(defaultButtonClick)="collectionNamesDialogVisible = false">
 
 	<!-- Names -->
 	<pocketlib-edit-collection-names 

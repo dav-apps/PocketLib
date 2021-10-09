@@ -319,11 +319,11 @@
 	[title]="locale.davProRequiredDialog.title"
 	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
 	[defaultButtonText]="locale.back"
+	[isVisible]="davProRequiredDialogVisible"
 	maxWidth="340"
 	(dismiss)="davProRequiredDialogVisible = false"
 	(primaryButtonClick)="NavigateToAccountPage()"
-	(defaultButtonClick)="davProRequiredDialogVisible = false"
-	*ngIf="davProRequiredDialogVisible">
+	(defaultButtonClick)="davProRequiredDialogVisible = false">
 
 	<p>{{ locale.davProRequiredDialog.description }}</p>
 </dav-dialog>
@@ -332,11 +332,11 @@
 	[title]="book.price == 0 ? locale.buyBookDialog.loginRequired.titleFree : locale.buyBookDialog.title"
 	[primaryButtonText]="locale.buyBookDialog.continue"
 	[defaultButtonText]="locale.back"
+	[isVisible]="buyBookDialogVisible"
 	maxWidth="400"
 	(dismiss)="buyBookDialogVisible = false"
 	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
-	(defaultButtonClick)="buyBookDialogVisible = false"
-	*ngIf="buyBookDialogVisible">
+	(defaultButtonClick)="buyBookDialogVisible = false">
 
 	<p [innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description"></p>
 </dav-dialog>
@@ -344,10 +344,10 @@
 <dav-dialog
 	[title]="locale.errorDialog.title"
 	[defaultButtonText]="locale.errorDialog.ok"
+	[isVisible]="errorDialogVisible"
 	maxWidth="340"
 	(dismiss)="errorDialogVisible = false"
-	(defaultButtonClick)="errorDialogVisible = false"
-	*ngIf="errorDialogVisible">
+	(defaultButtonClick)="errorDialogVisible = false">
 
 	<p>{{ locale.errorDialog.description }}</p>
 </dav-dialog>

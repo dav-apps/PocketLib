@@ -52,10 +52,10 @@
 <dav-dialog
 	[title]="locale.selectLanguagesDialog.title"
 	[defaultButtonText]="locale.selectLanguagesDialog.close"
+	[isVisible]="selectLanguagesDialogVisible"
 	maxWidth="340"
 	(dismiss)="selectLanguagesDialogVisible = false"
-	(defaultButtonClick)="selectLanguagesDialogVisible = false"
-	*ngIf="selectLanguagesDialogVisible">
+	(defaultButtonClick)="selectLanguagesDialogVisible = false">
 
 	<p>{{ locale.selectLanguagesDialog.description }}</p>
 

@@ -221,10 +221,10 @@
 	[title]="locale.renameBookDialog.title"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="renameBookDialogVisible"
 	(dismiss)="renameBookDialogVisible = false"
 	(primaryButtonClick)="RenameBook()"
-	(defaultButtonClick)="renameBookDialogVisible = false"
-	*ngIf="renameBookDialogVisible">
+	(defaultButtonClick)="renameBookDialogVisible = false">
 
 	<!-- Title -->
 	<div class="mb-3">
@@ -248,12 +248,12 @@
 	[title]="locale.removeBookDialog.title"
 	[primaryButtonText]="locale.remove"
 	[defaultButtonText]="locale.cancel"
+	[isVisible]="removeBookDialogVisible"
 	primaryButtonType="danger"
 	maxWidth="340"
 	(dismiss)="removeBookDialogVisible = false"
 	(primaryButtonClick)="RemoveBook()"
-	(defaultButtonClick)="removeBookDialogVisible = false"
-	*ngIf="removeBookDialogVisible">
+	(defaultButtonClick)="removeBookDialogVisible = false">
 
 	<p>{{ locale.removeBookDialog.description }}</p>
 </dav-dialog>
@@ -261,10 +261,10 @@
 <dav-dialog
 	[title]="locale.loginToAccessBookDialog.title"
 	[primaryButtonText]="locale.ok"
+	[isVisible]="loginToAccessBookDialogVisible"
 	maxWidth="340"
 	(dismiss)="loginToAccessBookDialogVisible = false"
-	(primaryButtonClick)="loginToAccessBookDialogVisible = false"
-	*ngIf="loginToAccessBookDialogVisible">
+	(primaryButtonClick)="loginToAccessBookDialogVisible = false">
 
 	<p>{{ locale.loginToAccessBookDialog.description }}</p>
 </dav-dialog>
@@ -272,10 +272,10 @@
 <dav-dialog
 	[title]="locale.addBookErrorDialog.title"
 	[primaryButtonText]="locale.ok"
+	[isVisible]="addBookErrorDialogVisible"
 	maxWidth="340"
 	(dismiss)="addBookErrorDialogVisible = false"
-	(primaryButtonClick)="addBookErrorDialogVisible = false"
-	*ngIf="addBookErrorDialogVisible">
+	(primaryButtonClick)="addBookErrorDialogVisible = false">
 
 	<p>{{ locale.addBookErrorDialog.description }}</p>
 </dav-dialog>

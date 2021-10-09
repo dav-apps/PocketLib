@@ -247,11 +247,11 @@
 	[title]="locale.leavePageDialog.title"
 	[primaryButtonText]="locale.leavePageDialog.leave"
 	[defaultButtonText]="locale.leavePageDialog.cancel"
+	[isVisible]="leavePageDialogVisible"
 	maxWidth="340"
 	(dismiss)="LeavePageDialogCancel()"
 	(primaryButtonClick)="LeavePageDialogLeave()"
-	(defaultButtonClick)="LeavePageDialogCancel()"
-	*ngIf="leavePageDialogVisible">
+	(defaultButtonClick)="LeavePageDialogCancel()">
 
 	<p>{{ locale.leavePageDialog.description }}</p>
 </dav-dialog>
