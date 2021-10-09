@@ -52,11 +52,15 @@
 <dav-dialog
 	[title]="locale.selectLanguagesDialog.title"
 	[defaultButtonText]="locale.selectLanguagesDialog.close"
+	maxWidth="340"
 	(dismiss)="selectLanguagesDialogVisible = false"
 	(defaultButtonClick)="selectLanguagesDialogVisible = false"
 	*ngIf="selectLanguagesDialogVisible">
 
 	<p>{{ locale.selectLanguagesDialog.description }}</p>
 
-	<pocketlib-languages-selection></pocketlib-languages-selection>
+	<div class="mb-3">
+		<pocketlib-languages-selection>
+		</pocketlib-languages-selection>
+	</div>
 </dav-dialog>
