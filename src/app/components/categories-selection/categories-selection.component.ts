@@ -34,8 +34,8 @@ export class CategoriesSelectionComponent {
 		return this.selectedCategories
 	}
 
-	CategoryCheckboxSelected(event: { checked: boolean }, key: string) {
-		if (event.checked) {
+	CategoryCheckboxSelected(checked: boolean, key: string) {
+		if (checked) {
 			// Add the category to the selected categories
 			this.selectedCategories.push(key)
 		} else {
