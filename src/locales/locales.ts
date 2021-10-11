@@ -7,7 +7,7 @@ const enDefaults = {
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
 		renameBookDialog: {
-			title: "Rename book",
+			header: "Rename book",
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The Littlest Elf",
 			errors: {
@@ -17,15 +17,15 @@ const enDefaults = {
 			}
 		},
 		removeBookDialog: {
-			title: "Remove book",
+			header: "Remove book",
 			description: "Are you sure you want to remove this book from your library?"
 		},
 		loginToAccessBookDialog: {
-			title: "Login required",
+			header: "Login required",
 			description: "Please log in to access this book."
 		},
 		addBookErrorDialog: {
-			title: "Invalid file",
+			header: "Invalid file",
 			description: "The specified file could not be read."
 		},
 		save: "Save",
@@ -44,7 +44,7 @@ const enDefaults = {
 		signup: "Sign up",
 		upgradeTitle: "Change your plan to make PocketLib even better",
 		logoutDialog: {
-			title: "Log out",
+			header: "Log out",
 			description: "Are you sure you want to log out?"
 		},
 		cancel: "Cancel"
@@ -88,7 +88,7 @@ const enDefaults = {
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
 		createAuthorDialog: {
-			title: "Create author",
+			header: "Create author",
 			firstNameTextfieldLabel: "First name",
 			lastNameTextfieldLabel: "Last name",
 			errors: {
@@ -122,12 +122,12 @@ const enDefaults = {
 	},
 	authorBookPage: {
 		editTitleDialog: {
-			title: "Edit title",
+			header: "Edit title",
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The Littlest Elf"
 		},
 		categoriesSelectionDialog: {
-			title: "Select categories"
+			header: "Select categories"
 		},
 		cover: "Cover",
 		noCover: "No cover uploaded",
@@ -201,7 +201,7 @@ const enDefaults = {
 			updatingLocalData: "Updating local data..."
 		},
 		leavePageDialog: {
-			title: "Leave page",
+			header: "Leave page",
 			description: "Are you sure? The data you have entered will not be saved.",
 			cancel: "Cancel",
 			leave: "Leave"
@@ -233,7 +233,7 @@ const enDefaults = {
 		languages: "Languages",
 		publish: "Publish",
 		selectLanguagesDialog: {
-			title: "Select languages",
+			header: "Select languages",
 			description: "Select the languages for which books should be displayed.",
 			close: "Close"
 		}
@@ -247,22 +247,22 @@ const enDefaults = {
 		publish: "Publish",
 		free: "Free",
 		davProRequiredDialog: {
-			title: "dav Pro required",
+			header: "dav Pro required",
 			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month.",
 			learnMore: "Learn more"
 		},
 		buyBookDialog: {
-			title: "Buy book",
+			header: "Buy book",
 			description: "When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
 			loginRequired: {
-				titleFree: "Login required",
+				headerFree: "Login required",
 				description: "When you buy a book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
 				descriptionFree: "Log in to read this book."
 			},
 			continue: "Continue"
 		},
 		errorDialog: {
-			title: "Error",
+			header: "Error",
 			description: "An error occured. Please check your internet connection or try it again later.",
 			ok: "Okay"
 		},
@@ -272,7 +272,7 @@ const enDefaults = {
 		allBooksTitle: "All books"
 	},
 	editCollectionNames: {
-		nameTextfieldPlaceholder: "The name of your collection in {0}",
+		nameTextfieldPlaceholder: "Name of your collection",
 		addLanguageDropdownLabel: "Add language",
 		selectLanguage: "Select a language",
 		errors: {
@@ -300,7 +300,7 @@ const enDefaults = {
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
 		editProfileDialog: {
-			title: "Edit your profile",
+			header: "Edit your profile",
 			firstNameTextfieldLabel: "First name",
 			lastNameTextfieldLabel: "Last name",
 			websiteUrlTextfieldLabel: "Website",
@@ -338,7 +338,7 @@ const enDefaults = {
 	},
 	collectionView: {
 		collectionNamesDialog: {
-			title: "Collection name"
+			header: "Collection name"
 		},
 		noBooks: "This collection contains no books",
 		close: "Close"
@@ -407,7 +407,7 @@ const deDefaults = {
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
 		renameBookDialog: {
-			title: "Buch umbenennen",
+			header: "Buch umbenennen",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Das winzigste Elflein",
 			errors: {
@@ -417,15 +417,15 @@ const deDefaults = {
 			}
 		},
 		removeBookDialog: {
-			title: "Buch entfernen",
+			header: "Buch entfernen",
 			description: "Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
 		},
 		loginToAccessBookDialog: {
-			title: "Anmeldung erforderlich",
+			header: "Anmeldung erforderlich",
 			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen."
 		},
 		addBookErrorDialog: {
-			title: "Ungültige Datei",
+			header: "Ungültige Datei",
 			description: "Die angegebene Datei konnte nicht gelesen werden."
 		},
 		save: "Speichern",
@@ -444,7 +444,7 @@ const deDefaults = {
 		signup: "Registrieren",
 		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
 		logoutDialog: {
-			title: "Abmelden",
+			header: "Abmelden",
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
 		},
 		cancel: "Abbrechen"
@@ -488,7 +488,7 @@ const deDefaults = {
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
 		createAuthorDialog: {
-			title: "Autor erstellen",
+			header: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
 			lastNameTextfieldLabel: "Nachname",
 			errors: {
@@ -522,12 +522,12 @@ const deDefaults = {
 	},
 	authorBookPage: {
 		editTitleDialog: {
-			title: "Titel bearbeiten",
+			header: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Das winzigste Elflein"
 		},
 		categoriesSelectionDialog: {
-			title: "Kategorien auswählen"
+			header: "Kategorien auswählen"
 		},
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
@@ -601,7 +601,7 @@ const deDefaults = {
 			updatingLocalData: "Lokale Daten werden aktualisiert..."
 		},
 		leavePageDialog: {
-			title: "Seite verlassen",
+			header: "Seite verlassen",
 			description: "Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
 			cancel: "Abbrechen",
 			leave: "Verlassen"
@@ -633,7 +633,7 @@ const deDefaults = {
 		languages: "Sprachen",
 		publish: "Veröffentlichen",
 		selectLanguagesDialog: {
-			title: "Sprachen auswählen",
+			header: "Sprachen auswählen",
 			description: "Wähle die Sprachen, für die Bücher angezeigt werden sollen.",
 			close: "Schließen"
 		}
@@ -647,22 +647,22 @@ const deDefaults = {
 		publish: "Veröffentlichen",
 		free: "Kostenlos",
 		davProRequiredDialog: {
-			title: "dav Pro benötigt",
+			header: "dav Pro benötigt",
 			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen.",
 			learnMore: "Mehr erfahren"
 		},
 		buyBookDialog: {
-			title: "Buch kaufen",
+			header: "Buch kaufen",
 			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
 			loginRequired: {
-				titleFree: "Anmeldung erforderlich",
+				headerFree: "Anmeldung erforderlich",
 				description: "Wenn du ein Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 				descriptionFree: "Melde dich an, um dieses Buch zu lesen."
 			},
 			continue: "Weiter"
 		},
 		errorDialog: {
-			title: "Fehler",
+			header: "Fehler",
 			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal.",
 			ok: "Ok"
 		},
@@ -672,7 +672,7 @@ const deDefaults = {
 		allBooksTitle: "Alle Bücher"
 	},
 	editCollectionNames: {
-		nameTextfieldPlaceholder: "Der Name deiner Sammlung auf {0}",
+		nameTextfieldPlaceholder: "Name deiner Sammlung",
 		addLanguageDropdownLabel: "Sprache hinzufügen",
 		selectLanguage: "Wähle eine Sprache",
 		errors: {
@@ -700,7 +700,7 @@ const deDefaults = {
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
 		editProfileDialog: {
-			title: "Profil bearbeiten",
+			header: "Profil bearbeiten",
 			firstNameTextfieldLabel: "Vorname",
 			lastNameTextfieldLabel: "Nachname",
 			websiteUrlTextfieldLabel: "Webseite",
@@ -738,7 +738,7 @@ const deDefaults = {
 	},
 	collectionView: {
 		collectionNamesDialog: {
-			title: "Name der Sammlung"
+			header: "Name der Sammlung"
 		},
 		noBooks: "Diese Sammlung enthält keine Bücher",
 		close: "Schließen"

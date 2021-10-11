@@ -305,19 +305,6 @@ export function FindElement(currentElement: Element, tagName: string): Element {
 	return null
 }
 
-export function SetTextFieldAutocomplete(textFieldId: string, autocomplete: string, setFocus: boolean = false) {
-	// Find the input element
-	let textField = document.getElementById(textFieldId)
-	let input = FindElement(textField, "input") as HTMLInputElement
-
-	if (input) {
-		if (setFocus) input.focus()
-
-		// Set the autocomplete attribute
-		input.setAttribute("autocomplete", autocomplete)
-	}
-}
-
 export function FindAppropriateLanguage(targetLanguage: string, objects: { language: string }[]): number {
 	if (objects.length == 0) return -1
 	if (objects.length == 1) return 0

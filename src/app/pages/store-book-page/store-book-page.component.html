@@ -316,7 +316,7 @@
 </div>
 
 <dav-dialog
-	[title]="locale.davProRequiredDialog.title"
+	[header]="locale.davProRequiredDialog.header"
 	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
 	[defaultButtonText]="locale.back"
 	[isVisible]="davProRequiredDialogVisible"
@@ -329,7 +329,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[title]="book.price == 0 ? locale.buyBookDialog.loginRequired.titleFree : locale.buyBookDialog.title"
+	[header]="book.price == 0 ? locale.buyBookDialog.loginRequired.headerFree : locale.buyBookDialog.header"
 	[primaryButtonText]="locale.buyBookDialog.continue"
 	[defaultButtonText]="locale.back"
 	[isVisible]="buyBookDialogVisible"
@@ -342,7 +342,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[title]="locale.errorDialog.title"
+	[header]="locale.errorDialog.header"
 	[defaultButtonText]="locale.errorDialog.ok"
 	[isVisible]="errorDialogVisible"
 	maxWidth="340"
