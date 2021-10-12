@@ -8,10 +8,20 @@
 
 		<mat-nested-tree-node *matTreeNodeDef="let node; when: hasNestedChild" style="min-height: 0px">
 			<li class="list-group-item d-flex theme-background-color-secondary" style="padding: 5px 0px; margin-left: -15px; border: none">
-				<button mat-icon-button matTreeNodeToggle class="text-color" style="height: 35px; width: 35px; outline: none;">
-					<fab-icon [iconName]="treeControl.isExpanded(node) ? 'ChevronDownMed' : 'ChevronRightMed'"></fab-icon>
+				<button
+					mat-icon-button
+					matTreeNodeToggle
+					class="text-color"
+					style="height: 30px; width: 30px; margin-right: 6px; display: flex; align-items: center; justify-content: center;">
+					<i class="ms-Icon ms-Icon--ChevronDownMed" style="font-size: 14px" aria-hidden="true" *ngIf="treeControl.isExpanded(node)"></i>
+					<i class="ms-Icon ms-Icon--ChevronRightMed" style="font-size: 14px" aria-hidden="true" *ngIf="!treeControl.isExpanded(node)"></i>
 				</button>
-				<a [href]="node.href" class="my-auto text-color" (click)="LinkClicked(node)">{{ node.title }}</a>
+
+				<a class="my-auto text-color d-flex align-items-center"
+					[href]="node.href"
+					(click)="LinkClicked(node)">
+					{{ node.title }}
+				</a>
 			</li>
 
 			<div [style.display]="treeControl.isExpanded(node) ? '' : 'none'" style="padding-left: 15px;">
