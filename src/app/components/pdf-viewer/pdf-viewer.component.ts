@@ -99,15 +99,6 @@ export class PdfViewerComponent {
 	showBookmarksPanel: boolean = false
 	//#endregion
 
-	//#region Variables for zoom
-	zoomCalloutVisible: boolean = false
-	sliderStyles = {
-		container: {
-			width: 200
-		}
-	}
-	//#endregion
-
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -607,10 +598,6 @@ export class PdfViewerComponent {
 		return false
 	}
 
-	ZoomChanged(event: { value: number }) {
-		this.UpdateZoom(event.value / 100)
-	}
-
 	UpdateZoom(zoom: number) {
 		// Set the transform scale of the first divs of the pdf-viewers
 		let pdfViewer = document.getElementsByTagName('pdf-viewer')
@@ -625,10 +612,6 @@ export class PdfViewerComponent {
 
 		// Update the zoom in the database
 		this.currentBook.SetZoom(zoom)
-	}
-
-	FormatZoomValue(value: number) {
-		return `${value} %`
 	}
 
 	SetPageOfCurrentViewer(page: number) {

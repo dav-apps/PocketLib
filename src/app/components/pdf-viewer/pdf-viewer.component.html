@@ -150,9 +150,11 @@
    </button>
 
 	<div style="float: right">
-		<button mat-button class="book-toolbar-button" id="zoomButtonTopToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
+		<!--
+		<button mat-button class="book-toolbar-button" id="zoomButtonTopToolbar">
          <i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
       </button>
+		-->
       <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
          <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
       </button>
@@ -183,9 +185,11 @@
 			</div>
 
 			<div class="mx-auto">
-				<button mat-button class="book-toolbar-button" id="zoomButtonBottomToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
+				<!--
+				<button mat-button class="book-toolbar-button" id="zoomButtonBottomToolbar">
 					<i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
 				</button>
+				-->
 				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
@@ -235,21 +239,3 @@
 		{{ locale.noBookmarks }}
 	</p>
 </dav-panel>
-
-<fab-callout
-	[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"
-	[hidden]="!zoomCalloutVisible"
-	(onDismiss)="zoomCalloutVisible = false">
-
-	<div class="m-3">
-		<fab-slider
-			[min]="100"
-			[max]="200"
-			[step]="10"
-			[value]="currentBook.zoom * 100"
-			(onChanged)="ZoomChanged($event)"
-			[valueFormat]="FormatZoomValue"
-			[styles]="sliderStyles">
-		</fab-slider>
-	</div>
-</fab-callout>
