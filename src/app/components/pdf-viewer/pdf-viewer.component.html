@@ -156,7 +156,7 @@
       <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
          <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
       </button>
-      <button mat-button class="book-toolbar-button" style="float: right;" (click)="OpenBookmarksPanel()">
+      <button mat-button class="book-toolbar-button" style="float: right;" (click)="showBookmarksPanel = true">
          <i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
       </button>
    </div>
@@ -186,7 +186,7 @@
 				<button mat-button class="book-toolbar-button" id="zoomButtonBottomToolbar" (click)="zoomCalloutVisible = !zoomCalloutVisible">
 					<i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
 				</button>
-				<button mat-button class="book-toolbar-button" (click)="OpenBookmarksPanel()">
+				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
 					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
 				</button>
 				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
@@ -211,25 +211,30 @@
    <p class="font-weight-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage + (showSecondPage ? 1 : 0) }}</p>
 </div>
 
-<fab-panel
-	[isOpen]="showBookmarksPanel"
-   isLightDismiss="true"
-   (onDismissed)="showBookmarksPanel = false; CloseBottomToolbar()"
-   (onLightDismissClick)="showBookmarksPanel = false; CloseBottomToolbar()"
-   isHiddenOnDismiss="true"
-	[headerText]="locale.bookmarks">
+<dav-panel
+	[header]="locale.bookmarks"
+	[isVisible]="showBookmarksPanel"
+	(dismiss)="showBookmarksPanel = false; CloseBottomToolbar()">
 
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item d-flex"
 			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
 			*ngFor="let page of currentBook.bookmarks">
 
-			<a href="#" style="color: black;" (click)="NavigateToPage(page)" [ngClass]="currentPage == page ? 'font-weight-bold' : ''">{{ locale.page }} {{ page }}</a>
+			<a href="#"
+				style="color: black;"
+				(click)="NavigateToPage(page)"
+				[ngClass]="currentPage == page ? 'font-weight-bold' : ''">
+				{{ locale.page }} {{ page }}
+			</a>
 		</li>
 	</ul>
 
-	<p class="font-weight-light" [style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">{{ locale.noBookmarks }}</p>
-</fab-panel>
+	<p class="font-weight-light"
+		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
+		{{ locale.noBookmarks }}
+	</p>
+</dav-panel>
 
 <fab-callout
 	[target]="showBottomToolbar ? '#zoomButtonBottomToolbar' : '#zoomButtonTopToolbar'"

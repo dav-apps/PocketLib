@@ -579,14 +579,6 @@ export class PdfViewerComponent {
 		this.bottomToolbarOpened = false
 	}
 
-	OpenBookmarksPanel() {
-		this.showBookmarksPanel = true
-
-		// Remove outline of the panel close button
-		let closeButton = document.body.getElementsByClassName('ms-Panel-closeButton')[0]
-		closeButton.setAttribute("style", `outline: none`)
-	}
-
 	async AddOrRemoveBookmark() {
 		if (this.showPageRunning) return
 		let removeBookmark: boolean = false
