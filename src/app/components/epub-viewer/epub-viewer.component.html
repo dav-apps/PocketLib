@@ -190,16 +190,16 @@
 </div>
 
 <!-- Panel for TOC and Bookmarks -->
-<fab-panel 
-	[isOpen]="showChaptersPanel || showBookmarksPanel" 
-   isLightDismiss="true" 
-   (onDismissed)="ClosePanel()" 
-	(onLightDismissClick)="ClosePanel()"
-	isHiddenOnDismiss="true"
-   [headerText]="showChaptersPanel ? locale.toc : locale.bookmarks"
-   [styles]="panelStyles">
+<dav-panel
+	[header]="showChaptersPanel ? locale.toc : locale.bookmarks"
+	[isVisible]="showChaptersPanel || showBookmarksPanel"
+	(dismiss)="ClosePanel()">
 
-   <pocketlib-chapters-tree #chaptersTree (linkClick)="ChapterLinkClicked($event)" [style.display]="showChaptersPanel ? '' : 'none'"></pocketlib-chapters-tree>
+	<pocketlib-chapters-tree
+		#chaptersTree
+		[style.display]="showChaptersPanel ? '' : 'none'"
+		(linkClick)="ChapterLinkClicked($event)">
+	</pocketlib-chapters-tree>
 
 	<div *ngIf="showBookmarksPanel">
 		<ul class="list-group list-group-flush">
@@ -209,7 +209,7 @@
 				<a href="#" class="text-color" (click)="NavigateToBookmark(bookmark)" [ngClass]="bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''">{{ bookmark.name }}</a>
 			</li>
 		</ul>
-	
+
 		<p class="font-weight-light text-color" [style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">{{ locale.noBookmarks }}</p>
 	</div>
-</fab-panel>
+</dav-panel>
