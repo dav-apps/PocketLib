@@ -157,17 +157,6 @@ export class EpubViewerComponent {
 	//#region Variables for the chapters panel
 	showChaptersPanel: boolean = false
 	@ViewChild('chaptersTree', { static: true }) chapterTree: ChaptersTreeComponent
-	panelStyles = {
-		main: {
-			backgroundColor: getComputedStyle(document.body).getPropertyValue("--theme-color-secondary")
-		},
-		headerText: {
-			color: getComputedStyle(document.body).getPropertyValue("--text-color")
-		},
-		overlay: {
-			backgroundColor: this.dataService.darkTheme ? "rgba(21, 32, 43, 0.4)" : "rgba(255, 255, 255, 0.4)"
-		}
-	}
 	//#endregion
 
 	//#region Variables for bookmarks
@@ -927,9 +916,13 @@ export class EpubViewerComponent {
 		this.bottomToolbarOpened = false
 	}
 
-	ClosePanel() {
-		this.showChaptersPanel = false
+	CloseBookmarksPanel() {
 		this.showBookmarksPanel = false
+		this.CloseBottomToolbar()
+	}
+
+	CloseChaptersPanel() {
+		this.showChaptersPanel = false
 		this.CloseBottomToolbar()
 	}
 
