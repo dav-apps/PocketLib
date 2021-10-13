@@ -1,18 +1,18 @@
-var path = require('path');
-var fs = require('fs');
-var jsdom = require("jsdom");
-var { JSDOM } = jsdom;
-var axios = require('axios');
+var path = require('path')
+var fs = require('fs')
+var jsdom = require("jsdom")
+var { JSDOM } = jsdom
+var axios = require('axios')
 
-const backendUrl = process.env.ENV == "production" ? `https://dav-backend.herokuapp.com/v1` : `http://localhost:3111/v1`;
-const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`;
+const backendUrl = process.env.ENV == "production" ? `https://dav-backend.herokuapp.com/v1` : `http://localhost:3111/v1`
+const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`
 
-export async function PrepareStoreBookPage(uuid: string) : Promise<string>{
+export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
 		let response = await axios.default({
 			method: 'get',
 			url: `${backendUrl}/api/1/call/store/book/${uuid}`
-		});
+		})
 
 		if (response.status == 200) {
 			// Add the appropriate meta tags to the html
@@ -21,11 +21,11 @@ export async function PrepareStoreBookPage(uuid: string) : Promise<string>{
 				description: response.data.description,
 				imageUrl: `${backendUrl}/api/1/call/store/book/${uuid}/cover`,
 				url: `${websiteUrl}/store/book/${uuid}`
-			});
+			})
 		}
 	} catch (error) { }
 
-	return getHtml();
+	return getHtml()
 }
 
 export async function PrepareStoreAuthorPage(uuid: string) {
@@ -33,7 +33,7 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 		let response = await axios.default({
 			method: 'get',
 			url: `${backendUrl}/api/1/call/author/${uuid}`
-		});
+		})
 
 		if (response.status == 200) {
 			return getHtml({
@@ -41,11 +41,11 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 				description: response.data.bios.length > 0 ? response.data.bios[0].bio : "",
 				imageUrl: `${backendUrl}/api/1/call/author/${uuid}/profile_image`,
 				url: `${websiteUrl}/store/author/${uuid}`
-			});
+			})
 		}
 	} catch (error) { }
-	
-	return getHtml();
+
+	return getHtml()
 }
 
 function getHtml(params?: {
@@ -61,12 +61,12 @@ function getHtml(params?: {
 	}
 }): string {
 	// Read the html file
-	let index = fs.readFileSync(path.resolve('./PocketLib/index.html'), { encoding: 'utf8' });
+	let index = fs.readFileSync(path.resolve('./PocketLib/index.html'), { encoding: 'utf8' })
 
 	if (params) {
-		const dom = new JSDOM(index);
-		let html = dom.window.document.querySelector('html');
-		let head = html.querySelector('head');
+		const dom = new JSDOM(index)
+		let html = dom.window.document.querySelector('html')
+		let head = html.querySelector('head')
 
 		let metas: { name?: string, property?: string, content: string }[] = [
 			// Twitter tags
@@ -95,18 +95,18 @@ function getHtml(params?: {
 		}
 
 		for (let metaObj of metas) {
-			let meta = dom.window.document.createElement('meta');
+			let meta = dom.window.document.createElement('meta')
 			if (metaObj.name) {
-				meta.setAttribute('name', metaObj.name);
+				meta.setAttribute('name', metaObj.name)
 			} else if (metaObj.property) {
-				meta.setAttribute('property', metaObj.property);
+				meta.setAttribute('property', metaObj.property)
 			}
-			meta.setAttribute('content', metaObj.content);
-			head.appendChild(meta);
+			meta.setAttribute('content', metaObj.content)
+			head.appendChild(meta)
 		}
 
-		return html.outerHTML;
+		return html.outerHTML
 	}
 
-	return index;
+	return index
 }
