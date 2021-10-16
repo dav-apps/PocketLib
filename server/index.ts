@@ -1,24 +1,24 @@
-var path = require('path')
-var fs = require('fs')
-var jsdom = require("jsdom")
-var { JSDOM } = jsdom
-var axios = require('axios')
+import * as path from 'path'
+import * as fs from 'fs'
+import { JSDOM } from 'jsdom'
+import axios from 'axios'
 
 const backendUrl = process.env.ENV == "production" ? `https://dav-backend.herokuapp.com/v1` : `http://localhost:3111/v1`
 const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
-		let response = await axios.default({
+		let response = await axios({
 			method: 'get',
 			url: `${backendUrl}/api/1/call/store/book/${uuid}`
 		})
+		let responseData = response.data as any
 
 		if (response.status == 200) {
 			// Add the appropriate meta tags to the html
 			return getHtml({
-				title: response.data.title,
-				description: response.data.description,
+				title: responseData.title,
+				description: responseData.description,
 				imageUrl: `${backendUrl}/api/1/call/store/book/${uuid}/cover`,
 				url: `${websiteUrl}/store/book/${uuid}`
 			})
@@ -30,15 +30,16 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 
 export async function PrepareStoreAuthorPage(uuid: string) {
 	try {
-		let response = await axios.default({
+		let response = await axios({
 			method: 'get',
 			url: `${backendUrl}/api/1/call/author/${uuid}`
 		})
+		let responseData = response.data as any
 
 		if (response.status == 200) {
 			return getHtml({
-				title: `${response.data.first_name} ${response.data.last_name}`,
-				description: response.data.bios.length > 0 ? response.data.bios[0].bio : "",
+				title: `${responseData.first_name} ${responseData.last_name}`,
+				description: responseData.bios.length > 0 ? responseData.bios[0].bio : "",
 				imageUrl: `${backendUrl}/api/1/call/author/${uuid}/profile_image`,
 				url: `${websiteUrl}/store/author/${uuid}`
 			})
