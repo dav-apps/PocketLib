@@ -10,10 +10,10 @@
     "express": "^4.17.1",
     "jsdom": "^16.7.0",
     "path": "^0.12.7",
-    "typescript": "^4.0.5"
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
-    "@types/node": "^16.10.8",
+    "@types/node": "^16.11.0",
     "dotenv": "^10.0.0"
   }
 }
