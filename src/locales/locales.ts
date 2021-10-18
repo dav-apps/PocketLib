@@ -178,7 +178,7 @@ const enDefaults = {
 			descriptionTextfieldPlaceholder: "This book tells the story of a teensy-weensy little man who scurries around Fairyland having all sorts of adorable adventures."
 		},
 		categoriesSection: {
-			description: "Choose the appropriate categories for your book (maximum 2)."
+			description: "Choose the appropriate categories for your book (maximum 3)."
 		},
 		priceSection: {
 			description: "Specify the price for your book."
@@ -578,7 +578,7 @@ const deDefaults = {
 			descriptionTextfieldPlaceholder: "Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt."
 		},
 		categoriesSection: {
-			description: "Wähle die passenden Kategorien für dein Buch (maximal 2)."
+			description: "Wähle die passenden Kategorien für dein Buch (maximal 3)."
 		},
 		priceSection: {
 			description: "Gib den Preis für dein Buch an."

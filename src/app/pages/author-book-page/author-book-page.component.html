@@ -112,7 +112,7 @@
 					<div class="my-auto">
 						<span
 							class="badge badge-pill mr-2"
-							[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+							[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
 							style="font-size: 13px"
 							*ngFor="let category of book.categories; let i = index">
 							{{ category.name }}
@@ -375,7 +375,7 @@
 						<div class="my-auto">
 							<span
 								class="badge badge-pill mr-2"
-								[ngClass]="i % 2 == 0 ? 'badge-primary' : 'badge-secondary'"
+								[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
 								style="font-size: 13px"
 								*ngFor="let category of book.categories; let i = index">
 								{{ category.name }}
