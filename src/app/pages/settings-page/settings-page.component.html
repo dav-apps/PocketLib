@@ -11,6 +11,7 @@
 		<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
 
 		<dav-toggle
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			[checked]="openLastReadBook"
 			(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
 		</dav-toggle>
