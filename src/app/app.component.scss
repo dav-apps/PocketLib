@@ -1,4 +1,12 @@
-#bottom-navigation-bar{
+#navbar-header {
+	color: white;
+	background-color: transparent;
+	font-size: 22px;
+	padding: 8px 16px;
+	border: none;
+}
+
+#bottom-navigation-bar {
 	position: fixed;
 	bottom: 0;
 	left: 0;
@@ -6,7 +14,7 @@
 	height: 56px;
 }
 
-.bottom-navigation-button{
+.bottom-navigation-button {
 	border-radius: 0px;
 	color: white;
 	background-color: var(--primary);

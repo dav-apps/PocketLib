@@ -16,11 +16,13 @@
 			<i class="material-icons" style="font-size: 25px; color: white">arrow_back</i>
 		</a>
 
-		<a class="nav-link"
-			style="color: white; font-size: 22px"
-			[routerLink]="routingService.showsStore ? '/store' : '/'">
+		<button
+			id="navbar-header"
+			class="cursor"
+			role="link"
+			(click)="routingService.showsStore ? routingService.NavigateToStorePage() : routingService.NavigateToLibraryPage()">
 			{{ routingService.showsStore ? 'PocketLib Store' : 'PocketLib' }}
-		</a>
+		</button>
 
 		<span style="flex: 1 1 auto"></span>
 
