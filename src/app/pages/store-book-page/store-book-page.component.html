@@ -321,11 +321,12 @@
 	[defaultButtonText]="locale.back"
 	[isVisible]="davProRequiredDialogVisible"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="davProRequiredDialogVisible = false"
 	(primaryButtonClick)="NavigateToAccountPage()"
 	(defaultButtonClick)="davProRequiredDialogVisible = false">
 
-	<p>{{ locale.davProRequiredDialog.description }}</p>
+	<p class="text-color">{{ locale.davProRequiredDialog.description }}</p>
 </dav-dialog>
 
 <dav-dialog
@@ -334,20 +335,24 @@
 	[defaultButtonText]="locale.back"
 	[isVisible]="buyBookDialogVisible"
 	maxWidth="400"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="buyBookDialogVisible = false"
 	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
 	(defaultButtonClick)="buyBookDialogVisible = false">
 
-	<p [innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description"></p>
+	<p class="text-color"
+		[innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description">
+	</p>
 </dav-dialog>
 
 <dav-dialog
 	[header]="locale.errorDialog.header"
-	[defaultButtonText]="locale.errorDialog.ok"
+	[primaryButtonText]="locale.errorDialog.ok"
 	[isVisible]="errorDialogVisible"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="errorDialogVisible = false"
-	(defaultButtonClick)="errorDialogVisible = false">
+	(primaryButtonClick)="errorDialogVisible = false">
 
-	<p>{{ locale.errorDialog.description }}</p>
+	<p class="text-color">{{ locale.errorDialog.description }}</p>
 </dav-dialog>
