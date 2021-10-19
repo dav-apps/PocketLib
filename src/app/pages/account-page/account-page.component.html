@@ -163,9 +163,10 @@
 	[isVisible]="logoutDialogVisible"
 	primaryButtonType="danger"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="logoutDialogVisible = false"
 	(primaryButtonClick)="Logout()"
 	(defaultButtonClick)="logoutDialogVisible = false">
 
-	<p>{{ locale.logoutDialog.description }}</p>
+	<p class="text-color">{{ locale.logoutDialog.description }}</p>
 </dav-dialog>

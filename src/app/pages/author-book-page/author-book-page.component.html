@@ -516,6 +516,7 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="editTitleDialogVisible"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="editTitleDialogVisible = false"
 	(primaryButtonClick)="UpdateTitle()"
 	(defaultButtonClick)="editTitleDialogVisible = false">
@@ -542,6 +543,7 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="categoriesSelectionDialogVisible"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="categoriesSelectionDialogVisible = false"
 	(primaryButtonClick)="UpdateCategories()"
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false">

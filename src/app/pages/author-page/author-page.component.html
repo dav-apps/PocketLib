@@ -195,6 +195,7 @@
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="createAuthorDialogVisible"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="createAuthorDialogVisible = false"
 	(primaryButtonClick)="CreateAuthor()"
 	(defaultButtonClick)="createAuthorDialogVisible = false">

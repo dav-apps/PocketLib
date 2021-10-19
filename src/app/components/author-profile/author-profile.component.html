@@ -395,6 +395,7 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="editProfileDialogVisible"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="editProfileDialogVisible = false"
 	(primaryButtonClick)="SaveProfile()"
 	(defaultButtonClick)="editProfileDialogVisible = false">

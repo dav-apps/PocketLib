@@ -249,9 +249,10 @@
 	[defaultButtonText]="locale.leavePageDialog.cancel"
 	[isVisible]="leavePageDialogVisible"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="LeavePageDialogCancel()"
 	(primaryButtonClick)="LeavePageDialogLeave()"
 	(defaultButtonClick)="LeavePageDialogCancel()">
 
-	<p>{{ locale.leavePageDialog.description }}</p>
+	<p class="text-color">{{ locale.leavePageDialog.description }}</p>
 </dav-dialog>

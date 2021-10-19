@@ -54,10 +54,11 @@
 	[defaultButtonText]="locale.selectLanguagesDialog.close"
 	[isVisible]="selectLanguagesDialogVisible"
 	maxWidth="340"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="selectLanguagesDialogVisible = false"
 	(defaultButtonClick)="selectLanguagesDialogVisible = false">
 
-	<p>{{ locale.selectLanguagesDialog.description }}</p>
+	<p class="text-color">{{ locale.selectLanguagesDialog.description }}</p>
 
 	<div class="mb-3">
 		<pocketlib-languages-selection>
