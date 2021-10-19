@@ -1,9 +1,9 @@
 <div class="mb-3" style="font-size: 16px" *ngFor="let collectionName of collectionNames">
-	<p class="mb-1 font-weight-light">{{ collectionName.fullLanguage }}: </p>
+	<p class="mb-1 font-weight-light text-color">{{ collectionName.fullLanguage }}: </p>
 
 	<div class="d-flex">
 		<div style="width: 80%" *ngIf="!collectionName.edit">
-			<p class="mb-0" style="line-height: 30px">{{ collectionName.name }}</p>
+			<p class="mb-0 text-color" style="line-height: 30px">{{ collectionName.name }}</p>
 		</div>
 
 		<div style="width: 80%" *ngIf="collectionName.edit">
@@ -21,7 +21,7 @@
 
 		<button
 			type="button"
-			class="btn btn-sm ml-2"
+			class="btn btn-sm ml-2 text-color"
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
 			(click)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
 			<i class="ms-Icon ms-Icon--Save" aria-hidden="true" *ngIf="collectionName.edit"></i>
@@ -59,7 +59,7 @@
 
 		<button
 			type="button"
-			class="btn btn-sm ml-2"
+			class="btn btn-sm ml-2 text-color"
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
 			(click)="AddLanguage()">
 			<i class="ms-Icon ms-Icon--Save" aria-hidden="true"></i>

@@ -99,6 +99,7 @@
 	[header]="locale.collectionNamesDialog.header"
 	[defaultButtonText]="locale.close"
 	[isVisible]="collectionNamesDialogVisible"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="collectionNamesDialogVisible = false"
 	(defaultButtonClick)="collectionNamesDialogVisible = false">
 
