@@ -193,6 +193,7 @@
 <dav-panel
 	[header]="locale.bookmarks"
 	[isVisible]="showBookmarksPanel"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="CloseBookmarksPanel()">
 
 	<ul class="list-group list-group-flush">
@@ -215,6 +216,7 @@
 <dav-panel
 	[header]="locale.toc"
 	[isVisible]="showChaptersPanel"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="CloseChaptersPanel()">
 
 	<pocketlib-chapters-tree

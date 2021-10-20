@@ -82,6 +82,7 @@
 				width="170"
 				[options]="bioLanguageDropdownOptions"
 				[selectedKey]="bioLanguageDropdownSelectedKey"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="BioLanguageDropdownChange($event)"
 				*ngIf="authorMode != 0">
 			</dav-dropdown>
@@ -276,6 +277,7 @@
 				width="170"
 				[options]="bioLanguageDropdownOptions"
 				[selectedKey]="bioLanguageDropdownSelectedKey"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="BioLanguageDropdownChange($event)"
 				*ngIf="authorMode != 0">
 			</dav-dropdown>

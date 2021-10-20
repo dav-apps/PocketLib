@@ -26,7 +26,7 @@ export class LanguageDropdownComponent {
 	]
 
 	constructor(
-		private dataService: DataService
+		public dataService: DataService
 	) {
 		this.languages = this.dataService.GetLocale().misc.languages
 		this.options[0].value = this.languages.en

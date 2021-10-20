@@ -36,6 +36,7 @@
 			[label]="locale.addLanguageDropdownLabel"
 			[options]="addLanguageOptions"
 			[selectedKey]="addLanguageSelectedKey"
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="AddLanguageDropdownChange($event)">
 		</dav-dropdown>
 	</div>

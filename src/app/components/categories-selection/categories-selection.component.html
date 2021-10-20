@@ -3,6 +3,7 @@
 		[label]="category.name"
 		[checked]="selectedCategories.includes(category.key)"
 		[disabled]="selectedCategories.length >= 3 && !selectedCategories.includes(category.key)"
+		[theme]="dataService.darkTheme ? 'dark' : 'light'"
 		(change)="CategoryCheckboxSelected($event.detail.checked, category.key)"
 		*ngFor="let category of dataService.categories">
 	</dav-checkbox>
