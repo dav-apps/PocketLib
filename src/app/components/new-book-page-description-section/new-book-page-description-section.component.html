@@ -11,19 +11,19 @@
 			{{ locale.descriptionSection.description }}
 		</label>
 
-		<div class="d-flex mb-2">
+		<div class="d-flex mb-3">
 			<pocketlib-language-dropdown
 				[language]="language"
 				(updated)="SetLanguage($event)">
 			</pocketlib-language-dropdown>
 		</div>
 
-		<fluent-text-area
-			style="width: 100%"
+		<dav-textarea
 			[value]="description"
 			[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
-			(input)="description = $event.target.value">
-		</fluent-text-area>
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
+			(change)="description = $event.detail.value">
+		</dav-textarea>
 	</div>
 
 	<dav-button

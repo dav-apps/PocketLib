@@ -100,17 +100,14 @@
 			</p>
 
 			<div class="mx-auto my-3" style="width: 80%" *ngIf="bioMode == 1 || bioMode == 3">
-				<fluent-text-area
-					style="margin-top: 10px; width: 100%"
-					resize="vertical"
+				<dav-textarea
 					[value]="newBio"
 					[placeholder]="locale.bioTextfieldPlaceholder"
-					(input)="newBio = $event.target.value; newBioError = ''">
-				</fluent-text-area>
-
-				<p class="text-field-error text-left" *ngIf="newBioError.length > 0">
-					{{ newBioError }}
-				</p>
+					resize="vertical"
+					[errorMessage]="newBioError"
+					[theme]="dataService.darkTheme ? 'dark' : 'light'"
+					(change)="newBio = $event.detail.value; newBioError = ''">
+				</dav-textarea>
 			</div>
 
 			<dav-button
@@ -295,17 +292,14 @@
 			</p>
 
 			<div class="mx-auto my-3" style="width: 80%" *ngIf="bioMode == 1 || bioMode == 3">
-				<fluent-text-area
-					style="margin-top: 10px; width: 100%"
-					resize="vertical"
+				<dav-textarea
 					[value]="newBio"
 					[placeholder]="locale.bioTextfieldPlaceholder"
-					(input)="newBio = $event.target.value; newBioError = ''">
-				</fluent-text-area>
-
-				<p class="text-field-error text-left" *ngIf="newBioError.length > 0">
-					{{ newBioError }}
-				</p>
+					resize="vertical"
+					[errorMessage]="newBioError"
+					[theme]="dataService.darkTheme ? 'dark' : 'light'"
+					(change)="newBio = $event.detail.value; newBioError = ''">
+				</dav-textarea>
 			</div>
 
 			<dav-button

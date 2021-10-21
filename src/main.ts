@@ -6,17 +6,11 @@ import { environment } from './environments/environment'
 
 import {
 	provideFluentDesignSystem,
-	fluentButton,
-	fluentTextField,
-	fluentTextArea,
 	fluentProgressRing
 } from '@fluentui/web-components'
 
 provideFluentDesignSystem()
 	.register(
-		fluentButton(),
-		fluentTextField(),
-		fluentTextArea(),
 		fluentProgressRing()
 	)
 

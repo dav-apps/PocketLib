@@ -60,17 +60,14 @@
 					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
 					*ngIf="editDescription">
 
-					<fluent-text-area
-						style="width: 100%"
-						resize="vertical"
+					<dav-textarea
 						[value]="newDescription"
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
-						(input)="newDescription = $event.target.value; newDescriptionError = ''">
-					</fluent-text-area>
-
-					<p class="text-field-error" *ngIf="newDescriptionError.length > 0">
-						{{ newDescriptionError }}
-					</p>
+						resize="vertical"
+						[errorMessage]="newDescriptionError"
+						[theme]="dataService.darkTheme ? 'dark' : 'light'"
+						(change)="newDescription = $event.detail.value; newDescriptionError = ''">
+					</dav-textarea>
 				</div>
 
 				<dav-button
@@ -313,17 +310,14 @@
 						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
 						*ngIf="editDescription">
 
-						<fluent-text-area
-							style="width: 100%"
-							resize="vertical"
+						<dav-textarea
 							[value]="newDescription"
 							[placeholder]="locale.descriptionTextfieldPlaceholder"
-							(input)="newDescription = $event.target.value; newDescriptionError = ''">
-						</fluent-text-area>
-
-						<p class="text-field-error" *ngIf="newDescriptionError.length > 0">
-							{{ newDescriptionError }}
-						</p>
+							resize="vertical"
+							[errorMessage]="newDescriptionError"
+							[theme]="dataService.darkTheme ? 'dark' : 'light'"
+							(change)="newDescription = $event.detail.value; newDescriptionError = ''">
+						</dav-textarea>
 					</div>
 
 					<dav-button
