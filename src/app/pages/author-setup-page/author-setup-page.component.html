@@ -16,33 +16,29 @@
 		<form>
 			<!-- First name -->
 			<div class="mb-3">
-				<fluent-text-field
-					style="width: 100%"
+				<dav-textfield
 					[value]="firstName"
+					[label]="locale.firstNameTextfieldLabel"
 					placeholder="Monty"
-					(input)="firstName = $event.target.value; firstNameError = ''">
-					{{ locale.firstNameTextfieldLabel }}
-				</fluent-text-field>
-
-				<p class="text-field-error" *ngIf="firstNameError.length > 0">
-					{{ firstNameError }}
-				</p>
+					autocomplete="given-name"
+					[errorMessage]="firstNameError"
+					[theme]="dataService.darkTheme ? 'dark' : 'light'"
+					(change)="firstName = $event.detail.value; firstNameError = ''">
+				</dav-textfield>
 			</div>
 
 			<!-- Last name -->
 			<div class="mb-3">
-				<fluent-text-field	
-					style="width: 100%"
+				<dav-textfield
 					[value]="lastName"
+					[label]="locale.lastNameTextfieldLabel"
 					placeholder="Kensicle"
-					(input)="lastName = $event.target.value; lastNameError = ''"
-					(keydown.enter)="Submit()">
-					{{ locale.lastNameTextfieldLabel }}
-				</fluent-text-field>
-
-				<p class="text-field-error" *ngIf="lastNameError.length > 0">
-					{{ lastNameError }}
-				</p>
+					autocomplete="family-name"
+					[errorMessage]="lastNameError"
+					[theme]="dataService.darkTheme ? 'dark' : 'light'"
+					(change)="lastName = $event.detail.value; lastNameError = ''"
+					(enter)="Submit()">
+				</dav-textfield>
 			</div>
 
 			<!-- Terms of Service -->
@@ -87,33 +83,29 @@
 			<form>
 				<!-- First name -->
 				<div class="mb-3">
-					<fluent-text-field
-						style="width: 100%"
+					<dav-textfield
 						[value]="firstName"
+						[label]="locale.firstNameTextfieldLabel"
 						placeholder="Monty"
-						(input)="firstName = $event.target.value; firstNameError = ''">
-						{{ locale.firstNameTextfieldLabel }}
-					</fluent-text-field>
-	
-					<p class="text-field-error" *ngIf="firstNameError.length > 0">
-						{{ firstNameError }}
-					</p>
+						autocomplete="given-name"
+						[errorMessage]="firstNameError"
+						[theme]="dataService.darkTheme ? 'dark' : 'light'"
+						(change)="firstName = $event.detail.value; firstNameError = ''">
+					</dav-textfield>
 				</div>
 	
 				<!-- Last name -->
 				<div class="mb-3">
-					<fluent-text-field	
-						style="width: 100%"
+					<dav-textfield
 						[value]="lastName"
+						[label]="locale.lastNameTextfieldLabel"
 						placeholder="Kensicle"
-						(input)="lastName = $event.target.value; lastNameError = ''"
-						(keydown.enter)="Submit()">
-						{{ locale.lastNameTextfieldLabel }}
-					</fluent-text-field>
-	
-					<p class="text-field-error" *ngIf="lastNameError.length > 0">
-						{{ lastNameError }}
-					</p>
+						autocomplete="family-name"
+						[errorMessage]="lastNameError"
+						[theme]="dataService.darkTheme ? 'dark' : 'light'"
+						(change)="lastName = $event.detail.value; lastNameError = ''"
+						(enter)="Submit()">
+					</dav-textfield>
 				</div>
 	
 				<!-- Terms of Service -->

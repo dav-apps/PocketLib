@@ -200,34 +200,32 @@
 	(primaryButtonClick)="CreateAuthor()"
 	(defaultButtonClick)="createAuthorDialogVisible = false">
 
-	<!-- First name -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="createAuthorDialogFirstName"
-			placeholder="Monty"
-			(input)="createAuthorDialogFirstName = $event.target.value; createAuthorDialogFirstNameError = ''">
-			{{ locale.createAuthorDialog.firstNameTextfieldLabel }}
-		</fluent-text-field>
+	<form>
+		<!-- First name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="createAuthorDialogFirstName"
+				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
+				placeholder="Monty"
+				autocomplete="given-name"
+				[errorMessage]="createAuthorDialogFirstNameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
+			</dav-textfield>
+		</div>
 
-		<p class="text-field-error" *ngIf="createAuthorDialogFirstNameError.length > 0">
-			{{ createAuthorDialogFirstNameError }}
-		</p>
-	</div>
-
-	<!-- Last name -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="createAuthorDialogLastName"
-			placeholder="Kensicle"
-			(input)="createAuthorDialogLastName = $event.target.value; createAuthorDialogLastNameError = ''"
-			(keydown.enter)="CreateAuthor()">
-			{{ locale.createAuthorDialog.lastNameTextfieldLabel }}
-		</fluent-text-field>
-
-		<p class="text-field-error" *ngIf="createAuthorDialogLastNameError.length > 0">
-			{{ createAuthorDialogLastNameError }}
-		</p>
-	</div>
+		<!-- Last name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="createAuthorDialogLastName"
+				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
+				placeholder="Kensicle"
+				autocomplete="family-name"
+				[errorMessage]="createAuthorDialogLastNameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
+				(enter)="CreateAuthor()">
+			</dav-textfield>
+		</div>
+	</form>
 </dav-dialog>

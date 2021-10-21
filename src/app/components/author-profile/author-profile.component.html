@@ -402,99 +402,90 @@
 	(primaryButtonClick)="SaveProfile()"
 	(defaultButtonClick)="editProfileDialogVisible = false">
 
-	<!-- First name -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogFirstName"
-			placeholder="Monty"
-			(input)="editProfileDialogFirstName = $event.target.value; editProfileDialogFirstNameError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.firstNameTextfieldLabel }}
-		</fluent-text-field>
+	<form>
+		<!-- First name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogFirstName"
+				[label]="locale.editProfileDialog.firstNameTextfieldLabel"
+				placeholder="Monty"
+				autocomplete="given-name"
+				[errorMessage]="editProfileDialogFirstNameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogFirstName = $event.detail.value; editProfileDialogFirstNameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
 
-		<p class="text-field-error" *ngIf="editProfileDialogFirstNameError.length > 0">
-			{{ editProfileDialogFirstNameError }}
-		</p>
-	</div>
+		<!-- Last name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogLastName"
+				[label]="locale.editProfileDialog.lastNameTextfieldLabel"
+				placeholder="Kensicle"
+				autocomplete="family-name"
+				[errorMessage]="editProfileDialogLastNameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogLastName = $event.detail.value; editProfileDialogLastNameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
 
-	<!-- Last name -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogLastName"
-			placeholder="Kensicle"
-			(input)="editProfileDialogLastName = $event.target.value; editProfileDialogLastNameError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.lastNameTextfieldLabel }}
-		</fluent-text-field>
+		<!-- Website url -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogWebsiteUrl"
+				[label]="locale.editProfileDialog.websiteUrlTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.websiteUrlTextfieldPlaceholder"
+				type="url"
+				autocomplete="url"
+				[errorMessage]="editProfileDialogWebsiteUrlError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogWebsiteUrl = $event.detail.value; editProfileDialogWebsiteUrlError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
 
-		<p class="text-field-error" *ngIf="editProfileDialogLastNameError.length > 0">
-			{{ editProfileDialogLastNameError }}
-		</p>
-	</div>
+		<!-- Facebook username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogFacebookUsername"
+				[label]="locale.editProfileDialog.facebookUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogFacebookUsernameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogFacebookUsername = $event.detail.value; editProfileDialogFacebookUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
 
-	<!-- Website url -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogWebsiteUrl"
-			[placeholder]="locale.editProfileDialog.websiteUrlTextfieldPlaceholder"
-			(input)="editProfileDialogWebsiteUrl = $event.target.value; editProfileDialogWebsiteUrlError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.websiteUrlTextfieldLabel }}
-		</fluent-text-field>
+		<!-- Instagram username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogInstagramUsername"
+				[label]="locale.editProfileDialog.instagramUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogInstagramUsernameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogInstagramUsername = $event.detail.value; editProfileDialogInstagramUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
 
-		<p class="text-field-error" *ngIf="editProfileDialogWebsiteUrlError.length > 0">
-			{{ editProfileDialogWebsiteUrlError }}
-		</p>
-	</div>
-
-	<!-- Facebook username -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogFacebookUsername"
-			[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
-			(input)="editProfileDialogFacebookUsername = $event.target.value; editProfileDialogFacebookUsernameError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.facebookUsernameTextfieldLabel }}
-		</fluent-text-field>
-
-		<p class="text-field-error" *ngIf="editProfileDialogFacebookUsernameError.length > 0">
-			{{ editProfileDialogFacebookUsernameError }}
-		</p>
-	</div>
-
-	<!-- Instagram username -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogInstagramUsername"
-			[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
-			(input)="editProfileDialogInstagramUsername = $event.target.value; editProfileDialogInstagramUsernameError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.instagramUsernameTextfieldLabel }}
-		</fluent-text-field>
-
-		<p class="text-field-error" *ngIf="editProfileDialogInstagramUsernameError.length > 0">
-			{{ editProfileDialogInstagramUsernameError }}
-		</p>
-	</div>
-
-	<!-- Twitter username -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="editProfileDialogTwitterUsername"
-			[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
-			(input)="editProfileDialogTwitterUsername = $event.target.value; editProfileDialogTwitterUsernameError = ''"
-			(keydown.enter)="SaveProfile()">
-			{{ locale.editProfileDialog.twitterUsernameTextfieldLabel }}
-		</fluent-text-field>
-
-		<p class="text-field-error" *ngIf="editProfileDialogTwitterUsernameError.length > 0">
-			{{ editProfileDialogTwitterUsernameError }}
-		</p>
-	</div>
+		<!-- Twitter username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogTwitterUsername"
+				[label]="locale.editProfileDialog.twitterUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogTwitterUsernameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="editProfileDialogTwitterUsername = $event.detail.value; editProfileDialogTwitterUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+	</form>
 </dav-dialog>

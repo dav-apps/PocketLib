@@ -6,18 +6,16 @@
 			<p class="mb-0 text-color" style="line-height: 30px">{{ collectionName.name }}</p>
 		</div>
 
-		<div style="width: 80%" *ngIf="collectionName.edit">
-			<fluent-text-field
+		<form style="width: 80%" *ngIf="collectionName.edit">
+			<dav-textfield
 				[value]="collectionName.name"
 				[placeholder]="locale.nameTextfieldPlaceholder"
-				(input)="collectionName.name = $event.target.value; collectionName.errorMessage = ''"
-				(keydown.enter)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
-			</fluent-text-field>
-
-			<p class="text-field-error" *ngIf="collectionName.errorMessage && collectionName.errorMessage.length > 0">
-				{{ collectionName.errorMessage }}
-			</p>
-		</div>
+				[errorMessage]="collectionName.errorMessage"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="collectionName.name = $event.detail.value; collectionName.errorMessage = ''"
+				(enter)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
+			</dav-textfield>
+		</form>
 
 		<button
 			type="button"
@@ -45,18 +43,16 @@
 		class="d-flex mb-3"
 		*ngIf="addLanguageSelectedKey != 'default'">
 
-		<div style="width: 80%">
-			<fluent-text-field
+		<form style="width: 80%">
+			<dav-textfield
 				[value]="newLanguageName"
 				[placeholder]="locale.nameTextfieldPlaceholder"
-				(input)="newLanguageName = $event.target.value; newLanguageNameError = ''"
-				(keydown.enter)="AddLanguage()">
-			</fluent-text-field>
-
-			<p class="text-field-error" *ngIf="newLanguageNameError.length > 0">
-				{{ newLanguageNameError }}
-			</p>
-		</div>
+				[errorMessage]="newLanguageNameError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="newLanguageName = $event.detail.value; newLanguageNameError = ''"
+				(enter)="AddLanguage()">
+			</dav-textfield>
+		</form>
 
 		<button
 			type="button"

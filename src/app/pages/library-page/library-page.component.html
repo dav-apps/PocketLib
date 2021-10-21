@@ -227,22 +227,20 @@
 	(primaryButtonClick)="RenameBook()"
 	(defaultButtonClick)="renameBookDialogVisible = false">
 
-	<!-- Title -->
-	<div class="mb-3">
-		<fluent-text-field
-			style="width: 100%"
-			[value]="renameBookDialogTitle"
-			type="text"
-			[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
-			(input)="renameBookDialogTitle = $event.target.value; renameBookDialogError = ''"
-			(keydown.enter)="RenameBook()">
-			{{ locale.renameBookDialog.titleTextfieldLabel }}
-		</fluent-text-field>
-
-		<p class="text-field-error" *ngIf="renameBookDialogError.length > 0">
-			{{ renameBookDialogError }}
-		</p>
-	</div>
+	<form>
+		<!-- Title -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="renameBookDialogTitle"
+				[label]="locale.renameBookDialog.titleTextfieldLabel"
+				[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
+				[errorMessage]="renameBookDialogError"
+				[theme]="dataService.darkTheme ? 'dark' : 'light'"
+				(change)="renameBookDialogTitle = $event.detail.value; renameBookDialogError = ''"
+				(enter)="RenameBook()">
+			</dav-textfield>
+		</div>
+	</form>
 </dav-dialog>
 
 <dav-dialog

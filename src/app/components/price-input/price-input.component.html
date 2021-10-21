@@ -2,17 +2,17 @@
 	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ formattedPrice }}</p>
 
 	<div class="d-flex" *ngIf="edit">
-		<fluent-text-field
-			style="width: 100%"
+		<dav-textfield
+			[value]="price"
+			[label]="locale.priceTextfieldLabel"
+			[placeholder]="locale.priceTextfieldPlaceholder"
 			type="number"
 			min="0"
 			max="100000"
-			[value]="price"
-			[placeholder]="locale.priceTextfieldPlaceholder"
-			(input)="price = $event.target.value"
-			(keydown.enter)="UpdatePrice()">
-			{{ locale.priceTextfieldLabel }}
-		</fluent-text-field>
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
+			(change)="price = $event.detail.value"
+			(enter)="UpdatePrice()">
+		</dav-textfield>
 
 		<button
 			type="button"

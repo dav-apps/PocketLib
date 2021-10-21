@@ -8,27 +8,22 @@
 	</p>
 
 	<div class="d-flex" *ngIf="edit">
-		<div>
-			<fluent-text-field
-				style="width: 100%"
-				[value]="isbn"
-				placeholder="9780064407663"
-				(input)="isbn = $event.target.value; errorMessage = ''"
-				(keydown.enter)="UpdateValue()">
-				ISBN
-			</fluent-text-field>
-
-			<p class="text-field-error" *ngIf="errorMessage.length > 0">
-				{{ errorMessage }}
-			</p>
-		</div>
+		<dav-textfield
+			[value]="isbn"
+			label="ISBN"
+			placeholder="9780064407663"
+			[errorMessage]="errorMessage"
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
+			(change)="isbn = $event.detail.value; errorMessage = ''"
+			(enter)="UpdateValue()">
+		</dav-textfield>
 
 		<button
 			type="button"
 			class="btn ml-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
 			(click)="UpdateValue()">
-			
+
 			<i class="ms-Icon ms-Icon--Save" style="font-size: 16px" aria-hidden="true"></i>
 		</button>
 

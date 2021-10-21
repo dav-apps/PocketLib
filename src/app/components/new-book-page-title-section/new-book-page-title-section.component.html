@@ -11,13 +11,13 @@
 			{{ locale.titleSection.description }}
 		</label>
 
-		<fluent-text-field
-			style="width: 100%"
+		<dav-textfield
 			[value]="title"
 			[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
-			(input)="title = $event.target.value"
-			(keydown.enter)="Submit()">
-		</fluent-text-field>
+			[theme]="dataService.darkTheme ? 'dark' : 'light'"
+			(change)="title = $event.detail.value"
+			(enter)="Submit()">
+		</dav-textfield>
 	</div>
 
 	<div class="d-flex" style="float: right">
