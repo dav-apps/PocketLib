@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import { JSDOM } from 'jsdom'
 import axios from 'axios'
 
-const backendUrl = process.env.ENV == "production" ? `https://dav-backend.herokuapp.com/v1` : `http://localhost:3111/v1`
+const backendUrl = process.env.ENV == "production" ? `https://dav-backend-tfpik.ondigitalocean.app/v1` : `http://localhost:3111/v1`
 const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
