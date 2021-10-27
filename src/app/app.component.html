@@ -1,5 +1,5 @@
-<mat-toolbar id="navbar" class="bg-primary mat-elevation-z10" style="z-index: 5; position: relative" [style.display]="dataService.navbarVisible ? '' : 'none'">
-   <mat-toolbar-row>
+<mat-toolbar id="navbar" class="bg-primary mat-elevation-z10" style="z-index: 5" [style.display]="dataService.navbarVisible ? '' : 'none'">
+	<mat-toolbar-row>
 		<button
 			mat-icon-button
 			(click)="dataService.sideNavOpened = !dataService.sideNavOpened"
