@@ -51,6 +51,7 @@ export class StoreBookPageComponent {
 			inLibrary: false,
 			purchased: false
 		}
+	categoryKeys: string[] = []
 	price: string = ""
 	bookStatus: string = ""
 	author: Author = {
@@ -160,6 +161,7 @@ export class StoreBookPageComponent {
 			this.book.coverBlurhash = responseData.cover_blurhash
 			this.book.inLibrary = responseData.in_library
 			this.book.purchased = responseData.purchased
+			this.categoryKeys = responseData.categories
 			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 
 			this.addToLibraryButtonDisabled = this.book.inLibrary

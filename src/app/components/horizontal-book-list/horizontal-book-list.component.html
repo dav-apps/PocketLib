@@ -1,5 +1,7 @@
 <div class="mt-3">
-	<h4 class="ml-3 font-weight-light text-color">{{ locale.recentlyPublished }}</h4>
+	<h4 class="ml-3 font-weight-light text-color">
+		{{ type == "latest" ? locale.recentlyPublished : (categories.length == 1 ? locale.moreBooksInCategory : locale.moreBooksInCategories) }}
+	</h4>
 
 	<div class="horizontal-store-list" style="height: 250px; overflow-x: scroll; overflow-y: hidden">
 		<div class="d-flex mb-3 pl-4" style="width: max-content">
@@ -13,15 +15,15 @@
 				style="display: inline-flex; width: 100px"
 				*ngIf="books.length > 0">
 
-				<a
-					class="d-flex mx-auto my-auto align-items-center justify-content-center cursor"
+				<a class="d-flex mx-auto my-auto align-items-center justify-content-center cursor"
 					[ngClass]="showAllHovered ? 'shadow' : 'shadow-sm'"
 					style="width: 50px; height: 50px; border-radius: 50%; text-decoration: none; transition: 0.12s"
 					routerLink="/store/books/all"
 					(mouseover)="showAllHovered = true"
 					(mouseout)="showAllHovered = false"
 					(focusin)="showAllHovered = true"
-					(focusout)="showAllHovered = false">
+					(focusout)="showAllHovered = false"
+					*ngIf="type == 'latest'">
 
 					<i class="ms-Icon ms-Icon--Forward text-color"
 						aria-hidden="true"

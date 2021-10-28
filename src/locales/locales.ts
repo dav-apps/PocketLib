@@ -344,7 +344,9 @@ const enDefaults = {
 		close: "Close"
 	},
 	horizontalBookList: {
-		recentlyPublished: "Recently published books"
+		recentlyPublished: "Recently published books",
+		moreBooksInCategory: "More books in this category",
+		moreBooksInCategories: "More books in these categories"
 	},
 	horizontalAuthorList: {
 		newAuthors: "New authors"
@@ -744,7 +746,9 @@ const deDefaults = {
 		close: "Schließen"
 	},
 	horizontalBookList: {
-		recentlyPublished: "Kürzlich veröffentlichte Bücher"
+		recentlyPublished: "Kürzlich veröffentlichte Bücher",
+		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien"
 	},
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
