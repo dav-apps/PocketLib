@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import * as axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import {
 	Dav,
 	ApiResponse,
@@ -29,7 +29,7 @@ export class ApiService {
 			if (params.firstName != null) data["first_name"] = params.firstName
 			if (params.lastName != null) data["last_name"] = params.lastName
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
@@ -53,7 +53,7 @@ export class ApiService {
 
 	async GetAuthorOfUser(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
@@ -92,7 +92,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}`,
 				params: {
@@ -121,7 +121,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			var response = await axios.default({
+			var response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors/latest`
 			})
@@ -156,7 +156,7 @@ export class ApiService {
 			if (params.instagramUsername != null) data["instagram_username"] = params.instagramUsername
 			if (params.twitterUsername != null) data["twitter_username"] = params.twitterUsername
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author`,
 				headers: {
@@ -196,7 +196,7 @@ export class ApiService {
 			if (params.instagramUsername != null) data["instagram_username"] = params.instagramUsername
 			if (params.twitterUsername != null) data["twitter_username"] = params.twitterUsername
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}`,
 				headers: {
@@ -228,7 +228,7 @@ export class ApiService {
 			let data = {}
 			if (params.bio != null) data["bio"] = params.bio
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/bio/${params.language}`,
 				headers: {
@@ -259,7 +259,7 @@ export class ApiService {
 			let data = {}
 			if (params.bio != null) data["bio"] = params.bio
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/bio/${params.language}`,
 				headers: {
@@ -288,7 +288,7 @@ export class ApiService {
 		file: any
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/profile_image`,
 				headers: {
@@ -316,7 +316,7 @@ export class ApiService {
 		file: any
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/author/${params.uuid}/profile_image`,
 				headers: {
@@ -351,7 +351,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/author/${uuid}/profile_image`,
 				responseType: 'blob'
@@ -385,7 +385,7 @@ export class ApiService {
 			if (params.language != null) data["language"] = params.language
 			if (params.author != null) data["author"] = params.author
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection`,
 				headers: {
@@ -420,7 +420,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let options: axios.AxiosRequestConfig = {
+			let options: AxiosRequestConfig = {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${uuid}`
 			}
@@ -431,7 +431,7 @@ export class ApiService {
 				}
 			}
 
-			let response = await axios.default(options)
+			let response = await axios(options)
 
 			let result = {
 				status: response.status,
@@ -461,7 +461,7 @@ export class ApiService {
 		name: string
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/collection/${params.uuid}/name/${params.language}`,
 				headers: {
@@ -508,7 +508,7 @@ export class ApiService {
 			if (params.isbn) data["isbn"] = params.isbn
 			if (params.categories) data["categories"] = params.categories
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/book`,
 				headers: {
@@ -543,7 +543,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let options: axios.AxiosRequestConfig = {
+			let options: AxiosRequestConfig = {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`
 			}
@@ -554,7 +554,7 @@ export class ApiService {
 				}
 			}
 
-			let response = await axios.default(options)
+			let response = await axios(options)
 
 			let result = {
 				status: response.status,
@@ -598,7 +598,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/category/${params.key}`,
 				params: {
@@ -640,7 +640,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/latest`,
 				params: {
@@ -670,7 +670,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/books/review`,
 				headers: {
@@ -716,7 +716,7 @@ export class ApiService {
 			if (params.status != null) data["status"] = params.status
 			if (params.categories != null) data["categories"] = params.categories
 
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}`,
 				headers: {
@@ -743,7 +743,7 @@ export class ApiService {
 		currency: string
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/purchase`,
 				headers: {
@@ -775,7 +775,7 @@ export class ApiService {
 		file: any
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/cover`,
 				headers: {
@@ -810,7 +810,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${uuid}/cover`,
 				responseType: 'blob'
@@ -840,7 +840,7 @@ export class ApiService {
 		file: any
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store/book/${params.uuid}/file`,
 				headers: {
@@ -869,7 +869,7 @@ export class ApiService {
 		storeBook: string
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/book`,
 				headers: {
@@ -902,7 +902,7 @@ export class ApiService {
 		if (cachedResponse) return cachedResponse
 
 		try {
-			let response = await axios.default({
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store/categories`
 			})
