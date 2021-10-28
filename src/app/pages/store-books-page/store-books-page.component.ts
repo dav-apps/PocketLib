@@ -115,7 +115,7 @@ export class StoreBooksPageComponent {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
 				response = await this.apiService.GetStoreBooksByCategory({
-					key: this.key,
+					keys: [this.key],
 					languages: await this.dataService.GetStoreLanguages(),
 					limit: this.maxVisibleBooks,
 					page: this.page
