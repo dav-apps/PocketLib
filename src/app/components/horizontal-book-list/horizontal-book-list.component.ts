@@ -19,7 +19,6 @@ export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
 	books: BookListItem[] = []
 	showAllHovered: boolean = false
-	categoriesLoaded: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -41,13 +40,12 @@ export class HorizontalBookListComponent {
 			changes.categories == null
 			|| changes.categories.currentValue.length == 0
 		) return
+
 		await this.LoadStoreBooksByCategories()
 	}
 
 	async LoadLatestStoreBooks() {
 		// Get the latest store books
-		this.books = []
-
 		let response = await this.apiService.GetLatestStoreBooks({
 			languages: await this.dataService.GetStoreLanguages(),
 			limit: maxVisibleStoreBooks
@@ -58,19 +56,18 @@ export class HorizontalBookListComponent {
 	}
 
 	async LoadStoreBooksByCategories() {
-		if (this.categoriesLoaded) return
-		this.categoriesLoaded = true
-
 		// Get the store books with the given categories
-		this.books = []
-
 		let response = await this.apiService.GetStoreBooksByCategory({
 			keys: this.categories,
 			languages: await this.dataService.GetStoreLanguages()
 		})
 
 		if (response.status != 200) return
-		let books = (response as ApiResponse<any>).data.books as any[]
+
+		let books = []
+		for (let book of (response as ApiResponse<any>).data.books) {
+			books.push(book)
+		}
 
 		// Remove the current book
 		let i = books.findIndex(book => book.uuid == this.currentBookUuid)
@@ -80,6 +77,8 @@ export class HorizontalBookListComponent {
 	}
 
 	ShowBooks(books: any[]) {
+		this.books = []
+
 		for (let storeBook of books) {
 			let width = 123
 			let height = 190

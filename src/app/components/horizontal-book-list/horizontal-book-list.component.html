@@ -13,7 +13,7 @@
 			<div
 				class="mx-2 my-3"
 				style="display: inline-flex; width: 100px"
-				*ngIf="books.length > 0">
+				*ngIf="type == 'latest' && books.length > 0">
 
 				<a class="d-flex mx-auto my-auto align-items-center justify-content-center cursor"
 					[ngClass]="showAllHovered ? 'shadow' : 'shadow-sm'"
@@ -22,8 +22,7 @@
 					(mouseover)="showAllHovered = true"
 					(mouseout)="showAllHovered = false"
 					(focusin)="showAllHovered = true"
-					(focusout)="showAllHovered = false"
-					*ngIf="type == 'latest'">
+					(focusout)="showAllHovered = false">
 
 					<i class="ms-Icon ms-Icon--Forward text-color"
 						aria-hidden="true"

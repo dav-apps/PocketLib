@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute, ParamMap } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
@@ -94,26 +94,21 @@ export class StoreBookPageComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
-		// Get the uuid from the params
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
 	async ngOnInit() {
 		this.setSize()
 		await this.dataService.userPromiseHolder.AwaitResult()
 
-		// Set the link of the back button
-		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")
-		this.backButtonLink = lastVisitedRoute.url
-		this.backButtonLinkParams = lastVisitedRoute.params
+		// Get the uuid from the params
+		this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+			let uuid = paramMap.get("uuid")
 
-		// Get the store book cover
-		let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
-		if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
-
-		// Get StoreBook, StoreBookCollection and Author
-		await this.GetData()
+			if (this.uuid != uuid) {
+				this.uuid = uuid
+				this.Init()
+			}
+		})
 	}
 
 	ngAfterViewInit() {
@@ -125,6 +120,20 @@ export class StoreBookPageComponent {
 		this.width = window.innerWidth
 		this.showMobileLayout = window.innerWidth < 768 && !this.dualScreenLayout
 		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
+	}
+
+	async Init() {
+		// Set the link of the back button
+		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")
+		this.backButtonLink = lastVisitedRoute.url
+		this.backButtonLinkParams = lastVisitedRoute.params
+
+		// Get the store book cover
+		let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
+		if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
+
+		// Get StoreBook, StoreBookCollection and Author
+		await this.GetData()
 	}
 
 	BackButtonClick() {
@@ -191,7 +200,9 @@ export class StoreBookPageComponent {
 			}
 
 			// Load the categories
+			this.book.categories = []
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
+
 			for (let key of responseData.categories) {
 				// Find the category with the key
 				let category = this.dataService.categories.find(c => c.key == key)
