@@ -19,6 +19,7 @@ export class HorizontalBookListComponent {
 	locale = enUS.horizontalBookList
 	books: BookListItem[] = []
 	showAllHovered: boolean = false
+	loading: boolean = true
 
 	constructor(
 		public dataService: DataService,
@@ -112,5 +113,7 @@ export class HorizontalBookListComponent {
 
 			this.books.push(bookItem)
 		}
+
+		this.loading = false
 	}
 }
