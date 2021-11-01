@@ -1,5 +1,6 @@
-import { Component, HostListener } from '@angular/core'
+import { Component, HostListener, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
+import { MatDrawerContainer } from '@angular/material/sidenav'
 import { DataService } from 'src/app/services/data-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { smallWindowMaxSize } from 'src/constants/constants'
@@ -10,6 +11,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-page.component.html'
 })
 export class StorePageComponent {
+	@ViewChild('matDrawerContainer') matDrawerContainer: MatDrawerContainer
 	locale = enUS.storePage
 	sideNavHidden: boolean = false
 	dualScreenLayout: boolean = false
@@ -30,6 +32,10 @@ export class StorePageComponent {
 
 	ngOnInit() {
 		this.setSize()
+	}
+
+	ngAfterViewInit() {
+		this.dataService.storePageDrawerContainer = this.matDrawerContainer
 	}
 
 	@HostListener('window:resize')

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { MatDrawerContainer } from '@angular/material/sidenav'
 import * as localforage from 'localforage'
 import {
 	Dav,
@@ -53,6 +54,7 @@ export class DataService {
 	adminAuthors: Author[] = []
 	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
 	userIsAdmin: boolean = false
+	storePageDrawerContainer: MatDrawerContainer
 	sideNavOpened: boolean = false
 	contentHeight: number = 200
 	categories: Category[] = []

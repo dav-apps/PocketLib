@@ -123,6 +123,9 @@ export class StoreBookPageComponent {
 	}
 
 	async Init() {
+		// Scroll to the top of the page
+		this.dataService.storePageDrawerContainer.scrollable.scrollTo({ top: 0 })
+
 		// Set the link of the back button
 		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")
 		this.backButtonLink = lastVisitedRoute.url
