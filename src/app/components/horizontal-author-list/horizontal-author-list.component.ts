@@ -13,6 +13,7 @@ import { enUS } from 'src/locales/locales'
 export class HorizontalAuthorListComponent {
 	locale = enUS.horizontalAuthorList
 	authors: AuthorListItem[] = []
+	loading: boolean = true
 
 	constructor(
 		public dataService: DataService,
@@ -49,6 +50,8 @@ export class HorizontalAuthorListComponent {
 
 			this.authors.push(authorItem)
 		}
+
+		this.loading = false
 	}
 
 	NavigateToAuthor(uuid: string) {
