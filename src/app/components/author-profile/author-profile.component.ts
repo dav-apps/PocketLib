@@ -27,6 +27,7 @@ export class AuthorProfileComponent {
 	@Input() uuid: string
 	@Output() loaded = new EventEmitter()
 	collectionsLoaded: boolean = false
+	seriesLoaded: boolean = false
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -42,6 +43,7 @@ export class AuthorProfileComponent {
 		twitterUsername: "",
 		bios: [],
 		collections: [],
+		series: [],
 		profileImage: false,
 		profileImageBlurhash: null
 	}
@@ -179,6 +181,7 @@ export class AuthorProfileComponent {
 		}
 
 		this.collectionsLoaded = true
+		this.seriesLoaded = true
 		this.loaded.emit()
 	}
 
@@ -562,6 +565,7 @@ export class AuthorProfileComponent {
 				twitterUsername: responseData.twitter_username,
 				bios: responseData.bios,
 				collections: [],
+				series: [],
 				profileImage: responseData.profile_image,
 				profileImageBlurhash: responseData.profile_image_blurhash
 			}

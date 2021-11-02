@@ -295,6 +295,7 @@ const enDefaults = {
 	},
 	authorProfile: {
 		yourBooks: "Your books",
+		yourBookSeries: "Your book series",
 		uploadProfileImage: "Upload profile image",
 		addYourBio: "Add your biography",
 		bioTextfieldPlaceholder: "Your biography",
@@ -697,6 +698,7 @@ const deDefaults = {
 	},
 	authorProfile: {
 		yourBooks: "Deine Bücher",
+		yourBookSeries: "Deine Buch-Reihen",
 		uploadProfileImage: "Profilbild hochladen",
 		addYourBio: "Biographie angeben",
 		bioTextfieldPlaceholder: "Deine Biographie",

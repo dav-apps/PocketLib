@@ -167,6 +167,27 @@
 					*ngFor="let collection of collections">
 				</pocketlib-horizontal-book-card>
 			</div>
+
+			<!-- List of series -->
+			<h3 class="text-center font-weight-light mb-3 mb-md-4 mt-md-5 text-color">
+				{{ locale.yourBookSeries }}
+			</h3>
+
+			<div class="mt-3" *ngIf="!seriesLoaded">
+				<fluent-progress-ring
+					class="mx-auto"
+					style="width: 28px; height: 28px">
+				</fluent-progress-ring>
+			</div>
+
+			<div *ngIf="seriesLoaded">
+				<pocketlib-add-list-item
+					[link]="newBookPageLink.path"
+					[linkParams]="newBookPageLink.params">
+				</pocketlib-add-list-item>
+
+
+			</div>
 		</div>
 
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="authorMode == 0">
@@ -369,6 +390,27 @@
 						[link]="collection.books.length == 1 ? ('/author/book/' + collection.books[0].uuid) : ('/author/collection/' + collection.uuid)"
 						*ngFor="let collection of collections">
 					</pocketlib-horizontal-book-card>
+				</div>
+
+				<!-- List of series -->
+				<h3 class="text-center font-weight-light mb-3 mb-md-4 mt-md-5 text-color">
+					{{ locale.yourBookSeries }}
+				</h3>
+
+				<div class="mt-3" *ngIf="!seriesLoaded">
+					<fluent-progress-ring
+						class="mx-auto"
+						style="width: 28px; height: 28px">
+					</fluent-progress-ring>
+				</div>
+	
+				<div *ngIf="seriesLoaded">
+					<pocketlib-add-list-item
+						[link]="newBookPageLink.path"
+						[linkParams]="newBookPageLink.params">
+					</pocketlib-add-list-item>
+	
+	
 				</div>
 			</div>
 
