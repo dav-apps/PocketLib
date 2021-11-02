@@ -78,6 +78,7 @@ export class AuthorSetupPageComponent {
 				twitterUsername: responseData.twitter_username,
 				bios: [],
 				collections: [],
+				series: [],
 				profileImage: false,
 				profileImageBlurhash: null
 			}

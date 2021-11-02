@@ -97,6 +97,7 @@ export class DataService {
 							twitterUsername: author.twitter_username,
 							bios: author.bios,
 							collections: author.collections,
+							series: author.series,
 							profileImage: author.profile_image,
 							profileImageBlurhash: author.profile_image_blurhash
 						})
@@ -112,6 +113,7 @@ export class DataService {
 						twitterUsername: responseData.twitter_username,
 						bios: responseData.bios,
 						collections: responseData.collections,
+						series: responseData.series,
 						profileImage: responseData.profile_image,
 						profileImageBlurhash: responseData.profile_image_blurhash
 					}

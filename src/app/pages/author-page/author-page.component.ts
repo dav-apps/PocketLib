@@ -159,6 +159,7 @@ export class AuthorPageComponent {
 				twitterUsername: responseData.twitter_username,
 				bios: responseData.bios,
 				collections: responseData.collections,
+				series: responseData.series,
 				profileImage: responseData.profile_image,
 				profileImageBlurhash: responseData.profile_image_blurhash
 			})

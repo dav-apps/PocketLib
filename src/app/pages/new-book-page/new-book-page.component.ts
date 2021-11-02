@@ -38,6 +38,7 @@ export class NewBookPageComponent {
 		twitterUsername: null,
 		bios: [],
 		collections: [],
+		series: [],
 		profileImage: false,
 		profileImageBlurhash: null
 	}

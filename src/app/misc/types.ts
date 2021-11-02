@@ -48,6 +48,14 @@ export interface Author {
 			file: boolean
 		}[]
 	}[]
+	series: {
+		uuid: string,
+		names: {
+			name: string,
+			language: string
+		}[],
+		collections: string[]
+	}[]
 	profileImage: boolean
 	profileImageBlurhash: string
 }

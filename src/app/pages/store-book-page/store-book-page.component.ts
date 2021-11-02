@@ -64,6 +64,7 @@ export class StoreBookPageComponent {
 		twitterUsername: null,
 		bios: [],
 		collections: [],
+		series: [],
 		profileImage: false,
 		profileImageBlurhash: null
 	}
