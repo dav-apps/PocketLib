@@ -36,17 +36,7 @@ export interface Author {
 			name: string,
 			language: string
 		}[],
-		books: {
-			uuid: string,
-			title: string,
-			description: string,
-			language: string,
-			status: BookStatus,
-			cover: boolean,
-			coverContent: string,
-			coverBlurhash: string,
-			file: boolean
-		}[]
+		books: StoreBook[]
 	}[]
 	series: {
 		uuid: string,
@@ -58,6 +48,18 @@ export interface Author {
 	}[]
 	profileImage: boolean
 	profileImageBlurhash: string
+}
+
+export interface StoreBook {
+	uuid: string,
+	title: string,
+	description: string,
+	language: string,
+	status: BookStatus,
+	cover: boolean,
+	coverContent: string,
+	coverBlurhash: string,
+	file: boolean
 }
 
 export interface Category {

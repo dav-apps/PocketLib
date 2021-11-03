@@ -217,6 +217,9 @@ const enDefaults = {
 			description: "Specify the name of your book series.",
 			nameTextfieldPlaceholder: "Name of the book series"
 		},
+		bookSelectionSection: {
+			description: "Choose the books that belong to a series."
+		},
 		previous: "Previous",
 		next: "Next",
 		finish: "Finish"
@@ -629,6 +632,9 @@ const deDefaults = {
 		nameSection: {
 			description: "Gib einen Namen für deine Buch-Reihe an.",
 			nameTextfieldPlaceholder: "Name der Buch-Reihe"
+		},
+		bookSelectionSection: {
+			description: "Wähle die Bücher, die zu einer Reihe gehören."
 		},
 		previous: "Zurück",
 		next: "Weiter",

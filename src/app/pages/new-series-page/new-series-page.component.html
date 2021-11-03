@@ -25,6 +25,8 @@
 		[section]="section"
 		[visibleSection]="visibleSection"
 		[forwardNavigation]="forwardNavigation"
+		[books]="selectableBooks"
+		(selectedBooksChange)="SelectedBooksChange($event)"
 		(previous)="Previous()"
 		(finish)="Finish()">
 	</pocketlib-new-series-page-book-selection-section>

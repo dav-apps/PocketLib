@@ -1,8 +1,9 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
+import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { Author } from 'src/app/misc/types'
+import { Author, StoreBook } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -40,8 +41,14 @@ export class NewSeriesPageComponent {
 	nameSubmitted: boolean = false
 	//#endregion
 
+	//#region Book selection
+	selectableBooks: StoreBook[] = []
+	selectedBooks: string[] = []
+	//#endregion
+
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private routingService: RoutingService,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -72,6 +79,19 @@ export class NewSeriesPageComponent {
 			this.GoBack()
 			return
 		}
+
+		// Load the books of the author
+		await this.apiService.LoadCollectionsOfAuthor(this.author)
+
+		// Get the books that can be selected (status = review, published or hidden; language = current language)
+		for (let collection of this.author.collections) {
+			for (let book of collection.books) {
+				if (book.status > 0 && book.language == this.dataService.supportedLocale) {
+					this.selectableBooks.push(book)
+					break
+				}
+			}
+		}
 	}
 
 	GoBack() {
@@ -85,6 +105,10 @@ export class NewSeriesPageComponent {
 
 		this.submittedName = this.name
 		this.nameSubmitted = true
+	}
+
+	SelectedBooksChange(selectedBooks: string[]) {
+		this.selectedBooks = selectedBooks
 	}
 
 	Previous() {
