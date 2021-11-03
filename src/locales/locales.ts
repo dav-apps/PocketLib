@@ -211,6 +211,16 @@ const enDefaults = {
 		next: "Next",
 		finish: "Finish"
 	},
+	newSeriesPage: {
+		title: "Create book series",
+		nameSection: {
+			description: "Specify the name of your book series.",
+			nameTextfieldPlaceholder: "Name of the book series"
+		},
+		previous: "Previous",
+		next: "Next",
+		finish: "Finish"
+	},
 	loginPage: {
 		title: "Log in to dav",
 		emailTextfieldLabel: "Email",
@@ -610,6 +620,16 @@ const deDefaults = {
 			leave: "Verlassen"
 		},
 		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
+		previous: "Zurück",
+		next: "Weiter",
+		finish: "Fertigstellen"
+	},
+	newSeriesPage: {
+		title: "Buch-Reihe erstellen",
+		nameSection: {
+			description: "Gib einen Namen für deine Buch-Reihe an.",
+			nameTextfieldPlaceholder: "Name der Buch-Reihe"
+		},
 		previous: "Zurück",
 		next: "Weiter",
 		finish: "Fertigstellen"

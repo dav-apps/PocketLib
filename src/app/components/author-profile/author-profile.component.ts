@@ -84,6 +84,10 @@ export class AuthorProfileComponent {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
+	newSeriesPageLink: {
+		path: string,
+		params: any
+	} = { path: "/author/series/new", params: {} }
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -156,7 +160,10 @@ export class AuthorProfileComponent {
 		}
 
 		// Set the new book page link
-		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.author.uuid
+		if (this.dataService.userIsAdmin) {
+			this.newBookPageLink.params["author"] = this.author.uuid
+			this.newSeriesPageLink.params["author"] = this.author.uuid
+		}
 
 		this.SetupBioLanguageDropdown()
 		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)

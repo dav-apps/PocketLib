@@ -1,0 +1,18 @@
+<div
+	class="mx-auto mb-4"
+	[ngClass]="section != 1 ? (forwardNavigation ? 'ms-motion-slideLeftOut' : 'ms-motion-slideRightOut') : (forwardNavigation ? 'ms-motion-slideLeftIn' : 'ms-motion-slideRightIn')"
+	style="max-width: 300px; overflow: hidden"
+	[style.display]="visibleSection != 1 ? 'none' : null">
+
+	<dav-button
+		(click)="Previous()">
+		{{ locale.previous }}
+	</dav-button>
+
+	<dav-button
+		style="float: right"
+		type="accent"
+		(click)="Finish()">
+		{{ locale.finish }}
+	</dav-button>
+</div>

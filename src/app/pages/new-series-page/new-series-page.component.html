@@ -1,0 +1,31 @@
+<!-- Normal layout -->
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0">
+
+	<div class="mt-3 mb-4">
+		<pocketlib-header
+			[title]="nameSubmitted ? submittedName : locale.title"
+			[editButtonVisible]="nameSubmitted"
+			(backButtonClick)="GoBack()"
+			(editButtonClick)="NavigateToSection(0)">
+		</pocketlib-header>
+	</div>
+
+	<!-- Name -->
+	<pocketlib-new-series-page-name-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(submit)="SubmitName($event)">
+	</pocketlib-new-series-page-name-section>
+
+	<!-- Book selection -->
+	<pocketlib-new-series-page-book-selection-section
+		[section]="section"
+		[visibleSection]="visibleSection"
+		[forwardNavigation]="forwardNavigation"
+		(previous)="Previous()"
+		(finish)="Finish()">
+	</pocketlib-new-series-page-book-selection-section>
+</div>
