@@ -182,12 +182,20 @@ export class NewSeriesPageComponent {
 	async Finish() {
 		this.ShowLoadingScreen()
 		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
+		let collectionUuids: string[] = []
+
+		// Get the collection uuids of the books
+		for (let bookUuid of this.selectedBooks) {
+			let collection = this.author.collections.find(collection => collection.books.findIndex(b => b.uuid == bookUuid) != -1)
+			if (collection != null) collectionUuids.push(collection.uuid)
+		}
 
 		// Create the StoreBookSeries
 		let createStoreBookSeriesResponse = await this.apiService.CreateStoreBookSeries({
 			author: authorUuid,
 			name: this.name,
-			language: this.dataService.supportedLocale
+			language: this.dataService.supportedLocale,
+			collections: collectionUuids
 		})
 
 		if (createStoreBookSeriesResponse.status != 201) {

@@ -32,7 +32,7 @@
 						[checked]="book.checked"
 						labelHidden
 						[theme]="dataService.darkTheme ? 'dark' : 'light'"
-						(checked)="ToggleSelectedBook(book)">
+						(change)="ToggleSelectedBook(book)">
 					</dav-checkbox>
 				</div>
 			</div>

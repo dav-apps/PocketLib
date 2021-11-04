@@ -490,13 +490,15 @@ export class ApiService {
 	async CreateStoreBookSeries(params: {
 		author?: string,
 		name: string,
-		language: string
+		language: string,
+		collections?: string[]
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let data = {}
 			if (params.name != null) data["name"] = params.name
 			if (params.language != null) data["language"] = params.language
 			if (params.author != null) data["author"] = params.author
+			if (params.collections != null) data["collections"] = params.collections
 
 			let response = await axios({
 				method: 'post',
