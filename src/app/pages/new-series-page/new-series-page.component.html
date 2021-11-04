@@ -12,6 +12,16 @@
 		</pocketlib-header>
 	</div>
 
+	<!-- Error message bar -->
+	<div
+		class="mb-3 mx-auto"
+		style="max-width: 300px"
+		*ngIf="errorMessage.length > 0">
+		<dav-message-bar type="danger">
+			{{ errorMessage }}
+		</dav-message-bar>
+	</div>
+
 	<!-- Name -->
 	<pocketlib-new-series-page-name-section
 		[section]="section"

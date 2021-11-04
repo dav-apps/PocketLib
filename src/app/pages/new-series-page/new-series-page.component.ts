@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -36,6 +36,7 @@ export class NewSeriesPageComponent {
 		profileImage: false,
 		profileImageBlurhash: null
 	}
+	errorMessage: string = ""
 	//#endregion
 
 	//#region Name variables
@@ -58,6 +59,7 @@ export class NewSeriesPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().newSeriesPage
@@ -162,7 +164,34 @@ export class NewSeriesPageComponent {
 		}, 1)
 	}
 
-	Finish() {
+	HideLoadingScreen() {
+		this.dataService.navbarVisible = true
+		this.loadingScreenVisible = false
+	}
+
+	async Finish() {
 		this.ShowLoadingScreen()
+		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
+
+		// Create the StoreBookSeries
+		let createStoreBookSeriesResponse = await this.apiService.CreateStoreBookSeries({
+			author: authorUuid,
+			name: this.name,
+			language: this.dataService.supportedLocale
+		})
+
+		if (createStoreBookSeriesResponse.status != 201) {
+			this.errorMessage = this.locale.errorMessage
+			this.HideLoadingScreen()
+			return
+		}
+
+		// Redirect to the author profile
+		this.dataService.navbarVisible = true
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid])
+		} else {
+			this.router.navigate(["author"])
+		}
 	}
 }

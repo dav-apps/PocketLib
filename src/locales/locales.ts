@@ -223,6 +223,7 @@ const enDefaults = {
 		loadingScreen: {
 			message: "Creating the book series..."
 		},
+		errorMessage: "An unexpected error occured. Please try it again later.",
 		previous: "Previous",
 		next: "Next",
 		finish: "Finish"
@@ -642,6 +643,7 @@ const deDefaults = {
 		loadingScreen: {
 			message: "Buch-Reihe wird erstellt..."
 		},
+		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
 		previous: "Zurück",
 		next: "Weiter",
 		finish: "Fertigstellen"
