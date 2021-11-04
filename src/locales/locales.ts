@@ -220,6 +220,9 @@ const enDefaults = {
 		bookSelectionSection: {
 			description: "Choose the books that belong to a series."
 		},
+		loadingScreen: {
+			message: "Creating the book series..."
+		},
 		previous: "Previous",
 		next: "Next",
 		finish: "Finish"
@@ -635,6 +638,9 @@ const deDefaults = {
 		},
 		bookSelectionSection: {
 			description: "Wähle die Bücher, die zu einer Reihe gehören."
+		},
+		loadingScreen: {
+			message: "Buch-Reihe wird erstellt..."
 		},
 		previous: "Zurück",
 		next: "Weiter",

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core'
+import { Component, HostListener } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { Author, StoreBook } from 'src/app/misc/types'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -19,6 +20,8 @@ export class NewSeriesPageComponent {
 
 	//#region General variables
 	locale = enUS.newSeriesPage
+	dualScreenLayout: boolean = false
+	dualScreenFoldMargin: number = 0
 	author: Author = {
 		uuid: "",
 		firstName: "",
@@ -35,15 +38,20 @@ export class NewSeriesPageComponent {
 	}
 	//#endregion
 
-	//#region Name
+	//#region Name variables
 	name: string = ""
 	submittedName: string = ""
 	nameSubmitted: boolean = false
 	//#endregion
 
-	//#region Book selection
+	//#region Book selection variables
 	selectableBooks: StoreBook[] = []
 	selectedBooks: string[] = []
+	//#endregion
+
+	//#region Loading screen variables
+	height: number = 400
+	loadingScreenVisible: boolean = false
 	//#endregion
 
 	constructor(
@@ -53,9 +61,15 @@ export class NewSeriesPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().newSeriesPage
+
+		// Check if this is a dual-screen device with a vertical fold
+		let dualScreenSettings = GetDualScreenSettings()
+		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
+		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
+		this.setSize()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
 		// Get the author
@@ -94,6 +108,11 @@ export class NewSeriesPageComponent {
 		}
 	}
 
+	@HostListener('window:resize')
+	setSize() {
+		this.height = window.innerHeight
+	}
+
 	GoBack() {
 		this.routingService.NavigateBack("/author")
 	}
@@ -128,7 +147,22 @@ export class NewSeriesPageComponent {
 		}, 500)
 	}
 
+	ShowLoadingScreen() {
+		this.loadingScreenVisible = true
+
+		setTimeout(() => {
+			this.dataService.navbarVisible = false
+
+			// Set the color of the progress ring
+			let progress = document.getElementsByTagName('circle')
+			if (progress.length > 0) {
+				let item = progress.item(0)
+				item.setAttribute('style', item.getAttribute('style') + ' stroke: white')
+			}
+		}, 1)
+	}
+
 	Finish() {
-		
+		this.ShowLoadingScreen()
 	}
 }

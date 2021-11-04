@@ -31,3 +31,31 @@
 		(finish)="Finish()">
 	</pocketlib-new-series-page-book-selection-section>
 </div>
+
+<div
+	class="ms-motion-slideUpIn"
+	style="background-color: var(--primary); color: white; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 3"
+	[style.height.px]="height"
+	*ngIf="loadingScreenVisible">
+
+	<div
+		class="d-flex justify-content-center"
+		[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
+		[style.height.px]="height">
+
+		<div style="display: inline-block" class="m-auto text-center">
+			<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 20px">
+
+			<mat-progress-spinner
+				class="mx-auto"
+				mode="indeterminate"
+				diameter="30">
+			</mat-progress-spinner>
+
+			<p class="font-weight-light"
+				style="margin-top: 30px; font-size: 18px; color: white">
+				{{ locale.loadingScreen.message }}
+			</p>
+		</div>
+	</div>
+</div>
