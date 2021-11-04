@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
+import { PromiseHolder } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -16,6 +17,7 @@ export class NewSeriesPageComponent {
 	section: number = 0
 	visibleSection: number = 0
 	forwardNavigation: boolean = true
+	loading: boolean = false
 	//#endregion
 
 	//#region General variables
@@ -48,6 +50,7 @@ export class NewSeriesPageComponent {
 	//#region Book selection variables
 	selectableBooks: StoreBook[] = []
 	selectedBooks: string[] = []
+	loadCollectionsPromiseHolder = new PromiseHolder()
 	//#endregion
 
 	//#region Loading screen variables
@@ -108,6 +111,8 @@ export class NewSeriesPageComponent {
 				}
 			}
 		}
+
+		this.loadCollectionsPromiseHolder.Resolve()
 	}
 
 	@HostListener('window:resize')
@@ -119,8 +124,13 @@ export class NewSeriesPageComponent {
 		this.routingService.NavigateBack("/author")
 	}
 
-	SubmitName(name: string) {
+	async SubmitName(name: string) {
 		this.name = name
+
+		// Wait for the collections
+		this.loading = true
+		await this.loadCollectionsPromiseHolder.AwaitResult()
+		this.loading = false
 
 		this.Next()
 

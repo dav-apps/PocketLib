@@ -255,17 +255,15 @@ export class NewBookPageComponent {
 	async SubmitTitle(title: string) {
 		this.title = title
 
-		if (this.title.length >= 3) {
-			// Wait for the collections
-			this.loading = true
-			await this.loadCollectionsPromiseHolder.AwaitResult()
-			this.loading = false
+		// Wait for the collections
+		this.loading = true
+		await this.loadCollectionsPromiseHolder.AwaitResult()
+		this.loading = false
 
-			this.Next()
+		this.Next()
 
-			this.submittedTitle = this.title
-			this.titleSubmitted = true
-		}
+		this.submittedTitle = this.title
+		this.titleSubmitted = true
 	}
 	//#endregion
 

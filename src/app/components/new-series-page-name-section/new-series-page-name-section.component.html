@@ -20,11 +20,18 @@
 		</dav-textfield>
 	</div>
 
-	<dav-button
-		style="float: right"
-		type="accent"
-		[disabled]="name.length < 3"
-		(click)="Submit()">
-		{{ locale.next }}
-	</dav-button>
+	<div class="d-flex" style="float: right">
+		<fluent-progress-ring
+			style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
+			*ngIf="loading">
+		</fluent-progress-ring>
+
+		<dav-button
+			style="float: right"
+			type="accent"
+			[disabled]="name.length < 3 || loading"
+			(click)="Submit()">
+			{{ locale.next }}
+		</dav-button>
+	</div>
 </div>

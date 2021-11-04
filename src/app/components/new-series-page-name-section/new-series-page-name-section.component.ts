@@ -8,6 +8,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class NewSeriesPageNameSectionComponent {
 	locale = enUS.newSeriesPage
+	@Input() loading: boolean = false
 	@Input() section: number = 0
 	@Input() visibleSection: number = 0
 	@Input() forwardNavigation: boolean = false
@@ -21,7 +22,7 @@ export class NewSeriesPageNameSectionComponent {
 	}
 
 	Submit() {
-		if (this.name.length >= 3) {
+		if (this.name.length >= 3 && !this.loading) {
 			this.submit.emit(this.name)
 		}
 	}

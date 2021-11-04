@@ -22,6 +22,8 @@ export class NewBookPageTitleSectionComponent{
 	}
 
 	Submit() {
-		this.submit.emit(this.title)
+		if (this.title.length >= 3 && !this.loading) {
+			this.submit.emit(this.title)
+		}
 	}
 }
