@@ -12,7 +12,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './author-collection-page.component.html'
 })
 export class AuthorCollectionPageComponent {
-	locale = enUS.collectionView
+	locale = enUS.authorCollectionPage
 	uuid: string
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -41,7 +41,7 @@ export class AuthorCollectionPageComponent {
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().collectionView
+		this.locale = this.dataService.GetLocale().authorCollectionPage
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
@@ -118,13 +118,13 @@ export class AuthorCollectionPageComponent {
 
 		// Determine the author mode
 		if (
-			this.dataService.userIsAdmin &&
-			(this.dataService.adminAuthors.findIndex(author => author.uuid == this.collection.author) != -1)
+			this.dataService.userIsAdmin
+			&& (this.dataService.adminAuthors.findIndex(author => author.uuid == this.collection.author) != -1)
 		) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
 		} else if (
-			this.dataService.userAuthor &&
-			this.collection.author == this.dataService.userAuthor.uuid
+			this.dataService.userAuthor
+			&& this.collection.author == this.dataService.userAuthor.uuid
 		) {
 			this.authorMode = AuthorMode.AuthorOfUser
 		}

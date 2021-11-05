@@ -163,6 +163,13 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured"
 		}
 	},
+	authorCollectionPage: {
+		collectionNamesDialog: {
+			header: "Collection name"
+		},
+		noBooks: "This collection contains no books",
+		close: "Close"
+	},
 	newBookPage: {
 		title: "Create book",
 		titleSection: {
@@ -353,13 +360,6 @@ const enDefaults = {
 		cancel: "Cancel",
 		save: "Save",
 		create: "Create"
-	},
-	collectionView: {
-		collectionNamesDialog: {
-			header: "Collection name"
-		},
-		noBooks: "This collection contains no books",
-		close: "Close"
 	},
 	horizontalBookList: {
 		recentlyPublished: "Recently published books",
@@ -583,6 +583,13 @@ const deDefaults = {
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		}
 	},
+	authorCollectionPage: {
+		collectionNamesDialog: {
+			header: "Name der Sammlung"
+		},
+		noBooks: "Diese Sammlung enthält keine Bücher",
+		close: "Schließen"
+	},
 	newBookPage: {
 		title: "Buch erstellen",
 		titleSection: {
@@ -773,13 +780,6 @@ const deDefaults = {
 		cancel: "Abbrechen",
 		save: "Speichern",
 		create: "Erstellen"
-	},
-	collectionView: {
-		collectionNamesDialog: {
-			header: "Name der Sammlung"
-		},
-		noBooks: "Diese Sammlung enthält keine Bücher",
-		close: "Schließen"
 	},
 	horizontalBookList: {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher",
