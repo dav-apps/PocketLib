@@ -185,6 +185,7 @@ export class AuthorProfileComponent {
 		// Get the appropriate language of each collection
 		for (let collection of this.author.collections) {
 			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
+			if (i == -1) continue
 
 			this.collections.push({
 				uuid: collection.uuid,
@@ -196,8 +197,9 @@ export class AuthorProfileComponent {
 		// Get the appropriate language and details of each series
 		for (let series of this.author.series) {
 			let i = FindAppropriateLanguage(this.dataService.supportedLocale, series.names)
-			let language = series.names[i].language
+			if (i == -1) continue
 
+			let language = series.names[i].language
 			let newSeries: SeriesItem = {
 				uuid: series.uuid,
 				name: series.names[i].name,

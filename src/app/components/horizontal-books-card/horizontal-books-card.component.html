@@ -12,14 +12,18 @@
 			class="d-flex align-items-center"
 			style="width: 50%"
 			[style.height.px]="120 + (books.length * 10)">
-			<img
-				[src]="book.coverContent"
+
+			<pocketlib-blurhash-image
 				style="margin-left: 15px; position: absolute"
 				[style.transform]="'translateX(' + (i * 15) + 'px) translateY(' + ((i * 10) - ((books.length - 1) * 5)) + 'px)'"
 				[style.zIndex]="books.length - i"
-				class="rounded"
+				[src]="book.coverContent"
+				[fallback]="dataService.defaultStoreBookCover"
+				[blurhash]="book.coverBlurhash"
+				[title]="book.title"
 				height="100"
 				*ngFor="let book of books; let i = index">
+			</pocketlib-blurhash-image>
 		</div>
 
 		<div class="card-body my-auto" style="width: 50%">
