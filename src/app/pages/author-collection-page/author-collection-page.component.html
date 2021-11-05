@@ -104,9 +104,9 @@
 	(defaultButtonClick)="collectionNamesDialogVisible = false">
 
 	<!-- Names -->
-	<pocketlib-edit-collection-names 
-		[collectionNames]="collectionNames" 
-		[uuid]="uuid" 
+	<pocketlib-edit-names
+		[names]="collectionNames"
+		[uuid]="uuid"
 		(update)="UpdateCollectionName($event)">
-	</pocketlib-edit-collection-names>
+	</pocketlib-edit-names>
 </dav-dialog>

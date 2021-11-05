@@ -298,7 +298,7 @@ const enDefaults = {
 	storeBooksPage: {
 		allBooksTitle: "All books"
 	},
-	editCollectionNames: {
+	editNames: {
 		nameTextfieldPlaceholder: "Name of your collection",
 		addLanguageDropdownLabel: "Add language",
 		selectLanguage: "Select a language",
@@ -721,7 +721,7 @@ const deDefaults = {
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
 	},
-	editCollectionNames: {
+	editNames: {
 		nameTextfieldPlaceholder: "Name deiner Sammlung",
 		addLanguageDropdownLabel: "Sprache hinzufügen",
 		selectLanguage: "Wähle eine Sprache",

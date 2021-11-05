@@ -1,19 +1,19 @@
-<div class="mb-3" style="font-size: 16px" *ngFor="let collectionName of collectionNames">
-	<p class="mb-1 font-weight-light text-color">{{ collectionName.fullLanguage }}: </p>
+<div class="mb-3" style="font-size: 16px" *ngFor="let name of names">
+	<p class="mb-1 font-weight-light text-color">{{ name.fullLanguage }}: </p>
 
 	<div class="d-flex">
-		<div style="width: 80%" *ngIf="!collectionName.edit">
-			<p class="mb-0 text-color" style="line-height: 30px">{{ collectionName.name }}</p>
+		<div style="width: 80%" *ngIf="!name.edit">
+			<p class="mb-0 text-color" style="line-height: 30px">{{ name.name }}</p>
 		</div>
 
-		<form style="width: 80%" *ngIf="collectionName.edit">
+		<form style="width: 80%" *ngIf="name.edit">
 			<dav-textfield
-				[value]="collectionName.name"
+				[value]="name.name"
 				[placeholder]="locale.nameTextfieldPlaceholder"
-				[errorMessage]="collectionName.errorMessage"
+				[errorMessage]="name.errorMessage"
 				[theme]="dataService.darkTheme ? 'dark' : 'light'"
-				(change)="collectionName.name = $event.detail.value; collectionName.errorMessage = ''"
-				(enter)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
+				(change)="name.name = $event.detail.value; name.errorMessage = ''"
+				(enter)="name.edit ? UpdateName(name) : name.edit = true">
 			</dav-textfield>
 		</form>
 
@@ -21,9 +21,9 @@
 			type="button"
 			class="btn btn-sm ml-2 text-color"
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
-			(click)="collectionName.edit ? UpdateName(collectionName) : collectionName.edit = true">
-			<i class="ms-Icon ms-Icon--Save" aria-hidden="true" *ngIf="collectionName.edit"></i>
-			<i class="ms-Icon ms-Icon--Edit" aria-hidden="true" *ngIf="!collectionName.edit"></i>
+			(click)="name.edit ? UpdateName(name) : name.edit = true">
+			<i class="ms-Icon ms-Icon--Save" aria-hidden="true" *ngIf="name.edit"></i>
+			<i class="ms-Icon ms-Icon--Edit" aria-hidden="true" *ngIf="!name.edit"></i>
 		</button>
 	</div>
 </div>

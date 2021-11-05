@@ -6,14 +6,25 @@ import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
+interface Name {
+	name: string
+	language: string
+	fullLanguage: string
+	edit: boolean
+	errorMessage: string
+}
+
+type NameType = "collection" | "series"
+
 @Component({
-	selector: 'pocketlib-edit-collection-names',
-	templateUrl: './edit-collection-names.component.html'
+	selector: 'pocketlib-edit-names',
+	templateUrl: './edit-names.component.html'
 })
-export class EditCollectionNamesComponent {
-	locale = enUS.editCollectionNames
-	@Input() collectionNames: CollectionName[] = []
+export class EditNamesComponent {
+	locale = enUS.editNames
+	@Input() names: Name[] = []
 	@Input() uuid: string
+	@Input() type: NameType = "collection"
 	@Output() update = new EventEmitter()
 	addLanguageSelectedKey: string = "default"
 	addLanguageOptions: DropdownOption[] = []
@@ -24,7 +35,7 @@ export class EditCollectionNamesComponent {
 		private dataService: DataService,
 		private apiService: ApiService
 	) {
-		this.locale = this.dataService.GetLocale().editCollectionNames
+		this.locale = this.dataService.GetLocale().editNames
 	}
 
 	ngOnInit() {
@@ -36,7 +47,7 @@ export class EditCollectionNamesComponent {
 
 		let languages = this.dataService.GetLocale().misc.languages
 		for (let language of Object.keys(languages)) {
-			if (this.collectionNames.findIndex(name => name.language == language) == -1) {
+			if (this.names.findIndex(name => name.language == language) == -1) {
 				// Add the language as an option to add
 				this.addLanguageOptions.push({
 					key: language,
@@ -52,7 +63,7 @@ export class EditCollectionNamesComponent {
 		let i = this.addLanguageOptions.findIndex(option => option.key == this.addLanguageSelectedKey)
 		if (i == -1) return
 
-		// Create the collection name on the server
+		// Create the name on the server
 		let setCollectionNameResponse = await this.apiService.SetStoreBookCollectionName({
 			uuid: this.uuid,
 			language: this.addLanguageSelectedKey,
@@ -60,7 +71,7 @@ export class EditCollectionNamesComponent {
 		})
 
 		if (setCollectionNameResponse.status == 200) {
-			this.collectionNames.push({
+			this.names.push({
 				name: this.newLanguageName,
 				language: this.addLanguageSelectedKey,
 				fullLanguage: this.addLanguageOptions[i].value,
@@ -89,32 +100,32 @@ export class EditCollectionNamesComponent {
 		}
 	}
 
-	async UpdateName(collectionName: CollectionName) {
-		collectionName.errorMessage = ""
+	async UpdateName(name: Name) {
+		name.errorMessage = ""
 
-		// Update the collection name on the server
+		// Update the name on the server
 		let setCollectionNameResponse = await this.apiService.SetStoreBookCollectionName({
 			uuid: this.uuid,
-			language: collectionName.language,
-			name: collectionName.name
+			language: name.language,
+			name: name.name
 		})
 
 		if (setCollectionNameResponse.status == 200) {
-			collectionName.edit = false
+			name.edit = false
 			this.update.emit((setCollectionNameResponse as ApiResponse<any>).data)
 		} else {
 			switch ((setCollectionNameResponse as ApiErrorResponse).errors[0].code) {
 				case ErrorCodes.NameMissing:
-					collectionName.errorMessage = this.locale.errors.nameMissing
+					name.errorMessage = this.locale.errors.nameMissing
 					break
 				case ErrorCodes.NameTooShort:
-					collectionName.errorMessage = this.locale.errors.nameTooShort
+					name.errorMessage = this.locale.errors.nameTooShort
 					break
 				case ErrorCodes.NameTooLong:
-					collectionName.errorMessage = this.locale.errors.nameTooLong
+					name.errorMessage = this.locale.errors.nameTooLong
 					break
 				default:
-					collectionName.errorMessage = this.locale.errors.unexpectedError
+					name.errorMessage = this.locale.errors.unexpectedError
 					break
 			}
 		}
@@ -123,12 +134,4 @@ export class EditCollectionNamesComponent {
 	AddLanguageDropdownChange(event: CustomEvent) {
 		this.addLanguageSelectedKey = event.detail.key
 	}
-}
-
-interface CollectionName {
-	name: string
-	language: string
-	fullLanguage: string
-	edit: boolean
-	errorMessage: string
 }
