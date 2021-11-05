@@ -170,6 +170,9 @@ const enDefaults = {
 		noBooks: "This collection contains no books",
 		close: "Close"
 	},
+	authorSeriesPage: {
+
+	},
 	newBookPage: {
 		title: "Create book",
 		titleSection: {
@@ -589,6 +592,9 @@ const deDefaults = {
 		},
 		noBooks: "Diese Sammlung enthält keine Bücher",
 		close: "Schließen"
+	},
+	authorSeriesPage: {
+
 	},
 	newBookPage: {
 		title: "Buch erstellen",

@@ -1,0 +1,15 @@
+<!-- Normal layout -->
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
+	*ngIf="!dualScreenLayout">
+
+	<div class="mt-3 mb-4">
+		<pocketlib-header
+			[title]="seriesName.name"
+			[backButtonLink]="backButtonLink">
+		</pocketlib-header>
+	</div>
+
+
+</div>

@@ -73,6 +73,7 @@ import { SettingsPageComponent } from './pages/settings-page/settings-page.compo
 import { AuthorPageComponent } from './pages/author-page/author-page.component'
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component'
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component'
+import { AuthorSeriesPageComponent } from './pages/author-series-page/author-series-page.component'
 import { AuthorBookPageComponent } from './pages/author-book-page/author-book-page.component'
 import { NewBookPageComponent } from './pages/new-book-page/new-book-page.component'
 import { NewSeriesPageComponent } from './pages/new-series-page/new-series-page.component'
@@ -129,6 +130,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		AuthorPageComponent,
 		AuthorSetupPageComponent,
 		AuthorCollectionPageComponent,
+		AuthorSeriesPageComponent,
 		AuthorBookPageComponent,
 		NewBookPageComponent,
 		NewSeriesPageComponent,
