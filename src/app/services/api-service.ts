@@ -523,6 +523,38 @@ export class ApiService {
 	}
 	//#endregion
 
+	//#region StoreBookSeriesName
+	async SetStoreBookSeriesName(params: {
+		uuid: string,
+		language: string,
+		name: string
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
+		try {
+			let response = await axios({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/store/series/${params.uuid}/name/${params.language}`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': 'application/json'
+				},
+				data: {
+					name: params.name
+				}
+			})
+
+			return {
+				status: response.status,
+				data: response.data
+			}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.SetStoreBookSeriesName(params)
+		}
+	}
+	//#endregion
+
 	//#region StoreBook
 	async CreateStoreBook(params: {
 		author?: string,

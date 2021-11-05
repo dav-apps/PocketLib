@@ -64,13 +64,23 @@ export class EditNamesComponent {
 		if (i == -1) return
 
 		// Create the name on the server
-		let setCollectionNameResponse = await this.apiService.SetStoreBookCollectionName({
-			uuid: this.uuid,
-			language: this.addLanguageSelectedKey,
-			name: this.newLanguageName
-		})
+		let setNameResponse: ApiResponse<any> | ApiErrorResponse
 
-		if (setCollectionNameResponse.status == 200) {
+		if (this.type == "collection") {
+			setNameResponse = await this.apiService.SetStoreBookCollectionName({
+				uuid: this.uuid,
+				language: this.addLanguageSelectedKey,
+				name: this.newLanguageName
+			})
+		} else {
+			setNameResponse = await this.apiService.SetStoreBookSeriesName({
+				uuid: this.uuid,
+				language: this.addLanguageSelectedKey,
+				name: this.newLanguageName
+			})
+		}
+
+		if (setNameResponse.status == 200) {
 			this.names.push({
 				name: this.newLanguageName,
 				language: this.addLanguageSelectedKey,
@@ -83,7 +93,7 @@ export class EditNamesComponent {
 			this.addLanguageOptions.splice(i, 1)
 			this.addLanguageSelectedKey = "default"
 		} else {
-			switch ((setCollectionNameResponse as ApiErrorResponse).errors[0].code) {
+			switch ((setNameResponse as ApiErrorResponse).errors[0].code) {
 				case ErrorCodes.NameMissing:
 					this.newLanguageNameError = this.locale.errors.nameMissing
 					break
@@ -104,17 +114,27 @@ export class EditNamesComponent {
 		name.errorMessage = ""
 
 		// Update the name on the server
-		let setCollectionNameResponse = await this.apiService.SetStoreBookCollectionName({
-			uuid: this.uuid,
-			language: name.language,
-			name: name.name
-		})
+		let setNameResponse: ApiResponse<any> | ApiErrorResponse
 
-		if (setCollectionNameResponse.status == 200) {
-			name.edit = false
-			this.update.emit((setCollectionNameResponse as ApiResponse<any>).data)
+		if (this.type == "collection") {
+			setNameResponse = await this.apiService.SetStoreBookCollectionName({
+				uuid: this.uuid,
+				language: name.language,
+				name: name.name
+			})
 		} else {
-			switch ((setCollectionNameResponse as ApiErrorResponse).errors[0].code) {
+			setNameResponse = await this.apiService.SetStoreBookSeriesName({
+				uuid: this.uuid,
+				language: name.language,
+				name: name.name
+			})
+		}
+
+		if (setNameResponse.status == 200) {
+			name.edit = false
+			this.update.emit((setNameResponse as ApiResponse<any>).data)
+		} else {
+			switch ((setNameResponse as ApiErrorResponse).errors[0].code) {
 				case ErrorCodes.NameMissing:
 					name.errorMessage = this.locale.errors.nameMissing
 					break

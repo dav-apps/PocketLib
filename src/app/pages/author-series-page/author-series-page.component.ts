@@ -16,9 +16,11 @@ export class AuthorSeriesPageComponent {
 	uuid: string = ""
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
+	author: string = ""
 	series: StoreBookSeries = { uuid: "", names: [], collections: [] }
 	seriesName: { name: string, language: string } = { name: "", language: "" }
-	author: string = ""
+	seriesNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
+	namesDialogVisible: boolean = false
 	backButtonLink: string = ""
 
 	constructor(
@@ -71,5 +73,43 @@ export class AuthorSeriesPageComponent {
 
 		// Set the back button link
 		this.backButtonLink =  this.dataService.userIsAdmin ? `/author/${this.author}` : `/author`
+	}
+
+	ShowNamesDialog() {
+		// Update the series names for the EditNames component
+		this.seriesNames = []
+		let languages = this.dataService.GetLocale().misc.languages
+
+		for (let seriesName of this.series.names) {
+			this.seriesNames.push({
+				name: seriesName.name,
+				language: seriesName.language,
+				fullLanguage: seriesName.language == "de" ? languages.de : languages.en,
+				edit: false
+			})
+		}
+
+		this.namesDialogVisible = true
+	}
+
+	UpdateSeriesName(seriesName: { name: string, language: string }) {
+		if (this.seriesName.language == seriesName.language) {
+			// Update the title
+			this.seriesName.name = seriesName.name
+		} else {
+			let i = this.series.names.findIndex(name => name.language == seriesName.language)
+
+			if (i == -1) {
+				// Add the name to the series
+				this.series.names.push(seriesName)
+
+				// Set the title if the name for the current language was just added
+				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.series.names)
+				if (j != -1) this.seriesName = this.series.names[j]
+			} else {
+				// Update the name in the series
+				this.series.names[i].name = seriesName.name
+			}
+		}
 	}
 }
