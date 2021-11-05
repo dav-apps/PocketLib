@@ -17,7 +17,6 @@ export class AuthorCollectionPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	authorMode: AuthorMode = AuthorMode.Normal
-	collectionName: { name: string, language: string } = { name: "", language: "" }
 	collection: {
 		uuid: string,
 		author: string,
@@ -26,6 +25,7 @@ export class AuthorCollectionPageComponent {
 		leftScreenBooks: BookListItem[],
 		rightScreenBooks: BookListItem[]
 	} = { uuid: "", author: "", names: [], books: [], leftScreenBooks: [], rightScreenBooks: [] }
+	collectionName: { name: string, language: string } = { name: "", language: "" }
 	collectionNamesDialogVisible: boolean = false
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	showAddLanguageButton: boolean = false
@@ -57,7 +57,7 @@ export class AuthorCollectionPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
-		
+
 		// Get the collection
 		let getCollectionResponse = await this.apiService.GetStoreBookCollection({
 			uuid: this.uuid

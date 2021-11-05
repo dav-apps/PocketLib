@@ -2,6 +2,7 @@
 	class="card my-4 cursor theme-background-color-secondary"
 	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
 	style="text-decoration: none; transition: 0.12s"
+	[routerLink]="link"
 	(mouseover)="hovered = true"
 	(mouseout)="hovered = false"
 	(focusin)="hovered = true"

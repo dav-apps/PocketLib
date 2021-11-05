@@ -18,6 +18,24 @@ export interface AuthorListItem {
 	profileImageAlt: string
 }
 
+export interface StoreBookCollection {
+	uuid: string
+	names: {
+		name: string
+		language: string
+	}[]
+	books: StoreBook[]
+}
+
+export interface StoreBookSeries {
+	uuid: string
+	names: {
+		name: string
+		language: string
+	}[]
+	collections: string[]
+}
+
 export interface Author {
 	uuid: string
 	firstName: string
@@ -30,22 +48,8 @@ export interface Author {
 		bio: string,
 		language: string
 	}[]
-	collections: {
-		uuid: string,
-		names: {
-			name: string,
-			language: string
-		}[],
-		books: StoreBook[]
-	}[]
-	series: {
-		uuid: string,
-		names: {
-			name: string,
-			language: string
-		}[],
-		collections: string[]
-	}[]
+	collections: StoreBookCollection[]
+	series: StoreBookSeries[]
 	profileImage: boolean
 	profileImageBlurhash: string
 }

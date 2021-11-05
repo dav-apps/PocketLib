@@ -189,6 +189,7 @@
 				<pocketlib-horizontal-books-card
 					[title]="s.name"
 					[books]="s.books"
+					[link]="'/author/series/' + s.uuid"
 					*ngFor="let s of series">
 				</pocketlib-horizontal-books-card>
 			</div>

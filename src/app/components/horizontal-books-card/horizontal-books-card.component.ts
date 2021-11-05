@@ -9,6 +9,7 @@ import { DataService } from 'src/app/services/data-service'
 export class HorizontalBooksCardComponent {
 	@Input() title: string = ""
 	@Input() books: StoreBook[] = []
+	@Input() link: string = ""
 	hovered: boolean = false
 	fontSize: number = 20
 
