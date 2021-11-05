@@ -100,6 +100,8 @@ export class EditNamesComponent {
 				errorMessage: ""
 			})
 
+			this.update.emit((setNameResponse as ApiResponse<any>).data)
+
 			// Remove the selected option and reset the dropdown
 			this.addLanguageOptions.splice(i, 1)
 			this.addLanguageSelectedKey = "default"

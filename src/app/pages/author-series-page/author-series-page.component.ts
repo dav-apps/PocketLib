@@ -121,7 +121,7 @@ export class AuthorSeriesPageComponent {
 				// Add the name to the series
 				this.series.names.push(seriesName)
 
-				// Set the title if the name for the current language was just added
+				// Update the title if the name for the current language was added
 				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.series.names)
 				if (j != -1) this.seriesName = this.series.names[j]
 			} else {

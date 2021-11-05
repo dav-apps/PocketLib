@@ -163,7 +163,7 @@ export class AuthorCollectionPageComponent {
 				// Add the name to the collection
 				this.collection.names.push(collectionName)
 
-				// Set the title if the name for the current language was just added
+				// Update the title if the name for the current language was added
 				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
 				if (j != -1) this.collectionName = this.collection.names[j]
 			} else {
