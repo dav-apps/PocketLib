@@ -186,7 +186,11 @@
 					[linkParams]="newSeriesPageLink.params">
 				</pocketlib-add-list-item>
 
-
+				<pocketlib-horizontal-books-card
+					[title]="s.name"
+					[books]="s.books"
+					*ngFor="let s of series">
+				</pocketlib-horizontal-books-card>
 			</div>
 		</div>
 
@@ -403,14 +407,18 @@
 						style="width: 28px; height: 28px">
 					</fluent-progress-ring>
 				</div>
-	
+
 				<div *ngIf="seriesLoaded">
 					<pocketlib-add-list-item
 						[link]="newSeriesPageLink.path"
 						[linkParams]="newSeriesPageLink.params">
 					</pocketlib-add-list-item>
-	
-	
+
+					<pocketlib-horizontal-books-card
+						[title]="s.name"
+						[books]="s.books"
+						*ngFor="let s of series">
+					</pocketlib-horizontal-books-card>
 				</div>
 			</div>
 
