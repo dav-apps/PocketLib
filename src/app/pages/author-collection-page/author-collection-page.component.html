@@ -1,1 +1,112 @@
-<pocketlib-collection-view [uuid]="uuid"></pocketlib-collection-view>
+<!-- Normal layout -->
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
+	*ngIf="!dualScreenLayout">
+
+	<div class="mt-3 mb-4">
+		<pocketlib-header
+			[title]="collectionName.name"
+			[editButtonVisible]="authorMode != 0"
+			[backButtonLink]="backButtonLink"
+			(editButtonClick)="ShowCollectionNamesDialog()">
+		</pocketlib-header>
+	</div>
+
+	<p class="font-weight-light text-center mt-3 text-color"
+		style="font-size: 18px; font-family: 'Segoe UI'"
+		*ngIf="authorMode == 0 && collection.books.length == 0">
+		{{ locale.noBooks }}
+	</p>
+
+	<div class="col-12 col-md-6 mx-auto">
+		<pocketlib-add-list-item
+			[link]="newBookPageLink.path"
+			[linkParams]="newBookPageLink.params"
+			*ngIf="collection.books.length > 0">
+		</pocketlib-add-list-item>
+
+		<pocketlib-horizontal-book-card
+			[title]="book.title"
+			[coverContent]="book.coverContent"
+			[coverBlurhash]="book.coverBlurhash"
+			[link]="'/author/book/' + book.uuid"
+			*ngFor="let book of collection.books">
+		</pocketlib-horizontal-book-card>
+	</div>
+</div>
+
+<!-- Dual-Screen layout -->
+<div
+	class="d-flex flex-row ms-motion-slideUpIn"
+	*ngIf="dualScreenLayout">
+
+	<!-- Left screen -->
+	<div
+		class="w-50"
+		[style.marginRight.px]="dualScreenFoldMargin">
+
+		<div class="mt-3 mb-4">
+			<pocketlib-header
+				[title]="collectionName.name"
+				[editButtonVisible]="authorMode != 0"
+				[backButtonLink]="backButtonLink"
+				(editButtonClick)="ShowCollectionNamesDialog()">
+			</pocketlib-header>
+		</div>
+
+		<p class="font-weight-light text-center mt-3 text-color"
+			style="font-size: 18px; font-family: 'Segoe UI'"
+			*ngIf="authorMode == 0 && collection.leftScreenBooks.length == 0 && collection.rightScreenBooks.length == 0">
+			{{ locale.noBooks }}
+		</p>
+
+		<div class="mx-auto px-5">
+			<pocketlib-add-list-item
+				[link]="newBookPageLink.path"
+				[linkParams]="newBookPageLink.params"
+				*ngIf="collection.leftScreenBooks.length > 0 || collection.rightScreenBooks.length > 0">
+			</pocketlib-add-list-item>
+	
+			<pocketlib-horizontal-book-card
+				[title]="book.title"
+				[coverContent]="book.coverContent"
+				[coverBlurhash]="book.coverBlurhash"
+				[link]="'/author/book/' + book.uuid"
+				*ngFor="let book of collection.leftScreenBooks">
+			</pocketlib-horizontal-book-card>
+		</div>
+	</div>
+
+	<!-- Right screen -->
+	<div
+		class="w-50"
+		[style.marginLeft.px]="dualScreenFoldMargin">
+
+		<div class="mx-auto px-5" style="margin-top: 78px">
+			<pocketlib-horizontal-book-card
+				[title]="book.title"
+				[coverContent]="book.coverContent"
+				[coverBlurhash]="book.coverBlurhash"
+				[link]="'/author/book/' + book.uuid"
+				*ngFor="let book of collection.rightScreenBooks">
+			</pocketlib-horizontal-book-card>
+		</div>
+	</div>
+</div>
+
+<dav-dialog
+	[header]="locale.collectionNamesDialog.header"
+	[defaultButtonText]="locale.close"
+	[isVisible]="collectionNamesDialogVisible"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'"
+	(dismiss)="collectionNamesDialogVisible = false"
+	(defaultButtonClick)="collectionNamesDialogVisible = false">
+
+	<!-- Names -->
+	<pocketlib-edit-collection-names 
+		[collectionNames]="collectionNames" 
+		[uuid]="uuid" 
+		(update)="UpdateCollectionName($event)">
+	</pocketlib-edit-collection-names>
+</dav-dialog>

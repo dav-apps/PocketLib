@@ -35,7 +35,6 @@ import { EditCollectionNamesComponent } from './components/edit-collection-names
 import { EpubViewerComponent } from './components/epub-viewer/epub-viewer.component'
 import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component'
 import { AuthorProfileComponent } from './components/author-profile/author-profile.component'
-import { CollectionViewComponent } from './components/collection-view/collection-view.component'
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component'
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component'
 import { HorizontalAuthorListItemComponent } from './components/horizontal-author-list-item/horizontal-author-list-item.component'
@@ -93,7 +92,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		EpubViewerComponent,
 		PdfViewerComponent,
 		AuthorProfileComponent,
-		CollectionViewComponent,
 		HorizontalBookListComponent,
 		HorizontalAuthorListComponent,
 		HorizontalAuthorListItemComponent,
