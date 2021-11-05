@@ -10,9 +10,28 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { BookListItem, Author, AuthorMode, BookStatus } from 'src/app/misc/types'
+import { BookListItem, Author, AuthorMode, StoreBook } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
+
+interface CollectionItem {
+	uuid: string
+	name: string
+	books: StoreBook[]
+}
+
+interface SeriesItem {
+	uuid: string
+	name: string
+	books: StoreBook[]
+}
+
+enum BioMode {
+	None = 0,		// If the author has no bios and has not selected to add a bio, show nothing
+	New = 1,			// If the author has selected a language to add, show the input for creating a bio
+	Normal = 2,		// If the author has one or more bios, show the selected bio
+	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
+}
 
 @Component({
 	selector: 'pocketlib-author-profile',
@@ -59,21 +78,8 @@ export class AuthorProfileComponent {
 	newBio: string = ""
 	newBioError: string = ""
 	bioLoading: boolean = false
-	collections: {
-		uuid: string,
-		name: string,
-		books: {
-			uuid: string,
-			title: string,
-			description: string,
-			language: string,
-			status: BookStatus,
-			cover: boolean,
-			coverContent: string,
-			coverBlurhash: string,
-			file: boolean
-		}[]
-	}[] = []
+	collections: CollectionItem[] = []
+	series: SeriesItem[] = []
 	profileImageLoading: boolean = false
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	profileImageAlt: string = ""
@@ -185,6 +191,31 @@ export class AuthorProfileComponent {
 				name: collection.names[i].name,
 				books: collection.books
 			})
+		}
+
+		// Get the appropriate language and details of each series
+		for (let series of this.author.series) {
+			let i = FindAppropriateLanguage(this.dataService.supportedLocale, series.names)
+			let language = series.names[i].language
+
+			let newSeries: SeriesItem = {
+				uuid: series.uuid,
+				name: series.names[i].name,
+				books: []
+			}
+
+			for (let collectionUuid of series.collections) {
+				let collection = this.author.collections.find(c => c.uuid == collectionUuid)
+				if (collection == null) continue
+
+				// Get the first book in the appropriate language
+				let book = collection.books.find(book => book.language == language)
+				if (book == null) continue
+
+				newSeries.books.push(book)
+			}
+
+			this.series.push(newSeries)
 		}
 
 		this.collectionsLoaded = true
@@ -623,11 +654,4 @@ export class AuthorProfileComponent {
 		if (!twitterUsername) return ""
 		return `https://twitter.com/${twitterUsername}`
 	}
-}
-
-enum BioMode {
-	None = 0,		// If the author has no bios and has not selected to add a bio, show nothing
-	New = 1,			// If the author has selected a language to add, show the input for creating a bio
-	Normal = 2,		// If the author has one or more bios, show the selected bio
-	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
 }
