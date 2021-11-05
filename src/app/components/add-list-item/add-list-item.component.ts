@@ -23,7 +23,7 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 		])
 	]
 })
-export class AddListItemComponent{
+export class AddListItemComponent {
 	@Input() link: string = ""
 	@Input() linkParams = {}
 	hover: boolean = false

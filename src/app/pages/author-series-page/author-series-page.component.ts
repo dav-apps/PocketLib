@@ -1,10 +1,10 @@
 import { Component } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { StoreBookSeries } from 'src/app/misc/types'
+import { Author, StoreBook, StoreBookSeries } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -16,18 +16,19 @@ export class AuthorSeriesPageComponent {
 	uuid: string = ""
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	author: string = ""
+	author: Author
 	series: StoreBookSeries = { uuid: "", names: [], collections: [] }
+	books: StoreBook[] = []
 	seriesName: { name: string, language: string } = { name: "", language: "" }
 	seriesNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	namesDialogVisible: boolean = false
 	backButtonLink: string = ""
+	addButtonHover: boolean = false
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
-		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorSeriesPage
@@ -53,11 +54,13 @@ export class AuthorSeriesPageComponent {
 				let series = author.series.find(s => s.uuid == this.uuid)
 				if (series != null) {
 					this.series = series
-					this.author = author.uuid
+					this.author = author
 					break
 				}
 			}
 		} else if (this.dataService.userAuthor != null) {
+			this.author = this.dataService.userAuthor
+
 			let series = this.dataService.userAuthor.series.find(s => s.uuid == this.uuid)
 			if (series != null) this.series = series
 		}
@@ -72,7 +75,22 @@ export class AuthorSeriesPageComponent {
 		if (i != -1) this.seriesName = this.series.names[i]
 
 		// Set the back button link
-		this.backButtonLink =  this.dataService.userIsAdmin ? `/author/${this.author}` : `/author`
+		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.author.uuid}` : `/author`
+
+		// Load the collection of the author
+		await this.apiService.LoadCollectionsOfAuthor(this.author)
+
+		// Get the books of the series
+		for (let collectionUuid of this.series.collections) {
+			let collection = this.author.collections.find(c => c.uuid == collectionUuid)
+			if (collection == null) continue
+
+			// Get the first book in the appropriate language
+			let book = collection.books.find(book => book.language == this.seriesName.language)
+			if (book == null) continue
+
+			this.books.push(book)
+		}
 	}
 
 	ShowNamesDialog() {
@@ -111,5 +129,9 @@ export class AuthorSeriesPageComponent {
 				this.series.names[i].name = seriesName.name
 			}
 		}
+	}
+
+	ShowAddBookDialog() {
+		
 	}
 }
