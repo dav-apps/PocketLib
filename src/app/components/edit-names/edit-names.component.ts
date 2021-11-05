@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core'
 import { ApiErrorResponse, ApiResponse } from 'dav-js'
 import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
@@ -39,6 +39,16 @@ export class EditNamesComponent {
 	}
 
 	ngOnInit() {
+		this.LoadLanguageOptions()
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes.names != null) {
+			this.LoadLanguageOptions()
+		}
+	}
+
+	LoadLanguageOptions() {
 		this.addLanguageOptions = [{
 			key: "default",
 			value: this.locale.selectLanguage,
@@ -46,6 +56,7 @@ export class EditNamesComponent {
 		}]
 
 		let languages = this.dataService.GetLocale().misc.languages
+
 		for (let language of Object.keys(languages)) {
 			if (this.names.findIndex(name => name.language == language) == -1) {
 				// Add the language as an option to add
