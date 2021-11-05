@@ -9,7 +9,7 @@
 			[title]="collectionName.name"
 			[editButtonVisible]="authorMode != 0"
 			[backButtonLink]="backButtonLink"
-			(editButtonClick)="ShowCollectionNamesDialog()">
+			(editButtonClick)="ShowNamesDialog()">
 		</pocketlib-header>
 	</div>
 
@@ -96,12 +96,12 @@
 </div>
 
 <dav-dialog
-	[header]="locale.collectionNamesDialog.header"
+	[header]="locale.namesDialog.header"
 	[defaultButtonText]="locale.close"
-	[isVisible]="collectionNamesDialogVisible"
+	[isVisible]="namesDialogVisible"
 	[theme]="dataService.darkTheme ? 'dark' : 'light'"
-	(dismiss)="collectionNamesDialogVisible = false"
-	(defaultButtonClick)="collectionNamesDialogVisible = false">
+	(dismiss)="namesDialogVisible = false"
+	(defaultButtonClick)="namesDialogVisible = false">
 
 	<!-- Names -->
 	<pocketlib-edit-names

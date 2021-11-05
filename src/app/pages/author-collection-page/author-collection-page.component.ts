@@ -26,8 +26,8 @@ export class AuthorCollectionPageComponent {
 		rightScreenBooks: BookListItem[]
 	} = { uuid: "", author: "", names: [], books: [], leftScreenBooks: [], rightScreenBooks: [] }
 	collectionName: { name: string, language: string } = { name: "", language: "" }
-	collectionNamesDialogVisible: boolean = false
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
+	namesDialogVisible: boolean = false
 	showAddLanguageButton: boolean = false
 	newBookPageLink: {
 		path: string,
@@ -135,8 +135,8 @@ export class AuthorCollectionPageComponent {
 		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.collection.author}` : "/author"
 	}
 
-	ShowCollectionNamesDialog() {
-		// Update the collection names for the EditCollectionNames component
+	ShowNamesDialog() {
+		// Update the collection names for the EditNames component
 		this.collectionNames = []
 		let languages = this.dataService.GetLocale().misc.languages
 
@@ -149,7 +149,7 @@ export class AuthorCollectionPageComponent {
 			})
 		}
 
-		this.collectionNamesDialogVisible = true
+		this.namesDialogVisible = true
 	}
 
 	UpdateCollectionName(collectionName: { name: string, language: string }) {
@@ -158,11 +158,12 @@ export class AuthorCollectionPageComponent {
 			this.collectionName.name = collectionName.name
 		} else {
 			let i = this.collection.names.findIndex(name => name.language == collectionName.language)
+
 			if (i == -1) {
 				// Add the name to the collection
 				this.collection.names.push(collectionName)
 
-				// Set the title of the name for the current language was just added
+				// Set the title if the name for the current language was just added
 				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
 				if (j != -1) this.collectionName = this.collection.names[j]
 			} else {

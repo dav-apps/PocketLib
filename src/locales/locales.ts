@@ -164,14 +164,17 @@ const enDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		collectionNamesDialog: {
+		namesDialog: {
 			header: "Collection name"
 		},
 		noBooks: "This collection contains no books",
 		close: "Close"
 	},
 	authorSeriesPage: {
-
+		namesDialog: {
+			header: "Book series name"
+		},
+		close: "Close"
 	},
 	newBookPage: {
 		title: "Create book",
@@ -299,7 +302,8 @@ const enDefaults = {
 		allBooksTitle: "All books"
 	},
 	editNames: {
-		nameTextfieldPlaceholder: "Name of your collection",
+		collectionNameTextfieldPlaceholder: "Name of your collection",
+		seriesNameTextfieldPlaceholder: "Name of your book series",
 		addLanguageDropdownLabel: "Add language",
 		selectLanguage: "Select a language",
 		errors: {
@@ -587,14 +591,17 @@ const deDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		collectionNamesDialog: {
+		namesDialog: {
 			header: "Name der Sammlung"
 		},
 		noBooks: "Diese Sammlung enthält keine Bücher",
 		close: "Schließen"
 	},
 	authorSeriesPage: {
-
+		namesDialog: {
+			header: "Name der Buch-Reihe"
+		},
+		close: "Schließen"
 	},
 	newBookPage: {
 		title: "Buch erstellen",
@@ -722,7 +729,8 @@ const deDefaults = {
 		allBooksTitle: "Alle Bücher"
 	},
 	editNames: {
-		nameTextfieldPlaceholder: "Name deiner Sammlung",
+		collectionNameTextfieldPlaceholder: "Name deiner Sammlung",
+		seriesNameTextfieldPlaceholder: "Name deiner Buch-Reihe",
 		addLanguageDropdownLabel: "Sprache hinzufügen",
 		selectLanguage: "Wähle eine Sprache",
 		errors: {

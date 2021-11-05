@@ -9,7 +9,7 @@
 		<form style="width: 80%" *ngIf="name.edit">
 			<dav-textfield
 				[value]="name.name"
-				[placeholder]="locale.nameTextfieldPlaceholder"
+				[placeholder]="type == 'collection' ? locale.collectionNameTextfieldPlaceholder : locale.seriesNameTextfieldPlaceholder"
 				[errorMessage]="name.errorMessage"
 				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="name.name = $event.detail.value; name.errorMessage = ''"
@@ -46,7 +46,7 @@
 		<form style="width: 80%">
 			<dav-textfield
 				[value]="newLanguageName"
-				[placeholder]="locale.nameTextfieldPlaceholder"
+				[placeholder]="type == 'collection' ? locale.collectionNameTextfieldPlaceholder : locale.seriesNameTextfieldPlaceholder"
 				[errorMessage]="newLanguageNameError"
 				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="newLanguageName = $event.detail.value; newLanguageNameError = ''"
