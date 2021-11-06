@@ -146,76 +146,43 @@
 	</div>
 </div>
 
-<div
-	#contextMenu 
-	class="dropdown-menu shadow-sm ms-motion-slideDownIn theme-background-color-tertiary" 
-	[ngClass]="contextMenuVisible ? 'show' : ''"
-	style="position: absolute;" 
-	[style.left.px]="contextMenuPositionX" 
-	[style.top.px]="contextMenuPositionY">
+<dav-context-menu
+	#contextMenu
+	[isVisible]="contextMenuVisible"
+	[posX]="contextMenuPositionY"
+	[posY]="contextMenuPositionX"
+	[theme]="dataService.darkTheme ? 'dark' : 'light'">
 
 	<!-- Export -->
-	<button
-		class="dropdown-item d-flex cursor"
-		style="padding-left: 10px; padding-right: 10px"
-		*ngIf="showExportBookOption"
-		(click)="DownloadBook()">
-
-		<i class="ms-Icon ms-Icon--Export text-color"
-			aria-hidden="true"
-			style="font-size: 16px; margin-right: 10px; margin-top: 2px">
-		</i>
-
-		<span
-			class="text-color"
-			style="margin-top: 3px; margin-bottom: 2px">
-			{{ locale.bookContextMenuExport }}
-		</span>
-	</button>
-
-	<div
-		class="mx-2 my-1"
-		style="border-top: 1px solid #8e8e8e"
+	<dav-context-menu-item
+		[value]="locale.bookContextMenuExport"
+		icon="Export"
+		[theme]="dataService.darkTheme ? 'dark' : 'light'"
+		(click)="DownloadBook()"
 		*ngIf="showExportBookOption">
-	</div>
+	</dav-context-menu-item>
+
+	<dav-context-menu-divider
+		*ngIf="showExportBookOption">
+	</dav-context-menu-divider>
 
 	<!-- Rename -->
-	<button
-		class="dropdown-item d-flex cursor"
-		style="padding-left: 10px; padding-right: 10px"
-		*ngIf="showRenameBookOption"
-		(click)="ShowRenameBookDialog()">
-
-		<i class="ms-Icon ms-Icon--Edit text-color"
-			aria-hidden="true"
-			style="font-size: 16px; margin-right: 10px; margin-top: 2px">
-		</i>
-
-		<span
-			class="text-color"
-			style="margin-top: 3px; margin-bottom: 2px">
-			{{ locale.bookContextMenuRename }}
-		</span>
-	</button>
+	<dav-context-menu-item
+		[value]="locale.bookContextMenuRename"
+		icon="Edit"
+		[theme]="dataService.darkTheme ? 'dark' : 'light'"
+		(click)="ShowRenameBookDialog()"
+		*ngIf="showRenameBookOption">
+	</dav-context-menu-item>
 
 	<!-- Remove -->
-	<button
-		class="dropdown-item d-flex cursor"
-		style="padding-left: 10px; padding-right: 10px"
+	<dav-context-menu-item
+		[value]="locale.bookContextMenuRemove"
+		icon="Delete"
+		[theme]="dataService.darkTheme ? 'dark' : 'light'"
 		(click)="ShowRemoveBookDialog()">
-
-		<i class="ms-Icon ms-Icon--Delete text-color"
-			aria-hidden="true"
-			style="font-size: 16px; margin-right: 10px; margin-top: 2px">
-		</i>
-
-		<span
-			class="text-color"
-			style="margin-top: 3px; margin-bottom: 2px">
-			{{ locale.bookContextMenuRemove }}
-		</span>
-	</button>
-</div>
+	</dav-context-menu-item>
+</dav-context-menu>
 
 <dav-dialog
 	[header]="locale.renameBookDialog.header"

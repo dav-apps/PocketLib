@@ -2,6 +2,7 @@ import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
+import { ContextMenu } from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
@@ -18,7 +19,7 @@ const pdfType = "application/pdf"
 })
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
-	@ViewChild('contextMenu', { static: true }) contextMenu: ElementRef
+	@ViewChild('contextMenu', { static: true }) contextMenu: ContextMenu
 	faAddressCard = faAddressCard
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
@@ -53,18 +54,6 @@ export class LibraryPageComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
-		document.onclick = (event: MouseEvent) => {
-			if (!this.contextMenuVisible) return
-
-			let target = event.target as Node
-			let contextMenu = this.contextMenu.nativeElement as HTMLDivElement
-
-			if (!contextMenu.contains(target)) {
-				// Hide the context menu
-				this.contextMenuVisible = false
-			}
-		}
 	}
 
 	async ngOnInit() {
