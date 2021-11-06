@@ -20,6 +20,7 @@ import { PortalModule } from '@angular/cdk/portal'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { DragulaModule } from 'ng2-dragula'
 import { ServiceWorkerModule } from '@angular/service-worker'
 
 // Services
@@ -160,6 +161,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		NgbModule,
 		PdfViewerModule,
 		FontAwesomeModule,
+		DragulaModule.forRoot(),
       ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   	],
   	providers: [
