@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { DragulaService } from 'ng2-dragula'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -24,12 +25,14 @@ export class AuthorSeriesPageComponent {
 	namesDialogVisible: boolean = false
 	backButtonLink: string = ""
 	addButtonHover: boolean = false
+	dragging: boolean = false
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		private dragulaService: DragulaService
 	) {
 		this.locale = this.dataService.GetLocale().authorSeriesPage
 
@@ -40,6 +43,9 @@ export class AuthorSeriesPageComponent {
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
+
+		this.dragulaService.drag("books").subscribe(() => this.dragging = true)
+		this.dragulaService.dragend("books").subscribe(() => this.dragging = false)
 	}
 
 	async ngOnInit() {
@@ -133,5 +139,22 @@ export class AuthorSeriesPageComponent {
 
 	ShowAddBookDialog() {
 		
+	}
+
+	async BooksReordered(books: StoreBook[]) {
+		this.books = books
+		let collectionUuids: string[] = []
+
+		// Get the collection uuids of the books
+		for (let book of this.books) {
+			let collection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
+			if (collection != null) collectionUuids.push(collection.uuid)
+		}
+
+		// Save the new collection order
+		await this.apiService.UpdateStoreBookSeries({
+			uuid: this.uuid,
+			collections: collectionUuids
+		})
 	}
 }

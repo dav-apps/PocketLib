@@ -38,26 +38,29 @@
 			</button>
 		</div>
 
-		<div
-			class="mx-auto"
-			style="display: inline-block"
-			*ngFor="let book of books; let i = index">
-
-			<hr
-				class="mx-2"
-				[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'">
-
+		<div class="d-flex flex-column" dragula="books" [dragulaModel]="books" (dragulaModelChange)="BooksReordered($event)">
 			<div
-				class="card cursor shadow-sm theme-background-color-secondary"
-				style="display: inline-block">
+				class="mx-auto"
+				style="display: inline-block"
+				*ngFor="let book of books; let i = index">
 
-				<pocketlib-blurhash-image
-					[src]="book.coverContent"
-					[fallback]="dataService.defaultStoreBookCover"
-					[blurhash]="book.coverBlurhash"
-					[title]="book.title"
-					height="180">
-				</pocketlib-blurhash-image>
+				<hr
+					class="mx-2"
+					[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'"
+					[style.visibility]="dragging ? 'hidden' : 'visible'">
+
+				<div
+					class="card cursor shadow-sm theme-background-color-secondary"
+					style="display: inline-block">
+
+					<pocketlib-blurhash-image
+						[src]="book.coverContent"
+						[fallback]="dataService.defaultStoreBookCover"
+						[blurhash]="book.coverBlurhash"
+						[title]="book.title"
+						height="180">
+					</pocketlib-blurhash-image>
+				</div>
 			</div>
 		</div>
 	</div>
