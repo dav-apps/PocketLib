@@ -51,7 +51,8 @@
 
 				<div
 					class="card cursor shadow-sm theme-background-color-secondary"
-					style="display: inline-block">
+					style="display: inline-block"
+					(contextmenu)="ShowBookContextMenu($event, book)">
 
 					<pocketlib-blurhash-image
 						[src]="book.coverContent"
@@ -65,6 +66,20 @@
 		</div>
 	</div>
 </div>
+
+<dav-context-menu
+	#contextMenu
+	[isVisible]="contextMenuVisible"
+	[posX]="contextMenuPositionY"
+	[posY]="contextMenuPositionX">
+
+	<!-- Remove -->
+	<dav-context-menu-item
+		[value]="locale.bookContextMenuRemove"
+		icon="Delete"
+		(click)="RemoveBook()">
+	</dav-context-menu-item>
+</dav-context-menu>
 
 <dav-dialog
 	[header]="locale.namesDialog.header"

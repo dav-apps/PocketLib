@@ -174,6 +174,7 @@ const enDefaults = {
 		namesDialog: {
 			header: "Book series name"
 		},
+		bookContextMenuRemove: "Remove",
 		close: "Close"
 	},
 	newBookPage: {
@@ -601,6 +602,7 @@ const deDefaults = {
 		namesDialog: {
 			header: "Name der Buch-Reihe"
 		},
+		bookContextMenuRemove: "Entfernen",
 		close: "Schließen"
 	},
 	newBookPage: {

@@ -48,8 +48,7 @@
 				</button>
 
 				<!-- Card for discovering books in the Store -->
-				<a
-					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
+				<a class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
 					style="width: 140px; text-decoration: none; transition: 0.12s"
 					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
 					routerLink="/store"
@@ -67,8 +66,7 @@
 				</a>
 
 				<!-- Card for going to the author page, if the user is an author -->
-				<a
-					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
+				<a class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
 					style="width: 140px; text-decoration: none; transition: 0.12s"
 					[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
 					routerLink="/author"
@@ -147,7 +145,6 @@
 </div>
 
 <dav-context-menu
-	#contextMenu
 	[isVisible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"
 	[posY]="contextMenuPositionX">

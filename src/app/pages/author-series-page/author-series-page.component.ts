@@ -26,6 +26,10 @@ export class AuthorSeriesPageComponent {
 	backButtonLink: string = ""
 	addButtonHover: boolean = false
 	dragging: boolean = false
+	contextMenuVisible: boolean = false
+	contextMenuPositionX: number = 0
+	contextMenuPositionY: number = 0
+	contextMenuBook: StoreBook
 
 	constructor(
 		public dataService: DataService,
@@ -149,6 +153,54 @@ export class AuthorSeriesPageComponent {
 		for (let book of this.books) {
 			let collection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
 			if (collection != null) collectionUuids.push(collection.uuid)
+		}
+
+		// Save the new collection order
+		await this.apiService.UpdateStoreBookSeries({
+			uuid: this.uuid,
+			collections: collectionUuids
+		})
+	}
+
+	async ShowBookContextMenu(event: PointerEvent, book: StoreBook) {
+		event.preventDefault()
+		this.contextMenuBook = book
+
+		// Set the position of the context menu
+		this.contextMenuPositionX = event.pageX
+		this.contextMenuPositionY = event.pageY
+		
+		if (this.contextMenuVisible) {
+			this.contextMenuVisible = false
+
+			await new Promise((resolve: Function) => {
+				setTimeout(() => resolve(), 60)
+			})
+		}
+
+		this.contextMenuVisible = true
+	}
+
+	async RemoveBook() {
+		if (this.contextMenuBook == null) return
+		let collectionUuids: string[] = []
+
+		// Get the collection uuid of the selected book
+		let selectedBookCollection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == this.contextMenuBook.uuid) != -1)
+		if (selectedBookCollection == null) return
+
+		// Remove the book from the books
+		let i = this.books.findIndex(b => b.uuid == this.contextMenuBook.uuid)
+		if (i != -1) this.books.splice(i, 1)
+
+		// Get the collection uuids of the books, except the selected one
+		for (let book of this.books) {
+			let collection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
+
+			if (
+				collection != null
+				&& collection.uuid != selectedBookCollection.uuid
+			) collectionUuids.push(collection.uuid)
 		}
 
 		// Save the new collection order
