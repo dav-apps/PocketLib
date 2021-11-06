@@ -15,7 +15,7 @@
 
 	<div class="d-flex flex-column">
 		<!-- Add button -->
-		<div class="d-flex justify-content-center">
+		<div class="d-flex justify-content-center" *ngIf="selectableBooks.length > 0">
 			<button
 				class="d-flex align-items-center card cursor theme-background-color-secondary"
 				[ngClass]="addButtonHover ? 'shadow' : 'shadow-sm'"
@@ -24,7 +24,7 @@
 				(mouseout)="addButtonHover = false"
 				(focusin)="addButtonHover = true"
 				(focusout)="addButtonHover = false"
-				(click)="ShowAddBookDialog()">
+				(click)="addBookDialogVisible = true">
 
 				<div
 					class="card-body d-flex justify-content-center align-items-center"
@@ -41,17 +41,20 @@
 		<div class="d-flex flex-column" dragula="books" [dragulaModel]="books" (dragulaModelChange)="BooksReordered($event)">
 			<div
 				class="mx-auto"
+				[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
 				style="display: inline-block"
 				*ngFor="let book of books; let i = index">
 
 				<hr
 					class="mx-2"
 					[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'"
-					[style.visibility]="dragging ? 'hidden' : 'visible'">
+					[style.visibility]="dragging ? 'hidden' : 'visible'"
+					*ngIf="selectableBooks.length > 0 || i > 0">
 
 				<div
 					class="card cursor shadow-sm theme-background-color-secondary"
 					style="display: inline-block"
+					[style.marginTop.rem]="selectableBooks.length == 0 && i == 0 ? 2 : 0"
 					(contextmenu)="ShowBookContextMenu($event, book)">
 
 					<pocketlib-blurhash-image
@@ -95,4 +98,28 @@
 		type="series"
 		(update)="UpdateSeriesName($event)">
 	</pocketlib-edit-names>
+</dav-dialog>
+
+<dav-dialog
+	[header]="locale.addBookDialog.header"
+	[defaultButtonText]="locale.cancel"
+	[isVisible]="addBookDialogVisible"
+	(dismiss)="addBookDialogVisible = false"
+	(defaultButtonClick)="addBookDialogVisible = false">
+
+	<div class="d-flex flex-wrap mb-4" style="max-width: 500px">
+		<div
+			class="card cursor theme-background-color-secondary shadow-sm m-2"
+			*ngFor="let book of selectableBooks">
+
+			<pocketlib-blurhash-image
+				[src]="book.coverContent"
+				[fallback]="dataService.defaultStoreBookCover"
+				[blurhash]="book.coverBlurhash"
+				[title]="book.title"
+				height="150"
+				(click)="AddBook(book)">
+			</pocketlib-blurhash-image>
+		</div>
+	</div>
 </dav-dialog>

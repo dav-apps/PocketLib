@@ -174,8 +174,12 @@ const enDefaults = {
 		namesDialog: {
 			header: "Book series name"
 		},
+		addBookDialog: {
+			header: "Choose a book to add"
+		},
 		bookContextMenuRemove: "Remove",
-		close: "Close"
+		close: "Close",
+		cancel: "Cancel"
 	},
 	newBookPage: {
 		title: "Create book",
@@ -602,8 +606,12 @@ const deDefaults = {
 		namesDialog: {
 			header: "Name der Buch-Reihe"
 		},
+		addBookDialog: {
+			header: "Wähle ein Buch zum Hinzufügen"
+		},
 		bookContextMenuRemove: "Entfernen",
-		close: "Schließen"
+		close: "Schließen",
+		cancel: "Abbrechen"
 	},
 	newBookPage: {
 		title: "Buch erstellen",

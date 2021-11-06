@@ -20,9 +20,11 @@ export class AuthorSeriesPageComponent {
 	author: Author
 	series: StoreBookSeries = { uuid: "", names: [], collections: [] }
 	books: StoreBook[] = []
+	selectableBooks: StoreBook[] = []
 	seriesName: { name: string, language: string } = { name: "", language: "" }
 	seriesNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	namesDialogVisible: boolean = false
+	addBookDialogVisible: boolean = false
 	backButtonLink: string = ""
 	addButtonHover: boolean = false
 	dragging: boolean = false
@@ -101,6 +103,24 @@ export class AuthorSeriesPageComponent {
 
 			this.books.push(book)
 		}
+
+		// Load the books for the add book dialog
+		this.LoadSelectableBooks()
+	}
+
+	LoadSelectableBooks() {
+		this.selectableBooks = []
+
+		// Get the available books
+		for (let collection of this.author.collections) {
+			for (let book of collection.books) {
+				if (
+					this.books.findIndex(b => b.uuid == book.uuid) == -1
+					&& book.status > 0
+					&& book.language == this.dataService.supportedLocale
+				) this.selectableBooks.push(book)
+			}
+		}
 	}
 
 	ShowNamesDialog() {
@@ -141,8 +161,33 @@ export class AuthorSeriesPageComponent {
 		}
 	}
 
-	ShowAddBookDialog() {
-		
+	async AddBook(book: StoreBook) {
+		let collectionUuids: string[] = []
+
+		// Get the collection uuids of the books
+		for (let book of this.books) {
+			let collection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
+			if (collection != null) collectionUuids.push(collection.uuid)
+		}
+
+		// Get the collection uuid of the selected book
+		let selectedBookCollection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
+		if (selectedBookCollection == null) return
+
+		// Add the collection uuid of the selected book
+		collectionUuids.push(selectedBookCollection.uuid)
+
+		// Save the new collection order
+		let response = await this.apiService.UpdateStoreBookSeries({
+			uuid: this.uuid,
+			collections: collectionUuids
+		})
+
+		if (response.status == 200) {
+			this.books.push(book)
+			this.addBookDialogVisible = false
+			this.LoadSelectableBooks()
+		}
 	}
 
 	async BooksReordered(books: StoreBook[]) {
@@ -189,10 +234,6 @@ export class AuthorSeriesPageComponent {
 		let selectedBookCollection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == this.contextMenuBook.uuid) != -1)
 		if (selectedBookCollection == null) return
 
-		// Remove the book from the books
-		let i = this.books.findIndex(b => b.uuid == this.contextMenuBook.uuid)
-		if (i != -1) this.books.splice(i, 1)
-
 		// Get the collection uuids of the books, except the selected one
 		for (let book of this.books) {
 			let collection = this.author.collections.find(c => c.books.findIndex(b => b.uuid == book.uuid) != -1)
@@ -204,9 +245,17 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new collection order
-		await this.apiService.UpdateStoreBookSeries({
+		let response = await this.apiService.UpdateStoreBookSeries({
 			uuid: this.uuid,
 			collections: collectionUuids
 		})
+
+		if (response.status == 200) {
+			// Remove the selected book from the books
+			let i = this.books.findIndex(b => b.uuid == this.contextMenuBook.uuid)
+			if (i != -1) this.books.splice(i, 1)
+
+			this.LoadSelectableBooks()
+		}
 	}
 }
