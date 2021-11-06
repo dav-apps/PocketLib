@@ -22,7 +22,6 @@
 					placeholder="Monty"
 					autocomplete="given-name"
 					[errorMessage]="firstNameError"
-					[theme]="dataService.darkTheme ? 'dark' : 'light'"
 					(change)="firstName = $event.detail.value; firstNameError = ''">
 				</dav-textfield>
 			</div>
@@ -35,7 +34,6 @@
 					placeholder="Kensicle"
 					autocomplete="family-name"
 					[errorMessage]="lastNameError"
-					[theme]="dataService.darkTheme ? 'dark' : 'light'"
 					(change)="lastName = $event.detail.value; lastNameError = ''"
 					(enter)="Submit()">
 				</dav-textfield>
@@ -89,7 +87,6 @@
 						placeholder="Monty"
 						autocomplete="given-name"
 						[errorMessage]="firstNameError"
-						[theme]="dataService.darkTheme ? 'dark' : 'light'"
 						(change)="firstName = $event.detail.value; firstNameError = ''">
 					</dav-textfield>
 				</div>
@@ -102,7 +99,6 @@
 						placeholder="Kensicle"
 						autocomplete="family-name"
 						[errorMessage]="lastNameError"
-						[theme]="dataService.darkTheme ? 'dark' : 'light'"
 						(change)="lastName = $event.detail.value; lastNameError = ''"
 						(enter)="Submit()">
 					</dav-textfield>

@@ -13,7 +13,6 @@
 			label="ISBN"
 			placeholder="9780064407663"
 			[errorMessage]="errorMessage"
-			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="isbn = $event.detail.value; errorMessage = ''"
 			(enter)="UpdateValue()">
 		</dav-textfield>

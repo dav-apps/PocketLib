@@ -249,7 +249,6 @@
 	[defaultButtonText]="locale.leavePageDialog.cancel"
 	[isVisible]="leavePageDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="LeavePageDialogCancel()"
 	(primaryButtonClick)="LeavePageDialogLeave()"
 	(defaultButtonClick)="LeavePageDialogCancel()">

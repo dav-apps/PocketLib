@@ -345,7 +345,6 @@
 	[defaultButtonText]="locale.back"
 	[isVisible]="davProRequiredDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="davProRequiredDialogVisible = false"
 	(primaryButtonClick)="NavigateToAccountPage()"
 	(defaultButtonClick)="davProRequiredDialogVisible = false">
@@ -359,7 +358,6 @@
 	[defaultButtonText]="locale.back"
 	[isVisible]="buyBookDialogVisible"
 	maxWidth="400"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="buyBookDialogVisible = false"
 	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
 	(defaultButtonClick)="buyBookDialogVisible = false">
@@ -374,7 +372,6 @@
 	[primaryButtonText]="locale.errorDialog.ok"
 	[isVisible]="errorDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="errorDialogVisible = false"
 	(primaryButtonClick)="errorDialogVisible = false">
 

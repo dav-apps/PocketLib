@@ -7,6 +7,7 @@ import {
 	GetAllTableObjects,
 	PromiseHolder
 } from 'dav-js'
+import * as DavUIComponents from 'dav-ui-components'
 import { ApiService } from './api-service'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
@@ -217,7 +218,7 @@ export class DataService {
 
 		switch (theme) {
 			case keys.darkThemeKey:
-				this.darkTheme = true;
+				this.darkTheme = true
 				break
 			case keys.systemThemeKey:
 				// Get the browser theme
@@ -244,6 +245,7 @@ export class DataService {
 		)
 
 		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
+		DavUIComponents.setTheme(this.darkTheme)
 	}
 
 	//#region Settings

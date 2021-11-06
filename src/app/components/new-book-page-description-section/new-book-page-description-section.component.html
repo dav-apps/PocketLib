@@ -21,7 +21,6 @@
 		<dav-textarea
 			[value]="description"
 			[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
-			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="description = $event.detail.value">
 		</dav-textarea>
 	</div>

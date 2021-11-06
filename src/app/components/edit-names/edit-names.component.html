@@ -11,7 +11,6 @@
 				[value]="name.name"
 				[placeholder]="type == 'collection' ? locale.collectionNameTextfieldPlaceholder : locale.seriesNameTextfieldPlaceholder"
 				[errorMessage]="name.errorMessage"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="name.name = $event.detail.value; name.errorMessage = ''"
 				(enter)="name.edit ? UpdateName(name) : name.edit = true">
 			</dav-textfield>
@@ -34,7 +33,6 @@
 			[label]="locale.addLanguageDropdownLabel"
 			[options]="addLanguageOptions"
 			[selectedKey]="addLanguageSelectedKey"
-			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="AddLanguageDropdownChange($event)">
 		</dav-dropdown>
 	</div>
@@ -48,7 +46,6 @@
 				[value]="newLanguageName"
 				[placeholder]="type == 'collection' ? locale.collectionNameTextfieldPlaceholder : locale.seriesNameTextfieldPlaceholder"
 				[errorMessage]="newLanguageNameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="newLanguageName = $event.detail.value; newLanguageNameError = ''"
 				(enter)="AddLanguage()">
 			</dav-textfield>

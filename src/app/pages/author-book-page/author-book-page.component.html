@@ -65,7 +65,6 @@
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
 						resize="vertical"
 						[errorMessage]="newDescriptionError"
-						[theme]="dataService.darkTheme ? 'dark' : 'light'"
 						(change)="newDescription = $event.detail.value; newDescriptionError = ''">
 					</dav-textarea>
 				</div>
@@ -315,7 +314,6 @@
 							[placeholder]="locale.descriptionTextfieldPlaceholder"
 							resize="vertical"
 							[errorMessage]="newDescriptionError"
-							[theme]="dataService.darkTheme ? 'dark' : 'light'"
 							(change)="newDescription = $event.detail.value; newDescriptionError = ''">
 						</dav-textarea>
 					</div>
@@ -510,7 +508,6 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="editTitleDialogVisible"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="editTitleDialogVisible = false"
 	(primaryButtonClick)="UpdateTitle()"
 	(defaultButtonClick)="editTitleDialogVisible = false">
@@ -523,7 +520,6 @@
 				[label]="locale.editTitleDialog.titleTextfieldLabel"
 				[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
 				[errorMessage]="editTitleDialogTitleError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editTitleDialogTitle = $event.detail.value; editTitleDialogTitleError = ''"
 				(enter)="UpdateTitle()">
 			</dav-textfield>
@@ -536,7 +532,6 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="categoriesSelectionDialogVisible"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="categoriesSelectionDialogVisible = false"
 	(primaryButtonClick)="UpdateCategories()"
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false">

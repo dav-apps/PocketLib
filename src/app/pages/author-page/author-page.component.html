@@ -195,7 +195,6 @@
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="createAuthorDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="createAuthorDialogVisible = false"
 	(primaryButtonClick)="CreateAuthor()"
 	(defaultButtonClick)="createAuthorDialogVisible = false">
@@ -209,7 +208,6 @@
 				placeholder="Monty"
 				autocomplete="given-name"
 				[errorMessage]="createAuthorDialogFirstNameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
 			</dav-textfield>
 		</div>
@@ -222,7 +220,6 @@
 				placeholder="Kensicle"
 				autocomplete="family-name"
 				[errorMessage]="createAuthorDialogLastNameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
 				(enter)="CreateAuthor()">
 			</dav-textfield>

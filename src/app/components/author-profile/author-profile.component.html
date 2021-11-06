@@ -82,7 +82,6 @@
 				width="170"
 				[options]="bioLanguageDropdownOptions"
 				[selectedKey]="bioLanguageDropdownSelectedKey"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="BioLanguageDropdownChange($event)"
 				*ngIf="authorMode != 0">
 			</dav-dropdown>
@@ -105,7 +104,6 @@
 					[placeholder]="locale.bioTextfieldPlaceholder"
 					resize="vertical"
 					[errorMessage]="newBioError"
-					[theme]="dataService.darkTheme ? 'dark' : 'light'"
 					(change)="newBio = $event.detail.value; newBioError = ''">
 				</dav-textarea>
 			</div>
@@ -300,7 +298,6 @@
 				width="170"
 				[options]="bioLanguageDropdownOptions"
 				[selectedKey]="bioLanguageDropdownSelectedKey"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="BioLanguageDropdownChange($event)"
 				*ngIf="authorMode != 0">
 			</dav-dropdown>
@@ -323,7 +320,6 @@
 					[placeholder]="locale.bioTextfieldPlaceholder"
 					resize="vertical"
 					[errorMessage]="newBioError"
-					[theme]="dataService.darkTheme ? 'dark' : 'light'"
 					(change)="newBio = $event.detail.value; newBioError = ''">
 				</dav-textarea>
 			</div>
@@ -442,7 +438,6 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="editProfileDialogVisible"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="editProfileDialogVisible = false"
 	(primaryButtonClick)="SaveProfile()"
 	(defaultButtonClick)="editProfileDialogVisible = false">
@@ -456,7 +451,6 @@
 				placeholder="Monty"
 				autocomplete="given-name"
 				[errorMessage]="editProfileDialogFirstNameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogFirstName = $event.detail.value; editProfileDialogFirstNameError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>
@@ -470,7 +464,6 @@
 				placeholder="Kensicle"
 				autocomplete="family-name"
 				[errorMessage]="editProfileDialogLastNameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogLastName = $event.detail.value; editProfileDialogLastNameError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>
@@ -485,7 +478,6 @@
 				type="url"
 				autocomplete="url"
 				[errorMessage]="editProfileDialogWebsiteUrlError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogWebsiteUrl = $event.detail.value; editProfileDialogWebsiteUrlError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>
@@ -499,7 +491,6 @@
 				[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogFacebookUsernameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogFacebookUsername = $event.detail.value; editProfileDialogFacebookUsernameError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>
@@ -513,7 +504,6 @@
 				[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogInstagramUsernameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogInstagramUsername = $event.detail.value; editProfileDialogInstagramUsernameError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>
@@ -527,7 +517,6 @@
 				[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogTwitterUsernameError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="editProfileDialogTwitterUsername = $event.detail.value; editProfileDialogTwitterUsernameError = ''"
 				(enter)="SaveProfile()">
 			</dav-textfield>

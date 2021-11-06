@@ -9,7 +9,6 @@
 			type="number"
 			min="0"
 			max="100000"
-			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="price = $event.detail.value"
 			(enter)="UpdatePrice()">
 		</dav-textfield>

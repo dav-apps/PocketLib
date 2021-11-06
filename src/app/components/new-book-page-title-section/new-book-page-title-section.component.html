@@ -14,7 +14,6 @@
 		<dav-textfield
 			[value]="title"
 			[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
-			[theme]="dataService.darkTheme ? 'dark' : 'light'"
 			(change)="title = $event.detail.value"
 			(enter)="Submit()">
 		</dav-textfield>

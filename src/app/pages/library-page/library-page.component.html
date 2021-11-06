@@ -150,14 +150,12 @@
 	#contextMenu
 	[isVisible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"
-	[posY]="contextMenuPositionX"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'">
+	[posY]="contextMenuPositionX">
 
 	<!-- Export -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuExport"
 		icon="Export"
-		[theme]="dataService.darkTheme ? 'dark' : 'light'"
 		(click)="DownloadBook()"
 		*ngIf="showExportBookOption">
 	</dav-context-menu-item>
@@ -170,7 +168,6 @@
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRename"
 		icon="Edit"
-		[theme]="dataService.darkTheme ? 'dark' : 'light'"
 		(click)="ShowRenameBookDialog()"
 		*ngIf="showRenameBookOption">
 	</dav-context-menu-item>
@@ -179,7 +176,6 @@
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRemove"
 		icon="Delete"
-		[theme]="dataService.darkTheme ? 'dark' : 'light'"
 		(click)="ShowRemoveBookDialog()">
 	</dav-context-menu-item>
 </dav-context-menu>
@@ -189,7 +185,6 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[isVisible]="renameBookDialogVisible"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="renameBookDialogVisible = false"
 	(primaryButtonClick)="RenameBook()"
 	(defaultButtonClick)="renameBookDialogVisible = false">
@@ -202,7 +197,6 @@
 				[label]="locale.renameBookDialog.titleTextfieldLabel"
 				[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
 				[errorMessage]="renameBookDialogError"
-				[theme]="dataService.darkTheme ? 'dark' : 'light'"
 				(change)="renameBookDialogTitle = $event.detail.value; renameBookDialogError = ''"
 				(enter)="RenameBook()">
 			</dav-textfield>
@@ -217,7 +211,6 @@
 	[isVisible]="removeBookDialogVisible"
 	primaryButtonType="danger"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="removeBookDialogVisible = false"
 	(primaryButtonClick)="RemoveBook()"
 	(defaultButtonClick)="removeBookDialogVisible = false">
@@ -230,7 +223,6 @@
 	[primaryButtonText]="locale.ok"
 	[isVisible]="loginToAccessBookDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="loginToAccessBookDialogVisible = false"
 	(primaryButtonClick)="loginToAccessBookDialogVisible = false">
 
@@ -242,7 +234,6 @@
 	[primaryButtonText]="locale.ok"
 	[isVisible]="addBookErrorDialogVisible"
 	maxWidth="340"
-	[theme]="dataService.darkTheme ? 'dark' : 'light'"
 	(dismiss)="addBookErrorDialogVisible = false"
 	(primaryButtonClick)="addBookErrorDialogVisible = false">
 
