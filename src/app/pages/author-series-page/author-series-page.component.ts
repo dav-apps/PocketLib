@@ -1,6 +1,7 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { DragulaService } from 'ng2-dragula'
+import { ApiResponse } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -186,7 +187,9 @@ export class AuthorSeriesPageComponent {
 		if (response.status == 200) {
 			this.books.push(book)
 			this.addBookDialogVisible = false
+
 			this.LoadSelectableBooks()
+			this.series.collections = (response as ApiResponse<any>).data.collections
 		}
 	}
 
@@ -201,10 +204,14 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new collection order
-		await this.apiService.UpdateStoreBookSeries({
+		let response = await this.apiService.UpdateStoreBookSeries({
 			uuid: this.uuid,
 			collections: collectionUuids
 		})
+
+		if (response.status == 200) {
+			this.series.collections = (response as ApiResponse<any>).data.collections
+		}
 	}
 
 	async ShowBookContextMenu(event: PointerEvent, book: StoreBook) {
@@ -256,6 +263,7 @@ export class AuthorSeriesPageComponent {
 			if (i != -1) this.books.splice(i, 1)
 
 			this.LoadSelectableBooks()
+			this.series.collections = (response as ApiResponse<any>).data.collections
 		}
 	}
 }
