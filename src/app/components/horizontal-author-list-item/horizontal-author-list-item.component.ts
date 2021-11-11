@@ -25,10 +25,12 @@ export class HorizontalAuthorListItemComponent {
 	) { }
 
 	ShowImageShadow() {
+		this.hovered = true
 		this.blurhashImage.AddShadow()
 	}
 
 	HideImageShadow() {
+		this.hovered = false
 		this.blurhashImage.RemoveShadow()
 	}
 }

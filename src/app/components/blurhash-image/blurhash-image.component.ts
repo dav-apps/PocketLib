@@ -26,6 +26,7 @@ export class BlurhashImageComponent{
 	@Input() shadowSm: boolean = false			// Show shadow-sm on the image
 	@Input() shadow: boolean = false				// Show shadow on the image
 	@Input() shadowOnHover: boolean = false	// Show shadow-sm on the image and shadow on the image on hover
+	@Input() transform: string = ""				// The transform applied to the image
 	@Input() rounded: boolean = false			// Show the image as a circle
 	@Input() cursor: boolean = false
 	@Input() loading: boolean = false			// Show the opacity on the image and the spinner if true
