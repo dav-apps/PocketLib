@@ -522,6 +522,44 @@ export class ApiService {
 		}
 	}
 
+	async GetLatestStoreBookSeries(params: {
+		languages?: string[],
+		limit?: number
+	}) {
+		let languages = params.languages != null ? params.languages.join(',') : "en"
+		let limit = params.limit != null ? params.limit : 4
+		
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetLatestStoreBookSeries.name, {
+			languages,
+			limit
+		})
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store/series/latest`,
+				params: {
+					languages,
+					limit
+				}
+			})
+
+			let result = {
+				status: response.status,
+				data: response.data
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			return result
+		} catch (error) {
+			return ConvertErrorToApiErrorResponse(error)
+		}
+	}
+
 	async UpdateStoreBookSeries(params: {
 		uuid: string,
 		collections?: string[]

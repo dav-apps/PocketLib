@@ -39,7 +39,9 @@ import { AuthorProfileComponent } from './components/author-profile/author-profi
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component'
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component'
 import { HorizontalAuthorListItemComponent } from './components/horizontal-author-list-item/horizontal-author-list-item.component'
+import { HorizontalSeriesListComponent } from './components/horizontal-series-list/horizontal-series-list.component'
 import { StoreBookCardComponent } from './components/store-book-card/store-book-card.component'
+import { StoreBooksCardComponent } from './components/store-books-card/store-books-card.component'
 import { LanguageDropdownComponent } from './components/language-dropdown/language-dropdown.component'
 import { CategoriesSelectionComponent } from './components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from './components/price-input/price-input.component'
@@ -97,7 +99,9 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		HorizontalBookListComponent,
 		HorizontalAuthorListComponent,
 		HorizontalAuthorListItemComponent,
+		HorizontalSeriesListComponent,
 		StoreBookCardComponent,
+		StoreBooksCardComponent,
 		LanguageDropdownComponent,
 		CategoriesSelectionComponent,
 		PriceInputComponent,

@@ -8,6 +8,11 @@ export interface BookListItem {
 	coverHeight?: number
 }
 
+export interface SeriesListItem {
+	uuid: string
+	books: BookListItem[]
+}
+
 export interface AuthorListItem {
 	uuid: string
 	firstName: string

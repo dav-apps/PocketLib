@@ -381,6 +381,9 @@ const enDefaults = {
 	horizontalAuthorList: {
 		newAuthors: "New authors"
 	},
+	horizontalSeriesList: {
+		newSeries: "New book series"
+	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",
 		priceTextfieldPlaceholder: "Price of your book in Euro",
@@ -812,6 +815,9 @@ const deDefaults = {
 	},
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
+	},
+	horizontalSeriesList: {
+		newSeries: "Neue Buch-Reihen"
 	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",
