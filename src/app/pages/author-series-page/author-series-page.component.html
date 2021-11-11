@@ -70,6 +70,83 @@
 	</div>
 </div>
 
+<!-- Dual-Screen layout -->
+<div
+	class="d-flex flex-row ms-motion-slideUpIn"
+	*ngIf="dualScreenLayout">
+
+	<!-- Left screen -->
+	<div
+		class="w-50"
+		[style.marginRight.px]="dualScreenFoldMargin">
+
+		<div class="mt-3 mb-4">
+			<pocketlib-header
+				[title]="seriesName.name"
+				editButtonVisible="true"
+				[backButtonLink]="backButtonLink"
+				(editButtonClick)="ShowNamesDialog()">
+			</pocketlib-header>
+		</div>
+
+		<div class="d-flex flex-column">
+			<!-- Add button -->
+			<div class="d-flex justify-content-center" *ngIf="selectableBooks.length > 0">
+				<button
+					class="d-flex align-items-center card cursor theme-background-color-secondary"
+					[ngClass]="addButtonHover ? 'shadow' : 'shadow-sm'"
+					style="transition: 0.12s; width: 120px"
+					(mouseover)="addButtonHover = true"
+					(mouseout)="addButtonHover = false"
+					(focusin)="addButtonHover = true"
+					(focusout)="addButtonHover = false"
+					(click)="addBookDialogVisible = true">
+	
+					<div
+						class="card-body d-flex justify-content-center align-items-center"
+						style="padding: 12px 14px">
+	
+						<i class="ms-Icon ms-Icon--Add text-color"
+							aria-hidden="true"
+							style="font-size: 20px">
+						</i>
+					</div>
+				</button>
+			</div>
+	
+			<div class="d-flex flex-column" dragula="books" [dragulaModel]="books" (dragulaModelChange)="BooksReordered($event)">
+				<div
+					class="mx-auto"
+					[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
+					style="display: inline-block"
+					*ngFor="let book of books; let i = index">
+	
+					<hr
+						class="mx-2"
+						[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'"
+						[style.visibility]="dragging ? 'hidden' : 'visible'"
+						*ngIf="selectableBooks.length > 0 || i > 0">
+	
+					<div
+						class="card cursor shadow-sm theme-background-color-secondary"
+						style="display: inline-block"
+						[style.marginTop.rem]="selectableBooks.length == 0 && i == 0 ? 2 : 0"
+						(contextmenu)="ShowBookContextMenu($event, book)">
+	
+						<pocketlib-blurhash-image
+							[src]="book.coverContent"
+							[fallback]="dataService.defaultStoreBookCover"
+							[blurhash]="book.coverBlurhash"
+							[title]="book.title"
+							height="180">
+						</pocketlib-blurhash-image>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <dav-context-menu
 	#contextMenu
 	[isVisible]="contextMenuVisible"
