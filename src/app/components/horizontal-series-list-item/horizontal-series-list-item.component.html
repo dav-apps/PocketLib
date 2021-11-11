@@ -1,7 +1,7 @@
 <a class="d-flex"
 	style="width: 220px"
-	[style.height.px]="120 + (books.length * 10)"
-	href="/"
+	[style.height.px]="120 + (series.books.length * 10)"
+	[routerLink]="link"
 	(mouseover)="hover = true"
 	(mouseout)="hover = false"
 	(focusin)="hover = true"
@@ -9,14 +9,14 @@
 
 	<pocketlib-blurhash-image
 		style="margin-left: 15px; position: absolute; transition: 0.16s"
-		[style.transform]="hover ? 'translate(' + ((i > 0 ? 15 : 0) + (i * 25)) + 'px, 0px) rotate(' + i * 13 + 'deg)' : 'translate(' + (i * 15) + 'px, ' + ((i * 10) - ((books.length - 1) * 5)) + 'px)'"
-		[style.zIndex]="books.length - i"
+		[style.transform]="hover ? 'translate(' + ((i > 0 ? 15 : 0) + (i * 25)) + 'px, 0px) rotate(' + i * 13 + 'deg)' : 'translate(' + (i * 15) + 'px, ' + ((i * 10) - ((series.books.length - 1) * 5)) + 'px)'"
+		[style.zIndex]="series.books.length - i"
 		[src]="book.coverContent"
 		[fallback]="dataService.defaultStoreBookCover"
 		[blurhash]="book.coverBlurhash"
 		[title]="book.title"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
-		*ngFor="let book of books; let i = index">
+		*ngFor="let book of series.books; let i = index">
 	</pocketlib-blurhash-image>
 </a>
