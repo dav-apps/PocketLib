@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core'
-import { ApiResponse } from 'dav-js'
+import { ApiResponse, PromiseHolder } from 'dav-js'
 
 @Injectable()
 export class CachingService {
 	private apiRequestCache: {
 		[key: string]: ApiResponse<any>
+	} = {}
+	private apiRequests: {
+		[key: string]: PromiseHolder<boolean>
 	} = {}
 	private blurhashImageCache: {
 		[key: string]: string
@@ -34,6 +37,26 @@ export class CachingService {
 		for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
 			delete this.apiRequestCache[selectedKey]
 		}
+	}
+
+	SetupApiRequest(key: string) {
+		let promiseHolder = this.apiRequests[key]
+		if (promiseHolder != null) return
+
+		this.apiRequests[key] = new PromiseHolder()
+	}
+
+	GetApiRequest(key: string): PromiseHolder<boolean> {
+		return this.apiRequests[key]
+	}
+
+	ResolveApiRequest(key: string, success: boolean) {
+		let promiseHolder = this.apiRequests[key]
+		if (promiseHolder == null) return
+
+		// Resolve the PromiseHolder and remove it from the object
+		promiseHolder.Resolve(success)
+		delete this.apiRequests[key]
 	}
 	//#endregion
 

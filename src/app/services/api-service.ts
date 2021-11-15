@@ -88,8 +88,15 @@ export class ApiService {
 			books,
 			languages
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -108,8 +115,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -117,8 +127,15 @@ export class ApiService {
 	async GetLatestAuthors(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetLatestAuthors.name, {})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			var response = await axios({
@@ -133,8 +150,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -347,8 +367,15 @@ export class ApiService {
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetProfileImageOfAuthor.name, {
 			uuid
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -366,8 +393,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -416,8 +446,15 @@ export class ApiService {
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBookCollection.name, {
 			uuid
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let options: AxiosRequestConfig = {
@@ -440,8 +477,12 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
 			if (Dav.accessToken == null) {
 				return ConvertErrorToApiErrorResponse(error)
 			}
@@ -522,10 +563,57 @@ export class ApiService {
 		}
 	}
 
+	async GetStoreBookSeries(params: {
+		uuid: string,
+		languages?: string[]
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
+		let uuid = params.uuid
+		let languages = params.languages
+
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBookSeries.name, {
+			uuid,
+			languages
+		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store/series/${params.uuid}`,
+				params: {
+					languages: languages.join(',')
+				}
+			})
+
+			let result = {
+				status: response.status,
+				data: response.data
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+			return ConvertErrorToApiErrorResponse(error)
+		}
+	}
+
 	async GetLatestStoreBookSeries(params: {
 		languages?: string[],
 		limit?: number
-	}) {
+	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		let languages = params.languages != null ? params.languages.join(',') : "en"
 		let limit = params.limit != null ? params.limit : 4
 		
@@ -534,8 +622,15 @@ export class ApiService {
 			languages,
 			limit
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -554,8 +649,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -676,8 +774,15 @@ export class ApiService {
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBook.name, {
 			uuid
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let options: AxiosRequestConfig = {
@@ -700,8 +805,12 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
 			if (Dav.accessToken == null) {
 				return ConvertErrorToApiErrorResponse(error)
 			}
@@ -731,8 +840,15 @@ export class ApiService {
 			limit,
 			page
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -752,8 +868,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -773,8 +892,15 @@ export class ApiService {
 			limit,
 			page
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -794,8 +920,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -803,8 +932,15 @@ export class ApiService {
 	async GetStoreBooksInReview(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBooksInReview.name, {})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -822,8 +958,12 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
 			let renewSessionError = await HandleApiError(error)
 			if (renewSessionError != null) return renewSessionError
 
@@ -943,8 +1083,15 @@ export class ApiService {
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetStoreBookCover.name, {
 			uuid
 		})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -962,8 +1109,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
@@ -1035,8 +1185,15 @@ export class ApiService {
 	async GetCategories(): Promise<ApiResponse<any> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetCategories.name, {})
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
 		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
@@ -1051,8 +1208,11 @@ export class ApiService {
 
 			// Add the response to the cache
 			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
 			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
