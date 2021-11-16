@@ -109,9 +109,15 @@ export function GetDualScreenSettings() {
 		dualScreenFoldMargin: 0
 	}
 
-	if (window["getWindowSegments"]) {
-		let screenSegments = window["getWindowSegments"]()
+	let screenSegments: any
 
+	if (window["getWindowSegments"]) {
+		screenSegments = window["getWindowSegments"]()
+	} else if (window.visualViewport["segments"]) {
+		screenSegments = window.visualViewport["segments"]
+	}
+
+	if (screenSegments) {
 		if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
 			settings.dualScreenLayout = true
 
