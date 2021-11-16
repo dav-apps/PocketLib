@@ -78,7 +78,7 @@ export class BlurhashImageComponent{
 				canvas.width = this.width
 				canvas.height = this.height
 
-				if (canvas.getContext) {
+				if (canvas.getContext && Number.isFinite(this.width) && Number.isFinite(this.height)) {
 					// Decode the blurhash and set the canvas
 					let ctx = canvas.getContext('2d')
 					let pixels = decode(this.blurhash, this.width, this.height)

@@ -3,6 +3,7 @@ import { ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
+import { AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 const maxVisibleStoreBooks = 10
@@ -81,21 +82,8 @@ export class HorizontalBookListComponent {
 		this.books = []
 
 		for (let storeBook of books) {
-			let width = 123
 			let height = 190
-
-			if (storeBook.cover_aspect_ratio != null) {
-				let parts = storeBook.cover_aspect_ratio.split(':')
-				let widthAspectRatio = +parts[0]
-				let heightAspectRatio = +parts[1]
-
-				if (widthAspectRatio == 1) {
-					// 1:2 -> 0.5:1
-					widthAspectRatio /= heightAspectRatio
-				}
-
-				width = Math.round(height * widthAspectRatio)
-			}
+			let width = AdaptCoverWidthHeightToAspectRatio(123, height, storeBook.cover_aspect_ratio)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,

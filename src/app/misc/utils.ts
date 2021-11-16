@@ -150,3 +150,26 @@ export function GetBookStatusByString(status: string): BookStatus {
 			return BookStatus.Unpublished
 	}
 }
+
+export function AdaptCoverWidthHeightToAspectRatio(
+	aproxWidth: number,
+	aproxHeight: number,
+	aspectRatio: string
+): number {
+	if (aspectRatio == null) return aproxWidth
+	let parts = aspectRatio.split(':')
+
+	if (parts.length > 1 && parts[0].length > 0 && parts[1].length > 0) {
+		let widthAspectRatio = +parts[0]
+		let heightAspectRatio = +parts[1]
+
+		if (widthAspectRatio == 1) {
+			// 1:2 -> 0.5:1
+			widthAspectRatio /= heightAspectRatio
+		}
+
+		aproxWidth = Math.round(aproxHeight * widthAspectRatio)
+	}
+
+	return aproxWidth
+}

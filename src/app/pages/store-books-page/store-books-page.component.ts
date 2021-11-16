@@ -4,7 +4,11 @@ import { ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
-import { GetDualScreenSettings, GetElementHeight } from 'src/app/misc/utils'
+import {
+	GetDualScreenSettings,
+	GetElementHeight,
+	AdaptCoverWidthHeightToAspectRatio
+} from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -143,21 +147,8 @@ export class StoreBooksPageComponent {
 		let i = 0
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
-			let width = 178
 			let height = 270
-
-			if (storeBook.cover_aspect_ratio != null) {
-				let parts = storeBook.cover_aspect_ratio.split(':')
-				let widthAspectRatio = +parts[0]
-				let heightAspectRatio = +parts[1]
-
-				if (widthAspectRatio == 1) {
-					// 1:2 -> 0.5:1
-					widthAspectRatio /= heightAspectRatio
-				}
-
-				width = Math.round(height * widthAspectRatio)
-			}
+			let width = AdaptCoverWidthHeightToAspectRatio(178, height, storeBook.cover_aspect_ratio)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
