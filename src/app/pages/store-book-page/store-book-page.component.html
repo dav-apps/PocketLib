@@ -100,7 +100,25 @@
 		</div>
 	</div>
 
-	<div class="offset-lg-1 col-12 col-lg-10" style="padding: 0px 15px; margin-top: 5rem">
+	<!-- List of books of the series -->
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="padding: 0px 15px; margin-top: 5rem"
+		*ngIf="book.series.length > 0">
+
+		<pocketlib-horizontal-book-list
+			type="series"
+			[series]="book.series[0]"
+			[currentBookUuid]="uuid">
+		</pocketlib-horizontal-book-list>
+	</div>
+
+	<!-- List of books with the same categories -->
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="padding: 0px 15px"
+		[style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
+
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[currentBookUuid]="uuid"
@@ -222,7 +240,15 @@
 			</a>
 		</div>
 
-		<div style="margin-top: 5rem">
+		<div style="margin-top: 5rem" *ngIf="book.series.length > 0">
+			<pocketlib-horizontal-book-list
+				type="series"
+				[series]="book.series[0]"
+				[currentBookUuid]="uuid">
+			</pocketlib-horizontal-book-list>
+		</div>
+
+		<div [style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
 			<pocketlib-horizontal-book-list
 				type="categories"
 				[currentBookUuid]="uuid"
@@ -330,7 +356,15 @@
 		{{ category.name }}
 	</a>
 
-	<div style="margin-top: 5rem">
+	<div style="margin-top: 5rem" *ngIf="book.series.length > 0">
+		<pocketlib-horizontal-book-list
+			type="series"
+			[series]="book.series[0]"
+			[currentBookUuid]="uuid">
+		</pocketlib-horizontal-book-list>
+	</div>
+
+	<div [style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[currentBookUuid]="uuid"

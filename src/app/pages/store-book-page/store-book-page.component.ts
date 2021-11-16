@@ -39,7 +39,8 @@ export class StoreBookPageComponent {
 			name: string
 		}[],
 		inLibrary: boolean,
-		purchased: boolean
+		purchased: boolean,
+		series: string[]
 	} = {
 			collection: "",
 			title: "",
@@ -49,7 +50,8 @@ export class StoreBookPageComponent {
 			coverBlurhash: null,
 			categories: [],
 			inLibrary: false,
-			purchased: false
+			purchased: false,
+			series: []
 		}
 	categoryKeys: string[] = []
 	price: string = ""
@@ -174,6 +176,7 @@ export class StoreBookPageComponent {
 			this.book.coverBlurhash = responseData.cover_blurhash
 			this.book.inLibrary = responseData.in_library
 			this.book.purchased = responseData.purchased
+			this.book.series = responseData.series
 			this.categoryKeys = responseData.categories
 			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 
