@@ -7,7 +7,7 @@ import { AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 const maxVisibleStoreBooks = 10
-type HorizontalBookListType = "latest" | "categories"
+type HorizontalBookListType = "latest" | "categories" | "series"
 
 @Component({
 	selector: 'pocketlib-horizontal-book-list',
@@ -17,7 +17,9 @@ export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
+	@Input() series: string = ""
 	locale = enUS.horizontalBookList
+	header: string = ""
 	books: BookListItem[] = []
 	showAllHovered: boolean = false
 	loading: boolean = true
@@ -31,9 +33,17 @@ export class HorizontalBookListComponent {
 
 	async ngOnInit() {
 		if (this.type == "latest") {
+			this.header = this.locale.recentlyPublished
+		} else if (this.type == "categories") {
+			this.header = this.categories.length == 1 ? this.locale.moreBooksInCategory : this.locale.moreBooksInCategories
+		}
+
+		if (this.type == "latest") {
 			await this.LoadLatestStoreBooks()
-		} else if (this.categories.length > 0) {
+		} else if (this.type == "categories" && this.categories.length > 0) {
 			await this.LoadStoreBooksByCategories()
+		} else if (this.type == "series") {
+			await this.LoadStoreBooksBySeries()
 		}
 	}
 
@@ -74,6 +84,31 @@ export class HorizontalBookListComponent {
 		// Remove the current book
 		let i = books.findIndex(book => book.uuid == this.currentBookUuid)
 		if (i != -1) books.splice(i, 1)
+
+		this.ShowBooks(books)
+	}
+
+	async LoadStoreBooksBySeries() {
+		if (this.series.length == 0) return
+
+		// Get the store book series
+		let response = await this.apiService.GetStoreBookSeries({
+			uuid: this.series,
+			languages: await this.dataService.GetStoreLanguages()
+		})
+
+		if (response.status != 200) return
+
+		let responseData = (response as ApiResponse<any>).data
+
+		// Set the header
+		this.header = this.locale.moreOfSeries.replace('{0}', responseData.name)
+
+		// Get the books of the series
+		let books = []
+		for (let book of responseData.books) {
+			books.push(book)
+		}
 
 		this.ShowBooks(books)
 	}

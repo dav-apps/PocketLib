@@ -376,7 +376,8 @@ const enDefaults = {
 	horizontalBookList: {
 		recentlyPublished: "Recently published books",
 		moreBooksInCategory: "More books in this category",
-		moreBooksInCategories: "More books in these categories"
+		moreBooksInCategories: "More books in these categories",
+		moreOfSeries: "More from the series \"{0}\""
 	},
 	horizontalAuthorList: {
 		newAuthors: "New authors"
@@ -811,7 +812,8 @@ const deDefaults = {
 	horizontalBookList: {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher",
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
-		moreBooksInCategories: "Weitere Bücher in diesen Kategorien"
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
+		moreOfSeries: "Mehr aus der Reihe \"{0}\""
 	},
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
