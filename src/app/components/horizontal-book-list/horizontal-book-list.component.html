@@ -15,6 +15,7 @@
 		<div class="d-flex mb-3 pl-4 ms-motion-slideUpIn" style="width: max-content" *ngIf="!loading">
 			<pocketlib-store-book-card
 				[book]="book"
+				[highlighted]="type == 'series' && book.uuid == currentBookUuid"
 				*ngFor="let book of books">
 			</pocketlib-store-book-card>
 

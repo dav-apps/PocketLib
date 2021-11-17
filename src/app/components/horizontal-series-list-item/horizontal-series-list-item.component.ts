@@ -16,6 +16,6 @@ export class HorizontalSeriesListItemComponent {
 	) { }
 
 	ngOnInit() {
-		this.link = `/store/series/${this.series.uuid}`
+		this.link = `/store/book/${this.series.books[0].uuid}`
 	}
 }

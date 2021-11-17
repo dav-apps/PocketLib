@@ -8,6 +8,7 @@ import { BookListItem } from 'src/app/misc/types'
 })
 export class StoreBookCardComponent {
 	@Input() book: BookListItem
+	@Input() highlighted: boolean = false
 	hovered: boolean = false
 	alt: string = ""
 	link: string = ""
