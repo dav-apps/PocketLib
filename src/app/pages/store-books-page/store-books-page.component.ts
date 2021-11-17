@@ -1,21 +1,16 @@
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
+import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { BookListItem } from 'src/app/misc/types'
-import {
-	GetDualScreenSettings,
-	GetElementHeight,
-	AdaptCoverWidthHeightToAspectRatio
-} from 'src/app/misc/utils'
+import { GetDualScreenSettings, AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
 	templateUrl: './store-books-page.component.html'
 })
 export class StoreBooksPageComponent {
-	@ViewChild('container') container: ElementRef<HTMLDivElement>
 	locale = enUS.storeBooksPage
 	header: string = ""
 	books: BookListItem[] = []
@@ -88,7 +83,6 @@ export class StoreBooksPageComponent {
 	@HostListener('window:resize')
 	setSize() {
 		this.width = window.innerWidth
-		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
 	async UpdateView() {

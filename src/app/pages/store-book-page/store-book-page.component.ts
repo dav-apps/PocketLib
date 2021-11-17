@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
+import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
@@ -6,11 +6,7 @@ import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import {
-	GetDualScreenSettings,
-	GetElementHeight,
-	GetBookStatusByString
-} from 'src/app/misc/utils'
+import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import { Author, BookStatus } from 'src/app/misc/types'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
@@ -20,7 +16,6 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-book-page.component.html'
 })
 export class StoreBookPageComponent {
-	@ViewChild('container') container: ElementRef<HTMLDivElement>
 	locale = enUS.storeBookPage
 	width: number = 500
 	showMobileLayout: boolean = false
@@ -122,12 +117,11 @@ export class StoreBookPageComponent {
 	setSize() {
 		this.width = window.innerWidth
 		this.showMobileLayout = window.innerWidth < 768 && !this.dualScreenLayout
-		if (this.container) this.dataService.storePageContentHeight = GetElementHeight(this.container.nativeElement)
 	}
 
 	async Init() {
 		// Scroll to the top of the page
-		this.dataService.storePageDrawerContainer.scrollable.scrollTo({ top: 0 })
+		this.dataService.ScrollStoreContentToTop()
 
 		// Set the link of the back button
 		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")

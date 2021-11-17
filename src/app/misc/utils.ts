@@ -132,12 +132,6 @@ export function GetDualScreenSettings() {
 	return settings
 }
 
-export function GetElementHeight(element: HTMLElement): number {
-	return element.offsetHeight
-		+ parseInt(document.defaultView.getComputedStyle(element).marginTop)
-		+ parseInt(document.defaultView.getComputedStyle(element).marginBottom)
-}
-
 export function GetBookStatusByString(status: string): BookStatus {
 	switch (status) {
 		case "published":

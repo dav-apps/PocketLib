@@ -1,6 +1,5 @@
-import { Component, HostListener, ViewChild } from '@angular/core'
+import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
-import { MatDrawerContainer } from '@angular/material/sidenav'
 import { DataService } from 'src/app/services/data-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { smallWindowMaxSize } from 'src/constants/constants'
@@ -11,7 +10,7 @@ import { enUS } from 'src/locales/locales'
 	templateUrl: './store-page.component.html'
 })
 export class StorePageComponent {
-	@ViewChild('matDrawerContainer') matDrawerContainer: MatDrawerContainer
+	@ViewChild('container') storePageContentContainer: ElementRef<HTMLDivElement>
 	locale = enUS.storePage
 	width: number = 500
 	height: number = 500
@@ -38,7 +37,7 @@ export class StorePageComponent {
 	}
 
 	ngAfterViewInit() {
-		this.dataService.storePageDrawerContainer = this.matDrawerContainer
+		this.dataService.storePageContentContainer = this.storePageContentContainer
 	}
 
 	@HostListener('window:resize')
@@ -58,11 +57,6 @@ export class StorePageComponent {
 
 	ShowCategory(key: string) {
 		this.router.navigate(["store", "category", key])
-		if (this.sideNavHidden) this.dataService.sideNavOpened = false
-	}
-
-	ShowAuthorPage() {
-		this.router.navigate(["author"])
 		if (this.sideNavHidden) this.dataService.sideNavOpened = false
 	}
 }

@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core'
-import { MatDrawerContainer } from '@angular/material/sidenav'
+import { Injectable, ElementRef } from '@angular/core'
 import * as localforage from 'localforage'
 import {
 	Dav,
@@ -41,7 +40,6 @@ export class DataService {
 	currentBook: Book = null
 	darkTheme: boolean = false
 	smallWindow: boolean = false
-	storePageContentHeight: number = 500
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
 	settings: Settings
@@ -55,7 +53,7 @@ export class DataService {
 	adminAuthors: Author[] = []
 	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
 	userIsAdmin: boolean = false
-	storePageDrawerContainer: MatDrawerContainer
+	storePageContentContainer: ElementRef<HTMLDivElement>
 	sideNavOpened: boolean = false
 	contentHeight: number = 200
 	categories: Category[] = []
@@ -208,6 +206,12 @@ export class DataService {
 
 	UpdateBottomToolbarVisibility() {
 		this.bottomToolbarVisible = this.navbarVisible && this.smallWindow
+	}
+
+	ScrollStoreContentToTop() {
+		if (this.storePageContentContainer != null){
+			this.storePageContentContainer.nativeElement.scrollTo(0, 0)
+		}
 	}
 
 	async ApplyTheme(theme?: string) {
