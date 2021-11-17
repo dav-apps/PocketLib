@@ -100,10 +100,16 @@
 		</div>
 	</div>
 
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="margin-top: 4rem"
+		[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
+	</div>
+
 	<!-- List of books of the series -->
 	<div
 		class="offset-lg-1 col-12 col-lg-10"
-		style="padding: 0px 15px; margin-top: 5rem"
+		style="padding: 0px 15px; margin-top: 2.5rem"
 		*ngIf="book.series.length > 0">
 
 		<pocketlib-horizontal-book-list
@@ -240,7 +246,13 @@
 			</a>
 		</div>
 
-		<div style="margin-top: 5rem" *ngIf="book.series.length > 0">
+		<div
+			class="mx-3"
+			style="margin-top: 3.5rem"
+			[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
+		</div>
+
+		<div style="margin-top: 2.5rem" *ngIf="book.series.length > 0">
 			<pocketlib-horizontal-book-list
 				type="series"
 				[series]="book.series[0]"
@@ -356,7 +368,13 @@
 		{{ category.name }}
 	</a>
 
-	<div style="margin-top: 5rem" *ngIf="book.series.length > 0">
+	<div
+		class="mx-3"
+		style="margin-top: 3.5rem"
+		[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
+	</div>
+
+	<div style="margin-top: 2.5rem" *ngIf="book.series.length > 0">
 		<pocketlib-horizontal-book-list
 			type="series"
 			[series]="book.series[0]"
