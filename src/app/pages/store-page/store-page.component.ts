@@ -13,7 +13,10 @@ import { enUS } from 'src/locales/locales'
 export class StorePageComponent {
 	@ViewChild('matDrawerContainer') matDrawerContainer: MatDrawerContainer
 	locale = enUS.storePage
+	width: number = 500
+	height: number = 500
 	sideNavHidden: boolean = false
+	categoriesVisible: boolean = true
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	selectLanguagesDialogVisible: boolean = false
@@ -40,6 +43,8 @@ export class StorePageComponent {
 
 	@HostListener('window:resize')
 	setSize() {
+		this.width = window.innerWidth
+		this.height = window.innerHeight
 		this.sideNavHidden = window.innerWidth <= smallWindowMaxSize
 
 		if (!this.sideNavHidden) this.dataService.sideNavOpened = true

@@ -265,8 +265,6 @@ const enDefaults = {
 	storePage: {
 		startPage: "Start",
 		categories: "Categories",
-		languages: "Languages",
-		publish: "Publish",
 		selectLanguagesDialog: {
 			header: "Select languages",
 			description: "Select the languages for which books should be displayed.",
@@ -701,8 +699,6 @@ const deDefaults = {
 	storePage: {
 		startPage: "Startseite",
 		categories: "Kategorien",
-		languages: "Sprachen",
-		publish: "Veröffentlichen",
 		selectLanguagesDialog: {
 			header: "Sprachen auswählen",
 			description: "Wähle die Sprachen, für die Bücher angezeigt werden sollen.",

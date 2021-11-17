@@ -1,53 +1,30 @@
-<mat-drawer-container #matDrawerContainer autosize style="background-color: inherit; color: inherit" [style.height.px]="dataService.contentHeight">
-	<mat-drawer class="shadow-sm theme-background-color-secondary" style="z-index: 1" [mode]="sideNavHidden ? 'over' : 'side'" [(opened)]="dataService.sideNavOpened">
-		<mat-nav-list class="d-flex flex-column" style="height: 100%">
-			<mat-list-item
-				class="mb-2"
-				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-				(click)="ShowStartPage()">
-				{{ locale.startPage }}
-			</mat-list-item>
+<div class="d-flex" style="margin-top: 64px" [style.height.px]="height - 64" [style.width.px]="width">
+	<dav-sidenav class="theme-background-color-secondary">
+		<dav-sidenav-item
+			[value]="locale.startPage"
+			icon="Home"
+			(click)="ShowStartPage()">
+		</dav-sidenav-item>
 
-			<h3
-				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.54)' : 'rgba(0,0,0,0,.54)'"
-				matSubheader>
-				{{ locale.categories }}
-			</h3>
-			<mat-list-item
-				[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-				*ngFor="let category of dataService.categories"
-				(click)="ShowCategory(category.key)">
-				{{ category.name }}
-			</mat-list-item>
+		<dav-sidenav-item
+			[value]="locale.categories"
+			[icon]="categoriesVisible ? 'ChevronDown' : 'ChevronUp'"
+			(click)="categoriesVisible = !categoriesVisible">
+		</dav-sidenav-item>
 
-			<!--
-			<div class="mt-auto">
-				<div
-					class="m-2"
-					style="border-top: 1px solid"
-					[style.borderTopColor]="dataService.darkTheme ? '#7b7b7b' : '#e0e0e0'"></div>
-				
-				<mat-list-item
-					[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-					*ngIf="dataService.userAuthor == null && !dataService.userIsAdmin"
-					(click)="ShowAuthorPage()">
-					{{ locale.publish }}
-				</mat-list-item>
+		<div *ngIf="categoriesVisible">
+			<dav-sidenav-item
+				[value]="category.name"
+				(click)="ShowCategory(category.key)"
+				*ngFor="let category of dataService.categories">
+			</dav-sidenav-item>
+		</div>
+	</dav-sidenav>
 
-				<mat-list-item
-					[style.color]="dataService.darkTheme ? 'rgba(255,255,255,.87)' : 'rgba(0,0,0,0,.87)'"
-					(click)="selectLanguagesDialogVisible = true">
-					{{ locale.languages }}
-				</mat-list-item>
-			</div>
-			-->
-		</mat-nav-list>
-	</mat-drawer>
-
-	<mat-drawer-content [style.overflowY]="dataService.storePageContentHeight > dataService.contentHeight ? 'scroll' : 'hidden'">
+	<div style="overflow-y: scroll; width: 100%">
 		<router-outlet></router-outlet>
-	</mat-drawer-content>
-</mat-drawer-container>
+	</div>
+</div>
 
 <dav-dialog
 	[header]="locale.selectLanguagesDialog.header"
