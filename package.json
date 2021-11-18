@@ -46,7 +46,7 @@
 		"bootstrap": "^4.5.0",
 		"core-js": "^3.16.0",
 		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v2.1",
-		"dav-ui-components": "git+https://github.com/dav-apps/dav-ui-components.git#v0.5.1",
+		"dav-ui-components": "git+https://github.com/dav-apps/dav-ui-components.git#v0.6",
 		"express": "^4.17.1",
 		"http": "0.0.0",
 		"jquery": "^3.6.0",
