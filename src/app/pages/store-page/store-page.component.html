@@ -1,5 +1,15 @@
-<div class="d-flex" style="margin-top: 64px" [style.height.px]="height - 64" [style.width.px]="width">
-	<dav-sidenav class="theme-background-color-secondary">
+<dav-sidenav-container
+	[style.height.px]="height - (dataService.smallWindow ? 56 : 64)"
+	[style.width.px]="width"
+	[style.marginTop.px]="dataService.smallWindow ? 56 : 64">
+
+	<dav-sidenav
+		class="theme-background-color-secondary"
+		style="z-index: 1"
+		[mode]="sideNavHidden ? 'over' : 'side'"
+		[open]="dataService.sideNavOpened"
+		(dismiss)="dataService.sideNavOpened = false">
+
 		<dav-sidenav-item
 			[value]="locale.startPage"
 			icon="Home"
@@ -24,7 +34,7 @@
 	<div #container style="overflow-y: scroll; width: 100%">
 		<router-outlet></router-outlet>
 	</div>
-</div>
+</dav-sidenav-container>
 
 <dav-dialog
 	[header]="locale.selectLanguagesDialog.header"
