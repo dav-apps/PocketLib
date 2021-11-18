@@ -507,7 +507,7 @@
 	[header]="locale.editTitleDialog.header"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
-	[isVisible]="editTitleDialogVisible"
+	[visible]="editTitleDialogVisible"
 	(dismiss)="editTitleDialogVisible = false"
 	(primaryButtonClick)="UpdateTitle()"
 	(defaultButtonClick)="editTitleDialogVisible = false">
@@ -531,7 +531,7 @@
 	[header]="locale.categoriesSelectionDialog.header"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
-	[isVisible]="categoriesSelectionDialogVisible"
+	[visible]="categoriesSelectionDialogVisible"
 	(dismiss)="categoriesSelectionDialogVisible = false"
 	(primaryButtonClick)="UpdateCategories()"
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false">

@@ -192,7 +192,7 @@
 <!-- Panel for Bookmarks -->
 <dav-panel
 	[header]="locale.bookmarks"
-	[isVisible]="showBookmarksPanel"
+	[visible]="showBookmarksPanel"
 	(dismiss)="CloseBookmarksPanel()">
 
 	<ul class="list-group list-group-flush">
@@ -214,7 +214,7 @@
 <!-- Panel for TOC -->
 <dav-panel
 	[header]="locale.toc"
-	[isVisible]="showChaptersPanel"
+	[visible]="showChaptersPanel"
 	(dismiss)="CloseChaptersPanel()">
 
 	<pocketlib-chapters-tree

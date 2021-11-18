@@ -145,7 +145,7 @@
 </div>
 
 <dav-context-menu
-	[isVisible]="contextMenuVisible"
+	[visible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"
 	[posY]="contextMenuPositionX">
 
@@ -181,7 +181,7 @@
 	[header]="locale.renameBookDialog.header"
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
-	[isVisible]="renameBookDialogVisible"
+	[visible]="renameBookDialogVisible"
 	(dismiss)="renameBookDialogVisible = false"
 	(primaryButtonClick)="RenameBook()"
 	(defaultButtonClick)="renameBookDialogVisible = false">
@@ -205,7 +205,7 @@
 	[header]="locale.removeBookDialog.header"
 	[primaryButtonText]="locale.remove"
 	[defaultButtonText]="locale.cancel"
-	[isVisible]="removeBookDialogVisible"
+	[visible]="removeBookDialogVisible"
 	primaryButtonType="danger"
 	maxWidth="340"
 	(dismiss)="removeBookDialogVisible = false"
@@ -218,7 +218,7 @@
 <dav-dialog
 	[header]="locale.loginToAccessBookDialog.header"
 	[primaryButtonText]="locale.ok"
-	[isVisible]="loginToAccessBookDialogVisible"
+	[visible]="loginToAccessBookDialogVisible"
 	maxWidth="340"
 	(dismiss)="loginToAccessBookDialogVisible = false"
 	(primaryButtonClick)="loginToAccessBookDialogVisible = false">
@@ -229,7 +229,7 @@
 <dav-dialog
 	[header]="locale.addBookErrorDialog.header"
 	[primaryButtonText]="locale.ok"
-	[isVisible]="addBookErrorDialogVisible"
+	[visible]="addBookErrorDialogVisible"
 	maxWidth="340"
 	(dismiss)="addBookErrorDialogVisible = false"
 	(primaryButtonClick)="addBookErrorDialogVisible = false">

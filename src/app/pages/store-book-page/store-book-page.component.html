@@ -392,7 +392,7 @@
 	[header]="locale.davProRequiredDialog.header"
 	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
 	[defaultButtonText]="locale.back"
-	[isVisible]="davProRequiredDialogVisible"
+	[visible]="davProRequiredDialogVisible"
 	maxWidth="340"
 	(dismiss)="davProRequiredDialogVisible = false"
 	(primaryButtonClick)="NavigateToAccountPage()"
@@ -405,7 +405,7 @@
 	[header]="book.price == 0 ? locale.buyBookDialog.loginRequired.headerFree : locale.buyBookDialog.header"
 	[primaryButtonText]="locale.buyBookDialog.continue"
 	[defaultButtonText]="locale.back"
-	[isVisible]="buyBookDialogVisible"
+	[visible]="buyBookDialogVisible"
 	maxWidth="400"
 	(dismiss)="buyBookDialogVisible = false"
 	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
@@ -419,7 +419,7 @@
 <dav-dialog
 	[header]="locale.errorDialog.header"
 	[primaryButtonText]="locale.errorDialog.ok"
-	[isVisible]="errorDialogVisible"
+	[visible]="errorDialogVisible"
 	maxWidth="340"
 	(dismiss)="errorDialogVisible = false"
 	(primaryButtonClick)="errorDialogVisible = false">

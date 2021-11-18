@@ -149,7 +149,7 @@
 
 <dav-context-menu
 	#contextMenu
-	[isVisible]="contextMenuVisible"
+	[visible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"
 	[posY]="contextMenuPositionX">
 
@@ -164,7 +164,7 @@
 <dav-dialog
 	[header]="locale.namesDialog.header"
 	[defaultButtonText]="locale.close"
-	[isVisible]="namesDialogVisible"
+	[visible]="namesDialogVisible"
 	(dismiss)="namesDialogVisible = false"
 	(defaultButtonClick)="namesDialogVisible = false">
 
@@ -180,7 +180,7 @@
 <dav-dialog
 	[header]="locale.addBookDialog.header"
 	[defaultButtonText]="locale.cancel"
-	[isVisible]="addBookDialogVisible"
+	[visible]="addBookDialogVisible"
 	(dismiss)="addBookDialogVisible = false"
 	(defaultButtonClick)="addBookDialogVisible = false">
 
