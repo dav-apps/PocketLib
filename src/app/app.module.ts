@@ -47,7 +47,6 @@ import { CategoriesSelectionComponent } from './components/categories-selection/
 import { PriceInputComponent } from './components/price-input/price-input.component'
 import { IsbnInputComponent } from './components/isbn-input/isbn-input.component'
 import { AddListItemComponent } from './components/add-list-item/add-list-item.component'
-import { HeaderComponent } from './components/header/header.component'
 import { LinkIconButtonComponent } from './components/link-icon-button/link-icon-button.component'
 import { BlurhashImageComponent } from './components/blurhash-image/blurhash-image.component'
 import { LanguagesSelectionComponent } from './components/languages-selection/languages-selection.component'
@@ -107,7 +106,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		PriceInputComponent,
 		IsbnInputComponent,
 		AddListItemComponent,
-		HeaderComponent,
 		LinkIconButtonComponent,
 		BlurhashImageComponent,
 		LanguagesSelectionComponent,
