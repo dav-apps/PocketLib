@@ -135,6 +135,10 @@ export class AuthorCollectionPageComponent {
 		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.collection.author}` : "/author"
 	}
 
+	BackButtonClick() {
+		this.router.navigate([this.backButtonLink])
+	}
+
 	ShowNamesDialog() {
 		// Update the collection names for the EditNames component
 		this.collectionNames = []

@@ -169,6 +169,10 @@ export class AuthorBookPageComponent {
 		}
 	}
 
+	BackButtonClick() {
+		this.router.navigate([this.backButtonLink])
+	}
+
 	LoadCategories(keys: string[]) {
 		this.book.categories = []
 

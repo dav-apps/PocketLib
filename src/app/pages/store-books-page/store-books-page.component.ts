@@ -141,8 +141,8 @@ export class StoreBooksPageComponent {
 		let i = 0
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
-			let height = 270
-			let width = AdaptCoverWidthHeightToAspectRatio(178, height, storeBook.cover_aspect_ratio)
+			let height = 230
+			let width = AdaptCoverWidthHeightToAspectRatio(153, height, storeBook.cover_aspect_ratio)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,

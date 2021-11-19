@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { DragulaService } from 'ng2-dragula'
 import { ApiResponse } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
@@ -38,6 +38,7 @@ export class AuthorSeriesPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService
 	) {
@@ -107,6 +108,10 @@ export class AuthorSeriesPageComponent {
 
 		// Load the books for the add book dialog
 		this.LoadSelectableBooks()
+	}
+
+	BackButtonClick() {
+		this.router.navigate([this.backButtonLink])
 	}
 
 	LoadSelectableBooks() {

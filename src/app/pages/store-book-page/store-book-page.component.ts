@@ -74,8 +74,6 @@ export class StoreBookPageComponent {
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
-	backButtonLink: string = ""
-	backButtonLinkParams: { [key: string]: any } = {}
 
 	constructor(
 		public dataService: DataService,
@@ -123,11 +121,6 @@ export class StoreBookPageComponent {
 		// Scroll to the top of the page
 		this.dataService.ScrollStoreContentToTop()
 
-		// Set the link of the back button
-		let lastVisitedRoute = this.routingService.GetLastVisitedRoute("/store")
-		this.backButtonLink = lastVisitedRoute.url
-		this.backButtonLinkParams = lastVisitedRoute.params
-
 		// Get the store book cover
 		let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
 		if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
@@ -137,7 +130,7 @@ export class StoreBookPageComponent {
 	}
 
 	BackButtonClick() {
-		this.routingService.RevertLastNavigation()
+		this.routingService.NavigateBack("/store")
 	}
 
 	async GetData() {

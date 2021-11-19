@@ -3,7 +3,10 @@
 	class="container ms-motion-slideUpIn mb-3"
 	*ngIf="!dualScreenLayout">
 
-	<h1 class="text-center font-weight-light mt-3 text-color">{{ header }}</h1>
+	<dav-header
+		[header]="header"
+		size="big">
+	</dav-header>
 
 	<div
 		class="mt-3 row justify-content-center"
@@ -42,7 +45,10 @@
 
 	<!-- Left screen -->
 	<div style="grid-row: 1; grid-column: 1;" [style.marginRight.px]="dualScreenFoldMargin">
-		<h1 class="text-center font-weight-light mt-3 text-color">{{ header }}</h1>
+		<dav-header
+			[header]="header"
+			size="big">
+		</dav-header>
 
 		<div
 			class="d-flex flex-wrap justify-content-center"
