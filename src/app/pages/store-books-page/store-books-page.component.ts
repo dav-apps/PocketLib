@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { RoutingService } from 'src/app/services/routing-service'
 import { BookListItem } from 'src/app/misc/types'
 import { GetDualScreenSettings, AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
@@ -36,6 +37,7 @@ export class StoreBooksPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -83,6 +85,10 @@ export class StoreBooksPageComponent {
 	@HostListener('window:resize')
 	setSize() {
 		this.width = window.innerWidth
+	}
+
+	BackButtonClick() {
+		this.routingService.NavigateBack("/store")
 	}
 
 	async UpdateView() {

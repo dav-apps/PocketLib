@@ -5,7 +5,9 @@
 
 	<dav-header
 		[header]="header"
-		size="big">
+		size="big"
+		backButtonVisible
+		(backButtonClick)="BackButtonClick()">
 	</dav-header>
 
 	<div
@@ -47,7 +49,9 @@
 	<div style="grid-row: 1; grid-column: 1;" [style.marginRight.px]="dualScreenFoldMargin">
 		<dav-header
 			[header]="header"
-			size="big">
+			size="big"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()">
 		</dav-header>
 
 		<div
