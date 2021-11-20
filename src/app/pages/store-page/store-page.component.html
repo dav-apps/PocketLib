@@ -24,6 +24,7 @@
 		<div *ngIf="categoriesVisible">
 			<dav-sidenav-item
 				[value]="category.name"
+				indent
 				(click)="ShowCategory(category.key)"
 				*ngFor="let category of dataService.categories">
 			</dav-sidenav-item>

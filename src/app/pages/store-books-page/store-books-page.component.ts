@@ -24,7 +24,6 @@ export class StoreBooksPageComponent {
 
 	//#region Variables for pagination
 	pages: number = 1
-	paginationCollectionSize: number = 1
 	maxVisibleBooks: number = 20
 	//#endregion
 
@@ -142,7 +141,6 @@ export class StoreBooksPageComponent {
 
 		responseBooks = responseData.books
 		this.pages = responseData.pages
-		this.paginationCollectionSize = this.pages * this.maxVisibleBooks
 
 		let i = 0
 		for (let storeBook of responseBooks) {

@@ -24,12 +24,11 @@
 		class="mt-5 d-flex justify-content-center"
 		*ngIf="pages > 1 && !loading">
 
-		<ngb-pagination
-			[page]="page"
-			[collectionSize]="paginationCollectionSize"
-			[pageSize]="maxVisibleBooks"
-			(pageChange)="PageChange($event)">
-		</ngb-pagination>
+		<dav-pagination
+			[pages]="pages"
+			[currentPage]="page"
+			(pageChange)="PageChange($event.detail.page)">
+		</dav-pagination>
 	</div>
 
 	<fluent-progress-ring
@@ -83,12 +82,11 @@
 			class="mt-5 d-flex justify-content-center"
 			*ngIf="pages > 1 && !loading">
 
-			<ngb-pagination
-				[page]="page"
-				[collectionSize]="paginationCollectionSize"
-				[pageSize]="maxVisibleBooks"
-				(pageChange)="PageChange($event)">
-			</ngb-pagination>
+			<dav-pagination
+				[pages]="pages"
+				[currentPage]="page"
+				(pageChange)="PageChange($event.detail.page)">
+			</dav-pagination>
 		</div>
 	</div>
 </div>
