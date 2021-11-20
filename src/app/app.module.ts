@@ -17,7 +17,6 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatListModule } from '@angular/material/list'
 import { PortalModule } from '@angular/cdk/portal'
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { DragulaModule } from 'ng2-dragula'
@@ -160,7 +159,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		MatSnackBarModule,
 		MatListModule,
       PortalModule,
-		NgbModule,
 		PdfViewerModule,
 		FontAwesomeModule,
 		DragulaModule.forRoot(),
