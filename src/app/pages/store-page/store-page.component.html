@@ -31,7 +31,7 @@
 		</div>
 	</dav-sidenav>
 
-	<div #container style="overflow-y: scroll; width: 100%" [style.marginBottom.px]="dataService.smallWindow ? 56 : 0">
+	<div #container style="overflow-y: auto; width: 100%" [style.marginBottom.px]="dataService.smallWindow ? 56 : 0">
 		<router-outlet></router-outlet>
 	</div>
 </dav-sidenav-container>

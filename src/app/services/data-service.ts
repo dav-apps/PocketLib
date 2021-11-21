@@ -138,7 +138,7 @@ export class DataService {
 			for (let category of getCategoriesResponseData.categories) {
 				let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names)
 				let currentLanguage = category.names[currentLanguageIndex]
-	
+
 				this.categories.push({
 					key: category.key,
 					name: currentLanguage.name,
