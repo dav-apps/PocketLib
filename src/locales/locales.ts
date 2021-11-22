@@ -22,15 +22,16 @@ const enDefaults = {
 		},
 		loginToAccessBookDialog: {
 			header: "Login required",
-			description: "Please log in to access this book."
+			description: "Please log in to access this book.",
+			login: "Login"
 		},
 		addBookErrorDialog: {
 			header: "Invalid file",
-			description: "The specified file could not be read."
+			description: "The selected file could not be read."
 		},
 		save: "Save",
 		remove: "Remove",
-		ok: "Okay",
+		close: "Close",
 		cancel: "Cancel"
    },
    accountPage: {
@@ -456,15 +457,16 @@ const deDefaults = {
 		},
 		loginToAccessBookDialog: {
 			header: "Anmeldung erforderlich",
-			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen."
+			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
+			login: "Anmelden"
 		},
 		addBookErrorDialog: {
 			header: "Ungültige Datei",
-			description: "Die angegebene Datei konnte nicht gelesen werden."
+			description: "Die ausgewählte Datei konnte nicht gelesen werden."
 		},
 		save: "Speichern",
 		remove: "Entfernen",
-		ok: "Ok",
+		close: "Schließen",
 		cancel: "Abbrechen"
    },
    accountPage: {

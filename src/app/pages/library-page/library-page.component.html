@@ -217,22 +217,24 @@
 
 <dav-dialog
 	[header]="locale.loginToAccessBookDialog.header"
-	[primaryButtonText]="locale.ok"
+	[primaryButtonText]="locale.loginToAccessBookDialog.login"
+	[defaultButtonText]="locale.close"
 	[visible]="loginToAccessBookDialogVisible"
 	maxWidth="340"
 	(dismiss)="loginToAccessBookDialogVisible = false"
-	(primaryButtonClick)="loginToAccessBookDialogVisible = false">
+	(primaryButtonClick)="GoToAccountPage()"
+	(defaultButtonClick)="loginToAccessBookDialogVisible = false">
 
 	<p class="text-color">{{ locale.loginToAccessBookDialog.description }}</p>
 </dav-dialog>
 
 <dav-dialog
 	[header]="locale.addBookErrorDialog.header"
-	[primaryButtonText]="locale.ok"
+	[defaultButtonText]="locale.close"
 	[visible]="addBookErrorDialogVisible"
 	maxWidth="340"
 	(dismiss)="addBookErrorDialogVisible = false"
-	(primaryButtonClick)="addBookErrorDialogVisible = false">
+	(defaultButtonClick)="addBookErrorDialogVisible = false">
 
 	<p class="text-color">{{ locale.addBookErrorDialog.description }}</p>
 </dav-dialog>

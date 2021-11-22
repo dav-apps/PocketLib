@@ -133,6 +133,10 @@ export class LibraryPageComponent {
 		link.click()
 	}
 
+	GoToAccountPage() {
+		this.router.navigate(["/account"])
+	}
+
 	ShowRenameBookDialog() {
 		this.contextMenuVisible = false
 		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
