@@ -184,12 +184,16 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 					if (abbrChild) abbrElement.appendChild(abbrChild)
 				}
 			}
-			
+
 			return abbrElement
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
 			if (textElement.Href) aElement.setAttribute("href", textElement.Href)
+
+			if (textElement.Role && textElement.Role == "doc-noteref") {
+				aElement.setAttribute("style", "font-size: 80%; vertical-align: super")
+			}
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -584,6 +588,7 @@ export function ExtractTextElements(
 						Type: TextElementType.A,
 						Id: aElement.id,
 						Href: aElement.getAttribute("href"),
+						Role: aElement.getAttribute("role"),
 						ParentElement: parentElement
 					}
 
@@ -1124,6 +1129,8 @@ const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.CITE,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -1147,6 +1154,8 @@ const allowedTypesForTableCellElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.CITE,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
