@@ -94,6 +94,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return strongElement
+		case TextElementType.TIME:
+			let timeElement = document.createElement("time") as HTMLTimeElement
+			if (textElement.Id) timeElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let timeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (timeChild) timeElement.appendChild(timeChild)
+				}
+			}
+			
+			return timeElement
 		case TextElementType.BLOCKQUOTE:
 			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
 			if (textElement.Id) blockquoteElement.id = textElement.Id
@@ -478,6 +490,18 @@ export function ExtractTextElements(
 				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement, allowedTypesForStrongElement)
 				textElements.push(strongTextElement)
 				break
+			case "TIME":
+				let timeElement = node as HTMLTimeElement
+
+				let timeTextElement: TextElement = {
+					Type: TextElementType.TIME,
+					Id: timeElement.id,
+					ParentElement: parentElement
+				}
+
+				timeTextElement.TextElements = GetInnerTextElements(timeElement, timeTextElement, allowedTypesForTimeElement)
+				textElements.push(timeTextElement)
+				break
 			case "BLOCKQUOTE":
 				let blockquoteElement = node as HTMLQuoteElement
 
@@ -853,6 +877,7 @@ export enum TextElementType {
 	EM = "EM",
 	B = "B",
 	STRONG = "STRONG",
+	TIME = "TIME",
 	BLOCKQUOTE = "BLOCKQUOTE",
 	SECTION = "SECTION",
 	HEADER = "HEADER",
@@ -882,6 +907,7 @@ const allowedTypesForHElements: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -894,6 +920,7 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
 	TextElementType.CITE,
 	TextElementType.ABBR,
@@ -910,6 +937,7 @@ const allowedTypesForSpanElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -920,6 +948,7 @@ const allowedTypesForIElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -930,6 +959,7 @@ const allowedTypesForEmElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -940,6 +970,7 @@ const allowedTypesForBElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -950,8 +981,18 @@ const allowedTypesForStrongElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForTimeElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG
 ]
 
 const allowedTypesForBlockquoteElement: TextElementType[] = [
@@ -962,6 +1003,7 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
 	TextElementType.HEADER,
 	TextElementType.FOOTER,
@@ -985,6 +1027,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
 	TextElementType.HEADER,
 	TextElementType.FOOTER,
@@ -1012,6 +1055,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.CITE,
 	TextElementType.ABBR,
 	TextElementType.A,
@@ -1027,6 +1071,7 @@ const allowedTypesForFooterElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
@@ -1039,6 +1084,7 @@ const allowedTypesForCiteElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A
 ]
 
@@ -1049,6 +1095,7 @@ const allowedTypesForAbbrElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A
 ]
 
@@ -1076,6 +1123,7 @@ const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -1098,6 +1146,7 @@ const allowedTypesForTableCellElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.TIME,
 	TextElementType.A,
 	TextElementType.BR
 ]
