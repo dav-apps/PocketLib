@@ -1578,6 +1578,10 @@ export class BookChapter {
 			a {
 				color: {5};
 			}
+
+			footer {
+				text-align: right;
+			}
 		`
 
 		let headElement = html.getElementsByTagName("head")[0] as HTMLHeadElement

@@ -124,6 +124,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return footerElement
+		case TextElementType.ABBR:
+			let abbrElement = document.createElement("abbr") as HTMLElement
+			if (textElement.Id) abbrElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let abbrChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (abbrChild) abbrElement.appendChild(abbrChild)
+				}
+			}
+			
+			return abbrElement
 		case TextElementType.A:
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
@@ -452,6 +464,18 @@ export function ExtractTextElements(
 				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement, allowedTypesForFooterElement)
 				textElements.push(footerTextElement)
 				break
+			case "ABBR":
+				let abbrElement = node as HTMLElement
+
+				let abbrTextElement: TextElement = {
+					Type: TextElementType.ABBR,
+					Id: abbrElement.id,
+					ParentElement: parentElement
+				}
+
+				abbrTextElement.TextElements = GetInnerTextElements(abbrElement, abbrTextElement, allowedTypesForAbbrElement)
+				textElements.push(abbrTextElement)
+				break
 			case "A":
 				let aElement = node as HTMLAnchorElement
 
@@ -716,6 +740,7 @@ function NodeContainsText(node: Node): boolean {
 				|| childNode.nodeName == "B"
 				|| childNode.nodeName == "STRONG"
 				|| childNode.nodeName == "A"
+				|| childNode.nodeName == "ABBR"
 			)
 			&& childNode.textContent.trim().length > 0
 		) return true
@@ -754,6 +779,7 @@ export enum TextElementType {
 	STRONG = "STRONG",
 	BLOCKQUOTE = "BLOCKQUOTE",
 	FOOTER = "FOOTER",
+	ABBR = "ABBR",
 	A = "A",
 	IMG = "IMG",
 	UL = "UL",
@@ -869,8 +895,19 @@ const allowedTypesForFooterElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForAbbrElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A
 ]
 
 const allowedTypesForAnchorElement: TextElementType[] = [
