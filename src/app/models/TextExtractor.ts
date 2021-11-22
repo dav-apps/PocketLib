@@ -149,6 +149,19 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return footerElement
+		case TextElementType.CITE:
+			let citeElement = document.createElement("cite") as HTMLElement
+			if (textElement.Id) citeElement.id = textElement.Id
+			citeElement.setAttribute("style", "display: block; text-align: right")
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let citeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (citeChild) citeElement.appendChild(citeChild)
+				}
+			}
+
+			return citeElement
 		case TextElementType.ABBR:
 			let abbrElement = document.createElement("abbr") as HTMLElement
 			if (textElement.Id) abbrElement.id = textElement.Id
@@ -514,6 +527,18 @@ export function ExtractTextElements(
 				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement, allowedTypesForFooterElement)
 				textElements.push(footerTextElement)
 				break
+			case "CITE":
+				let citeElement = node as HTMLElement
+
+				let citeTextElement: TextElement = {
+					Type: TextElementType.CITE,
+					Id: citeElement.id,
+					ParentElement: parentElement
+				}
+
+				citeTextElement.TextElements = GetInnerTextElements(citeElement, citeTextElement, allowedTypesForCiteElement)
+				textElements.push(citeTextElement)
+				break
 			case "ABBR":
 				let abbrElement = node as HTMLElement
 
@@ -832,6 +857,7 @@ export enum TextElementType {
 	SECTION = "SECTION",
 	HEADER = "HEADER",
 	FOOTER = "FOOTER",
+	CITE = "CITE",
 	ABBR = "ABBR",
 	A = "A",
 	IMG = "IMG",
@@ -869,6 +895,8 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.CITE,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR,
 	TextElementType.IMG,
@@ -935,7 +963,10 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.HEADER,
 	TextElementType.FOOTER,
+	TextElementType.CITE,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -957,6 +988,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.BLOCKQUOTE,
 	TextElementType.HEADER,
 	TextElementType.FOOTER,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.IMG,
 	TextElementType.UL,
@@ -980,6 +1012,8 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.STRONG,
+	TextElementType.CITE,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.IMG,
 	TextElementType.BR
@@ -996,6 +1030,16 @@ const allowedTypesForFooterElement: TextElementType[] = [
 	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForCiteElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A
 ]
 
 const allowedTypesForAbbrElement: TextElementType[] = [
