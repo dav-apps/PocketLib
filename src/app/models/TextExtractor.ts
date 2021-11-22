@@ -124,7 +124,11 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (
 				textElement.Role
-				&& (textElement.Role == "doc-dedication" || textElement.Role == "doc-epigraph")
+				&& (
+					textElement.Role == "doc-dedication"
+					|| textElement.Role == "doc-epigraph"
+					|| textElement.Role == "doc-colophon"
+				)
 			) {
 				sectionElement.setAttribute("style", "text-align: center")
 			}
@@ -943,6 +947,7 @@ const allowedTypesForSpanElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -954,6 +959,7 @@ const allowedTypesForIElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -965,6 +971,7 @@ const allowedTypesForEmElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -976,6 +983,7 @@ const allowedTypesForBElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
@@ -987,6 +995,7 @@ const allowedTypesForStrongElement: TextElementType[] = [
 	TextElementType.EM,
 	TextElementType.B,
 	TextElementType.TIME,
+	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
 ]
