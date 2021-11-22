@@ -290,7 +290,8 @@ export class EpubChapter {
 
 			// Check if the link is a local file
 			if (
-				href.startsWith('http://')
+				href == null
+				|| href.startsWith('http://')
 				|| href.startsWith('https://')
 				|| href.startsWith('www.')
 				|| href.startsWith('mailto:')
