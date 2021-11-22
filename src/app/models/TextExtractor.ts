@@ -101,17 +101,30 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let blockquoteChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (blockquoteChild == null) continue
-
-					if (innerTextElement.Type == TextElementType.FOOTER) {
-						blockquoteChild.setAttribute("style", "text-align: right")
-					}
-
-					blockquoteElement.appendChild(blockquoteChild)
+					if (blockquoteChild) blockquoteElement.appendChild(blockquoteChild)
 				}
 			}
 
 			return blockquoteElement
+		case TextElementType.SECTION:
+			let sectionElement = document.createElement("section") as HTMLElement
+			if (textElement.Id) sectionElement.id = textElement.Id
+
+			if (
+				textElement.Role
+				&& (textElement.Role == "doc-dedication" || textElement.Role == "doc-epigraph")
+			) {
+				sectionElement.setAttribute("style", "text-align: center")
+			}
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let sectionChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (sectionChild) sectionElement.appendChild(sectionChild)
+				}
+			}
+
+			return sectionElement
 		case TextElementType.FOOTER:
 			let footerElement = document.createElement("footer") as HTMLElement
 			if (textElement.Id) footerElement.id = textElement.Id
@@ -452,6 +465,19 @@ export function ExtractTextElements(
 				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement, allowedTypesForBlockquoteElement)
 				textElements.push(blockquoteTextElement)
 				break
+			case "SECTION":
+				let sectionElement = node as HTMLElement
+
+				let sectionTextElement: TextElement = {
+					Type: TextElementType.SECTION,
+					Id: sectionElement.id,
+					Role: sectionElement.getAttribute("role"),
+					ParentElement: parentElement
+				}
+
+				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement, allowedTypesForSectionElement)
+				textElements.push(sectionTextElement)
+				break
 			case "FOOTER":
 				let footerElement = node as HTMLElement
 
@@ -757,6 +783,7 @@ export interface TextElement {
 	Source?: string
 	Alt?: string
 	Title?: string
+	Role?: string
 	Colspan?: number
 	Rowspan?: number
 	TextElements?: TextElement[],
@@ -778,6 +805,7 @@ export enum TextElementType {
 	B = "B",
 	STRONG = "STRONG",
 	BLOCKQUOTE = "BLOCKQUOTE",
+	SECTION = "SECTION",
 	FOOTER = "FOOTER",
 	ABBR = "ABBR",
 	A = "A",
@@ -885,6 +913,31 @@ const allowedTypesForBlockquoteElement: TextElementType[] = [
 	TextElementType.FOOTER,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForSectionElement: TextElementType[] = [
+	TextElementType.H1,
+	TextElementType.H2,
+	TextElementType.H3,
+	TextElementType.H4,
+	TextElementType.H5,
+	TextElementType.H6,
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.BLOCKQUOTE,
+	TextElementType.FOOTER,
+	TextElementType.A,
+	TextElementType.IMG,
+	TextElementType.UL,
+	TextElementType.OL,
+	TextElementType.HR,
+	TextElementType.BR,
+	TextElementType.TABLE
 ]
 
 const allowedTypesForFooterElement: TextElementType[] = [
