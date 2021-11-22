@@ -6,18 +6,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.H4:
 		case TextElementType.H5:
 		case TextElementType.H6:
-			let headerElement = document.createElement(textElement.Type) as HTMLHeadingElement
-			if (textElement.Id) headerElement.id = textElement.Id
-			headerElement.setAttribute("style", "text-align: center; margin-top: 2em; margin-bottom: 2em; font-weight: 300")
+			let hElement = document.createElement(textElement.Type) as HTMLHeadingElement
+			if (textElement.Id) hElement.id = textElement.Id
+			hElement.setAttribute("style", "text-align: center; margin-top: 2em; margin-bottom: 2em; font-weight: 300")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let headerChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (headerChild) headerElement.appendChild(headerChild)
+					if (headerChild) hElement.appendChild(headerChild)
 				}
 			}
 
-			return headerElement
+			return hElement
 		case TextElementType.P:
 			let pElement = document.createElement("p") as HTMLParagraphElement
 			if (textElement.Id) pElement.id = textElement.Id
@@ -125,6 +125,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return sectionElement
+		case TextElementType.HEADER:
+			let headerElement = document.createElement("header")
+			if (textElement.Id) headerElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let headerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (headerChild) headerElement.appendChild(headerChild)
+				}
+			}
+
+			return headerElement
 		case TextElementType.FOOTER:
 			let footerElement = document.createElement("footer") as HTMLElement
 			if (textElement.Id) footerElement.id = textElement.Id
@@ -339,13 +351,13 @@ export function ExtractTextElements(
 			case "H4":
 			case "H5":
 			case "H6":
-				let headerElement = node as HTMLHeadingElement
+				let hElement = node as HTMLHeadingElement
 
-				if (NodeContainsText(headerElement)) {
+				if (NodeContainsText(hElement)) {
 					// Add the element as a header
 					let type = TextElementType.H1
 
-					switch (headerElement.nodeName) {
+					switch (hElement.nodeName) {
 						case "H1":
 							type = TextElementType.H1
 							break
@@ -366,18 +378,18 @@ export function ExtractTextElements(
 							break
 					}
 
-					let headerTextElement: TextElement = {
+					let hTextElement: TextElement = {
 						Type: type,
-						Id: headerElement.id,
+						Id: hElement.id,
 						ParentElement: parentElement
 					}
 
-					headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement, allowedTypes ? allowedTypes : allowedTypesForHeaderElement)
-					textElements.push(headerTextElement)
+					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement, allowedTypes ? allowedTypes : allowedTypesForHElements)
+					textElements.push(hTextElement)
 				} else {
 					// Add the child elements
-					for (let i = 0; i < headerElement.childNodes.length; i++) {
-						let childNode = headerElement.childNodes.item(i)
+					for (let i = 0; i < hElement.childNodes.length; i++) {
+						let childNode = hElement.childNodes.item(i)
 						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
 					}
 				}
@@ -477,6 +489,18 @@ export function ExtractTextElements(
 
 				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement, allowedTypesForSectionElement)
 				textElements.push(sectionTextElement)
+				break
+			case "HEADER":
+				let headerElement = node as HTMLElement
+
+				let headerTextElement: TextElement = {
+					Type: TextElementType.HEADER,
+					Id: headerElement.id,
+					ParentElement: parentElement
+				}
+
+				headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement, allowedTypesForHeaderElement)
+				textElements.push(headerTextElement)
 				break
 			case "FOOTER":
 				let footerElement = node as HTMLElement
@@ -806,6 +830,7 @@ export enum TextElementType {
 	STRONG = "STRONG",
 	BLOCKQUOTE = "BLOCKQUOTE",
 	SECTION = "SECTION",
+	HEADER = "HEADER",
 	FOOTER = "FOOTER",
 	ABBR = "ABBR",
 	A = "A",
@@ -824,7 +849,7 @@ export enum TextElementType {
 	CODE = "CODE"
 }
 
-const allowedTypesForHeaderElement: TextElementType[] = [
+const allowedTypesForHElements: TextElementType[] = [
 	TextElementType.SPAN,
 	TextElementType.TEXT,
 	TextElementType.I,
@@ -930,6 +955,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.B,
 	TextElementType.STRONG,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.HEADER,
 	TextElementType.FOOTER,
 	TextElementType.A,
 	TextElementType.IMG,
@@ -938,6 +964,25 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.HR,
 	TextElementType.BR,
 	TextElementType.TABLE
+]
+
+const allowedTypesForHeaderElement: TextElementType[] = [
+	TextElementType.H1,
+	TextElementType.H2,
+	TextElementType.H3,
+	TextElementType.H4,
+	TextElementType.H5,
+	TextElementType.H6,
+	TextElementType.P,
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG,
+	TextElementType.A,
+	TextElementType.IMG,
+	TextElementType.BR
 ]
 
 const allowedTypesForFooterElement: TextElementType[] = [
