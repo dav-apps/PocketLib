@@ -182,6 +182,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return sectionElement
+		case TextElementType.HGROUP:
+			let hgroupElement = document.createElement("hgroup") as HTMLElement
+			if (textElement.Id) hgroupElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let hgroupChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (hgroupChild) hgroupElement.appendChild(hgroupChild)
+				}
+			}
+
+			return hgroupElement
 		case TextElementType.HEADER:
 			let headerElement = document.createElement("header")
 			if (textElement.Id) headerElement.id = textElement.Id
@@ -587,6 +599,18 @@ export function ExtractTextElements(
 				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement, allowedTypesForSectionElement)
 				textElements.push(sectionTextElement)
 				break
+			case "HGROUP":
+				let hgroupElement = node as HTMLElement
+
+				let hgroupTextElement: TextElement = {
+					Type: TextElementType.HGROUP,
+					Id: hgroupElement.id,
+					ParentElement: parentElement
+				}
+
+				hgroupTextElement.TextElements = GetInnerTextElements(hgroupElement, hgroupTextElement, allowedTypesForHgroupElement)
+				textElements.push(hgroupTextElement)
+				break
 			case "HEADER":
 				let headerElement = node as HTMLElement
 
@@ -942,6 +966,7 @@ export enum TextElementType {
 	TIME = "TIME",
 	BLOCKQUOTE = "BLOCKQUOTE",
 	SECTION = "SECTION",
+	HGROUP = "HGROUP",
 	HEADER = "HEADER",
 	FOOTER = "FOOTER",
 	CITE = "CITE",
@@ -1113,6 +1138,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
 	TextElementType.SECTION,
+	TextElementType.HGROUP,
 	TextElementType.HEADER,
 	TextElementType.FOOTER,
 	TextElementType.ABBR,
@@ -1123,6 +1149,15 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.HR,
 	TextElementType.BR,
 	TextElementType.TABLE
+]
+
+const allowedTypesForHgroupElement: TextElementType[] = [
+	TextElementType.H1,
+	TextElementType.H2,
+	TextElementType.H3,
+	TextElementType.H4,
+	TextElementType.H5,
+	TextElementType.H6
 ]
 
 const allowedTypesForHeaderElement: TextElementType[] = [
