@@ -82,6 +82,38 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return bElement
+		case TextElementType.Q:
+			let qElement = document.createElement("q") as HTMLQuoteElement
+			if (textElement.Id) qElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				// Check if the quote element contains unnecessary additional "" chars
+				if (
+					textElement.TextElements.length == 1
+					&& textElement.TextElements[0].Type == TextElementType.TEXT
+					&& textElement.TextElements[0].Content.length > 1
+					&& textElement.TextElements[0].Content[0] == "“"
+					&& textElement.TextElements[0].Content[textElement.TextElements[0].Content.length - 1] == "”"
+				) {
+					textElement.TextElements[0].Content = textElement.TextElements[0].Content.slice(1, textElement.TextElements[0].Content.length - 1)
+				} else if (
+					textElement.TextElements.length > 1
+					&& textElement.TextElements[0].Type == TextElementType.TEXT
+					&& textElement.TextElements[textElement.TextElements.length - 1].Type == TextElementType.TEXT
+					&& textElement.TextElements[0].Content == "“"
+					&& textElement.TextElements[textElement.TextElements.length - 1].Content == "”"
+				) {
+					textElement.TextElements.splice(0, 1)
+					textElement.TextElements.splice(textElement.TextElements.length - 1, 1)
+				}
+
+				for (let innerTextElement of textElement.TextElements) {
+					let qChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (qChild) qElement.appendChild(qChild)
+				}
+			}
+
+			return qElement
 		case TextElementType.STRONG:
 			let strongElement = document.createElement("strong") as HTMLElement
 			if (textElement.Id) strongElement.id = textElement.Id
@@ -113,7 +145,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let blockquoteChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (blockquoteChild) blockquoteElement.appendChild(blockquoteChild)
+					if (blockquoteChild == null) continue
+
+					if (innerTextElement.Type == TextElementType.CITE) {
+						blockquoteChild.setAttribute("style", "display: block; text-align: right")
+					}
+
+					blockquoteElement.appendChild(blockquoteChild)
 				}
 			}
 
@@ -168,7 +206,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.CITE:
 			let citeElement = document.createElement("cite") as HTMLElement
 			if (textElement.Id) citeElement.id = textElement.Id
-			citeElement.setAttribute("style", "display: block; text-align: right")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -485,6 +522,18 @@ export function ExtractTextElements(
 
 				bTextElement.TextElements = GetInnerTextElements(bElement, bTextElement, allowedTypesForBElement)
 				textElements.push(bTextElement)
+				break
+			case "Q":
+				let qElement = node as HTMLQuoteElement
+
+				let qTextElement: TextElement = {
+					Type: TextElementType.Q,
+					Id: qElement.id,
+					ParentElement: parentElement
+				}
+
+				qTextElement.TextElements = GetInnerTextElements(qElement, qTextElement, allowedTypesForQElement)
+				textElements.push(qTextElement)
 				break
 			case "STRONG":
 				let strongElement = node as HTMLElement
@@ -885,6 +934,7 @@ export enum TextElementType {
 	I = "I",
 	EM = "EM",
 	B = "B",
+	Q = "Q",
 	STRONG = "STRONG",
 	TIME = "TIME",
 	BLOCKQUOTE = "BLOCKQUOTE",
@@ -928,6 +978,7 @@ const allowedTypesForParagraphElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
@@ -945,6 +996,7 @@ const allowedTypesForSpanElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.ABBR,
@@ -957,6 +1009,7 @@ const allowedTypesForIElement: TextElementType[] = [
 	TextElementType.TEXT,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.ABBR,
@@ -969,6 +1022,7 @@ const allowedTypesForEmElement: TextElementType[] = [
 	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.ABBR,
@@ -981,11 +1035,21 @@ const allowedTypesForBElement: TextElementType[] = [
 	TextElementType.TEXT,
 	TextElementType.I,
 	TextElementType.EM,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForQElement: TextElementType[] = [
+	TextElementType.SPAN,
+	TextElementType.TEXT,
+	TextElementType.I,
+	TextElementType.EM,
+	TextElementType.B,
+	TextElementType.STRONG
 ]
 
 const allowedTypesForStrongElement: TextElementType[] = [
@@ -994,6 +1058,7 @@ const allowedTypesForStrongElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.TIME,
 	TextElementType.ABBR,
 	TextElementType.A,
@@ -1040,6 +1105,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
@@ -1068,6 +1134,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.CITE,
@@ -1084,6 +1151,7 @@ const allowedTypesForFooterElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.ABBR,
@@ -1136,6 +1204,7 @@ const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.CITE,
@@ -1161,6 +1230,7 @@ const allowedTypesForTableCellElement: TextElementType[] = [
 	TextElementType.I,
 	TextElementType.EM,
 	TextElementType.B,
+	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.CITE,
