@@ -149,6 +149,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 					if (innerTextElement.Type == TextElementType.CITE) {
 						blockquoteChild.setAttribute("style", "display: block; text-align: right")
+					} else if (innerTextElement.Type == TextElementType.HEADER) {
+						blockquoteChild.setAttribute("style", "text-align: right")
 					}
 
 					blockquoteElement.appendChild(blockquoteChild)
@@ -160,21 +162,22 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			let sectionElement = document.createElement("section") as HTMLElement
 			if (textElement.Id) sectionElement.id = textElement.Id
 
-			if (
-				textElement.Role
-				&& (
-					textElement.Role == "doc-dedication"
-					|| textElement.Role == "doc-epigraph"
-					|| textElement.Role == "doc-colophon"
-				)
-			) {
+			if (textElement.Role == "doc-dedication") {
+				sectionElement.setAttribute("style", "text-align: center; max-width: 50%; margin: auto")
+			} else if (textElement.Role == "doc-epigraph" || textElement.Role == "doc-colophon") {
 				sectionElement.setAttribute("style", "text-align: center")
 			}
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let sectionChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (sectionChild) sectionElement.appendChild(sectionChild)
+					if (sectionChild == null) continue
+
+					if (innerTextElement.Type == TextElementType.BLOCKQUOTE && textElement.Role == "doc-epigraph") {
+						sectionChild.setAttribute("style", "display: inline-block; text-align: left")
+					}
+
+					sectionElement.appendChild(sectionChild)
 				}
 			}
 
@@ -232,7 +235,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Id) aElement.id = textElement.Id
 			if (textElement.Href) aElement.setAttribute("href", textElement.Href)
 
-			if (textElement.Role && textElement.Role == "doc-noteref") {
+			if (textElement.Role == "doc-noteref") {
 				aElement.setAttribute("style", "font-size: 80%; vertical-align: super")
 			}
 
@@ -295,7 +298,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.HR:
 			let hrElement = document.createElement("hr") as HTMLHRElement
 			if (textElement.Id) hrElement.id = textElement.Id
-			hrElement.setAttribute("style", "margin: 4em 0")
+			hrElement.setAttribute("style", "margin: 4em 25%")
 			return hrElement
 		case TextElementType.BR:
 			let brElement = document.createElement("br") as HTMLBRElement
@@ -400,7 +403,7 @@ export function ExtractTextElements(
 	if (node.nodeType == Node.TEXT_NODE) {
 		let textContent = node.textContent
 
-		if (textContent.trim().length > 0) {
+		if (textContent.length > 0) {
 			textElements.push({
 				Type: TextElementType.TEXT,
 				Content: textContent,
@@ -1109,6 +1112,7 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.SECTION,
 	TextElementType.HEADER,
 	TextElementType.FOOTER,
 	TextElementType.ABBR,
@@ -1207,6 +1211,7 @@ const allowedTypesForListItemElement: TextElementType[] = [
 	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.BLOCKQUOTE,
 	TextElementType.CITE,
 	TextElementType.ABBR,
 	TextElementType.A,
