@@ -1570,17 +1570,77 @@ export class BookChapter {
 				font-family: Segoe UI;
 			}
 
-			img {
-				max-width: {3}px;
-				max-height: {4}px;
+			h1, h2, h3, h4, h5, h6 {
+				text-align: center;
+				margin: 2em 0;
+				font-weight: 300;
+			}
+
+			h1 {
+				font-size: 1.75em;
+			}
+
+			blockquote > cite {
+				display: block;
+				text-align: right;
+			}
+
+			blockquote > header {
+				text-align: right;
+			}
+
+			section[role="doc-dedication"] {
+				text-align: center;
+				max-width: 50%;
+				margin: auto;
+			}
+
+			section[role="doc-epigraph"], section[role="doc-colophon"] {
+				text-align: center;
+			}
+
+			section[role="doc-epigraph"] > blockquote {
+				display: inline-block;
+				text-align: left;
+			}
+
+			footer {
+				text-align: right;
 			}
 
 			a {
 				color: {5};
 			}
 
-			footer {
-				text-align: right;
+			a[role="doc-noteref"] {
+				font-size: 80%;
+				vertical-align: super;
+			}
+
+			img {
+				max-width: {3}px;
+				max-height: {4}px;
+				text-align: center;
+			}
+
+			hr {
+				margin: 4em 25%;
+			}
+
+			table {
+				border-spacing: 1em;
+			}
+
+			th, td {
+				vertical-align: top;
+			}
+
+			td > p {
+				margin: 0;
+			}
+
+			pre {
+				white-space: pre-wrap;
 			}
 		`
 

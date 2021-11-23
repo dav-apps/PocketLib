@@ -8,7 +8,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.H6:
 			let hElement = document.createElement(textElement.Type) as HTMLHeadingElement
 			if (textElement.Id) hElement.id = textElement.Id
-			hElement.setAttribute("style", "text-align: center; margin-top: 2em; margin-bottom: 2em; font-weight: 300")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -145,15 +144,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let blockquoteChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (blockquoteChild == null) continue
-
-					if (innerTextElement.Type == TextElementType.CITE) {
-						blockquoteChild.setAttribute("style", "display: block; text-align: right")
-					} else if (innerTextElement.Type == TextElementType.HEADER) {
-						blockquoteChild.setAttribute("style", "text-align: right")
-					}
-
-					blockquoteElement.appendChild(blockquoteChild)
+					if (blockquoteChild) blockquoteElement.appendChild(blockquoteChild)
 				}
 			}
 
@@ -161,23 +152,12 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.SECTION:
 			let sectionElement = document.createElement("section") as HTMLElement
 			if (textElement.Id) sectionElement.id = textElement.Id
-
-			if (textElement.Role == "doc-dedication") {
-				sectionElement.setAttribute("style", "text-align: center; max-width: 50%; margin: auto")
-			} else if (textElement.Role == "doc-epigraph" || textElement.Role == "doc-colophon") {
-				sectionElement.setAttribute("style", "text-align: center")
-			}
+			if (textElement.Role) sectionElement.setAttribute("role", textElement.Role)
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let sectionChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (sectionChild == null) continue
-
-					if (innerTextElement.Type == TextElementType.BLOCKQUOTE && textElement.Role == "doc-epigraph") {
-						sectionChild.setAttribute("style", "display: inline-block; text-align: left")
-					}
-
-					sectionElement.appendChild(sectionChild)
+					if (sectionChild) sectionElement.appendChild(sectionChild)
 				}
 			}
 
@@ -246,10 +226,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			let aElement = document.createElement("a") as HTMLAnchorElement
 			if (textElement.Id) aElement.id = textElement.Id
 			if (textElement.Href) aElement.setAttribute("href", textElement.Href)
-
-			if (textElement.Role == "doc-noteref") {
-				aElement.setAttribute("style", "font-size: 80%; vertical-align: super")
-			}
+			if (textElement.Role) aElement.setAttribute("role", textElement.Role)
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -265,7 +242,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			imgElement.setAttribute("src", textElement.Source)
 			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
 			if (textElement.Title) imgElement.setAttribute("title", textElement.Title)
-			imgElement.setAttribute("style", "text-align: center")
 
 			let imgContainerElement = document.createElement("div")
 			let imgContainerElementStyle = "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em"
@@ -310,7 +286,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.HR:
 			let hrElement = document.createElement("hr") as HTMLHRElement
 			if (textElement.Id) hrElement.id = textElement.Id
-			hrElement.setAttribute("style", "margin: 4em 25%")
 			return hrElement
 		case TextElementType.BR:
 			let brElement = document.createElement("br") as HTMLBRElement
@@ -319,7 +294,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.TABLE:
 			let tableElement = document.createElement("table") as HTMLTableElement
 			if (textElement.Id) tableElement.id = textElement.Id
-			tableElement.setAttribute("style", "border-spacing: 1em")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -342,11 +316,10 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			return trElement
 		case TextElementType.TH:
-			let thElement = document.createElement("th") as HTMLTableHeaderCellElement
+			let thElement = document.createElement("th") as HTMLTableCellElement
 			if (textElement.Id) thElement.id = textElement.Id
 			if (textElement.Colspan) thElement.colSpan = textElement.Colspan
 			if (textElement.Rowspan) thElement.rowSpan = textElement.Rowspan
-			thElement.setAttribute("style", "vertical-align: top")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
@@ -357,22 +330,15 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			return thElement
 		case TextElementType.TD:
-			let tdElement = document.createElement("td") as HTMLTableDataCellElement
+			let tdElement = document.createElement("td") as HTMLTableCellElement
 			if (textElement.Id) tdElement.id = textElement.Id
 			if (textElement.Colspan) tdElement.colSpan = textElement.Colspan
 			if (textElement.Rowspan) tdElement.rowSpan = textElement.Rowspan
-			tdElement.setAttribute("style", "vertical-align: top")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
 					let tdChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (tdChild == null) continue
-
-					if (innerTextElement.Type == TextElementType.P) {
-						tdChild.setAttribute("style", "margin: 0px")
-					}
-
-					tdElement.appendChild(tdChild)
+					if (tdChild) tdElement.appendChild(tdChild)
 				}
 			}
 
@@ -380,7 +346,6 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.PRE:
 			let preElement = document.createElement("pre") as HTMLPreElement
 			if (textElement.Id) preElement.id = textElement.Id
-			preElement.setAttribute("style", "white-space: pre-wrap")
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
