@@ -1754,6 +1754,9 @@ export class BookChapter {
 			let positions: number[] = []
 			FindPositionsInHtmlElement(viewerSide.iframe.contentDocument.getElementsByTagName("body")[0] as HTMLBodyElement, positions)
 
+			// Sort the positions
+			positions.sort((a: number, b: number) => a > b ? 1 : -1)
+
 			this.pageBreakPositions.push({
 				positions: FindPageBreakPositions(positions, contentHeight),
 				width: contentWidth,
