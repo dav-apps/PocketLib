@@ -96,7 +96,6 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region Loading Screen variables
-	height: number = 400
 	loadingScreenVisible: boolean = false
 	loadingScreenMessage: string = ""
 	//#endregion
@@ -119,7 +118,6 @@ export class NewBookPageComponent {
 	}
 
 	async ngOnInit() {
-		this.setSize()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
 		// Get the author
@@ -181,11 +179,6 @@ export class NewBookPageComponent {
 
 	ngOnDestroy() {
 		this.routingService.toolbarNavigationEvent = null
-	}
-
-	@HostListener('window:resize')
-	setSize() {
-		this.height = window.innerHeight
 	}
 
 	@HostListener('window:beforeunload', ['$event'])

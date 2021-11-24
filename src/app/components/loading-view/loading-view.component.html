@@ -16,6 +16,12 @@
 				mode="indeterminate"
 				diameter="30">
 			</mat-progress-spinner>
+
+			<p class="font-weight-light"
+				style="margin-top: 30px; font-size: 18px; color: white"
+				*ngIf="message.length > 0">
+				{{ message }}
+			</p>
 		</div>
 	</div>
 </div>

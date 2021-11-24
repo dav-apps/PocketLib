@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core'
+import { Component, Input, HostListener } from '@angular/core'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
@@ -7,6 +7,7 @@ import { GetDualScreenSettings } from 'src/app/misc/utils'
 	styleUrls: ['./loading-view.component.scss']
 })
 export class LoadingViewComponent {
+	@Input() message: string = ""
 	height: number = 500
 	dualScreenLayout: boolean = false
 
