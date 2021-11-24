@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core'
+import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { PromiseHolder } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
@@ -54,7 +54,6 @@ export class NewSeriesPageComponent {
 	//#endregion
 
 	//#region Loading screen variables
-	height: number = 400
 	loadingScreenVisible: boolean = false
 	//#endregion
 
@@ -74,7 +73,6 @@ export class NewSeriesPageComponent {
 	}
 
 	async ngOnInit() {
-		this.setSize()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
 		// Get the author
@@ -113,11 +111,6 @@ export class NewSeriesPageComponent {
 		}
 
 		this.loadCollectionsPromiseHolder.Resolve()
-	}
-
-	@HostListener('window:resize')
-	setSize() {
-		this.height = window.innerHeight
 	}
 
 	GoBack() {
