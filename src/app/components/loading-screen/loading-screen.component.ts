@@ -2,11 +2,11 @@ import { Component, Input, HostListener } from '@angular/core'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
-	selector: 'pocketlib-loading-view',
-	templateUrl: './loading-view.component.html',
-	styleUrls: ['./loading-view.component.scss']
+	selector: 'pocketlib-loading-screen',
+	templateUrl: './loading-screen.component.html',
+	styleUrls: ['./loading-screen.component.scss']
 })
-export class LoadingViewComponent {
+export class LoadingScreenComponent {
 	@Input() message: string = ""
 	height: number = 500
 	dualScreenLayout: boolean = false
