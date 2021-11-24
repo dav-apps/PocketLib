@@ -1,21 +1,2 @@
-<div
-	class="ms-motion-slideUpIn"
-	style="background-color: var(--primary); color: white"
-   [style.height.px]="height">
-
-	<div
-		class="d-flex justify-content-center"
-		[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
-		[style.height.px]="height">
-
-		<div style="display: inline-block" class="m-auto text-center">
-			<img src="/assets/images/pocketlib-logo.png" width="150" style="margin-bottom: 38px">
-
-			<mat-progress-spinner
-				class="mx-auto"
-				mode="indeterminate"
-				diameter="30">
-			</mat-progress-spinner>
-		</div>
-	</div>
-</div>
+<pocketlib-loading-view>
+</pocketlib-loading-view>

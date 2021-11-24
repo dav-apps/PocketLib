@@ -1,10 +1,9 @@
-import { Component, HostListener } from '@angular/core'
+import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
 import { GetBook } from 'src/app/models/BookManager'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: 'pocketlib-loading-page',
@@ -22,34 +21,10 @@ export class LoadingPageComponent {
 	}
 
 	async ngOnInit() {
-		this.setSize()
-
-		// Check if this is a dual-screen device with a vertical fold
-		this.dualScreenLayout = GetDualScreenSettings().dualScreenLayout
-
 		// Wait for the user to be loaded
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		await this.LoadSettings()
-	}
-
-	ngAfterViewInit() {
-		// Set the color of the progress ring
-		let progress = document.getElementsByTagName('circle')
-
-		if (progress.length > 0) {
-			let item = progress.item(0)
-			item.setAttribute('style', item.getAttribute('style') + ' stroke: white')
-		}
-	}
-
-	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
-	setSize() {
-		this.height = window.innerHeight
 	}
 
 	async LoadSettings() {

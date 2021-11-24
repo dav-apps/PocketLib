@@ -34,6 +34,7 @@ import { ChaptersTreeComponent } from './components/chapters-tree/chapters-tree.
 import { EditNamesComponent } from './components/edit-names/edit-names.component'
 import { EpubViewerComponent } from './components/epub-viewer/epub-viewer.component'
 import { PdfViewerComponent } from './components/pdf-viewer/pdf-viewer.component'
+import { LoadingViewComponent } from './components/loading-view/loading-view.component'
 import { AuthorProfileComponent } from './components/author-profile/author-profile.component'
 import { HorizontalBookListComponent } from './components/horizontal-book-list/horizontal-book-list.component'
 import { HorizontalAuthorListComponent } from './components/horizontal-author-list/horizontal-author-list.component'
@@ -93,6 +94,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
 		EditNamesComponent,
 		EpubViewerComponent,
 		PdfViewerComponent,
+		LoadingViewComponent,
 		AuthorProfileComponent,
 		HorizontalBookListComponent,
 		HorizontalAuthorListComponent,
