@@ -1,11 +1,12 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
-import { MatSnackBar } from '@angular/material/snack-bar'
 import { ApiResponse, DownloadTableObject } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
+import { EpubBook } from 'src/app/models/EpubBook'
+import { PdfBook } from 'src/app/models/PdfBook'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import { Author, BookStatus } from 'src/app/misc/types'
 import { environment } from 'src/environments/environment'
@@ -69,18 +70,17 @@ export class StoreBookPageComponent {
 	coverAlt: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageAlt: string = ""
-	addToLibraryButtonDisabled: boolean = false
 	davProRequiredDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
+	loadingScreenVisible: boolean = false
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private cachingService: CachingService,
 		private routingService: RoutingService,
-		private snackBar: MatSnackBar,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -167,8 +167,6 @@ export class StoreBookPageComponent {
 			this.categoryKeys = responseData.categories
 			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 
-			this.addToLibraryButtonDisabled = this.book.inLibrary
-
 			// Load the price
 			if (this.book.price == 0) {
 				this.price = this.locale.free
@@ -248,59 +246,73 @@ export class StoreBookPageComponent {
 		}
 	}
 
-	async AddToLibrary() {
-		// Check if the user can add the book to the library
-		let isAuthorOfBook = false
-		if (this.dataService.userAuthor) {
-			// Try to find the book in the books of the author
-			isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
+	async Read() {
+		// Check if the book is already in the library of the user
+		if (!this.book.inLibrary) {
+			// Check if the user can add the book to the library
+			let isAuthorOfBook = false
+			if (this.dataService.userAuthor) {
+				// Try to find the book in the books of the author
+				isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
+			}
+
+			if (
+				!this.dataService.userIsAdmin
+				&& !isAuthorOfBook
+				&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
+			) {
+				// Show dav Pro dialog
+				this.davProRequiredDialogVisible = true
+				return
+			}
+
+			// Show the loading screen
+			this.loadingScreenVisible = true
+
+			// Add the StoreBook to the library of the user
+			let response = await this.apiService.CreateBook({
+				storeBook: this.uuid
+			})
+
+			if (response.status == 201) {
+				let responseData = (response as ApiResponse<any>).data
+
+				// Download the table objects
+				await DownloadTableObject(responseData.uuid)
+				await DownloadTableObject(responseData.file)
+
+				await this.dataService.ReloadBook(responseData.uuid)
+
+				// Clear the ApiCache for GetStoreBook
+				this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+			} else {
+				// Show error
+				this.loadingScreenVisible = false
+				this.errorDialogVisible = true
+				return
+			}
 		}
 
-		if (
-			!this.dataService.userIsAdmin
-			&& !isAuthorOfBook
-			&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
-		) {
-			// Show dav Pro dialog
-			this.davProRequiredDialogVisible = true
+		// Load the book
+		let book = this.dataService.books.find(b => b.storeBook == this.uuid)
+		
+		if (book == null) {
+			// Show error
+			this.loadingScreenVisible = false
+			this.errorDialogVisible = true
 			return
 		}
 
-		// Add the StoreBook to the library of the user
-		let response = await this.apiService.CreateBook({
-			storeBook: this.uuid
-		})
+		this.dataService.currentBook = book
 
-		if (response.status == 201) {
-			let responseData = (response as ApiResponse<any>).data
-			this.addToLibraryButtonDisabled = true
-
-			// Show Snackbar
-			this.snackBar.open(this.locale.snackbarMessageAdded, null, { duration: 5000 })
-
-			if (this.dataService.smallWindow) {
-				// Move the snackbar above the bottom toolbar
-				setTimeout(() => {
-					let snackbarContainerList = document.getElementsByTagName("snack-bar-container")
-
-					for (let i = 0; i < snackbarContainerList.length; i++) {
-						let snackbarContainer = snackbarContainerList.item(i)
-						let snackbarOverlay = snackbarContainer.parentElement
-						snackbarOverlay.style.marginBottom = "56px"
-					}
-				}, 1)
-			}
-
-			// Download the table objects
-			await DownloadTableObject(responseData.uuid)
-			await DownloadTableObject(responseData.file)
-
-			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
-		} else {
-			// Show error
-			this.errorDialogVisible = true
+		// Update the settings with the position of the current book
+		if (book instanceof EpubBook) {
+			await this.dataService.settings.SetBook(book.uuid, book.chapter, book.progress)
+		} else if (book instanceof PdfBook) {
+			await this.dataService.settings.SetBook(book.uuid, null, book.page)
 		}
+
+		this.router.navigate(["book"])
 	}
 
 	async BuyBook() {

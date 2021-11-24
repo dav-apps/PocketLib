@@ -97,10 +97,10 @@ export class LibraryPageComponent {
 		this.dataService.currentBook = book
 
 		// Update the settings with the position of the current book
-		if (this.dataService.currentBook instanceof EpubBook) {
-			await this.dataService.settings.SetBook(book.uuid, this.dataService.currentBook.chapter, this.dataService.currentBook.progress)
-		} else if (this.dataService.currentBook instanceof PdfBook) {
-			await this.dataService.settings.SetBook(book.uuid, null, this.dataService.currentBook.page)
+		if (book instanceof EpubBook) {
+			await this.dataService.settings.SetBook(book.uuid, book.chapter, book.progress)
+		} else if (book instanceof PdfBook) {
+			await this.dataService.settings.SetBook(book.uuid, null, book.page)
 		}
 
 		this.router.navigate(["book"])

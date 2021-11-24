@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatTreeModule } from '@angular/material/tree'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatSidenavModule } from '@angular/material/sidenav'
-import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatListModule } from '@angular/material/list'
 import { PortalModule } from '@angular/cdk/portal'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
@@ -158,7 +157,6 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
       MatTreeModule,
 		MatProgressSpinnerModule,
 		MatSidenavModule,
-		MatSnackBarModule,
 		MatListModule,
       PortalModule,
 		PdfViewerModule,

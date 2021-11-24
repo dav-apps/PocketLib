@@ -42,20 +42,19 @@
 			</a>
 
 			<!-- Buy button -->
-			<div *ngIf="!book.purchased">
+			<div *ngIf="!book.purchased && book.price > 0">
 				<dav-button
 					(click)="BuyBook()">
 					{{ price }}
 				</dav-button>
 			</div>
 
-			<!-- Add to library button -->
-			<div class="mt-2" style="min-width: 194px" *ngIf="!(book.price == 0 && !this.book.purchased)">
+			<!-- Read now / continue reading button -->
+			<div class="mt-2" style="min-width: 194px">
 				<dav-button
 					type="accent"
-					[disabled]="addToLibraryButtonDisabled"
-					(click)="AddToLibrary()">
-					{{ locale.addToLibrary }}
+					(click)="Read()">
+					{{ locale.readNow }}
 				</dav-button>
 			</div>
 
@@ -182,20 +181,19 @@
 			</a>
 
 			<!-- Buy button -->
-			<div *ngIf="!book.purchased">
+			<div *ngIf="!book.purchased && book.price > 0">
 				<dav-button
 					(click)="BuyBook()">
 					{{ price }}
 				</dav-button>
 			</div>
 
-			<!-- Add to library button -->
-			<div class="mt-2" style="min-width: 194px" *ngIf="!(book.price == 0 && !this.book.purchased)">
+			<!-- Read now / continue reading button -->
+			<div class="mt-2" style="min-width: 194px">
 				<dav-button
 					type="accent"
-					[disabled]="addToLibraryButtonDisabled"
-					(click)="AddToLibrary()">
-					{{ locale.addToLibrary }}
+					(click)="Read()">
+					{{ locale.readNow }}
 				</dav-button>
 			</div>
 
@@ -319,20 +317,19 @@
 			</a>
 
 			<!-- Buy button -->
-			<div *ngIf="!book.purchased">
+			<div *ngIf="!book.purchased && book.price > 0">
 				<dav-button
 					(click)="BuyBook()">
 					{{ price }}
 				</dav-button>
 			</div>
 
-			<!-- Add to library button -->
-			<div class="mt-2" style="min-width: 194px"  *ngIf="!(book.price == 0 && !this.book.purchased)">
+			<!-- Read now / continue reading button -->
+			<div class="mt-2" style="min-width: 194px">
 				<dav-button
 					type="accent"
-					[disabled]="addToLibraryButtonDisabled"
-					(click)="AddToLibrary()">
-					{{ locale.addToLibrary }}
+					(click)="Read()">
+					{{ locale.readNow }}
 				</dav-button>
 			</div>
 
@@ -385,10 +382,14 @@
 	</div>
 </div>
 
+<pocketlib-loading-screen
+	*ngIf="loadingScreenVisible">
+</pocketlib-loading-screen>
+
 <dav-dialog
 	[header]="locale.davProRequiredDialog.header"
 	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
-	[defaultButtonText]="locale.back"
+	[defaultButtonText]="locale.close"
 	[visible]="davProRequiredDialogVisible"
 	maxWidth="340"
 	(dismiss)="davProRequiredDialogVisible = false"
@@ -401,7 +402,7 @@
 <dav-dialog
 	[header]="book.price == 0 ? locale.buyBookDialog.loginRequired.headerFree : locale.buyBookDialog.header"
 	[primaryButtonText]="locale.buyBookDialog.continue"
-	[defaultButtonText]="locale.back"
+	[defaultButtonText]="locale.cancel"
 	[visible]="buyBookDialogVisible"
 	maxWidth="400"
 	(dismiss)="buyBookDialogVisible = false"
@@ -415,11 +416,11 @@
 
 <dav-dialog
 	[header]="locale.errorDialog.header"
-	[primaryButtonText]="locale.errorDialog.ok"
+	[defaultButtonText]="locale.close"
 	[visible]="errorDialogVisible"
 	maxWidth="340"
 	(dismiss)="errorDialogVisible = false"
-	(primaryButtonClick)="errorDialogVisible = false">
+	(defaultButtonClick)="errorDialogVisible = false">
 
 	<p class="text-color">{{ locale.errorDialog.description }}</p>
 </dav-dialog>

@@ -273,8 +273,7 @@ const enDefaults = {
 		}
 	},
 	storeBookPage: {
-		addToLibrary: "Add to your library",
-		snackbarMessageAdded: "The book was added to your library",
+		readNow: "Read now",
 		unpublished: "Unpublished",
 		review: "In review",
 		hidden: "Hidden",
@@ -297,10 +296,10 @@ const enDefaults = {
 		},
 		errorDialog: {
 			header: "Error",
-			description: "An error occured. Please check your internet connection or try it again later.",
-			ok: "Okay"
+			description: "An error occured. Please check your internet connection or try it again later."
 		},
-		back: "Back"
+		cancel: "Cancel",
+		close: "Close"
 	},
 	storeBooksPage: {
 		allBooksTitle: "All books"
@@ -708,8 +707,7 @@ const deDefaults = {
 		}
 	},
 	storeBookPage: {
-		addToLibrary: "Zur Bibliothek hinzufügen",
-		snackbarMessageAdded: "Das Buch wurde zu deiner Bibliothek hinzugefügt",
+		readNow: "Jetzt lesen",
 		unpublished: "Nicht veröffentlicht",
 		review: "In Überprüfung",
 		hidden: "Versteckt",
@@ -732,10 +730,10 @@ const deDefaults = {
 		},
 		errorDialog: {
 			header: "Fehler",
-			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal.",
-			ok: "Ok"
+			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
-		back: "Zurück"
+		cancel: "Abbrechen",
+		close: "Schließen"
 	},
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
