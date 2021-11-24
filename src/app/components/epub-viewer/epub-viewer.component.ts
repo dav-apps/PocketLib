@@ -1599,7 +1599,22 @@ export class BookChapter {
 				text-align: center;
 			}
 
-			section[role="doc-epigraph"] > blockquote {
+			section[role="doc-epigraph"] > blockquote, section[role="doc-dedication"] > blockquote {
+				display: inline-block;
+				text-align: left;
+			}
+
+			header {
+				text-align: center;
+			}
+
+			header > p {
+				max-width: 70%;
+				margin: auto;
+				text-align: left;
+			}
+
+			header > blockquote {
 				display: inline-block;
 				text-align: left;
 			}

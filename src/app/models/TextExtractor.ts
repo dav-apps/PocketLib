@@ -1142,6 +1142,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.STRONG,
 	TextElementType.TIME,
 	TextElementType.BLOCKQUOTE,
+	TextElementType.HGROUP,
 	TextElementType.CITE,
 	TextElementType.ABBR,
 	TextElementType.A,
