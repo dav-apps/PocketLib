@@ -70,6 +70,7 @@ export class StoreBookPageComponent {
 	coverAlt: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageAlt: string = ""
+	loginRequiredDialogVisible: boolean = false
 	davProRequiredDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
@@ -247,6 +248,12 @@ export class StoreBookPageComponent {
 	}
 
 	async Read() {
+		// Check if the user is logged in
+		if (!this.dataService.dav.isLoggedIn) {
+			this.loginRequiredDialogVisible = true
+			return
+		}
+
 		// Check if the book is already in the library of the user
 		if (!this.book.inLibrary) {
 			// Check if the user can add the book to the library

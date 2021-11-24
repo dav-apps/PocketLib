@@ -279,25 +279,25 @@ const enDefaults = {
 		hidden: "Hidden",
 		publish: "Publish",
 		free: "Free",
+		loginRequiredDialog: {
+			header: "Login required",
+			description: "Log in to get access to this book and to automatically save your books and your progress."
+		},
 		davProRequiredDialog: {
 			header: "dav Pro required",
-			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month.",
-			learnMore: "Learn more"
+			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month."
 		},
 		buyBookDialog: {
 			header: "Buy book",
 			description: "When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
-			loginRequired: {
-				headerFree: "Login required",
-				description: "When you buy a book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
-				descriptionFree: "Log in to read this book."
-			},
+			descriptionNotLoggedIn: "When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
 			continue: "Continue"
 		},
 		errorDialog: {
 			header: "Error",
 			description: "An error occured. Please check your internet connection or try it again later."
 		},
+		learnMore: "Learn more",
 		cancel: "Cancel",
 		close: "Close"
 	},
@@ -713,25 +713,25 @@ const deDefaults = {
 		hidden: "Versteckt",
 		publish: "Veröffentlichen",
 		free: "Kostenlos",
+		loginRequiredDialog: {
+			header: "Anmeldung erforderlich",
+			description: "Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
+		},
 		davProRequiredDialog: {
 			header: "dav Pro benötigt",
-			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen.",
-			learnMore: "Mehr erfahren"
+			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen."
 		},
 		buyBookDialog: {
 			header: "Buch kaufen",
 			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
-			loginRequired: {
-				headerFree: "Anmeldung erforderlich",
-				description: "Wenn du ein Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
-				descriptionFree: "Melde dich an, um dieses Buch zu lesen."
-			},
+			descriptionNotLoggedIn: "Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 			continue: "Weiter"
 		},
 		errorDialog: {
 			header: "Fehler",
 			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
+		learnMore: "Mehr erfahren",
 		cancel: "Abbrechen",
 		close: "Schließen"
 	},

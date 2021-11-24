@@ -387,8 +387,21 @@
 </pocketlib-loading-screen>
 
 <dav-dialog
+	[header]="locale.loginRequiredDialog.header"
+	[primaryButtonText]="locale.learnMore"
+	[defaultButtonText]="locale.close"
+	[visible]="loginRequiredDialogVisible"
+	maxWidth="340"
+	(dismiss)="loginRequiredDialogVisible = false"
+	(primaryButtonClick)="NavigateToAccountPage()"
+	(defaultButtonClick)="loginRequiredDialogVisible = false">
+
+	<p class="text-color">{{ locale.loginRequiredDialog.description }}</p>
+</dav-dialog>
+
+<dav-dialog
 	[header]="locale.davProRequiredDialog.header"
-	[primaryButtonText]="locale.davProRequiredDialog.learnMore"
+	[primaryButtonText]="locale.learnMore"
 	[defaultButtonText]="locale.close"
 	[visible]="davProRequiredDialogVisible"
 	maxWidth="340"
@@ -400,7 +413,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="book.price == 0 ? locale.buyBookDialog.loginRequired.headerFree : locale.buyBookDialog.header"
+	[header]="locale.buyBookDialog.header"
 	[primaryButtonText]="locale.buyBookDialog.continue"
 	[defaultButtonText]="locale.cancel"
 	[visible]="buyBookDialogVisible"
@@ -410,7 +423,7 @@
 	(defaultButtonClick)="buyBookDialogVisible = false">
 
 	<p class="text-color"
-		[innerHTML]="buyBookDialogLoginRequired ? (book.price == 0 ? locale.buyBookDialog.loginRequired.descriptionFree : locale.buyBookDialog.loginRequired.description) : locale.buyBookDialog.description">
+		[innerHTML]="buyBookDialogLoginRequired ? locale.buyBookDialog.descriptionNotLoggedIn : locale.buyBookDialog.description">
 	</p>
 </dav-dialog>
 
