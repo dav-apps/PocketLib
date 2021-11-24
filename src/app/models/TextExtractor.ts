@@ -388,7 +388,7 @@ export function ExtractTextElements(
 			})
 		}
 	} else if (node.nodeType == Node.ELEMENT_NODE) {
-		if (allowedTypes) {
+		if (allowedTypes && TextElementType[node.nodeName] != undefined) {
 			// Check if the allowed types list contains the name of the current node
 			let i = allowedTypes.findIndex(type => type.toString() == node.nodeName)
 			if (i == -1) return textElements
@@ -434,7 +434,7 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					}
 
-					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement, allowedTypes ? allowedTypes : allowedTypesForHElements)
+					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement, allowedTypesForHElements)
 					textElements.push(hTextElement)
 				} else {
 					// Add the child elements
@@ -452,7 +452,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypes ? allowedTypes : allowedTypesForParagraphElement)
+				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypesForParagraphElement)
 				textElements.push(pTextElement)
 				break
 			case "SPAN":
@@ -1141,6 +1141,7 @@ const allowedTypesForHeaderElement: TextElementType[] = [
 	TextElementType.Q,
 	TextElementType.STRONG,
 	TextElementType.TIME,
+	TextElementType.BLOCKQUOTE,
 	TextElementType.CITE,
 	TextElementType.ABBR,
 	TextElementType.A,
