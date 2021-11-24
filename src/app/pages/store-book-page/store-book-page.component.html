@@ -54,7 +54,7 @@
 				<dav-button
 					type="accent"
 					(click)="Read()">
-					{{ locale.readNow }}
+					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
 
@@ -193,7 +193,7 @@
 				<dav-button
 					type="accent"
 					(click)="Read()">
-					{{ locale.readNow }}
+					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
 
@@ -329,7 +329,7 @@
 				<dav-button
 					type="accent"
 					(click)="Read()">
-					{{ locale.readNow }}
+					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
 
