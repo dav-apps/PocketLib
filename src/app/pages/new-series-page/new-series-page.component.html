@@ -6,11 +6,9 @@
 
 	<div class="mt-3 mb-4">
 		<dav-header
-			[header]="nameSubmitted ? submittedName : locale.title"
+			[header]="locale.title"
 			backButtonVisible
-			[editButtonVisible]="nameSubmitted"
-			(backButtonClick)="GoBack()"
-			(editButtonClick)="NavigateToSection(0)">
+			(backButtonClick)="GoBack()">
 		</dav-header>
 	</div>
 
@@ -24,25 +22,82 @@
 		</dav-message-bar>
 	</div>
 
-	<!-- Name -->
-	<pocketlib-new-series-page-name-section
-		[loading]="loading"
-		[section]="section"
-		[visibleSection]="visibleSection"
-		[forwardNavigation]="forwardNavigation"
-		(submit)="SubmitName($event)">
-	</pocketlib-new-series-page-name-section>
+	<div class="mx-auto mb-4" style="max-width: 300px">
+		<p class="text-color mb-3"
+			style="font-size: 15px;"
+			[innerHTML]="locale.description">
+		</p>
 
-	<!-- Book selection -->
-	<pocketlib-new-series-page-book-selection-section
-		[section]="section"
-		[visibleSection]="visibleSection"
-		[forwardNavigation]="forwardNavigation"
-		[books]="selectableBooks"
-		(selectedBooksChange)="SelectedBooksChange($event)"
-		(previous)="Previous()"
-		(finish)="Finish()">
-	</pocketlib-new-series-page-book-selection-section>
+		<!-- Language -->
+		<div class="d-flex mb-3">
+			<pocketlib-language-dropdown
+				[language]="language"
+				(updated)="SetLanguage($event)">
+			</pocketlib-language-dropdown>
+		</div>
+
+		<!-- Name -->
+		<dav-textfield
+			[label]="locale.nameTextfieldLabel"
+			[value]="name"
+			[placeholder]="locale.nameTextfieldPlaceholder"
+			(change)="name = $event.detail.value">
+		</dav-textfield>
+	</div>
+
+	<fluent-progress-ring
+		style="margin: 50px auto 0; width: 28px; height: 28px"
+		*ngIf="booksLoading">
+	</fluent-progress-ring>
+
+	<div class="d-flex flex-wrap justify-content-center mb-4" *ngIf="!booksLoading">
+		<div
+			class="card theme-background-color-secondary shadow-sm m-2"
+			style="padding: 0.8rem 0.8rem 0.5rem"
+			*ngFor="let book of bookItems">
+
+			<div class="d-flex flex-column">
+				<img
+					class="rounded cursor"
+					[src]="book.cover"
+					height="150"
+					[title]="book.title"
+					(click)="ToggleSelectedBook(book)">
+
+				<div class="d-flex justify-content-center" style="margin-top: 0.5rem">
+					<dav-checkbox
+						[label]="book.title"
+						[checked]="book.checked"
+						labelHidden
+						(change)="ToggleSelectedBook(book)">
+					</dav-checkbox>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="mx-auto mt-3 text-center"
+		style="max-width: 300px"
+		*ngIf="bookItems.length == 0 && !booksLoading">
+		<p class="text-color font-weight-light">{{ locale.noBooksMessage }}</p>
+	</div>
+
+	<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
+		<div class="d-flex" style="float: right">
+			<fluent-progress-ring
+				style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
+				*ngIf="loading">
+			</fluent-progress-ring>
+
+			<dav-button
+				type="accent"
+				[disabled]="selectedBooks.length <= 1 || name.length < 3 || loading"
+				(click)="Submit()">
+				{{ locale.create }}
+			</dav-button>
+		</div>
+	</div>
 </div>
 
 <!-- Dual-Screen layout -->
@@ -54,14 +109,12 @@
 	<div
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
-	
+
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
-				[header]="nameSubmitted ? submittedName : locale.title"
+				[header]="locale.title"
 				backButtonVisible
-				[editButtonVisible]="nameSubmitted"
-				(backButtonClick)="GoBack()"
-				(editButtonClick)="NavigateToSection(0)">
+				(backButtonClick)="GoBack()">
 			</dav-header>
 		</div>
 
@@ -75,29 +128,88 @@
 			</dav-message-bar>
 		</div>
 
-		<!-- Name -->
-		<pocketlib-new-series-page-name-section
-			[loading]="loading"
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(submit)="SubmitName($event)">
-		</pocketlib-new-series-page-name-section>
+		<div class="mx-auto mb-4" style="max-width: 300px">
+			<p class="text-color mb-3"
+				style="font-size: 15px;"
+				[innerHTML]="locale.description">
+			</p>
 
-		<!-- Book selection -->
-		<pocketlib-new-series-page-book-selection-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			[books]="selectableBooks"
-			(selectedBooksChange)="SelectedBooksChange($event)"
-			(previous)="Previous()"
-			(finish)="Finish()">
-		</pocketlib-new-series-page-book-selection-section>
+			<!-- Language -->
+			<div class="d-flex mb-3">
+				<pocketlib-language-dropdown
+					[language]="language"
+					(updated)="SetLanguage($event)">
+				</pocketlib-language-dropdown>
+			</div>
+
+			<!-- Name -->
+			<dav-textfield
+				[label]="locale.nameTextfieldLabel"
+				[value]="name"
+				[placeholder]="locale.nameTextfieldPlaceholder"
+				(change)="name = $event.detail.value">
+			</dav-textfield>
+		</div>
+	</div>
+
+	<!-- Right screen -->
+	<div
+		class="w-50"
+		style="padding-top: 50px"
+		[style.marginLeft.px]="dualScreenFoldMargin">
+
+		<fluent-progress-ring
+			style="margin: 50px auto 0; width: 28px; height: 28px"
+			*ngIf="booksLoading">
+		</fluent-progress-ring>
+
+		<div class="d-flex flex-wrap justify-content-center mb-5" *ngIf="!booksLoading">
+			<div
+				class="card theme-background-color-secondary shadow-sm m-2"
+				style="padding: 0.8rem 0.8rem 0.5rem"
+				*ngFor="let book of bookItems">
+
+				<div class="d-flex flex-column">
+					<img
+						class="rounded cursor"
+						[src]="book.cover"
+						height="150"
+						[title]="book.title"
+						(click)="ToggleSelectedBook(book)">
+
+					<div class="d-flex justify-content-center" style="margin-top: 0.5rem">
+						<dav-checkbox
+							[label]="book.title"
+							[checked]="book.checked"
+							labelHidden
+							(change)="ToggleSelectedBook(book)">
+						</dav-checkbox>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div
+			class="mx-auto mt-3 text-center"
+			style="max-width: 300px"
+			*ngIf="bookItems.length == 0 && !booksLoading">
+			<p class="text-color font-weight-light">{{ locale.noBooksMessage }}</p>
+		</div>
+
+		<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
+			<div class="d-flex" style="float: right">
+				<fluent-progress-ring
+					style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
+					*ngIf="loading">
+				</fluent-progress-ring>
+
+				<dav-button
+					type="accent"
+					[disabled]="selectedBooks.length <= 1 || name.length < 3 || loading"
+					(click)="Submit()">
+					{{ locale.create }}
+				</dav-button>
+			</div>
+		</div>
 	</div>
 </div>
-
-<pocketlib-loading-screen
-	*ngIf="loadingScreenVisible"
-	[message]="locale.loadingScreen.message">
-</pocketlib-loading-screen>

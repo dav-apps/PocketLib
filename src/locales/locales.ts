@@ -232,20 +232,12 @@ const enDefaults = {
 	},
 	newSeriesPage: {
 		title: "Create book series",
-		nameSection: {
-			description: "Specify the name of your book series.",
-			nameTextfieldPlaceholder: "Name of the book series"
-		},
-		bookSelectionSection: {
-			description: "Choose the books that belong to a series."
-		},
-		loadingScreen: {
-			message: "Creating the book series..."
-		},
+		description: "Choose the language and the name for the book series.<br>Then you can select the books that belong to the series.",
+		nameTextfieldLabel: "Name",
+		nameTextfieldPlaceholder: "Name of the book series",
+		noBooksMessage: "There are no available books in the selected language.",
 		errorMessage: "An unexpected error occured. Please try it again later.",
-		previous: "Previous",
-		next: "Next",
-		finish: "Finish"
+		create: "Create"
 	},
 	loginPage: {
 		title: "Log in to dav",
@@ -667,20 +659,12 @@ const deDefaults = {
 	},
 	newSeriesPage: {
 		title: "Buch-Reihe erstellen",
-		nameSection: {
-			description: "Gib einen Namen für deine Buch-Reihe an.",
-			nameTextfieldPlaceholder: "Name der Buch-Reihe"
-		},
-		bookSelectionSection: {
-			description: "Wähle die Bücher, die zu einer Reihe gehören."
-		},
-		loadingScreen: {
-			message: "Buch-Reihe wird erstellt..."
-		},
+		description: "Wähle die Sprache und den Namen für die Buch-Reihe.<br>Anschließend kannst du die Bücher auswählen, die zu der Reihe gehören.",
+		nameTextfieldLabel: "Name",
+		nameTextfieldPlaceholder: "Name der Buch-Reihe",
+		noBooksMessage: "In der ausgewählten Sprache gibt es keine verfügbaren Bücher.",
 		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
-		previous: "Zurück",
-		next: "Weiter",
-		finish: "Fertigstellen"
+		create: "Erstellen"
 	},
 	loginPage: {
 		title: "Mit dav anmelden",

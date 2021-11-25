@@ -1,26 +1,24 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { PromiseHolder } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { Author, StoreBook } from 'src/app/misc/types'
+import { Author } from 'src/app/misc/types'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
+
+interface BookItem {
+	uuid: string
+	title: string
+	cover: string
+	checked: boolean
+}
 
 @Component({
 	selector: 'pocketlib-new-series-page',
 	templateUrl: './new-series-page.component.html'
 })
 export class NewSeriesPageComponent {
-	//#region Navigation variables
-	section: number = 0
-	visibleSection: number = 0
-	forwardNavigation: boolean = true
-	loading: boolean = false
-	//#endregion
-
-	//#region General variables
 	locale = enUS.newSeriesPage
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -38,24 +36,13 @@ export class NewSeriesPageComponent {
 		profileImage: false,
 		profileImageBlurhash: null
 	}
+	booksLoading: boolean = true
+	loading: boolean = false
 	errorMessage: string = ""
-	//#endregion
-
-	//#region Name variables
+	language: string = this.dataService.supportedLocale
 	name: string = ""
-	submittedName: string = ""
-	nameSubmitted: boolean = false
-	//#endregion
-
-	//#region Book selection variables
-	selectableBooks: StoreBook[] = []
-	selectedBooks: string[] = []
-	loadCollectionsPromiseHolder = new PromiseHolder()
-	//#endregion
-
-	//#region Loading screen variables
-	loadingScreenVisible: boolean = false
-	//#endregion
+	bookItems: BookItem[] = []
+	selectedBooks: BookItem[] = []
 
 	constructor(
 		public dataService: DataService,
@@ -99,87 +86,70 @@ export class NewSeriesPageComponent {
 
 		// Load the books of the author
 		await this.apiService.LoadCollectionsOfAuthor(this.author)
+		this.LoadBooks()
+	}
+
+	LoadBooks() {
+		this.booksLoading = true
+		this.bookItems = []
 
 		// Get the books that can be selected (status = review, published or hidden; language = current language)
 		for (let collection of this.author.collections) {
 			for (let book of collection.books) {
-				if (book.status > 0 && book.language == this.dataService.supportedLocale) {
-					this.selectableBooks.push(book)
+				if (book.status > 0 && book.language == this.language) {
+					this.bookItems.push({
+						uuid: book.uuid,
+						title: book.title,
+						cover: book.coverContent,
+						checked: false
+					})
+
 					break
 				}
 			}
 		}
 
-		this.loadCollectionsPromiseHolder.Resolve()
+		this.booksLoading = false
 	}
 
 	GoBack() {
 		this.routingService.NavigateBack("/author")
 	}
 
-	async SubmitName(name: string) {
-		this.name = name
+	SetLanguage(language: string) {
+		this.language = language
+		this.selectedBooks = []
 
-		// Wait for the collections
-		this.loading = true
-		await this.loadCollectionsPromiseHolder.AwaitResult()
-		this.loading = false
-
-		this.Next()
-
-		this.submittedName = this.name
-		this.nameSubmitted = true
+		this.LoadBooks()
 	}
 
-	SelectedBooksChange(selectedBooks: string[]) {
-		this.selectedBooks = selectedBooks
-	}
+	ToggleSelectedBook(bookItem: BookItem) {
+		bookItem.checked = !bookItem.checked
+		let i = this.bookItems.findIndex(b => b.uuid == bookItem.uuid)
 
-	Previous() {
-		this.NavigateToSection(this.section - 1)
-	}
+		if (i != -1) {
+			this.bookItems[i].checked = bookItem.checked
+		}
 
-	Next() {
-		this.NavigateToSection(this.section + 1)
-	}
+		// Get the selected books
+		this.selectedBooks = []
 
-	NavigateToSection(index: number) {
-		this.forwardNavigation = index > this.section
-		this.section = index
-
-		setTimeout(() => {
-			this.visibleSection = index
-		}, 500)
-	}
-
-	ShowLoadingScreen() {
-		this.loadingScreenVisible = true
-
-		setTimeout(() => {
-			this.dataService.navbarVisible = false
-
-			// Set the color of the progress ring
-			let progress = document.getElementsByTagName('circle')
-			if (progress.length > 0) {
-				let item = progress.item(0)
-				item.setAttribute('style', item.getAttribute('style') + ' stroke: white')
+		for (let book of this.bookItems) {
+			if (book.checked) {
+				this.selectedBooks.push(book)
 			}
-		}, 1)
+		}
 	}
 
-	HideLoadingScreen() {
-		this.dataService.navbarVisible = true
-		this.loadingScreenVisible = false
-	}
+	async Submit() {
+		this.loading = true
 
-	async Finish() {
-		this.ShowLoadingScreen()
 		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
 		let collectionUuids: string[] = []
 
 		// Get the collection uuids of the books
-		for (let bookUuid of this.selectedBooks) {
-			let collection = this.author.collections.find(collection => collection.books.findIndex(b => b.uuid == bookUuid) != -1)
+		for (let book of this.selectedBooks) {
+			let collection = this.author.collections.find(collection => collection.books.findIndex(b => b.uuid == book.uuid) != -1)
 			if (collection != null) collectionUuids.push(collection.uuid)
 		}
 
@@ -187,15 +157,18 @@ export class NewSeriesPageComponent {
 		let createStoreBookSeriesResponse = await this.apiService.CreateStoreBookSeries({
 			author: authorUuid,
 			name: this.name,
-			language: this.dataService.supportedLocale,
+			language: this.language,
 			collections: collectionUuids
 		})
 
 		if (createStoreBookSeriesResponse.status != 201) {
 			this.errorMessage = this.locale.errorMessage
-			this.HideLoadingScreen()
+			this.loading = false
 			return
 		}
+
+		// Reload the author
+		await this.dataService.LoadAuthorOfUser()
 
 		// Redirect to the author profile
 		this.dataService.navbarVisible = true
