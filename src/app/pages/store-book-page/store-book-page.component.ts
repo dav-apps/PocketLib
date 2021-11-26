@@ -248,58 +248,141 @@ export class StoreBookPageComponent {
 	}
 
 	async Read() {
+		/*
+		- is not logged in:
+			- Show login dialog
+		- is logged in:
+			- is in library:
+				- open book
+			- is not in library:
+				- purchased:
+					- add to library
+					- open book
+				- not purchased:
+					- free:
+						- create purchase for book
+						- add to library
+						- open book
+					- not free:
+						- can access:
+							- add to library
+							- open book
+						- can not access
+							- show dav Plus dialog
+
+		*/
+
 		// Check if the user is logged in
 		if (!this.dataService.dav.isLoggedIn) {
 			this.loginRequiredDialogVisible = true
 			return
 		}
 
-		// Check if the book is already in the library of the user
-		if (!this.book.inLibrary) {
-			// Check if the user can add the book to the library
-			let isAuthorOfBook = false
-			if (this.dataService.userAuthor) {
-				// Try to find the book in the books of the author
-				isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
-			}
-
-			if (
-				!this.dataService.userIsAdmin
-				&& !isAuthorOfBook
-				&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
-			) {
-				// Show dav Pro dialog
-				this.davProRequiredDialogVisible = true
-				return
-			}
-
-			// Show the loading screen
+		// Check if the book is in the library of the user
+		if (this.book.inLibrary) {
+			// TODO: Check if the book is already downloaded, and if not, wait for download
+			await this.OpenBook()
+		} else {
 			this.loadingScreenVisible = true
 
-			// Add the StoreBook to the library of the user
-			let response = await this.apiService.CreateBook({
-				storeBook: this.uuid
-			})
+			// Check if the user has purchased the book
+			if (this.book.purchased) {
+				if (!await this.AddBookToLibrary()) {
+					// Show error
+					this.loadingScreenVisible = false
+					this.errorDialogVisible = true
+					return
+				}
 
-			if (response.status == 201) {
-				let responseData = (response as ApiResponse<any>).data
-
-				// Download the table objects
-				await DownloadTableObject(responseData.uuid)
-				await DownloadTableObject(responseData.file)
-
-				await this.dataService.ReloadBook(responseData.uuid)
-
-				// Clear the ApiCache for GetStoreBook
-				this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+				await this.OpenBook()
 			} else {
-				// Show error
-				this.loadingScreenVisible = false
-				this.errorDialogVisible = true
-				return
+				// Check if the book is free
+				if (this.book.price == 0) {
+					if (!await this.CreatePurchaseForBook()) {
+						// Show error
+						this.loadingScreenVisible = false
+						this.errorDialogVisible = true
+						return
+					}
+
+					if (!await this.AddBookToLibrary()) {
+						// Show error
+						this.loadingScreenVisible = false
+						this.errorDialogVisible = true
+						return
+					}
+
+					await this.OpenBook()
+				} else {
+					// Check if the user can access the book
+					let isAuthorOfBook = false
+					if (this.dataService.userAuthor) {
+						// Try to find the book in the books of the author
+						isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
+					}
+
+					if (
+						!this.dataService.userIsAdmin
+						&& !isAuthorOfBook
+						&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
+					) {
+						// Show dav Pro dialog
+						this.loadingScreenVisible = false
+						this.davProRequiredDialogVisible = true
+						return
+					}
+
+					await this.AddBookToLibrary()
+					await this.OpenBook()
+				}
 			}
 		}
+	}
 
+	private async CreatePurchaseForBook(): Promise<boolean> {
+		// Purchase this book directly
+		let createPurchaseResponse = await this.apiService.CreatePurchaseForStoreBook({
+			uuid: this.uuid,
+			currency: "eur"
+		})
+
+		if (createPurchaseResponse.status == 201) {
+			this.book.purchased = true
+
+			// Clear the ApiCache for GetStoreBook
+			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+
+			return true
+		}
+
+		return false
+	}
+
+	private async AddBookToLibrary(): Promise<boolean> {
+		// Add the StoreBook to the library of the user
+		let response = await this.apiService.CreateBook({
+			storeBook: this.uuid
+		})
+
+		if (response.status == 201) {
+			let responseData = (response as ApiResponse<any>).data
+
+			// Download the table objects
+			await DownloadTableObject(responseData.uuid)
+			await DownloadTableObject(responseData.file)
+
+			await this.dataService.ReloadBook(responseData.uuid)
+
+			// Clear the ApiCache for GetStoreBook
+			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+
+			return true
+		}
+
+		return false
+	}
+
+	private async OpenBook() {
 		// Load the book
 		let book = this.dataService.books.find(b => b.storeBook == this.uuid)
 		
@@ -324,26 +407,8 @@ export class StoreBookPageComponent {
 
 	async BuyBook() {
 		if (this.dataService.dav.isLoggedIn) {
-			if (this.book.price == 0) {
-				// Purchase this book directly
-				let createPurchaseResponse = await this.apiService.CreatePurchaseForStoreBook({
-					uuid: this.uuid,
-					currency: "eur"
-				})
-
-				if (createPurchaseResponse.status == 201) {
-					this.book.purchased = true
-
-					// Clear the ApiCache for GetStoreBook
-					this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
-				} else {
-					// Show error
-					this.errorDialogVisible = true
-				}
-			} else {
-				// Show dialog for buying the book
-				this.ShowBuyBookDialog(false)
-			}
+			// Show dialog for buying the book
+			this.ShowBuyBookDialog(false)
 		} else {
 			// Show the Buy book dialog with login required
 			this.ShowBuyBookDialog(true)
