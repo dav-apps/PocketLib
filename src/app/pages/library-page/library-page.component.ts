@@ -2,12 +2,14 @@ import { Component, HostListener } from '@angular/core'
 import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
+import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { environment } from 'src/environments/environment'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -133,8 +135,8 @@ export class LibraryPageComponent {
 		link.click()
 	}
 
-	GoToAccountPage() {
-		this.router.navigate(["/account"])
+	GoToLoginPage() {
+		Dav.ShowLoginPage(environment.apiKey, environment.baseUrl)
 	}
 
 	ShowRenameBookDialog() {
