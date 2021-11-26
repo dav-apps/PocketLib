@@ -30,6 +30,8 @@ export class StorePageComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
+		this.dataService.navbarVisible = true
 	}
 
 	ngOnInit() {
