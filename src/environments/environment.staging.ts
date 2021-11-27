@@ -1,7 +1,7 @@
 export const environment = {
 	production: true,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
-	baseUrl: "https://pocketlib.dav-apps.tech",
+	baseUrl: "https://pocketlib-staging-d9rk6.ondigitalocean.app",
 	pocketlibApiBaseUrl: "https://dav-backend-tfpik.ondigitalocean.app/v1/api/1/dev/call",
 	websiteBaseUrl: "https://dav-apps.tech",
 	appId: 6,
