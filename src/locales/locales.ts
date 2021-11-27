@@ -276,9 +276,9 @@ const enDefaults = {
 			header: "Login required",
 			description: "Log in to get access to this book and to automatically save your books and your progress."
 		},
-		davProRequiredDialog: {
-			header: "dav Pro required",
-			description: "Access all books in the Store and support the authors with dav Pro for 10 € per month."
+		noAccessDialog: {
+			header: "No access",
+			description: "Purchase this book or upgrade to dav Pro to read this book."
 		},
 		buyBookDialog: {
 			header: "Buy book",
@@ -703,9 +703,9 @@ const deDefaults = {
 			header: "Anmeldung erforderlich",
 			description: "Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
 		},
-		davProRequiredDialog: {
-			header: "dav Pro benötigt",
-			description: "Mit dav Pro kannst du für 10 € pro Monat auf alle Bücher im Store zugreifen und gleichzeitig die Autoren unterstützen."
+		noAccessDialog: {
+			header: "Kein Zugriff",
+			description: "Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen."
 		},
 		buyBookDialog: {
 			header: "Buch kaufen",

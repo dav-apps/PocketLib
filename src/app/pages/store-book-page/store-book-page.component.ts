@@ -71,7 +71,7 @@ export class StoreBookPageComponent {
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageAlt: string = ""
 	loginRequiredDialogVisible: boolean = false
-	davProRequiredDialogVisible: boolean = false
+	noAccessDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
@@ -328,7 +328,7 @@ export class StoreBookPageComponent {
 					) {
 						// Show dav Pro dialog
 						this.loadingScreenVisible = false
-						this.davProRequiredDialogVisible = true
+						this.noAccessDialogVisible = true
 						return
 					}
 

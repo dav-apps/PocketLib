@@ -400,16 +400,16 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="locale.davProRequiredDialog.header"
+	[header]="locale.noAccessDialog.header"
 	[primaryButtonText]="locale.learnMore"
 	[defaultButtonText]="locale.close"
-	[visible]="davProRequiredDialogVisible"
+	[visible]="noAccessDialogVisible"
 	maxWidth="340"
-	(dismiss)="davProRequiredDialogVisible = false"
+	(dismiss)="noAccessDialogVisible = false"
 	(primaryButtonClick)="NavigateToAccountPage()"
-	(defaultButtonClick)="davProRequiredDialogVisible = false">
+	(defaultButtonClick)="noAccessDialogVisible = false">
 
-	<p class="text-color">{{ locale.davProRequiredDialog.description }}</p>
+	<p class="text-color">{{ locale.noAccessDialog.description }}</p>
 </dav-dialog>
 
 <dav-dialog
