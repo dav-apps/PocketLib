@@ -147,6 +147,9 @@ export class DataService {
 			}
 		}
 
+		// Sort the categories by name
+		this.categories.sort((a: Category, b: Category) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+
 		this.categoriesPromiseHolder.Resolve()
 	}
 
