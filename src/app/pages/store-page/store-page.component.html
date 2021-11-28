@@ -12,6 +12,7 @@
 		<dav-sidenav-item
 			[value]="locale.startPage"
 			icon="Home"
+			link="/store"
 			(click)="ShowStartPage()">
 		</dav-sidenav-item>
 
@@ -25,6 +26,7 @@
 			<dav-sidenav-item
 				[value]="category.name"
 				indent
+				[link]="'/store/category/' + category.key"
 				(click)="ShowCategory(category.key)"
 				*ngFor="let category of dataService.categories">
 			</dav-sidenav-item>
