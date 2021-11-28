@@ -9,7 +9,7 @@
 
 	<pocketlib-blurhash-image
 		style="margin-left: 15px; position: absolute; transition: 0.16s"
-		[style.transform]="hover ? 'translate(' + ((i > 0 ? 15 : 0) + (i * 25)) + 'px, 0px) rotate(' + i * 13 + 'deg)' : 'translate(' + (i * 15) + 'px, ' + ((i * 10) - ((series.books.length - 1) * 5)) + 'px)'"
+		[style.transform]="hover ? 'translate(' + (((advancedHoverAnimation ? 90 : 100) / series.books.length) * (advancedHoverAnimation ? i - advancedHoverAnimationIndexTransform : i)) + 'px, 10px) rotate(' + (((advancedHoverAnimation ? 60 : 26) / series.books.length) * (advancedHoverAnimation ? i - advancedHoverAnimationIndexTransform : i)) + 'deg)' : 'translate(' + ((50 / series.books.length) * i) + 'px, ' + ((25 / series.books.length) * i) + 'px)'"
 		[style.zIndex]="series.books.length - i"
 		[src]="book.coverContent"
 		[fallback]="dataService.defaultStoreBookCover"

@@ -10,6 +10,8 @@ export class HorizontalSeriesListItemComponent {
 	@Input() series: SeriesListItem
 	hover: boolean = false
 	link: string = ""
+	advancedHoverAnimationIndexTransform: number = 1
+	advancedHoverAnimation: boolean = false
 
 	constructor(
 		public dataService: DataService
@@ -17,5 +19,7 @@ export class HorizontalSeriesListItemComponent {
 
 	ngOnInit() {
 		this.link = `/store/book/${this.series.books[0].uuid}`
+		this.advancedHoverAnimation = this.series.books.length > 3
+		this.advancedHoverAnimationIndexTransform = Math.floor((this.series.books.length - 1) / 3)
 	}
 }

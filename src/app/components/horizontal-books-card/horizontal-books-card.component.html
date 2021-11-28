@@ -11,12 +11,11 @@
 	<div class="d-flex">
 		<div
 			class="d-flex align-items-center"
-			style="width: 50%"
-			[style.height.px]="120 + (books.length * 10)">
+			style="width: 150px; height: 160px">
 
 			<pocketlib-blurhash-image
 				style="margin-left: 15px; position: absolute"
-				[style.transform]="'translateX(' + (i * 15) + 'px) translateY(' + ((i * 10) - ((books.length - 1) * 5)) + 'px)'"
+				[style.transform]="'translate(' + ((50 / books.length) * i) + 'px, ' + (((25 / books.length) * i) - 13) + 'px)'"
 				[style.zIndex]="books.length - i"
 				[src]="book.coverContent"
 				[fallback]="dataService.defaultStoreBookCover"
@@ -27,7 +26,7 @@
 			</pocketlib-blurhash-image>
 		</div>
 
-		<div class="card-body my-auto" style="width: 50%">
+		<div class="card-body my-auto">
 			<h5
 				[style.fontSize.px]="fontSize"
 				class="card-title my-auto text-color">
