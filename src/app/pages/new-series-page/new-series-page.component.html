@@ -32,6 +32,7 @@
 		<div class="d-flex mb-3">
 			<pocketlib-language-dropdown
 				[language]="language"
+				[disabled]="loading"
 				(updated)="SetLanguage($event)">
 			</pocketlib-language-dropdown>
 		</div>
@@ -41,6 +42,7 @@
 			[label]="locale.nameTextfieldLabel"
 			[value]="name"
 			[placeholder]="locale.nameTextfieldPlaceholder"
+			[disabled]="loading"
 			(change)="name = $event.detail.value">
 		</dav-textfield>
 	</div>
@@ -138,6 +140,7 @@
 			<div class="d-flex mb-3">
 				<pocketlib-language-dropdown
 					[language]="language"
+					[disabled]="loading"
 					(updated)="SetLanguage($event)">
 				</pocketlib-language-dropdown>
 			</div>
@@ -147,6 +150,7 @@
 				[label]="locale.nameTextfieldLabel"
 				[value]="name"
 				[placeholder]="locale.nameTextfieldPlaceholder"
+				[disabled]="loading"
 				(change)="name = $event.detail.value">
 			</dav-textfield>
 		</div>

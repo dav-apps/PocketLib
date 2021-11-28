@@ -62,12 +62,20 @@
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<dav-button
-					type="accent"
-					(click)="PublishStoreBook()"
-					*ngIf="book.status == 1">
-					{{ locale.publish }}
-				</dav-button>
+				<div class="d-flex">
+					<dav-button
+						type="accent"
+						[disabled]="publishLoading"
+						(click)="PublishStoreBook()"
+						*ngIf="book.status == 1">
+						{{ locale.publish }}
+					</dav-button>
+
+					<fluent-progress-ring
+						style="margin: 8px 0px 0px 14px; width: 16px; height: 16px"
+						*ngIf="publishLoading">
+					</fluent-progress-ring>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -201,12 +209,20 @@
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<dav-button
-					type="accent"
-					(click)="PublishStoreBook()"
-					*ngIf="book.status == 1">
-					{{ locale.publish }}
-				</dav-button>
+				<div class="d-flex">
+					<dav-button
+						type="accent"
+						[disabled]="publishLoading"
+						(click)="PublishStoreBook()"
+						*ngIf="book.status == 1">
+						{{ locale.publish }}
+					</dav-button>
+
+					<fluent-progress-ring
+						style="margin: 8px 0px 0px 14px; width: 16px; height: 16px"
+						*ngIf="publishLoading">
+					</fluent-progress-ring>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -337,12 +353,20 @@
 			<div *ngIf="dataService.userIsAdmin && book.status != 2">
 				<p class="mt-3 mb-2 text-color">{{ bookStatus }}</p>
 
-				<dav-button
-					type="accent"
-					(click)="PublishStoreBook()"
-					*ngIf="book.status == 1">
-					{{ locale.publish }}
-				</dav-button>
+				<div class="d-flex">
+					<dav-button
+						type="accent"
+						[disabled]="publishLoading"
+						(click)="PublishStoreBook()"
+						*ngIf="book.status == 1">
+						{{ locale.publish }}
+					</dav-button>
+
+					<fluent-progress-ring
+						style="margin: 8px 0px 0px 14px; width: 16px; height: 16px"
+						*ngIf="publishLoading">
+					</fluent-progress-ring>
+				</div>
 			</div>
 		</div>
 	</div>

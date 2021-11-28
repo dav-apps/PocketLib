@@ -76,6 +76,7 @@ export class StoreBookPageComponent {
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
 	loadingScreenVisible: boolean = false
+	publishLoading: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -445,6 +446,8 @@ export class StoreBookPageComponent {
 	}
 
 	async PublishStoreBook() {
+		this.publishLoading = true
+
 		let response = await this.apiService.UpdateStoreBook({
 			uuid: this.uuid,
 			status: "published"
@@ -454,5 +457,7 @@ export class StoreBookPageComponent {
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
 		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBooksInReview.name)
+
+		this.publishLoading = false
 	}
 }

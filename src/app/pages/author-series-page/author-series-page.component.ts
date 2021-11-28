@@ -123,7 +123,7 @@ export class AuthorSeriesPageComponent {
 				if (
 					this.books.findIndex(b => b.uuid == book.uuid) == -1
 					&& book.status > 0
-					&& book.language == this.dataService.supportedLocale
+					&& book.language == this.seriesName.language
 				) this.selectableBooks.push(book)
 			}
 		}
