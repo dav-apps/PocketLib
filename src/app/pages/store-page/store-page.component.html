@@ -22,7 +22,7 @@
 			(click)="categoriesVisible = !categoriesVisible">
 		</dav-sidenav-item>
 
-		<div *ngIf="categoriesVisible">
+		<div [style.marginBottom.px]="dataService.smallWindow ? 112 : 0" *ngIf="categoriesVisible">
 			<dav-sidenav-item
 				[value]="category.name"
 				indent

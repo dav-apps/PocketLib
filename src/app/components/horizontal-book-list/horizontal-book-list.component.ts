@@ -32,11 +32,7 @@ export class HorizontalBookListComponent {
 	}
 
 	async ngOnInit() {
-		if (this.type == "latest") {
-			this.header = this.locale.recentlyPublished
-		} else if (this.type == "categories") {
-			this.header = this.categories.length == 1 ? this.locale.moreBooksInCategory : this.locale.moreBooksInCategories
-		}
+		this.SetHeader()
 
 		if (this.type == "latest") {
 			await this.LoadLatestStoreBooks()
@@ -53,7 +49,16 @@ export class HorizontalBookListComponent {
 			|| changes.categories.currentValue.length == 0
 		) return
 
+		this.SetHeader()
 		await this.LoadStoreBooksByCategories()
+	}
+
+	SetHeader() {
+		if (this.type == "latest") {
+			this.header = this.locale.recentlyPublished
+		} else if (this.type == "categories") {
+			this.header = this.categories.length == 1 ? this.locale.moreBooksInCategory : this.locale.moreBooksInCategories
+		}
 	}
 
 	async LoadLatestStoreBooks() {

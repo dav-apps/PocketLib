@@ -127,8 +127,7 @@
 	<!-- List of books with the same categories -->
 	<div
 		class="offset-lg-1 col-12 col-lg-10"
-		style="padding: 0px 15px"
-		[style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
+		style="padding: 0px 15px; margin-top: 2.5rem">
 
 		<pocketlib-horizontal-book-list
 			type="categories"
@@ -270,7 +269,7 @@
 			</pocketlib-horizontal-book-list>
 		</div>
 
-		<div [style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
+		<div style="margin-top: 2.5rem">
 			<pocketlib-horizontal-book-list
 				type="categories"
 				[currentBookUuid]="uuid"
@@ -397,7 +396,7 @@
 		</pocketlib-horizontal-book-list>
 	</div>
 
-	<div [style.marginTop.rem]="book.series.length > 0 ? 0 : 5">
+	<div style="margin-top: 2.5rem">
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[currentBookUuid]="uuid"
