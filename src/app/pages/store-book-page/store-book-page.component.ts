@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
-import { ApiResponse, DownloadTableObject } from 'dav-js'
+import { ApiResponse, ApiErrorResponse, DownloadTableObject } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
@@ -378,6 +378,13 @@ export class StoreBookPageComponent {
 			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
 
 			return true
+		} else {
+			let error = (response as ApiErrorResponse).errors[0]
+			
+			if (error.code == 3005) {
+				// StoreBook is already in library
+				return true
+			}
 		}
 
 		return false

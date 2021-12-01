@@ -13,9 +13,7 @@ import { environment } from 'src/environments/environment'
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: [
-		'./app.component.scss'
-	]
+	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
@@ -117,9 +115,10 @@ export class AppComponent {
 		this.dataService.userPromiseHolder.Resolve()
 	}
 
-	UserDownloaded() {
+	async UserDownloaded() {
 		// Load the author
-		this.dataService.LoadAuthorOfUser()
+		await this.dataService.LoadAuthorOfUser()
+		this.dataService.userIsAdmin = environment.admins.includes(this.dataService.dav.user.Id)
 	}
 
 	SyncFinished() {

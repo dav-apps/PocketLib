@@ -180,6 +180,7 @@ export class StoreBooksPageComponent {
 	PageChange(page: number) {
 		this.page = page
 		this.router.navigate([], { queryParams: { page } })
+		this.dataService.ScrollStoreContentToTop()
 		this.UpdateView()
 	}
 }
