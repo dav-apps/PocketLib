@@ -3,7 +3,6 @@ import { Router } from '@angular/router'
 import { DataService } from 'src/app/services/data-service'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { enUS } from 'src/locales/locales'
-declare var $: any
 
 const progressFactor = 100000
 const currentViewerZIndex = -2
@@ -27,9 +26,7 @@ const doubleTapToleranceTime = 400
 @Component({
 	selector: 'pocketlib-pdf-viewer',
 	templateUrl: './pdf-viewer.component.html',
-	styleUrls: [
-		"./pdf-viewer.component.scss"
-	]
+	styleUrls: ["./pdf-viewer.component.scss"]
 })
 export class PdfViewerComponent {
 	locale = enUS.pdfViewer
@@ -99,6 +96,11 @@ export class PdfViewerComponent {
 	showBookmarksPanel: boolean = false
 	//#endregion
 
+	//#region Global event listeners
+	keydownEventListener = (event: KeyboardEvent) => this.onKeyDown(event)
+	mouseWheelEventListener = (event: WheelEvent) => this.onMouseWheel(event)
+	//#endregion
+
 	constructor(
 		private dataService: DataService,
 		private router: Router,
@@ -123,8 +125,8 @@ export class PdfViewerComponent {
 		this.UpdateZoom(this.currentBook.zoom)
 
 		// Bind the keydown and wheel events
-		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode))
-		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta))
+		document.addEventListener("keydown", this.keydownEventListener)
+		document.addEventListener("wheel", this.mouseWheelEventListener)
 
 		// Bind the touch events
 		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
@@ -144,7 +146,9 @@ export class PdfViewerComponent {
 	}
 
 	ngOnDestroy() {
-		$(document).unbind()
+		// Remove the event listeners for the document
+		document.removeEventListener("keydown", this.keydownEventListener)
+		document.removeEventListener("wheel", this.mouseWheelEventListener)
 	}
 
 	@HostListener('window:resize')
@@ -405,27 +409,27 @@ export class PdfViewerComponent {
 		this.ShowPage(NavigationDirection.None, this.currentBook.page)
 	}
 
-	onKeyDown(keyCode: number) {
-		switch (keyCode) {
-			case 8:		// Back key
+	onKeyDown(event: KeyboardEvent) {
+		switch (event.code) {
+			case "Backspace":		// Back key
 				this.ngZone.run(() => this.GoHome())
 				break
-			case 37:		// Left arrow key
+			case "ArrowLeft":		// Left arrow key
 				this.ngZone.run(() => this.PrevPage())
 				break
-			case 39:		// Right arrow key
+			case "ArrowRight":	// Right arrow key
 				this.ngZone.run(() => this.NextPage())
 				break
 		}
 	}
 
-	onMouseWheel(wheelDelta: number) {
-		if (wheelDelta > 0) {
-			// Wheel up
-			this.ngZone.run(() => this.PrevPage())
-		} else {
+	onMouseWheel(event: WheelEvent) {
+		if (event.deltaY > 0) {
 			// Wheel down
 			this.ngZone.run(() => this.NextPage())
+		} else {
+			// Wheel up
+			this.ngZone.run(() => this.PrevPage())
 		}
 	}
 

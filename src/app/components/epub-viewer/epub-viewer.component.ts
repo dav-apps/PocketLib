@@ -15,7 +15,6 @@ import {
 } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
-declare var $: any
 
 const secondPageMinWidth = 1050		// Show two pages on the window if the window width is greater than this
 const progressFactor = 100000			// The factor which is used to save the progress
@@ -164,6 +163,11 @@ export class EpubViewerComponent {
 	showBookmarksPanel: boolean = false
 	//#endregion
 
+	//#region Global event listeners
+	keydownEventListener = (event: KeyboardEvent) => this.onKeyDown(event)
+	mouseWheelEventListener = (event: WheelEvent) => this.onMouseWheel(event)
+	//#endregion
+
 	constructor(
 		public dataService: DataService,
 		private router: Router,
@@ -229,8 +233,8 @@ export class EpubViewerComponent {
 		this.CalculateTotalProgress(this.currentBook.progress)
 
 		// Bind the keydown and wheel events
-		$(document).unbind().keydown((e) => this.onKeyDown(e.keyCode))
-		$(document).bind('mousewheel', (e) => this.onMouseWheel(e.originalEvent.wheelDelta))
+		document.addEventListener("keydown", this.keydownEventListener)
+		document.addEventListener("wheel", this.mouseWheelEventListener)
 
 		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
@@ -249,34 +253,36 @@ export class EpubViewerComponent {
 	}
 
 	ngOnDestroy() {
-		$(document).unbind()
+		// Remove the event listeners for the document
+		document.removeEventListener("keydown", this.keydownEventListener)
+		document.removeEventListener("wheel", this.mouseWheelEventListener)
 	}
 
-	async onKeyDown(keyCode: number) {
+	async onKeyDown(event: KeyboardEvent) {
 		if (this.showChaptersPanel) return
 
-		switch (keyCode) {
-			case 8:		// Back key
+		switch (event.code) {
+			case "Backspace":		// Back key
 				this.ngZone.run(() => this.GoBack())
 				break
-			case 37:		// Left arrow key
+			case "ArrowLeft":		// Left arrow key
 				this.ngZone.run(() => this.PrevPage())
 				break
-			case 39:		// Right arrow key
+			case "ArrowRight":	// Right arrow key
 				this.ngZone.run(() => this.NextPage())
 				break
 		}
 	}
 
-	async onMouseWheel(wheelDelta: number) {
+	async onMouseWheel(event: WheelEvent) {
 		if (this.showChaptersPanel) return
 
-		if (wheelDelta > 0) {
-			// Wheel up
-			this.ngZone.run(() => this.PrevPage())
-		} else {
+		if (event.deltaY > 0) {
 			// Wheel down
 			this.ngZone.run(() => this.NextPage())
+		} else {
+			// Wheel up
+			this.ngZone.run(() => this.PrevPage())
 		}
 	}
 
@@ -1426,8 +1432,8 @@ export class EpubViewerComponent {
 
 	SetEventListenersForViewer(viewer: HTMLIFrameElement) {
 		// Bind the keydown and wheel events to the viewers
-		$(viewer.contentWindow).keydown((e: any) => this.onKeyDown(e.keyCode))
-		$(viewer.contentWindow).bind('mousewheel', (e: any) => this.onMouseWheel(e.originalEvent.wheelDelta))
+		viewer.contentWindow.addEventListener("keydown", (event: KeyboardEvent) => this.onKeyDown(event))
+		viewer.contentWindow.addEventListener("wheel", (event: WheelEvent) => this.onMouseWheel(event))
 
 		// Bind the touch and click events to the viewers
 		viewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
