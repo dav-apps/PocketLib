@@ -358,7 +358,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.CODE:
 			let codeElement = document.createElement("code") as HTMLElement
 			if (textElement.Id) codeElement.id = textElement.Id
-			codeElement.innerText = textElement.Content
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let codeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (codeChild) codeElement.appendChild(codeChild)
+				}
+			}
 
 			return codeElement
 	}
@@ -729,7 +735,7 @@ export function ExtractTextElements(
 				textElements.push(trTextElement)
 				break
 			case "TH":
-				let thElement = node as HTMLTableHeaderCellElement
+				let thElement = node as HTMLTableCellElement
 				let thTextElement: TextElement = {
 					Type: TextElementType.TH,
 					Id: thElement.id,
@@ -742,7 +748,7 @@ export function ExtractTextElements(
 				textElements.push(thTextElement)
 				break
 			case "TD":
-				let tdElement = node as HTMLTableDataCellElement
+				let tdElement = node as HTMLTableCellElement
 				let tdTextElement: TextElement = {
 					Type: TextElementType.TD,
 					Id: tdElement.id,
@@ -770,10 +776,10 @@ export function ExtractTextElements(
 				let codeTextElement: TextElement = {
 					Type: TextElementType.CODE,
 					Id: codeElement.id,
-					Content: codeElement.textContent,
 					ParentElement: parentElement
 				}
 
+				codeTextElement.TextElements = GetInnerTextElements(codeElement, codeTextElement, allowedTypesForCodeElement)
 				textElements.push(codeTextElement)
 				break
 			default:
@@ -1113,7 +1119,8 @@ const allowedTypesForSectionElement: TextElementType[] = [
 	TextElementType.OL,
 	TextElementType.HR,
 	TextElementType.BR,
-	TextElementType.TABLE
+	TextElementType.TABLE,
+	TextElementType.PRE
 ]
 
 const allowedTypesForHgroupElement: TextElementType[] = [
@@ -1244,4 +1251,8 @@ const allowedTypesForTableCellElement: TextElementType[] = [
 	TextElementType.ABBR,
 	TextElementType.A,
 	TextElementType.BR
+]
+
+const allowedTypesForCodeElement: TextElementType[] = [
+	TextElementType.TEXT
 ]
