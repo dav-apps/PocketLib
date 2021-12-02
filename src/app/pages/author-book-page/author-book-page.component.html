@@ -108,9 +108,8 @@
 				<div class="d-flex">
 					<div class="my-auto">
 						<span
-							class="badge badge-pill me-2"
-							[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
-							style="font-size: 13px"
+							class="badge rounded-pill me-2"
+							[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 							*ngFor="let category of book.categories; let i = index">
 							{{ category.name }}
 						</span>
@@ -368,16 +367,15 @@
 					<div class="d-flex">
 						<div class="my-auto">
 							<span
-								class="badge badge-pill me-2"
-								[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
-								style="font-size: 13px"
+								class="badge rounded-pill me-2"
+								[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 								*ngFor="let category of book.categories; let i = index">
 								{{ category.name }}
 							</span>
 						</div>
 
-						<button type="button" 
-							class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+						<button type="button"
+							class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 							style="height: 35px; padding: 3px 6px; font-size: 16px"
 							(click)="ShowCategoriesDialog()">
 							<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>

@@ -95,9 +95,8 @@
 			<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
 
 			<!-- Categories -->
-			<a class="badge badge-pill me-2 cursor"
-				[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
-				style="font-size: 13px"
+			<a class="badge rounded-pill me-2 cursor"
+				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 				[routerLink]="'/store/category/' + category.key"
 				*ngFor="let category of book.categories; let i = index">
 				{{ category.name }}
@@ -246,9 +245,8 @@
 			<p class="mb-1 text-color" style="white-space: pre-wrap">{{ book.description }}</p>
 
 			<!-- Categories -->
-			<a class="badge badge-pill me-2 cursor"
-				[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
-				style="font-size: 13px"
+			<a class="badge rounded-pill me-2 cursor"
+				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 				[routerLink]="'/store/category/' + category.key"
 				*ngFor="let category of book.categories; let i = index">
 				{{ category.name }}
@@ -374,9 +372,8 @@
 	<p class="mt-4 mb-1 text-color" style="white-space: pre-line">{{ book.description }}</p>
 
 	<!-- Categories -->
-	<a class="badge badge-pill me-2 cursor"
-		[ngClass]="i == 0 ? 'badge-primary' : 'badge-secondary'"
-		style="font-size: 13px"
+	<a class="badge rounded-pill me-2 cursor"
+		[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 		[routerLink]="'/store/category/' + category.key"
 		*ngFor="let category of book.categories; let i = index">
 		{{ category.name }}

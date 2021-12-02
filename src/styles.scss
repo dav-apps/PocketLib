@@ -1,5 +1,6 @@
-// Customize the bootstrap color
+// Customize bootstrap properties
 $primary: #0d47a1;	// Blue 900
+$badge-font-size: 12px;
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
@@ -97,6 +98,14 @@ body {
 .horizontal-store-list::-webkit-scrollbar-thumb {
 	background-color: var(--scrollbar-color);
 	border-radius: 10px;
+}
+
+a.badge {
+	text-decoration: none;
+}
+
+a.badge:hover {
+	color: white;
 }
 
 // Custom Acrylic styles
