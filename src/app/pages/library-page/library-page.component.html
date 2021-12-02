@@ -86,7 +86,7 @@
 				</a>
 			</div>
 
-			<div class="row justify-content-center">
+			<div class="d-flex flex-wrap justify-content-center">
 				<pocketlib-library-page-book-card
 					*ngFor="let book of dataService.books; let i = index"
 					[book]="book"
@@ -130,7 +130,7 @@
 		[style.marginLeft.px]="dualScreenFoldMargin">
 
 		<div
-			class="row justify-content-center pt-3"
+			class="d-flex flex-wrap justify-content-center pt-3"
 			style="overflow: scroll"
 			[style.height.px]="dataService.contentHeight">
 
