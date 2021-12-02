@@ -82,7 +82,7 @@
 		class="mx-auto mt-3 text-center"
 		style="max-width: 300px"
 		*ngIf="bookItems.length == 0 && !booksLoading">
-		<p class="text-color font-weight-light">{{ locale.noBooksMessage }}</p>
+		<p class="text-color fw-light">{{ locale.noBooksMessage }}</p>
 	</div>
 
 	<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
@@ -197,7 +197,7 @@
 			class="mx-auto mt-3 text-center"
 			style="max-width: 300px"
 			*ngIf="bookItems.length == 0 && !booksLoading">
-			<p class="text-color font-weight-light">{{ locale.noBooksMessage }}</p>
+			<p class="text-color fw-light">{{ locale.noBooksMessage }}</p>
 		</div>
 
 		<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">

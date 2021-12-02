@@ -4,7 +4,7 @@
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="!dualScreenLayout">
 
-	<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+	<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
    <div class="my-3" *ngIf="!loading">
 		<div
@@ -12,7 +12,7 @@
 			*ngIf="dataService.books.length == 0">
 
 			<div class="mx-auto" style="width: 100%; height: 100%; max-width: 600px">
-				<p class="font-weight-light text-center text-color mt-2 mb-3"
+				<p class="fw-light text-center text-color mt-2 mb-3"
 					style="font-size: 19px">
 					{{ locale.libraryEmpty }}
 				</p>
@@ -115,7 +115,7 @@
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
 		<div class="mx-auto px-5">
 			<pocketlib-library-page-cards

@@ -4,7 +4,7 @@
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout">
 
-	<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+	<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 	<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 	<div class="row mt-5">
@@ -52,7 +52,7 @@
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 		<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 		<div class="row" style="margin-top: 50px">
@@ -107,7 +107,7 @@
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout">
 
-   <h1 class="text-center font-weight-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
+   <h1 class="text-center fw-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
    
    <pocketlib-user-profile
 		[compact]="width < 410"
@@ -116,7 +116,7 @@
 
 	<!--
 	<div class="text-color" style="margin-top: 90px" *ngIf="dataService.dav.user.Plan < 2">
-		<h4 class="text-center font-weight-light">{{ locale.upgradeTitle }}</h4>
+		<h4 class="text-center fw-light">{{ locale.upgradeTitle }}</h4>
 
 		<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
 	</div>
@@ -133,7 +133,7 @@
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center font-weight-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
 
 		<pocketlib-user-profile
 			[compact]="width < 410"
@@ -148,7 +148,7 @@
 
 		<!--
 		<div class="text-color mt-4" *ngIf="dataService.dav.user.Plan < 2">
-			<h4 class="text-center font-weight-light">{{ locale.upgradeTitle }}</h4>
+			<h4 class="text-center fw-light">{{ locale.upgradeTitle }}</h4>
 	
 			<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
 		</div>

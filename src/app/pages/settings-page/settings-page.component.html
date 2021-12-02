@@ -4,11 +4,11 @@
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="!dualScreenLayout">
 
-   <h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+   <h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
    
    <div class="mx-auto mt-4" style="max-width: 240px">
       <!-- Open last read book -->
-		<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
+		<p class="text-color fw-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
 
 		<dav-toggle
 			[checked]="openLastReadBook"
@@ -71,11 +71,11 @@
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center font-weight-light mt-3 text-color">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
 		<div class="mx-auto mt-4 pb-2" style="max-width: 240px">
 			<!-- Open last read book -->
-			<p class="text-color font-weight-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
+			<p class="text-color fw-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
 			
 			<dav-toggle
 				[checked]="openLastReadBook"

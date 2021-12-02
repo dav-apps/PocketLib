@@ -18,11 +18,11 @@
 		<div id="book-details-container">
 			<!-- Cover -->
 			<div id="book-details-cover-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
 			</div>
 
 			<div id="book-details-cover-data" class="book-details-data">
-				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
 					<pocketlib-blurhash-image
 						[src]="coverContent"
@@ -46,7 +46,7 @@
 
 			<!-- Description -->
 			<div id="book-details-description-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 			</div>
 
 			<div id="book-details-description-data" class="book-details-data">
@@ -55,7 +55,7 @@
 					*ngIf="book.description && !editDescription">
 					{{ book.description }}
 				</p>
-				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 
 				<div
 					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
@@ -88,7 +88,7 @@
 
 			<!-- Language -->
 			<div id="book-details-language-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
 			</div>
 
 			<div id="book-details-language-data" class="d-flex book-details-data">
@@ -101,7 +101,7 @@
 
 			<!-- Categories -->
 			<div id="book-details-categories-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
 			</div>
 
 			<div id="book-details-categories-data" class="book-details-data">
@@ -127,7 +127,7 @@
 
 			<!-- Price -->
 			<div id="book-details-price-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
 			</div>
 
 			<div id="book-details-price-data" class="book-details-data">
@@ -140,7 +140,7 @@
 
 			<!-- ISBN -->
 			<div id="book-details-isbn-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">ISBN: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">ISBN: </p>
 			</div>
 
 			<div id="book-details-isbn-data" class="d-flex text-color book-details-data">
@@ -153,14 +153,14 @@
 
 			<!-- Book file -->
 			<div id="book-details-book-file-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 			</div>
 
 			<div id="book-details-book-file-data" class="book-details-data">
-				<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
-				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
-				<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
-				<p class="font-weight-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
+				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
+				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
+				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
+				<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
 
 				<div class="d-flex">
 					<dav-button
@@ -182,7 +182,7 @@
 
 			<!-- Status -->
 			<div id="book-details-status-label">
-				<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
+				<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 			</div>
 
 			<div id="book-details-status-data" class="book-details-data">
@@ -268,11 +268,11 @@
 			<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
 				<!-- Cover -->
 				<div style="grid-column: 1; grid-row: 1;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.cover }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 1;">
-					<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 					<div class="mb-3" *ngIf="coverContent">
 						<pocketlib-blurhash-image
 							[src]="coverContent"
@@ -296,7 +296,7 @@
 
 				<!-- Description -->
 				<div style="grid-column: 1; grid-row: 2;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.description }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 2; min-width: 300px">
@@ -305,7 +305,7 @@
 						*ngIf="book.description && !editDescription">
 						{{ book.description }}
 					</p>
-					<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 
 					<div
 						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
@@ -348,7 +348,7 @@
 			<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
 				<!-- Language -->
 				<div style="grid-column: 1; grid-row: 1;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.language }}: </p>
 				</div>
 
 				<div class="d-flex" style="grid-column: 2; grid-row: 1">
@@ -361,7 +361,7 @@
 
 				<!-- Categories -->
 				<div style="grid-column: 1; grid-row: 2">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.categories }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 2">
@@ -387,7 +387,7 @@
 
 				<!-- Price -->
 				<div style="grid-column: 1; grid-row: 3">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.price }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 3">
@@ -400,7 +400,7 @@
 
 				<!-- ISBN -->
 				<div style="grid-column: 1; grid-row: 4;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">ISBN: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">ISBN: </p>
 				</div>
 
 				<div class="d-flex text-color" style="grid-column: 2; grid-row: 4;">
@@ -413,14 +413,14 @@
 
 				<!-- Book file -->
 				<div style="grid-column: 1; grid-row: 5;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.bookFile }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 5;">
-					<p class="font-weight-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
-					<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
-					<p class="font-weight-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
-					<p class="font-weight-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
+					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
+					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
+					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
+					<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
 
 					<div class="d-flex">
 						<dav-button
@@ -442,7 +442,7 @@
 
 				<!-- Status -->
 				<div style="grid-column: 1; grid-row: 6;">
-					<p class="mr-3 font-weight-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
+					<p class="mr-3 fw-light text-color" style="font-size: 19px">{{ locale.status }}: </p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 6;">

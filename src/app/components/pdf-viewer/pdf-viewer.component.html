@@ -209,10 +209,10 @@
 
 <!-- Page indicators -->
 <div style="z-index: 3; position: absolute; bottom: 0; left: 0" *ngIf="showSecondPage">
-   <p class="font-weight-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage }}</p>
+   <p class="fw-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage }}</p>
 </div>
 <div style="z-index: 3; position: absolute; bottom: 0; right: 0" *ngIf="!showSecondPage || (!lastPage && showSecondPage)">
-   <p class="font-weight-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage + (showSecondPage ? 1 : 0) }}</p>
+   <p class="fw-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage + (showSecondPage ? 1 : 0) }}</p>
 </div>
 
 <dav-panel
@@ -234,7 +234,7 @@
 		</li>
 	</ul>
 
-	<p class="font-weight-light"
+	<p class="fw-light"
 		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
 		{{ locale.noBookmarks }}
 	</p>
