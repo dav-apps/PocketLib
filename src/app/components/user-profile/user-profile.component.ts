@@ -5,7 +5,8 @@ import { enUS } from 'src/locales/locales'
 
 @Component({
 	selector: 'pocketlib-user-profile',
-	templateUrl: './user-profile.component.html'
+	templateUrl: './user-profile.component.html',
+	styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent {
 	locale = enUS.userProfile
