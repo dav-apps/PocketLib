@@ -1,6 +1,6 @@
 {
   "name": "pocketlib",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "scripts": {
     "ng": "ng",
     "start": "cd dist && node server.js",
@@ -39,7 +39,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/pro-light-svg-icons": "^5.15.4",
-    "@schematics/angular": "^9.1.15",
+    "@schematics/angular": "^13.0.4",
     "axios": "^0.24.0",
     "blurhash": "^1.1.4",
     "bootstrap": "^5.1.3",
