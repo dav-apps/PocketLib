@@ -8,7 +8,8 @@ import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
 	selector: "pocketlib-settings-page",
-	templateUrl: "./settings-page.component.html"
+	templateUrl: "./settings-page.component.html",
+	styleUrls: ['./settings-page.component.scss']
 })
 export class SettingsPageComponent {
 	locale = enUS.settingsPage

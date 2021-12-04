@@ -100,12 +100,17 @@ body {
 	border-radius: 10px;
 }
 
-a.badge {
+a {
 	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 a.badge:hover {
 	color: white;
+	text-decoration: none;
 }
 
 // Custom Acrylic styles
