@@ -1,6 +1,6 @@
 {
   "name": "pocketlib",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "scripts": {
     "ng": "ng",
     "start": "cd dist && node server.js",
