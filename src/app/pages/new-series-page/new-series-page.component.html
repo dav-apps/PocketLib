@@ -47,10 +47,10 @@
 		</dav-textfield>
 	</div>
 
-	<fluent-progress-ring
+	<dav-progress-ring
 		style="margin: 50px auto 0; width: 28px; height: 28px"
 		*ngIf="booksLoading">
-	</fluent-progress-ring>
+	</dav-progress-ring>
 
 	<div class="d-flex flex-wrap justify-content-center mb-4" *ngIf="!booksLoading">
 		<div
@@ -87,10 +87,10 @@
 
 	<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
 		<div class="d-flex" style="float: right">
-			<fluent-progress-ring
+			<dav-progress-ring
 				style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
 				*ngIf="loading">
-			</fluent-progress-ring>
+			</dav-progress-ring>
 
 			<dav-button
 				type="accent"
@@ -162,10 +162,10 @@
 		style="padding-top: 50px"
 		[style.marginLeft.px]="dualScreenFoldMargin">
 
-		<fluent-progress-ring
+		<dav-progress-ring
 			style="margin: 50px auto 0; width: 28px; height: 28px"
 			*ngIf="booksLoading">
-		</fluent-progress-ring>
+		</dav-progress-ring>
 
 		<div class="d-flex flex-wrap justify-content-center mb-5" *ngIf="!booksLoading">
 			<div
@@ -202,10 +202,10 @@
 
 		<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
 			<div class="d-flex" style="float: right">
-				<fluent-progress-ring
+				<dav-progress-ring
 					style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
 					*ngIf="loading">
-				</fluent-progress-ring>
+				</dav-progress-ring>
 
 				<dav-button
 					type="accent"
