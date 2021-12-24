@@ -73,7 +73,7 @@ export class SettingsPageComponent {
 				this.noUpdateAvailable = true
 
 				setTimeout(() => {
-					this.hideNoUpdateAvailable = false
+					this.hideNoUpdateAvailable = true
 				}, 3000)
 			}
 		}
