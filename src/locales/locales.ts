@@ -60,7 +60,11 @@ const enDefaults = {
 		news: "News and updates",
 		github: "PocketLib on GitHub",
 		privacy: "Privacy Policy",
-		installUpdate: "Install update"
+		updateSearch: "Searching for updates...",
+		installingUpdate: "Installing the update...",
+		updateError: "Error while installing the update",
+		noUpdateAvailable: "The app is up-to-date",
+		activateUpdate: "Activate update"
    },
    developerPage: {
       landingHeader1: "Build on PocketLib",
@@ -487,7 +491,11 @@ const deDefaults = {
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
 		privacy: "Datenschutzerklärung",
-		installUpdate: "Update installieren"
+		updateSearch: "Suche nach Updates...",
+		installingUpdate: "Update wird installiert...",
+		updateError: "Fehler beim Installieren des Updates",
+		noUpdateAvailable: "Die App ist aktuell",
+		activateUpdate: "Update aktivieren"
 	},
 	developerPage: {
       landingHeader1: "Baue auf PocketLib",

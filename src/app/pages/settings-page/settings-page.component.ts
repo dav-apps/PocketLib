@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
-import { SwUpdate } from '@angular/service-worker'
+import { SwUpdate, VersionEvent } from '@angular/service-worker'
+import { faCheck } from '@fortawesome/pro-light-svg-icons'
 import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
@@ -13,6 +14,7 @@ import { GetDualScreenSettings } from 'src/app/misc/utils'
 })
 export class SettingsPageComponent {
 	locale = enUS.settingsPage
+	faCheck = faCheck
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	version: string = keys.version
@@ -20,7 +22,11 @@ export class SettingsPageComponent {
 	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
 	selectedTheme: string
 	openLastReadBook: boolean = false
-	updateAvailable: boolean = false
+	updateMessage: string = ""
+	searchForUpdates: boolean = false
+	updateInstalled: boolean = false
+	updateError: boolean = false
+	noUpdateAvailable: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -45,13 +51,27 @@ export class SettingsPageComponent {
 		let labels = document.getElementsByClassName('ms-Toggle-label')
 		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
 
-		// Check for updates
-		this.swUpdate.available.subscribe(() => {
-			this.updateAvailable = true
-		})
-
 		if (this.swUpdate.isEnabled) {
-			this.swUpdate.checkForUpdate()
+			// Check for updates
+			this.updateMessage = this.locale.updateSearch
+			this.searchForUpdates = true
+
+			this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
+				if (event.type == "VERSION_DETECTED") {
+					this.updateMessage = this.locale.installingUpdate
+				} else if (event.type == "VERSION_READY") {
+					this.searchForUpdates = false
+					this.updateInstalled = true
+				} else {
+					this.searchForUpdates = false
+					this.updateError = true
+				}
+			})
+
+			if (!this.swUpdate.checkForUpdate()) {
+				this.searchForUpdates = false
+				this.noUpdateAvailable = true
+			}
 		}
 	}
 
@@ -66,7 +86,7 @@ export class SettingsPageComponent {
 		this.dataService.SetOpenLastReadBook(!checked)
 	}
 
-	InstallUpdate() {
+	ActivateUpdate() {
 		window.location.reload()
 	}
 }
