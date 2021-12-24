@@ -144,6 +144,10 @@
 	</div>
 </div>
 
+<pocketlib-loading-screen
+	*ngIf="loadingScreenVisible">
+</pocketlib-loading-screen>
+
 <dav-context-menu
 	[visible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"

@@ -9,6 +9,7 @@ import { CachingService } from 'src/app/services/caching-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { GetBook } from 'src/app/models/BookManager'
 import { environment } from 'src/environments/environment'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
@@ -40,6 +41,7 @@ export class LibraryPageComponent {
 	discoverBooksHover: boolean = false
 	goToAuthorPageHover: boolean = false
 	loading: boolean = true
+	loadingScreenVisible: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -73,20 +75,27 @@ export class LibraryPageComponent {
 	}
 
 	async AddBookFilePick(file: ReadFile) {
+		this.loadingScreenVisible = true
+		let uuid: string = ""
+
 		// Create a new book
 		if (file.type == pdfType) {
-			await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
+			uuid = await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
 		} else {
-			let uuid = await EpubBook.Create(file.underlyingFile)
+			uuid = await EpubBook.Create(file.underlyingFile)
+		}
 
-			if (uuid == null) {
-				// Show error dialog
-				this.addBookErrorDialogVisible = true
-				return
-			}
+		if (uuid == null) {
+			// Show error dialog
+			this.loadingScreenVisible = false
+			this.addBookErrorDialogVisible = true
+			return
 		}
 
 		await this.dataService.LoadAllBooks()
+
+		// Get the created book
+		this.ShowBook(await GetBook(uuid))
 	}
 
 	async ShowBook(book: Book) {
