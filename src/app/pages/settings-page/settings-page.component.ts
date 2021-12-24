@@ -24,9 +24,9 @@ export class SettingsPageComponent {
 	openLastReadBook: boolean = false
 	updateMessage: string = ""
 	searchForUpdates: boolean = false
-	updateInstalled: boolean = false
 	updateError: boolean = false
 	noUpdateAvailable: boolean = false
+	hideNoUpdateAvailable: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -51,7 +51,7 @@ export class SettingsPageComponent {
 		let labels = document.getElementsByClassName('ms-Toggle-label')
 		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
 
-		if (this.swUpdate.isEnabled) {
+		if (this.swUpdate.isEnabled && !this.dataService.updateInstalled) {
 			// Check for updates
 			this.updateMessage = this.locale.updateSearch
 			this.searchForUpdates = true
@@ -61,16 +61,20 @@ export class SettingsPageComponent {
 					this.updateMessage = this.locale.installingUpdate
 				} else if (event.type == "VERSION_READY") {
 					this.searchForUpdates = false
-					this.updateInstalled = true
+					this.dataService.updateInstalled = true
 				} else {
 					this.searchForUpdates = false
 					this.updateError = true
 				}
 			})
 
-			if (!this.swUpdate.checkForUpdate()) {
+			if (!await this.swUpdate.checkForUpdate()) {
 				this.searchForUpdates = false
 				this.noUpdateAvailable = true
+
+				setTimeout(() => {
+					this.hideNoUpdateAvailable = false
+				}, 3000)
 			}
 		}
 	}

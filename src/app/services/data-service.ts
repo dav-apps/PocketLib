@@ -61,6 +61,7 @@ export class DataService {
 	settingsCache: {
 		[key: string]: any
 	} = {}
+	updateInstalled: boolean = false
 
 	constructor(
 		private apiService: ApiService
