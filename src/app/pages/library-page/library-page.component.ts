@@ -77,7 +77,9 @@ export class LibraryPageComponent {
 	}
 
 	ngAfterViewChecked() {
-		if (!this.allBooksVisible && this.rightContentContainer != null) {
+		if (this.allBooksVisible && this.leftContentContainer != null) {
+			this.leftContentContainer.nativeElement.style.transform = `translateX(-${window.innerWidth}px)`
+		} else if (!this.allBooksVisible && this.rightContentContainer != null) {
 			this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
 		}
 	}
