@@ -21,14 +21,12 @@ export async function GetBook(uuid: string): Promise<Book> {
 export async function GetAllBooks(bookOrder: BookOrder): Promise<Book[]> {
 	let tableObjects = await GetAllTableObjects(environment.bookTableId, false)
 	let books: Book[] = []
-	let booksCopy: Book[] = []
 
 	for (let tableObject of tableObjects) {
 		let book = await GetBookByTableObject(tableObject)
 		if (book == null) continue
 
 		books.push(book)
-		booksCopy.push(book)
 	}
 
 	// Sort the books
@@ -39,12 +37,12 @@ export async function GetAllBooks(bookOrder: BookOrder): Promise<Book[]> {
 		let i = books.findIndex(b => b.uuid == uuid)
 		if (i == -1) continue
 
-		sortedBooks.push(booksCopy[i])
-		booksCopy.splice(i, 1)
+		sortedBooks.push(books[i])
+		books.splice(i, 1)
 	}
 
 	// Add the remaining books in the list to the end of the sorted books
-	for (let book of booksCopy) {
+	for (let book of books) {
 		sortedBooks.push(book)
 	}
 
