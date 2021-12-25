@@ -183,7 +183,12 @@ export class LibraryPageComponent {
 		this.rightContentContainer.nativeElement.style.transform = `translateX(0px)`
 
 		setTimeout(() => {
-			window.scrollTo({ top: 0 })
+			window.scrollTo(0, 0)
+
+			setTimeout(() => {
+				this.leftContentContainer.nativeElement.style.position = "absolute"
+				this.rightContentContainer.nativeElement.style.position = "relative"
+			}, 200)
 		}, 300)
 	}
 
@@ -194,7 +199,12 @@ export class LibraryPageComponent {
 		this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
 
 		setTimeout(() => {
-			window.scrollTo({ top: 0 })
+			window.scrollTo(0, 0)
+			
+			setTimeout(() => {
+				this.leftContentContainer.nativeElement.style.position = "relative"
+				this.rightContentContainer.nativeElement.style.position = "absolute"
+			}, 200)
 		}, 300)
 	}
 
