@@ -3,6 +3,7 @@ const enDefaults = {
    libraryPage: {
 		title: "Your Library",
 		libraryEmpty: "Your library is currently empty...",
+		allBooks: "All books",
 		bookContextMenuExport: "Export",
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
@@ -434,6 +435,7 @@ const deDefaults = {
    libraryPage: {
 		title: "Deine Bibliothek",
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
+		allBooks: "Alle Bücher",
 		bookContextMenuExport: "Exportieren",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",

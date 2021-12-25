@@ -65,6 +65,8 @@ export class LibraryPageComponent {
 	async ngOnInit() {
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
 		this.loading = false
+
+		this.setSize()
 	}
 
 	ngAfterViewInit() {
