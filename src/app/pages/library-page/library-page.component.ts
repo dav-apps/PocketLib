@@ -49,6 +49,7 @@ export class LibraryPageComponent {
 	loading: boolean = true
 	loadingScreenVisible: boolean = false
 	allBooksVisible: boolean = false
+	allBooks: Book[] = []
 
 	constructor(
 		public dataService: DataService,
@@ -155,6 +156,27 @@ export class LibraryPageComponent {
 	}
 
 	ShowAllBooks() {
+		// Copy the books
+		this.allBooks = []
+
+		for (let book of this.dataService.books) {
+			this.allBooks.push(book)
+		}
+
+		// Sort the books by name
+		this.allBooks.sort((a: EpubBook | PdfBook, b: EpubBook | PdfBook) => {
+			let firstTitle = a.title.toLowerCase()
+			let secondTitle = b.title.toLowerCase()
+
+			if (firstTitle > secondTitle) {
+				return 1
+			} else if (firstTitle < secondTitle) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+
 		this.allBooksVisible = true
 
 		this.leftContentContainer.nativeElement.style.transform = `translateX(${-window.innerWidth}px)`
