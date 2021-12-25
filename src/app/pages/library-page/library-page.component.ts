@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core'
+import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
 import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
@@ -23,6 +23,8 @@ const pdfType = "application/pdf"
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
 	faAddressCard = faAddressCard
+	@ViewChild('leftContentContainer') leftContentContainer: ElementRef<HTMLDivElement>
+	@ViewChild('rightContentContainer') rightContentContainer: ElementRef<HTMLDivElement>
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -46,6 +48,7 @@ export class LibraryPageComponent {
 	goToAuthorPageHover: boolean = false
 	loading: boolean = true
 	loadingScreenVisible: boolean = false
+	allBooksVisible: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -71,6 +74,12 @@ export class LibraryPageComponent {
 
 	ngAfterViewInit() {
 		this.setSize()
+	}
+
+	ngAfterViewChecked() {
+		if (!this.allBooksVisible && this.rightContentContainer != null) {
+			this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
+		}
 	}
 
 	@HostListener('window:resize')
@@ -141,6 +150,28 @@ export class LibraryPageComponent {
 
 		// Update the order of the books
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
+	}
+
+	ShowAllBooks() {
+		this.allBooksVisible = true
+
+		this.leftContentContainer.nativeElement.style.transform = `translateX(${-window.innerWidth}px)`
+		this.rightContentContainer.nativeElement.style.transform = `translateX(0px)`
+
+		setTimeout(() => {
+			window.scrollTo({ top: 0 })
+		}, 300)
+	}
+
+	HideAllBooks() {
+		this.allBooksVisible = false
+
+		this.leftContentContainer.nativeElement.style.transform = `translateX(0px)`
+		this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
+
+		setTimeout(() => {
+			window.scrollTo({ top: 0 })
+		}, 300)
 	}
 
 	async BookContextMenu(event: MouseEvent, book: Book) {
