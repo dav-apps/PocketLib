@@ -26,7 +26,7 @@ export class LibraryPageComponent {
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
-	bookCoverWidth: number = 180
+	largeBookCoverWidth: number = 300
 	selectedBook: Book
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -66,13 +66,7 @@ export class LibraryPageComponent {
 
 	@HostListener('window:resize')
 	setSize() {
-		if (window.innerWidth > 400) {
-			this.bookCoverWidth = 180
-		} else if (window.innerWidth > 360) {
-			this.bookCoverWidth = 160
-		} else {
-			this.bookCoverWidth = 140
-		}
+		
 	}
 
 	async AddBookFilePick(file: ReadFile) {

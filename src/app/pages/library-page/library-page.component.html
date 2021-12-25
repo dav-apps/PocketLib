@@ -86,14 +86,30 @@
 				</a>
 			</div>
 
-			<div class="d-flex flex-wrap justify-content-center">
+			<div class="d-flex justify-content-center">
+				<!-- Big book card for last read book -->
 				<pocketlib-library-page-book-card
-					*ngFor="let book of dataService.books; let i = index"
-					[book]="book"
-					[width]="bookCoverWidth"
-					(click)="ShowBook(book)"
-					(contextMenu)="BookContextMenu($event, book)">
+					[book]="dataService.books[0]"
+					[width]="largeBookCoverWidth"
+					(click)="ShowBook(dataService.books[0])"
+					(contextMenu)="BookContextMenu($event, dataService.books[0])">
 				</pocketlib-library-page-book-card>
+
+				<div
+					style="display: flex; flex-flow: column wrap;"
+					[style.maxHeight.px]="(largeBookCoverWidth * 1.5) + 200"
+					[style.width.px]="((largeBookCoverWidth / 2) + 16) * (dataService.books.length > 3 ? 2 : (dataService.books.length == 1 ? 0 : 1))">
+
+					<div *ngFor="let book of dataService.books; let i = index">
+						<pocketlib-library-page-book-card
+							[book]="book"
+							[width]="(largeBookCoverWidth / 2) - 6"
+							(click)="ShowBook(book)"
+							(contextMenu)="BookContextMenu($event, book)"
+							*ngIf="i != 0 && i < 5">
+						</pocketlib-library-page-book-card>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
