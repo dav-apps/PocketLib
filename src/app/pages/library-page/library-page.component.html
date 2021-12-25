@@ -131,10 +131,30 @@
 			class="d-flex justify-content-center w-100"
 			style="position: absolute; transition: 0.3s all; transform: translateX(3000px)">
 
-			<dav-button
-				(click)="HideAllBooks()">
-				Zurück
-			</dav-button>
+			<div class="container">
+				<div class="mx-auto" style="max-width: 700px">
+					<dav-button
+						(click)="HideAllBooks()">
+						<i class="ms-Icon ms-Icon--Back me-2" aria-hidden="true"></i>
+						<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
+					</dav-button>
+
+					<div class="card cursor mt-3" *ngFor="let book of dataService.books">
+						<div class="d-flex">
+							<div style="height: 100px">
+								<img
+									class="img-fluid rounded-start"
+									style="height: 100%"
+									[src]="book.cover ?? dataService.defaultStoreBookCover">
+							</div>
+
+							<div class="card-body d-flex align-items-center">
+								<h5 class="card-title mb-0">{{ book.title }}</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

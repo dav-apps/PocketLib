@@ -30,6 +30,7 @@ const enDefaults = {
 			header: "Invalid file",
 			description: "The selected file could not be read."
 		},
+		back: "Back",
 		save: "Save",
 		remove: "Remove",
 		close: "Close",
@@ -462,6 +463,7 @@ const deDefaults = {
 			header: "Ungültige Datei",
 			description: "Die ausgewählte Datei konnte nicht gelesen werden."
 		},
+		back: "Zurück",
 		save: "Speichern",
 		remove: "Entfernen",
 		close: "Schließen",
