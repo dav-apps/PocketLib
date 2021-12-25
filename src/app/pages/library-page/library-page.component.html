@@ -23,8 +23,8 @@
 			</div>
 		</div>
 
-		<div *ngIf="dataService.books.length > 0">
-			<div class="d-flex justify-content-center my-3">
+		<div class="d-flex flex-column align-items-center" *ngIf="dataService.books.length > 0">
+			<div class="d-flex justify-content-center mb-3">
 				<!-- Card for adding new book -->
 				<button
 					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
@@ -86,7 +86,7 @@
 				</a>
 			</div>
 
-			<div class="d-flex justify-content-center">
+			<div [ngClass]="smallBookList ? '' : 'd-flex justify-content-center'">
 				<!-- Big book card for last read book -->
 				<pocketlib-library-page-book-card
 					[book]="dataService.books[0]"
@@ -96,14 +96,15 @@
 				</pocketlib-library-page-book-card>
 
 				<div
-					style="display: flex; flex-flow: column wrap;"
+					class="d-flex"
+					[style.flexFlow]="smallBookList ? 'row wrap' : 'column wrap'"
 					[style.maxHeight.px]="(largeBookCoverWidth * 1.5) + 200"
-					[style.width.px]="((largeBookCoverWidth / 2) + 16) * (dataService.books.length > 3 ? 2 : (dataService.books.length == 1 ? 0 : 1))">
+					[style.width.px]="smallBookListWidth">
 
 					<div *ngFor="let book of dataService.books; let i = index">
 						<pocketlib-library-page-book-card
 							[book]="book"
-							[width]="(largeBookCoverWidth / 2) - 6"
+							[width]="smallBookCoverWidth"
 							(click)="ShowBook(book)"
 							(contextMenu)="BookContextMenu($event, book)"
 							*ngIf="i != 0 && i < 5">

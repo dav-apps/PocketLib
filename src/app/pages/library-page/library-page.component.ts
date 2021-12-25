@@ -26,7 +26,10 @@ export class LibraryPageComponent {
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
+	smallBookList: boolean = false
+	smallBookListWidth: number = 200
 	largeBookCoverWidth: number = 300
+	smallBookCoverWidth: number = 150
 	selectedBook: Book
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -64,9 +67,29 @@ export class LibraryPageComponent {
 		this.loading = false
 	}
 
+	ngAfterViewInit() {
+		this.setSize()
+	}
+
 	@HostListener('window:resize')
 	setSize() {
-		
+		this.smallBookList = window.innerWidth < 650
+
+		if (this.smallBookList) {
+			this.smallBookCoverWidth = (this.largeBookCoverWidth / 2) - 9
+		} else {
+			this.smallBookCoverWidth = (this.largeBookCoverWidth / 2) - 6
+		}
+
+		if (this.smallBookList) {
+			this.smallBookListWidth = this.largeBookCoverWidth + 18
+		} else if (this.dataService.books.length > 3) {
+			this.smallBookListWidth = ((this.largeBookCoverWidth / 2) + 16) * 2
+		} else if (this.dataService.books.length == 1) {
+			this.smallBookListWidth = 0
+		} else {
+			this.smallBookListWidth = ((this.largeBookCoverWidth / 2) + 16)
+		}
 	}
 
 	async AddBookFilePick(file: ReadFile) {
