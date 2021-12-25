@@ -33,10 +33,6 @@ export class LibraryPageBookCardComponent {
 		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
 	}
 
-	Click() {
-		this.click.emit()
-	}
-
 	ContextMenu(event: MouseEvent) {
 		this.contextMenu.emit(event)
 		return false
