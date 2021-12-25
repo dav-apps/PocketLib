@@ -160,6 +160,15 @@ export class DataService {
 		this.books = await GetAllBooks(this.bookOrder)
 	}
 
+	MoveBookToFirstPosition(uuid: string) {
+		let i = this.books.findIndex(b => b.uuid == uuid)
+		if (i == -1) return
+
+		let book = this.books[i]
+		this.books.splice(i, 1)
+		this.books.unshift(book)
+	}
+
 	async ReloadBook(uuid: string) {
 		// The book was updated in the database. Get it and replace the old book in the list with the new one
 		let book = await GetBook(uuid)

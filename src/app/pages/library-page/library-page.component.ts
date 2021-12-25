@@ -115,6 +115,18 @@ export class LibraryPageComponent {
 		}
 
 		this.router.navigate(["book"])
+
+		// Move the selected book to the top of the books list
+		this.dataService.MoveBookToFirstPosition(book.uuid)
+
+		// Update the order of the books
+		let uuids: string[] = []
+
+		for (let b of this.dataService.books) {
+			uuids.push(b.uuid)
+		}
+
+		await this.dataService.bookOrder.SetBookUuids(uuids)
 	}
 
 	async BookContextMenu(event: MouseEvent, book: Book) {
