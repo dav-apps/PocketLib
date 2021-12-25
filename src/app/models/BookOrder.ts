@@ -1,4 +1,5 @@
 import { TableObject, Property, GetTableObject, GetAllTableObjects } from 'dav-js'
+import { Book } from './Book'
 import { environment } from 'src/environments/environment'
 
 export class BookOrder {
@@ -31,12 +32,19 @@ export class BookOrder {
 
 		// Create the list of properties with the book uuids as values
 		let properties: Property[] = []
+		let i = 0
 
-		for (let i = 0; i < this.bookUuids.length; i++) {
+		for (; i < this.bookUuids.length; i++) {
 			properties.push({
 				name: i.toString(),
 				value: this.bookUuids[i]
 			})
+		}
+
+		// Remove old uuids
+		while (tableObject.Properties[i.toString()] != null) {
+			tableObject.RemoveProperty(i.toString())
+			i++
 		}
 
 		await tableObject.SetPropertyValues(properties)
@@ -106,4 +114,14 @@ function ConvertTableObjectToBookOrder(tableObject: TableObject): BookOrder {
 		tableObject.Uuid,
 		uuids
 	)
+}
+
+export async function UpdateBookOrder(bookOrder: BookOrder, books: Book[]) {
+	let uuids: string[] = []
+
+	for (let b of books) {
+		uuids.push(b.uuid)
+	}
+
+	await bookOrder.SetBookUuids(uuids)
 }

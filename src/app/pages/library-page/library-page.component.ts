@@ -10,6 +10,7 @@ import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { GetBook } from 'src/app/models/BookManager'
+import { UpdateBookOrder } from 'src/app/models/BookOrder'
 import { environment } from 'src/environments/environment'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
@@ -120,13 +121,7 @@ export class LibraryPageComponent {
 		this.dataService.MoveBookToFirstPosition(book.uuid)
 
 		// Update the order of the books
-		let uuids: string[] = []
-
-		for (let b of this.dataService.books) {
-			uuids.push(b.uuid)
-		}
-
-		await this.dataService.bookOrder.SetBookUuids(uuids)
+		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
 	}
 
 	async BookContextMenu(event: MouseEvent, book: Book) {
@@ -191,6 +186,9 @@ export class LibraryPageComponent {
 		this.removeBookDialogVisible = false
 		await this.selectedBook.Delete()
 		await this.dataService.LoadAllBooks()
+
+		// Update the order of the books
+		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
 
 		// Clear the ApiCache for GetStoreBook
 		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
