@@ -11,6 +11,7 @@ import { ApiService } from './api-service'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
+import { BookOrder } from '../models/BookOrder'
 import * as locales from 'src/locales/locales'
 import {
 	defaultLightStoreBookCoverUrl,
@@ -45,6 +46,7 @@ export class DataService {
 	settings: Settings
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>()
 	settingsSyncPromiseHolder = new PromiseHolder<Settings>()
+	bookOrder: BookOrder
 	allBooksInitialLoadPromiseHolder = new PromiseHolder()
 	syncFinished: boolean = false
 	userPromiseHolder = new PromiseHolder()
@@ -155,7 +157,7 @@ export class DataService {
 	}
 
 	async LoadAllBooks() {
-		this.books = await GetAllBooks()
+		this.books = await GetAllBooks(this.bookOrder)
 	}
 
 	async ReloadBook(uuid: string) {

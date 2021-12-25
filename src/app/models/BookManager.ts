@@ -6,6 +6,7 @@ import { EpubBook } from './EpubBook'
 import { PdfBook } from './PdfBook'
 import { EpubReader } from './EpubReader'
 import { EpubBookmark, GetEpubBookmark } from './EpubBookmark'
+import { BookOrder } from './BookOrder'
 
 const epubType = "application/epub+zip"
 const pdfType = "application/pdf"
@@ -17,17 +18,37 @@ export async function GetBook(uuid: string): Promise<Book> {
 	return await GetBookByTableObject(tableObject)
 }
 
-export async function GetAllBooks(): Promise<Book[]> {
+export async function GetAllBooks(bookOrder: BookOrder): Promise<Book[]> {
 	let tableObjects = await GetAllTableObjects(environment.bookTableId, false)
 	let books: Book[] = []
+	let booksCopy: Book[] = []
 
 	for (let tableObject of tableObjects) {
 		let book = await GetBookByTableObject(tableObject)
-		if (!book) continue
+		if (book == null) continue
+
 		books.push(book)
+		booksCopy.push(book)
 	}
 
-	return books
+	// Sort the books
+	let sortedBooks: Book[] = []
+
+	// Go through each uuid in the book order and get the corresponding book from the list
+	for (let uuid of bookOrder.bookUuids) {
+		let i = books.findIndex(b => b.uuid == uuid)
+		if (i == -1) continue
+
+		sortedBooks.push(booksCopy[i])
+		booksCopy.splice(i, 1)
+	}
+
+	// Add the remaining books in the list to the end of the sorted books
+	for (let book of booksCopy) {
+		sortedBooks.push(book)
+	}
+
+	return sortedBooks
 }
 
 async function GetBookByTableObject(tableObject: TableObject): Promise<Book> {

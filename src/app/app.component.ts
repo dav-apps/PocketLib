@@ -7,6 +7,7 @@ import * as DavUIComponents from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { RoutingService } from './services/routing-service'
 import { GetSettings } from 'src/app/models/Settings'
+import { GetBookOrder } from './models/BookOrder'
 import { toolbarHeight, smallWindowMaxSize } from 'src/constants/constants'
 import { environment } from 'src/environments/environment'
 
@@ -45,7 +46,13 @@ export class AppComponent {
 		new Dav({
 			environment: environment.production ? Environment.Production : Environment.Development,
 			appId: environment.appId,
-			tableIds: [environment.settingsTableId, environment.bookFileTableId, environment.bookTableId, environment.epubBookmarkTableId],
+			tableIds: [
+				environment.settingsTableId,
+				environment.bookOrderTableId,
+				environment.bookFileTableId,
+				environment.bookTableId,
+				environment.epubBookmarkTableId
+			],
 			callbacks: {
 				UpdateAllOfTable: (tableId: number, changed: boolean) => this.UpdateAllOfTable(tableId, changed),
 				UpdateTableObject: (tableObject: TableObject, fileDownloaded: boolean = false) => this.UpdateTableObject(tableObject, fileDownloaded),
@@ -64,6 +71,9 @@ export class AppComponent {
 		if (await this.dataService.GetOpenLastReadBook() && this.router.url == "/") {
 			this.router.navigate(['loading'], { skipLocationChange: true })
 		}
+
+		// Get the book order
+		this.dataService.bookOrder = await GetBookOrder()
 
 		// Load the books
 		this.dataService.LoadAllBooks().then(() => {
