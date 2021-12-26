@@ -133,16 +133,20 @@
 
 			<div class="container">
 				<div class="mx-auto" style="max-width: 700px">
-					<dav-button
-						(click)="HideAllBooks()">
-						<i class="ms-Icon ms-Icon--Back me-2" aria-hidden="true"></i>
-						<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
-					</dav-button>
+					<div style="display: inline-block">
+						<dav-button
+							(click)="HideAllBooks()">
+							<i class="ms-Icon ms-Icon--Back me-2" aria-hidden="true"></i>
+							<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
+						</dav-button>
+					</div>
 
 					<button
-						class="card cursor mt-3 w-100"
+						class="card cursor mt-3 p-0 w-100"
 						[ngClass]="allBooksHoveredIndex == i ? 'shadow' : 'shadow-sm'"
 						style="transition: 0.12s"
+						(click)="ShowBook(book)"
+						(contextmenu)="BookContextMenu($event, book)"
 						(mouseover)="allBooksHoveredIndex = i"
 						(mouseout)="allBooksHoveredIndex = -1"
 						(focusin)="allBooksHoveredIndex = i"

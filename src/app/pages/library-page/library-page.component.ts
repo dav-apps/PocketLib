@@ -157,27 +157,7 @@ export class LibraryPageComponent {
 	}
 
 	async ShowAllBooks() {
-		// Copy the books
-		this.allBooks = []
-
-		for (let book of this.dataService.books) {
-			this.allBooks.push(book)
-		}
-
-		// Sort the books by name
-		this.allBooks.sort((a: EpubBook | PdfBook, b: EpubBook | PdfBook) => {
-			let firstTitle = a.title.toLowerCase()
-			let secondTitle = b.title.toLowerCase()
-
-			if (firstTitle > secondTitle) {
-				return 1
-			} else if (firstTitle < secondTitle) {
-				return -1
-			} else {
-				return 0
-			}
-		})
-
+		this.LoadAllBooksList()
 		this.allBooksVisible = true
 
 		this.rightContentContainer.nativeElement.classList.remove("d-none")
@@ -213,7 +193,32 @@ export class LibraryPageComponent {
 		this.rightContentContainer.nativeElement.classList.add("d-none")
 	}
 
+	LoadAllBooksList() {
+		// Copy the books
+		this.allBooks = []
+
+		for (let book of this.dataService.books) {
+			this.allBooks.push(book)
+		}
+
+		// Sort the books by name
+		this.allBooks.sort((a: EpubBook | PdfBook, b: EpubBook | PdfBook) => {
+			let firstTitle = a.title.toLowerCase()
+			let secondTitle = b.title.toLowerCase()
+
+			if (firstTitle > secondTitle) {
+				return 1
+			} else if (firstTitle < secondTitle) {
+				return -1
+			} else {
+				return 0
+			}
+		})
+	}
+
 	async BookContextMenu(event: MouseEvent, book: Book) {
+		event.preventDefault()
+
 		this.selectedBook = book
 		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
 		this.showExportBookOption = book.belongsToUser || book.purchase != null
@@ -275,6 +280,10 @@ export class LibraryPageComponent {
 		this.removeBookDialogVisible = false
 		await this.selectedBook.Delete()
 		await this.dataService.LoadAllBooks()
+
+		if (this.allBooksVisible) {
+			this.LoadAllBooksList()
+		}
 
 		// Update the order of the books
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
