@@ -50,6 +50,7 @@ export class LibraryPageComponent {
 	loadingScreenVisible: boolean = false
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
+	allBooksHoveredIndex: number = -1
 
 	constructor(
 		public dataService: DataService,
@@ -155,7 +156,7 @@ export class LibraryPageComponent {
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
 	}
 
-	ShowAllBooks() {
+	async ShowAllBooks() {
 		// Copy the books
 		this.allBooks = []
 
@@ -179,33 +180,37 @@ export class LibraryPageComponent {
 
 		this.allBooksVisible = true
 
+		this.rightContentContainer.nativeElement.classList.remove("d-none")
+		await new Promise((r: Function) => setTimeout(r, 1))
+
 		this.leftContentContainer.nativeElement.style.transform = `translateX(${-window.innerWidth}px)`
 		this.rightContentContainer.nativeElement.style.transform = `translateX(0px)`
+		await new Promise((r: Function) => setTimeout(r, 300))
 
-		setTimeout(() => {
-			window.scrollTo(0, 0)
+		window.scrollTo(0, 0)
+		await new Promise((r: Function) => setTimeout(r, 200))
 
-			setTimeout(() => {
-				this.leftContentContainer.nativeElement.style.position = "absolute"
-				this.rightContentContainer.nativeElement.style.position = "relative"
-			}, 200)
-		}, 300)
+		this.leftContentContainer.nativeElement.style.position = "absolute"
+		this.rightContentContainer.nativeElement.style.position = "relative"
+		this.leftContentContainer.nativeElement.classList.add("d-none")
 	}
 
-	HideAllBooks() {
+	async HideAllBooks() {
 		this.allBooksVisible = false
+
+		this.leftContentContainer.nativeElement.classList.remove("d-none")
+		await new Promise((r: Function) => setTimeout(r, 1))
 
 		this.leftContentContainer.nativeElement.style.transform = `translateX(0px)`
 		this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
+		await new Promise((r: Function) => setTimeout(r, 300))
 
-		setTimeout(() => {
-			window.scrollTo(0, 0)
-			
-			setTimeout(() => {
-				this.leftContentContainer.nativeElement.style.position = "relative"
-				this.rightContentContainer.nativeElement.style.position = "absolute"
-			}, 200)
-		}, 300)
+		window.scrollTo(0, 0)
+		await new Promise((r: Function) => setTimeout(r, 200))
+
+		this.leftContentContainer.nativeElement.style.position = "relative"
+		this.rightContentContainer.nativeElement.style.position = "absolute"
+		this.rightContentContainer.nativeElement.classList.add("d-none")
 	}
 
 	async BookContextMenu(event: MouseEvent, book: Book) {

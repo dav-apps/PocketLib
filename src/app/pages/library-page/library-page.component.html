@@ -139,7 +139,16 @@
 						<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
 					</dav-button>
 
-					<div class="card cursor mt-3" *ngFor="let book of allBooks">
+					<button
+						class="card cursor mt-3 w-100"
+						[ngClass]="allBooksHoveredIndex == i ? 'shadow' : 'shadow-sm'"
+						style="transition: 0.12s"
+						(mouseover)="allBooksHoveredIndex = i"
+						(mouseout)="allBooksHoveredIndex = -1"
+						(focusin)="allBooksHoveredIndex = i"
+						(focusout)="allBooksHoveredIndex = -1"
+						*ngFor="let book of allBooks; let i = index">
+
 						<div class="d-flex">
 							<div style="height: 100px">
 								<img
@@ -152,7 +161,7 @@
 								<h5 class="card-title mb-0">{{ book.title }}</h5>
 							</div>
 						</div>
-					</div>
+					</button>
 				</div>
 			</div>
 		</div>
