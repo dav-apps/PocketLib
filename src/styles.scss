@@ -3,6 +3,7 @@ $primary: #0d47a1;	// Blue 900
 $badge-font-size: 12px;
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../node_modules/cropperjs/dist/cropper.css";
 
 // Theme colors
 :root {
