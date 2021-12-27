@@ -202,6 +202,10 @@ export class LibraryPageComponent {
 		}
 
 		// Sort the books by name
+		this.SortAllBooksByName()
+	}
+
+	SortAllBooksByName() {
 		this.allBooks.sort((a: EpubBook | PdfBook, b: EpubBook | PdfBook) => {
 			let firstTitle = a.title.toLowerCase()
 			let secondTitle = b.title.toLowerCase()
@@ -290,5 +294,24 @@ export class LibraryPageComponent {
 
 		// Clear the ApiCache for GetStoreBook
 		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+	}
+
+	SearchTextChange(value: string) {
+		if (value.length == 0) {
+			// Show all books
+			this.LoadAllBooksList()
+		} else {
+			this.allBooks = []
+
+			// Find all books, which include the search value in the title
+			for (let book of this.dataService.books) {
+				if ((book as EpubBook | PdfBook).title.toLowerCase().includes(value.toLowerCase().trim())) {
+					this.allBooks.push(book)
+				}
+			}
+
+			// Sort the books by name
+			this.SortAllBooksByName()
+		}
 	}
 }

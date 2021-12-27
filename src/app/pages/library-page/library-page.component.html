@@ -137,13 +137,24 @@
 
 			<div class="container">
 				<div class="mx-auto" style="max-width: 700px">
-					<div style="display: inline-block">
+					<div class="d-flex">
 						<dav-button
 							(click)="HideAllBooks()">
 							<i class="ms-Icon ms-Icon--Back me-2" aria-hidden="true"></i>
 							<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
 						</dav-button>
+
+						<dav-textfield
+							class="ms-3"
+							[placeholder]="locale.search"
+							(change)="SearchTextChange($event.detail.value)">
+						</dav-textfield>
 					</div>
+
+					<p class="text-color text-center fw-light mt-5 fs-5"
+						*ngIf="allBooks.length == 0">
+						{{ locale.noBooks }}
+					</p>
 
 					<button
 						class="card cursor mt-3 p-0 w-100"
