@@ -96,14 +96,29 @@ function getHtml(params?: {
 		}
 
 		for (let metaObj of metas) {
-			let meta = dom.window.document.createElement('meta')
-			if (metaObj.name) {
-				meta.setAttribute('name', metaObj.name)
-			} else if (metaObj.property) {
-				meta.setAttribute('property', metaObj.property)
+			// Check if a meta tag with the name or property already exists
+			let meta
+
+			if (metaObj.name != null) {
+				meta = dom.window.document.querySelector(`meta[name='${metaObj.name}']`)
+			} else if (metaObj.property != null) {
+				meta = dom.window.document.querySelector(`meta[property='${metaObj.property}']`)
 			}
-			meta.setAttribute('content', metaObj.content)
-			head.appendChild(meta)
+
+			if (meta == null) {
+				meta = dom.window.document.createElement('meta')
+
+				if (metaObj.name != null) {
+					meta.setAttribute('name', metaObj.name)
+				} else if (metaObj.property != null) {
+					meta.setAttribute('property', metaObj.property)
+				}
+
+				meta.setAttribute('content', metaObj.content)
+				head.appendChild(meta)
+			} else {
+				meta.setAttribute('content', metaObj.content)
+			}
 		}
 
 		return html.outerHTML
