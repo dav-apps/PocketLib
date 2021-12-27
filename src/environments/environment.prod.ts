@@ -9,5 +9,6 @@ export const environment = {
 	bookFileTableId: 15,
 	epubBookmarkTableId: 17,
 	settingsTableId: 18,
+	bookOrderTableId: 30,
 	admins: [1]
 }
