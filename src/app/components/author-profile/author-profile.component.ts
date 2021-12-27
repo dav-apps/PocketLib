@@ -1,7 +1,16 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core'
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	HostListener,
+	ViewChild,
+	ElementRef
+} from '@angular/core'
 import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import Cropper from 'cropperjs'
 import { Dav, ApiResponse, ApiErrorResponse } from 'dav-js'
 import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import {
@@ -32,6 +41,8 @@ enum BioMode {
 	Normal = 2,		// If the author has one or more bios, show the selected bio
 	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
 }
+
+const maxProfileImageFileSize = 2000000
 
 @Component({
 	selector: 'pocketlib-author-profile',
@@ -94,6 +105,12 @@ export class AuthorProfileComponent {
 		path: string,
 		params: any
 	} = { path: "/author/series/new", params: {} }
+
+	//#region ProfileImageDialog
+	@ViewChild('profileImageDialogImage', { static: true }) profileImageDialogImage: ElementRef<HTMLImageElement>
+	profileImageDialogVisible: boolean = false
+	profileImageCropper: Cropper
+	//#endregion
 
 	//#region EditProfileDialog
 	editProfileDialogVisible: boolean = false
@@ -226,10 +243,6 @@ export class AuthorProfileComponent {
 	}
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
 		this.width = window.innerWidth
 
@@ -388,34 +401,54 @@ export class AuthorProfileComponent {
 		this.UpdateCurrentBio()
 	}
 
-	async UploadProfileImage(file: ReadFile) {
-		this.profileImageLoading = true
+	async ProfileImageFileSelected(file: ReadFile) {
+		if (file.size > maxProfileImageFileSize) {
+			// TODO: Show error message
+			console.log("Image file too large")
+			return
+		}
 
-		// Get the content of the image file
-		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
-			let reader = new FileReader();
-			reader.addEventListener('loadend', () => {
-				resolve(reader.result as ArrayBuffer)
+		this.profileImageDialogVisible = true
+
+		this.profileImageDialogImage.nativeElement.onload = () => {
+			this.profileImageCropper = new Cropper(this.profileImageDialogImage.nativeElement, {
+				aspectRatio: 1,
+				autoCropArea: 1,
+				viewMode: 2
 			})
-			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
-		})
+		}
 
-		let imageContent = await readPromise
-		this.profileImageContent = file.content
+		this.profileImageDialogImage.nativeElement.src = file.content
+	}
 
-		// Upload the image
+	HideProfileImageDialog() {
+		this.profileImageDialogVisible = false
+	}
+
+	async UploadProfileImage() {
+		this.profileImageLoading = true
+		this.profileImageDialogVisible = false
+
+		let canvas = this.profileImageCropper.getCroppedCanvas()
+		this.profileImageContent = canvas.toDataURL("image/png")
+		let blob = await new Promise<Blob>((r: Function) =>
+			canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
+		)
+		this.profileImageCropper.destroy()
+
+		// Send the file content to the server
 		let response: ApiResponse<any> | ApiErrorResponse
 
 		if (this.authorMode == AuthorMode.AuthorOfUser) {
 			response = await this.apiService.SetProfileImageOfAuthorOfUser({
-				type: file.type,
-				file: imageContent
+				type: blob.type,
+				file: blob
 			})
 		} else {
 			response = await this.apiService.SetProfileImageOfAuthor({
 				uuid: this.uuid,
-				type: file.type,
-				file: imageContent
+				type: blob.type,
+				file: blob
 			})
 		}
 

@@ -335,6 +335,9 @@ const enDefaults = {
 		addYourBio: "Add your biography",
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
+		profileImageDialog: {
+			header: "Crop your profile image"
+		},
 		editProfileDialog: {
 			header: "Edit your profile",
 			firstNameTextfieldLabel: "First name",
@@ -770,6 +773,9 @@ const deDefaults = {
 		addYourBio: "Biographie angeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
+		profileImageDialog: {
+			header: "Profilbild zuschneiden"
+		},
 		editProfileDialog: {
 			header: "Profil bearbeiten",
 			firstNameTextfieldLabel: "Vorname",
