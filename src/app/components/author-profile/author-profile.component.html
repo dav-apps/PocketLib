@@ -126,11 +126,22 @@
 		</div>
 	
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="authorMode != 0">
+			<!-- Error message -->
+			<div
+				class="mt-3 mx-auto"
+				style="min-width: 200px; max-width: 300px"
+				*ngIf="errorMessage.length > 0">
+
+				<dav-message-bar type="danger">
+					{{ errorMessage }}
+				</dav-message-bar>
+			</div>
+
 			<!-- Message to sign up as a provider -->
 			<div
 				class="mt-3 mx-auto"
 				style="min-width: 200px; max-width: 300px"
-				*ngIf="showProviderMessage">
+				*ngIf="providerMessage.length > 0">
 
 				<dav-message-bar type="warning">
 					<span [innerHtml]="providerMessage"></span>
@@ -139,8 +150,8 @@
 
 			<!-- List of collections -->
 			<h3
-				class="text-center fw-light mb-3 mb-md-4 text-color"
-				[ngClass]="showProviderMessage ? 'mt-md-4' : 'mt-md-5'">
+				class="text-center fw-light mb-3 mb-md-4 mt-4 text-color"
+				[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'">
 				{{ locale.yourBooks }}
 			</h3>
 
@@ -167,7 +178,7 @@
 			</div>
 
 			<!-- List of series -->
-			<h3 class="text-center fw-light mb-3 mb-md-4 mt-md-5 text-color">
+			<h3 class="text-center fw-light mb-3 mt-4 mb-md-4 mt-md-5 text-color">
 				{{ locale.yourBookSeries }}
 			</h3>
 
@@ -353,11 +364,22 @@
 			[style.height.px]="dataService.contentHeight">
 
 			<div *ngIf="authorMode != 0">
+				<!-- Error message -->
+				<div
+					class="mt-4 mx-auto"
+					style="min-width: 200px; max-width: 300px"
+					*ngIf="errorMessage.length > 0">
+
+					<dav-message-bar type="danger">
+						{{ errorMessage }}
+					</dav-message-bar>
+				</div>
+
 				<!-- Message to sign up as a provider -->
 				<div
-					class="mt-3 mx-auto"
+					class="mt-4 mx-auto"
 					style="min-width: 200px; max-width: 300px"
-					*ngIf="showProviderMessage">
+					*ngIf="providerMessage.length > 0">
 
 					<dav-message-bar type="warning">
 						<span [innerHtml]="providerMessage"></span>
@@ -366,8 +388,8 @@
 
 				<!-- List of collections -->
 				<h3
-					class="text-center fw-light mb-3 mb-md-4 text-color"
-					[ngClass]="showProviderMessage ? 'mt-md-4' : 'mt-md-5'">
+					class="text-center fw-light mb-3 mt-4 mb-md-4 text-color"
+					[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'">
 					{{ locale.yourBooks }}
 				</h3>
 
@@ -394,7 +416,7 @@
 				</div>
 
 				<!-- List of series -->
-				<h3 class="text-center fw-light mb-3 mb-md-4 mt-md-5 text-color">
+				<h3 class="text-center fw-light mb-3 mt-4 mb-md-4 mt-md-5 text-color">
 					{{ locale.yourBookSeries }}
 				</h3>
 
@@ -439,9 +461,9 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[visible]="profileImageDialogVisible"
-	(dismiss)="HideProfileImageDialog()"
+	(dismiss)="profileImageDialogVisible = false"
 	(primaryButtonClick)="UploadProfileImage()"
-	(defaultButtonClick)="HideProfileImageDialog()">
+	(defaultButtonClick)="profileImageDialogVisible = false">
 
 	<div class="mb-3" style="max-height: 400px">
 		<img #profileImageDialogImage style="max-width: 100%">

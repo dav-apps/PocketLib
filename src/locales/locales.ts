@@ -363,6 +363,7 @@ const enDefaults = {
 			}
 		},
 		errors: {
+			profileImageFileTooLarge: "The image file is too large",
 			bioTooShort: "Your biography is too short",
 			bioTooLong: "Your biography is too long",
 			unexpectedError: "An unexpected error occured. Please try again."
@@ -801,6 +802,7 @@ const deDefaults = {
 			}
 		},
 		errors: {
+			profileImageFileTooLarge: "Die Bilddatei ist zu groß",
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."

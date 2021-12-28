@@ -95,7 +95,7 @@ export class AuthorProfileComponent {
 	profileImageContent: string = this.dataService.defaultProfileImageUrl
 	profileImageAlt: string = ""
 	bookTitleFontSize: number = 20
-	showProviderMessage: boolean = false
+	errorMessage: string = ""
 	providerMessage: string = ""
 	newBookPageLink: {
 		path: string,
@@ -170,7 +170,6 @@ export class AuthorProfileComponent {
 
 			// Set the text and visibility for the provider message
 			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
-			this.showProviderMessage = !this.dataService.dav.user.Provider
 		} else {
 			// Get the author from the server
 			await this.LoadAuthor()
@@ -402,12 +401,7 @@ export class AuthorProfileComponent {
 	}
 
 	async ProfileImageFileSelected(file: ReadFile) {
-		if (file.size > maxProfileImageFileSize) {
-			// TODO: Show error message
-			console.log("Image file too large")
-			return
-		}
-
+		this.errorMessage = ""
 		this.profileImageDialogVisible = true
 
 		this.profileImageDialogImage.nativeElement.onload = () => {
@@ -421,20 +415,22 @@ export class AuthorProfileComponent {
 		this.profileImageDialogImage.nativeElement.src = file.content
 	}
 
-	HideProfileImageDialog() {
-		this.profileImageDialogVisible = false
-	}
-
 	async UploadProfileImage() {
-		this.profileImageLoading = true
 		this.profileImageDialogVisible = false
 
 		let canvas = this.profileImageCropper.getCroppedCanvas()
-		this.profileImageContent = canvas.toDataURL("image/png")
 		let blob = await new Promise<Blob>((r: Function) =>
 			canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
 		)
 		this.profileImageCropper.destroy()
+
+		if (blob.size > maxProfileImageFileSize) {
+			this.errorMessage = this.locale.errors.profileImageFileTooLarge
+			return
+		}
+
+		this.profileImageLoading = true
+		this.profileImageContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
 		let response: ApiResponse<any> | ApiErrorResponse
