@@ -27,12 +27,16 @@ export class RoutingService {
 			if (event instanceof NavigationEnd) {
 				let url = event.url.includes('?') ? event.url.substring(0, event.url.indexOf("?")) : event.url
 				this.showsStore = url.startsWith('/store')
-				
+
 				this.history.push({
 					url,
 					fullUrl: event.url,
 					params: this.activatedRoute.snapshot.queryParams
 				})
+
+				if (this.showsStore && this.dataService.updateInstalled) {
+					window.location.reload()
+				}
 			}
 		})
 	}
