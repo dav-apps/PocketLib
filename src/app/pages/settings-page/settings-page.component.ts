@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { SwUpdate } from '@angular/service-worker'
 import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
@@ -23,10 +22,10 @@ export class SettingsPageComponent {
 	updateAvailable: boolean = false
 
 	constructor(
-		public dataService: DataService,
-		private swUpdate: SwUpdate
+		public dataService: DataService
 	) {
 		this.locale = this.dataService.GetLocale().settingsPage
+		this.updateAvailable = this.dataService.updateInstalled
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
@@ -44,15 +43,6 @@ export class SettingsPageComponent {
 		// Increase the font size of the toggle label
 		let labels = document.getElementsByClassName('ms-Toggle-label')
 		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
-
-		// Check for updates
-		this.swUpdate.available.subscribe(() => {
-			this.updateAvailable = true
-		})
-
-		if (this.swUpdate.isEnabled) {
-			this.swUpdate.checkForUpdate()
-		}
 	}
 
 	onThemeRadioButtonSelected(event: MatRadioChange) {
