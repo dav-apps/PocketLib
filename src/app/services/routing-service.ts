@@ -33,6 +33,10 @@ export class RoutingService {
 					fullUrl: event.url,
 					params: this.activatedRoute.snapshot.queryParams
 				})
+
+				if (this.showsStore && this.dataService.updateInstalled) {
+					window.location.reload()
+				}
 			}
 		})
 	}

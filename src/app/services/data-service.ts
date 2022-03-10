@@ -1,4 +1,5 @@
 import { Injectable, ElementRef } from '@angular/core'
+import { SwUpdate, VersionEvent } from '@angular/service-worker'
 import * as localforage from 'localforage'
 import {
 	Dav,
@@ -66,13 +67,25 @@ export class DataService {
 	updateInstalled: boolean = false
 
 	constructor(
-		private apiService: ApiService
+		private apiService: ApiService,
+		private swUpdate: SwUpdate
 	) {
 		// Set the supported locale
 		if (this.locale.startsWith("de")) {
 			this.supportedLocale = "de"
 		} else {
 			this.supportedLocale = "en"
+		}
+
+		if (this.swUpdate.isEnabled) {
+			// Check for updates
+			this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
+				if (event.type == "VERSION_READY") {
+					this.updateInstalled = true
+				}
+			})
+
+			this.swUpdate.checkForUpdate()
 		}
 	}
 
