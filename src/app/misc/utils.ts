@@ -1,4 +1,19 @@
-import { BookStatus } from './types'
+import {
+	BookStatus,
+	AuthorResource,
+	AuthorBioResource,
+	AuthorProfileImageResource,
+	StoreBookCollectionResource,
+	StoreBookCollectionNameResource,
+	StoreBookSeriesResource,
+	StoreBookSeriesNameResource,
+	StoreBookResource,
+	StoreBookCoverResource,
+	StoreBookFileResource,
+	CategoryResource,
+	BookResource,
+	PurchaseResource
+} from './types'
 
 /**
  * Recursively finds all positions in the given element and adds them to the array
@@ -166,4 +181,168 @@ export function AdaptCoverWidthHeightToAspectRatio(
 	}
 
 	return aproxWidth
+}
+
+export function PrepareRequestParams(params: Object, joinArrays = false) {
+	let newParams = {}
+
+	for (let key in Object.keys(params)) {
+		if (params[key] == null) continue
+
+		let value = params[key]
+
+		if (joinArrays && Array.isArray(value)) {
+			value = value.join(',')
+		}
+
+		newParams[key] = value
+	}
+
+	return newParams
+}
+
+export function ResponseDataToAuthorResource(responseData: any): AuthorResource {
+	return {
+		uuid: responseData.uuid,
+		firstName: responseData.first_name,
+		lastName: responseData.last_name,
+		bio: {
+			value: responseData.bio?.value,
+			language: responseData.bio?.language
+		},
+		websiteUrl: responseData.website_url,
+		facebookUsername: responseData.facebook_username,
+		instagramUsername: responseData.instagram_username,
+		twitterUsername: responseData.twitter_username,
+		profileImage: {
+			url: responseData.profile_image?.url,
+			blurhash: responseData.profile_image?.blurhash
+		}
+	}
+}
+
+export function ResponseDataToAuthorBioResource(responseData: any): AuthorBioResource {
+	return {
+		uuid: responseData.uuid,
+		bio: responseData.bio,
+		language: responseData.language
+	}
+}
+
+export function ResponseDataToAuthorProfileImageResource(responseData: any): AuthorProfileImageResource {
+	return {
+		uuid: responseData.uuid,
+		url: responseData.url,
+		blurhash: responseData.blurhash
+	}
+}
+
+export function ResponseDataToStoreBookCollectionResource(responseData: any): StoreBookCollectionResource {
+	return {
+		uuid: responseData.uuid,
+		name: {
+			value: responseData.name?.value,
+			language: responseData.name?.language
+		}
+	}
+}
+
+export function ResponseDataToStoreBookCollectionNameResource(responseData: any): StoreBookCollectionNameResource {
+	return {
+		uuid: responseData.uuid,
+		name: responseData.name,
+		language: responseData.language
+	}
+}
+
+export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreBookSeriesResource {
+	return {
+		uuid: responseData.uuid,
+		name: {
+			value: responseData.name?.value,
+			language: responseData.name?.language
+		}
+	}
+}
+
+export function ResponseDataToStoreBookSeriesNameResource(responseData: any): StoreBookSeriesNameResource {
+	return {
+		uuid: responseData.uuid,
+		name: responseData.name,
+		language: responseData.language
+	}
+}
+
+export function ResponseDataToStoreBookResource(responseData: any): StoreBookResource {
+	return {
+		uuid: responseData.uuid,
+		title: responseData.title,
+		description: responseData.description,
+		language: responseData.language,
+		price: responseData.price,
+		isbn: responseData.isbn,
+		status: responseData.status,
+		cover: {
+			url: responseData.cover?.url,
+			aspectRatio: responseData.cover?.aspect_ratio,
+			blurhash: responseData.cover?.blurhash
+		},
+		file: {
+			fileName: responseData.file?.file_name
+		},
+		inLibrary: responseData.in_library,
+		purchased: responseData.purchased,
+		categories: responseData.categories
+	}
+}
+
+export function ResponseDataToStoreBookCoverResource(responseData: any): StoreBookCoverResource {
+	return {
+		uuid: responseData.uuid,
+		url: responseData.url,
+		aspectRatio: responseData.aspect_ratio,
+		blurhash: responseData.blurhash
+	}
+}
+
+export function ResponseDataToStoreBookFileResource(responseData: any): StoreBookFileResource {
+	return {
+		uuid: responseData.uuid,
+		fileName: responseData.file_name
+	}
+}
+
+export function ResponseDataToCategoryResource(responseData: any): CategoryResource {
+	return {
+		uuid: responseData.uuid,
+		key: responseData.key,
+		name: {
+			value: responseData.name?.value,
+			language: responseData.name?.language
+		}
+	}
+}
+
+export function ResponseDataToBookResource(responseData: any): BookResource {
+	return {
+		uuid: responseData.uuid,
+		storeBook: responseData.store_book,
+		file: responseData.file
+	}
+}
+
+export function ResponseDataToPurchaseResource(responseData: any): PurchaseResource {
+	return {
+		id: responseData.id,
+		userId: responseData.user_id,
+		uuid: responseData.uuid,
+		paymentIntentId: responseData.payment_intent_id,
+		providerName: responseData.provider_name,
+		providerImage: responseData.provider_image,
+		productName: responseData.product_name,
+		productImage: responseData.product_image,
+		price: responseData.price,
+		currency: responseData.currency,
+		completed: responseData.completed
+	}
 }
