@@ -1,12 +1,19 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
-import { ApiErrorResponse, ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
+import {
+	AuthorField,
+	AuthorResource,
+	ListResponseData,
+	StoreBookListField,
+	StoreBookResource
+} from 'src/app/misc/types'
 
 @Component({
 	selector: "pocketlib-author-page",
@@ -58,14 +65,23 @@ export class AuthorPageComponent {
 		this.setSize()
 
 		await this.dataService.userPromiseHolder.AwaitResult()
+
 		if (this.dataService.userIsAdmin && !this.uuid) {
 			// Get the books in review
-			let response = await this.apiService.GetStoreBooksInReview()
+			let listStoreBooksResponse = await this.apiService.ListStoreBooks({
+				review: true,
+				fields: [
+					StoreBookListField.items_uuid,
+					StoreBookListField.items_title
+				],
+				languages: await this.dataService.GetStoreLanguages()
+			})
 
-			if (response.status == 200) {
+			if (isSuccessStatusCode(listStoreBooksResponse.status)) {
+				let listStoreBooksResponseData = (listStoreBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
 				this.booksInReview = []
 
-				for (let book of (response as ApiResponse<any>).data.books) {
+				for (let book of listStoreBooksResponseData.items) {
 					this.booksInReview.push({
 						uuid: book.uuid,
 						title: book.title
@@ -76,10 +92,6 @@ export class AuthorPageComponent {
 	}
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
 		let navbarHeight = window.innerWidth < 600 ? 56 : 64
 		this.section1Height = window.innerHeight - navbarHeight
@@ -142,26 +154,35 @@ export class AuthorPageComponent {
 
 		let response = await this.apiService.CreateAuthor({
 			firstName: this.createAuthorDialogFirstName,
-			lastName: this.createAuthorDialogLastName
+			lastName: this.createAuthorDialogLastName,
+			fields: [
+				AuthorField.uuid,
+				AuthorField.firstName,
+				AuthorField.lastName,
+				AuthorField.websiteUrl,
+				AuthorField.facebookUsername,
+				AuthorField.instagramUsername,
+				AuthorField.twitterUsername,
+				AuthorField.profileImage
+			]
 		})
 
-		if (response.status == 201) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
 			
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push({
 				uuid: responseData.uuid,
-				firstName: responseData.first_name,
-				lastName: responseData.last_name,
-				websiteUrl: responseData.website_url,
-				facebookUsername: responseData.facebook_username,
-				instagramUsername: responseData.instagram_username,
-				twitterUsername: responseData.twitter_username,
-				bios: responseData.bios,
-				collections: responseData.collections,
-				series: responseData.series,
-				profileImage: responseData.profile_image,
-				profileImageBlurhash: responseData.profile_image_blurhash
+				firstName: responseData.firstName,
+				lastName: responseData.lastName,
+				websiteUrl: responseData.websiteUrl,
+				facebookUsername: responseData.facebookUsername,
+				instagramUsername: responseData.instagramUsername,
+				twitterUsername: responseData.twitterUsername,
+				profileImage: null,
+				bios: [],
+				collections: [],
+				series: []
 			})
 
 			this.createAuthorDialogVisible = false
