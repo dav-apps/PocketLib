@@ -192,6 +192,7 @@ export function PrepareRequestParams(params: Object, joinArrays = false) {
 		let value = params[key]
 
 		if (joinArrays && Array.isArray(value)) {
+			if (value.length == 0) continue
 			value = value.join(',')
 		}
 

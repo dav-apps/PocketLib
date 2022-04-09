@@ -5,7 +5,8 @@ import {
 	Dav,
 	ApiResponse,
 	GetAllTableObjects,
-	PromiseHolder
+	PromiseHolder,
+	isSuccessStatusCode
 } from 'dav-js'
 import * as DavUIComponents from 'dav-ui-components'
 import { ApiService } from './api-service'
@@ -21,7 +22,14 @@ import {
 } from 'src/constants/constants'
 import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
-import { Author, Category } from 'src/app/misc/types'
+import {
+	Author,
+	Category,
+	CategoryListField,
+	CategoryResource,
+	Language,
+	ListResponseData
+} from 'src/app/misc/types'
 
 @Injectable()
 export class DataService {
@@ -145,20 +153,21 @@ export class DataService {
 
 	async LoadCategories() {
 		// Get the categories
-		let getCategoriesResponse = await this.apiService.GetCategories()
 		this.categories = []
 
-		if (getCategoriesResponse.status == 200) {
-			let getCategoriesResponseData = (getCategoriesResponse as ApiResponse<any>).data
+		let response = await this.apiService.ListCategories({
+			fields: [CategoryListField.items_key, CategoryListField.items_name],
+			languages: await this.GetStoreLanguages()
+		})
 
-			for (let category of getCategoriesResponseData.categories) {
-				let currentLanguageIndex = FindAppropriateLanguage(this.locale.slice(0, 2), category.names)
-				let currentLanguage = category.names[currentLanguageIndex]
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<ListResponseData<CategoryResource>>).data
 
+			for (let category of responseData.items) {
 				this.categories.push({
 					key: category.key,
-					name: currentLanguage.name,
-					language: currentLanguage.language
+					name: category.name.value,
+					language: category.name.language
 				})
 			}
 		}
@@ -305,15 +314,15 @@ export class DataService {
 		)
 	}
 
-	async SetStoreLanguages(languages: string[]) {
+	async SetStoreLanguages(languages: Language[]) {
 		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
 		this.settingsCache[keys.settingsStoreLanguagesKey] = languages
 	}
 
-	async GetStoreLanguages(): Promise<string[]> {
-		return this.GetSetting<string[]>(
+	async GetStoreLanguages(): Promise<Language[]> {
+		return this.GetSetting<Language[]>(
 			keys.settingsStoreLanguagesKey,
-			["en", "de"]
+			[Language.en, Language.de]
 		)
 	}
 
