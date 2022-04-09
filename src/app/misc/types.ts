@@ -49,14 +49,16 @@ export interface Author {
 	facebookUsername: string
 	instagramUsername: string
 	twitterUsername: string
+	profileImage: {
+		url: string,
+		blurhash: string
+	}
 	bios: {
 		bio: string,
 		language: string
 	}[]
 	collections: StoreBookCollection[]
 	series: StoreBookSeries[]
-	profileImage: boolean
-	profileImageBlurhash: string
 }
 
 export interface StoreBook {

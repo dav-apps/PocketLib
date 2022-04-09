@@ -24,6 +24,9 @@ import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
 import {
 	Author,
+	AuthorResource,
+	AuthorField,
+	AuthorListField,
 	Category,
 	CategoryListField,
 	CategoryResource,
@@ -101,49 +104,82 @@ export class DataService {
 		await this.userPromiseHolder.AwaitResult()
 
 		if (this.dav.isLoggedIn) {
-			let response = await this.apiService.GetAuthorOfUser()
+			if (environment.admins.includes(this.dav.user.Id)) {
+				this.adminAuthors = []
 
-			if (response.status == 200) {
-				let responseData = (response as ApiResponse<any>).data
+				let response = await this.apiService.ListAuthors({
+					mine: true,
+					fields: [
+						AuthorListField.items_uuid,
+						AuthorListField.items_firstName,
+						AuthorListField.items_lastName,
+						AuthorListField.items_websiteUrl,
+						AuthorListField.items_facebookUsername,
+						AuthorListField.items_instagramUsername,
+						AuthorListField.items_twitterUsername,
+						AuthorListField.items_profileImage
+					],
+					languages: await this.GetStoreLanguages()
+				})
 
-				if (responseData.authors) {
-					this.adminAuthors = []
+				if (isSuccessStatusCode(response.status)) {
+					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
 
-					for (let author of responseData.authors) {
+					for (let author of responseData.items) {
 						this.adminAuthors.push({
 							uuid: author.uuid,
-							firstName: author.first_name,
-							lastName: author.last_name,
-							websiteUrl: author.website_url,
-							facebookUsername: author.facebook_username,
-							instagramUsername: author.instagram_username,
-							twitterUsername: author.twitter_username,
-							bios: author.bios,
-							collections: author.collections,
-							series: author.series,
-							profileImage: author.profile_image,
-							profileImageBlurhash: author.profile_image_blurhash
+							firstName: author.firstName,
+							lastName: author.lastName,
+							websiteUrl: author.websiteUrl,
+							facebookUsername: author.facebookUsername,
+							instagramUsername: author.instagramUsername,
+							twitterUsername: author.twitterUsername,
+							profileImage: {
+								url: author.profileImage?.url,
+								blurhash: author.profileImage?.blurhash
+							},
+							bios: [],
+							collections: [],
+							series: []
 						})
-					}
-				} else {
-					this.userAuthor = {
-						uuid: responseData.uuid,
-						firstName: responseData.first_name,
-						lastName: responseData.last_name,
-						websiteUrl: responseData.website_url,
-						facebookUsername: responseData.facebook_username,
-						instagramUsername: responseData.instagram_username,
-						twitterUsername: responseData.twitter_username,
-						bios: responseData.bios,
-						collections: responseData.collections,
-						series: responseData.series,
-						profileImage: responseData.profile_image,
-						profileImageBlurhash: responseData.profile_image_blurhash
 					}
 				}
 			} else {
-				this.userAuthor = null
-				this.adminAuthors = []
+				let response = await this.apiService.RetrieveAuthor({
+					uuid: "mine",
+					fields: [
+						AuthorField.uuid,
+						AuthorField.firstName,
+						AuthorField.lastName,
+						AuthorField.websiteUrl,
+						AuthorField.facebookUsername,
+						AuthorField.instagramUsername,
+						AuthorField.twitterUsername,
+						AuthorField.profileImage
+					],
+					languages: await this.GetStoreLanguages()
+				})
+
+				if (isSuccessStatusCode(response.status)) {
+					let responseData = (response as ApiResponse<AuthorResource>).data
+
+					this.userAuthor = {
+						uuid: responseData.uuid,
+						firstName: responseData.firstName,
+						lastName: responseData.lastName,
+						websiteUrl: responseData.websiteUrl,
+						facebookUsername: responseData.facebookUsername,
+						instagramUsername: responseData.instagramUsername,
+						twitterUsername: responseData.twitterUsername,
+						profileImage: {
+							url: responseData.profileImage?.url,
+							blurhash: responseData.profileImage.blurhash
+						},
+						bios: [],
+						collections: [],
+						series: []
+					}
+				}
 			}
 		}
 
