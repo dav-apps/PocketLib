@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
-import { ApiErrorResponse, ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
@@ -9,7 +9,7 @@ import { CategoriesSelectionComponent } from 'src/app/components/categories-sele
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { Author, BookStatus } from 'src/app/misc/types'
+import { Author, BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -101,23 +101,32 @@ export class AuthorBookPageComponent {
 		}
 
 		// Get the store book
-		let response = await this.apiService.GetStoreBook({
-			uuid: this.uuid
+		let response = await this.apiService.RetrieveStoreBook({
+			uuid: this.uuid,
+			fields: [
+				StoreBookField.title,
+				StoreBookField.description,
+				StoreBookField.language,
+				StoreBookField.price,
+				StoreBookField.isbn,
+				StoreBookField.status,
+				StoreBookField.cover,
+				StoreBookField.file
+			]
 		})
 
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<StoreBookResource>).data
 
-			this.book.collection = responseData.collection
 			this.book.title = responseData.title
-			this.book.description = responseData.description
+			this.book.description = responseData.description ?? ""
 			this.book.language = responseData.language
 			this.book.price = responseData.price
-			this.book.isbn = responseData.isbn ? responseData.isbn : ""
+			this.book.isbn = responseData.isbn ?? ""
 			this.book.status = GetBookStatusByString(responseData.status)
-			this.book.coverBlurhash = responseData.cover_blurhash
-			this.book.fileName = responseData.file_name
-			this.bookFileUploaded = responseData.file
+			this.book.coverBlurhash = responseData.cover?.blurhash
+			this.book.fileName = responseData.file?.fileName
+			this.bookFileUploaded = responseData.file != null
 
 			// Get the categories
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
@@ -126,9 +135,12 @@ export class AuthorBookPageComponent {
 			this.priceInput.SetPrice(this.book.price)
 			this.isbnInput.SetIsbn(this.book.isbn)
 
-			if (responseData.cover) {
-				let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
-				if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
+			if (responseData.cover?.url != null) {
+				this.apiService.GetFile({ url: responseData.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.coverContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
 			}
 		} else {
 			// Redirect back to the author page
@@ -312,7 +324,7 @@ export class AuthorBookPageComponent {
 		this.coverLoading = true
 
 		// Upload the image
-		await this.apiService.SetStoreBookCover({
+		await this.apiService.UploadStoreBookCover({
 			uuid: this.uuid,
 			type: file.type,
 			file: imageContent
@@ -334,7 +346,7 @@ export class AuthorBookPageComponent {
 		this.bookFileLoading = true
 
 		// Upload the file
-		let response = await this.apiService.SetStoreBookFile({
+		let response = await this.apiService.UploadStoreBookFile({
 			uuid: this.uuid,
 			type: file.type,
 			name: file.name,
@@ -356,13 +368,13 @@ export class AuthorBookPageComponent {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				published
+				status: published ? "review" : "hidden"
 			})
 		)
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBooksInReview.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { BookListItem, AuthorMode } from 'src/app/misc/types'
+import { BookListItem, AuthorMode, StoreBookCollectionResource, StoreBookCollectionField, ListResponseData, StoreBookResource, StoreBookListField } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -59,55 +59,74 @@ export class AuthorCollectionPageComponent {
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
 		// Get the collection
-		let getCollectionResponse = await this.apiService.GetStoreBookCollection({
-			uuid: this.uuid
+		let retrieveCollectionResponse = await this.apiService.RetrieveStoreBookCollection({
+			uuid: this.uuid,
+			fields: [
+				StoreBookCollectionField.uuid,
+				StoreBookCollectionField.author,
+				StoreBookCollectionField.name
+			],
+			languages: await this.dataService.GetStoreLanguages()
 		})
 
-		if (getCollectionResponse.status == 200) {
-			let getCollectionResponseData = (getCollectionResponse as ApiResponse<any>).data
+		if (isSuccessStatusCode(retrieveCollectionResponse.status)) {
+			let retrieveCollectionResponseData = (retrieveCollectionResponse as ApiResponse<StoreBookCollectionResource>).data
 
 			this.collection = {
-				uuid: getCollectionResponseData.uuid,
-				author: getCollectionResponseData.author,
-				names: getCollectionResponseData.names,
+				uuid: retrieveCollectionResponseData.uuid,
+				author: retrieveCollectionResponseData.author,
+				names: [],
 				books: [],
 				leftScreenBooks: [],
 				rightScreenBooks: []
 			}
 
-			// Get the appropriate collection name
-			let i = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
-			if (i != -1) this.collectionName = this.collection.names[i]
+			this.collectionName.name = retrieveCollectionResponseData.name.value
+			this.collectionName.language = retrieveCollectionResponseData.name.language
 
-			let j = 0
-			for (let responseBook of getCollectionResponseData.books) {
-				let bookItem: BookListItem = {
-					uuid: responseBook.uuid,
-					title: responseBook.title,
-					cover: responseBook.cover,
-					coverContent: null,
-					coverBlurhash: null
-				}
+			// Get the store books of the collection
+			let listStoreBooksResponse = await this.apiService.ListStoreBooks({
+				collection: this.collection.uuid,
+				fields: [
+					StoreBookListField.items_uuid,
+					StoreBookListField.items_title,
+					StoreBookListField.items_cover
+				],
+				languages: await this.dataService.GetStoreLanguages()
+			})
 
-				if (bookItem.cover) {
-					bookItem.coverBlurhash = responseBook.cover_blurhash
+			if (isSuccessStatusCode(listStoreBooksResponse.status)) {
+				let listStoreBooksResponseData = (listStoreBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+				let i = 0
 
-					this.apiService.GetStoreBookCover({ uuid: bookItem.uuid }).then((result: ApiResponse<string>) => {
-						bookItem.coverContent = result.data
-					})
-				}
-
-				if (this.dualScreenLayout) {
-					// Evenly distribute the books on the left and right screens
-					if (j % 2 == 0) {
-						this.collection.leftScreenBooks.push(bookItem)
-					} else {
-						this.collection.rightScreenBooks.push(bookItem)
+				for (let storeBook of listStoreBooksResponseData.items) {
+					let bookItem: BookListItem = {
+						uuid: storeBook.uuid,
+						title: storeBook.title,
+						coverContent: null,
+						coverBlurhash: storeBook.cover?.blurhash
 					}
 
-					j++
-				} else {
-					this.collection.books.push(bookItem)
+					if (storeBook.cover?.url != null) {
+						this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+							if (isSuccessStatusCode(fileResponse.status)) {
+								bookItem.coverContent = (fileResponse as ApiResponse<string>).data
+							}
+						})
+					}
+
+					if (this.dualScreenLayout) {
+						// Evenly distribute the books on the left and right screens
+						if (i % 2 == 0) {
+							this.collection.leftScreenBooks.push(bookItem)
+						} else {
+							this.collection.rightScreenBooks.push(bookItem)
+						}
+
+						i++
+					} else {
+						this.collection.books.push(bookItem)
+					}
 				}
 			}
 		} else {
