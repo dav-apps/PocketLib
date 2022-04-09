@@ -6,6 +6,8 @@ import { ApiService } from 'src/app/services/api-service'
 import { AuthorListField, AuthorListItem, AuthorResource, ListResponseData } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
+const maxVisibleAuthors = 8
+
 @Component({
 	selector: 'pocketlib-horizontal-author-list',
 	templateUrl: './horizontal-author-list.component.html'
@@ -36,7 +38,7 @@ export class HorizontalAuthorListComponent {
 			],
 			languages: await this.dataService.GetStoreLanguages(),
 			latest: true,
-			limit: 8
+			limit: maxVisibleAuthors
 		})
 
 		if (!isSuccessStatusCode(response.status)) return

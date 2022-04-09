@@ -12,7 +12,6 @@ export class HorizontalAuthorListItemComponent {
 		uuid: "",
 		firstName: "",
 		lastName: "",
-		profileImage: false,
 		profileImageContent: null,
 		profileImageBlurhash: null,
 		profileImageAlt: ""
