@@ -199,6 +199,7 @@ export enum AuthorProfileImageField {
 //#region StoreBookCollection
 export interface StoreBookCollectionResource {
 	uuid: string
+	author: string
 	name: {
 		value: string,
 		language: string
@@ -207,6 +208,7 @@ export interface StoreBookCollectionResource {
 
 export enum StoreBookCollectionField {
 	uuid = "uuid",
+	author = "author",
 	name = "name",
 	name_value = "name.value",
 	name_language = "name.language"
@@ -215,6 +217,7 @@ export enum StoreBookCollectionField {
 export enum StoreBookCollectionListField {
 	type = "type",
 	items_uuid = "items.uuid",
+	items_author = "items.author",
 	items_name = "items.name",
 	items_name_value = "items.name.value",
 	items_name_language = "items.name.language"
@@ -245,6 +248,7 @@ export enum StoreBookCollectionNameListField {
 //#region StoreBookSeries
 export interface StoreBookSeriesResource {
 	uuid: string
+	author: string
 	name: {
 		value: string
 		language: string
@@ -253,6 +257,7 @@ export interface StoreBookSeriesResource {
 
 export enum StoreBookSeriesField {
 	uuid = "uuid",
+	author = "author",
 	name = "name",
 	name_value = "name.value",
 	name_language = "name.language"
@@ -261,6 +266,7 @@ export enum StoreBookSeriesField {
 export enum StoreBookSeriesListField {
 	type = "type",
 	items_uuid = "items.uuid",
+	items_author = "items.author",
 	items_name = "items.name",
 	items_name_value = "items.name.value",
 	items_name_language = "items.name.language"
@@ -291,6 +297,7 @@ export enum StoreBookSeriesNameListField {
 //#region StoreBook
 export interface StoreBookResource {
 	uuid: string
+	collection: string
 	title: string
 	description: string
 	language: string
@@ -312,6 +319,7 @@ export interface StoreBookResource {
 
 export enum StoreBookField {
 	uuid = "uuid",
+	collection = "collection",
 	title = "title",
 	description = "description",
 	language = "language",
@@ -333,6 +341,7 @@ export enum StoreBookListField {
 	type = "type",
 	pages = "pages",
 	items_uuid = "items.uuid",
+	items_collection = "items.collection",
 	items_title = "items.title",
 	items_description = "items.description",
 	items_language = "items.language",
