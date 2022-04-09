@@ -1,8 +1,16 @@
 import { Component } from '@angular/core'
-import { ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { BookListItem, SeriesListItem } from 'src/app/misc/types'
+import {
+	BookListItem,
+	ListResponseData,
+	SeriesListItem,
+	StoreBookListField,
+	StoreBookResource,
+	StoreBookSeriesListField,
+	StoreBookSeriesResource
+} from 'src/app/misc/types'
 import { AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -23,35 +31,52 @@ export class HorizontalSeriesListComponent {
 	}
 
 	async ngOnInit() {
-		let response = await this.apiService.GetLatestStoreBookSeries({
-			languages: await this.dataService.GetStoreLanguages()
+		let seriesResponse = await this.apiService.ListStoreBookSeries({
+			fields: [StoreBookSeriesListField.items_uuid],
+			languages: await this.dataService.GetStoreLanguages(),
+			latest: true,
+			limit: 4
 		})
 
-		if (response.status != 200) return
-		let series = (response as ApiResponse<any>).data.series
+		if (!isSuccessStatusCode(seriesResponse.status)) return
+		let seriesResponseData = (seriesResponse as ApiResponse<ListResponseData<StoreBookSeriesResource>>).data
 
-		for (let s of series) {
+		for (let series of seriesResponseData.items) {
+			let storeBookResponse = await this.apiService.ListStoreBooks({
+				fields: [
+					StoreBookListField.items_uuid,
+					StoreBookListField.items_title,
+					StoreBookListField.items_cover
+				],
+				languages: await this.dataService.GetStoreLanguages(),
+				series: series.uuid
+			})
+
+			if (!isSuccessStatusCode(storeBookResponse.status)) continue
+			let storeBookResponseData = (storeBookResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+
 			let seriesItem: SeriesListItem = {
-				uuid: s.uuid,
+				uuid: series.uuid,
 				books: []
 			}
 
-			for (let book of s.books) {
+			for (let book of storeBookResponseData.items) {
 				let height = 150
-				let width = AdaptCoverWidthHeightToAspectRatio(96, height, book.cover_aspect_ratio)
+				let width = AdaptCoverWidthHeightToAspectRatio(96, height, book.cover.aspectRatio)
 
 				let bookItem: BookListItem = {
 					uuid: book.uuid,
 					title: book.title,
-					cover: book.cover,
 					coverContent: null,
-					coverBlurhash: book.cover_blurhash,
+					coverBlurhash: book.cover.blurhash,
 					coverWidth: width,
 					coverHeight: height
 				}
 
-				this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
-					bookItem.coverContent = result.data
+				this.apiService.GetFile({ url: book.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
+					}
 				})
 
 				seriesItem.books.push(bookItem)
