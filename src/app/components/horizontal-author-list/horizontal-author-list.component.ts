@@ -1,9 +1,9 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-import { ApiResponse } from 'dav-js'
+import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { AuthorListItem } from 'src/app/misc/types'
+import { AuthorListField, AuthorListItem, AuthorResource, ListResponseData } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -26,25 +26,39 @@ export class HorizontalAuthorListComponent {
 	async ngOnInit() {
 		// Get the latest authors
 		this.authors = []
-		let response = await this.apiService.GetLatestAuthors()
-		if (response.status != 200) return
-		let profileImageAltTemplate = this.dataService.GetLocale().misc.authorProfileImageAlt
-		let responseData = (response as ApiResponse<any>).data
 
-		for (let author of responseData.authors) {
+		let response = await this.apiService.ListAuthors({
+			fields: [
+				AuthorListField.items_uuid,
+				AuthorListField.items_firstName,
+				AuthorListField.items_lastName,
+				AuthorListField.items_profileImage
+			],
+			languages: await this.dataService.GetStoreLanguages(),
+			latest: true,
+			limit: 8
+		})
+
+		if (!isSuccessStatusCode(response.status)) return
+
+		let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+		let profileImageAltTemplate = this.dataService.GetLocale().misc.authorProfileImageAlt
+
+		for (let author of responseData.items) {
 			let authorItem = {
 				uuid: author.uuid,
-				firstName: author.first_name,
-				lastName: author.last_name,
-				profileImage: author.profile_image,
+				firstName: author.firstName,
+				lastName: author.lastName,
 				profileImageContent: null,
-				profileImageBlurhash: author.profile_image_blurhash,
-				profileImageAlt: profileImageAltTemplate.replace('{0}', `${author.first_name} ${author.last_name}`)
+				profileImageBlurhash: author.profileImage?.blurhash,
+				profileImageAlt: profileImageAltTemplate.replace('{0}', `${author.firstName} ${author.lastName}`)
 			}
 
-			if (authorItem.profileImage) {
-				this.apiService.GetProfileImageOfAuthor({ uuid: author.uuid }).then((result: ApiResponse<string>) => {
-					authorItem.profileImageContent = result.data
+			if (author.profileImage?.url != null) {
+				this.apiService.GetFile({ url: author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						authorItem.profileImageContent = (fileResponse as ApiResponse<string>).data
+					}
 				})
 			}
 

@@ -17,7 +17,6 @@ export interface AuthorListItem {
 	uuid: string
 	firstName: string
 	lastName: string
-	profileImage: boolean
 	profileImageContent: string
 	profileImageBlurhash: string
 	profileImageAlt: string
