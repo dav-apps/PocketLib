@@ -11,7 +11,7 @@ import { ReadFile } from 'ngx-file-helpers'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Cropper from 'cropperjs'
-import { Dav, ApiResponse, ApiErrorResponse } from 'dav-js'
+import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import {
 	DataService,
@@ -19,7 +19,18 @@ import {
 } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { BookListItem, Author, AuthorMode, StoreBook } from 'src/app/misc/types'
+import {
+	BookListItem,
+	Author,
+	AuthorMode,
+	StoreBook,
+	AuthorBioField,
+	AuthorBioResource,
+	AuthorResource,
+	AuthorField,
+	ListResponseData,
+	StoreBookResource
+} from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 
@@ -71,11 +82,10 @@ export class AuthorProfileComponent {
 		facebookUsername: "",
 		instagramUsername: "",
 		twitterUsername: "",
+		profileImage: null,
 		bios: [],
 		collections: [],
-		series: [],
-		profileImage: false,
-		profileImageBlurhash: null
+		series: []
 	}
 	facebookLink: string = ""
 	instagramLink: string = ""
@@ -177,8 +187,11 @@ export class AuthorProfileComponent {
 
 		if (this.author.profileImage) {
 			// Set the author profile image
-			let profileImageResponse = await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })
-			if (profileImageResponse.status == 200) this.profileImageContent = (profileImageResponse as ApiResponse<any>).data
+			this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+				if (isSuccessStatusCode(fileResponse.status)) {
+					this.profileImageContent = (fileResponse as ApiResponse<string>).data
+				}
+			})
 		}
 
 		// Set the new book page link
@@ -354,14 +367,17 @@ export class AuthorProfileComponent {
 			// Save the new bio on the server
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
 				this.ProcessSetBioResponse(
-					await this.apiService.SetBioOfAuthorOfUser({
+					await this.apiService.SetAuthorBio({
+						fields: [AuthorBioField.bio, AuthorBioField.language],
+						uuid: "mine",
 						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
 					})
 				)
 			} else {
 				this.ProcessSetBioResponse(
-					await this.apiService.SetBioOfAuthor({
+					await this.apiService.SetAuthorBio({
+						fields: [AuthorBioField.bio, AuthorBioField.language],
 						uuid: this.uuid,
 						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
@@ -436,12 +452,13 @@ export class AuthorProfileComponent {
 		let response: ApiResponse<any> | ApiErrorResponse
 
 		if (this.authorMode == AuthorMode.AuthorOfUser) {
-			response = await this.apiService.SetProfileImageOfAuthorOfUser({
+			response = await this.apiService.UploadAuthorProfileImage({
+				uuid: "mine",
 				type: blob.type,
 				file: blob
 			})
 		} else {
-			response = await this.apiService.SetProfileImageOfAuthor({
+			response = await this.apiService.UploadAuthorProfileImage({
 				uuid: this.uuid,
 				type: blob.type,
 				file: blob
@@ -449,11 +466,6 @@ export class AuthorProfileComponent {
 		}
 
 		this.profileImageLoading = false
-
-		if (response.status == 200) {
-			// Show the uploaded profile image
-			this.author.profileImage = true
-		}
 	}
 
 	ShowEditProfileDialog() {
@@ -480,10 +492,18 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response: ApiResponse<any> | ApiErrorResponse
+		let response: ApiResponse<AuthorResource> | ApiErrorResponse
 
 		if (this.dataService.userIsAdmin) {
 			response = await this.apiService.UpdateAuthor({
+				fields: [
+					AuthorField.firstName,
+					AuthorField.lastName,
+					AuthorField.websiteUrl,
+					AuthorField.facebookUsername,
+					AuthorField.instagramUsername,
+					AuthorField.twitterUsername
+				],
 				uuid: this.author.uuid,
 				firstName: this.editProfileDialogFirstName,
 				lastName: this.editProfileDialogLastName,
@@ -493,7 +513,16 @@ export class AuthorProfileComponent {
 				twitterUsername: this.editProfileDialogTwitterUsername
 			})
 		} else {
-			response = await this.apiService.UpdateAuthorOfUser({
+			response = await this.apiService.UpdateAuthor({
+				fields: [
+					AuthorField.firstName,
+					AuthorField.lastName,
+					AuthorField.websiteUrl,
+					AuthorField.facebookUsername,
+					AuthorField.instagramUsername,
+					AuthorField.twitterUsername
+				],
+				uuid: "mine",
 				firstName: this.editProfileDialogFirstName,
 				lastName: this.editProfileDialogLastName,
 				websiteUrl: this.editProfileDialogWebsiteUrl,
@@ -503,8 +532,8 @@ export class AuthorProfileComponent {
 			})
 		}
 
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
 
 			// Close the dialog and update the values in the appropriate author
 			this.editProfileDialogVisible = false
@@ -513,19 +542,19 @@ export class AuthorProfileComponent {
 				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == responseData.uuid)
 				if (i == -1) return
 
-				this.dataService.adminAuthors[i].firstName = responseData.first_name
-				this.dataService.adminAuthors[i].lastName = responseData.last_name
-				this.dataService.adminAuthors[i].websiteUrl = responseData.website_url
-				this.dataService.adminAuthors[i].facebookUsername = responseData.facebook_username
-				this.dataService.adminAuthors[i].instagramUsername = responseData.instagram_username
-				this.dataService.adminAuthors[i].twitterUsername = responseData.twitter_username
+				this.dataService.adminAuthors[i].firstName = responseData.firstName
+				this.dataService.adminAuthors[i].lastName = responseData.lastName
+				this.dataService.adminAuthors[i].websiteUrl = responseData.websiteUrl
+				this.dataService.adminAuthors[i].facebookUsername = responseData.facebookUsername
+				this.dataService.adminAuthors[i].instagramUsername = responseData.instagramUsername
+				this.dataService.adminAuthors[i].twitterUsername = responseData.twitterUsername
 			} else {
-				this.dataService.userAuthor.firstName = responseData.first_name
-				this.dataService.userAuthor.lastName = responseData.last_name
-				this.dataService.userAuthor.websiteUrl = responseData.website_url
-				this.dataService.userAuthor.facebookUsername = responseData.facebook_username
-				this.dataService.userAuthor.instagramUsername = responseData.instagram_username
-				this.dataService.userAuthor.twitterUsername = responseData.twitter_username
+				this.dataService.userAuthor.firstName = responseData.firstName
+				this.dataService.userAuthor.lastName = responseData.lastName
+				this.dataService.userAuthor.websiteUrl = responseData.websiteUrl
+				this.dataService.userAuthor.facebookUsername = responseData.facebookUsername
+				this.dataService.userAuthor.instagramUsername = responseData.instagramUsername
+				this.dataService.userAuthor.twitterUsername = responseData.twitterUsername
 			}
 
 			this.UpdateSocialMediaLinks()
@@ -569,13 +598,16 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	ProcessSetBioResponse(response: ApiResponse<any> | ApiErrorResponse) {
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+	ProcessSetBioResponse(response: ApiResponse<AuthorBioResource> | ApiErrorResponse) {
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorBioResource>).data
 
 			if (this.bioMode == BioMode.New) {
 				// Add the new bio to the bios
-				this.author.bios.push(responseData)
+				this.author.bios.push({
+					bio: responseData.bio,
+					language: responseData.language
+				})
 
 				// Update the dropdown
 				this.bioMode = BioMode.Normal
@@ -615,48 +647,69 @@ export class AuthorProfileComponent {
 	}
 
 	async LoadAuthor() {
-		let response = await this.apiService.GetAuthor({
+		let response = await this.apiService.RetrieveAuthor({
 			uuid: this.uuid,
-			books: true,
+			fields: [
+				AuthorField.uuid,
+				AuthorField.firstName,
+				AuthorField.lastName,
+				AuthorField.websiteUrl,
+				AuthorField.facebookUsername,
+				AuthorField.instagramUsername,
+				AuthorField.twitterUsername,
+				AuthorField.profileImage
+			],
 			languages: await this.dataService.GetStoreLanguages()
 		})
 
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
 
 			this.author = {
 				uuid: responseData.uuid,
-				firstName: responseData.first_name,
-				lastName: responseData.last_name,
-				websiteUrl: responseData.website_url,
-				facebookUsername: responseData.facebook_username,
-				instagramUsername: responseData.instagram_username,
-				twitterUsername: responseData.twitter_username,
-				bios: responseData.bios,
+				firstName: responseData.firstName,
+				lastName: responseData.lastName,
+				websiteUrl: responseData.websiteUrl,
+				facebookUsername: responseData.facebookUsername,
+				instagramUsername: responseData.instagramUsername,
+				twitterUsername: responseData.twitterUsername,
+				profileImage: {
+					url: responseData.profileImage?.url,
+					blurhash: responseData.profileImage?.blurhash
+				},
+				bios: [],
 				collections: [],
-				series: [],
-				profileImage: responseData.profile_image,
-				profileImageBlurhash: responseData.profile_image_blurhash
+				series: []
 			}
 
-			for (let book of responseData.books) {
-				let bookItem: BookListItem = {
-					uuid: book.uuid,
-					title: book.title,
-					cover: book.cover,
-					coverContent: null,
-					coverBlurhash: null
+			// Get the store books of the author
+			let storeBooksResponse = await this.apiService.ListStoreBooks({
+				fields: [],
+				languages: await this.dataService.GetStoreLanguages(),
+				author: responseData.uuid
+			})
+
+			if (isSuccessStatusCode(storeBooksResponse.status)) {
+				let storeBooksResponseData = (storeBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+
+				for (let storeBook of storeBooksResponseData.items) {
+					let bookItem: BookListItem = {
+						uuid: storeBook.uuid,
+						title: storeBook.title,
+						coverContent: null,
+						coverBlurhash: storeBook.cover?.blurhash
+					}
+
+					if (storeBook.cover?.url != null) {
+						this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+							if (isSuccessStatusCode(fileResponse.status)) {
+								bookItem.coverContent = (fileResponse as ApiResponse<string>).data
+							}
+						})
+					}
+
+					this.books.push(bookItem)
 				}
-
-				if (bookItem.cover) {
-					bookItem.coverBlurhash = book.cover_blurhash
-
-					this.apiService.GetStoreBookCover({ uuid: book.uuid }).then((result: ApiResponse<string>) => {
-						bookItem.coverContent = result.data
-					})
-				}
-
-				this.books.push(bookItem)
 			}
 
 			this.bioMode = BioMode.Normal
