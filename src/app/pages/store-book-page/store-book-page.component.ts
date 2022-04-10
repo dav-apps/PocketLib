@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
-import { ApiResponse, ApiErrorResponse, DownloadTableObject } from 'dav-js'
+import { ApiResponse, ApiErrorResponse, DownloadTableObject, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
@@ -8,7 +8,19 @@ import { RoutingService } from 'src/app/services/routing-service'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
-import { Author, BookStatus } from 'src/app/misc/types'
+import {
+	Author,
+	AuthorResource,
+	BookResource,
+	BookField,
+	BookStatus,
+	PurchaseResource,
+	PurchaseField,
+	StoreBookCollectionResource,
+	StoreBookCollectionField,
+	StoreBookResource,
+	StoreBookField
+} from 'src/app/misc/types'
 import { environment } from 'src/environments/environment'
 import { enUS } from 'src/locales/locales'
 
@@ -122,10 +134,6 @@ export class StoreBookPageComponent {
 		// Scroll to the top of the page
 		this.dataService.ScrollStoreContentToTop()
 
-		// Get the store book cover
-		let coverResponse = await this.apiService.GetStoreBookCover({ uuid: this.uuid })
-		if (coverResponse.status == 200) this.coverContent = (coverResponse as ApiResponse<any>).data
-
 		// Get StoreBook, StoreBookCollection and Author
 		await this.GetData()
 	}
@@ -149,24 +157,43 @@ export class StoreBookPageComponent {
 	}
 
 	async GetStoreBook(): Promise<string> {
-		let response = await this.apiService.GetStoreBook({
-			uuid: this.uuid
+		let response = await this.apiService.RetrieveStoreBook({
+			uuid: this.uuid,
+			fields: [
+				StoreBookField.collection,
+				StoreBookField.title,
+				StoreBookField.description,
+				StoreBookField.price,
+				StoreBookField.status,
+				StoreBookField.cover,
+				StoreBookField.inLibrary,
+				StoreBookField.purchased,
+				StoreBookField.categories
+			]
 		})
 
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<StoreBookResource>).data
 
 			this.book.collection = responseData.collection
 			this.book.title = responseData.title
 			this.book.description = responseData.description
 			this.book.price = responseData.price
 			this.book.status = GetBookStatusByString(responseData.status)
-			this.book.coverBlurhash = responseData.cover_blurhash
-			this.book.inLibrary = responseData.in_library
+			this.book.coverBlurhash = responseData.cover?.blurhash
+			this.book.inLibrary = responseData.inLibrary
 			this.book.purchased = responseData.purchased
-			this.book.series = responseData.series
 			this.categoryKeys = responseData.categories
 			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
+
+			// Load the cover
+			if (responseData.cover?.url != null) {
+				this.apiService.GetFile({ url: responseData.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.coverContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
+			}
 
 			// Load the price
 			if (this.book.price == 0) {
@@ -196,7 +223,7 @@ export class StoreBookPageComponent {
 			this.book.categories = []
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
 
-			for (let key of responseData.categories) {
+			for (let key of this.categoryKeys) {
 				// Find the category with the key
 				let category = this.dataService.categories.find(c => c.key == key)
 
@@ -215,34 +242,41 @@ export class StoreBookPageComponent {
 	}
 
 	async GetStoreBookCollection(uuid: string): Promise<string> {
-		let response = await this.apiService.GetStoreBookCollection({
-			uuid
+		let response = await this.apiService.RetrieveStoreBookCollection({
+			uuid,
+			fields: [StoreBookCollectionField.author]
 		})
 
-		if (response.status == 200) {
-			return (response as ApiResponse<any>).data.author
+		if (isSuccessStatusCode(response.status)) {
+			return (response as ApiResponse<StoreBookCollectionResource>).data.author
 		}
 
 		return null
 	}
 
 	async GetAuthor(uuid: string) {
-		let response = await this.apiService.GetAuthor({ uuid })
+		let response = await this.apiService.RetrieveAuthor({
+			uuid,
+			fields: []
+		})
 
-		if (response.status == 200) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
 			this.author.uuid = responseData.uuid
-			this.author.firstName = responseData.first_name
-			this.author.lastName = responseData.last_name
-			this.author.bios = responseData.bios
-			this.author.collections = responseData.collections
-			this.author.profileImage = responseData.profile_image
-			this.author.profileImageBlurhash = responseData.profile_image_blurhash
+			this.author.firstName = responseData.firstName
+			this.author.lastName = responseData.lastName
+			this.author.profileImage = {
+				url: responseData.profileImage?.url,
+				blurhash: responseData.profileImage?.blurhash
+			}
 			this.authorProfileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 
-			if (this.author.profileImage) {
-				let profileImageResponse = await this.apiService.GetProfileImageOfAuthor({ uuid: this.author.uuid })
-				if (profileImageResponse.status == 200) this.authorProfileImageContent = (profileImageResponse as ApiResponse<any>).data
+			if (responseData.profileImage?.url != null) {
+				this.apiService.GetFile({ url: responseData.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.authorProfileImageContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
 			}
 		}
 	}
@@ -341,16 +375,16 @@ export class StoreBookPageComponent {
 
 	private async CreatePurchaseForBook(): Promise<boolean> {
 		// Purchase this book directly
-		let createPurchaseResponse = await this.apiService.CreatePurchaseForStoreBook({
-			uuid: this.uuid,
+		let createPurchaseResponse = await this.apiService.CreatePurchase({
+			storeBook: this.uuid,
 			currency: "eur"
 		})
 
-		if (createPurchaseResponse.status == 201) {
+		if (isSuccessStatusCode(createPurchaseResponse.status)) {
 			this.book.purchased = true
 
 			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+			this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
 
 			return true
 		}
@@ -361,11 +395,12 @@ export class StoreBookPageComponent {
 	private async AddBookToLibrary(): Promise<boolean> {
 		// Add the StoreBook to the library of the user
 		let response = await this.apiService.CreateBook({
-			storeBook: this.uuid
+			storeBook: this.uuid,
+			fields: [BookField.uuid, BookField.file]
 		})
 
-		if (response.status == 201) {
-			let responseData = (response as ApiResponse<any>).data
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<BookResource>).data
 
 			// Download the table objects
 			await DownloadTableObject(responseData.uuid)
@@ -374,7 +409,7 @@ export class StoreBookPageComponent {
 			await this.dataService.ReloadBook(responseData.uuid)
 
 			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+			this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
 
 			return true
 		} else {
@@ -433,16 +468,17 @@ export class StoreBookPageComponent {
 
 	async NavigateToPurchasePage() {
 		// Create the purchase on the server
-		let createPurchaseResponse = await this.apiService.CreatePurchaseForStoreBook({
-			uuid: this.uuid,
-			currency: "eur"
+		let createPurchaseResponse = await this.apiService.CreatePurchase({
+			storeBook: this.uuid,
+			currency: "eur",
+			fields: [PurchaseField.uuid]
 		})
 		this.buyBookDialogVisible = false
 
-		if (createPurchaseResponse.status == 201) {
+		if (isSuccessStatusCode(createPurchaseResponse.status)) {
 			// Navigate to the purchase page on the website
 			let url = environment.baseUrl + this.router.url
-			let purchaseUuid = (createPurchaseResponse as ApiResponse<any>).data.uuid
+			let purchaseUuid = (createPurchaseResponse as ApiResponse<PurchaseResource>).data.uuid
 
 			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseUuid}?redirectUrl=${url}`
 		} else {
@@ -461,8 +497,8 @@ export class StoreBookPageComponent {
 		if (response.status == 200) this.book.status = BookStatus.Published
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBooksInReview.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
 
 		this.publishLoading = false
 	}
