@@ -30,11 +30,10 @@ export class NewSeriesPageComponent {
 		facebookUsername: null,
 		instagramUsername: null,
 		twitterUsername: null,
+		profileImage: null,
 		bios: [],
 		collections: [],
-		series: [],
-		profileImage: false,
-		profileImageBlurhash: null
+		series: []
 	}
 	booksLoading: boolean = true
 	loading: boolean = false

@@ -36,11 +36,10 @@ export class NewBookPageComponent {
 		facebookUsername: null,
 		instagramUsername: null,
 		twitterUsername: null,
+		profileImage: null,
 		bios: [],
 		collections: [],
-		series: [],
-		profileImage: false,
-		profileImageBlurhash: null
+		series: []
 	}
 	leavePageDialogVisible: boolean = false
 	errorMessage: string = ""
@@ -401,7 +400,7 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
 
 			// Upload the cover
-			await this.apiService.SetStoreBookCover({
+			await this.apiService.UploadStoreBookCover({
 				uuid: createStoreBookResponseData.uuid,
 				type: this.coverType,
 				file: this.coverContent
@@ -412,7 +411,7 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingBookFile
 
 			// Upload the book file
-			await this.apiService.SetStoreBookFile({
+			await this.apiService.UploadStoreBookFile({
 				uuid: createStoreBookResponseData.uuid,
 				type: this.bookFileType,
 				name: this.bookFileName,
@@ -420,8 +419,8 @@ export class NewBookPageComponent {
 			})
 		}
 
-		// Remove GetStoreBookCollection responses from ApiService cache
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBookCollection.name)
+		// Remove RetrieveStoreBookCollection responses from ApiService cache
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBookCollection.name)
 
 		// Reload the author of the user
 		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData

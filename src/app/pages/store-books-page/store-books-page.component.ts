@@ -1,10 +1,10 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { ApiResponse, ApiErrorResponse } from 'dav-js'
+import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { BookListItem } from 'src/app/misc/types'
+import { BookListItem, ListResponseData, StoreBookResource } from 'src/app/misc/types'
 import { GetDualScreenSettings, AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -111,56 +111,61 @@ export class StoreBooksPageComponent {
 		this.rightScreenBooks = []
 		this.loading = true
 
-		let response: ApiResponse<any> | ApiErrorResponse
-		let responseBooks: any[] = []
+		let response: ApiResponse<ListResponseData<StoreBookResource>> | ApiErrorResponse
 
 		switch (this.context) {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
-				response = await this.apiService.GetStoreBooksByCategory({
-					keys: [this.key],
+				response = await this.apiService.ListStoreBooks({
+					fields: [],
 					languages: await this.dataService.GetStoreLanguages(),
+					categories: [this.key],
 					limit: this.maxVisibleBooks,
 					page: this.page
 				})
 				break
 			default:
 				// Show all books
-				response = await this.apiService.GetLatestStoreBooks({
+				response = await this.apiService.ListStoreBooks({
+					fields: [],
 					languages: await this.dataService.GetStoreLanguages(),
 					limit: this.maxVisibleBooks,
-					page: this.page
+					page: this.page,
+					latest: true
 				})
 				break
 		}
 
 		this.loading = false
 
-		if (response.status != 200) return
-		let responseData = (response as ApiResponse<any>).data
+		if (!isSuccessStatusCode(response.status)) return
+		let responseData = (response as ApiResponse<ListResponseData<StoreBookResource>>).data
 
-		responseBooks = responseData.books
+		let responseBooks = responseData.items
 		this.pages = responseData.pages
 
 		let i = 0
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
 			let height = 230
-			let width = AdaptCoverWidthHeightToAspectRatio(153, height, storeBook.cover_aspect_ratio)
+			let width = AdaptCoverWidthHeightToAspectRatio(153, height, storeBook.cover?.aspectRatio)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
 				title: storeBook.title,
-				cover: storeBook.cover,
 				coverContent: null,
-				coverBlurhash: storeBook.cover_blurhash,
+				coverBlurhash: storeBook.cover?.blurhash,
 				coverWidth: width,
 				coverHeight: height
 			}
 
-			this.apiService.GetStoreBookCover({ uuid: storeBook.uuid }).then((result: ApiResponse<string>) => {
-				bookItem.coverContent = result.data
-			})
+			if (storeBook.cover?.url != null) {
+				this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
+			}
 
 			if (this.dualScreenLayout) {
 				// Evenly distribute the books on the left and right screens

@@ -60,11 +60,10 @@ export class StoreBookPageComponent {
 		facebookUsername: null,
 		instagramUsername: null,
 		twitterUsername: null,
+		profileImage: null,
 		bios: [],
 		collections: [],
-		series: [],
-		profileImage: false,
-		profileImageBlurhash: null
+		series: []
 	}
 	coverContent: string
 	coverAlt: string = ""

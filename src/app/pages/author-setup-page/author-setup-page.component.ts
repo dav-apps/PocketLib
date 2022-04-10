@@ -1,13 +1,14 @@
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-import { ApiErrorResponse, ApiResponse } from 'dav-js'
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
+import { AuthorField, AuthorResource } from 'src/app/misc/types'
 
 @Component({
 	selector: 'pocketlib-author-setup-page',
@@ -61,26 +62,30 @@ export class AuthorSetupPageComponent {
 
 		let response = await this.apiService.CreateAuthor({
 			firstName: this.firstName,
-			lastName: this.lastName
+			lastName: this.lastName,
+			fields: [
+				AuthorField.uuid,
+				AuthorField.firstName,
+				AuthorField.lastName
+			]
 		})
 
-		if (response.status == 201) {
-			let responseData = (response as ApiResponse<any>).data
-			
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
+
 			// Set the author in DataService
 			this.dataService.userAuthor = {
 				uuid: responseData.uuid,
-				firstName: responseData.first_name,
-				lastName: responseData.last_name,
-				websiteUrl: responseData.website_url,
-				facebookUsername: responseData.facebook_username,
-				instagramUsername: responseData.instagram_username,
-				twitterUsername: responseData.twitter_username,
+				firstName: responseData.firstName,
+				lastName: responseData.lastName,
+				websiteUrl: null,
+				facebookUsername: null,
+				instagramUsername: null,
+				twitterUsername: null,
+				profileImage: null,
 				bios: [],
 				collections: [],
-				series: [],
-				profileImage: false,
-				profileImageBlurhash: null
+				series: []
 			}
 			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor)
 

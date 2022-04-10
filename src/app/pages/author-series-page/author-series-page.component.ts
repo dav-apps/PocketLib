@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { DragulaService } from 'ng2-dragula'
-import { ApiResponse } from 'dav-js'
+import { isSuccessStatusCode } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -189,12 +189,12 @@ export class AuthorSeriesPageComponent {
 			collections: collectionUuids
 		})
 
-		if (response.status == 200) {
+		if (isSuccessStatusCode(response.status)) {
 			this.books.push(book)
 			this.addBookDialogVisible = false
 
 			this.LoadSelectableBooks()
-			this.series.collections = (response as ApiResponse<any>).data.collections
+			this.series.collections = collectionUuids
 		}
 	}
 
@@ -214,8 +214,8 @@ export class AuthorSeriesPageComponent {
 			collections: collectionUuids
 		})
 
-		if (response.status == 200) {
-			this.series.collections = (response as ApiResponse<any>).data.collections
+		if (isSuccessStatusCode(response.status)) {
+			this.series.collections = collectionUuids
 		}
 	}
 
@@ -262,13 +262,13 @@ export class AuthorSeriesPageComponent {
 			collections: collectionUuids
 		})
 
-		if (response.status == 200) {
+		if (isSuccessStatusCode(response.status)) {
 			// Remove the selected book from the books
 			let i = this.books.findIndex(b => b.uuid == this.contextMenuBook.uuid)
 			if (i != -1) this.books.splice(i, 1)
 
 			this.LoadSelectableBooks()
-			this.series.collections = (response as ApiResponse<any>).data.collections
+			this.series.collections = collectionUuids
 		}
 	}
 }

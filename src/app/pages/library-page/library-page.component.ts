@@ -293,7 +293,7 @@ export class LibraryPageComponent {
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
 
 		// Clear the ApiCache for GetStoreBook
-		this.cachingService.ClearApiRequestCache(this.apiService.GetStoreBook.name)
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
 	}
 
 	SearchTextChange(value: string) {
