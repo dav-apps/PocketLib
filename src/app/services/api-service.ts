@@ -807,7 +807,8 @@ export class ApiService {
 		languages?: Language[],
 		limit?: number,
 		latest?: boolean,
-		author?: string
+		author?: string,
+		storeBook?: string
 	}): Promise<ApiResponse<ListResponseData<StoreBookSeriesResource>> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
@@ -817,7 +818,8 @@ export class ApiService {
 				languages: params.languages,
 				limit: params.limit,
 				latest: params.latest,
-				author: params.author
+				author: params.author,
+				storeBook: params.storeBook
 			}, true)
 		)
 
@@ -839,7 +841,8 @@ export class ApiService {
 					languages: params.languages,
 					limit: params.limit,
 					latest: params.latest,
-					author: params.author
+					author: params.author,
+					store_book: params.storeBook
 				}, true)
 			})
 
