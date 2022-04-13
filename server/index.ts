@@ -10,16 +10,20 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
 		let response = await axios({
 			method: 'get',
-			url: `${backendUrl}/api/1/call/store/book/${uuid}`
+			url: `${backendUrl}/api/1/call/store_books/${uuid}`,
+			params: {
+				fields: "title,description,cover.url"
+			}
 		})
-		let responseData = response.data as any
 
 		if (response.status == 200) {
+			let responseData = response.data as any
+
 			// Add the appropriate meta tags to the html
 			return getHtml({
 				title: responseData.title,
 				description: responseData.description,
-				imageUrl: `${backendUrl}/api/1/call/store/book/${uuid}/cover`,
+				imageUrl: responseData.cover?.url,
 				url: `${websiteUrl}/store/book/${uuid}`
 			})
 		}
@@ -32,15 +36,19 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 	try {
 		let response = await axios({
 			method: 'get',
-			url: `${backendUrl}/api/1/call/author/${uuid}`
+			url: `${backendUrl}/api/1/call/authors/${uuid}`,
+			params: {
+				fields: "first_name,last_name,bio.value,profile_image.url"
+			}
 		})
-		let responseData = response.data as any
 
 		if (response.status == 200) {
+			let responseData = response.data as any
+
 			return getHtml({
 				title: `${responseData.first_name} ${responseData.last_name}`,
-				description: responseData.bios.length > 0 ? responseData.bios[0].bio : "",
-				imageUrl: `${backendUrl}/api/1/call/author/${uuid}/profile_image`,
+				description: responseData.bio?.value,
+				imageUrl: responseData.profile_image?.url,
 				url: `${websiteUrl}/store/author/${uuid}`
 			})
 		}
@@ -96,6 +104,8 @@ function getHtml(params?: {
 		}
 
 		for (let metaObj of metas) {
+			if (metaObj.content == null) continue
+
 			// Check if a meta tag with the name or property already exists
 			let meta
 
