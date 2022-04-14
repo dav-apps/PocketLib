@@ -9,8 +9,8 @@ import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import {
-	Author,
 	AuthorResource,
+	AuthorField,
 	BookResource,
 	BookField,
 	BookStatus,
@@ -67,18 +67,16 @@ export class StoreBookPageComponent {
 	categoryKeys: string[] = []
 	price: string = ""
 	bookStatus: string = ""
-	author: Author = {
+	author: AuthorResource = {
 		uuid: "",
 		firstName: "",
 		lastName: "",
+		bio: null,
 		websiteUrl: null,
 		facebookUsername: null,
 		instagramUsername: null,
 		twitterUsername: null,
-		profileImage: null,
-		bios: [],
-		collections: [],
-		series: []
+		profileImage: null
 	}
 	coverContent: string
 	coverAlt: string = ""
@@ -275,22 +273,20 @@ export class StoreBookPageComponent {
 	async GetAuthor(uuid: string) {
 		let response = await this.apiService.RetrieveAuthor({
 			uuid,
-			fields: []
+			fields: [
+				AuthorField.uuid,
+				AuthorField.firstName,
+				AuthorField.lastName,
+				AuthorField.profileImage
+			]
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
-			this.author.uuid = responseData.uuid
-			this.author.firstName = responseData.firstName
-			this.author.lastName = responseData.lastName
-			this.author.profileImage = {
-				url: responseData.profileImage?.url,
-				blurhash: responseData.profileImage?.blurhash
-			}
+			this.author = (response as ApiResponse<AuthorResource>).data
 			this.authorProfileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 
-			if (responseData.profileImage?.url != null) {
-				this.apiService.GetFile({ url: responseData.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+			if (this.author.profileImage?.url != null) {
+				this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.authorProfileImageContent = (fileResponse as ApiResponse<string>).data
 					}
@@ -370,7 +366,7 @@ export class StoreBookPageComponent {
 					let isAuthorOfBook = false
 					if (this.dataService.userAuthor) {
 						// Try to find the book in the books of the author
-						isAuthorOfBook = this.dataService.userAuthor.collections.findIndex(collection => collection.uuid == this.book.collection) != -1
+						isAuthorOfBook = (await this.dataService.userAuthor.GetCollections()).findIndex(collection => collection.uuid == this.book.collection) != -1
 					}
 
 					if (

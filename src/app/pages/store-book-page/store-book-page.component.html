@@ -25,7 +25,7 @@
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImageBlurhash"
+					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"
@@ -170,7 +170,7 @@
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImageBlurhash"
+					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"
@@ -313,7 +313,7 @@
 				<pocketlib-blurhash-image
 					[src]="authorProfileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImageBlurhash"
+					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"

@@ -4,7 +4,7 @@ import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { BookListItem, ListResponseData, StoreBookResource } from 'src/app/misc/types'
+import { BookListItem, ListResponseData, StoreBookResource, StoreBookListField } from 'src/app/misc/types'
 import { GetDualScreenSettings, AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -117,7 +117,12 @@ export class StoreBooksPageComponent {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
 				response = await this.apiService.ListStoreBooks({
-					fields: [],
+					fields: [
+						StoreBookListField.pages,
+						StoreBookListField.items_uuid,
+						StoreBookListField.items_title,
+						StoreBookListField.items_cover
+					],
 					languages: await this.dataService.GetStoreLanguages(),
 					categories: [this.key],
 					limit: this.maxVisibleBooks,
@@ -127,7 +132,12 @@ export class StoreBooksPageComponent {
 			default:
 				// Show all books
 				response = await this.apiService.ListStoreBooks({
-					fields: [],
+					fields: [
+						StoreBookListField.pages,
+						StoreBookListField.items_uuid,
+						StoreBookListField.items_title,
+						StoreBookListField.items_cover
+					],
 					languages: await this.dataService.GetStoreLanguages(),
 					limit: this.maxVisibleBooks,
 					page: this.page,
