@@ -21,54 +21,14 @@ export interface AuthorListItem {
 	profileImageAlt: string
 }
 
-export interface StoreBookCollection {
-	uuid: string
-	names: {
-		name: string
-		language: string
-	}[]
-	books: StoreBook[]
-}
-
-export interface StoreBookSeries {
-	uuid: string
-	names: {
-		name: string
-		language: string
-	}[]
-	collections: string[]
-}
-
-export interface Author {
-	uuid: string
-	firstName: string
-	lastName: string
-	websiteUrl: string
-	facebookUsername: string
-	instagramUsername: string
-	twitterUsername: string
-	profileImage: {
-		url: string,
-		blurhash: string
-	}
-	bios: {
-		bio: string,
-		language: string
-	}[]
-	collections: StoreBookCollection[]
-	series: StoreBookSeries[]
-}
-
-export interface StoreBook {
+export interface StoreBookItem {
 	uuid: string,
 	title: string,
 	description: string,
 	language: string,
 	status: BookStatus,
-	cover: boolean,
 	coverContent: string,
-	coverBlurhash: string,
-	file: boolean
+	coverBlurhash: string
 }
 
 export interface Category {

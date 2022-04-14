@@ -12,7 +12,8 @@ import {
 	StoreBookFileResource,
 	CategoryResource,
 	BookResource,
-	PurchaseResource
+	PurchaseResource,
+	Language
 } from './types'
 
 /**
@@ -147,6 +148,13 @@ export function GetDualScreenSettings() {
 	return settings
 }
 
+export function GetAllLanguages(): Language[] {
+	return [
+		Language.en,
+		Language.de
+	]
+}
+
 export function GetBookStatusByString(status: string): BookStatus {
 	switch (status) {
 		case "published":
@@ -157,6 +165,15 @@ export function GetBookStatusByString(status: string): BookStatus {
 			return BookStatus.Hidden
 		default:
 			return BookStatus.Unpublished
+	}
+}
+
+export function GetLanguageByString(language: string): Language {
+	switch (language) {
+		case "de":
+			return Language.de
+		default:
+			return Language.en
 	}
 }
 
@@ -186,7 +203,7 @@ export function AdaptCoverWidthHeightToAspectRatio(
 export function PrepareRequestParams(params: Object, joinArrays = false) {
 	let newParams = {}
 
-	for (let key in Object.keys(params)) {
+	for (let key of Object.keys(params)) {
 		if (params[key] == null) continue
 
 		let value = params[key]
@@ -241,6 +258,7 @@ export function ResponseDataToAuthorProfileImageResource(responseData: any): Aut
 export function ResponseDataToStoreBookCollectionResource(responseData: any): StoreBookCollectionResource {
 	return {
 		uuid: responseData.uuid,
+		author: responseData.author,
 		name: {
 			value: responseData.name?.value,
 			language: responseData.name?.language
@@ -259,6 +277,7 @@ export function ResponseDataToStoreBookCollectionNameResource(responseData: any)
 export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreBookSeriesResource {
 	return {
 		uuid: responseData.uuid,
+		author: responseData.author,
 		name: {
 			value: responseData.name?.value,
 			language: responseData.name?.language
@@ -277,6 +296,7 @@ export function ResponseDataToStoreBookSeriesNameResource(responseData: any): St
 export function ResponseDataToStoreBookResource(responseData: any): StoreBookResource {
 	return {
 		uuid: responseData.uuid,
+		collection: responseData.collection,
 		title: responseData.title,
 		description: responseData.description,
 		language: responseData.language,
