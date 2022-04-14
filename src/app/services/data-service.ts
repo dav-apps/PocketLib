@@ -14,6 +14,7 @@ import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
 import { BookOrder } from '../models/BookOrder'
+import { Author } from 'src/app/models/Author'
 import * as locales from 'src/locales/locales'
 import {
 	defaultLightStoreBookCoverUrl,
@@ -23,7 +24,6 @@ import {
 import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
 import {
-	Author,
 	AuthorResource,
 	AuthorField,
 	AuthorListField,
@@ -125,23 +125,8 @@ export class DataService {
 				if (isSuccessStatusCode(response.status)) {
 					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
 
-					for (let author of responseData.items) {
-						this.adminAuthors.push({
-							uuid: author.uuid,
-							firstName: author.firstName,
-							lastName: author.lastName,
-							websiteUrl: author.websiteUrl,
-							facebookUsername: author.facebookUsername,
-							instagramUsername: author.instagramUsername,
-							twitterUsername: author.twitterUsername,
-							profileImage: {
-								url: author.profileImage?.url,
-								blurhash: author.profileImage?.blurhash
-							},
-							bios: [],
-							collections: [],
-							series: []
-						})
+					for (let item of responseData.items) {
+						this.adminAuthors.push(new Author(item, await this.GetStoreLanguages(), this.apiService))
 					}
 				}
 			} else {
@@ -162,23 +147,7 @@ export class DataService {
 
 				if (isSuccessStatusCode(response.status)) {
 					let responseData = (response as ApiResponse<AuthorResource>).data
-
-					this.userAuthor = {
-						uuid: responseData.uuid,
-						firstName: responseData.firstName,
-						lastName: responseData.lastName,
-						websiteUrl: responseData.websiteUrl,
-						facebookUsername: responseData.facebookUsername,
-						instagramUsername: responseData.instagramUsername,
-						twitterUsername: responseData.twitterUsername,
-						profileImage: {
-							url: responseData.profileImage?.url,
-							blurhash: responseData.profileImage.blurhash
-						},
-						bios: [],
-						collections: [],
-						series: []
-					}
+					this.userAuthor = new Author(responseData, await this.GetStoreLanguages(), this.apiService)
 				}
 			}
 		}
@@ -356,9 +325,18 @@ export class DataService {
 	}
 
 	async GetStoreLanguages(): Promise<Language[]> {
+		let defaultLanguages = []
+		let l = this.locale.toLowerCase()
+
+		if (l.startsWith("de")) {
+			defaultLanguages = [Language.de, Language.en]
+		} else {
+			defaultLanguages = [Language.en, Language.de]
+		}
+
 		return this.GetSetting<Language[]>(
 			keys.settingsStoreLanguagesKey,
-			[Language.en, Language.de]
+			defaultLanguages
 		)
 	}
 

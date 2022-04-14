@@ -324,7 +324,7 @@ export class ApiService {
 				}
 			}
 
-			for (let item in response.data.items) {
+			for (let item of response.data.items) {
 				result.data.items.push(ResponseDataToAuthorBioResource(item))
 			}
 
@@ -552,7 +552,8 @@ export class ApiService {
 	}
 
 	async ListStoreBookCollections(params: {
-		author: string,
+		author?: string,
+		series?: string,
 		fields?: StoreBookCollectionListField[],
 		languages?: Language[]
 	}): Promise<ApiResponse<ListResponseData<StoreBookCollectionResource>> | ApiErrorResponse> {
@@ -561,6 +562,7 @@ export class ApiService {
 			this.ListStoreBookCollections.name,
 			PrepareRequestParams({
 				author: params.author,
+				series: params.series,
 				fields: params.fields,
 				languages: params.languages
 			}, true)
@@ -584,6 +586,7 @@ export class ApiService {
 				},
 				params: PrepareRequestParams({
 					author: params.author,
+					series: params.series,
 					fields: params.fields,
 					languages: params.languages
 				}, true)
@@ -951,7 +954,7 @@ export class ApiService {
 				}
 			}
 
-			for (let item in response.data.items) {
+			for (let item of response.data.items) {
 				result.data.items.push(ResponseDataToStoreBookSeriesNameResource(item))
 			}
 
@@ -1165,12 +1168,17 @@ export class ApiService {
 
 			if (
 				Dav.accessToken != null
-				&& params.fields != null
 				&& (
-					params.fields.includes(StoreBookListField.items_file)
-					|| params.fields.includes(StoreBookListField.items_file_fileName)
-					|| params.fields.includes(StoreBookListField.items_inLibrary)
-					|| params.fields.includes(StoreBookListField.items_purchased)
+					params.review
+					|| (
+						params.fields != null
+						&& (
+							params.fields.includes(StoreBookListField.items_file)
+							|| params.fields.includes(StoreBookListField.items_file_fileName)
+							|| params.fields.includes(StoreBookListField.items_inLibrary)
+							|| params.fields.includes(StoreBookListField.items_purchased)
+						)
+					)
 				)
 			) {
 				requestConfig.headers = {
@@ -1189,7 +1197,7 @@ export class ApiService {
 				}
 			}
 
-			for (let item in response.data.items) {
+			for (let item of response.data.items) {
 				result.data.items.push(ResponseDataToStoreBookResource(item))
 			}
 
