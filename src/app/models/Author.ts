@@ -11,6 +11,7 @@ import {
 	StoreBookSeriesListField
 } from "../misc/types"
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from '../services/caching-service'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import { StoreBookSeries } from 'src/app/models/StoreBookSeries'
 
@@ -42,7 +43,12 @@ export class Author {
 		itemsPromiseHolder: PromiseHolder<StoreBookSeries[]>
 	}
 
-	constructor(authorResource: AuthorResource, private languages: Language[], private apiService: ApiService) {
+	constructor(
+		authorResource: AuthorResource,
+		private languages: Language[],
+		private apiService: ApiService,
+		private cachingService: CachingService
+	) {
 		this.uuid = authorResource?.uuid ?? ""
 		this.firstName = authorResource?.firstName ?? ""
 		this.lastName = authorResource?.lastName ?? ""
@@ -104,6 +110,7 @@ export class Author {
 
 	ClearBios() {
 		this.bios.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListAuthorBios.name)
 	}
 
 	async GetCollections(): Promise<StoreBookCollection[]> {
@@ -186,10 +193,15 @@ export class Author {
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(new StoreBookSeries(item, this.apiService))
+			items.push(new StoreBookSeries(item, this.apiService, this.cachingService))
 		}
 
 		this.series.itemsPromiseHolder.Resolve(items)
 		return items
+	}
+
+	ClearSeries() {
+		this.series.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookSeries.name)
 	}
 }

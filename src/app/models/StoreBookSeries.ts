@@ -10,6 +10,7 @@ import {
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
+import { CachingService } from "../services/caching-service"
 import { StoreBookCollection } from "./StoreBookCollection"
 
 export class StoreBookSeries {
@@ -30,7 +31,11 @@ export class StoreBookSeries {
 		itemsPromiseHolder: PromiseHolder<StoreBookCollectionResource[]>
 	}
 
-	constructor(seriesResource: StoreBookSeriesResource, private apiService: ApiService) {
+	constructor(
+		seriesResource: StoreBookSeriesResource,
+		private apiService: ApiService,
+		private cachingService: CachingService
+	) {
 		this.uuid = seriesResource?.uuid ?? ""
 		this.author = seriesResource?.author ?? ""
 		this.name = {
@@ -86,6 +91,7 @@ export class StoreBookSeries {
 
 	ClearNames() {
 		this.names.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookSeriesNames.name)
 	}
 
 	async GetCollections(): Promise<StoreBookCollection[]> {

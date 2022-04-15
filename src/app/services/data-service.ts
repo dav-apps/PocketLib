@@ -10,6 +10,7 @@ import {
 } from 'dav-js'
 import * as DavUIComponents from 'dav-ui-components'
 import { ApiService } from './api-service'
+import { CachingService } from './caching-service'
 import { Book } from '../models/Book'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
@@ -79,6 +80,7 @@ export class DataService {
 
 	constructor(
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private swUpdate: SwUpdate
 	) {
 		// Set the supported locale
@@ -126,7 +128,14 @@ export class DataService {
 					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
 
 					for (let item of responseData.items) {
-						this.adminAuthors.push(new Author(item, await this.GetStoreLanguages(), this.apiService))
+						this.adminAuthors.push(
+							new Author(
+								item,
+								await this.GetStoreLanguages(),
+								this.apiService,
+								this.cachingService
+							)
+						)
 					}
 				}
 			} else {
@@ -147,7 +156,12 @@ export class DataService {
 
 				if (isSuccessStatusCode(response.status)) {
 					let responseData = (response as ApiResponse<AuthorResource>).data
-					this.userAuthor = new Author(responseData, await this.GetStoreLanguages(), this.apiService)
+					this.userAuthor = new Author(
+						responseData,
+						await this.GetStoreLanguages(),
+						this.apiService,
+						this.cachingService
+					)
 				}
 			}
 		}
