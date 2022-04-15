@@ -1,9 +1,10 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
+import { isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { Author } from 'src/app/misc/types'
+import { Author } from 'src/app/models/Author'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -22,19 +23,7 @@ export class NewSeriesPageComponent {
 	locale = enUS.newSeriesPage
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	author: Author = {
-		uuid: "",
-		firstName: "",
-		lastName: "",
-		websiteUrl: null,
-		facebookUsername: null,
-		instagramUsername: null,
-		twitterUsername: null,
-		profileImage: null,
-		bios: [],
-		collections: [],
-		series: []
-	}
+	author: Author
 	booksLoading: boolean = true
 	loading: boolean = false
 	errorMessage: string = ""
@@ -68,7 +57,8 @@ export class NewSeriesPageComponent {
 
 			// Find the author with the uuid
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
-			if (!author) {
+
+			if (author == null) {
 				this.GoBack()
 				return
 			}
@@ -83,26 +73,26 @@ export class NewSeriesPageComponent {
 			return
 		}
 
-		// Load the books of the author
-		await this.apiService.LoadCollectionsOfAuthor(this.author)
 		this.LoadBooks()
 	}
 
-	LoadBooks() {
+	async LoadBooks() {
 		this.booksLoading = true
 		this.bookItems = []
 
 		// Get the books that can be selected (status = review, published or hidden; language = current language)
-		for (let collection of this.author.collections) {
-			for (let book of collection.books) {
+		for (let collection of await this.author.GetCollections()) {
+			for (let book of await collection.GetStoreBooks()) {
 				if (book.status > 0 && book.language == this.language) {
-					this.bookItems.push({
+					let bookItem: BookItem = {
 						uuid: book.uuid,
 						title: book.title,
-						cover: book.coverContent,
+						cover: null,
 						checked: false
-					})
+					}
 
+					book.GetCoverContent().then(result => bookItem.cover = result)
+					this.bookItems.push(bookItem)
 					break
 				}
 			}
@@ -143,12 +133,24 @@ export class NewSeriesPageComponent {
 	async Submit() {
 		this.loading = true
 
+		let authorCollections = await this.author.GetCollections()
 		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
 		let collectionUuids: string[] = []
 
 		// Get the collection uuids of the books
 		for (let book of this.selectedBooks) {
-			let collection = this.author.collections.find(collection => collection.books.findIndex(b => b.uuid == book.uuid) != -1)
+			let collection = null
+
+			for (let authorCollection of authorCollections) {
+				let collectionStoreBooks = await authorCollection.GetStoreBooks()
+				let i = collectionStoreBooks.findIndex(b => b.uuid == book.uuid)
+
+				if (i != -1) {
+					collection = authorCollection
+					break
+				}
+			}
+
 			if (collection != null) collectionUuids.push(collection.uuid)
 		}
 
@@ -160,14 +162,14 @@ export class NewSeriesPageComponent {
 			collections: collectionUuids
 		})
 
-		if (createStoreBookSeriesResponse.status != 201) {
+		if (!isSuccessStatusCode(createStoreBookSeriesResponse.status)) {
 			this.errorMessage = this.locale.errorMessage
 			this.loading = false
 			return
 		}
 
 		// Reload the author
-		await this.dataService.LoadAuthorOfUser()
+		this.author.ClearSeries()
 
 		// Redirect to the author profile
 		this.dataService.navbarVisible = true
