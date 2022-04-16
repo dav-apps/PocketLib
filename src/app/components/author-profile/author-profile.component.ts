@@ -13,23 +13,22 @@ import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg
 import Cropper from 'cropperjs'
 import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
-import {
-	DataService,
-	FindAppropriateLanguage
-} from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
+import { Author } from 'src/app/models/Author'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import {
 	BookListItem,
-	Author,
 	AuthorMode,
-	StoreBook,
-	AuthorBioField,
-	AuthorBioResource,
 	AuthorResource,
 	AuthorField,
+	AuthorBioField,
+	AuthorBioResource,
 	ListResponseData,
-	StoreBookResource
+	StoreBookResource,
+	StoreBookListField,
+	StoreBookItem
 } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -37,13 +36,13 @@ import { enUS } from 'src/locales/locales'
 interface CollectionItem {
 	uuid: string
 	name: string
-	books: StoreBook[]
+	books: StoreBookItem[]
 }
 
 interface SeriesItem {
 	uuid: string
 	name: string
-	books: StoreBook[]
+	books: StoreBookItem[]
 }
 
 enum BioMode {
@@ -74,22 +73,11 @@ export class AuthorProfileComponent {
 	dualScreenFoldMargin: number = 0
 	storeContext: boolean = true		// Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = {
-		uuid: "",
-		firstName: "",
-		lastName: "",
-		websiteUrl: "",
-		facebookUsername: "",
-		instagramUsername: "",
-		twitterUsername: "",
-		profileImage: null,
-		bios: [],
-		collections: [],
-		series: []
-	}
+	author: Author = new Author(null, [], this.apiService, this.cachingService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
+	bios: { language: string, value: string }[] = []
 	books: BookListItem[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownOptions: DropdownOption[] = []
@@ -140,7 +128,8 @@ export class AuthorProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private cachingService: CachingService
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
 
@@ -172,11 +161,13 @@ export class AuthorProfileComponent {
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
 			this.UpdateSocialMediaLinks()
-			this.SelectDefaultBio()
+			await this.LoadBios()
+			await this.SelectDefaultBio()
 		} else if (this.authorMode == AuthorMode.AuthorOfUser) {
 			this.author = this.dataService.userAuthor
 			this.UpdateSocialMediaLinks()
-			this.SelectDefaultBio()
+			await this.LoadBios()
+			await this.SelectDefaultBio()
 
 			// Set the text and visibility for the provider message
 			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
@@ -185,7 +176,7 @@ export class AuthorProfileComponent {
 			await this.LoadAuthor()
 		}
 
-		if (this.author.profileImage) {
+		if (this.author.profileImage.url != null) {
 			// Set the author profile image
 			this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 				if (isSuccessStatusCode(fileResponse.status)) {
@@ -203,50 +194,61 @@ export class AuthorProfileComponent {
 		this.SetupBioLanguageDropdown()
 		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 
-		if (
-			this.authorMode == AuthorMode.AuthorOfAdmin
-			|| this.authorMode == AuthorMode.AuthorOfUser
-		) {
-			// Loads the collections, if necessary
-			await this.apiService.LoadCollectionsOfAuthor(this.author)
-		}
-
-		// Get the appropriate language of each collection
-		for (let collection of this.author.collections) {
-			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
-			if (i == -1) continue
-
-			this.collections.push({
+		for (let collection of await this.author.GetCollections()) {
+			let collectionItem: CollectionItem = {
 				uuid: collection.uuid,
-				name: collection.names[i].name,
-				books: collection.books
-			})
-		}
-
-		// Get the appropriate language and details of each series
-		for (let series of this.author.series) {
-			let i = FindAppropriateLanguage(this.dataService.supportedLocale, series.names)
-			if (i == -1) continue
-
-			let language = series.names[i].language
-			let newSeries: SeriesItem = {
-				uuid: series.uuid,
-				name: series.names[i].name,
+				name: collection.name.value,
 				books: []
 			}
 
-			for (let collectionUuid of series.collections) {
-				let collection = this.author.collections.find(c => c.uuid == collectionUuid)
+			for (let book of await collection.GetStoreBooks()) {
+				let bookItem: StoreBookItem = {
+					uuid: book.uuid,
+					title: book.title,
+					description: book.description,
+					language: book.language,
+					status: book.status,
+					coverContent: null,
+					coverBlurhash: book.cover.blurhash
+				}
+
+				book.GetCoverContent().then(result => bookItem.coverContent = result)
+				collectionItem.books.push(bookItem)
+			}
+
+			this.collections.push(collectionItem)
+		}
+
+		// Get the appropriate language and details of each series
+		for (let series of await this.author.GetSeries()) {
+			let seriesItem: SeriesItem = {
+				uuid: series.uuid,
+				name: series.name.value,
+				books: []
+			}
+
+			for (let seriesCollection of await series.GetCollections()) {
+				let collection = (await this.author.GetCollections()).find(c => c.uuid == seriesCollection.uuid)
 				if (collection == null) continue
 
 				// Get the first book in the appropriate language
-				let book = collection.books.find(book => book.language == language)
+				let book = (await collection.GetStoreBooks()).find(book => book.language == series.name.language)
 				if (book == null) continue
 
-				newSeries.books.push(book)
+				let bookItem: StoreBookItem = {
+					uuid: book.uuid,
+					title: book.title,
+					description: book.description,
+					language: book.language,
+					status: book.status,
+					coverContent: await book.GetCoverContent(),
+					coverBlurhash: book.cover?.blurhash
+				}
+
+				seriesItem.books.push(bookItem)
 			}
 
-			this.series.push(newSeries)
+			this.series.push(seriesItem)
 		}
 
 		this.collectionsLoaded = true
@@ -267,13 +269,24 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	SelectDefaultBio() {
-		let i = this.author.bios.findIndex(bio => bio.language == this.dataService.supportedLocale)
+	async LoadBios() {
+		this.bios = []
+
+		for (let bio of await this.author.GetBios()) {
+			this.bios.push({
+				language: bio.language,
+				value: bio.bio
+			})
+		}
+	}
+
+	async SelectDefaultBio() {
+		let i = this.bios.findIndex(bio => bio.language == this.dataService.supportedLocale)
 
 		if (i != -1) {
 			this.bioLanguageDropdownSelectedKey = this.dataService.supportedLocale
-		} else if (this.author.bios.length > 0) {
-			this.bioLanguageDropdownSelectedKey = this.author.bios[0].language
+		} else if (this.bios.length > 0) {
+			this.bioLanguageDropdownSelectedKey = this.bios[0].language
 		} else {
 			this.bioLanguageDropdownSelectedKey = "default"
 		}
@@ -281,26 +294,26 @@ export class AuthorProfileComponent {
 		this.UpdateCurrentBio()
 	}
 
-	UpdateCurrentBio() {
-		let i = this.author.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+	async UpdateCurrentBio() {
+		let i = this.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
 
 		if (i == -1) {
 			this.currentBio = ""
 		} else {
-			this.currentBio = this.author.bios[i].bio
+			this.currentBio = this.bios[i].value
 		}
 	}
 
-	SetupBioLanguageDropdown() {
+	async SetupBioLanguageDropdown() {
 		if (this.authorMode == AuthorMode.Normal) return
 
 		// Prepare the Bio language dropdown
 		this.bioLanguageDropdownOptions = []
 
-		for (let lang of this.author.bios) {
+		for (let bio of this.bios) {
 			this.bioLanguageDropdownOptions.push({
-				key: lang.language,
-				value: this.dataService.GetFullLanguage(lang.language),
+				key: bio.language,
+				value: this.dataService.GetFullLanguage(bio.language),
 				type: DropdownOptionType.option
 			})
 		}
@@ -366,7 +379,7 @@ export class AuthorProfileComponent {
 
 			// Save the new bio on the server
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
-				this.ProcessSetBioResponse(
+				await this.ProcessSetBioResponse(
 					await this.apiService.SetAuthorBio({
 						fields: [AuthorBioField.bio, AuthorBioField.language],
 						uuid: "mine",
@@ -375,7 +388,7 @@ export class AuthorProfileComponent {
 					})
 				)
 			} else {
-				this.ProcessSetBioResponse(
+				await this.ProcessSetBioResponse(
 					await this.apiService.SetAuthorBio({
 						fields: [AuthorBioField.bio, AuthorBioField.language],
 						uuid: this.uuid,
@@ -397,14 +410,14 @@ export class AuthorProfileComponent {
 		this.newBioError = ""
 	}
 
-	BioLanguageDropdownChange(event: CustomEvent) {
+	async BioLanguageDropdownChange(event: CustomEvent) {
 		this.bioLanguageDropdownSelectedKey = event.detail.key
 		this.newBioError = ""
 
 		if (this.bioLanguageDropdownSelectedKey == "default") {
 			this.bioMode = BioMode.None
 		} else {
-			let i = this.author.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+			let i = this.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
 
 			if (i == -1) {
 				this.bioMode = BioMode.New
@@ -497,6 +510,7 @@ export class AuthorProfileComponent {
 		if (this.dataService.userIsAdmin) {
 			response = await this.apiService.UpdateAuthor({
 				fields: [
+					AuthorField.uuid,
 					AuthorField.firstName,
 					AuthorField.lastName,
 					AuthorField.websiteUrl,
@@ -515,6 +529,7 @@ export class AuthorProfileComponent {
 		} else {
 			response = await this.apiService.UpdateAuthor({
 				fields: [
+					AuthorField.uuid,
 					AuthorField.firstName,
 					AuthorField.lastName,
 					AuthorField.websiteUrl,
@@ -598,34 +613,16 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	ProcessSetBioResponse(response: ApiResponse<AuthorBioResource> | ApiErrorResponse) {
+	async ProcessSetBioResponse(response: ApiResponse<AuthorBioResource> | ApiErrorResponse) {
 		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorBioResource>).data
+			this.author.ClearBios()
+			await this.LoadBios()
 
-			if (this.bioMode == BioMode.New) {
-				// Add the new bio to the bios
-				this.author.bios.push({
-					bio: responseData.bio,
-					language: responseData.language
-				})
+			this.newBio = ""
+			this.newBioError = ""
+			this.bioMode = BioMode.Normal
 
-				// Update the dropdown
-				this.bioMode = BioMode.Normal
-				this.newBio = ""
-				this.newBioError = ""
-				this.SetupBioLanguageDropdown()
-			} else {
-				// Find and update the edited bio
-				let i = this.author.bios.findIndex(bio => bio.language == responseData.language)
-				if (i != -1) {
-					this.author.bios[i].bio = responseData.bio
-				}
-
-				this.newBio = ""
-				this.newBioError = ""
-				this.bioMode = BioMode.Normal
-			}
-
+			this.SetupBioLanguageDropdown()
 			this.UpdateCurrentBio()
 		} else {
 			let errorCode = (response as ApiErrorResponse).errors[0].code
@@ -664,27 +661,20 @@ export class AuthorProfileComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<AuthorResource>).data
-
-			this.author = {
-				uuid: responseData.uuid,
-				firstName: responseData.firstName,
-				lastName: responseData.lastName,
-				websiteUrl: responseData.websiteUrl,
-				facebookUsername: responseData.facebookUsername,
-				instagramUsername: responseData.instagramUsername,
-				twitterUsername: responseData.twitterUsername,
-				profileImage: {
-					url: responseData.profileImage?.url,
-					blurhash: responseData.profileImage?.blurhash
-				},
-				bios: [],
-				collections: [],
-				series: []
-			}
+			this.author = new Author(
+				responseData,
+				await this.dataService.GetStoreLanguages(),
+				this.apiService,
+				this.cachingService
+			)
 
 			// Get the store books of the author
 			let storeBooksResponse = await this.apiService.ListStoreBooks({
-				fields: [],
+				fields: [
+					StoreBookListField.items_uuid,
+					StoreBookListField.items_title,
+					StoreBookListField.items_cover
+				],
 				languages: await this.dataService.GetStoreLanguages(),
 				author: responseData.uuid
 			})

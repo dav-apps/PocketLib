@@ -9,7 +9,7 @@
 			<pocketlib-blurhash-image
 				[src]="profileImageContent"
 				[fallback]="dataService.defaultProfileImageUrl"
-				[blurhash]="author.profileImageBlurhash"
+				[blurhash]="author.profileImage.blurhash"
 				[title]="author.firstName + ' ' + author.lastName"
 				[alt]="profileImageAlt"
 				[width]="profileImageWidth"
@@ -235,7 +235,7 @@
 				<pocketlib-blurhash-image
 					[src]="profileImageContent"
 					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImageBlurhash"
+					[blurhash]="author.profileImage.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="profileImageAlt"
 					[width]="profileImageWidth"

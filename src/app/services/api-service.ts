@@ -247,7 +247,7 @@ export class ApiService {
 	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}`,
 				headers: {
 					Authorization: Dav.accessToken,
