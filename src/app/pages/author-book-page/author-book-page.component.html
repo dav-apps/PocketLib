@@ -192,7 +192,7 @@
 						<dav-button
 							type="accent"
 							[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
-							(click)="PublishOrUnpublishBook(true)">
+							(click)="PublishOrUnpublishBook(book.status == 3 ? 'published' : 'review')">
 							{{ locale.publish }}
 						</dav-button>
 
@@ -210,7 +210,7 @@
 						<dav-button
 							type="accent"
 							[disabled]="statusLoading"
-							(click)="PublishOrUnpublishBook(false)">
+							(click)="PublishOrUnpublishBook('unpublished')">
 							{{ locale.unpublish }}
 						</dav-button>
 
@@ -228,7 +228,7 @@
 						<dav-button
 							type="accent"
 							[disabled]="statusLoading"
-							(click)="PublishOrUnpublishBook(false)">
+							(click)="PublishOrUnpublishBook('hidden')">
 							{{ locale.unpublish }}
 						</dav-button>
 
@@ -451,7 +451,7 @@
 							<dav-button
 								type="accent"
 								[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
-								(click)="PublishOrUnpublishBook(true)">
+								(click)="PublishOrUnpublishBook(book.status == 3 ? 'published' : 'review')">
 								{{ locale.publish }}
 							</dav-button>
 
@@ -469,7 +469,7 @@
 							<dav-button
 								type="accent"
 								[disabled]="statusLoading"
-								(click)="PublishOrUnpublishBook(false)">
+								(click)="PublishOrUnpublishBook('unpublished')">
 								{{ locale.unpublish }}
 							</dav-button>
 
@@ -487,7 +487,7 @@
 							<dav-button
 								type="accent"
 								[disabled]="statusLoading"
-								(click)="PublishOrUnpublishBook(false)">
+								(click)="PublishOrUnpublishBook('hidden')">
 								{{ locale.unpublish }}
 							</dav-button>
 

@@ -8,8 +8,9 @@ import { CachingService } from 'src/app/services/caching-service'
 import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
+import { Author } from 'src/app/models/Author'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { Author, BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
+import { BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -104,6 +105,7 @@ export class AuthorBookPageComponent {
 		let response = await this.apiService.RetrieveStoreBook({
 			uuid: this.uuid,
 			fields: [
+				StoreBookField.collection,
 				StoreBookField.title,
 				StoreBookField.description,
 				StoreBookField.language,
@@ -111,13 +113,15 @@ export class AuthorBookPageComponent {
 				StoreBookField.isbn,
 				StoreBookField.status,
 				StoreBookField.cover,
-				StoreBookField.file
+				StoreBookField.file,
+				StoreBookField.categories
 			]
 		})
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<StoreBookResource>).data
 
+			this.book.collection = responseData.collection
 			this.book.title = responseData.title
 			this.book.description = responseData.description ?? ""
 			this.book.language = responseData.language
@@ -156,18 +160,23 @@ export class AuthorBookPageComponent {
 
 		// Try to find the author of the collection of the book
 		if (this.dataService.userIsAdmin) {
-			author = this.dataService.adminAuthors.find(author => author.collections.findIndex(collection => collection.uuid == this.book.collection) != -1)
+			for (let a of this.dataService.adminAuthors) {
+				let collections = await a.GetCollections()
+				let i = collections.findIndex(c => c.uuid == this.book.collection)
+
+				if (i != -1) {
+					author = a
+					break
+				}
+			}
 		} else {
 			author = this.dataService.userAuthor
 		}
 
 		if (author != null) {
-			// Load the books of the collections
-			await this.apiService.LoadCollectionsOfAuthor(author)
-
 			// Find the collection of the current book
-			let collection = author.collections.find(c => c.uuid == this.book.collection)
-			singleBookInCollection = collection.books.length == 1
+			let collection = (await author.GetCollections()).find(c => c.uuid == this.book.collection)
+			singleBookInCollection = (await collection.GetStoreBooks()).length == 1
 
 			if (singleBookInCollection && this.dataService.userIsAdmin) {
 				this.backButtonLink = `/author/${author.uuid}`
@@ -211,7 +220,8 @@ export class AuthorBookPageComponent {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				title: this.editTitleDialogTitle
+				title: this.editTitleDialogTitle,
+				fields: [StoreBookField.title]
 			})
 		)
 	}
@@ -225,7 +235,8 @@ export class AuthorBookPageComponent {
 			this.UpdateStoreBookResponse(
 				await this.apiService.UpdateStoreBook({
 					uuid: this.uuid,
-					description: this.newDescription
+					description: this.newDescription,
+					fields: [StoreBookField.description]
 				})
 			)
 		} else {
@@ -241,7 +252,8 @@ export class AuthorBookPageComponent {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				language
+				language,
+				fields: [StoreBookField.language]
 			})
 		)
 	}
@@ -276,7 +288,8 @@ export class AuthorBookPageComponent {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				price
+				price,
+				fields: [StoreBookField.price]
 			})
 		)
 	}
@@ -287,7 +300,8 @@ export class AuthorBookPageComponent {
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				isbn
+				isbn,
+				fields: [StoreBookField.isbn]
 			})
 		)
 	}
@@ -353,22 +367,23 @@ export class AuthorBookPageComponent {
 			file: fileContent
 		})
 
-		this.bookFileUploaded = response.status == 200
+		this.bookFileUploaded = isSuccessStatusCode(response.status)
 		this.bookFileLoading = false
 
-		if (response.status == 200) {
+		if (isSuccessStatusCode(response.status)) {
 			this.book.fileName = file.name
 		}
 	}
 
-	async PublishOrUnpublishBook(published: boolean) {
+	async PublishOrUnpublishBook(status: string) {
 		this.publishingOrUnpublishing = true
 		this.statusLoading = true
 
 		this.UpdateStoreBookResponse(
 			await this.apiService.UpdateStoreBook({
 				uuid: this.uuid,
-				status: published ? "review" : "hidden"
+				status,
+				fields: [StoreBookField.status]
 			})
 		)
 
@@ -380,7 +395,7 @@ export class AuthorBookPageComponent {
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
 		if (this.editDescription) {
 			// The description was updated
-			if (response.status == 200) {
+			if (isSuccessStatusCode(response.status)) {
 				this.book.description = (response as ApiResponse<any>).data.description
 				this.editDescription = false
 			} else {
@@ -403,14 +418,14 @@ export class AuthorBookPageComponent {
 		} else if (this.updateLanguage) {
 			this.updateLanguage = false
 
-			if (response.status == 200) {
+			if (isSuccessStatusCode(response.status)) {
 				this.book.language = (response as ApiResponse<any>).data.language
 			}
 		} else if (this.priceUpdating) {
 			this.priceUpdating = false
 
 			// The price was updated
-			if (response.status == 200) {
+			if (isSuccessStatusCode(response.status)) {
 				this.book.price = (response as ApiResponse<any>).data.price
 				this.priceInput.SetPrice(this.book.price)
 			} else {
@@ -429,7 +444,7 @@ export class AuthorBookPageComponent {
 			this.isbnUpdating = false
 
 			// The ISBN was updated
-			if (response.status == 200) {
+			if (isSuccessStatusCode(response.status)) {
 				let responseData = (response as ApiResponse<any>).data
 				this.book.isbn = responseData.isbn ? responseData.isbn : ""
 				this.isbnInput.SetIsbn(this.book.isbn)
@@ -449,13 +464,13 @@ export class AuthorBookPageComponent {
 			this.publishingOrUnpublishing = false
 			this.statusLoading = false
 
-			if (response.status == 200) {
-				this.book.status = GetBookStatusByString((response as ApiResponse<any>).data.status)
+			if (isSuccessStatusCode(response.status)) {
+				this.book.status = GetBookStatusByString((response as ApiResponse<StoreBookResource>).data.status)
 			}
 		} else {
 			// The title was updated
-			if (response.status == 200) {
-				this.book.title = (response as ApiResponse<any>).data.title
+			if (isSuccessStatusCode(response.status)) {
+				this.book.title = (response as ApiResponse<StoreBookResource>).data.title
 				this.editTitleDialogVisible = false
 			} else {
 				let errorCode = (response as ApiErrorResponse).errors[0].code
