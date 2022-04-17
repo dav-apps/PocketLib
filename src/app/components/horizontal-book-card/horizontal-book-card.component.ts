@@ -24,10 +24,6 @@ export class HorizontalBookCardComponent {
 	}
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
 		let bookCardParent = document.getElementById("book-card-parent") as HTMLDivElement
 		let bookCardParentWidth = bookCardParent.clientWidth

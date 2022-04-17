@@ -4,6 +4,7 @@ import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
@@ -14,6 +15,7 @@ import {
 	StoreBookListField,
 	StoreBookResource
 } from 'src/app/misc/types'
+import { Author } from 'src/app/models/Author'
 
 @Component({
 	selector: "pocketlib-author-page",
@@ -47,6 +49,7 @@ export class AuthorPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -171,19 +174,14 @@ export class AuthorPageComponent {
 			let responseData = (response as ApiResponse<AuthorResource>).data
 			
 			// Add the author to the admin authors in DataService
-			this.dataService.adminAuthors.push({
-				uuid: responseData.uuid,
-				firstName: responseData.firstName,
-				lastName: responseData.lastName,
-				websiteUrl: responseData.websiteUrl,
-				facebookUsername: responseData.facebookUsername,
-				instagramUsername: responseData.instagramUsername,
-				twitterUsername: responseData.twitterUsername,
-				profileImage: null,
-				bios: [],
-				collections: [],
-				series: []
-			})
+			this.dataService.adminAuthors.push(
+				new Author(
+					responseData,
+					await this.dataService.GetStoreLanguages(),
+					this.apiService,
+					this.cachingService
+				)
+			)
 
 			this.createAuthorDialogVisible = false
 

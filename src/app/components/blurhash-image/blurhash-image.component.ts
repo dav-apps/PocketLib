@@ -69,7 +69,7 @@ export class BlurhashImageComponent{
 		if (typeof this.width == "string") this.width = +this.width
 		if (typeof this.height == "string") this.height = +this.height
 
-		if (this.blurhash != null) {
+		if (this.blurhash != null && this.blurhash.length >= 6) {
 			let cacheKey = this.cachingService.GetBlurhashImageCacheKey(this.blurhash, this.width, this.height)
 			let cacheItem = this.cachingService.GetBlurhashImageCacheItem(cacheKey)
 

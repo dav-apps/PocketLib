@@ -1019,7 +1019,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: 'post',
-				url: `${environment.pocketlibApiBaseUrl}/store/book`,
+				url: `${environment.pocketlibApiBaseUrl}/store_books`,
 				headers: {
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'

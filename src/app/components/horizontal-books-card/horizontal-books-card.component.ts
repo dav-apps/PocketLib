@@ -1,5 +1,5 @@
 import { Component, Input, HostListener } from '@angular/core'
-import { StoreBook } from 'src/app/misc/types'
+import { StoreBookItem } from 'src/app/misc/types'
 import { DataService } from 'src/app/services/data-service'
 
 @Component({
@@ -8,7 +8,7 @@ import { DataService } from 'src/app/services/data-service'
 })
 export class HorizontalBooksCardComponent {
 	@Input() title: string = ""
-	@Input() books: StoreBook[] = []
+	@Input() books: StoreBookItem[] = []
 	@Input() link: string = ""
 	hovered: boolean = false
 	fontSize: number = 20
@@ -18,10 +18,6 @@ export class HorizontalBooksCardComponent {
 	) { }
 
 	@HostListener('window:resize')
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
 		let bookCardParent = document.getElementById("book-card-parent") as HTMLDivElement
 		let bookCardParentWidth = bookCardParent.clientWidth

@@ -8,7 +8,7 @@ import {
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
-import { Author } from 'src/app/misc/types'
+import { Author } from 'src/app/models/Author'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
@@ -28,19 +28,7 @@ export class NewBookPageComponent {
 	locale = enUS.newBookPage
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	author: Author = {
-		uuid: "",
-		firstName: "",
-		lastName: "",
-		websiteUrl: null,
-		facebookUsername: null,
-		instagramUsername: null,
-		twitterUsername: null,
-		profileImage: null,
-		bios: [],
-		collections: [],
-		series: []
-	}
+	author: Author
 	leavePageDialogVisible: boolean = false
 	errorMessage: string = ""
 	navigationEventPromiseHolder = new PromiseHolder<boolean>()
@@ -126,7 +114,8 @@ export class NewBookPageComponent {
 
 			// Find the author with the uuid
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
-			if (!author) {
+
+			if (author == null) {
 				this.GoBack()
 				return
 			}
@@ -142,24 +131,21 @@ export class NewBookPageComponent {
 		}
 
 		// Get the collections
-		for (let collection of this.author.collections) {
-			// Find the correct name
-			let i = FindAppropriateLanguage(this.dataService.supportedLocale, collection.names)
-
+		for (let collection of await this.author.GetCollections()) {
 			// Find a cover
 			let cover: boolean = false
 			let coverContent: string = ""
-			for (let book of collection.books) {
+			for (let book of await collection.GetStoreBooks()) {
 				if (book.cover) {
 					cover = true
-					coverContent = book.coverContent
+					coverContent = await book.GetCoverContent()
 					break
 				}
 			}
 
 			this.collections.push({
 				uuid: collection.uuid,
-				name: collection.names[i].name,
+				name: collection.name.value,
 				cover,
 				coverContent
 			})

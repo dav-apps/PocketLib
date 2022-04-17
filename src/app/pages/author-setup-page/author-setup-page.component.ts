@@ -4,11 +4,13 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
+import { CachingService } from 'src/app/services/caching-service'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { environment } from 'src/environments/environment'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
 import { AuthorField, AuthorResource } from 'src/app/misc/types'
+import { Author } from 'src/app/models/Author'
 
 @Component({
 	selector: 'pocketlib-author-setup-page',
@@ -29,6 +31,7 @@ export class AuthorSetupPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private router: Router,
 		private domSanitizer: DomSanitizer
 	) {
@@ -74,19 +77,12 @@ export class AuthorSetupPageComponent {
 			let responseData = (response as ApiResponse<AuthorResource>).data
 
 			// Set the author in DataService
-			this.dataService.userAuthor = {
-				uuid: responseData.uuid,
-				firstName: responseData.firstName,
-				lastName: responseData.lastName,
-				websiteUrl: null,
-				facebookUsername: null,
-				instagramUsername: null,
-				twitterUsername: null,
-				profileImage: null,
-				bios: [],
-				collections: [],
-				series: []
-			}
+			this.dataService.userAuthor = new Author(
+				responseData,
+				await this.dataService.GetStoreLanguages(),
+				this.apiService,
+				this.cachingService
+			)
 			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor)
 
 			// Redirect to the author page

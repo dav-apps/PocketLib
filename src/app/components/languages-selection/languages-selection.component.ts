@@ -1,5 +1,7 @@
 import { Component } from '@angular/core'
 import { DataService } from 'src/app/services/data-service'
+import { GetLanguageByString } from 'src/app/misc/utils'
+import { Language as LangCode } from 'src/app/misc/types'
 
 @Component({
 	selector: 'pocketlib-languages-selection',
@@ -18,6 +20,7 @@ export class LanguagesSelectionComponent{
 		this.languages = []
 
 		let languages = this.dataService.GetLocale().misc.languages
+
 		for (let language of Object.keys(languages)) {
 			this.languages.push({
 				code: language,
@@ -34,10 +37,10 @@ export class LanguagesSelectionComponent{
 	async SelectInitialLanguages() {
 		// Get the selected languages from the database
 		let selectedLanguages = await this.dataService.GetStoreLanguages()
-		
+
 		// Check all selected languages
 		for (let language of this.languages) {
-			if (selectedLanguages.includes(language.code)) {
+			if (selectedLanguages.includes(GetLanguageByString(language.code))) {
 				language.checked = true
 			}
 		}
@@ -68,10 +71,11 @@ export class LanguagesSelectionComponent{
 		this.DisableOnlySelectedLanguage()
 
 		// Save the selected languages in the database
-		let languageCodes: string[] = []
+		let languageCodes: LangCode[] = []
+
 		for (let language of this.languages) {
 			if (language.checked) {
-				languageCodes.push(language.code)
+				languageCodes.push(GetLanguageByString(language.code))
 			}
 		}
 
@@ -79,7 +83,7 @@ export class LanguagesSelectionComponent{
 	}
 }
 
-interface Language{
+interface Language {
 	code: string,
 	name: string,
 	checked: boolean,
