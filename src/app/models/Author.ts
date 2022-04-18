@@ -5,6 +5,8 @@ import {
 	AuthorResource,
 	AuthorBioResource,
 	AuthorBioListField,
+	AuthorProfileImageResource,
+	AuthorProfileImageField,
 	StoreBookCollectionResource,
 	StoreBookCollectionListField,
 	StoreBookSeriesResource,
@@ -63,6 +65,25 @@ export class Author {
 		this.bios = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
 		this.collections = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
 		this.series = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+	}
+
+	async ReloadProfileImage() {
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveAuthorProfileImage.name)
+
+		let response = await this.apiService.RetrieveAuthorProfileImage({
+			uuid: this.uuid,
+			fields: [
+				AuthorProfileImageField.url,
+				AuthorProfileImageField.blurhash
+			]
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorProfileImageResource>).data
+
+			this.profileImage.url = responseData.url
+			this.profileImage.blurhash = responseData.blurhash
+		}
 	}
 
 	async GetBios(): Promise<AuthorBioResource[]> {

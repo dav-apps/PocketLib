@@ -177,7 +177,7 @@ export class AuthorProfileComponent {
 		}
 
 		if (this.author.profileImage.url != null) {
-			// Set the author profile image
+			// Load the author profile image
 			this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 				if (isSuccessStatusCode(fileResponse.status)) {
 					this.profileImageContent = (fileResponse as ApiResponse<string>).data
@@ -446,6 +446,7 @@ export class AuthorProfileComponent {
 
 	async UploadProfileImage() {
 		this.profileImageDialogVisible = false
+		let oldProfileImageContent = this.profileImageContent
 
 		let canvas = this.profileImageCropper.getCroppedCanvas()
 		let blob = await new Promise<Blob>((r: Function) =>
@@ -476,6 +477,14 @@ export class AuthorProfileComponent {
 				type: blob.type,
 				file: blob
 			})
+		}
+
+		if (isSuccessStatusCode(response.status)) {
+			await this.author.ReloadProfileImage()
+		} else {
+			// Show the old profile image
+			this.profileImageContent = oldProfileImageContent
+			// TODO: Show error message
 		}
 
 		this.profileImageLoading = false
