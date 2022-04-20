@@ -30,9 +30,6 @@ import {
 	StoreBookSeriesResource,
 	StoreBookSeriesField,
 	StoreBookSeriesListField,
-	StoreBookSeriesNameResource,
-	StoreBookSeriesNameField,
-	StoreBookSeriesNameListField,
 	StoreBookResource,
 	StoreBookField,
 	StoreBookListField,
@@ -55,7 +52,6 @@ import {
 	ResponseDataToStoreBookCollectionResource,
 	ResponseDataToStoreBookCollectionNameResource,
 	ResponseDataToStoreBookSeriesResource,
-	ResponseDataToStoreBookSeriesNameResource,
 	ResponseDataToStoreBookResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource,
@@ -553,7 +549,6 @@ export class ApiService {
 
 	async ListStoreBookCollections(params: {
 		author?: string,
-		series?: string,
 		fields?: StoreBookCollectionListField[],
 		languages?: Language[]
 	}): Promise<ApiResponse<ListResponseData<StoreBookCollectionResource>> | ApiErrorResponse> {
@@ -562,7 +557,6 @@ export class ApiService {
 			this.ListStoreBookCollections.name,
 			PrepareRequestParams({
 				author: params.author,
-				series: params.series,
 				fields: params.fields,
 				languages: params.languages
 			}, true)
@@ -586,7 +580,6 @@ export class ApiService {
 				},
 				params: PrepareRequestParams({
 					author: params.author,
-					series: params.series,
 					fields: params.fields,
 					languages: params.languages
 				}, true)
@@ -717,7 +710,7 @@ export class ApiService {
 		author?: string,
 		name: string,
 		language: string,
-		collections?: string[],
+		storeBooks?: string[],
 		fields?: StoreBookSeriesField[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
 		try {
@@ -735,7 +728,7 @@ export class ApiService {
 					author: params.author,
 					name: params.name,
 					language: params.language,
-					collections: params.collections
+					store_books: params.storeBooks
 				})
 			})
 
@@ -753,16 +746,14 @@ export class ApiService {
 
 	async RetrieveStoreBookSeries(params: {
 		uuid: string,
-		fields?: StoreBookSeriesField[],
-		languages?: Language[]
+		fields?: StoreBookSeriesField[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookSeries.name,
 			PrepareRequestParams({
 				uuid: params.uuid,
-				fields: params.fields,
-				languages: params.languages
+				fields: params.fields
 			}, true)
 		)
 
@@ -780,8 +771,7 @@ export class ApiService {
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}`,
 				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
+					fields: params.fields
 				}, true)
 			})
 
@@ -879,7 +869,8 @@ export class ApiService {
 
 	async UpdateStoreBookSeries(params: {
 		uuid: string,
-		collections?: string[],
+		name?: string,
+		storeBooks?: string[],
 		fields?: StoreBookSeriesField[],
 		languages?: Language[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
@@ -896,7 +887,8 @@ export class ApiService {
 					languages: params.languages
 				}, true),
 				data: PrepareRequestParams({
-					collections: params.collections
+					name: params.name,
+					store_books: params.storeBooks
 				})
 			})
 
@@ -909,97 +901,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.UpdateStoreBookSeries(params)
-		}
-	}
-	//#endregion
-
-	//#region StoreBookSeriesName
-	async ListStoreBookSeriesNames(params: {
-		uuid: string,
-		fields?: StoreBookSeriesNameListField[]
-	}): Promise<ApiResponse<ListResponseData<StoreBookSeriesNameResource>> | ApiErrorResponse> {
-		// Check if the response is cached
-		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
-			this.ListStoreBookSeriesNames.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
-		)
-
-		// Check if the request is currently running
-		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
-		if (promiseHolder != null) await promiseHolder.AwaitResult()
-
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
-		if (cachedResponse) return cachedResponse
-
-		this.cachingService.SetupApiRequest(cacheResponseKey)
-
-		try {
-			let response = await axios({
-				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}/names`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
-			})
-
-			let result = {
-				status: response.status,
-				data: {
-					type: response.data.type,
-					pages: response.data.pages,
-					items: []
-				}
-			}
-
-			for (let item of response.data.items) {
-				result.data.items.push(ResponseDataToStoreBookSeriesNameResource(item))
-			}
-
-			// Add the response to the cache
-			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
-			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
-
-			return result
-		} catch (error) {
-			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
-			return await HandleApiError(error)
-		}
-	}
-
-	async SetStoreBookSeriesName(params: {
-		uuid: string,
-		language: string,
-		name: string,
-		fields?: StoreBookSeriesNameField[]
-	}): Promise<ApiResponse<StoreBookSeriesNameResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}/names/${params.language}`,
-				headers: {
-					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
-				},
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
-				data: PrepareRequestParams({
-					name: params.name
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookSeriesNameResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.SetStoreBookSeriesName(params)
 		}
 	}
 	//#endregion
