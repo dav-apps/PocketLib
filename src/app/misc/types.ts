@@ -209,46 +209,21 @@ export enum StoreBookCollectionNameListField {
 export interface StoreBookSeriesResource {
 	uuid: string
 	author: string
-	name: {
-		value: string
-		language: string
-	}
+	name: string
+	language: string
 }
 
 export enum StoreBookSeriesField {
 	uuid = "uuid",
 	author = "author",
 	name = "name",
-	name_value = "name.value",
-	name_language = "name.language"
+	language = "language"
 }
 
 export enum StoreBookSeriesListField {
 	type = "type",
 	items_uuid = "items.uuid",
 	items_author = "items.author",
-	items_name = "items.name",
-	items_name_value = "items.name.value",
-	items_name_language = "items.name.language"
-}
-//#endregion
-
-//#region StoreBookSeriesName
-export interface StoreBookSeriesNameResource {
-	uuid: string
-	name: string
-	language: string
-}
-
-export enum StoreBookSeriesNameField {
-	uuid = "uuid",
-	name = "name",
-	language = "language"
-}
-
-export enum StoreBookSeriesNameListField {
-	type = "type",
-	items_uuid = "items.uuid",
 	items_name = "items.name",
 	items_language = "items.language"
 }

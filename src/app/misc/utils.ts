@@ -6,7 +6,6 @@ import {
 	StoreBookCollectionResource,
 	StoreBookCollectionNameResource,
 	StoreBookSeriesResource,
-	StoreBookSeriesNameResource,
 	StoreBookResource,
 	StoreBookCoverResource,
 	StoreBookFileResource,
@@ -278,16 +277,6 @@ export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreB
 	return {
 		uuid: responseData.uuid,
 		author: responseData.author,
-		name: {
-			value: responseData.name?.value,
-			language: responseData.name?.language
-		}
-	}
-}
-
-export function ResponseDataToStoreBookSeriesNameResource(responseData: any): StoreBookSeriesNameResource {
-	return {
-		uuid: responseData.uuid,
 		name: responseData.name,
 		language: responseData.language
 	}
