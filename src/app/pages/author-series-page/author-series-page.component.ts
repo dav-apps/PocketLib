@@ -116,6 +116,7 @@ export class AuthorSeriesPageComponent {
 				if (
 					this.books.findIndex(b => b.uuid == book.uuid) == -1
 					&& book.status > 0
+					&& book.cover.url != null
 					&& book.language == this.series.language
 				) this.selectableBooks.push(book)
 			}

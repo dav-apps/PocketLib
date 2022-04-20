@@ -83,7 +83,7 @@ export class NewSeriesPageComponent {
 		// Get the books that can be selected (status = review, published or hidden; language = current language)
 		for (let collection of await this.author.GetCollections()) {
 			for (let book of await collection.GetStoreBooks()) {
-				if (book.status > 0 && book.language == this.language) {
+				if (book.status > 0 && book.cover.url != null && book.language == this.language) {
 					let bookItem: BookItem = {
 						uuid: book.uuid,
 						title: book.title,
@@ -133,25 +133,11 @@ export class NewSeriesPageComponent {
 	async Submit() {
 		this.loading = true
 
-		let authorCollections = await this.author.GetCollections()
 		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
-		let collectionUuids: string[] = []
+		let storeBookUuids: string[] = []
 
-		// Get the collection uuids of the books
 		for (let book of this.selectedBooks) {
-			let collection = null
-
-			for (let authorCollection of authorCollections) {
-				let collectionStoreBooks = await authorCollection.GetStoreBooks()
-				let i = collectionStoreBooks.findIndex(b => b.uuid == book.uuid)
-
-				if (i != -1) {
-					collection = authorCollection
-					break
-				}
-			}
-
-			if (collection != null) collectionUuids.push(collection.uuid)
+			storeBookUuids.push(book.uuid)
 		}
 
 		// Create the StoreBookSeries
@@ -159,7 +145,7 @@ export class NewSeriesPageComponent {
 			author: authorUuid,
 			name: this.name,
 			language: this.language,
-			collections: collectionUuids
+			storeBooks: storeBookUuids
 		})
 
 		if (!isSuccessStatusCode(createStoreBookSeriesResponse.status)) {

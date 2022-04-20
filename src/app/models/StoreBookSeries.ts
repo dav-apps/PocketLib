@@ -8,6 +8,7 @@ import {
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
+import { CachingService } from "../services/caching-service"
 import { StoreBook } from "./StoreBook"
 
 export class StoreBookSeries {
@@ -23,7 +24,8 @@ export class StoreBookSeries {
 
 	constructor(
 		seriesResource: StoreBookSeriesResource,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private cachingService: CachingService
 	) {
 		this.uuid = seriesResource?.uuid ?? ""
 		this.author = seriesResource?.author ?? ""
@@ -84,5 +86,10 @@ export class StoreBookSeries {
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)
 		return items
+	}
+
+	ClearStoreBooks() {
+		this.storeBooks.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
 	}
 }

@@ -198,7 +198,8 @@ export class Author {
 			fields: [
 				StoreBookSeriesListField.items_uuid,
 				StoreBookSeriesListField.items_author,
-				StoreBookSeriesListField.items_name
+				StoreBookSeriesListField.items_name,
+				StoreBookSeriesListField.items_language
 			]
 		})
 
