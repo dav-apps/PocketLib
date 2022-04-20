@@ -180,14 +180,21 @@ const enDefaults = {
 		close: "Close"
 	},
 	authorSeriesPage: {
-		namesDialog: {
-			header: "Book series name"
+		editNameDialog: {
+			header: "Edit name",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name of the book series"
 		},
 		addBookDialog: {
 			header: "Choose a book to add"
 		},
+		errors: {
+			nameTooShort: "The name is too short",
+			nameTooLong: "The name is too long",
+			unexpectedError: "An unexpected error occured"
+		},
 		bookContextMenuRemove: "Remove",
-		close: "Close",
+		save: "Save",
 		cancel: "Cancel"
 	},
 	newBookPage: {
@@ -619,14 +626,21 @@ const deDefaults = {
 		close: "Schließen"
 	},
 	authorSeriesPage: {
-		namesDialog: {
-			header: "Name der Buch-Reihe"
+		editNameDialog: {
+			header: "Name der Buch-Reihe",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name der Buch-Reihe"
 		},
 		addBookDialog: {
 			header: "Wähle ein Buch zum Hinzufügen"
 		},
+		errors: {
+			nameTooShort: "Der Name ist zu kurz",
+			nameTooLong: "Der Name ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+		},
 		bookContextMenuRemove: "Entfernen",
-		close: "Schließen",
+		save: "Speichern",
 		cancel: "Abbrechen"
 	},
 	newBookPage: {
