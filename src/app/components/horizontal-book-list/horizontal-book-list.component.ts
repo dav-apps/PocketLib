@@ -107,13 +107,13 @@ export class HorizontalBookListComponent {
 		// Get the series
 		let seriesResponse = await this.apiService.RetrieveStoreBookSeries({
 			uuid: this.series,
-			fields: [StoreBookSeriesField.name_value]
+			fields: [StoreBookSeriesField.name]
 		})
 
 		if (!isSuccessStatusCode(seriesResponse.status)) return
 		let seriesResponseData = (seriesResponse as ApiResponse<StoreBookSeriesResource>).data
 
-		this.header = this.locale.moreOfSeries.replace('{0}', seriesResponseData.name.value)
+		this.header = this.locale.moreOfSeries.replace('{0}', seriesResponseData.name)
 
 		// Get the store books of the series
 		let response = await this.apiService.ListStoreBooks({

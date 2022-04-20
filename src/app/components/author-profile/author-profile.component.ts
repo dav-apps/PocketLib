@@ -223,18 +223,11 @@ export class AuthorProfileComponent {
 		for (let series of await this.author.GetSeries()) {
 			let seriesItem: SeriesItem = {
 				uuid: series.uuid,
-				name: series.name.value,
+				name: series.name,
 				books: []
 			}
 
-			for (let seriesCollection of await series.GetCollections()) {
-				let collection = (await this.author.GetCollections()).find(c => c.uuid == seriesCollection.uuid)
-				if (collection == null) continue
-
-				// Get the first book in the appropriate language
-				let book = (await collection.GetStoreBooks()).find(book => book.language == series.name.language)
-				if (book == null) continue
-
+			for (let book of await series.GetStoreBooks()) {
 				let bookItem: StoreBookItem = {
 					uuid: book.uuid,
 					title: book.title,
