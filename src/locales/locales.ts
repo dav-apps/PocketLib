@@ -314,9 +314,6 @@ const enDefaults = {
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name of your collection",
-		seriesNameTextfieldPlaceholder: "Name of your book series",
-		addLanguageDropdownLabel: "Add language",
-		selectLanguage: "Select a language",
 		errors: {
 			nameMissing: "Please enter a name",
 			nameTooShort: "The name is too short",
@@ -760,9 +757,6 @@ const deDefaults = {
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name deiner Sammlung",
-		seriesNameTextfieldPlaceholder: "Name deiner Buch-Reihe",
-		addLanguageDropdownLabel: "Sprache hinzufügen",
-		selectLanguage: "Wähle eine Sprache",
 		errors: {
 			nameMissing: "Bitte gib einen Namen ein",
 			nameTooShort: "Der Name ist zu kurz",

@@ -234,14 +234,14 @@ export class DataService {
 		await this.ReloadBook(bookObject.Uuid)
 	}
 
-	GetFullLanguage(language: string): string {
+	GetFullLanguage(language: Language): string {
 		let languagesLocale = this.GetLocale().misc.languages
 
 		switch (language) {
-			case "en":
-				return languagesLocale.en
-			case "de":
+			case Language.de:
 				return languagesLocale.de
+			default:
+				return languagesLocale.en
 		}
 	}
 

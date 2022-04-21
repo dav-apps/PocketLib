@@ -171,7 +171,7 @@ export class Author {
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(new StoreBookCollection(item, this.apiService))
+			items.push(new StoreBookCollection(item, this.apiService, this.cachingService))
 		}
 
 		this.collections.itemsPromiseHolder.Resolve(items)

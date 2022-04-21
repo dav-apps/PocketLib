@@ -9,8 +9,9 @@ import {
 	StoreBookListField
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { ApiService } from 'src/app/services/api-service'
-import { StoreBook } from 'src/app/models/StoreBook'
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "../services/caching-service"
+import { StoreBook } from "src/app/models/StoreBook"
 
 export class StoreBookCollection {
 	public uuid: string
@@ -30,7 +31,11 @@ export class StoreBookCollection {
 		itemsPromiseHolder: PromiseHolder<StoreBook[]>
 	}
 
-	constructor(collectionResource: StoreBookCollectionResource, private apiService: ApiService) {
+	constructor(
+		collectionResource: StoreBookCollectionResource,
+		private apiService: ApiService,
+		private cachingService: CachingService
+	) {
 		this.uuid = collectionResource?.uuid ?? ""
 		this.author = collectionResource?.author ?? ""
 		this.name = {
@@ -82,6 +87,11 @@ export class StoreBookCollection {
 
 		this.names.itemsPromiseHolder.Resolve(items)
 		return items
+	}
+
+	ClearNames() {
+		this.names.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookCollectionNames.name)
 	}
 
 	async GetStoreBooks(): Promise<StoreBook[]> {

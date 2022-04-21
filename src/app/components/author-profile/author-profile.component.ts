@@ -17,7 +17,7 @@ import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { Author } from 'src/app/models/Author'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
 import {
 	BookListItem,
 	AuthorMode,
@@ -306,7 +306,7 @@ export class AuthorProfileComponent {
 		for (let bio of this.bios) {
 			this.bioLanguageDropdownOptions.push({
 				key: bio.language,
-				value: this.dataService.GetFullLanguage(bio.language),
+				value: this.dataService.GetFullLanguage(GetLanguageByString(bio.language)),
 				type: DropdownOptionType.option
 			})
 		}

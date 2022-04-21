@@ -68,6 +68,8 @@ export class AuthorSeriesPageComponent {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
+		let seriesLoaded = false
+
 		if (this.dataService.userIsAdmin) {
 			// Find the series in the collections of the authors of the user
 			for (let author of this.dataService.adminAuthors) {
@@ -76,6 +78,7 @@ export class AuthorSeriesPageComponent {
 				if (series != null) {
 					this.series = series
 					this.author = author
+					seriesLoaded = true
 					break
 				}
 			}
@@ -83,12 +86,17 @@ export class AuthorSeriesPageComponent {
 			this.author = this.dataService.userAuthor
 
 			let series = (await this.dataService.userAuthor.GetSeries()).find(s => s.uuid == this.uuid)
-			if (series != null) this.series = series
+
+			if (series != null) {
+				this.series = series
+				seriesLoaded = true
+			}
 		}
 
-		if (this.series == null) {
+		if (!seriesLoaded) {
 			// Redirect back to the author profile
-			this.routingService.NavigateBack("/author")
+			this.routingService.NavigateBack("author")
+			return
 		}
 
 		// Set the back button link
