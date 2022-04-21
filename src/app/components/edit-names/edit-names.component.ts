@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core'
-import { ApiErrorResponse, ApiResponse } from 'dav-js'
+import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -14,8 +14,6 @@ interface Name {
 	errorMessage: string
 }
 
-type NameType = "collection" | "series"
-
 @Component({
 	selector: 'pocketlib-edit-names',
 	templateUrl: './edit-names.component.html'
@@ -24,7 +22,6 @@ export class EditNamesComponent {
 	locale = enUS.editNames
 	@Input() names: Name[] = []
 	@Input() uuid: string
-	@Input() type: NameType = "collection"
 	@Output() update = new EventEmitter()
 	addLanguageSelectedKey: string = "default"
 	addLanguageOptions: DropdownOption[] = []
@@ -75,23 +72,13 @@ export class EditNamesComponent {
 		if (i == -1) return
 
 		// Create the name on the server
-		let setNameResponse: ApiResponse<any> | ApiErrorResponse
+		let setNameResponse = await this.apiService.SetStoreBookCollectionName({
+			uuid: this.uuid,
+			language: this.addLanguageSelectedKey,
+			name: this.newLanguageName
+		})
 
-		if (this.type == "collection") {
-			setNameResponse = await this.apiService.SetStoreBookCollectionName({
-				uuid: this.uuid,
-				language: this.addLanguageSelectedKey,
-				name: this.newLanguageName
-			})
-		} else {
-			setNameResponse = await this.apiService.SetStoreBookSeriesName({
-				uuid: this.uuid,
-				language: this.addLanguageSelectedKey,
-				name: this.newLanguageName
-			})
-		}
-
-		if (setNameResponse.status == 200) {
+		if (isSuccessStatusCode(setNameResponse.status)) {
 			this.names.push({
 				name: this.newLanguageName,
 				language: this.addLanguageSelectedKey,
@@ -100,13 +87,18 @@ export class EditNamesComponent {
 				errorMessage: ""
 			})
 
-			this.update.emit((setNameResponse as ApiResponse<any>).data)
+			this.update.emit({
+				name: this.newLanguageName,
+				language: this.addLanguageSelectedKey
+			})
 
 			// Remove the selected option and reset the dropdown
 			this.addLanguageOptions.splice(i, 1)
 			this.addLanguageSelectedKey = "default"
 		} else {
-			switch ((setNameResponse as ApiErrorResponse).errors[0].code) {
+			let errorCode = (setNameResponse as ApiErrorResponse).errors[0].code
+
+			switch (errorCode) {
 				case ErrorCodes.NameMissing:
 					this.newLanguageNameError = this.locale.errors.nameMissing
 					break
@@ -127,27 +119,23 @@ export class EditNamesComponent {
 		name.errorMessage = ""
 
 		// Update the name on the server
-		let setNameResponse: ApiResponse<any> | ApiErrorResponse
+		let setNameResponse = await this.apiService.SetStoreBookCollectionName({
+			uuid: this.uuid,
+			language: name.language,
+			name: name.name
+		})
 
-		if (this.type == "collection") {
-			setNameResponse = await this.apiService.SetStoreBookCollectionName({
-				uuid: this.uuid,
-				language: name.language,
-				name: name.name
-			})
-		} else {
-			setNameResponse = await this.apiService.SetStoreBookSeriesName({
-				uuid: this.uuid,
-				language: name.language,
-				name: name.name
-			})
-		}
-
-		if (setNameResponse.status == 200) {
+		if (isSuccessStatusCode(setNameResponse.status)) {
 			name.edit = false
-			this.update.emit((setNameResponse as ApiResponse<any>).data)
+
+			this.update.emit({
+				name: name.name,
+				language: name.language
+			})
 		} else {
-			switch ((setNameResponse as ApiErrorResponse).errors[0].code) {
+			let errorCode = (setNameResponse as ApiErrorResponse).errors[0].code
+
+			switch (errorCode) {
 				case ErrorCodes.NameMissing:
 					name.errorMessage = this.locale.errors.nameMissing
 					break
