@@ -194,6 +194,7 @@
 	[primaryButtonText]="locale.create"
 	[defaultButtonText]="locale.cancel"
 	[visible]="createAuthorDialogVisible"
+	[loading]="createAuthorDialogLoading"
 	maxWidth="340"
 	(dismiss)="createAuthorDialogVisible = false"
 	(primaryButtonClick)="CreateAuthor()"
@@ -207,6 +208,7 @@
 				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
 				placeholder="Monty"
 				autocomplete="given-name"
+				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogFirstNameError"
 				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
 			</dav-textfield>
@@ -219,6 +221,7 @@
 				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
 				placeholder="Kensicle"
 				autocomplete="family-name"
+				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogLastNameError"
 				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
 				(enter)="CreateAuthor()">

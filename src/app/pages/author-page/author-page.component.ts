@@ -37,6 +37,7 @@ export class AuthorPageComponent {
 	dualScreenFoldMargin: number = 0
 	uuid: string
 	createAuthorDialogVisible: boolean = false
+	createAuthorDialogLoading: boolean = false
 	createAuthorDialogFirstName: string = ""
 	createAuthorDialogLastName: string = ""
 	createAuthorDialogFirstNameError: string = ""
@@ -145,6 +146,7 @@ export class AuthorPageComponent {
 		this.createAuthorDialogLastName = ""
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogVisible = true
+		this.createAuthorDialogLoading = false
 	}
 
 	ShowBook(uuid: string) {
@@ -154,6 +156,7 @@ export class AuthorPageComponent {
 	async CreateAuthor() {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastNameError = ""
+		this.createAuthorDialogLoading = true
 
 		let response = await this.apiService.CreateAuthor({
 			firstName: this.createAuthorDialogFirstName,
@@ -170,9 +173,11 @@ export class AuthorPageComponent {
 			]
 		})
 
+		this.createAuthorDialogLoading = false
+
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<AuthorResource>).data
-			
+
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push(
 				new Author(
