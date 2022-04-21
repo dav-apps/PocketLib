@@ -16,7 +16,7 @@
 
 	<p class="fw-light text-center mt-3 text-color"
 		style="font-size: 18px; font-family: 'Segoe UI'"
-		*ngIf="authorMode == 0 && collection.books.length == 0">
+		*ngIf="authorMode == 0 && books.length == 0">
 		{{ locale.noBooks }}
 	</p>
 
@@ -24,7 +24,7 @@
 		<pocketlib-add-list-item
 			[link]="newBookPageLink.path"
 			[linkParams]="newBookPageLink.params"
-			*ngIf="collection.books.length > 0">
+			*ngIf="books.length > 0">
 		</pocketlib-add-list-item>
 
 		<pocketlib-horizontal-book-card
@@ -32,7 +32,7 @@
 			[coverContent]="book.coverContent"
 			[coverBlurhash]="book.coverBlurhash"
 			[link]="'/author/book/' + book.uuid"
-			*ngFor="let book of collection.books">
+			*ngFor="let book of books">
 		</pocketlib-horizontal-book-card>
 	</div>
 </div>
@@ -59,7 +59,7 @@
 
 		<p class="fw-light text-center mt-3 text-color"
 			style="font-size: 18px; font-family: 'Segoe UI'"
-			*ngIf="authorMode == 0 && collection.leftScreenBooks.length == 0 && collection.rightScreenBooks.length == 0">
+			*ngIf="authorMode == 0 && leftScreenBooks.length == 0 && rightScreenBooks.length == 0">
 			{{ locale.noBooks }}
 		</p>
 
@@ -67,7 +67,7 @@
 			<pocketlib-add-list-item
 				[link]="newBookPageLink.path"
 				[linkParams]="newBookPageLink.params"
-				*ngIf="collection.leftScreenBooks.length > 0 || collection.rightScreenBooks.length > 0">
+				*ngIf="leftScreenBooks.length > 0 || rightScreenBooks.length > 0">
 			</pocketlib-add-list-item>
 	
 			<pocketlib-horizontal-book-card
@@ -75,7 +75,7 @@
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
 				[link]="'/author/book/' + book.uuid"
-				*ngFor="let book of collection.leftScreenBooks">
+				*ngFor="let book of leftScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>
 	</div>
@@ -91,7 +91,7 @@
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
 				[link]="'/author/book/' + book.uuid"
-				*ngFor="let book of collection.rightScreenBooks">
+				*ngFor="let book of rightScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>
 	</div>

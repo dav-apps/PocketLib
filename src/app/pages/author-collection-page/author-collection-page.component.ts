@@ -3,8 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { BookListItem, AuthorMode, StoreBookCollectionResource, StoreBookCollectionField, ListResponseData, StoreBookResource, StoreBookListField } from 'src/app/misc/types'
+import { CachingService } from 'src/app/services/caching-service'
+import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
+import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
+import { BookListItem, AuthorMode } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -17,14 +19,11 @@ export class AuthorCollectionPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	authorMode: AuthorMode = AuthorMode.Normal
-	collection: {
-		uuid: string,
-		author: string,
-		names: { name: string, language: string }[],
-		books: BookListItem[],
-		leftScreenBooks: BookListItem[],
-		rightScreenBooks: BookListItem[]
-	} = { uuid: "", author: "", names: [], books: [], leftScreenBooks: [], rightScreenBooks: [] }
+	collection: StoreBookCollection = new StoreBookCollection(null, this.apiService, this.cachingService)
+	books: BookListItem[] = []
+	leftScreenBooks: BookListItem[] = []
+	rightScreenBooks: BookListItem[] = []
+	names: { name: string, language: string }[] = []
 	collectionName: { name: string, language: string } = { name: "", language: "" }
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
 	namesDialogVisible: boolean = false
@@ -38,6 +37,7 @@ export class AuthorCollectionPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -58,81 +58,66 @@ export class AuthorCollectionPageComponent {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
-		// Get the collection
-		let retrieveCollectionResponse = await this.apiService.RetrieveStoreBookCollection({
-			uuid: this.uuid,
-			fields: [
-				StoreBookCollectionField.uuid,
-				StoreBookCollectionField.author,
-				StoreBookCollectionField.name
-			],
-			languages: await this.dataService.GetStoreLanguages()
-		})
+		let collectionLoaded = false
 
-		if (isSuccessStatusCode(retrieveCollectionResponse.status)) {
-			let retrieveCollectionResponseData = (retrieveCollectionResponse as ApiResponse<StoreBookCollectionResource>).data
+		if (this.dataService.userIsAdmin) {
+			// Find the collection in the collections of the authors of the user
+			for (let author of this.dataService.adminAuthors) {
+				let collection = (await author.GetCollections()).find(c => c.uuid == this.uuid)
 
-			this.collection = {
-				uuid: retrieveCollectionResponseData.uuid,
-				author: retrieveCollectionResponseData.author,
-				names: [],
-				books: [],
-				leftScreenBooks: [],
-				rightScreenBooks: []
-			}
-
-			this.collectionName.name = retrieveCollectionResponseData.name.value
-			this.collectionName.language = retrieveCollectionResponseData.name.language
-
-			// Get the store books of the collection
-			let listStoreBooksResponse = await this.apiService.ListStoreBooks({
-				collection: this.collection.uuid,
-				fields: [
-					StoreBookListField.items_uuid,
-					StoreBookListField.items_title,
-					StoreBookListField.items_cover
-				],
-				languages: await this.dataService.GetStoreLanguages()
-			})
-
-			if (isSuccessStatusCode(listStoreBooksResponse.status)) {
-				let listStoreBooksResponseData = (listStoreBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
-				let i = 0
-
-				for (let storeBook of listStoreBooksResponseData.items) {
-					let bookItem: BookListItem = {
-						uuid: storeBook.uuid,
-						title: storeBook.title,
-						coverContent: null,
-						coverBlurhash: storeBook.cover?.blurhash
-					}
-
-					if (storeBook.cover?.url != null) {
-						this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-							if (isSuccessStatusCode(fileResponse.status)) {
-								bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-							}
-						})
-					}
-
-					if (this.dualScreenLayout) {
-						// Evenly distribute the books on the left and right screens
-						if (i % 2 == 0) {
-							this.collection.leftScreenBooks.push(bookItem)
-						} else {
-							this.collection.rightScreenBooks.push(bookItem)
-						}
-
-						i++
-					} else {
-						this.collection.books.push(bookItem)
-					}
+				if (collection != null) {
+					this.collection = collection
+					collectionLoaded = true
 				}
 			}
-		} else {
-			// Redirect back to the author page
+		} else if (this.dataService.userAuthor != null) {
+			let collection = (await this.dataService.userAuthor.GetCollections()).find(c => c.uuid == this.uuid)
+
+			if (collection != null) {
+				this.collection = collection
+				collectionLoaded = true
+			}
+		}
+
+		if (!collectionLoaded) {
+			// Redirect back to the author profile
 			this.router.navigate(["author"])
 			return
+		}
+
+		this.collectionName.name = this.collection.name.value
+		this.collectionName.language = this.collection.name.language
+
+		let i = 0
+
+		for (let storeBook of await this.collection.GetStoreBooks()) {
+			let bookItem: BookListItem = {
+				uuid: storeBook.uuid,
+				title: storeBook.title,
+				coverContent: null,
+				coverBlurhash: storeBook.cover?.blurhash
+			}
+
+			if (storeBook.cover?.url != null) {
+				this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
+			}
+
+			if (this.dualScreenLayout) {
+				// Evenly distribute the books on the left and right screens
+				if (i % 2 == 0) {
+					this.leftScreenBooks.push(bookItem)
+				} else {
+					this.rightScreenBooks.push(bookItem)
+				}
+
+				i++
+			} else {
+				this.books.push(bookItem)
+			}
 		}
 
 		// Determine the author mode
@@ -158,21 +143,23 @@ export class AuthorCollectionPageComponent {
 		this.router.navigate([this.backButtonLink])
 	}
 
-	ShowNamesDialog() {
+	async ShowNamesDialog() {
+		await this.LoadCollectionNames()
+		this.namesDialogVisible = true
+	}
+
+	async LoadCollectionNames() {
 		// Update the collection names for the EditNames component
 		this.collectionNames = []
-		let languages = this.dataService.GetLocale().misc.languages
 
-		for (let collectionName of this.collection.names) {
+		for (let collectionName of await this.collection.GetNames()) {
 			this.collectionNames.push({
 				name: collectionName.name,
 				language: collectionName.language,
-				fullLanguage: collectionName.language == "de" ? languages.de : languages.en,
+				fullLanguage: this.dataService.GetFullLanguage(GetLanguageByString(collectionName.language)),
 				edit: false
 			})
 		}
-
-		this.namesDialogVisible = true
 	}
 
 	UpdateCollectionName(collectionName: { name: string, language: string }) {
@@ -180,19 +167,22 @@ export class AuthorCollectionPageComponent {
 			// Update the title
 			this.collectionName.name = collectionName.name
 		} else {
-			let i = this.collection.names.findIndex(name => name.language == collectionName.language)
+			let i = this.names.findIndex(name => name.language == collectionName.language)
 
 			if (i == -1) {
-				// Add the name to the collection
-				this.collection.names.push(collectionName)
+				// Add the name to the names of the collection
+				this.names.push(collectionName)
 
 				// Update the title if the name for the current language was added
-				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.collection.names)
-				if (j != -1) this.collectionName = this.collection.names[j]
+				let j = FindAppropriateLanguage(this.dataService.supportedLocale, this.names)
+				if (j != -1) this.collectionName = this.names[j]
 			} else {
 				// Update the name in the collection
-				this.collection.names[i].name = collectionName.name
+				this.names[i].name = collectionName.name
 			}
 		}
+
+		this.collection.ClearNames()
+		this.LoadCollectionNames()
 	}
 }
