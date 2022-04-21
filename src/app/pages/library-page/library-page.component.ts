@@ -51,6 +51,7 @@ export class LibraryPageComponent {
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
 	allBooksHoveredIndex: number = -1
+	smallCardsWidth: number = 140
 
 	constructor(
 		public dataService: DataService,
@@ -104,6 +105,14 @@ export class LibraryPageComponent {
 			this.smallBookListWidth = 0
 		} else {
 			this.smallBookListWidth = ((this.largeBookCoverWidth / 2) + 16)
+		}
+
+		if (window.innerWidth < 450) {
+			this.smallCardsWidth = 100
+		} else if (window.innerWidth < 550) {
+			this.smallCardsWidth = 120
+		} else {
+			this.smallCardsWidth = 140
 		}
 	}
 
