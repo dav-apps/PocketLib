@@ -219,23 +219,33 @@ export function PrepareRequestParams(params: Object, joinArrays = false) {
 }
 
 export function ResponseDataToAuthorResource(responseData: any): AuthorResource {
-	return {
+	let authorResource: AuthorResource = {
 		uuid: responseData.uuid,
 		firstName: responseData.first_name,
 		lastName: responseData.last_name,
-		bio: {
-			value: responseData.bio?.value,
-			language: responseData.bio?.language
-		},
+		bio: null,
 		websiteUrl: responseData.website_url,
 		facebookUsername: responseData.facebook_username,
 		instagramUsername: responseData.instagram_username,
 		twitterUsername: responseData.twitter_username,
-		profileImage: {
-			url: responseData.profile_image?.url,
-			blurhash: responseData.profile_image?.blurhash
+		profileImage: null
+	}
+
+	if (responseData.bio != null) {
+		authorResource.bio = {
+			value: responseData.bio.value,
+			language: responseData.bio.language
 		}
 	}
+
+	if (responseData.profile_image != null) {
+		authorResource.profileImage = {
+			url: responseData.profile_image.url,
+			blurhash: responseData.profile_image.blurhash
+		}
+	}
+
+	return authorResource
 }
 
 export function ResponseDataToAuthorBioResource(responseData: any): AuthorBioResource {
@@ -255,14 +265,20 @@ export function ResponseDataToAuthorProfileImageResource(responseData: any): Aut
 }
 
 export function ResponseDataToStoreBookCollectionResource(responseData: any): StoreBookCollectionResource {
-	return {
+	let storeBookCollectionResource: StoreBookCollectionResource = {
 		uuid: responseData.uuid,
 		author: responseData.author,
-		name: {
-			value: responseData.name?.value,
-			language: responseData.name?.language
+		name: null
+	}
+
+	if (responseData.name != null) {
+		storeBookCollectionResource.name = {
+			value: responseData.name.value,
+			language: responseData.name.language
 		}
 	}
+
+	return storeBookCollectionResource
 }
 
 export function ResponseDataToStoreBookCollectionNameResource(responseData: any): StoreBookCollectionNameResource {
@@ -283,7 +299,7 @@ export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreB
 }
 
 export function ResponseDataToStoreBookResource(responseData: any): StoreBookResource {
-	return {
+	let storeBookResource: StoreBookResource = {
 		uuid: responseData.uuid,
 		collection: responseData.collection,
 		title: responseData.title,
@@ -292,18 +308,28 @@ export function ResponseDataToStoreBookResource(responseData: any): StoreBookRes
 		price: responseData.price,
 		isbn: responseData.isbn,
 		status: responseData.status,
-		cover: {
-			url: responseData.cover?.url,
-			aspectRatio: responseData.cover?.aspect_ratio,
-			blurhash: responseData.cover?.blurhash
-		},
-		file: {
-			fileName: responseData.file?.file_name
-		},
+		cover: null,
+		file: null,
 		inLibrary: responseData.in_library,
 		purchased: responseData.purchased,
 		categories: responseData.categories
 	}
+
+	if (responseData.cover != null) {
+		storeBookResource.cover = {
+			url: responseData.cover.url,
+			aspectRatio: responseData.cover.aspect_ratio,
+			blurhash: responseData.cover.blurhash
+		}
+	}
+
+	if (responseData.file != null) {
+		storeBookResource.file = {
+			fileName: responseData.file.file_name
+		}
+	}
+
+	return storeBookResource
 }
 
 export function ResponseDataToStoreBookCoverResource(responseData: any): StoreBookCoverResource {
@@ -323,14 +349,20 @@ export function ResponseDataToStoreBookFileResource(responseData: any): StoreBoo
 }
 
 export function ResponseDataToCategoryResource(responseData: any): CategoryResource {
-	return {
+	let categoryResource: CategoryResource = {
 		uuid: responseData.uuid,
 		key: responseData.key,
-		name: {
-			value: responseData.name?.value,
-			language: responseData.name?.language
+		name: null
+	}
+
+	if (responseData.name != null) {
+		categoryResource.name = {
+			value: responseData.name.value,
+			language: responseData.name.language
 		}
 	}
+
+	return categoryResource
 }
 
 export function ResponseDataToBookResource(responseData: any): BookResource {

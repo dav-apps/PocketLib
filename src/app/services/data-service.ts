@@ -187,8 +187,8 @@ export class DataService {
 			for (let category of responseData.items) {
 				this.categories.push({
 					key: category.key,
-					name: category.name.value,
-					language: category.name.language
+					name: category.name?.value,
+					language: category.name?.language
 				})
 			}
 		}
