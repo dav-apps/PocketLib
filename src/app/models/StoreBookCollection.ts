@@ -146,4 +146,9 @@ export class StoreBookCollection {
 		this.storeBooks.itemsPromiseHolder.Resolve(items)
 		return items
 	}
+
+	ClearStoreBooks() {
+		this.storeBooks.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
+	}
 }

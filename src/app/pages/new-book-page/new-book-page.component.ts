@@ -1,10 +1,7 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { PromiseHolder, ApiResponse } from 'dav-js'
-import {
-	DataService,
-	FindAppropriateLanguage
-} from 'src/app/services/data-service'
+import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -366,7 +363,7 @@ export class NewBookPageComponent {
 		let createStoreBookResponse = await this.apiService.CreateStoreBook({
 			author: authorUuid,
 			collection: collectionUuid,
-			description: this.description,
+			description: this.description.length > 0 ? this.description : null,
 			title: this.title,
 			language: this.language,
 			price: this.price,

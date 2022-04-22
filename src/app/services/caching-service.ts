@@ -33,9 +33,11 @@ export class CachingService {
 		this.apiRequestCache[key] = data
 	}
 
-	ClearApiRequestCache(functionName: string) {
-		for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
-			delete this.apiRequestCache[selectedKey]
+	ClearApiRequestCache(...functionNames: string[]) {
+		for (let functionName of functionNames) {
+			for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
+				delete this.apiRequestCache[selectedKey]
+			}
 		}
 	}
 

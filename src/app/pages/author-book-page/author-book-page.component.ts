@@ -9,6 +9,7 @@ import { CategoriesSelectionComponent } from 'src/app/components/categories-sele
 import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import { Author } from 'src/app/models/Author'
+import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
@@ -27,6 +28,8 @@ export class AuthorBookPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	uuid: string
+	author: Author
+	collection: StoreBookCollection
 	book: {
 		collection: string,
 		title: string,
@@ -156,7 +159,6 @@ export class AuthorBookPageComponent {
 	}
 
 	async LoadBackButtonLink() {
-		let author: Author
 		let singleBookInCollection = true
 
 		// Try to find the author of the collection of the book
@@ -166,21 +168,21 @@ export class AuthorBookPageComponent {
 				let i = collections.findIndex(c => c.uuid == this.book.collection)
 
 				if (i != -1) {
-					author = a
+					this.author = a
 					break
 				}
 			}
 		} else {
-			author = this.dataService.userAuthor
+			this.author = this.dataService.userAuthor
 		}
 
-		if (author != null) {
+		if (this.author != null) {
 			// Find the collection of the current book
-			let collection = (await author.GetCollections()).find(c => c.uuid == this.book.collection)
-			singleBookInCollection = (await collection.GetStoreBooks()).length == 1
+			this.collection = (await this.author.GetCollections()).find(c => c.uuid == this.book.collection)
+			singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
 
 			if (singleBookInCollection && this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${author.uuid}`
+				this.backButtonLink = `/author/${this.author.uuid}`
 			} else if (singleBookInCollection) {
 				this.backButtonLink = "/author"
 			} else {
@@ -349,7 +351,15 @@ export class AuthorBookPageComponent {
 
 		this.coverLoading = false
 
-		if (!isSuccessStatusCode(coverUploadResponse.status)) {
+		if (isSuccessStatusCode(coverUploadResponse.status)) {
+			this.author.ClearSeries()
+			this.collection.ClearStoreBooks()
+
+			this.cachingService.ClearApiRequestCache(
+				this.apiService.RetrieveStoreBook.name,
+				this.apiService.RetrieveStoreBookCover.name
+			)
+		} else {
 			// Remove the cover
 			this.coverContent = oldCoverContent
 
@@ -498,6 +508,16 @@ export class AuthorBookPageComponent {
 						break
 				}
 			}
+		}
+
+		if (isSuccessStatusCode(response.status)) {
+			this.author.ClearSeries()
+			this.collection.ClearStoreBooks()
+
+			this.cachingService.ClearApiRequestCache(
+				this.apiService.RetrieveStoreBook.name,
+				this.apiService.RetrieveStoreBookCover.name
+			)
 		}
 	}
 }
