@@ -52,14 +52,19 @@ export async function GetAllBooks(bookOrder: BookOrder): Promise<Book[]> {
 async function GetBookByTableObject(tableObject: TableObject): Promise<Book> {
 	// Get the book file
 	let fileTableObject = await GetBookFileOfBookTableObject(tableObject)
-	if (!fileTableObject) return null
+	if (fileTableObject == null) return null
+
+	let fileType = fileTableObject.GetPropertyValue("type")
+	if (fileType == null) {
+		fileType = fileTableObject.File.type
+	}
 
 	// Check the type of the file
-	if (fileTableObject.File.type == epubType) {
+	if (fileType == epubType) {
 		let book = await ConvertTableObjectsToEpubBook(tableObject, fileTableObject)
 		await LoadEpubBookDetails(book)
 		return book
-	} else if (fileTableObject.File.type == pdfType) {
+	} else if (fileType == pdfType) {
 		return ConvertTableObjectsToPdfBook(tableObject, fileTableObject)
 	}
 }

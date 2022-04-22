@@ -12,6 +12,8 @@ import * as DavUIComponents from 'dav-ui-components'
 import { ApiService } from './api-service'
 import { CachingService } from './caching-service'
 import { Book } from '../models/Book'
+import { EpubBook } from '../models/EpubBook'
+import { PdfBook } from '../models/PdfBook'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
 import { BookOrder } from '../models/BookOrder'
@@ -212,16 +214,35 @@ export class DataService {
 
 	async ReloadBook(uuid: string) {
 		// The book was updated in the database. Get it and replace the old book in the list with the new one
-		let book = await GetBook(uuid)
-		if (!book) return
+		let newBook = await GetBook(uuid)
+		if (newBook == null) return
 
 		// Replace or add the book
-		let i = this.books.findIndex(b => b.uuid == book.uuid)
+		let i = this.books.findIndex(b => b.uuid == newBook.uuid)
 
 		if (i !== -1) {
-			this.books[i] = book
+			let book = this.books[i]
+
+			book.file = newBook.file
+			book.storeBook = newBook.storeBook
+			book.belongsToUser = newBook.belongsToUser
+			book.purchase = newBook.purchase
+
+			if (book instanceof EpubBook && newBook instanceof EpubBook) {
+				book.chapter = newBook.chapter
+				book.progress = newBook.progress
+				book.totalProgress = newBook.totalProgress
+				book.chapterPercentages = newBook.chapterPercentages
+				book.bookmarks = newBook.bookmarks
+			} else if (book instanceof PdfBook && newBook instanceof PdfBook) {
+				book.title = newBook.title
+				book.page = newBook.page
+				book.totalProgress = newBook.totalProgress
+				book.bookmarks = newBook.bookmarks
+				book.zoom = newBook.zoom
+			}
 		} else {
-			this.books.push(book)
+			this.books.push(newBook)
 		}
 	}
 

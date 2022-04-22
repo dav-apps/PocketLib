@@ -441,7 +441,7 @@ export class StoreBookPageComponent {
 	private async OpenBook() {
 		// Load the book
 		let book = this.dataService.books.find(b => b.storeBook == this.uuid)
-		
+
 		if (book == null) {
 			// Show error
 			this.loadingScreenVisible = false

@@ -136,8 +136,9 @@ export class LibraryPageComponent {
 
 		await this.dataService.LoadAllBooks()
 
-		// Get the created book
-		this.ShowBook(await GetBook(uuid))
+		// Get the created book and show it
+		let book = this.dataService.books.find(b => b.uuid == uuid)
+		if (book != null) this.ShowBook(book)
 	}
 
 	async ShowBook(book: Book) {
