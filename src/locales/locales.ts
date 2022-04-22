@@ -169,7 +169,8 @@ const enDefaults = {
 			descriptionTooLong: "The description is too long",
 			priceInvalid: "The price is invalid",
 			isbnInvalid: "The ISBN is invalid",
-			unexpectedError: "An unexpected error occured"
+			unexpectedError: "An unexpected error occured",
+			unexpectedErrorLong: "An unexpected error occured. Please try it again."
 		}
 	},
 	authorCollectionPage: {
@@ -612,7 +613,8 @@ const deDefaults = {
 			descriptionTooLong: "Die Beschreibung ist zu lang",
 			priceInvalid: "Der Preis ist ungültig",
 			isbnInvalid: "Die ISBN ist ungültig",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten",
+			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
 	},
 	authorCollectionPage: {

@@ -71,6 +71,7 @@ export class AuthorBookPageComponent {
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
 	backButtonLink: string = ""
+	errorMessage: string = ""
 
 	constructor(
 		public dataService: DataService,
@@ -307,6 +308,8 @@ export class AuthorBookPageComponent {
 	}
 
 	async CoverUpload(file: ReadFile) {
+		let oldCoverContent = this.coverContent
+
 		// Get the content of the image file
 		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
 			let reader = new FileReader()
@@ -338,13 +341,21 @@ export class AuthorBookPageComponent {
 		this.coverLoading = true
 
 		// Upload the image
-		await this.apiService.UploadStoreBookCover({
+		let coverUploadResponse = await this.apiService.UploadStoreBookCover({
 			uuid: this.uuid,
 			type: file.type,
 			file: imageContent
 		})
 
 		this.coverLoading = false
+
+		if (!isSuccessStatusCode(coverUploadResponse.status)) {
+			// Remove the cover
+			this.coverContent = oldCoverContent
+
+			// Show error
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
 	}
 
 	async BookFileUpload(file: ReadFile) {

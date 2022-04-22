@@ -14,6 +14,15 @@
 		</dav-header>
 	</div>
 
+	<div class="mt-3 mb-4 mx-auto"
+		style="min-width: 200px; max-width: 300px"
+		*ngIf="errorMessage.length > 0">
+
+		<dav-message-bar type="danger">
+			{{ errorMessage }}
+		</dav-message-bar>
+	</div>
+
 	<div class="d-flex justify-content-center mb-4">
 		<div id="book-details-container">
 			<!-- Cover -->
@@ -247,7 +256,7 @@
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
 	*ngIf="dualScreenLayout">
-	
+
 	<!-- Left screen -->
 	<div
 		class="w-50"
@@ -261,6 +270,15 @@
 				(backButtonClick)="BackButtonClick()"
 				(editButtonClick)="ShowEditTitleDialog()">
 			</dav-header>
+		</div>
+
+		<div class="mt-3 mb-4 mx-auto"
+			style="min-width: 200px; max-width: 300px"
+			*ngIf="errorMessage.length > 0">
+
+			<dav-message-bar type="danger">
+				{{ errorMessage }}
+			</dav-message-bar>
 		</div>
 
 		<div class="d-flex justify-content-center mb-4 px-5">
