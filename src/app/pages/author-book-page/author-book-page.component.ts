@@ -57,6 +57,7 @@ export class AuthorBookPageComponent {
 			categories: []
 		}
 	editTitleDialogVisible: boolean = false
+	editTitleDialogLoading: boolean = false
 	editTitleDialogTitle: string = ""
 	editTitleDialogTitleError: string = ""
 	editDescription: boolean = false
@@ -73,6 +74,7 @@ export class AuthorBookPageComponent {
 	priceUpdating: boolean = false
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogVisible: boolean = false
+	categoriesSelectionDialogLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
 
@@ -216,17 +218,21 @@ export class AuthorBookPageComponent {
 	ShowEditTitleDialog() {
 		this.editTitleDialogTitle = this.book.title
 		this.editTitleDialogTitleError = ""
+		this.editTitleDialogLoading = false
 		this.editTitleDialogVisible = true
 	}
 
 	async UpdateTitle() {
-		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
-				uuid: this.uuid,
-				title: this.editTitleDialogTitle,
-				fields: [StoreBookField.title]
-			})
-		)
+		this.editTitleDialogLoading = true
+
+		let response = await this.apiService.UpdateStoreBook({
+			uuid: this.uuid,
+			title: this.editTitleDialogTitle,
+			fields: [StoreBookField.title]
+		})
+
+		this.editTitleDialogLoading = false
+		this.UpdateStoreBookResponse(response)
 	}
 
 	async EditDescription() {
@@ -262,6 +268,7 @@ export class AuthorBookPageComponent {
 	}
 
 	ShowCategoriesDialog() {
+		this.categoriesSelectionDialogLoading = false
 		this.categoriesSelectionDialogVisible = true
 
 		setTimeout(() => {
@@ -274,6 +281,7 @@ export class AuthorBookPageComponent {
 
 	async UpdateCategories() {
 		let categories = this.categoriesSelectionComponent.GetSelectedCategories()
+		this.categoriesSelectionDialogLoading = true
 
 		// Update the categories on the server
 		await this.apiService.UpdateStoreBook({
@@ -283,6 +291,7 @@ export class AuthorBookPageComponent {
 
 		this.LoadCategories(categories)
 		this.categoriesSelectionDialogVisible = false
+		this.categoriesSelectionDialogLoading = false
 	}
 
 	async UpdatePrice(price: number) {

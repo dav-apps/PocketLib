@@ -526,6 +526,7 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[visible]="editTitleDialogVisible"
+	[loading]="editTitleDialogLoading"
 	(dismiss)="editTitleDialogVisible = false"
 	(primaryButtonClick)="UpdateTitle()"
 	(defaultButtonClick)="editTitleDialogVisible = false">
@@ -538,6 +539,7 @@
 				[label]="locale.editTitleDialog.titleTextfieldLabel"
 				[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
 				[errorMessage]="editTitleDialogTitleError"
+				[disabled]="editTitleDialogLoading"
 				(change)="editTitleDialogTitle = $event.detail.value; editTitleDialogTitleError = ''"
 				(enter)="UpdateTitle()">
 			</dav-textfield>
@@ -550,6 +552,7 @@
 	[primaryButtonText]="locale.save"
 	[defaultButtonText]="locale.cancel"
 	[visible]="categoriesSelectionDialogVisible"
+	[loading]="categoriesSelectionDialogLoading"
 	(dismiss)="categoriesSelectionDialogVisible = false"
 	(primaryButtonClick)="UpdateCategories()"
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false">
