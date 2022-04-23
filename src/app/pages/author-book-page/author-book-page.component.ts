@@ -402,6 +402,9 @@ export class AuthorBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.fileName = file.name
+		} else {
+			// Show error
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
 		}
 	}
 
