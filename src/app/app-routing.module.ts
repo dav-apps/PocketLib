@@ -8,9 +8,10 @@ import { AuthorPageComponent } from './pages/author-page/author-page.component'
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component'
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component'
 import { AuthorSeriesPageComponent } from './pages/author-series-page/author-series-page.component'
+import { NewSeriesPageComponent } from './pages/new-series-page/new-series-page.component'
 import { AuthorBookPageComponent } from './pages/author-book-page/author-book-page.component'
 import { NewBookPageComponent } from './pages/new-book-page/new-book-page.component'
-import { NewSeriesPageComponent } from './pages/new-series-page/new-series-page.component'
+import { AuthorReleasesPageComponent } from './pages/author-releases-page/author-releases-page.component'
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component'
 import { StorePageComponent } from './pages/store-page/store-page.component'
 import { StoreStartPageComponent } from './pages/store-start-page/store-start-page.component'
@@ -27,10 +28,11 @@ const routes: Routes = [
 	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },
 	{ path: "author/collection/:uuid", component: AuthorCollectionPageComponent },
-	{ path: "author/book/new", component: NewBookPageComponent },
-	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
 	{ path: "author/series/new", component: NewSeriesPageComponent },
 	{ path: "author/series/:uuid", component: AuthorSeriesPageComponent },
+	{ path: "author/book/new", component: NewBookPageComponent },
+	{ path: "author/book/:uuid", component: AuthorBookPageComponent },
+	{ path: "author/book/:uuid/releases", component: AuthorReleasesPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
 	{
 		path: "store", component: StorePageComponent, children: [
