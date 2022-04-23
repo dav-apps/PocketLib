@@ -9,6 +9,7 @@ import {
 	StoreBookResource,
 	StoreBookCoverResource,
 	StoreBookFileResource,
+	StoreBookReleaseResource,
 	CategoryResource,
 	BookResource,
 	PurchaseResource,
@@ -346,6 +347,39 @@ export function ResponseDataToStoreBookFileResource(responseData: any): StoreBoo
 		uuid: responseData.uuid,
 		fileName: responseData.file_name
 	}
+}
+
+export function ResponseDataToStoreBookReleaseResource(responseData: any): StoreBookReleaseResource {
+	let storeBookReleaseResource: StoreBookReleaseResource = {
+		uuid: responseData.uuid,
+		storeBook: responseData.store_book,
+		releaseName: responseData.release_name,
+		releaseNotes: responseData.release_notes,
+		title: responseData.title,
+		description: responseData.description,
+		price: responseData.price,
+		isbn: responseData.isbn,
+		status: responseData.status,
+		cover: null,
+		file: null,
+		categories: responseData.categories
+	}
+
+	if (responseData.cover != null) {
+		storeBookReleaseResource.cover = {
+			url: responseData.cover.url,
+			aspectRatio: responseData.cover.aspect_ratio,
+			blurhash: responseData.cover.blurhash
+		}
+	}
+
+	if (responseData.file != null) {
+		storeBookReleaseResource.file = {
+			fileName: responseData.file.file_name
+		}
+	}
+
+	return storeBookReleaseResource
 }
 
 export function ResponseDataToCategoryResource(responseData: any): CategoryResource {

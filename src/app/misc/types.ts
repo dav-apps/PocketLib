@@ -323,6 +323,68 @@ export enum StoreBookFileField {
 }
 //#endregion
 
+//#region 
+export interface StoreBookReleaseResource {
+	uuid: string
+	storeBook: string
+	releaseName: string
+	releaseNotes: string
+	title: string
+	description: string
+	price: number
+	isbn: string
+	status: string
+	cover: {
+		url: string
+		aspectRatio: string
+		blurhash: string
+	}
+	file: {
+		fileName: string
+	}
+	categories: string[]
+}
+
+export enum StoreBookReleaseField {
+	uuid = "uuid",
+	storeBook = "store_book",
+	releaseName = "release_name",
+	releaseNotes = "release_notes",
+	title = "title",
+	description = "description",
+	price = "price",
+	isbn = "isbn",
+	status = "status",
+	cover = "cover",
+	cover_url = "cover.url",
+	cover_aspectRatio = "cover.aspect_ratio",
+	cover_blurhash = "cover.blurhash",
+	file = "file",
+	file_fileName = "file.file_name",
+	categories = "categories"
+}
+
+export enum StoreBookReleaseListField {
+	type = "type",
+	items_uuid = "items.uuid",
+	items_storeBook = "items.store_book",
+	items_releaseName = "items.release_name",
+	items_releaseNotes = "items.release_notes",
+	items_title = "items.title",
+	items_description = "items.description",
+	items_price = "items.price",
+	items_isbn = "items.isbn",
+	items_status = "items.status",
+	items_cover = "items.cover",
+	items_cover_url = "items.cover.url",
+	items_cover_aspectRatio = "items.cover.aspect_ratio",
+	items_cover_blurhash = "items.cover.blurhash",
+	items_file = "items.file",
+	items_file_fileName = "items.file.file_name",
+	items_categories = "items.categories"
+}
+//#endregion
+
 //#region Category
 export interface CategoryResource {
 	uuid: string
