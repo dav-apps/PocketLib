@@ -37,6 +37,9 @@ import {
 	StoreBookCoverField,
 	StoreBookFileResource,
 	StoreBookFileField,
+	StoreBookReleaseResource,
+	StoreBookReleaseField,
+	StoreBookReleaseListField,
 	CategoryResource,
 	CategoryListField,
 	BookResource,
@@ -55,6 +58,7 @@ import {
 	ResponseDataToStoreBookResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource,
+	ResponseDataToStoreBookReleaseResource,
 	ResponseDataToCategoryResource,
 	ResponseDataToBookResource,
 	ResponseDataToPurchaseResource
@@ -1250,6 +1254,24 @@ export class ApiService {
 		uuid: string,
 		fields?: StoreBookFileField[]
 	}): Promise<ApiResponse<StoreBookFileResource> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.RetrieveStoreBookFile.name,
+			PrepareRequestParams({
+				uuid: params.uuid,
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
 		try {
 			let response = await axios({
 				method: 'get',
@@ -1262,11 +1284,19 @@ export class ApiService {
 				}, true)
 			})
 
-			return {
+			let result = {
 				status: response.status,
 				data: ResponseDataToStoreBookFileResource(response.data)
 			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
 		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
 			let renewSessionError = await HandleApiError(error)
 			if (renewSessionError != null) return renewSessionError
 
@@ -1305,6 +1335,125 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.UploadStoreBookFile(params)
+		}
+	}
+	//#endregion
+
+	//#region StoreBookRelease
+	async RetrieveStoreBookRelease(params: {
+		uuid: string,
+		fields?: StoreBookReleaseField[]
+	}): Promise<ApiResponse<StoreBookReleaseResource> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.RetrieveStoreBookRelease.name,
+			PrepareRequestParams({
+				uuid: params.uuid,
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}`,
+				headers: {
+					Authorization: Dav.accessToken
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true)
+			})
+
+			let result = {
+				status: response.status,
+				data: ResponseDataToStoreBookReleaseResource(response.data)
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.RetrieveStoreBookRelease(params)
+		}
+	}
+
+	async ListStoreBookReleases(params: {
+		storeBook: string,
+		fields?: StoreBookReleaseListField[]
+	}): Promise<ApiResponse<ListResponseData<StoreBookReleaseResource>> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.ListStoreBookReleases.name,
+			PrepareRequestParams({
+				storeBook: params.storeBook,
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/store_book_releases`,
+				headers: {
+					Authorization: Dav.accessToken
+				},
+				params: PrepareRequestParams({
+					store_book: params.storeBook,
+					fields: params.fields
+				}, true)
+			})
+
+			let result = {
+				status: response.status,
+				data: {
+					type: response.data.type,
+					pages: response.data.pages,
+					items: []
+				}
+			}
+
+			for (let item of response.data.items) {
+				result.data.items.push(ResponseDataToStoreBookReleaseResource(item))
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.ListStoreBookReleases(params)
 		}
 	}
 	//#endregion
