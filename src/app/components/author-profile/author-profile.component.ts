@@ -95,6 +95,9 @@ export class AuthorProfileComponent {
 	bookTitleFontSize: number = 20
 	errorMessage: string = ""
 	providerMessage: string = ""
+	bookLink: string = ""
+	collectionLink: string = ""
+	seriesLink: string = ""
 	newBookPageLink: {
 		path: string,
 		params: any
@@ -163,6 +166,10 @@ export class AuthorProfileComponent {
 			this.UpdateSocialMediaLinks()
 			await this.LoadBios()
 			await this.SelectDefaultBio()
+
+			this.bookLink = `/author/${this.author.uuid}/book/{0}`
+			this.collectionLink = `/author/${this.author.uuid}/collection/{0}`
+			this.seriesLink = `/author/${this.author.uuid}/series/{0}`
 		} else if (this.authorMode == AuthorMode.AuthorOfUser) {
 			this.author = this.dataService.userAuthor
 			this.UpdateSocialMediaLinks()
@@ -171,6 +178,10 @@ export class AuthorProfileComponent {
 
 			// Set the text and visibility for the provider message
 			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
+
+			this.bookLink = `/author/book/{0}`
+			this.collectionLink = `/author/collection/{0}`
+			this.seriesLink = `/author/series/{0}`
 		} else {
 			// Get the author from the server
 			await this.LoadAuthor()
@@ -187,8 +198,8 @@ export class AuthorProfileComponent {
 
 		// Set the new book page link
 		if (this.dataService.userIsAdmin) {
-			this.newBookPageLink.params["author"] = this.author.uuid
-			this.newSeriesPageLink.params["author"] = this.author.uuid
+			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
+			this.newSeriesPageLink.path = `/author/${this.author.uuid}/series/new`
 		}
 
 		this.SetupBioLanguageDropdown()
