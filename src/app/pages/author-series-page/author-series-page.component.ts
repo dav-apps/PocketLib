@@ -31,7 +31,7 @@ export class AuthorSeriesPageComponent {
 	editNameDialogName: string = ""
 	editNameDialogNameError: string = ""
 	addBookDialogVisible: boolean = false
-	backButtonLink: string = ""
+	backButtonLink: string = "/author"
 	addButtonHover: boolean = false
 	dragging: boolean = false
 	contextMenuVisible: boolean = false
@@ -55,9 +55,6 @@ export class AuthorSeriesPageComponent {
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
-		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
-
 		this.dragulaService.drag("books").subscribe(() => this.dragging = true)
 		this.dragulaService.dragend("books").subscribe(() => this.dragging = false)
 	}
@@ -68,39 +65,30 @@ export class AuthorSeriesPageComponent {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
-		let seriesLoaded = false
-
 		if (this.dataService.userIsAdmin) {
-			// Find the series in the collections of the authors of the user
-			for (let author of this.dataService.adminAuthors) {
-				let series = (await author.GetSeries()).find(s => s.uuid == this.uuid)
-
-				if (series != null) {
-					this.series = series
-					this.author = author
-					seriesLoaded = true
-					break
-				}
-			}
-		} else if (this.dataService.userAuthor != null) {
+			// Get the author
+			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			this.backButtonLink = `/author/${this.author.uuid}`
+		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
-
-			let series = (await this.dataService.userAuthor.GetSeries()).find(s => s.uuid == this.uuid)
-
-			if (series != null) {
-				this.series = series
-				seriesLoaded = true
-			}
 		}
 
-		if (!seriesLoaded) {
-			// Redirect back to the author profile
-			this.routingService.NavigateBack("author")
+		if (this.author == null) {
+			this.router.navigate(['author'])
 			return
 		}
 
-		// Set the back button link
-		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.author.uuid}` : `/author`
+		// Get the uuid from the url
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("series_uuid")
+
+		// Get the series
+		this.series = (await this.author.GetSeries()).find(s => s.uuid == this.uuid)
+
+		if (this.series == null) {
+			this.router.navigate(['author'])
+			return
+		}
 
 		// Get the books of the series
 		for (let storeBook of await this.series.GetStoreBooks()) {
