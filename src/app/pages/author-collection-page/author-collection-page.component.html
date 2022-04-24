@@ -8,7 +8,7 @@
 		<dav-header
 			[header]="collectionName.name"
 			backButtonVisible
-			[editButtonVisible]="authorMode != 0"
+			editButtonVisible="true"
 			(backButtonClick)="BackButtonClick()"
 			(editButtonClick)="ShowNamesDialog()">
 		</dav-header>
@@ -16,7 +16,7 @@
 
 	<p class="fw-light text-center mt-3 text-color"
 		style="font-size: 18px; font-family: 'Segoe UI'"
-		*ngIf="authorMode == 0 && books.length == 0">
+		*ngIf="books.length == 0">
 		{{ locale.noBooks }}
 	</p>
 
@@ -31,7 +31,7 @@
 			[title]="book.title"
 			[coverContent]="book.coverContent"
 			[coverBlurhash]="book.coverBlurhash"
-			[link]="'/author/book/' + book.uuid"
+			[link]="bookLink.replace('{0}', book.uuid)"
 			*ngFor="let book of books">
 		</pocketlib-horizontal-book-card>
 	</div>
@@ -51,7 +51,7 @@
 			<dav-header
 				[header]="collectionName.name"
 				backButtonVisible
-				[editButtonVisible]="authorMode != 0"
+				editButtonVisible="true"
 				(backButtonClick)="BackButtonClick()"
 				(editButtonClick)="ShowNamesDialog()">
 			</dav-header>
@@ -59,7 +59,7 @@
 
 		<p class="fw-light text-center mt-3 text-color"
 			style="font-size: 18px; font-family: 'Segoe UI'"
-			*ngIf="authorMode == 0 && leftScreenBooks.length == 0 && rightScreenBooks.length == 0">
+			*ngIf="leftScreenBooks.length == 0 && rightScreenBooks.length == 0">
 			{{ locale.noBooks }}
 		</p>
 
@@ -74,7 +74,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				[link]="'/author/book/' + book.uuid"
+				[link]="bookLink.replace('{0}', book.uuid)"
 				*ngFor="let book of leftScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>
@@ -90,7 +90,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				[link]="'/author/book/' + book.uuid"
+				[link]="bookLink.replace('{0}', book.uuid)"
 				*ngFor="let book of rightScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>

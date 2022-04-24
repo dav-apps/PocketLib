@@ -1,12 +1,12 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService, FindAppropriateLanguage } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
+import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
-import { BookListItem, AuthorMode } from 'src/app/misc/types'
+import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -18,7 +18,7 @@ export class AuthorCollectionPageComponent {
 	uuid: string
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	authorMode: AuthorMode = AuthorMode.Normal
+	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(null, this.apiService, this.cachingService)
 	books: BookListItem[] = []
 	leftScreenBooks: BookListItem[] = []
@@ -32,7 +32,8 @@ export class AuthorCollectionPageComponent {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
-	backButtonLink: string = ""
+	bookLink: string = ""
+	backButtonLink: string = "/author"
 
 	constructor(
 		public dataService: DataService,
@@ -47,9 +48,6 @@ export class AuthorCollectionPageComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
-		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
 	async ngOnInit() {
@@ -58,30 +56,32 @@ export class AuthorCollectionPageComponent {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
-		let collectionLoaded = false
-
 		if (this.dataService.userIsAdmin) {
-			// Find the collection in the collections of the authors of the user
-			for (let author of this.dataService.adminAuthors) {
-				let collection = (await author.GetCollections()).find(c => c.uuid == this.uuid)
-
-				if (collection != null) {
-					this.collection = collection
-					collectionLoaded = true
-				}
-			}
-		} else if (this.dataService.userAuthor != null) {
-			let collection = (await this.dataService.userAuthor.GetCollections()).find(c => c.uuid == this.uuid)
-
-			if (collection != null) {
-				this.collection = collection
-				collectionLoaded = true
-			}
+			// Get the author
+			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
+			this.bookLink = `/author/${this.author.uuid}/book/{0}`
+			this.backButtonLink = `/author/${this.author.uuid}`
+		} else if (this.dataService.userAuthor) {
+			this.author = this.dataService.userAuthor
+			this.bookLink = `/author/book/{0}`
 		}
 
-		if (!collectionLoaded) {
-			// Redirect back to the author profile
-			this.router.navigate(["author"])
+		if (this.author == null) {
+			this.router.navigate(['author'])
+			return
+		}
+
+		// Get the uuid from the url
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("collection_uuid")
+		this.newBookPageLink.params["collection"] = this.uuid
+
+		// Get the collection
+		this.collection = (await this.author.GetCollections()).find(c => c.uuid == this.uuid)
+
+		if (this.collection == null) {
+			this.router.navigate(['author'])
 			return
 		}
 
@@ -98,13 +98,9 @@ export class AuthorCollectionPageComponent {
 				coverBlurhash: storeBook.cover?.blurhash
 			}
 
-			if (storeBook.cover?.url != null) {
-				this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
-			}
+			storeBook.GetCoverContent().then(result => {
+				if (result != null) bookItem.coverContent = result
+			})
 
 			if (this.dualScreenLayout) {
 				// Evenly distribute the books on the left and right screens
@@ -119,24 +115,6 @@ export class AuthorCollectionPageComponent {
 				this.books.push(bookItem)
 			}
 		}
-
-		// Determine the author mode
-		if (
-			this.dataService.userIsAdmin
-			&& (this.dataService.adminAuthors.findIndex(author => author.uuid == this.collection.author) != -1)
-		) {
-			this.authorMode = AuthorMode.AuthorOfAdmin
-		} else if (
-			this.dataService.userAuthor
-			&& this.collection.author == this.dataService.userAuthor.uuid
-		) {
-			this.authorMode = AuthorMode.AuthorOfUser
-		}
-
-		// Set the links
-		this.newBookPageLink.params["collection"] = this.uuid
-		if (this.dataService.userIsAdmin) this.newBookPageLink.params["author"] = this.collection.author
-		this.backButtonLink = this.dataService.userIsAdmin ? `/author/${this.collection.author}` : "/author"
 	}
 
 	BackButtonClick() {
