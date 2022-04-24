@@ -107,7 +107,7 @@ export class NewBookPageComponent {
 		// Get the author
 		if (this.dataService.userIsAdmin) {
 			// Get the uuid of the author from the url
-			let authorUuid = this.activatedRoute.snapshot.queryParamMap.get("author")
+			let authorUuid = this.activatedRoute.snapshot.paramMap.get("uuid")
 
 			// Find the author with the uuid
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
