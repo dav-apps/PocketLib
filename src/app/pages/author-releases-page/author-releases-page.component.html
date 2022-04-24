@@ -1,1 +1,31 @@
-<h1>Hello World</h1>
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0">
+
+	<div class="mt-3 mb-4">
+		<dav-header
+			[header]="title"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()">
+		</dav-header>
+	</div>
+
+	<div>
+		<a class="card my-2 mx-auto cursor theme-background-color-secondary"
+			style="text-decoration: none; transition: 0.12s; max-width: 400px"
+			*ngFor="let release of releases">
+
+			<div class="row">
+				<div class="col-10 my-auto">
+					<div class="card-body">
+						<h5 class="card-title my-auto text-color">{{ release.releaseName }}</h5>
+					</div>
+				</div>
+
+				<div class="col-2 my-auto d-flex justify-content-center">
+					<fa-icon [icon]="faAngleRight" class="text-color" style="font-size: 24px"></fa-icon>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
