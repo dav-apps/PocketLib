@@ -10,6 +10,7 @@ import { PriceInputComponent } from 'src/app/components/price-input/price-input.
 import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
 import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
+import { StoreBook } from 'src/app/models/StoreBook'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
 import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
@@ -91,9 +92,6 @@ export class AuthorBookPageComponent {
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
-		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
 	}
 
 	async ngOnInit() {
@@ -102,96 +100,75 @@ export class AuthorBookPageComponent {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 		await this.dataService.adminAuthorsPromiseHolder.AwaitResult()
 
-		// Redirect back to the author page if the user is not an author
-		if (!this.dataService.userAuthor && !this.dataService.userIsAdmin) {
-			this.router.navigate(['author'])
+		if (this.dataService.userIsAdmin) {
+			// Get the author
+			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+		} else if (this.dataService.userAuthor) {
+			this.author = this.dataService.userAuthor
 		}
+
+		if (this.author == null) {
+			this.router.navigate(['author'])
+			return
+		}
+
+		// Get the uuid from the url
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
 		// Get the store book
-		let response = await this.apiService.RetrieveStoreBook({
-			uuid: this.uuid,
-			fields: [
-				StoreBookField.collection,
-				StoreBookField.title,
-				StoreBookField.description,
-				StoreBookField.language,
-				StoreBookField.price,
-				StoreBookField.isbn,
-				StoreBookField.status,
-				StoreBookField.cover,
-				StoreBookField.file,
-				StoreBookField.categories
-			]
-		})
+		let book: StoreBook = null
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<StoreBookResource>).data
+		for (let collection of await this.author.GetCollections()) {
+			book = (await collection.GetStoreBooks()).find(b => b.uuid == this.uuid)
 
-			this.book.collection = responseData.collection
-			this.book.title = responseData.title
-			this.book.description = responseData.description ?? ""
-			this.book.language = responseData.language
-			this.book.price = responseData.price
-			this.book.isbn = responseData.isbn ?? ""
-			this.book.status = GetBookStatusByString(responseData.status)
-			this.book.coverBlurhash = responseData.cover?.blurhash
-			this.book.fileName = responseData.file?.fileName
-			this.bookFileUploaded = responseData.file != null
-
-			// Get the categories
-			await this.dataService.categoriesPromiseHolder.AwaitResult()
-			this.LoadCategories(responseData.categories)
-
-			this.priceInput.SetPrice(this.book.price)
-			this.isbnInput.SetIsbn(this.book.isbn)
-
-			if (responseData.cover?.url != null) {
-				this.apiService.GetFile({ url: responseData.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						this.coverContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+			if (book != null) {
+				this.collection = collection
+				break
 			}
-		} else {
-			// Redirect back to the author page
-			this.router.navigate(['author'])
 		}
+
+		if (book == null) {
+			this.router.navigate(['author'])
+			return
+		}
+
+		this.book.collection = book.collection
+		this.book.title = book.title
+		this.book.description = book.description ?? ""
+		this.book.language = book.language
+		this.book.price = book.price
+		this.book.isbn = book.isbn ?? ""
+		this.book.status = book.status
+		this.book.coverBlurhash = book.cover?.blurhash
+		this.book.fileName = book.file?.fileName
+		this.bookFileUploaded = book.file != null
+
+		// Get the categories
+		await this.dataService.categoriesPromiseHolder.AwaitResult()
+		this.LoadCategories(book.categories)
+
+		this.priceInput.SetPrice(this.book.price)
+		this.isbnInput.SetIsbn(this.book.isbn)
+
+		await book.GetCoverContent().then(result => {
+			if (result != null) this.coverContent = result
+		})
 
 		await this.LoadBackButtonLink()
 	}
 
 	async LoadBackButtonLink() {
-		let singleBookInCollection = true
+		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
 
-		// Try to find the author of the collection of the book
-		if (this.dataService.userIsAdmin) {
-			for (let a of this.dataService.adminAuthors) {
-				let collections = await a.GetCollections()
-				let i = collections.findIndex(c => c.uuid == this.book.collection)
-
-				if (i != -1) {
-					this.author = a
-					break
-				}
-			}
-		} else {
-			this.author = this.dataService.userAuthor
-		}
-
-		if (this.author != null) {
-			// Find the collection of the current book
-			this.collection = (await this.author.GetCollections()).find(c => c.uuid == this.book.collection)
-			singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
-
-			if (singleBookInCollection && this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${this.author.uuid}`
-			} else if (singleBookInCollection) {
-				this.backButtonLink = "/author"
-			} else {
-				this.backButtonLink = `/author/collection/${this.book.collection}`
-			}
-		} else {
+		if (singleBookInCollection && this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}`
+		} else if (singleBookInCollection) {
 			this.backButtonLink = "/author"
+		} else if (this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+		} else {
+			this.backButtonLink = `/author/collection/${this.book.collection}`
 		}
 	}
 
