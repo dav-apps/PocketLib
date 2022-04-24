@@ -5,6 +5,7 @@ import { ApiService } from "../services/api-service"
 
 export class StoreBook {
 	public uuid: string
+	public collection: string
 	public title: string
 	public description: string
 	public language: Language
@@ -24,6 +25,7 @@ export class StoreBook {
 
 	constructor(storeBookResource: StoreBookResource, private apiService: ApiService) {
 		this.uuid = storeBookResource.uuid
+		this.collection = storeBookResource.collection
 		this.title = storeBookResource.title
 		this.description = storeBookResource.description
 		this.language = GetLanguageByString(storeBookResource.language)
