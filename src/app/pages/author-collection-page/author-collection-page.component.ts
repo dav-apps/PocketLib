@@ -38,7 +38,6 @@ export class AuthorCollectionPageComponent {
 		params: any
 	} = { path: "/author/book/new", params: {} }
 	bookLink: string = ""
-	releasesLink: string = ""
 	backButtonLink: string = "/author"
 
 	constructor(
@@ -68,12 +67,10 @@ export class AuthorCollectionPageComponent {
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
 			this.bookLink = `/author/${this.author.uuid}/book/{0}`
-			this.releasesLink = `/author/${this.author.uuid}/book/{0}/releases`
 			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 			this.bookLink = `/author/book/{0}`
-			this.releasesLink = `/author/book/{0}/releases`
 		}
 
 		if (this.author == null) {

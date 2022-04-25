@@ -31,7 +31,6 @@ export class AuthorBookDashboardPageComponent {
 			// Get the author
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
-			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 		}
@@ -59,6 +58,21 @@ export class AuthorBookDashboardPageComponent {
 		}
 
 		this.title = this.book.title
+		await this.LoadBackButtonLink()
+	}
+
+	async LoadBackButtonLink() {
+		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+
+		if (singleBookInCollection && this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}`
+		} else if (singleBookInCollection) {
+			this.backButtonLink = "/author"
+		} else if (this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+		} else {
+			this.backButtonLink = `/author/collection/${this.book.collection}`
+		}
 	}
 
 	BackButtonClick() {

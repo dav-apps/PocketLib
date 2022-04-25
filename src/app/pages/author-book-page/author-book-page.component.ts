@@ -187,24 +187,16 @@ export class AuthorBookPageComponent {
 	}
 
 	async LoadBackButtonLink() {
-		if (this.releases.length > 1) {
-			if (this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${this.author.uuid}/book/${this.uuid}/releases`
-			} else {
-				this.backButtonLink = `/author/book/${this.uuid}/releases`
-			}
-		} else {
-			let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
 
-			if (singleBookInCollection && this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${this.author.uuid}`
-			} else if (singleBookInCollection) {
-				this.backButtonLink = "/author"
-			} else if (this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
-			} else {
-				this.backButtonLink = `/author/collection/${this.book.collection}`
-			}
+		if (singleBookInCollection && this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}`
+		} else if (singleBookInCollection) {
+			this.backButtonLink = "/author"
+		} else if (this.dataService.userIsAdmin) {
+			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+		} else {
+			this.backButtonLink = `/author/collection/${this.book.collection}`
 		}
 	}
 

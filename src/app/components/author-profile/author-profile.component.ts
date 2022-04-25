@@ -237,26 +237,10 @@ export class AuthorProfileComponent {
 
 			// Set the correct link for the collection item
 			if (collectionItem.books.length == 1) {
-				let book = collectionItem.books[0]
-				let releasesResponse = await this.apiService.ListStoreBookReleases({ storeBook: book.uuid })
-				let releases = []
-
-				if (isSuccessStatusCode(releasesResponse.status)) {
-					releases = (releasesResponse as ApiResponse<ListResponseData<StoreBookReleaseResource>>).data.items
-				}
-
 				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
-					if (releases.length > 1) {
-						collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}/releases`
-					} else {
-						collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}`
-					}
+					collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}`
 				} else {
-					if (releases.length > 1) {
-						collectionItem.link = `/author/book/${collectionItem.books[0].uuid}/releases`
-					} else {
-						collectionItem.link = `/author/book/${collectionItem.books[0].uuid}`
-					}
+					collectionItem.link = `/author/book/${collectionItem.books[0].uuid}`
 				}
 			} else {
 				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
