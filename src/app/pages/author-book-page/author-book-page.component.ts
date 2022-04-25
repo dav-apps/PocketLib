@@ -11,9 +11,10 @@ import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.com
 import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import { StoreBook } from 'src/app/models/StoreBook'
+import { StoreBookRelease } from 'src/app/models/StoreBookRelease'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { BookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
-import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
+import { StoreBookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
+import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -31,6 +32,8 @@ export class AuthorBookPageComponent {
 	uuid: string
 	author: Author
 	collection: StoreBookCollection
+	releases: StoreBookRelease[]
+	release: StoreBookRelease
 	book: {
 		collection: string,
 		title: string,
@@ -38,7 +41,7 @@ export class AuthorBookPageComponent {
 		language: string,
 		price: number,
 		isbn: string,
-		status: BookStatus,
+		status: StoreBookStatus,
 		coverBlurhash: string,
 		fileName: string,
 		categories: {
@@ -52,7 +55,7 @@ export class AuthorBookPageComponent {
 			language: "en",
 			price: 0,
 			isbn: "",
-			status: BookStatus.Unpublished,
+			status: StoreBookStatus.Unpublished,
 			coverBlurhash: null,
 			fileName: null,
 			categories: []
@@ -133,42 +136,75 @@ export class AuthorBookPageComponent {
 			return
 		}
 
-		this.book.collection = book.collection
-		this.book.title = book.title
-		this.book.description = book.description ?? ""
-		this.book.language = book.language
-		this.book.price = book.price
-		this.book.isbn = book.isbn ?? ""
-		this.book.status = book.status
-		this.book.coverBlurhash = book.cover?.blurhash
-		this.book.fileName = book.file?.fileName
-		this.bookFileUploaded = book.file != null
+		this.releases = await book.GetReleases()
+		let releaseUuid = this.activatedRoute.snapshot.paramMap.get("release_uuid")
+
+		if (releaseUuid != null) {
+			// Get the release
+			this.release = this.releases.find(r => r.uuid == releaseUuid)
+		}
 
 		// Get the categories
 		await this.dataService.categoriesPromiseHolder.AwaitResult()
-		this.LoadCategories(book.categories)
+
+		if (this.release != null) {
+			this.book.collection = book.collection
+			this.book.title = this.release.title
+			this.book.description = this.release.description ?? ""
+			this.book.language = book.language
+			this.book.price = this.release.price
+			this.book.isbn = this.release.isbn ?? ""
+			this.book.coverBlurhash = this.release.cover?.blurhash
+			this.book.fileName = this.release.file?.fileName
+			this.bookFileUploaded = this.release.file != null
+			this.LoadCategories(this.release.categories)
+
+			await this.release.GetCoverContent().then(result => {
+				if (result != null) this.coverContent = result
+			})
+		} else {
+			this.book.collection = book.collection
+			this.book.title = book.title
+			this.book.description = book.description ?? ""
+			this.book.language = book.language
+			this.book.price = book.price
+			this.book.isbn = book.isbn ?? ""
+			this.book.status = book.status
+			this.book.coverBlurhash = book.cover?.blurhash
+			this.book.fileName = book.file?.fileName
+			this.bookFileUploaded = book.file != null
+			this.LoadCategories(book.categories)
+
+			await book.GetCoverContent().then(result => {
+				if (result != null) this.coverContent = result
+			})
+		}
 
 		this.priceInput.SetPrice(this.book.price)
 		this.isbnInput.SetIsbn(this.book.isbn)
-
-		await book.GetCoverContent().then(result => {
-			if (result != null) this.coverContent = result
-		})
 
 		await this.LoadBackButtonLink()
 	}
 
 	async LoadBackButtonLink() {
-		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
-
-		if (singleBookInCollection && this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${this.author.uuid}`
-		} else if (singleBookInCollection) {
-			this.backButtonLink = "/author"
-		} else if (this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+		if (this.releases.length > 1) {
+			if (this.dataService.userIsAdmin) {
+				this.backButtonLink = `/author/${this.author.uuid}/book/${this.uuid}/releases`
+			} else {
+				this.backButtonLink = `/author/book/${this.uuid}/releases`
+			}
 		} else {
-			this.backButtonLink = `/author/collection/${this.book.collection}`
+			let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+
+			if (singleBookInCollection && this.dataService.userIsAdmin) {
+				this.backButtonLink = `/author/${this.author.uuid}`
+			} else if (singleBookInCollection) {
+				this.backButtonLink = "/author"
+			} else if (this.dataService.userIsAdmin) {
+				this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+			} else {
+				this.backButtonLink = `/author/collection/${this.book.collection}`
+			}
 		}
 	}
 
@@ -475,7 +511,7 @@ export class AuthorBookPageComponent {
 			this.statusLoading = false
 
 			if (isSuccessStatusCode(response.status)) {
-				this.book.status = GetBookStatusByString((response as ApiResponse<StoreBookResource>).data.status)
+				this.book.status = GetStoreBookStatusByString((response as ApiResponse<StoreBookResource>).data.status)
 			}
 		} else {
 			// The title was updated

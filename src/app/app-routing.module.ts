@@ -39,6 +39,7 @@ const routes: Routes = [
 	{ path: "author/:author_uuid/book/:book_uuid", component: AuthorBookPageComponent },
 	{ path: "author/book/:book_uuid/releases", component: AuthorReleasesPageComponent },
 	{ path: "author/:author_uuid/book/:book_uuid/releases", component: AuthorReleasesPageComponent },
+	{ path: "author/:author_uuid/book/:book_uuid/releases/:release_uuid", component: AuthorBookPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
 	{
 		path: "store", component: StorePageComponent, children: [

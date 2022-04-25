@@ -7,6 +7,11 @@ import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookRelease } from "src/app/models/StoreBookRelease"
 import { DataService } from "src/app/services/data-service"
 
+interface ReleaseItem {
+	name: string
+	link: string
+}
+
 @Component({
 	templateUrl: "./author-releases-page.component.html"
 })
@@ -15,7 +20,7 @@ export class AuthorReleasesPageComponent {
 	author: Author
 	collection: StoreBookCollection
 	book: StoreBook
-	releases: StoreBookRelease[]
+	releaseItems: ReleaseItem[] = []
 	title: string = ""
 	backButtonLink: string = "/author"
 
@@ -63,8 +68,32 @@ export class AuthorReleasesPageComponent {
 		}
 
 		// Get the store book releases
-		this.releases = await this.book.GetReleases()
-		this.title = this.releases[this.releases.length - 1].title
+		let releases = await this.book.GetReleases()
+		let currentReleaseUuid = releases[0].uuid
+		this.title = releases[releases.length - 1].title
+
+		for (let release of releases) {
+			let releaseItem: ReleaseItem = {
+				name: release.releaseName,
+				link: ""
+			}
+
+			if (this.dataService.userIsAdmin) {
+				if (release.uuid == currentReleaseUuid) {
+					releaseItem.link = `/author/${this.author.uuid}/book/${this.book.uuid}`
+				} else {
+					releaseItem.link = `/author/${this.author.uuid}/book/${this.book.uuid}/releases/${release.uuid}`
+				}
+			} else {
+				if (release.uuid == currentReleaseUuid) {
+					releaseItem.link = `/author/book/${this.book.uuid}`
+				} else {
+					releaseItem.link = `/author/book/${this.book.uuid}/releases/${release.uuid}`
+				}
+			}
+
+			this.releaseItems.push(releaseItem)
+		}
 
 		if ((await this.collection.GetStoreBooks()).length > 1) {
 			if (this.dataService.userIsAdmin) {

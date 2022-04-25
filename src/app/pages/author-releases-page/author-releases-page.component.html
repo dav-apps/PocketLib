@@ -13,12 +13,13 @@
 	<div>
 		<a class="card my-2 mx-auto cursor theme-background-color-secondary"
 			style="text-decoration: none; transition: 0.12s; max-width: 400px"
-			*ngFor="let release of releases">
+			[routerLink]="release.link"
+			*ngFor="let release of releaseItems">
 
 			<div class="row">
 				<div class="col-10 my-auto">
 					<div class="card-body">
-						<h5 class="card-title my-auto text-color">{{ release.releaseName }}</h5>
+						<h5 class="card-title my-auto text-color">{{ release.name }}</h5>
 					</div>
 				</div>
 
