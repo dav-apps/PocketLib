@@ -4,7 +4,6 @@ import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
-import { StoreBookRelease } from "src/app/models/StoreBookRelease"
 import { DataService } from "src/app/services/data-service"
 
 interface ReleaseItem {
