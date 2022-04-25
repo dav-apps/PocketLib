@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
+import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookReleaseResource } from "src/app/misc/types"
 import { DataService } from "src/app/services/data-service"
 
@@ -12,6 +13,7 @@ import { DataService } from "src/app/services/data-service"
 export class AuthorReleasesPageComponent {
 	faAngleRight = faAngleRight
 	author: Author
+	collection: StoreBookCollection
 	book: StoreBook
 	releases: StoreBookReleaseResource[]
 	title: string = ""
@@ -48,7 +50,11 @@ export class AuthorReleasesPageComponent {
 
 		for (let collection of await this.author.GetCollections()) {
 			this.book = (await collection.GetStoreBooks()).find(b => b.uuid == storeBookUuid)
-			if (this.book != null) break
+
+			if (this.book != null) {
+				this.collection = collection
+				break
+			}
 		}
 
 		if (this.book == null) {
@@ -59,6 +65,14 @@ export class AuthorReleasesPageComponent {
 		// Get the store book releases
 		this.releases = await this.book.GetReleases()
 		this.title = this.releases[this.releases.length - 1].title
+
+		if ((await this.collection.GetStoreBooks()).length > 1) {
+			if (this.dataService.userIsAdmin) {
+				this.backButtonLink = `/author/${this.author.uuid}/collection/${this.collection.uuid}`
+			} else {
+				this.backButtonLink = `/author/collection/${this.collection.uuid}`
+			}
+		}
 	}
 
 	BackButtonClick() {

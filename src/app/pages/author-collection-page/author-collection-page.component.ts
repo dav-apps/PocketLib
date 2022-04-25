@@ -6,8 +6,12 @@ import { CachingService } from 'src/app/services/caching-service'
 import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
-import { BookListItem } from 'src/app/misc/types'
+import { BookListItem, StoreBookReleaseResource } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
+
+interface ExtendedBookListItem extends BookListItem {
+	releases: StoreBookReleaseResource[]
+}
 
 @Component({
 	selector: 'pocketlib-author-collection-page',
@@ -20,9 +24,9 @@ export class AuthorCollectionPageComponent {
 	dualScreenFoldMargin: number = 0
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(null, this.apiService, this.cachingService)
-	books: BookListItem[] = []
-	leftScreenBooks: BookListItem[] = []
-	rightScreenBooks: BookListItem[] = []
+	books: ExtendedBookListItem[] = []
+	leftScreenBooks: ExtendedBookListItem[] = []
+	rightScreenBooks: ExtendedBookListItem[] = []
 	names: { name: string, language: string }[] = []
 	collectionName: { name: string, language: string } = { name: "", language: "" }
 	collectionNames: { name: string, language: string, fullLanguage: string, edit: boolean }[] = []
@@ -33,6 +37,7 @@ export class AuthorCollectionPageComponent {
 		params: any
 	} = { path: "/author/book/new", params: {} }
 	bookLink: string = ""
+	releasesLink: string = ""
 	backButtonLink: string = "/author"
 
 	constructor(
@@ -62,10 +67,12 @@ export class AuthorCollectionPageComponent {
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
 			this.bookLink = `/author/${this.author.uuid}/book/{0}`
+			this.releasesLink = `/author/${this.author.uuid}/book/{0}/releases`
 			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 			this.bookLink = `/author/book/{0}`
+			this.releasesLink = `/author/book/{0}/releases`
 		}
 
 		if (this.author == null) {
@@ -91,15 +98,20 @@ export class AuthorCollectionPageComponent {
 		let i = 0
 
 		for (let storeBook of await this.collection.GetStoreBooks()) {
-			let bookItem: BookListItem = {
+			let bookItem: ExtendedBookListItem = {
 				uuid: storeBook.uuid,
 				title: storeBook.title,
 				coverContent: null,
-				coverBlurhash: storeBook.cover?.blurhash
+				coverBlurhash: storeBook.cover?.blurhash,
+				releases: []
 			}
 
 			storeBook.GetCoverContent().then(result => {
 				if (result != null) bookItem.coverContent = result
+			})
+
+			storeBook.GetReleases().then(result => {
+				bookItem.releases = result
 			})
 
 			if (this.dualScreenLayout) {
