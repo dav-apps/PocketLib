@@ -1,1 +1,12 @@
-<h1>Hello World</h1>
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0">
+
+	<div class="mt-3 mb-4">
+		<dav-header
+			[header]="title"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()">
+		</dav-header>
+	</div>
+</div>
