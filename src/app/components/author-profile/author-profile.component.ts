@@ -28,6 +28,7 @@ import {
 	ListResponseData,
 	StoreBookResource,
 	StoreBookListField,
+	StoreBookReleaseResource,
 	StoreBookItem
 } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
@@ -36,12 +37,14 @@ import { enUS } from 'src/locales/locales'
 interface CollectionItem {
 	uuid: string
 	name: string
+	link: string
 	books: StoreBookItem[]
 }
 
 interface SeriesItem {
 	uuid: string
 	name: string
+	link: string
 	books: StoreBookItem[]
 }
 
@@ -95,9 +98,6 @@ export class AuthorProfileComponent {
 	bookTitleFontSize: number = 20
 	errorMessage: string = ""
 	providerMessage: string = ""
-	bookLink: string = ""
-	collectionLink: string = ""
-	seriesLink: string = ""
 	newBookPageLink: {
 		path: string,
 		params: any
@@ -150,27 +150,17 @@ export class AuthorProfileComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
-		// Determine the author mode
-		if (!this.uuid) {
-			this.authorMode = AuthorMode.AuthorOfUser
-		} else if (
-			this.dataService.userIsAdmin
-			&& (this.dataService.adminAuthors.findIndex(author => author.uuid == this.uuid) != -1)
-		) {
+		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
-		}
-
-		if (this.authorMode == AuthorMode.AuthorOfAdmin) {
+			
 			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
 			this.UpdateSocialMediaLinks()
 			await this.LoadBios()
 			await this.SelectDefaultBio()
+		} else if (this.dataService.userAuthor) {
+			this.authorMode = AuthorMode.AuthorOfUser
 
-			this.bookLink = `/author/${this.author.uuid}/book/{0}`
-			this.collectionLink = `/author/${this.author.uuid}/collection/{0}`
-			this.seriesLink = `/author/${this.author.uuid}/series/{0}`
-		} else if (this.authorMode == AuthorMode.AuthorOfUser) {
 			this.author = this.dataService.userAuthor
 			this.UpdateSocialMediaLinks()
 			await this.LoadBios()
@@ -178,10 +168,6 @@ export class AuthorProfileComponent {
 
 			// Set the text and visibility for the provider message
 			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
-
-			this.bookLink = `/author/book/{0}`
-			this.collectionLink = `/author/collection/{0}`
-			this.seriesLink = `/author/series/{0}`
 		} else {
 			// Get the author from the server
 			await this.LoadAuthor()
@@ -230,6 +216,7 @@ export class AuthorProfileComponent {
 			let collectionItem: CollectionItem = {
 				uuid: collection.uuid,
 				name: collection.name.value,
+				link: "",
 				books: []
 			}
 
@@ -248,6 +235,37 @@ export class AuthorProfileComponent {
 				collectionItem.books.push(bookItem)
 			}
 
+			// Set the correct link for the collection item
+			if (collectionItem.books.length == 1) {
+				let book = collectionItem.books[0]
+				let releasesResponse = await this.apiService.ListStoreBookReleases({ storeBook: book.uuid })
+				let releases = []
+
+				if (isSuccessStatusCode(releasesResponse.status)) {
+					releases = (releasesResponse as ApiResponse<ListResponseData<StoreBookReleaseResource>>).data.items
+				}
+
+				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
+					if (releases.length > 1) {
+						collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}/releases`
+					} else {
+						collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}`
+					}
+				} else {
+					if (releases.length > 1) {
+						collectionItem.link = `/author/book/${collectionItem.books[0].uuid}/releases`
+					} else {
+						collectionItem.link = `/author/book/${collectionItem.books[0].uuid}`
+					}
+				}
+			} else {
+				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
+					collectionItem.link = `/author/${this.author.uuid}/collection/${collectionItem.uuid}`
+				} else {
+					collectionItem.link = `/author/collection/${collectionItem.uuid}`
+				}
+			}
+
 			this.collections.push(collectionItem)
 		}
 
@@ -261,6 +279,7 @@ export class AuthorProfileComponent {
 			let seriesItem: SeriesItem = {
 				uuid: series.uuid,
 				name: series.name,
+				link: "",
 				books: []
 			}
 
@@ -276,6 +295,12 @@ export class AuthorProfileComponent {
 				}
 
 				seriesItem.books.push(bookItem)
+			}
+
+			if (this.authorMode == AuthorMode.AuthorOfAdmin) {
+				seriesItem.link = `/author/${this.author.uuid}/series/${seriesItem.uuid}`
+			} else {
+				seriesItem.link = `/author/series/${seriesItem.uuid}`
 			}
 
 			this.series.push(seriesItem)

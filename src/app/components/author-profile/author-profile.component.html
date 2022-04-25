@@ -172,7 +172,7 @@
 					[title]="collection.name"
 					[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
 					[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-					[link]="collection.books.length == 1 ? bookLink.replace('{0}', collection.books[0].uuid) : collectionLink.replace('{0}', collection.uuid)"
+					[link]="collection.link"
 					*ngFor="let collection of collections">
 				</pocketlib-horizontal-book-card>
 			</div>
@@ -198,7 +198,7 @@
 				<pocketlib-horizontal-books-card
 					[title]="s.name"
 					[books]="s.books"
-					[link]="seriesLink.replace('{0}', s.uuid)"
+					[link]="s.link"
 					*ngFor="let s of series">
 				</pocketlib-horizontal-books-card>
 			</div>
@@ -410,7 +410,7 @@
 						[title]="collection.name"
 						[coverContent]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverContent : dataService.defaultStoreBookCover"
 						[coverBlurhash]="collection.books.length > 0 && collection.books[0].coverContent ? collection.books[0].coverBlurhash : null"
-						[link]="collection.books.length == 1 ? bookLink.replace('{0}', collection.books[0].uuid) : collectionLink.replace('{0}', collection.uuid)"
+						[link]="collection.link"
 						*ngFor="let collection of collections">
 					</pocketlib-horizontal-book-card>
 				</div>
@@ -436,7 +436,7 @@
 					<pocketlib-horizontal-books-card
 						[title]="s.name"
 						[books]="s.books"
-						[link]="seriesLink.replace('{0}', s.uuid)"
+						[link]="s.link"
 						*ngFor="let s of series">
 					</pocketlib-horizontal-books-card>
 				</div>
