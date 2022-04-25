@@ -205,6 +205,27 @@ export class AuthorProfileComponent {
 		this.SetupBioLanguageDropdown()
 		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
 
+		await this.LoadCollections()
+		await this.LoadSeries()
+		this.loaded.emit()
+	}
+
+	@HostListener('window:resize')
+	setSize() {
+		this.width = window.innerWidth
+
+		if (window.innerWidth < 768) {
+			this.profileImageWidth = 110
+		} else if (window.innerWidth < 1200) {
+			this.profileImageWidth = 120
+		} else {
+			this.profileImageWidth = 130
+		}
+	}
+
+	async LoadCollections() {
+		if (this.authorMode == AuthorMode.Normal) return
+
 		for (let collection of await this.author.GetCollections()) {
 			let collectionItem: CollectionItem = {
 				uuid: collection.uuid,
@@ -230,7 +251,12 @@ export class AuthorProfileComponent {
 			this.collections.push(collectionItem)
 		}
 
-		// Get the appropriate language and details of each series
+		this.collectionsLoaded = true
+	}
+
+	async LoadSeries() {
+		if (this.authorMode == AuthorMode.Normal) return
+
 		for (let series of await this.author.GetSeries()) {
 			let seriesItem: SeriesItem = {
 				uuid: series.uuid,
@@ -255,22 +281,7 @@ export class AuthorProfileComponent {
 			this.series.push(seriesItem)
 		}
 
-		this.collectionsLoaded = true
 		this.seriesLoaded = true
-		this.loaded.emit()
-	}
-
-	@HostListener('window:resize')
-	setSize() {
-		this.width = window.innerWidth
-
-		if (window.innerWidth < 768) {
-			this.profileImageWidth = 110
-		} else if (window.innerWidth < 1200) {
-			this.profileImageWidth = 120
-		} else {
-			this.profileImageWidth = 130
-		}
 	}
 
 	async LoadBios() {
