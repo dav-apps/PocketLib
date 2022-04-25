@@ -26,7 +26,7 @@ export interface StoreBookItem {
 	title: string,
 	description: string,
 	language: string,
-	status: BookStatus,
+	status: StoreBookStatus,
 	coverContent: string,
 	coverBlurhash: string
 }
@@ -49,11 +49,16 @@ export enum AuthorMode {
 	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
 }
 
-export enum BookStatus {
+export enum StoreBookStatus {
 	Unpublished = 0,
 	Review = 1,
 	Published = 2,
 	Hidden = 3
+}
+
+export enum StoreBookReleaseStatus {
+	Unpublished = 0,
+	Published = 1
 }
 
 export enum Language {

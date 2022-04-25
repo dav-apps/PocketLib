@@ -5,12 +5,13 @@ import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
+import { StoreBookRelease } from 'src/app/models/StoreBookRelease'
 import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
-import { BookListItem, StoreBookReleaseResource } from 'src/app/misc/types'
+import { BookListItem } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 interface ExtendedBookListItem extends BookListItem {
-	releases: StoreBookReleaseResource[]
+	releases: StoreBookRelease[]
 }
 
 @Component({

@@ -4,7 +4,7 @@ import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
-import { StoreBookReleaseResource } from "src/app/misc/types"
+import { StoreBookRelease } from "src/app/models/StoreBookRelease"
 import { DataService } from "src/app/services/data-service"
 
 @Component({
@@ -15,7 +15,7 @@ export class AuthorReleasesPageComponent {
 	author: Author
 	collection: StoreBookCollection
 	book: StoreBook
-	releases: StoreBookReleaseResource[]
+	releases: StoreBookRelease[]
 	title: string = ""
 	backButtonLink: string = "/author"
 

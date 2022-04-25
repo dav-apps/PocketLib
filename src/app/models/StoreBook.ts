@@ -1,13 +1,14 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { StoreBookRelease } from "./StoreBookRelease"
 import {
-	BookStatus,
+	StoreBookStatus,
 	Language,
 	StoreBookResource,
 	StoreBookReleaseResource,
 	StoreBookReleaseListField,
 	ListResponseData
 } from "../misc/types"
-import { GetBookStatusByString, GetLanguageByString } from "../misc/utils"
+import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
 
 export class StoreBook {
@@ -18,7 +19,7 @@ export class StoreBook {
 	public language: Language
 	public price: number
 	public isbn: string
-	public status: BookStatus
+	public status: StoreBookStatus
 	public cover: {
 		url: string
 		aspectRatio: string
@@ -43,7 +44,7 @@ export class StoreBook {
 		this.language = GetLanguageByString(storeBookResource.language)
 		this.price = storeBookResource.price
 		this.isbn = storeBookResource.isbn
-		this.status = GetBookStatusByString(storeBookResource.status)
+		this.status = GetStoreBookStatusByString(storeBookResource.status)
 		this.cover = {
 			url: storeBookResource.cover?.url,
 			aspectRatio: storeBookResource.cover?.aspectRatio,
@@ -71,7 +72,7 @@ export class StoreBook {
 		return responseData
 	}
 
-	async GetReleases(): Promise<StoreBookReleaseResource[]> {
+	async GetReleases(): Promise<StoreBookRelease[]> {
 		if (this.releases.isLoading || this.releases.loaded) {
 			let items = []
 
@@ -116,7 +117,7 @@ export class StoreBook {
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(item)
+			items.push(new StoreBookRelease(item, this.apiService))
 		}
 
 		this.releases.itemsPromiseHolder.Resolve(items)

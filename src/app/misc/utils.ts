@@ -1,5 +1,6 @@
 import {
-	BookStatus,
+	StoreBookStatus,
+	StoreBookReleaseStatus,
 	AuthorResource,
 	AuthorBioResource,
 	AuthorProfileImageResource,
@@ -155,16 +156,25 @@ export function GetAllLanguages(): Language[] {
 	]
 }
 
-export function GetBookStatusByString(status: string): BookStatus {
+export function GetStoreBookStatusByString(status: string): StoreBookStatus {
 	switch (status) {
 		case "published":
-			return BookStatus.Published
+			return StoreBookStatus.Published
 		case "review":
-			return BookStatus.Review
+			return StoreBookStatus.Review
 		case "hidden":
-			return BookStatus.Hidden
+			return StoreBookStatus.Hidden
 		default:
-			return BookStatus.Unpublished
+			return StoreBookStatus.Unpublished
+	}
+}
+
+export function GetStoreBookReleaseStatusByString(status: string): StoreBookReleaseStatus {
+	switch (status) {
+		case "published":
+			return StoreBookReleaseStatus.Published
+		default:
+			return StoreBookReleaseStatus.Unpublished
 	}
 }
 

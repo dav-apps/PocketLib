@@ -7,13 +7,13 @@ import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
-import { GetDualScreenSettings, GetBookStatusByString } from 'src/app/misc/utils'
+import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
 import {
 	AuthorResource,
 	AuthorField,
 	BookResource,
 	BookField,
-	BookStatus,
+	StoreBookStatus,
 	PurchaseResource,
 	PurchaseField,
 	StoreBookCollectionResource,
@@ -43,7 +43,7 @@ export class StoreBookPageComponent {
 		title: string,
 		description: string,
 		price: number,
-		status: BookStatus,
+		status: StoreBookStatus,
 		coverBlurhash: string,
 		categories: {
 			key: string,
@@ -57,7 +57,7 @@ export class StoreBookPageComponent {
 			title: "",
 			description: "",
 			price: 0,
-			status: BookStatus.Unpublished,
+			status: StoreBookStatus.Unpublished,
 			coverBlurhash: null,
 			categories: [],
 			inLibrary: false,
@@ -180,7 +180,7 @@ export class StoreBookPageComponent {
 			this.book.title = responseData.title
 			this.book.description = responseData.description
 			this.book.price = responseData.price
-			this.book.status = GetBookStatusByString(responseData.status)
+			this.book.status = GetStoreBookStatusByString(responseData.status)
 			this.book.coverBlurhash = responseData.cover?.blurhash
 			this.book.inLibrary = responseData.inLibrary
 			this.book.purchased = responseData.purchased
@@ -209,13 +209,13 @@ export class StoreBookPageComponent {
 
 			// Load the status
 			switch (this.book.status) {
-				case BookStatus.Unpublished:
+				case StoreBookStatus.Unpublished:
 					this.bookStatus = this.locale.unpublished
 					break
-				case BookStatus.Review:
+				case StoreBookStatus.Review:
 					this.bookStatus = this.locale.review
 					break
-				case BookStatus.Hidden:
+				case StoreBookStatus.Hidden:
 					this.bookStatus = this.locale.hidden
 					break
 			}
@@ -508,7 +508,7 @@ export class StoreBookPageComponent {
 			uuid: this.uuid,
 			status: "published"
 		})
-		if (response.status == 200) this.book.status = BookStatus.Published
+		if (response.status == 200) this.book.status = StoreBookStatus.Published
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
 		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
