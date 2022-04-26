@@ -1,6 +1,8 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
+import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
@@ -17,10 +19,12 @@ export class AuthorBookDashboardPageComponent {
 	book: StoreBook
 	title: string = ""
 	status: StoreBookStatus = StoreBookStatus.Unpublished
+	loading: boolean = false
 	backButtonLink: string = "/author"
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -91,6 +95,27 @@ export class AuthorBookDashboardPageComponent {
 			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "details"])
 		} else {
 			this.router.navigate(["author", "book", this.book.uuid, "details"])
+		}
+	}
+
+	async CancelPublishingButtonClick() {
+		this.loading = true
+
+		let response = await this.apiService.UpdateStoreBook({
+			uuid: this.book.uuid,
+			status: "unpublished"
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			this.collection.ClearStoreBooks()
+			
+			if (this.dataService.userIsAdmin) {
+				this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "details"])
+			} else {
+				this.router.navigate(["author", "book", this.book.uuid, "details"])
+			}
+		} else {
+			this.loading = false
 		}
 	}
 }

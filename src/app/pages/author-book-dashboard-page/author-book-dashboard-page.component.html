@@ -19,7 +19,10 @@
 
 		<div class="d-flex justify-content-center">
 			<div class="m-1">
-				<dav-button type="accent" (click)="ShowDetailsButtonClick()">
+				<dav-button
+					type="accent"
+					[disabled]="loading"
+					(click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
@@ -40,13 +43,19 @@
 
 		<div class="d-flex flex-wrap justify-content-center">
 			<div class="m-1">
-				<dav-button type="danger">
+				<dav-button
+					type="danger"
+					[disabled]="loading"
+					(click)="CancelPublishingButtonClick()">
 					{{ locale.cancelPublishing }}
 				</dav-button>
 			</div>
 
 			<div class="m-1">
-				<dav-button type="accent" (click)="ShowDetailsButtonClick()">
+				<dav-button
+					type="accent"
+					[disabled]="loading"
+					(click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
