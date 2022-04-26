@@ -508,7 +508,21 @@ export class StoreBookPageComponent {
 			uuid: this.uuid,
 			status: "published"
 		})
-		if (response.status == 200) this.book.status = StoreBookStatus.Published
+
+		if (isSuccessStatusCode(response.status)) {
+			this.book.status = StoreBookStatus.Published
+			
+			// Find the author and clear the collections
+			if (this.dataService.userIsAdmin) {
+				let author = this.dataService.adminAuthors.find(a => a.uuid == this.author.uuid)
+
+				if (author != null) {
+					author.ClearCollections()
+				}
+			} else if (this.dataService.userAuthor?.uuid == this.author.uuid) {
+				this.dataService.userAuthor.ClearCollections()
+			}
+		}
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
 		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
