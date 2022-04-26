@@ -10,16 +10,46 @@
 		</dav-header>
 	</div>
 
+	<!-- Published -->
 	<div *ngIf="status == 2">
 		<p class="text-color text-center"
-			style="font-size: 21px">
-			{{ locale.status.published }}
+			style="font-size: 22px">
+			{{ locale.published }}
 		</p>
 
 		<div class="d-flex justify-content-center">
-			<dav-button type="accent" (click)="ShowDetailsButtonClick()">
-				{{ locale.showDetails }}
-			</dav-button>
+			<div class="m-1">
+				<dav-button type="accent" (click)="ShowDetailsButtonClick()">
+					{{ locale.showDetails }}
+				</dav-button>
+			</div>
+		</div>
+	</div>
+
+	<!-- In Review -->
+	<div *ngIf="status == 1">
+		<p class="text-color text-center"
+			style="font-size: 22px">
+			{{ locale.inReview }}
+		</p>
+
+		<p class="text-color text-center"
+			style="font-size: 18px">
+			{{ locale.inReviewDescription }}
+		</p>
+
+		<div class="d-flex flex-wrap justify-content-center">
+			<div class="m-1">
+				<dav-button type="danger">
+					{{ locale.cancelPublishing }}
+				</dav-button>
+			</div>
+
+			<div class="m-1">
+				<dav-button type="accent" (click)="ShowDetailsButtonClick()">
+					{{ locale.showDetails }}
+				</dav-button>
+			</div>
 		</div>
 	</div>
 </div>

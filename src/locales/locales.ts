@@ -130,10 +130,11 @@ const enDefaults = {
 		}
 	},
 	authorBookDashboardPage: {
-		status: {
-			published: "Your book is published!"
-		},
-		showDetails: "Show details"
+		published: "Your book is published!",
+		inReview: "You book is being reviewed...",
+		inReviewDescription: "We will notify you as soon as your book is published.",
+		showDetails: "Show details",
+		cancelPublishing: "Cancel publishing"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -580,10 +581,11 @@ const deDefaults = {
 		}
 	},
 	authorBookDashboardPage: {
-		status: {
-			published: "Dein Buch ist veröffentlicht!"
-		},
-		showDetails: "Details anzeigen"
+		published: "Dein Buch ist veröffentlicht!",
+		inReview: "Dein Buch wird überprüft...",
+		inReviewDescription: "Wir benachrichtigen dich, sobald dein Buch veröffentlicht wurde.",
+		showDetails: "Details anzeigen",
+		cancelPublishing: "Veröffentlichung abbrechen"
 	},
 	authorBookPage: {
 		editTitleDialog: {
