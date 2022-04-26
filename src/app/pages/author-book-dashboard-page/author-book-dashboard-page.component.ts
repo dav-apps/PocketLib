@@ -4,22 +4,28 @@ import { DataService } from "src/app/services/data-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
+import { StoreBookStatus } from "src/app/misc/types"
+import { enUS } from "src/locales/locales"
 
 @Component({
 	templateUrl: "./author-book-dashboard-page.component.html"
 })
 export class AuthorBookDashboardPageComponent {
+	locale = enUS.authorBookDashboardPage
 	author: Author
 	collection: StoreBookCollection
 	book: StoreBook
 	title: string = ""
+	status: StoreBookStatus = StoreBookStatus.Unpublished
 	backButtonLink: string = "/author"
 
 	constructor(
 		public dataService: DataService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) { }
+	) {
+		this.locale = this.dataService.GetLocale().authorBookDashboardPage
+	}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded
@@ -58,6 +64,7 @@ export class AuthorBookDashboardPageComponent {
 		}
 
 		this.title = this.book.title
+		this.status = this.book.status
 		await this.LoadBackButtonLink()
 	}
 
@@ -77,5 +84,13 @@ export class AuthorBookDashboardPageComponent {
 
 	BackButtonClick() {
 		this.router.navigate([this.backButtonLink])
+	}
+
+	ShowDetailsButtonClick() {
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "details"])
+		} else {
+			this.router.navigate(["author", "book", this.book.uuid, "details"])
+		}
 	}
 }

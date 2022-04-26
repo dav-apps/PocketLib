@@ -129,6 +129,12 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured. Please try again later."
 		}
 	},
+	authorBookDashboardPage: {
+		status: {
+			published: "Your book is published!"
+		},
+		showDetails: "Show details"
+	},
 	authorBookPage: {
 		editTitleDialog: {
 			header: "Edit title",
@@ -572,6 +578,12 @@ const deDefaults = {
 			lastNameTooLong: "Der Nachname ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
+	},
+	authorBookDashboardPage: {
+		status: {
+			published: "Dein Buch ist veröffentlicht!"
+		},
+		showDetails: "Details anzeigen"
 	},
 	authorBookPage: {
 		editTitleDialog: {

@@ -201,7 +201,11 @@ export class AuthorBookPageComponent {
 	}
 
 	BackButtonClick() {
-		this.router.navigate([this.backButtonLink])
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+		} else {
+			this.router.navigate(["author", "book", this.uuid])
+		}
 	}
 
 	LoadCategories(keys: string[]) {
