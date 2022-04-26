@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { PromiseHolder, ApiResponse } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { Author } from 'src/app/models/Author'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
@@ -41,7 +40,6 @@ export class NewBookPageComponent {
 	collections: {
 		uuid: string,
 		name: string,
-		cover: boolean,
 		coverContent: string
 	}[] = []
 	selectedCollection: number = -2
@@ -87,7 +85,6 @@ export class NewBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private cachingService: CachingService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -112,44 +109,41 @@ export class NewBookPageComponent {
 			// Find the author with the uuid
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 
-			if (author == null) {
-				this.GoBack()
-				return
-			}
-
 			this.author = author
 		} else if (this.dataService.userAuthor) {
 			// Get the current author
 			this.author = this.dataService.userAuthor
-		} else {
-			// Go back, as the user it not an author and not an admin
+		}
+
+		if (this.author == null) {
 			this.GoBack()
 			return
 		}
 
 		// Get the collections
 		for (let collection of await this.author.GetCollections()) {
-			// Find a cover
-			let cover: boolean = false
-			let coverContent: string = ""
+			let collectionItem = {
+				uuid: collection.uuid,
+				name: collection.name.value,
+				coverContent: this.dataService.defaultStoreBookCover
+			}
+
 			for (let book of await collection.GetStoreBooks()) {
-				if (book.cover) {
-					cover = true
-					coverContent = await book.GetCoverContent()
+				if (book.cover.url != null) {
+					book.GetCoverContent().then(result => {
+						if (result != null) collectionItem.coverContent = result
+					})
+
 					break
 				}
 			}
 
-			this.collections.push({
-				uuid: collection.uuid,
-				name: collection.name.value,
-				cover,
-				coverContent
-			})
+			this.collections.push(collectionItem)
 		}
 
 		// If the user navigated from the collection view, preselect the appropriate collection
 		let collectionUuid = this.activatedRoute.snapshot.queryParamMap.get("collection")
+
 		if (collectionUuid) {
 			let i = this.collections.findIndex(c => c.uuid == collectionUuid)
 			if (i != -1) this.selectedCollection = i
@@ -403,7 +397,7 @@ export class NewBookPageComponent {
 		}
 
 		// Remove RetrieveStoreBookCollection responses from ApiService cache
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBookCollection.name)
+		this.author.ClearCollections()
 
 		// Reload the author of the user
 		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData
@@ -411,7 +405,12 @@ export class NewBookPageComponent {
 
 		// Redirect to the AuthorBookPage
 		this.dataService.navbarVisible = true
-		this.router.navigate(["author", "book", createStoreBookResponseData.uuid])
+
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid, "book", createStoreBookResponseData.uuid, "details"])
+		} else {
+			this.router.navigate(["author", "book", createStoreBookResponseData.uuid, "details"])
+		}
 	}
 	//#endregion
 }

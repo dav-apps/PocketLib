@@ -22,9 +22,10 @@
 				style="transition: 0.12s"
 				*ngFor="let collection of collections; let i = index"
 				(click)="Select(i)">
+
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="collection.cover ? collection.coverContent : dataService.defaultStoreBookCover" style="width: 100px">
+						<img [src]="collection.coverContent" style="width: 100px">
 					</div>
 
 					<div class="col-8 my-auto">

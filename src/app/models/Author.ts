@@ -178,6 +178,11 @@ export class Author {
 		return items
 	}
 
+	ClearCollections() {
+		this.collections.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookCollections.name)
+	}
+
 	async GetSeries(): Promise<StoreBookSeries[]> {
 		if (this.series.isLoading || this.series.loaded) {
 			let items = []
