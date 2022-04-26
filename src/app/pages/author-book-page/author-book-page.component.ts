@@ -182,26 +182,26 @@ export class AuthorBookPageComponent {
 
 		this.priceInput.SetPrice(this.book.price)
 		this.isbnInput.SetIsbn(this.book.isbn)
-
-		await this.LoadBackButtonLink()
 	}
 
-	async LoadBackButtonLink() {
-		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+	async BackButtonClick() {
+		if (this.book.status == StoreBookStatus.Unpublished) {
+			let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
 
-		if (singleBookInCollection && this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${this.author.uuid}`
-		} else if (singleBookInCollection) {
-			this.backButtonLink = "/author"
+			if (singleBookInCollection) {
+				if (this.dataService.userIsAdmin) {
+					this.router.navigate(["author", this.author.uuid])
+				} else {
+					this.router.navigate(["author"])
+				}
+			} else {
+				if (this.dataService.userIsAdmin) {
+					this.router.navigate(["author", this.author.uuid, "collection", this.book.collection])
+				} else {
+					this.router.navigate(["author", "collection", this.book.collection])
+				}
+			}
 		} else if (this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
-		} else {
-			this.backButtonLink = `/author/collection/${this.book.collection}`
-		}
-	}
-
-	BackButtonClick() {
-		if (this.dataService.userIsAdmin) {
 			this.router.navigate(["author", this.author.uuid, "book", this.uuid])
 		} else {
 			this.router.navigate(["author", "book", this.uuid])

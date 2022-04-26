@@ -5,13 +5,12 @@ import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { Author } from 'src/app/models/Author'
 import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
-import { StoreBookRelease } from 'src/app/models/StoreBookRelease'
 import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
-import { BookListItem } from 'src/app/misc/types'
+import { BookListItem, StoreBookStatus } from 'src/app/misc/types'
 import { enUS } from 'src/locales/locales'
 
 interface ExtendedBookListItem extends BookListItem {
-	releases: StoreBookRelease[]
+	link: string
 }
 
 @Component({
@@ -37,8 +36,6 @@ export class AuthorCollectionPageComponent {
 		path: string,
 		params: any
 	} = { path: "/author/book/new", params: {} }
-	bookLink: string = ""
-	backButtonLink: string = "/author"
 
 	constructor(
 		public dataService: DataService,
@@ -66,11 +63,8 @@ export class AuthorCollectionPageComponent {
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
-			this.bookLink = `/author/${this.author.uuid}/book/{0}`
-			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
-			this.bookLink = `/author/book/{0}`
 		}
 
 		if (this.author == null) {
@@ -101,16 +95,26 @@ export class AuthorCollectionPageComponent {
 				title: storeBook.title,
 				coverContent: null,
 				coverBlurhash: storeBook.cover?.blurhash,
-				releases: []
+				link: ""
 			}
 
 			storeBook.GetCoverContent().then(result => {
 				if (result != null) bookItem.coverContent = result
 			})
 
-			storeBook.GetReleases().then(result => {
-				bookItem.releases = result
-			})
+			if (this.dataService.userIsAdmin) {
+				if (storeBook.status == StoreBookStatus.Unpublished) {
+					bookItem.link = `/author/${this.author.uuid}/book/${storeBook.uuid}/details`
+				} else {
+					bookItem.link = `/author/${this.author.uuid}/book/${storeBook.uuid}`
+				}
+			} else {
+				if (storeBook.status == StoreBookStatus.Unpublished) {
+					bookItem.link = `/author/book/${storeBook.uuid}/details`
+				} else {
+					bookItem.link = `/author/book/${storeBook.uuid}`
+				}
+			}
 
 			if (this.dualScreenLayout) {
 				// Evenly distribute the books on the left and right screens
@@ -128,7 +132,11 @@ export class AuthorCollectionPageComponent {
 	}
 
 	BackButtonClick() {
-		this.router.navigate([this.backButtonLink])
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid])
+		} else {
+			this.router.navigate(["author"])
+		}
 	}
 
 	async ShowNamesDialog() {

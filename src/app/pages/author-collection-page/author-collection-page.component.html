@@ -31,7 +31,7 @@
 			[title]="book.title"
 			[coverContent]="book.coverContent"
 			[coverBlurhash]="book.coverBlurhash"
-			[link]="bookLink.replace('{0}', book.uuid)"
+			[link]="book.link"
 			*ngFor="let book of books">
 		</pocketlib-horizontal-book-card>
 	</div>
@@ -74,7 +74,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				[link]="bookLink.replace('{0}', book.uuid)"
+				[link]="book.link"
 				*ngFor="let book of leftScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>
@@ -90,7 +90,7 @@
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
-				[link]="bookLink.replace('{0}', book.uuid)"
+				[link]="book.link"
 				*ngFor="let book of rightScreenBooks">
 			</pocketlib-horizontal-book-card>
 		</div>

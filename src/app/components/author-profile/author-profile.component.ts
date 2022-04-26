@@ -28,8 +28,8 @@ import {
 	ListResponseData,
 	StoreBookResource,
 	StoreBookListField,
-	StoreBookReleaseResource,
-	StoreBookItem
+	StoreBookItem,
+	StoreBookStatus
 } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -237,10 +237,16 @@ export class AuthorProfileComponent {
 
 			// Set the correct link for the collection item
 			if (collectionItem.books.length == 1) {
+				let book = collectionItem.books[0]
+
 				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
-					collectionItem.link = `/author/${this.author.uuid}/book/${collectionItem.books[0].uuid}`
+					collectionItem.link = `/author/${this.author.uuid}/book/${book.uuid}`
 				} else {
-					collectionItem.link = `/author/book/${collectionItem.books[0].uuid}`
+					collectionItem.link = `/author/book/${book.uuid}`
+				}
+
+				if (book.status == StoreBookStatus.Unpublished) {
+					collectionItem.link += "/details"
 				}
 			} else {
 				if (this.authorMode == AuthorMode.AuthorOfAdmin) {
