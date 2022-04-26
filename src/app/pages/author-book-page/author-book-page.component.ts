@@ -171,8 +171,8 @@ export class AuthorBookPageComponent {
 			this.book.isbn = book.isbn ?? ""
 			this.book.status = book.status
 			this.book.coverBlurhash = book.cover?.blurhash
-			this.book.fileName = book.file?.fileName
-			this.bookFileUploaded = book.file != null
+			this.book.fileName = book.file.fileName
+			this.bookFileUploaded = book.file.fileName != null
 			this.LoadCategories(book.categories)
 
 			await book.GetCoverContent().then(result => {
@@ -414,6 +414,31 @@ export class AuthorBookPageComponent {
 		} else {
 			// Show error
 			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
+	}
+
+	async PublishBook() {
+		if (this.book.status != StoreBookStatus.Unpublished) return
+		this.statusLoading = true
+
+		let response = await this.apiService.UpdateStoreBook({
+			uuid: this.uuid,
+			status: "review"
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			this.collection.ClearStoreBooks()
+
+			// Navigate to the dashboard
+			if (this.dataService.userIsAdmin) {
+				this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+			} else {
+				this.router.navigate(["author", "book", this.uuid])
+			}
+		} else {
+			// Show error message
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
+			this.statusLoading = false
 		}
 	}
 

@@ -194,7 +194,26 @@
 			</div>
 
 			<div id="book-details-status-data" class="book-details-data">
-				<div *ngIf="book.status == 0 || book.status == 3">
+
+				<div *ngIf="book.status == 0">
+					<p class="text-color">{{ locale.unpublished }}</p>
+
+					<div class="d-flex">
+						<dav-button
+							type="accent"
+							[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
+							(click)="PublishBook()">
+							{{ locale.publish }}
+						</dav-button>
+
+						<dav-progress-ring
+							style="width: 16px; height: 16px; margin: 8px 0px 0px 14px"
+							*ngIf="statusLoading">
+						</dav-progress-ring>
+					</div>
+				</div>
+
+				<div *ngIf="book.status == 3">
 					<p class="text-color">{{ locale.unpublished }}</p>
 
 					<div class="d-flex">
