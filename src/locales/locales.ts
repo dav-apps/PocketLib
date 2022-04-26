@@ -133,8 +133,11 @@ const enDefaults = {
 		published: "Your book is published!",
 		inReview: "You book is being reviewed...",
 		inReviewDescription: "We will notify you as soon as your book is published.",
+		hidden: "Your book is not listed",
 		showDetails: "Show details",
-		cancelPublishing: "Cancel publishing"
+		cancelPublishing: "Cancel publishing",
+		publish: "Publish",
+		unpublish: "Unpublish"
 	},
 	authorBookPage: {
 		editTitleDialog: {
@@ -584,8 +587,11 @@ const deDefaults = {
 		published: "Dein Buch ist veröffentlicht!",
 		inReview: "Dein Buch wird überprüft...",
 		inReviewDescription: "Wir benachrichtigen dich, sobald dein Buch veröffentlicht wurde.",
+		hidden: "Dein Buch ist nicht gelistet.",
 		showDetails: "Details anzeigen",
-		cancelPublishing: "Veröffentlichung abbrechen"
+		cancelPublishing: "Veröffentlichung abbrechen",
+		publish: "Veröffentlichen",
+		unpublish: "Veröffentlichung aufheben"
 	},
 	authorBookPage: {
 		editTitleDialog: {

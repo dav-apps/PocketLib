@@ -118,4 +118,36 @@ export class AuthorBookDashboardPageComponent {
 			this.loading = false
 		}
 	}
+
+	async PublishButtonClick() {
+		this.loading = true
+
+		let response = await this.apiService.UpdateStoreBook({
+			uuid: this.book.uuid,
+			status: "published"
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			this.status = StoreBookStatus.Published
+			this.collection.ClearStoreBooks()
+		}
+
+		this.loading = false
+	}
+
+	async UnpublishButtonClick() {
+		this.loading = true
+
+		let response = await this.apiService.UpdateStoreBook({
+			uuid: this.book.uuid,
+			status: "hidden"
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			this.status = StoreBookStatus.Hidden
+			this.collection.ClearStoreBooks()
+		}
+
+		this.loading = false
+	}
 }
