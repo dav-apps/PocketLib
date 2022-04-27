@@ -153,6 +153,7 @@ export class AuthorBookPageComponent {
 			this.book.language = book.language
 			this.book.price = this.release.price
 			this.book.isbn = this.release.isbn ?? ""
+			this.book.status = book.status
 			this.book.coverBlurhash = this.release.cover?.blurhash
 			this.book.fileName = this.release.file?.fileName
 			this.bookFileUploaded = this.release.file != null
@@ -201,7 +202,13 @@ export class AuthorBookPageComponent {
 				}
 			}
 		} else if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+			if (this.release != null) {
+				this.router.navigate(["author", this.author.uuid, "book", this.uuid, "releases"])
+			} else {
+				this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+			}
+		} else if (this.release != null) {
+			this.router.navigate(["author", "book", this.uuid, "releases"])
 		} else {
 			this.router.navigate(["author", "book", this.uuid])
 		}

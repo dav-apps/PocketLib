@@ -21,7 +21,6 @@ export class AuthorReleasesPageComponent {
 	book: StoreBook
 	releaseItems: ReleaseItem[] = []
 	title: string = ""
-	backButtonLink: string = "/author"
 
 	constructor(
 		public dataService: DataService,
@@ -39,7 +38,6 @@ export class AuthorReleasesPageComponent {
 			// Get the author
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
-			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 		}
@@ -68,8 +66,7 @@ export class AuthorReleasesPageComponent {
 
 		// Get the store book releases
 		let releases = await this.book.GetReleases()
-		let currentReleaseUuid = releases[0].uuid
-		this.title = releases[releases.length - 1].title
+		this.title = this.book.title
 
 		for (let release of releases) {
 			let releaseItem: ReleaseItem = {
@@ -78,32 +75,20 @@ export class AuthorReleasesPageComponent {
 			}
 
 			if (this.dataService.userIsAdmin) {
-				if (release.uuid == currentReleaseUuid) {
-					releaseItem.link = `/author/${this.author.uuid}/book/${this.book.uuid}`
-				} else {
-					releaseItem.link = `/author/${this.author.uuid}/book/${this.book.uuid}/releases/${release.uuid}`
-				}
+				releaseItem.link = `/author/${this.author.uuid}/book/${this.book.uuid}/releases/${release.uuid}`
 			} else {
-				if (release.uuid == currentReleaseUuid) {
-					releaseItem.link = `/author/book/${this.book.uuid}`
-				} else {
-					releaseItem.link = `/author/book/${this.book.uuid}/releases/${release.uuid}`
-				}
+				releaseItem.link = `/author/book/${this.book.uuid}/releases/${release.uuid}`
 			}
 
 			this.releaseItems.push(releaseItem)
 		}
-
-		if ((await this.collection.GetStoreBooks()).length > 1) {
-			if (this.dataService.userIsAdmin) {
-				this.backButtonLink = `/author/${this.author.uuid}/collection/${this.collection.uuid}`
-			} else {
-				this.backButtonLink = `/author/collection/${this.collection.uuid}`
-			}
-		}
 	}
 
 	BackButtonClick() {
-		this.router.navigate([this.backButtonLink])
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid])
+		} else {
+			this.router.navigate(["author", "book", this.book.uuid])
+		}
 	}
 }
