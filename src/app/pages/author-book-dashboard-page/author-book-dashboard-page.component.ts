@@ -98,6 +98,14 @@ export class AuthorBookDashboardPageComponent {
 		}
 	}
 
+	ShowReleasesButtonClick() {
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "releases"])
+		} else {
+			this.router.navigate(["author", "book", this.book.uuid, "releases"])
+		}
+	}
+
 	async CancelPublishingButtonClick() {
 		this.loading = true
 

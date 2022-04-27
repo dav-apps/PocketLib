@@ -34,6 +34,14 @@
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
+
+			<div class="m-1">
+				<dav-button
+					[disabled]="loading"
+					(click)="ShowReleasesButtonClick()">
+					{{ locale.showReleases }}
+				</dav-button>
+			</div>
 		</div>
 	</div>
 
@@ -59,6 +67,14 @@
 					[disabled]="loading"
 					(click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
+				</dav-button>
+			</div>
+
+			<div class="m-1">
+				<dav-button
+					[disabled]="loading"
+					(click)="ShowReleasesButtonClick()">
+					{{ locale.showReleases }}
 				</dav-button>
 			</div>
 		</div>

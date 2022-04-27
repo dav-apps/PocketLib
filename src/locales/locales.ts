@@ -135,6 +135,7 @@ const enDefaults = {
 		inReviewDescription: "We will notify you as soon as your book is published.",
 		hidden: "Your book is not listed",
 		showDetails: "Show details",
+		showReleases: "Show releases",
 		cancelPublishing: "Cancel publishing",
 		publish: "Publish",
 		unpublish: "Unpublish"
@@ -589,6 +590,7 @@ const deDefaults = {
 		inReviewDescription: "Wir benachrichtigen dich, sobald dein Buch veröffentlicht wurde.",
 		hidden: "Dein Buch ist nicht gelistet.",
 		showDetails: "Details anzeigen",
+		showReleases: "Änderungsverlauf anzeigen",
 		cancelPublishing: "Veröffentlichung abbrechen",
 		publish: "Veröffentlichen",
 		unpublish: "Veröffentlichung aufheben"
