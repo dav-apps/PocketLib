@@ -48,7 +48,8 @@
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
-					(filePick)="CoverUpload($event)">
+					(filePick)="CoverUpload($event)"
+					*ngIf="release == null">
 					{{ locale.uploadCover }}
 				</dav-button>
 			</div>
@@ -82,7 +83,8 @@
 				<dav-button
 					type="accent"
 					[disabled]="descriptionLoading"
-					(click)="EditDescription()">
+					(click)="EditDescription()"
+					*ngIf="release == null">
 					{{ editDescription ? locale.save : locale.edit }}
 				</dav-button>
 
@@ -103,7 +105,7 @@
 			<div id="book-details-language-data" class="d-flex book-details-data">
 				<pocketlib-language-dropdown
 					[language]="book.language"
-					[disabled]="book.status == 2 || book.status == 3"
+					[disabled]="(book.status == 2 || book.status == 3) && release != null"
 					(updated)="SetLanguage($event)">
 				</pocketlib-language-dropdown>
 			</div>
@@ -127,7 +129,8 @@
 					<button type="button" 
 						class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 						style="height: 35px; padding: 3px 6px; font-size: 16px"
-						(click)="ShowCategoriesDialog()">
+						(click)="ShowCategoriesDialog()"
+						*ngIf="release == null">
 						<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
 					</button>
 				</div>
@@ -154,7 +157,7 @@
 			<div id="book-details-isbn-data" class="d-flex text-color book-details-data">
 				<pocketlib-isbn-input
 					#isbnInput
-					[canEdit]="book.status == 0 || book.status == 1"
+					[canEdit]="(book.status == 0 || book.status == 1) && release != null"
 					(update)="UpdateIsbn($event)">
 				</pocketlib-isbn-input>
 			</div>
@@ -177,7 +180,7 @@
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
-						*ngIf="book.status == 0 || book.status == 1">
+						*ngIf="(book.status == 0 || book.status == 1) && release != null">
 						{{ locale.uploadBookFile }}
 					</dav-button>
 
