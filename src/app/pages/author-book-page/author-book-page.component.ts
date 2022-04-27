@@ -73,7 +73,6 @@ export class AuthorBookPageComponent {
 	coverLoading: boolean = false
 	bookFileUploaded: boolean = false
 	bookFileLoading: boolean = false
-	publishingOrUnpublishing: boolean = false
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
 	isbnUpdating: boolean = false
@@ -442,23 +441,6 @@ export class AuthorBookPageComponent {
 		}
 	}
 
-	async PublishOrUnpublishBook(status: string) {
-		this.publishingOrUnpublishing = true
-		this.statusLoading = true
-
-		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
-				uuid: this.uuid,
-				status,
-				fields: [StoreBookField.status]
-			})
-		)
-
-		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
-	}
-
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
 		if (this.editDescription) {
 			// The description was updated
@@ -526,13 +508,6 @@ export class AuthorBookPageComponent {
 						this.isbnInput.SetError(this.locale.errors.unexpectedError)
 						break
 				}
-			}
-		} else if (this.publishingOrUnpublishing) {
-			this.publishingOrUnpublishing = false
-			this.statusLoading = false
-
-			if (isSuccessStatusCode(response.status)) {
-				this.book.status = GetStoreBookStatusByString((response as ApiResponse<StoreBookResource>).data.status)
 			}
 		} else {
 			// The title was updated
