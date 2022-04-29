@@ -144,7 +144,7 @@
 			<div id="book-details-price-data" class="book-details-data">
 				<pocketlib-price-input
 					#priceInput
-					[canEdit]="book.status == 0 || book.status == 1"
+					[canEdit]="release == null"
 					(update)="UpdatePrice($event)">
 				</pocketlib-price-input>
 			</div>
@@ -157,7 +157,7 @@
 			<div id="book-details-isbn-data" class="d-flex text-color book-details-data">
 				<pocketlib-isbn-input
 					#isbnInput
-					[canEdit]="(book.status == 0 || book.status == 1) && release != null"
+					[canEdit]="release == null"
 					(update)="UpdateIsbn($event)">
 				</pocketlib-isbn-input>
 			</div>
@@ -180,7 +180,7 @@
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
-						*ngIf="(book.status == 0 || book.status == 1) && release != null">
+						*ngIf="release == null">
 						{{ locale.uploadBookFile }}
 					</dav-button>
 
@@ -213,6 +213,14 @@
 							*ngIf="statusLoading">
 						</dav-progress-ring>
 					</div>
+				</div>
+
+				<div *ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+					<dav-button
+						type="accent"
+						(click)="PublishChanges()">
+						{{ locale.publishChanges }}
+					</dav-button>
 				</div>
 			</div>
 		</div>
@@ -376,7 +384,7 @@
 				<div style="grid-column: 2; grid-row: 3">
 					<pocketlib-price-input
 						#priceInput
-						[canEdit]="book.status == 0 || book.status == 1"
+						[canEdit]="release == null"
 						(update)="UpdatePrice($event)">
 					</pocketlib-price-input>
 				</div>
@@ -389,7 +397,7 @@
 				<div class="d-flex text-color" style="grid-column: 2; grid-row: 4;">
 					<pocketlib-isbn-input
 						#isbnInput
-						[canEdit]="book.status == 0 || book.status == 1"
+						[canEdit]="release == null"
 						(update)="UpdateIsbn($event)">
 					</pocketlib-isbn-input>
 				</div>
@@ -412,7 +420,7 @@
 							accept="application/epub+zip"
 							[disabled]="bookFileLoading"
 							(filePick)="BookFileUpload($event)"
-							*ngIf="book.status == 0 || book.status == 1">
+							*ngIf="release == null">
 							{{ locale.uploadBookFile }}
 						</dav-button>
 
@@ -445,6 +453,14 @@
 								*ngIf="statusLoading">
 							</dav-progress-ring>
 						</div>
+					</div>
+
+					<div *ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+						<dav-button
+							type="accent"
+							(click)="PublishChanges()">
+							{{ locale.publishChanges }}
+						</dav-button>
 					</div>
 				</div>
 			</div>

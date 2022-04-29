@@ -13,8 +13,13 @@ import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
 import { StoreBook } from 'src/app/models/StoreBook'
 import { StoreBookRelease } from 'src/app/models/StoreBookRelease'
 import * as ErrorCodes from 'src/constants/errorCodes'
-import { StoreBookStatus, StoreBookField, StoreBookResource } from 'src/app/misc/types'
-import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
+import {
+	StoreBookStatus,
+	StoreBookReleaseStatus,
+	StoreBookField,
+	StoreBookResource
+} from 'src/app/misc/types'
+import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 
 @Component({
@@ -80,6 +85,7 @@ export class AuthorBookPageComponent {
 	categoriesSelectionDialogLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
+	changes: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -178,6 +184,14 @@ export class AuthorBookPageComponent {
 			await book.GetCoverContent().then(result => {
 				if (result != null) this.coverContent = result
 			})
+
+			// Check if there are any changes
+			let lastRelease = this.releases[0]
+
+			this.changes = (
+				(this.book.status == StoreBookStatus.Published || this.book.status == StoreBookStatus.Hidden)
+				&& lastRelease.status == StoreBookReleaseStatus.Unpublished
+			)
 		}
 
 		this.priceInput.SetPrice(this.book.price)
@@ -376,6 +390,7 @@ export class AuthorBookPageComponent {
 		this.coverLoading = false
 
 		if (isSuccessStatusCode(coverUploadResponse.status)) {
+			this.changes = true
 			this.author.ClearSeries()
 			this.collection.ClearStoreBooks()
 
@@ -417,6 +432,7 @@ export class AuthorBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.fileName = file.name
+			this.changes = true
 		} else {
 			// Show error
 			this.errorMessage = this.locale.errors.unexpectedErrorLong
@@ -446,6 +462,10 @@ export class AuthorBookPageComponent {
 			this.errorMessage = this.locale.errors.unexpectedErrorLong
 			this.statusLoading = false
 		}
+	}
+
+	PublishChanges() {
+		
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
@@ -539,6 +559,7 @@ export class AuthorBookPageComponent {
 		}
 
 		if (isSuccessStatusCode(response.status)) {
+			this.changes = true
 			this.author.ClearSeries()
 			this.collection.ClearStoreBooks()
 
