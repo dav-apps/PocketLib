@@ -36,6 +36,7 @@ export class AuthorBookPageComponent {
 	dualScreenFoldMargin: number = 0
 	uuid: string
 	author: Author
+	storeBook: StoreBook
 	collection: StoreBookCollection
 	releases: StoreBookRelease[]
 	release: StoreBookRelease
@@ -69,6 +70,13 @@ export class AuthorBookPageComponent {
 	editTitleDialogLoading: boolean = false
 	editTitleDialogTitle: string = ""
 	editTitleDialogTitleError: string = ""
+	publishChangesDialogVisible: boolean = false
+	publishChangesDialogLoading: boolean = false
+	publishChangesDialogReleaseName: string = ""
+	publishChangesDialogReleaseNotes: string = ""
+	publishChangesDialogReleaseNameError: string = ""
+	publishChangesDialogReleaseNotesError: string = ""
+	changes: boolean = false
 	editDescription: boolean = false
 	newDescription: string = ""
 	newDescriptionError: string = ""
@@ -85,7 +93,6 @@ export class AuthorBookPageComponent {
 	categoriesSelectionDialogLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
-	changes: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -131,6 +138,7 @@ export class AuthorBookPageComponent {
 			book = (await collection.GetStoreBooks()).find(b => b.uuid == this.uuid)
 
 			if (book != null) {
+				this.storeBook = book
 				this.collection = collection
 				break
 			}
@@ -321,6 +329,7 @@ export class AuthorBookPageComponent {
 		this.LoadCategories(categories)
 		this.categoriesSelectionDialogVisible = false
 		this.categoriesSelectionDialogLoading = false
+		this.ShowChanges()
 	}
 
 	async UpdatePrice(price: number) {
@@ -390,14 +399,7 @@ export class AuthorBookPageComponent {
 		this.coverLoading = false
 
 		if (isSuccessStatusCode(coverUploadResponse.status)) {
-			this.changes = true
-			this.author.ClearSeries()
-			this.collection.ClearStoreBooks()
-
-			this.cachingService.ClearApiRequestCache(
-				this.apiService.RetrieveStoreBook.name,
-				this.apiService.RetrieveStoreBookCover.name
-			)
+			this.ShowChanges()
 		} else {
 			// Remove the cover
 			this.coverContent = oldCoverContent
@@ -432,7 +434,7 @@ export class AuthorBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.fileName = file.name
-			this.changes = true
+			this.ShowChanges()
 		} else {
 			// Show error
 			this.errorMessage = this.locale.errors.unexpectedErrorLong
@@ -464,8 +466,68 @@ export class AuthorBookPageComponent {
 		}
 	}
 
-	PublishChanges() {
-		
+	async ShowPublishChangesDialog() {
+		this.ClearPublishChangesErrors()
+		this.publishChangesDialogLoading = false
+		this.publishChangesDialogVisible = true
+
+		// Reload the releases
+		this.storeBook.ClearReleases()
+		this.releases = await this.storeBook.GetReleases()
+	}
+
+	ClearPublishChangesErrors() {
+		this.publishChangesDialogReleaseNameError = ""
+		this.publishChangesDialogReleaseNotesError = ""
+	}
+
+	async PublishChanges() {
+		let lastRelease = this.releases[0]
+		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
+		this.publishChangesDialogLoading = true
+
+		let response = await this.apiService.PublishStoreBookRelease({
+			uuid: lastRelease.uuid,
+			releaseName: this.publishChangesDialogReleaseName,
+			releaseNotes: this.publishChangesDialogReleaseNotes
+		})
+
+		this.publishChangesDialogLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			this.publishChangesDialogVisible = false
+			this.publishChangesDialogLoading = false
+			this.publishChangesDialogReleaseName = ""
+			this.publishChangesDialogReleaseNotes = ""
+
+			this.changes = false
+			this.author.ClearSeries()
+			this.storeBook.ClearReleases()
+			this.collection.ClearStoreBooks()
+
+			this.cachingService.ClearApiRequestCache(
+				this.apiService.RetrieveStoreBook.name,
+				this.apiService.RetrieveStoreBookCover.name
+			)
+		} else {
+			// Show error message
+			let errorCode = (response as ApiErrorResponse).errors[0].code
+
+			switch (errorCode) {
+				case ErrorCodes.ReleaseNameTooShort:
+					this.publishChangesDialogReleaseNameError = this.locale.errors.releaseNameTooShort
+					break
+				case ErrorCodes.ReleaseNameTooLong:
+					this.publishChangesDialogReleaseNameError = this.locale.errors.releaseNameTooLong
+					break
+				case ErrorCodes.ReleaseNotesTooShort:
+					this.publishChangesDialogReleaseNotesError = this.locale.errors.releaseNotesTooShort
+					break
+				case ErrorCodes.ReleaseNotesTooLong:
+					this.publishChangesDialogReleaseNotesError = this.locale.errors.releaseNotesTooLong
+					break
+			}
+		}
 	}
 
 	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
@@ -559,14 +621,18 @@ export class AuthorBookPageComponent {
 		}
 
 		if (isSuccessStatusCode(response.status)) {
-			this.changes = true
-			this.author.ClearSeries()
-			this.collection.ClearStoreBooks()
-
-			this.cachingService.ClearApiRequestCache(
-				this.apiService.RetrieveStoreBook.name,
-				this.apiService.RetrieveStoreBookCover.name
-			)
+			this.ShowChanges()
 		}
+	}
+
+	ShowChanges() {
+		this.changes = true
+		this.author.ClearSeries()
+		this.collection.ClearStoreBooks()
+
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.RetrieveStoreBook.name,
+			this.apiService.RetrieveStoreBookCover.name
+		)
 	}
 }

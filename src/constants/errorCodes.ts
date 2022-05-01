@@ -22,6 +22,8 @@ export const CollectionMissing = 2106
 export const TitleMissing = 2107
 export const KeyMissing = 2108
 export const StoreBookMissing = 2109
+export const CurrencyMissing = 2110
+export const ReleaseNameMissing = 2111
 
 // Fields with wrong type
 export const FirstNameWrongType = 2200
@@ -44,6 +46,10 @@ export const CategoriesWrongType = 2216
 export const PublishedWrongType = 2217
 export const KeyWrongType = 2218
 export const StoreBookWrongType = 2219
+export const CurrencyWrongType = 2220
+export const StoreBooksWrongType = 2222
+export const ReleaseNameWrongType = 2223
+export const ReleaseNotesWrongType = 2224
 
 // Too short fields
 export const FirstNameTooShort = 2300
@@ -53,6 +59,8 @@ export const BioTooShort = 2303
 export const TitleTooShort = 2304
 export const DescriptionTooShort = 2305
 export const KeyTooShort = 2306
+export const ReleaseNameTooShort = 2307
+export const ReleaseNotesTooShort = 2308
 
 // Too long fields
 export const FirstNameTooLong = 2400
@@ -62,6 +70,8 @@ export const BioTooLong = 2403
 export const TitleTooLong = 2404
 export const DescriptionTooLong = 2405
 export const KeyTooLong = 2406
+export const ReleaseNameTooLong = 2407
+export const ReleaseNotesTooLong = 2408
 
 // Invalid fields
 export const WebsiteUrlInvalid = 2500

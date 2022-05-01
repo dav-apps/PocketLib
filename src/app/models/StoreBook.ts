@@ -1,4 +1,6 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { ApiService } from "../services/api-service"
+import { CachingService } from "../services/caching-service"
 import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
@@ -9,7 +11,6 @@ import {
 	ListResponseData
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
-import { ApiService } from "../services/api-service"
 
 export class StoreBook {
 	public uuid: string
@@ -36,7 +37,11 @@ export class StoreBook {
 		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource[]>
 	}
 
-	constructor(storeBookResource: StoreBookResource, private apiService: ApiService) {
+	constructor(
+		storeBookResource: StoreBookResource,
+		private apiService: ApiService,
+		private cachingService: CachingService
+	) {
 		this.uuid = storeBookResource.uuid
 		this.collection = storeBookResource.collection
 		this.title = storeBookResource.title
@@ -122,5 +127,10 @@ export class StoreBook {
 
 		this.releases.itemsPromiseHolder.Resolve(items)
 		return items
+	}
+
+	ClearReleases() {
+		this.releases.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookReleases.name)
 	}
 }

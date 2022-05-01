@@ -149,6 +149,13 @@ const enDefaults = {
 		categoriesSelectionDialog: {
 			header: "Select categories"
 		},
+		publishChangesDialog: {
+			header: "Publish changes",
+			releaseNameTextfieldLabel: "Release name",
+			releaseNameTextfieldPlaceholder: "What was changed?",
+			releaseNotesTextfieldLabel: "Release details",
+			releaseNotesTextfieldPlaceholder: "Here you can describe in detail what changes you have made (optional)"
+		},
 		cover: "Cover",
 		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
@@ -176,6 +183,10 @@ const enDefaults = {
 			titleTooLong: "The title is too long",
 			descriptionTooShort: "The description is too short",
 			descriptionTooLong: "The description is too long",
+			releaseNameTooShort: "The name is too short",
+			releaseNameTooLong: "The name is too long",
+			releaseNotesTooShort: "The details are too short",
+			releaseNotesTooLong: "The details are too long",
 			priceInvalid: "The price is invalid",
 			isbnInvalid: "The ISBN is invalid",
 			unexpectedError: "An unexpected error occured",
@@ -602,6 +613,13 @@ const deDefaults = {
 		categoriesSelectionDialog: {
 			header: "Kategorien auswählen"
 		},
+		publishChangesDialog: {
+			header: "Änderungen veröffentlichen",
+			releaseNameTextfieldLabel: "Name der Veröffentlichung",
+			releaseNameTextfieldPlaceholder: "Was wurde geändert?",
+			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
+			releaseNotesTextfieldPlaceholder: "Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)"
+		},
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
 		uploadCover: "Cover hochladen",
@@ -629,6 +647,10 @@ const deDefaults = {
 			titleTooLong: "Der Titel ist zu lang",
 			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
+			releaseNameTooShort: "Der Name ist zu kurz",
+			releaseNameTooLong: "Der Name ist zu lang",
+			releaseNotesTooShort: "Die Details sind zu kurz",
+			releaseNotesTooLong: "Die Details sind zu lang",
 			priceInvalid: "Der Preis ist ungültig",
 			isbnInvalid: "Die ISBN ist ungültig",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten",

@@ -81,7 +81,7 @@ export class StoreBookSeries {
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(new StoreBook(item, this.apiService))
+			items.push(new StoreBook(item, this.apiService, this.cachingService))
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)

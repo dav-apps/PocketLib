@@ -215,10 +215,14 @@
 					</div>
 				</div>
 
-				<div *ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+				<div
+					class="d-flex"
+					*ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+
 					<dav-button
 						type="accent"
-						(click)="PublishChanges()">
+						[disabled]="publishChangesLoading"
+						(click)="ShowPublishChangesDialog()">
 						{{ locale.publishChanges }}
 					</dav-button>
 				</div>
@@ -455,10 +459,14 @@
 						</div>
 					</div>
 
-					<div *ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+					<div
+						class="d-flex"
+						*ngIf="(book.status == 2 || book.status == 3) && release == null && changes">
+
 						<dav-button
 							type="accent"
-							(click)="PublishChanges()">
+							[disabled]="publishChangesLoading"
+							(click)="ShowPublishChangesDialog()">
 							{{ locale.publishChanges }}
 						</dav-button>
 					</div>
@@ -509,4 +517,40 @@
 			#categoriesSelection>
 		</pocketlib-categories-selection>
 	</div>
+</dav-dialog>
+
+<dav-dialog
+	[header]="locale.publishChangesDialog.header"
+	[primaryButtonText]="locale.publish"
+	[defaultButtonText]="locale.cancel"
+	[visible]="publishChangesDialogVisible"
+	[loading]="publishChangesDialogLoading"
+	(primaryButtonClick)="PublishChanges()"
+	(defaultButtonClick)="publishChangesDialogVisible = false">
+
+	<form>
+		<!-- Release name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="publishChangesDialogReleaseName"
+				[label]="locale.publishChangesDialog.releaseNameTextfieldLabel"
+				[placeholder]="locale.publishChangesDialog.releaseNameTextfieldPlaceholder"
+				[errorMessage]="publishChangesDialogReleaseNameError"
+				[disabled]="publishChangesDialogLoading"
+				(change)="publishChangesDialogReleaseName = $event.detail.value; ClearPublishChangesErrors()"
+				(enter)="PublishChanges()">
+			</dav-textfield>
+		</div>
+
+		<!-- Release notes -->
+		<div class="mb-3">
+			<dav-textarea
+				[value]="publishChangesDialogReleaseNotes"
+				[label]="locale.publishChangesDialog.releaseNotesTextfieldLabel"
+				[placeholder]="locale.publishChangesDialog.releaseNotesTextfieldPlaceholder"
+				[disabled]="publishChangesDialogLoading"
+				(change)="publishChangesDialogReleaseNotes = $event.detail.value; ClearPublishChangesErrors()">
+			</dav-textarea>
+		</div>
+	</form>
 </dav-dialog>
