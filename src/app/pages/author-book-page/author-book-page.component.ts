@@ -628,6 +628,7 @@ export class AuthorBookPageComponent {
 	ShowChanges() {
 		this.changes = true
 		this.author.ClearSeries()
+		this.storeBook.ClearReleases()
 		this.collection.ClearStoreBooks()
 
 		this.cachingService.ClearApiRequestCache(

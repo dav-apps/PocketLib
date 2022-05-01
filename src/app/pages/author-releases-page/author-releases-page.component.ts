@@ -5,6 +5,7 @@ import { DataService } from "src/app/services/data-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
+import { StoreBookReleaseStatus } from "src/app/misc/types"
 
 interface ReleaseItem {
 	name: string
@@ -69,6 +70,8 @@ export class AuthorReleasesPageComponent {
 		this.title = this.book.title
 
 		for (let release of releases) {
+			if (release.status == StoreBookReleaseStatus.Unpublished) continue
+
 			let releaseItem: ReleaseItem = {
 				name: release.releaseName,
 				link: ""
