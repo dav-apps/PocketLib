@@ -365,6 +365,7 @@ export function ResponseDataToStoreBookReleaseResource(responseData: any): Store
 		storeBook: responseData.store_book,
 		releaseName: responseData.release_name,
 		releaseNotes: responseData.release_notes,
+		publishedAt: responseData.published_at,
 		title: responseData.title,
 		description: responseData.description,
 		price: responseData.price,

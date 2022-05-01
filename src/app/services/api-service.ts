@@ -1456,6 +1456,41 @@ export class ApiService {
 			return await this.ListStoreBookReleases(params)
 		}
 	}
+
+	async PublishStoreBookRelease(params: {
+		uuid: string,
+		releaseName: string,
+		releaseNotes?: string,
+		fields?: StoreBookReleaseField[]
+	}): Promise<ApiResponse<StoreBookReleaseResource> | ApiErrorResponse> {
+		try {
+			let response = await axios({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}/publish`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': 'application/json'
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true),
+				data: PrepareRequestParams({
+					release_name: params.releaseName,
+					release_notes: params.releaseNotes
+				})
+			})
+
+			return {
+				status: response.status,
+				data: ResponseDataToStoreBookReleaseResource(response.data)
+			}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.PublishStoreBookRelease(params)
+		}
+	}
 	//#endregion
 
 	//#region Category

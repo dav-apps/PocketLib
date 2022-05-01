@@ -334,6 +334,7 @@ export interface StoreBookReleaseResource {
 	storeBook: string
 	releaseName: string
 	releaseNotes: string
+	publishedAt: number
 	title: string
 	description: string
 	price: number
@@ -355,6 +356,7 @@ export enum StoreBookReleaseField {
 	storeBook = "store_book",
 	releaseName = "release_name",
 	releaseNotes = "release_notes",
+	publishedAt = "published_at",
 	title = "title",
 	description = "description",
 	price = "price",
@@ -375,6 +377,7 @@ export enum StoreBookReleaseListField {
 	items_storeBook = "items.store_book",
 	items_releaseName = "items.release_name",
 	items_releaseNotes = "items.release_notes",
+	items_publishedAt = "items.published_at",
 	items_title = "items.title",
 	items_description = "items.description",
 	items_price = "items.price",
