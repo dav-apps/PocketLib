@@ -7,6 +7,8 @@ import { CachingService } from 'src/app/services/caching-service'
 import { RoutingService } from 'src/app/services/routing-service'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
+import { UpdateBookOrder } from 'src/app/models/BookOrder'
+import { GetBook } from 'src/app/models/BookManager'
 import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
 import {
 	AuthorResource,
@@ -420,7 +422,15 @@ export class StoreBookPageComponent {
 			await DownloadTableObject(responseData.uuid)
 			await DownloadTableObject(responseData.file)
 
-			await this.dataService.ReloadBook(responseData.uuid)
+			let book = await GetBook(responseData.uuid)
+
+			if (book != null) {
+				// Add the new book to the first position of the books
+				this.dataService.books.unshift(book)
+
+				// Update the order of the books
+				await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
+			}
 
 			// Clear the ApiCache for GetStoreBook
 			this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
