@@ -1318,7 +1318,7 @@ export class ApiService {
 				headers: {
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type,
-					'Content-Disposition': `attachment; filename="${params.name}"`
+					'Content-Disposition': `attachment; filename="${encodeURIComponent(params.name)}"`
 				},
 				params: PrepareRequestParams({
 					fields: params.fields
