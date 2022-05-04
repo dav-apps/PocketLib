@@ -6,7 +6,8 @@ import {
 	ApiErrorResponse,
 	BlobToBase64,
 	ConvertErrorToApiErrorResponse,
-	HandleApiError
+	HandleApiError,
+	PrepareRequestParams
 } from 'dav-js'
 import { CachingService } from './caching-service'
 import { environment } from 'src/environments/environment'
@@ -48,7 +49,6 @@ import {
 	PurchaseField
 } from 'src/app/misc/types'
 import {
-	PrepareRequestParams,
 	ResponseDataToAuthorResource,
 	ResponseDataToAuthorBioResource,
 	ResponseDataToAuthorProfileImageResource,

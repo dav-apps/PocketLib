@@ -210,25 +210,6 @@ export function AdaptCoverWidthHeightToAspectRatio(
 	return aproxWidth
 }
 
-export function PrepareRequestParams(params: Object, joinArrays = false) {
-	let newParams = {}
-
-	for (let key of Object.keys(params)) {
-		if (params[key] == null) continue
-
-		let value = params[key]
-
-		if (joinArrays && Array.isArray(value)) {
-			if (value.length == 0) continue
-			value = value.join(',')
-		}
-
-		newParams[key] = value
-	}
-
-	return newParams
-}
-
 export function ResponseDataToAuthorResource(responseData: any): AuthorResource {
 	let authorResource: AuthorResource = {
 		uuid: responseData.uuid,
