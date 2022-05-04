@@ -1,6 +1,13 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
-import { ApiResponse, ApiErrorResponse, DownloadTableObject, isSuccessStatusCode } from 'dav-js'
+import {
+	ApiResponse,
+	ApiErrorResponse,
+	CheckoutSessionsController,
+	CreateCheckoutSessionResponseData,
+	DownloadTableObject,
+	isSuccessStatusCode
+} from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
@@ -16,8 +23,6 @@ import {
 	BookResource,
 	BookField,
 	StoreBookStatus,
-	PurchaseResource,
-	PurchaseField,
 	StoreBookCollectionResource,
 	StoreBookCollectionField,
 	StoreBookResource,
@@ -81,6 +86,7 @@ export class StoreBookPageComponent {
 		profileImage: null
 	}
 	coverContent: string
+	coverUrl: string = ""
 	coverAlt: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageAlt: string = ""
@@ -191,6 +197,8 @@ export class StoreBookPageComponent {
 
 			// Load the cover
 			if (responseData.cover?.url != null) {
+				this.coverUrl = responseData.cover?.url
+
 				this.apiService.GetFile({ url: responseData.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.coverContent = (fileResponse as ApiResponse<string>).data
@@ -391,12 +399,19 @@ export class StoreBookPageComponent {
 
 	private async CreatePurchaseForBook(): Promise<boolean> {
 		// Purchase this book directly
-		let createPurchaseResponse = await this.apiService.CreatePurchase({
-			storeBook: this.uuid,
-			currency: "eur"
+		let currentUrl = environment.baseUrl + this.router.url
+
+		let response = await CheckoutSessionsController.CreateCheckoutSession({
+			mode: "payment",
+			currency: "eur",
+			productName: this.book.title,
+			productImage: this.coverUrl,
+			tableObjects: [this.uuid],
+			successUrl: currentUrl,
+			cancelUrl: currentUrl
 		})
 
-		if (isSuccessStatusCode(createPurchaseResponse.status)) {
+		if (isSuccessStatusCode(response.status)) {
 			this.book.purchased = true
 
 			// Clear the ApiCache for GetStoreBook
@@ -491,22 +506,25 @@ export class StoreBookPageComponent {
 	}
 
 	async NavigateToPurchasePage() {
-		// Create the purchase on the server
-		let createPurchaseResponse = await this.apiService.CreatePurchase({
-			storeBook: this.uuid,
+		let currentUrl = environment.baseUrl + this.router.url
+
+		let response = await CheckoutSessionsController.CreateCheckoutSession({
+			mode: "payment",
 			currency: "eur",
-			fields: [PurchaseField.uuid]
+			productName: this.book.title,
+			productImage: this.coverUrl,
+			tableObjects: [this.uuid],
+			successUrl: currentUrl,
+			cancelUrl: currentUrl
 		})
-		this.buyBookDialogVisible = false
 
-		if (isSuccessStatusCode(createPurchaseResponse.status)) {
-			// Navigate to the purchase page on the website
-			let url = environment.baseUrl + this.router.url
-			let purchaseUuid = (createPurchaseResponse as ApiResponse<PurchaseResource>).data.uuid
-
-			window.location.href = `${environment.websiteBaseUrl}/purchase/${purchaseUuid}?redirectUrl=${url}`
+		if (isSuccessStatusCode(response.status)) {
+			// Navigate to the checkout session url
+			let responseData = (response as ApiResponse<CreateCheckoutSessionResponseData>).data
+			window.location.href = responseData.sessionUrl
 		} else {
 			// Show error
+			this.buyBookDialogVisible = false
 			this.errorDialogVisible = true
 		}
 	}
