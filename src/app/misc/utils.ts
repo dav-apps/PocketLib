@@ -13,7 +13,6 @@ import {
 	StoreBookReleaseResource,
 	CategoryResource,
 	BookResource,
-	PurchaseResource,
 	Language
 } from './types'
 
@@ -396,21 +395,5 @@ export function ResponseDataToBookResource(responseData: any): BookResource {
 		uuid: responseData.uuid,
 		storeBook: responseData.store_book,
 		file: responseData.file
-	}
-}
-
-export function ResponseDataToPurchaseResource(responseData: any): PurchaseResource {
-	return {
-		id: responseData.id,
-		userId: responseData.user_id,
-		uuid: responseData.uuid,
-		paymentIntentId: responseData.payment_intent_id,
-		providerName: responseData.provider_name,
-		providerImage: responseData.provider_image,
-		productName: responseData.product_name,
-		productImage: responseData.product_image,
-		price: responseData.price,
-		currency: responseData.currency,
-		completed: responseData.completed
 	}
 }

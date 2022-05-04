@@ -44,9 +44,7 @@ import {
 	CategoryResource,
 	CategoryListField,
 	BookResource,
-	BookField,
-	PurchaseResource,
-	PurchaseField
+	BookField
 } from 'src/app/misc/types'
 import {
 	ResponseDataToAuthorResource,
@@ -60,8 +58,7 @@ import {
 	ResponseDataToStoreBookFileResource,
 	ResponseDataToStoreBookReleaseResource,
 	ResponseDataToCategoryResource,
-	ResponseDataToBookResource,
-	ResponseDataToPurchaseResource
+	ResponseDataToBookResource
 } from 'src/app/misc/utils'
 
 @Injectable()
@@ -1581,42 +1578,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.CreateBook(params)
-		}
-	}
-	//#endregion
-
-	//#region Purchase
-	async CreatePurchase(params: {
-		storeBook: string,
-		currency: string,
-		fields?: PurchaseField[]
-	}): Promise<ApiResponse<PurchaseResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: 'post',
-				url: `${environment.pocketlibApiBaseUrl}/purchases`,
-				headers: {
-					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
-				},
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
-				data: PrepareRequestParams({
-					store_book: params.storeBook,
-					currency: params.currency
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToPurchaseResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.CreatePurchase(params)
 		}
 	}
 	//#endregion

@@ -434,34 +434,4 @@ export enum BookField {
 	file = "file"
 }
 //#endregion
-
-//#region Purchase
-export interface PurchaseResource {
-	id: number
-	userId: number
-	uuid: string
-	paymentIntentId: string
-	providerName: string
-	providerImage: string
-	productName: string
-	productImage: string
-	price: number
-	currency: string
-	completed: boolean
-}
-
-export enum PurchaseField {
-	id = "id",
-	userId = "user_id",
-	uuid = "uuid",
-	paymentIntentId = "payment_intent_id",
-	providerName = "provider_name",
-	providerImage = "provider_image",
-	productName = "product_name",
-	productImage = "product_image",
-	price = "price",
-	currency = "currency",
-	completed = "completed"
-}
-//#endregion
 //#endregion
