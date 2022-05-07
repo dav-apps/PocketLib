@@ -156,6 +156,7 @@ const enDefaults = {
 			releaseNotesTextfieldLabel: "Release details",
 			releaseNotesTextfieldPlaceholder: "Here you can describe in detail what changes you have made (optional)"
 		},
+		releaseNotes: "Release details",
 		cover: "Cover",
 		noCover: "No cover uploaded",
 		uploadCover: "Upload cover",
@@ -620,6 +621,7 @@ const deDefaults = {
 			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
 			releaseNotesTextfieldPlaceholder: "Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)"
 		},
+		releaseNotes: "Details der Veröffentlichung",
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
 		uploadCover: "Cover hochladen",
