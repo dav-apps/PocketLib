@@ -1,6 +1,8 @@
 import {
 	StoreBookStatus,
 	StoreBookReleaseStatus,
+	PublisherResource,
+	PublisherProfileImageResource,
 	AuthorResource,
 	AuthorBioResource,
 	AuthorProfileImageResource,
@@ -207,6 +209,36 @@ export function AdaptCoverWidthHeightToAspectRatio(
 	}
 
 	return aproxWidth
+}
+
+export function ResponseDataToPublisherResource(responseData: any): PublisherResource {
+	let publisherResource: PublisherResource = {
+		uuid: responseData.uuid,
+		name: responseData.name,
+		description: responseData.description,
+		websiteUrl: responseData.website_url,
+		facebookUsername: responseData.facebook_username,
+		instagramUsername: responseData.instagram_username,
+		twitterUsername: responseData.twitter_username,
+		profileImage: null
+	}
+
+	if (responseData.profile_image != null) {
+		publisherResource.profileImage = {
+			url: responseData.profile_image.url,
+			blurhash: responseData.profile_image.blurhash
+		}
+	}
+
+	return publisherResource
+}
+
+export function ResponseDataToPublisherProfileImageResource(responseData: any): PublisherProfileImageResource {
+	return {
+		uuid: responseData.uuid,
+		url: responseData.url,
+		blurhash: responseData.blurhash
+	}
 }
 
 export function ResponseDataToAuthorResource(responseData: any): AuthorResource {

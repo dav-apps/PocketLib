@@ -73,6 +73,63 @@ export interface ListResponseData<T> {
 }
 
 //#region API types
+//#region Publisher
+export interface PublisherResource {
+	uuid: string
+	name: string
+	description: string
+	websiteUrl: string
+	facebookUsername: string
+	instagramUsername: string
+	twitterUsername: string
+	profileImage: {
+		url: string
+		blurhash: string
+	}
+}
+
+export enum PublisherField {
+	uuid = "uuid",
+	name = "name",
+	description = "description",
+	websiteUrl = "website_url",
+	facebookUsername = "facebook_username",
+	instagramUsername = "instagram_username",
+	twitterUsername = "twitter_username",
+	profileImage = "profile_image",
+	profileImage_url = "profile_image.url",
+	profileImage_blurhash = "profile_image.blurhash"
+}
+
+export enum PublisherListField {
+	type = "type",
+	items_uuid = "items.uuid",
+	items_name = "items.name",
+	items_description = "items.description",
+	items_websiteUrl = "items.website_url",
+	items_facebookUsername = "items.facebook_username",
+	items_instagramUsername = "items.instagram_username",
+	items_twitterUsername = "items.twitter_username",
+	items_profileImage = "items.profile_image",
+	items_profileImage_url = "items.profile_image.url",
+	items_profileImage_blurhash = "items.profile_image.blurhash"
+}
+//#endregion
+
+//#region PublisherProfileImage
+export interface PublisherProfileImageResource {
+	uuid: string
+	url: string
+	blurhash: string
+}
+
+export enum PublisherProfileImageType {
+	uuid = "uuid",
+	url = "url",
+	blurhash = "blurhash"
+}
+//#endregion
+
 //#region Author
 export interface AuthorResource {
 	uuid: string
