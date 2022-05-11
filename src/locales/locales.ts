@@ -94,6 +94,7 @@ const enDefaults = {
 		landingSection4Header: "Join a growing number of authors",
       createProfile: "Create your profile",
 		login: "Log in to create your profile",
+		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
 		createAuthorDialog: {
@@ -559,6 +560,7 @@ const deDefaults = {
 		landingSection4Header: "Trete einer wachsenden Anzahl an Autoren bei",
       createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
+		yourPublishers: "Deine Verlage",
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
 		createAuthorDialog: {
