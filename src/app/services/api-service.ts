@@ -14,6 +14,11 @@ import { environment } from 'src/environments/environment'
 import {
 	ListResponseData,
 	Language,
+	PublisherResource,
+	PublisherField,
+	PublisherListField,
+	PublisherProfileImageResource,
+	PublisherProfileImageField,
 	AuthorResource,
 	AuthorField,
 	AuthorListField,
@@ -47,6 +52,8 @@ import {
 	BookField
 } from 'src/app/misc/types'
 import {
+	ResponseDataToPublisherResource,
+	ResponseDataToPublisherProfileImageResource,
 	ResponseDataToAuthorResource,
 	ResponseDataToAuthorBioResource,
 	ResponseDataToAuthorProfileImageResource,
@@ -66,6 +73,280 @@ export class ApiService {
 	constructor(
 		private cachingService: CachingService
 	) { }
+
+	//#region Publisher functions
+	async CreatePublisher(params: {
+		name: string,
+		fields?: PublisherField[]
+	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
+		try {
+			let response = await axios({
+				method: 'post',
+				url: `${environment.pocketlibApiBaseUrl}/publishers`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': 'application/json'
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true),
+				data: PrepareRequestParams({
+					name: params.name
+				})
+			})
+
+			return {
+				status: response.status,
+				data: ResponseDataToPublisherResource(response.data)
+			}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.CreatePublisher(params)
+		}
+	}
+
+	async RetrievePublisher(params: {
+		uuid: string,
+		fields?: PublisherField[]
+	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.RetrievePublisher.name,
+			PrepareRequestParams({
+				uuid: params.uuid,
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
+				headers: {
+					Authorization: params.uuid == "mine" ? Dav.accessToken : null
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true)
+			})
+
+			let result = {
+				status: response.status,
+				data: ResponseDataToPublisherResource(response.data)
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.RetrievePublisher(params)
+		}
+	}
+
+	async ListPublishers(params: {
+		fields?: PublisherListField[]
+	}): Promise<ApiResponse<ListResponseData<PublisherResource>> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.ListPublishers.name,
+			PrepareRequestParams({
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/publishers`,
+				headers: {
+					Authorization: Dav.accessToken
+				},
+				params: PrepareRequestParams({
+					fields: params.fields,
+					mine: true
+				}, true)
+			})
+
+			let result = {
+				status: response.status,
+				data: {
+					type: response.data.type,
+					pages: response.data.pages,
+					items: []
+				}
+			}
+
+			for (let item of response.data.items) {
+				result.data.items.push(ResponseDataToPublisherResource(item))
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.ListPublishers(params)
+		}
+	}
+
+	async UpdatePublisher(params: {
+		uuid: string,
+		name?: string,
+		description?: string,
+		websiteUrl?: string,
+		facebookUsername?: string,
+		instagramUsername?: string,
+		twitterUsername?: string,
+		fields?: PublisherField[]
+	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
+		try {
+			let response = await axios({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': 'application/json'
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true),
+				data: PrepareRequestParams({
+					name: params.name,
+					description: params.description,
+					website_url: params.websiteUrl,
+					facebook_username: params.facebookUsername,
+					instagram_username: params.instagramUsername,
+					twitter_username: params.twitterUsername
+				})
+			})
+
+			return {
+				status: response.status,
+				data: ResponseDataToPublisherResource(response.data)
+			}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.UpdatePublisher(params)
+		}
+	}
+	//#endregion
+
+	//#region PublisherProfileImage
+	async RetrievePublisherProfileImage(params: {
+		uuid: string,
+		fields?: PublisherProfileImageField[]
+	}): Promise<ApiResponse<PublisherProfileImageResource> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.RetrievePublisherProfileImage.name,
+			PrepareRequestParams({
+				uuid: params.uuid,
+				fields: params.fields
+			}, true)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: 'get',
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/profile_image`,
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true)
+			})
+
+			let result = {
+				status: response.status,
+				data: ResponseDataToPublisherProfileImageResource(response.data)
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+
+			return await HandleApiError(error)
+		}
+	}
+
+	async UploadPublisherProfileImage(params: {
+		uuid: string,
+		type: string,
+		file: any,
+		fields?: PublisherProfileImageField[]
+	}): Promise<ApiResponse<PublisherProfileImageResource> | ApiErrorResponse> {
+		try {
+			let response = await axios({
+				method: 'put',
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/profile_image`,
+				headers: {
+					Authorization: Dav.accessToken,
+					'Content-Type': params.type
+				},
+				params: PrepareRequestParams({
+					fields: params.fields
+				}, true),
+				data: params.file
+			})
+
+			return {
+				status: response.status,
+				data: ResponseDataToPublisherProfileImageResource(response.data)
+			}
+		} catch (error) {
+			let renewSessionError = await HandleApiError(error)
+			if (renewSessionError != null) return renewSessionError
+
+			return await this.UploadPublisherProfileImage(params)
+		}
+	}
+	//#endregion
 
 	//#region Author functions
 	async CreateAuthor(params: {
@@ -233,12 +514,12 @@ export class ApiService {
 
 	async UpdateAuthor(params: {
 		uuid: string,
-		firstName: string,
-		lastName: string,
-		websiteUrl: string,
-		facebookUsername: string,
-		instagramUsername: string,
-		twitterUsername: string,
+		firstName?: string,
+		lastName?: string,
+		websiteUrl?: string,
+		facebookUsername?: string,
+		instagramUsername?: string,
+		twitterUsername?: string,
 		fields?: AuthorField[],
 		languages?: Language[]
 	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {

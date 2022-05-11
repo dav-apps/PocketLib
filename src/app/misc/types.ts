@@ -123,7 +123,7 @@ export interface PublisherProfileImageResource {
 	blurhash: string
 }
 
-export enum PublisherProfileImageType {
+export enum PublisherProfileImageField {
 	uuid = "uuid",
 	url = "url",
 	blurhash = "blurhash"
