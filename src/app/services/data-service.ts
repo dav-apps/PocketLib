@@ -17,6 +17,7 @@ import { PdfBook } from '../models/PdfBook'
 import { GetAllBooks, GetBook } from '../models/BookManager'
 import { Settings } from '../models/Settings'
 import { BookOrder } from '../models/BookOrder'
+import { Publisher } from '../models/Publisher'
 import { Author } from 'src/app/models/Author'
 import * as locales from 'src/locales/locales'
 import {
@@ -27,6 +28,8 @@ import {
 import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
 import {
+	PublisherResource,
+	PublisherListField,
 	AuthorResource,
 	AuthorField,
 	AuthorListField,
@@ -67,6 +70,8 @@ export class DataService {
 	userPromiseHolder = new PromiseHolder()
 	userAuthor: Author = null
 	userAuthorPromiseHolder = new PromiseHolder<Author>()
+	adminPublishers: Publisher[] = []
+	adminPublishersPromiseHolder = new PromiseHolder<Publisher[]>()
 	adminAuthors: Author[] = []
 	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
 	userIsAdmin: boolean = false
@@ -109,9 +114,34 @@ export class DataService {
 
 		if (this.dav.isLoggedIn) {
 			if (environment.admins.includes(this.dav.user.Id)) {
+				// Load the publishers of the admin
+				this.adminPublishers = []
+
+				let listPublishersResponse = await this.apiService.ListPublishers({
+					fields: [
+						PublisherListField.items_uuid,
+						PublisherListField.items_name,
+						PublisherListField.items_description,
+						PublisherListField.items_websiteUrl,
+						PublisherListField.items_facebookUsername,
+						PublisherListField.items_instagramUsername,
+						PublisherListField.items_twitterUsername,
+						PublisherListField.items_profileImage
+					]
+				})
+
+				if (isSuccessStatusCode(listPublishersResponse.status)) {
+					let listPublishersResponseData = (listPublishersResponse as ApiResponse<ListResponseData<PublisherResource>>).data
+
+					for (let item of listPublishersResponseData.items) {
+						this.adminPublishers.push(new Publisher(item))
+					}
+				}
+
+				// Load the authors of the admin
 				this.adminAuthors = []
 
-				let response = await this.apiService.ListAuthors({
+				let listAuthorsResponse = await this.apiService.ListAuthors({
 					mine: true,
 					fields: [
 						AuthorListField.items_uuid,
@@ -126,10 +156,10 @@ export class DataService {
 					languages: await this.GetStoreLanguages()
 				})
 
-				if (isSuccessStatusCode(response.status)) {
-					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+				if (isSuccessStatusCode(listAuthorsResponse.status)) {
+					let listAuthorsResponseData = (listAuthorsResponse as ApiResponse<ListResponseData<AuthorResource>>).data
 
-					for (let item of responseData.items) {
+					for (let item of listAuthorsResponseData.items) {
 						this.adminAuthors.push(
 							new Author(
 								item,
@@ -169,6 +199,7 @@ export class DataService {
 		}
 
 		this.userAuthorPromiseHolder.Resolve(this.userAuthor)
+		this.adminPublishersPromiseHolder.Resolve(this.adminPublishers)
 		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors)
 	}
 
