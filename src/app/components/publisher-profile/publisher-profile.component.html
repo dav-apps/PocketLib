@@ -14,9 +14,47 @@
 				[height]="logoWidth"
 				margin="0 0 1rem 0"
 				shadow="true"
-				rounded="true">
+				rounded="true"
+				[loading]="logoLoading">
 			</pocketlib-blurhash-image>
 			<br>
+
+			<dav-button
+				type="accent"
+				ngxFilePicker
+				accept="image/png,image/jpeg"
+				[disabled]="logoLoading"
+				(filePick)="LogoFileSelected($event)"
+				*ngIf="publisherMode != 0">
+				{{ locale.uploadLogo }}
+			</dav-button>
+		</div>
+
+		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="publisherMode != 0">
+			<!-- Error message -->
+			<div
+				class="mt-3 mx-auto"
+				style="min-width: 200px; max-width: 300px"
+				*ngIf="errorMessage.length > 0">
+
+				<dav-message-bar type="danger">
+					{{ errorMessage }}
+				</dav-message-bar>
+			</div>
 		</div>
 	</div>
 </div>
+
+<dav-dialog
+	[header]="locale.logoDialog.header"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="logoDialogVisible"
+	(dismiss)="logoDialogVisible = false"
+	(primaryButtonClick)="UploadLogo()"
+	(defaultButtonClick)="logoDialogVisible = false">
+
+	<div class="mb-3" style="max-height: 400px">
+		<img #logoDialogImage style="max-width: 100%">
+	</div>
+</dav-dialog>

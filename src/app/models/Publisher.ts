@@ -1,4 +1,7 @@
-import { PublisherResource } from "../misc/types"
+import { ApiResponse, isSuccessStatusCode } from "dav-js"
+import { PublisherResource, PublisherLogoResource, PublisherLogoField } from "../misc/types"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "../services/caching-service"
 
 export class Publisher {
 	public uuid: string
@@ -14,7 +17,9 @@ export class Publisher {
 	}
 
 	constructor(
-		publisherResource: PublisherResource
+		publisherResource: PublisherResource,
+		private apiService: ApiService,
+		private cachingService: CachingService
 	) {
 		this.uuid = publisherResource?.uuid ?? ""
 		this.name = publisherResource?.name ?? ""
@@ -26,6 +31,25 @@ export class Publisher {
 		this.logo = {
 			url: publisherResource?.logo?.url,
 			blurhash: publisherResource?.logo?.blurhash
+		}
+	}
+
+	async ReloadLogo() {
+		this.cachingService.ClearApiRequestCache(this.apiService.RetrievePublisherLogo.name)
+
+		let response = await this.apiService.RetrievePublisherLogo({
+			uuid: this.uuid,
+			fields: [
+				PublisherLogoField.url,
+				PublisherLogoField.blurhash
+			]
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<PublisherLogoResource>).data
+
+			this.logo.url = responseData.url
+			this.logo.blurhash = responseData.blurhash
 		}
 	}
 }

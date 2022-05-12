@@ -137,7 +137,13 @@ export class DataService {
 					let listPublishersResponseData = (listPublishersResponse as ApiResponse<ListResponseData<PublisherResource>>).data
 
 					for (let item of listPublishersResponseData.items) {
-						this.adminPublishers.push(new Publisher(item))
+						this.adminPublishers.push(
+							new Publisher(
+								item,
+								this.apiService,
+								this.cachingService
+							)
+						)
 					}
 				}
 
@@ -192,6 +198,7 @@ export class DataService {
 
 				if (isSuccessStatusCode(authorResponse.status)) {
 					let authorResponseData = (authorResponse as ApiResponse<AuthorResource>).data
+
 					this.userAuthor = new Author(
 						authorResponseData,
 						await this.GetStoreLanguages(),
@@ -216,7 +223,12 @@ export class DataService {
 
 					if (isSuccessStatusCode(publisherResponse.status)) {
 						let publisherResponseData = (publisherResponse as ApiResponse<PublisherResource>).data
-						this.userPublisher = new Publisher(publisherResponseData)
+
+						this.userPublisher = new Publisher(
+							publisherResponseData,
+							this.apiService,
+							this.cachingService
+						)
 					}
 				}
 			}

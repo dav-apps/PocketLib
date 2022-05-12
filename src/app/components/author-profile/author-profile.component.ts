@@ -29,7 +29,8 @@ import {
 	StoreBookResource,
 	StoreBookListField,
 	StoreBookItem,
-	StoreBookStatus
+	StoreBookStatus,
+	AuthorProfileImageResource
 } from 'src/app/misc/types'
 import * as ErrorCodes from 'src/constants/errorCodes'
 import { enUS } from 'src/locales/locales'
@@ -495,7 +496,7 @@ export class AuthorProfileComponent {
 		this.profileImageContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response: ApiResponse<any> | ApiErrorResponse
+		let response: ApiResponse<AuthorProfileImageResource> | ApiErrorResponse
 
 		if (this.authorMode == AuthorMode.AuthorOfUser) {
 			response = await this.apiService.UploadAuthorProfileImage({
@@ -516,7 +517,7 @@ export class AuthorProfileComponent {
 		} else {
 			// Show the old profile image
 			this.profileImageContent = oldProfileImageContent
-			// TODO: Show error message
+			this.errorMessage = this.locale.errors.profileImageUploadFailed
 		}
 
 		this.profileImageLoading = false

@@ -355,6 +355,18 @@ const enDefaults = {
       noBookmarks: "You have no bookmarks",
 		page: "Page"
 	},
+	publisherProfile: {
+		uploadLogo: "Upload logo",
+		logoDialog: {
+			header: "Crop your logo"
+		},
+		errors: {
+			logoFileTooLarge: "The image file is too large",
+			logoUploadFailed: "There was an error in uploading the logo"
+		},
+		cancel: "Cancel",
+		save: "Save"
+	},
 	authorProfile: {
 		yourBooks: "Your books",
 		yourBookSeries: "Your book series",
@@ -391,6 +403,7 @@ const enDefaults = {
 		},
 		errors: {
 			profileImageFileTooLarge: "The image file is too large",
+			profileImageUploadFailed: "There was an error in uploading the profile image",
 			bioTooShort: "Your biography is too short",
 			bioTooLong: "Your biography is too long",
 			unexpectedError: "An unexpected error occured. Please try again."
@@ -822,6 +835,18 @@ const deDefaults = {
       noBookmarks: "Du hast keine Lesezeichen",
 		page: "Seite"
 	},
+	publisherProfile: {
+		uploadLogo: "Logo hochladen",
+		logoDialog: {
+			header: "Logo zuschneiden"
+		},
+		errors: {
+			logoFileTooLarge: "Die Bilddatei ist zu groß",
+			logoUploadFailed: "Beim Hochladen des Logos ist ein Fehler aufgetreten"
+		},
+		cancel: "Abbrechen",
+		save: "Speichern"
+	},
 	authorProfile: {
 		yourBooks: "Deine Bücher",
 		yourBookSeries: "Deine Buch-Reihen",
@@ -858,6 +883,7 @@ const deDefaults = {
 		},
 		errors: {
 			profileImageFileTooLarge: "Die Bilddatei ist zu groß",
+			profileImageUploadFailed: "Beim Hochladen des Profilbilds ist ein Fehler aufgetreten",
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
