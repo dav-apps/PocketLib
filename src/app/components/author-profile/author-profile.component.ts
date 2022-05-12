@@ -173,7 +173,9 @@ export class AuthorProfileComponent {
 			await this.LoadAuthor()
 		}
 
-		if (this.author.profileImage.url != null) {
+		if (this.author == null) return
+
+		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
 			this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 				if (isSuccessStatusCode(fileResponse.status)) {

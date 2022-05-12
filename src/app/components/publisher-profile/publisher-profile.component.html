@@ -1,1 +1,22 @@
-<h1 class="text-color">Hello World</h1>
+<div
+	class="container ms-motion-slideUpIn"
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 56 : 0">
+
+	<div class="row">
+		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
+			<pocketlib-blurhash-image
+				[src]="logoContent"
+				[fallback]="dataService.defaultProfileImageUrl"
+				[blurhash]="publisher.logo?.blurhash"
+				[title]="publisher.name"
+				[alt]="logoAlt"
+				[width]="logoWidth"
+				[height]="logoWidth"
+				margin="0 0 1rem 0"
+				shadow="true"
+				rounded="true">
+			</pocketlib-blurhash-image>
+			<br>
+		</div>
+	</div>
+</div>
