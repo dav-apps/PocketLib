@@ -29,6 +29,7 @@ import { keys } from 'src/constants/keys'
 import { environment } from 'src/environments/environment'
 import {
 	PublisherResource,
+	PublisherField,
 	PublisherListField,
 	AuthorResource,
 	AuthorField,
@@ -68,6 +69,8 @@ export class DataService {
 	allBooksInitialLoadPromiseHolder = new PromiseHolder()
 	syncFinished: boolean = false
 	userPromiseHolder = new PromiseHolder()
+	userPublisher: Publisher = null
+	userPublisherPromiseHolder = new PromiseHolder<Publisher>()
 	userAuthor: Author = null
 	userAuthorPromiseHolder = new PromiseHolder<Author>()
 	adminPublishers: Publisher[] = []
@@ -171,7 +174,8 @@ export class DataService {
 					}
 				}
 			} else {
-				let response = await this.apiService.RetrieveAuthor({
+				// Try to get the author of the user
+				let authorResponse = await this.apiService.RetrieveAuthor({
 					uuid: "mine",
 					fields: [
 						AuthorField.uuid,
@@ -186,18 +190,39 @@ export class DataService {
 					languages: await this.GetStoreLanguages()
 				})
 
-				if (isSuccessStatusCode(response.status)) {
-					let responseData = (response as ApiResponse<AuthorResource>).data
+				if (isSuccessStatusCode(authorResponse.status)) {
+					let authorResponseData = (authorResponse as ApiResponse<AuthorResource>).data
 					this.userAuthor = new Author(
-						responseData,
+						authorResponseData,
 						await this.GetStoreLanguages(),
 						this.apiService,
 						this.cachingService
 					)
+				} else {
+					// Try to get the publisher of the user
+					let publisherResponse = await this.apiService.RetrievePublisher({
+						uuid: "mine",
+						fields: [
+							PublisherField.uuid,
+							PublisherField.name,
+							PublisherField.description,
+							PublisherField.websiteUrl,
+							PublisherField.facebookUsername,
+							PublisherField.instagramUsername,
+							PublisherField.twitterUsername,
+							PublisherField.profileImage
+						]
+					})
+
+					if (isSuccessStatusCode(publisherResponse.status)) {
+						let publisherResponseData = (publisherResponse as ApiResponse<PublisherResource>).data
+						this.userPublisher = new Publisher(publisherResponseData)
+					}
 				}
 			}
 		}
 
+		this.userPublisherPromiseHolder.Resolve(this.userPublisher)
 		this.userAuthorPromiseHolder.Resolve(this.userAuthor)
 		this.adminPublishersPromiseHolder.Resolve(this.adminPublishers)
 		this.adminAuthorsPromiseHolder.Resolve(this.adminAuthors)
