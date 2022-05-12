@@ -43,6 +43,12 @@ export interface Route {
 	params: { [key: string]: any }
 }
 
+export enum PublisherMode {
+	Normal = 0,				// If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
+	PublisherOfUser = 1,	// If the publisher belongs to the user
+	PublisherOfAdmin = 2	// If the user is an admin and the publisher belongs to the admin
+}
+
 export enum AuthorMode {
 	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
 	AuthorOfUser = 1,	// If the author belongs to the user
@@ -82,7 +88,7 @@ export interface PublisherResource {
 	facebookUsername: string
 	instagramUsername: string
 	twitterUsername: string
-	profileImage: {
+	logo: {
 		url: string
 		blurhash: string
 	}
@@ -96,9 +102,9 @@ export enum PublisherField {
 	facebookUsername = "facebook_username",
 	instagramUsername = "instagram_username",
 	twitterUsername = "twitter_username",
-	profileImage = "profile_image",
-	profileImage_url = "profile_image.url",
-	profileImage_blurhash = "profile_image.blurhash"
+	logo = "logo",
+	logo_url = "logo.url",
+	logo_blurhash = "logo.blurhash"
 }
 
 export enum PublisherListField {
@@ -110,20 +116,20 @@ export enum PublisherListField {
 	items_facebookUsername = "items.facebook_username",
 	items_instagramUsername = "items.instagram_username",
 	items_twitterUsername = "items.twitter_username",
-	items_profileImage = "items.profile_image",
-	items_profileImage_url = "items.profile_image.url",
-	items_profileImage_blurhash = "items.profile_image.blurhash"
+	items_logo = "items.logo",
+	items_logo_url = "items.logo.url",
+	items_logo_blurhash = "items.logo.blurhash"
 }
 //#endregion
 
-//#region PublisherProfileImage
-export interface PublisherProfileImageResource {
+//#region PublisherLogo
+export interface PublisherLogoResource {
 	uuid: string
 	url: string
 	blurhash: string
 }
 
-export enum PublisherProfileImageField {
+export enum PublisherLogoField {
 	uuid = "uuid",
 	url = "url",
 	blurhash = "blurhash"

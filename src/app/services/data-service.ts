@@ -129,7 +129,7 @@ export class DataService {
 						PublisherListField.items_facebookUsername,
 						PublisherListField.items_instagramUsername,
 						PublisherListField.items_twitterUsername,
-						PublisherListField.items_profileImage
+						PublisherListField.items_logo
 					]
 				})
 
@@ -210,7 +210,7 @@ export class DataService {
 							PublisherField.facebookUsername,
 							PublisherField.instagramUsername,
 							PublisherField.twitterUsername,
-							PublisherField.profileImage
+							PublisherField.logo
 						]
 					})
 

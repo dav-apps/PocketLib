@@ -2,7 +2,7 @@ import {
 	StoreBookStatus,
 	StoreBookReleaseStatus,
 	PublisherResource,
-	PublisherProfileImageResource,
+	PublisherLogoResource,
 	AuthorResource,
 	AuthorBioResource,
 	AuthorProfileImageResource,
@@ -220,20 +220,20 @@ export function ResponseDataToPublisherResource(responseData: any): PublisherRes
 		facebookUsername: responseData.facebook_username,
 		instagramUsername: responseData.instagram_username,
 		twitterUsername: responseData.twitter_username,
-		profileImage: null
+		logo: null
 	}
 
-	if (responseData.profile_image != null) {
-		publisherResource.profileImage = {
-			url: responseData.profile_image.url,
-			blurhash: responseData.profile_image.blurhash
+	if (responseData.logo != null) {
+		publisherResource.logo = {
+			url: responseData.logo.url,
+			blurhash: responseData.logo.blurhash
 		}
 	}
 
 	return publisherResource
 }
 
-export function ResponseDataToPublisherProfileImageResource(responseData: any): PublisherProfileImageResource {
+export function ResponseDataToPublisherLogoResource(responseData: any): PublisherLogoResource {
 	return {
 		uuid: responseData.uuid,
 		url: responseData.url,

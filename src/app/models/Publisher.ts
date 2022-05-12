@@ -8,7 +8,7 @@ export class Publisher {
 	public facebookUsername: string
 	public instagramUsername: string
 	public twitterUsername: string
-	public profileImage: {
+	public logo: {
 		url: string
 		blurhash: string
 	}
@@ -23,9 +23,9 @@ export class Publisher {
 		this.facebookUsername = publisherResource?.facebookUsername ?? ""
 		this.instagramUsername = publisherResource?.instagramUsername ?? ""
 		this.twitterUsername = publisherResource?.twitterUsername ?? ""
-		this.profileImage = {
-			url: publisherResource?.profileImage?.url,
-			blurhash: publisherResource?.profileImage?.blurhash
+		this.logo = {
+			url: publisherResource?.logo?.url,
+			blurhash: publisherResource?.logo?.blurhash
 		}
 	}
 }

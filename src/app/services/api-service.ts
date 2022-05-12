@@ -17,8 +17,8 @@ import {
 	PublisherResource,
 	PublisherField,
 	PublisherListField,
-	PublisherProfileImageResource,
-	PublisherProfileImageField,
+	PublisherLogoResource,
+	PublisherLogoField,
 	AuthorResource,
 	AuthorField,
 	AuthorListField,
@@ -53,7 +53,7 @@ import {
 } from 'src/app/misc/types'
 import {
 	ResponseDataToPublisherResource,
-	ResponseDataToPublisherProfileImageResource,
+	ResponseDataToPublisherLogoResource,
 	ResponseDataToAuthorResource,
 	ResponseDataToAuthorBioResource,
 	ResponseDataToAuthorProfileImageResource,
@@ -266,14 +266,14 @@ export class ApiService {
 	}
 	//#endregion
 
-	//#region PublisherProfileImage
-	async RetrievePublisherProfileImage(params: {
+	//#region PublisherLogo
+	async RetrievePublisherLogo(params: {
 		uuid: string,
-		fields?: PublisherProfileImageField[]
-	}): Promise<ApiResponse<PublisherProfileImageResource> | ApiErrorResponse> {
+		fields?: PublisherLogoField[]
+	}): Promise<ApiResponse<PublisherLogoResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
-			this.RetrievePublisherProfileImage.name,
+			this.RetrievePublisherLogo.name,
 			PrepareRequestParams({
 				uuid: params.uuid,
 				fields: params.fields
@@ -292,7 +292,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/profile_image`,
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
@@ -300,7 +300,7 @@ export class ApiService {
 
 			let result = {
 				status: response.status,
-				data: ResponseDataToPublisherProfileImageResource(response.data)
+				data: ResponseDataToPublisherLogoResource(response.data)
 			}
 
 			// Add the response to the cache
@@ -315,16 +315,16 @@ export class ApiService {
 		}
 	}
 
-	async UploadPublisherProfileImage(params: {
+	async UploadPublisherLogo(params: {
 		uuid: string,
 		type: string,
 		file: any,
-		fields?: PublisherProfileImageField[]
-	}): Promise<ApiResponse<PublisherProfileImageResource> | ApiErrorResponse> {
+		fields?: PublisherLogoField[]
+	}): Promise<ApiResponse<PublisherLogoResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
 				method: 'put',
-				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/profile_image`,
+				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
 				headers: {
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type
@@ -337,13 +337,13 @@ export class ApiService {
 
 			return {
 				status: response.status,
-				data: ResponseDataToPublisherProfileImageResource(response.data)
+				data: ResponseDataToPublisherLogoResource(response.data)
 			}
 		} catch (error) {
 			let renewSessionError = await HandleApiError(error)
 			if (renewSessionError != null) return renewSessionError
 
-			return await this.UploadPublisherProfileImage(params)
+			return await this.UploadPublisherLogo(params)
 		}
 	}
 	//#endregion
