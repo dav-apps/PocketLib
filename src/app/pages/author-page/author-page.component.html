@@ -116,6 +116,7 @@
 
 		<p class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
+			(click)="ShowPublisher(publisher.uuid)"
 			*ngFor="let publisher of dataService.adminPublishers">
 			{{ publisher.name }}
 		</p>
@@ -172,6 +173,7 @@
 	
 			<p class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
+				(click)="ShowPublisher(publisher.uuid)"
 				*ngFor="let publisher of dataService.adminPublishers">
 				{{ publisher.name }}
 			</p>

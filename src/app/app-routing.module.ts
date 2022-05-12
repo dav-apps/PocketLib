@@ -4,6 +4,7 @@ import { LibraryPageComponent } from './pages/library-page/library-page.componen
 import { BookPageComponent } from './pages/book-page/book-page.component'
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component'
 import { AccountPageComponent } from './pages/account-page/account-page.component'
+import { PublisherPageComponent } from './pages/publisher-page/publisher-page.component'
 import { AuthorPageComponent } from './pages/author-page/author-page.component'
 import { AuthorSetupPageComponent } from './pages/author-setup-page/author-setup-page.component'
 import { AuthorCollectionPageComponent } from './pages/author-collection-page/author-collection-page.component'
@@ -25,6 +26,7 @@ const routes: Routes = [
 	{ path: "book", component: BookPageComponent },
 	{ path: "account", component: AccountPageComponent },
 	{ path: "settings", component: SettingsPageComponent },
+	{ path: "publisher/:uuid", component: PublisherPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },

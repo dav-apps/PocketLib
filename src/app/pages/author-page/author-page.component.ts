@@ -136,6 +136,10 @@ export class AuthorPageComponent {
 		}
 	}
 
+	ShowPublisher(uuid: string) {
+		this.router.navigate(['publisher', uuid])
+	}
+
 	ShowAuthor(uuid: string) {
 		this.router.navigate(['author', uuid])
 	}
