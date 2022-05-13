@@ -17,7 +17,13 @@ import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
 import { Author } from 'src/app/models/Author'
-import { GetDualScreenSettings, GetLanguageByString } from 'src/app/misc/utils'
+import {
+	GetDualScreenSettings,
+	GetLanguageByString,
+	GenerateFacebookLink,
+	GenerateInstagramLink,
+	GenerateTwitterLink
+} from 'src/app/misc/utils'
 import {
 	BookListItem,
 	AuthorMode,
@@ -153,17 +159,14 @@ export class AuthorProfileComponent {
 
 		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
-			
-			// Get the author from the admin authors
 			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
-			this.UpdateSocialMediaLinks()
+
 			await this.LoadBios()
 			await this.SelectDefaultBio()
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser
-
 			this.author = this.dataService.userAuthor
-			this.UpdateSocialMediaLinks()
+
 			await this.LoadBios()
 			await this.SelectDefaultBio()
 
@@ -175,6 +178,7 @@ export class AuthorProfileComponent {
 		}
 
 		if (this.author == null) return
+		this.UpdateSocialMediaLinks()
 
 		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
@@ -715,23 +719,8 @@ export class AuthorProfileComponent {
 	}
 
 	UpdateSocialMediaLinks() {
-		this.facebookLink = this.GenerateFacebookLink(this.author.facebookUsername)
-		this.instagramLink = this.GenerateInstagramLink(this.author.instagramUsername)
-		this.twitterLink = this.GenerateTwitterLink(this.author.twitterUsername)
-	}
-
-	GenerateFacebookLink(facebookUsername: string): string {
-		if (!facebookUsername) return ""
-		return `https://facebook.com/${facebookUsername}`
-	}
-
-	GenerateInstagramLink(instagramUsername: string): string {
-		if (!instagramUsername) return ""
-		return `https://instagram.com/${instagramUsername}`
-	}
-
-	GenerateTwitterLink(twitterUsername: string): string {
-		if (!twitterUsername) return ""
-		return `https://twitter.com/${twitterUsername}`
+		this.facebookLink = GenerateFacebookLink(this.author.facebookUsername)
+		this.instagramLink = GenerateInstagramLink(this.author.instagramUsername)
+		this.twitterLink = GenerateTwitterLink(this.author.twitterUsername)
 	}
 }

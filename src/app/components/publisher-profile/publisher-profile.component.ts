@@ -1,11 +1,18 @@
 import { Component, Input, ElementRef, ViewChild, HostListener } from "@angular/core"
 import { ReadFile } from "ngx-file-helpers"
+import { faGlobe } from "@fortawesome/free-solid-svg-icons"
+import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons"
 import Cropper from "cropperjs"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { CachingService } from "src/app/services/caching-service"
+import {
+	GenerateFacebookLink,
+	GenerateInstagramLink,
+	GenerateTwitterLink
+} from 'src/app/misc/utils'
 import {
 	PublisherMode,
 	PublisherResource,
@@ -23,15 +30,22 @@ const maxLogoFileSize = 2000000
 })
 export class PublisherProfileComponent {
 	locale = enUS.publisherProfile
+	faGlobe = faGlobe
+	faFacebook = faFacebook
+	faInstagram = faInstagram
+	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
 	publisher: Publisher = new Publisher(null, this.apiService, this.cachingService)
-	storeContext: boolean = true		// Whether the component is shown in the Store
+	facebookLink: string = ""
+	instagramLink: string = ""
+	twitterLink: string = ""
 	logoContent: string = this.dataService.defaultProfileImageUrl
 	logoAlt: string = ""
 	logoWidth: number = 200
 	logoLoading: boolean = false
 	errorMessage: string = ""
+	storeContext: boolean = true		// Whether the component is shown in the Store
 
 	//#region LogoDialog
 	@ViewChild('logoDialogImage', { static: true }) logoDialogImage: ElementRef<HTMLImageElement>
@@ -71,8 +85,6 @@ export class PublisherProfileComponent {
 
 		if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
-
-			// Get the publisher from the admin publishers
 			this.publisher = this.dataService.adminPublishers.find(publisher => publisher.uuid == this.uuid)
 		} else if (this.dataService.userPublisher) {
 			this.publisherMode = PublisherMode.PublisherOfUser
@@ -83,6 +95,7 @@ export class PublisherProfileComponent {
 		}
 
 		if (this.publisher == null) return
+		this.UpdateSocialMediaLinks()
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
@@ -126,6 +139,12 @@ export class PublisherProfileComponent {
 			let responseData = (response as ApiResponse<PublisherResource>).data
 			this.publisher = new Publisher(responseData, this.apiService, this.cachingService)
 		}
+	}
+
+	UpdateSocialMediaLinks() {
+		this.facebookLink = GenerateFacebookLink(this.publisher.facebookUsername)
+		this.instagramLink = GenerateInstagramLink(this.publisher.instagramUsername)
+		this.twitterLink = GenerateTwitterLink(this.publisher.twitterUsername)
 	}
 
 	LogoFileSelected(file: ReadFile) {
@@ -236,6 +255,8 @@ export class PublisherProfileComponent {
 			this.publisher.facebookUsername = responseData.facebookUsername
 			this.publisher.instagramUsername = responseData.instagramUsername
 			this.publisher.twitterUsername = responseData.twitterUsername
+
+			this.UpdateSocialMediaLinks()
 		} else {
 			let responseErrors = (response as ApiErrorResponse).errors
 

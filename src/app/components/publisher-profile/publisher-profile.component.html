@@ -41,6 +41,39 @@
 					<i class="ms-Icon ms-Icon--Edit" style="font-size: 17px" aria-hidden="true"></i>
 				</button>
 			</h4>
+
+			<div
+				class="d-flex justify-content-center"
+				*ngIf="publisher.websiteUrl || publisher.facebookUsername || publisher.instagramUsername || publisher.twitterUsername">
+
+				<!-- Website -->
+				<pocketlib-link-icon-button
+					[icon]="faGlobe"
+					[link]="publisher.websiteUrl"
+					*ngIf="publisher.websiteUrl">
+				</pocketlib-link-icon-button>
+
+				<!-- Facebook -->
+				<pocketlib-link-icon-button
+					[icon]="faFacebook"
+					[link]="facebookLink"
+					*ngIf="publisher.facebookUsername">
+				</pocketlib-link-icon-button>
+
+				<!-- Instagram -->
+				<pocketlib-link-icon-button
+					[icon]="faInstagram"
+					[link]="instagramLink"
+					*ngIf="publisher.instagramUsername">
+				</pocketlib-link-icon-button>
+
+				<!-- Twitter -->
+				<pocketlib-link-icon-button
+					[icon]="faTwitter"
+					[link]="twitterLink"
+					*ngIf="publisher.twitterUsername">
+				</pocketlib-link-icon-button>
+			</div>
 		</div>
 
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="publisherMode != 0">

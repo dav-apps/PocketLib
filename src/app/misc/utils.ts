@@ -211,6 +211,21 @@ export function AdaptCoverWidthHeightToAspectRatio(
 	return aproxWidth
 }
 
+export function GenerateFacebookLink(facebookUsername: string): string {
+	if (facebookUsername == null) return ""
+	return `https://facebook.com/${facebookUsername}`
+}
+
+export function GenerateInstagramLink(instagramUsername: string): string {
+	if (instagramUsername == null) return ""
+	return `https://instagram.com/${instagramUsername}`
+}
+
+export function GenerateTwitterLink(twitterUsername: string): string {
+	if (twitterUsername == null) return ""
+	return `https://twitter.com/${twitterUsername}`
+}
+
 export function ResponseDataToPublisherResource(responseData: any): PublisherResource {
 	let publisherResource: PublisherResource = {
 		uuid: responseData.uuid,
