@@ -43,7 +43,7 @@
 			</div>
 
 			<div id="book-details-cover-data" class="book-details-data">
-				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 				<div class="mb-3" *ngIf="coverContent">
 					<pocketlib-blurhash-image
 						[src]="coverContent"
@@ -77,7 +77,7 @@
 					*ngIf="book.description && !editDescription">
 					{{ book.description }}
 				</p>
-				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 
 				<div
 					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
@@ -180,7 +180,7 @@
 			</div>
 
 			<div id="book-details-book-file-data" class="book-details-data">
-				<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
+				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
 				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
 				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
 				<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
@@ -292,7 +292,7 @@
 				</div>
 
 				<div style="grid-column: 2; grid-row: 2;">
-					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
 					<div class="mb-3" *ngIf="coverContent">
 						<pocketlib-blurhash-image
 							[src]="coverContent"
@@ -325,7 +325,7 @@
 						*ngIf="book.description && !editDescription">
 						{{ book.description }}
 					</p>
-					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
 
 					<div
 						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
@@ -436,7 +436,7 @@
 				</div>
 
 				<div style="grid-column: 2; grid-row: 5;">
-					<p class="fw-light font-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
+					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
 					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
 					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
 					<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>

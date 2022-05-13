@@ -44,6 +44,10 @@ export class PublisherProfileComponent {
 	logoAlt: string = ""
 	logoWidth: number = 200
 	logoLoading: boolean = false
+	editDescription: boolean = false
+	newDescription: string = ""
+	newDescriptionError: string = ""
+	descriptionLoading: boolean = false
 	errorMessage: string = ""
 	storeContext: boolean = true		// Whether the component is shown in the Store
 
@@ -231,7 +235,6 @@ export class PublisherProfileComponent {
 
 		let response = await this.apiService.UpdatePublisher({
 			fields: [
-				//PublisherField.uuid,
 				PublisherField.name,
 				PublisherField.websiteUrl,
 				PublisherField.facebookUsername,
@@ -287,5 +290,50 @@ export class PublisherProfileComponent {
 				}
 			}
 		}
+	}
+
+	async EditDescription() {
+		if (this.editDescription) {
+			this.newDescriptionError = ""
+			this.descriptionLoading = true
+
+			let response = await this.apiService.UpdatePublisher({
+				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
+				description: this.newDescription
+			})
+
+			this.descriptionLoading = false
+
+			if (isSuccessStatusCode(response.status)) {
+				this.publisher.description = this.newDescription
+				this.newDescription = ""
+				this.newDescriptionError = ""
+				this.editDescription = false
+			} else {
+				let errorCode = (response as ApiErrorResponse).errors[0].code
+
+				switch (errorCode) {
+					case ErrorCodes.DescriptionTooShort:
+						this.newDescriptionError = this.locale.errors.descriptionTooShort
+						break
+					case ErrorCodes.DescriptionTooLong:
+						this.newDescriptionError = this.locale.errors.descriptionTooLong
+						break
+					default:
+						this.newDescriptionError = this.locale.errors.unexpectedError
+						break
+				}
+			}
+		} else {
+			this.newDescription = this.publisher.description
+			this.newDescriptionError = ""
+			this.editDescription = true
+		}
+	}
+
+	CancelEditDescription() {
+		this.editDescription = false
+		this.newDescription = ""
+		this.newDescriptionError = ""
 	}
 }

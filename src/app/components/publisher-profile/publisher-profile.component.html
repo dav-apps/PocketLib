@@ -76,9 +76,42 @@
 			</div>
 
 			<p class="mt-3 text-color"
-				style="white-space: pre-line; text-align: justify">
+				style="white-space: pre-line; text-align: justify"
+				*ngIf="!editDescription">
 				{{ publisher.description }}
 			</p>
+
+			<p class="mt-3 fw-light fst-italic text-color"
+				*ngIf="(publisher.description == null || publisher.description.length == 0) && !editDescription">
+				{{ locale.noDescription }}
+			</p>
+
+			<div class="mx-auto my-3" style="width: 80%" *ngIf="editDescription">
+				<dav-textarea
+					[value]="newDescription"
+					[placeholder]="locale.descriptionTextareaPlaceholder"
+					[disabled]="descriptionLoading"
+					resize="vertical"
+					[errorMessage]="newDescriptionError"
+					(change)="newDescription = $event.detail.value; newDescriptionError = ''">
+				</dav-textarea>
+			</div>
+
+			<dav-button
+				type="accent"
+				[disabled]="descriptionLoading"
+				(click)="EditDescription()"
+				*ngIf="publisherMode != 0">
+				{{ editDescription ? locale.save : locale.edit }}
+			</dav-button>
+
+			<dav-button
+				style="margin-left: 10px"
+				[disabled]="descriptionLoading"
+				(click)="CancelEditDescription()"
+				*ngIf="editDescription">
+				{{ locale.cancel }}
+			</dav-button>
 		</div>
 
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="publisherMode != 0">

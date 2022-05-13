@@ -357,6 +357,8 @@ const enDefaults = {
 	},
 	publisherProfile: {
 		uploadLogo: "Upload logo",
+		descriptionTextareaPlaceholder: "A short description of your publisher",
+		noDescription: "No description provided",
 		logoDialog: {
 			header: "Crop your logo"
 		},
@@ -383,8 +385,12 @@ const enDefaults = {
 		},
 		errors: {
 			logoFileTooLarge: "The image file is too large",
-			logoUploadFailed: "There was an error in uploading the logo"
+			logoUploadFailed: "There was an error in uploading the logo",
+			descriptionTooShort: "The description is too short",
+			descriptionTooLong: "The description is too long",
+			unexpectedError: "An unexpected error occured"
 		},
+		edit: "Edit",
 		cancel: "Cancel",
 		save: "Save"
 	},
@@ -427,7 +433,7 @@ const enDefaults = {
 			profileImageUploadFailed: "There was an error in uploading the profile image",
 			bioTooShort: "Your biography is too short",
 			bioTooLong: "Your biography is too long",
-			unexpectedError: "An unexpected error occured. Please try again."
+			unexpectedError: "An unexpected error occured"
 		},
 		messages: {
 			providerMessage: "<a href='{0}' target='blank'>Register as a provider</a> so that your earnings can be transferred."
@@ -858,6 +864,8 @@ const deDefaults = {
 	},
 	publisherProfile: {
 		uploadLogo: "Logo hochladen",
+		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
+		noDescription: "Keine Beschreibung angegeben",
 		logoDialog: {
 			header: "Logo zuschneiden"
 		},
@@ -884,8 +892,12 @@ const deDefaults = {
 		},
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
-			logoUploadFailed: "Beim Hochladen des Logos ist ein Fehler aufgetreten"
+			logoUploadFailed: "Beim Hochladen des Logos ist ein Fehler aufgetreten",
+			descriptionTooShort: "Die Beschreibung ist zu kurz",
+			descriptionTooLong: "Die Beschreibung ist zu lang",
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
+		edit: "Bearbeiten",
 		cancel: "Abbrechen",
 		save: "Speichern"
 	},
@@ -928,7 +940,7 @@ const deDefaults = {
 			profileImageUploadFailed: "Beim Hochladen des Profilbilds ist ein Fehler aufgetreten",
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
 		messages: {
 			providerMessage: "<a href='{0}' target='blank'>Registriere dich als Anbieter</a>, damit deine Einnahmen überwiesen werden können."
