@@ -1586,6 +1586,10 @@ export class BookChapter {
 				font-size: 1.75em;
 			}
 
+			p {
+				text-align: justify;
+			}
+
 			blockquote > cite {
 				display: block;
 				text-align: right;
