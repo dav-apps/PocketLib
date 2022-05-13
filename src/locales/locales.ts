@@ -360,6 +360,27 @@ const enDefaults = {
 		logoDialog: {
 			header: "Crop your logo"
 		},
+		editProfileDialog: {
+			header: "Edit your profile",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "The name of your publisher",
+			websiteUrlTextfieldLabel: "Website",
+			websiteUrlTextfieldPlaceholder: "Link to your website",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Your username on Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Your username on Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Your username on Twitter",
+			errors: {
+				nameMissing: "Please enter a name",
+				nameTooShort: "The name is too short",
+				nameTooLong: "The name is too long",
+				websiteUrlInvalid: "The link is invalid",
+				usernameInvalid: "The username is invalid",
+				unexpectedError: "An unexpected error occured. Please try again later."
+			}
+		},
 		errors: {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo"
@@ -839,6 +860,27 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		logoDialog: {
 			header: "Logo zuschneiden"
+		},
+		editProfileDialog: {
+			header: "Profil bearbeiten",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name deines Verlags",
+			websiteUrlTextfieldLabel: "Webseite",
+			websiteUrlTextfieldPlaceholder: "Link zu deiner Webseite",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Dein Nutzername auf Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Dein Nutzername auf Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Dein Nutzername auf Twitter",
+			errors: {
+				nameMissing: "Bitte gib einen Namen ein",
+				nameTooShort: "Der Name ist zu kurz",
+				nameTooLong: "Der Name ist zu lang",
+				websiteUrlInvalid: "Der Link ist ungültig",
+				usernameInvalid: "Der Nutzername ist ungültig",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+			}
 		},
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",

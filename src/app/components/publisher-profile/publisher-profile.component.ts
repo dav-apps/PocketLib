@@ -12,6 +12,7 @@ import {
 	PublisherField,
 	PublisherLogoResource
 } from "src/app/misc/types"
+import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
@@ -36,6 +37,20 @@ export class PublisherProfileComponent {
 	@ViewChild('logoDialogImage', { static: true }) logoDialogImage: ElementRef<HTMLImageElement>
 	logoDialogVisible: boolean = false
 	logoCropper: Cropper
+	//#endregion
+
+	//#region EditProfileDialog
+	editProfileDialogVisible: boolean = false
+	editProfileDialogName: string = ""
+	editProfileDialogNameError: string = ""
+	editProfileDialogWebsiteUrl: string = ""
+	editProfileDialogWebsiteUrlError: string = ""
+	editProfileDialogFacebookUsername: string = ""
+	editProfileDialogFacebookUsernameError: string = ""
+	editProfileDialogInstagramUsername: string = ""
+	editProfileDialogInstagramUsernameError: string = ""
+	editProfileDialogTwitterUsername: string = ""
+	editProfileDialogTwitterUsernameError: string = ""
 	//#endregion
 
 	constructor(
@@ -172,5 +187,84 @@ export class PublisherProfileComponent {
 		}
 
 		this.logoLoading = false
+	}
+
+	ShowEditProfileDialog() {
+		this.editProfileDialogName = this.publisher.name
+		this.editProfileDialogNameError = ""
+		this.editProfileDialogWebsiteUrl = this.publisher.websiteUrl
+		this.editProfileDialogWebsiteUrlError = ""
+		this.editProfileDialogFacebookUsername = this.publisher.facebookUsername
+		this.editProfileDialogFacebookUsernameError = ""
+		this.editProfileDialogInstagramUsername = this.publisher.instagramUsername
+		this.editProfileDialogInstagramUsernameError = ""
+		this.editProfileDialogTwitterUsername = this.publisher.twitterUsername
+		this.editProfileDialogTwitterUsernameError = ""
+		this.editProfileDialogVisible = true
+	}
+
+	async SaveProfile() {
+		this.editProfileDialogNameError = ""
+		this.editProfileDialogWebsiteUrlError = ""
+		this.editProfileDialogFacebookUsernameError = ""
+		this.editProfileDialogInstagramUsernameError = ""
+		this.editProfileDialogTwitterUsernameError = ""
+
+		let response = await this.apiService.UpdatePublisher({
+			fields: [
+				//PublisherField.uuid,
+				PublisherField.name,
+				PublisherField.websiteUrl,
+				PublisherField.facebookUsername,
+				PublisherField.instagramUsername,
+				PublisherField.twitterUsername
+			],
+			uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
+			name: this.editProfileDialogName,
+			websiteUrl: this.editProfileDialogWebsiteUrl,
+			facebookUsername: this.editProfileDialogFacebookUsername,
+			instagramUsername: this.editProfileDialogInstagramUsername,
+			twitterUsername: this.editProfileDialogTwitterUsername
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<PublisherResource>).data
+			this.editProfileDialogVisible = false
+
+			this.publisher.name = responseData.name
+			this.publisher.websiteUrl = responseData.websiteUrl
+			this.publisher.facebookUsername = responseData.facebookUsername
+			this.publisher.instagramUsername = responseData.instagramUsername
+			this.publisher.twitterUsername = responseData.twitterUsername
+		} else {
+			let responseErrors = (response as ApiErrorResponse).errors
+
+			for (let error of responseErrors) {
+				switch (error.code) {
+					case ErrorCodes.NameTooShort:
+						if (this.editProfileDialogName.length == 0) {
+							this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameMissing
+						} else {
+							this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameTooShort
+						}
+						break
+					case ErrorCodes.NameTooLong:
+						this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameTooLong
+						break
+					case ErrorCodes.WebsiteUrlInvalid:
+						this.editProfileDialogWebsiteUrlError = this.locale.editProfileDialog.errors.websiteUrlInvalid
+						break
+					case ErrorCodes.FacebookUsernameInvalid:
+						this.editProfileDialogFacebookUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+					case ErrorCodes.InstagramUsernameInvalid:
+						this.editProfileDialogInstagramUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+					case ErrorCodes.TwitterUsernameInvalid:
+						this.editProfileDialogTwitterUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						break
+				}
+			}
+		}
 	}
 }

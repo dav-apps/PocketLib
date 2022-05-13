@@ -547,76 +547,40 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response: ApiResponse<AuthorResource> | ApiErrorResponse
-
-		if (this.dataService.userIsAdmin) {
-			response = await this.apiService.UpdateAuthor({
-				fields: [
-					AuthorField.uuid,
-					AuthorField.firstName,
-					AuthorField.lastName,
-					AuthorField.websiteUrl,
-					AuthorField.facebookUsername,
-					AuthorField.instagramUsername,
-					AuthorField.twitterUsername
-				],
-				uuid: this.author.uuid,
-				firstName: this.editProfileDialogFirstName,
-				lastName: this.editProfileDialogLastName,
-				websiteUrl: this.editProfileDialogWebsiteUrl,
-				facebookUsername: this.editProfileDialogFacebookUsername,
-				instagramUsername: this.editProfileDialogInstagramUsername,
-				twitterUsername: this.editProfileDialogTwitterUsername
-			})
-		} else {
-			response = await this.apiService.UpdateAuthor({
-				fields: [
-					AuthorField.uuid,
-					AuthorField.firstName,
-					AuthorField.lastName,
-					AuthorField.websiteUrl,
-					AuthorField.facebookUsername,
-					AuthorField.instagramUsername,
-					AuthorField.twitterUsername
-				],
-				uuid: "mine",
-				firstName: this.editProfileDialogFirstName,
-				lastName: this.editProfileDialogLastName,
-				websiteUrl: this.editProfileDialogWebsiteUrl,
-				facebookUsername: this.editProfileDialogFacebookUsername,
-				instagramUsername: this.editProfileDialogInstagramUsername,
-				twitterUsername: this.editProfileDialogTwitterUsername
-			})
-		}
+		let response = await this.apiService.UpdateAuthor({
+			fields: [
+				AuthorField.firstName,
+				AuthorField.lastName,
+				AuthorField.websiteUrl,
+				AuthorField.facebookUsername,
+				AuthorField.instagramUsername,
+				AuthorField.twitterUsername
+			],
+			uuid: this.dataService.userIsAdmin ? this.author.uuid : "mine",
+			firstName: this.editProfileDialogFirstName,
+			lastName: this.editProfileDialogLastName,
+			websiteUrl: this.editProfileDialogWebsiteUrl,
+			facebookUsername: this.editProfileDialogFacebookUsername,
+			instagramUsername: this.editProfileDialogInstagramUsername,
+			twitterUsername: this.editProfileDialogTwitterUsername
+		})
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<AuthorResource>).data
-
-			// Close the dialog and update the values in the appropriate author
 			this.editProfileDialogVisible = false
 
-			if (this.dataService.userIsAdmin) {
-				let i = this.dataService.adminAuthors.findIndex(author => author.uuid == responseData.uuid)
-				if (i == -1) return
-
-				this.dataService.adminAuthors[i].firstName = responseData.firstName
-				this.dataService.adminAuthors[i].lastName = responseData.lastName
-				this.dataService.adminAuthors[i].websiteUrl = responseData.websiteUrl
-				this.dataService.adminAuthors[i].facebookUsername = responseData.facebookUsername
-				this.dataService.adminAuthors[i].instagramUsername = responseData.instagramUsername
-				this.dataService.adminAuthors[i].twitterUsername = responseData.twitterUsername
-			} else {
-				this.dataService.userAuthor.firstName = responseData.firstName
-				this.dataService.userAuthor.lastName = responseData.lastName
-				this.dataService.userAuthor.websiteUrl = responseData.websiteUrl
-				this.dataService.userAuthor.facebookUsername = responseData.facebookUsername
-				this.dataService.userAuthor.instagramUsername = responseData.instagramUsername
-				this.dataService.userAuthor.twitterUsername = responseData.twitterUsername
-			}
+			this.author.firstName = responseData.firstName
+			this.author.lastName = responseData.lastName
+			this.author.websiteUrl = responseData.websiteUrl
+			this.author.facebookUsername = responseData.facebookUsername
+			this.author.instagramUsername = responseData.instagramUsername
+			this.author.twitterUsername = responseData.twitterUsername
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			for (let error of (response as ApiErrorResponse).errors) {
+			let responseErrors = (response as ApiErrorResponse).errors
+
+			for (let error of responseErrors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {

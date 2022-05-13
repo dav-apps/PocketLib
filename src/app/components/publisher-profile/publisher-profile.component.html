@@ -28,6 +28,19 @@
 				*ngIf="publisherMode != 0">
 				{{ locale.uploadLogo }}
 			</dav-button>
+
+			<h4 class="d-flex justify-content-center mt-3 text-color">
+				{{ publisher.name }}
+
+				<button
+					type="button"
+					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
+					style="height: 32px; font-size: 17px; margin-top: -4px; padding: 0px 4px"
+					(click)="ShowEditProfileDialog()"
+					*ngIf="publisherMode > 0">
+					<i class="ms-Icon ms-Icon--Edit" style="font-size: 17px" aria-hidden="true"></i>
+				</button>
+			</h4>
 		</div>
 
 		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="publisherMode != 0">
@@ -57,4 +70,81 @@
 	<div class="mb-3" style="max-height: 400px">
 		<img #logoDialogImage style="max-width: 100%">
 	</div>
+</dav-dialog>
+
+<dav-dialog
+	[header]="locale.editProfileDialog.header"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="editProfileDialogVisible"
+	(dismiss)="editProfileDialogVisible = false"
+	(primaryButtonClick)="SaveProfile()"
+	(defaultButtonClick)="editProfileDialogVisible = false">
+
+	<form>
+		<!-- Name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogName"
+				[label]="locale.editProfileDialog.nameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.nameTextfieldPlaceholder"
+				[errorMessage]="editProfileDialogNameError"
+				(change)="editProfileDialogName = $event.detail.value; editProfileDialogNameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+
+		<!-- Website url -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogWebsiteUrl"
+				[label]="locale.editProfileDialog.websiteUrlTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.websiteUrlTextfieldPlaceholder"
+				type="url"
+				autocomplete="url"
+				[errorMessage]="editProfileDialogWebsiteUrlError"
+				(change)="editProfileDialogWebsiteUrl = $event.detail.value; editProfileDialogWebsiteUrlError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+
+		<!-- Facebook username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogFacebookUsername"
+				[label]="locale.editProfileDialog.facebookUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogFacebookUsernameError"
+				(change)="editProfileDialogFacebookUsername = $event.detail.value; editProfileDialogFacebookUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+
+		<!-- Instagram username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogInstagramUsername"
+				[label]="locale.editProfileDialog.instagramUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogInstagramUsernameError"
+				(change)="editProfileDialogInstagramUsername = $event.detail.value; editProfileDialogInstagramUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+
+		<!-- Twitter username -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="editProfileDialogTwitterUsername"
+				[label]="locale.editProfileDialog.twitterUsernameTextfieldLabel"
+				[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="editProfileDialogTwitterUsernameError"
+				(change)="editProfileDialogTwitterUsername = $event.detail.value; editProfileDialogTwitterUsernameError = ''"
+				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+	</form>
 </dav-dialog>
