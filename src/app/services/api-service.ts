@@ -83,10 +83,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/publishers`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -133,9 +133,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
@@ -185,9 +185,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/publishers`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					mine: true
@@ -236,10 +236,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -325,10 +325,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -359,10 +359,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/authors`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -413,9 +413,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					languages: params.languages
@@ -476,9 +476,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors`,
-				headers: {
-					Authorization: params.mine ? Dav.accessToken : null
-				},
+				headers: PrepareRequestParams({
+					Authorization: params.mine || params.publisher != null ? Dav.accessToken : null
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					languages: params.languages,
@@ -532,10 +532,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					languages: params.languages
@@ -590,9 +590,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/bios`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
@@ -636,10 +636,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/bios/${params.language}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -720,10 +720,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/profile_image`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -754,10 +754,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -862,9 +862,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
-				},
+				}),
 				params: PrepareRequestParams({
 					author: params.author,
 					fields: params.fields,
@@ -967,10 +967,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections/${params.uuid}/names/${params.language}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1004,10 +1004,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1165,10 +1165,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					languages: params.languages
@@ -1208,10 +1208,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/store_books`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1271,9 +1271,9 @@ export class ApiService {
 			}
 
 			if (Dav.accessToken != null) {
-				requestConfig.headers = {
+				requestConfig.headers = PrepareRequestParams({
 					Authorization: Dav.accessToken
-				}
+				})
 			}
 
 			let response = await axios(requestConfig)
@@ -1369,9 +1369,9 @@ export class ApiService {
 					)
 				)
 			) {
-				requestConfig.headers = {
+				requestConfig.headers = PrepareRequestParams({
 					Authorization: Dav.accessToken
-				}
+				})
 			}
 
 			let response = await axios(requestConfig)
@@ -1419,10 +1419,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1509,10 +1509,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/cover`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1559,9 +1559,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/file`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
@@ -1598,11 +1598,11 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/file`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': params.type,
 					'Content-Disposition': `attachment; filename="${encodeURIComponent(params.name)}"`
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1649,9 +1649,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
@@ -1703,9 +1703,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
-				},
+				}),
 				params: PrepareRequestParams({
 					store_book: params.storeBook,
 					fields: params.fields
@@ -1750,10 +1750,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'put',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}/publish`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
@@ -1843,10 +1843,10 @@ export class ApiService {
 			let response = await axios({
 				method: 'post',
 				url: `${environment.pocketlibApiBaseUrl}/books`,
-				headers: {
+				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
 					'Content-Type': 'application/json'
-				},
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true),
