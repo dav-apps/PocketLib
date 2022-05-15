@@ -140,6 +140,7 @@ export class DataService {
 						this.adminPublishers.push(
 							new Publisher(
 								item,
+								await this.GetStoreLanguages(),
 								this.apiService,
 								this.cachingService
 							)
@@ -226,6 +227,7 @@ export class DataService {
 
 						this.userPublisher = new Publisher(
 							publisherResponseData,
+							await this.GetStoreLanguages(),
 							this.apiService,
 							this.cachingService
 						)

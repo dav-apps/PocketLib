@@ -36,7 +36,7 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, this.apiService, this.cachingService)
+	publisher: Publisher = new Publisher(null, [], this.apiService, this.cachingService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -87,15 +87,25 @@ export class PublisherProfileComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
+		let publisher = null
+
 		if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
-			this.publisher = this.dataService.adminPublishers.find(publisher => publisher.uuid == this.uuid)
+			publisher = this.dataService.adminPublishers.find(publisher => publisher.uuid == this.uuid)
 		} else if (this.dataService.userPublisher) {
 			this.publisherMode = PublisherMode.PublisherOfUser
-			this.publisher = this.dataService.userPublisher
-		} else {
+			publisher = this.dataService.userPublisher
+		}
+
+		if (publisher == null && this.storeContext) {
+			this.publisherMode = PublisherMode.Normal
+
 			// Get the publisher from the server
 			await this.LoadPublisher()
+		} else if (publisher == null) {
+			return
+		} else {
+			this.publisher = publisher
 		}
 
 		if (this.publisher == null) return
@@ -141,7 +151,7 @@ export class PublisherProfileComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<PublisherResource>).data
-			this.publisher = new Publisher(responseData, this.apiService, this.cachingService)
+			this.publisher = new Publisher(responseData, await this.dataService.GetStoreLanguages(), this.apiService, this.cachingService)
 		}
 	}
 

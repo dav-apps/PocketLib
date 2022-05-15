@@ -157,27 +157,47 @@ export class AuthorProfileComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
+		let author = null
+
 		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
-			this.author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
+			author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
 
-			await this.LoadBios()
-			await this.SelectDefaultBio()
+			if (author == null) {
+				for (let publisher of this.dataService.adminPublishers) {
+					author = (await publisher.GetAuthors()).find(a => a.uuid == this.uuid)
+					if (author != null) break
+				}
+			}
+
+			if (author != null) {
+				this.author = author
+				await this.LoadBios()
+				await this.SelectDefaultBio()
+			}
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser
-			this.author = this.dataService.userAuthor
+			author = this.dataService.userAuthor
 
-			await this.LoadBios()
-			await this.SelectDefaultBio()
+			if (this.author != null) {
+				this.author = author
+				await this.LoadBios()
+				await this.SelectDefaultBio()
 
-			// Set the text and visibility for the provider message
-			this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
-		} else {
-			// Get the author from the server
-			await this.LoadAuthor()
+				// Set the text and visibility for the provider message
+				this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
+			}
 		}
 
-		if (this.author == null) return
+		if (author == null && this.storeContext) {
+			this.authorMode = AuthorMode.Normal
+
+			// Get the author from the server
+			await this.LoadAuthor()
+		} else if (author == null) {
+			return
+		}
+
 		this.UpdateSocialMediaLinks()
 
 		if (this.author.profileImage?.url != null) {

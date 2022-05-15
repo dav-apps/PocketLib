@@ -158,6 +158,7 @@ export interface AuthorResource {
 
 export enum AuthorField {
 	uuid = "uuid",
+	publisher = "publisher",
 	firstName = "first_name",
 	lastName = "last_name",
 	bio = "bio",
@@ -175,6 +176,7 @@ export enum AuthorField {
 export enum AuthorListField {
 	type = "type",
 	items_uuid = "items.uuid",
+	items_publisher = "items.publisher",
 	items_firstName = "items.first_name",
 	items_lastName = "items.last_name",
 	items_bio = "items.bio",
