@@ -76,6 +76,7 @@ export class StoreBookPageComponent {
 	bookStatus: string = ""
 	author: AuthorResource = {
 		uuid: "",
+		publisher: "",
 		firstName: "",
 		lastName: "",
 		bio: null,

@@ -350,6 +350,7 @@ export class ApiService {
 
 	//#region Author functions
 	async CreateAuthor(params: {
+		publisher?: string,
 		firstName: string,
 		lastName: string,
 		fields?: AuthorField[]
@@ -366,6 +367,7 @@ export class ApiService {
 					fields: params.fields
 				}, true),
 				data: PrepareRequestParams({
+					publisher: params.publisher,
 					first_name: params.firstName,
 					last_name: params.lastName
 				})
@@ -445,7 +447,8 @@ export class ApiService {
 		languages?: Language[],
 		limit?: number,
 		mine?: boolean,
-		latest?: boolean
+		latest?: boolean,
+		publisher?: string
 	}): Promise<ApiResponse<ListResponseData<AuthorResource>> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
@@ -455,7 +458,8 @@ export class ApiService {
 				languages: params.languages,
 				limit: params.limit,
 				mine: params.mine,
-				latest: params.latest
+				latest: params.latest,
+				publisher: params.publisher
 			}, true)
 		)
 
@@ -480,7 +484,8 @@ export class ApiService {
 					languages: params.languages,
 					limit: params.limit,
 					mine: params.mine,
-					latest: params.latest
+					latest: params.latest,
+					publisher: params.publisher
 				}, true)
 			})
 

@@ -19,6 +19,7 @@ import { StoreBookSeries } from 'src/app/models/StoreBookSeries'
 
 export class Author {
 	public uuid: string
+	public publisher: string
 	public firstName: string
 	public lastName: string
 	public websiteUrl: string
@@ -52,6 +53,7 @@ export class Author {
 		private cachingService: CachingService
 	) {
 		this.uuid = authorResource?.uuid ?? ""
+		this.publisher = authorResource?.publisher ?? ""
 		this.firstName = authorResource?.firstName ?? ""
 		this.lastName = authorResource?.lastName ?? ""
 		this.websiteUrl = authorResource?.websiteUrl ?? ""

@@ -139,6 +139,7 @@ export enum PublisherLogoField {
 //#region Author
 export interface AuthorResource {
 	uuid: string
+	publisher: string
 	firstName: string
 	lastName: string
 	bio: {

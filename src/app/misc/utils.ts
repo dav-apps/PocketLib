@@ -259,6 +259,7 @@ export function ResponseDataToPublisherLogoResource(responseData: any): Publishe
 export function ResponseDataToAuthorResource(responseData: any): AuthorResource {
 	let authorResource: AuthorResource = {
 		uuid: responseData.uuid,
+		publisher: responseData.publisher,
 		firstName: responseData.first_name,
 		lastName: responseData.last_name,
 		bio: null,
