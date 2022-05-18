@@ -97,6 +97,17 @@ const enDefaults = {
 		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
+		createPublisherDialog: {
+			header: "Create publisher",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name of the publisher",
+			errors: {
+				nameMissing: "Please enter a name",
+				nameTooShort: "The name is too short",
+				nameTooLong: "The name is too long",
+				unexpectedError: "An unexpected error occured. Please try it again later."
+			}
+		},
 		createAuthorDialog: {
 			header: "Create author",
 			firstNameTextfieldLabel: "First name",
@@ -624,6 +635,17 @@ const deDefaults = {
 		yourPublishers: "Deine Verlage",
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
+		createPublisherDialog: {
+			header: "Verlag erstellen",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name des Verlags",
+			errors: {
+				nameMissing: "Bitte gib einen Namen ein",
+				nameTooShort: "Der Name ist zu kurz",
+				nameTooLong: "Der Name ist zu lang",
+				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+			}
+		},
 		createAuthorDialog: {
 			header: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",

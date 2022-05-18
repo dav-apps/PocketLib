@@ -9,12 +9,15 @@ import * as ErrorCodes from 'src/constants/errorCodes'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 import { enUS } from 'src/locales/locales'
 import {
+	PublisherResource,
+	PublisherField,
 	AuthorField,
 	AuthorResource,
 	ListResponseData,
 	StoreBookListField,
 	StoreBookResource
 } from 'src/app/misc/types'
+import { Publisher } from 'src/app/models/Publisher'
 import { Author } from 'src/app/models/Author'
 
 @Component({
@@ -36,6 +39,10 @@ export class AuthorPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	uuid: string
+	createPublisherDialogVisible: boolean = false
+	createPublisherDialogLoading: boolean = false
+	createPublisherDialogName: string = ""
+	createPublisherDialogNameError: string = ""
 	createAuthorDialogVisible: boolean = false
 	createAuthorDialogLoading: boolean = false
 	createAuthorDialogFirstName: string = ""
@@ -144,6 +151,73 @@ export class AuthorPageComponent {
 		this.router.navigate(['author', uuid])
 	}
 
+	ShowBook(uuid: string) {
+		this.router.navigate(["store", "book", uuid])
+	}
+
+	ShowCreatePublisherDialog() {
+		this.createPublisherDialogName = ""
+		this.createPublisherDialogNameError = ""
+		this.createPublisherDialogVisible = true
+		this.createPublisherDialogLoading = false
+	}
+
+	async CreatePublisher() {
+		this.createPublisherDialogNameError = ""
+		this.createPublisherDialogLoading = true
+
+		let response = await this.apiService.CreatePublisher({
+			name: this.createPublisherDialogName,
+			fields: [
+				PublisherField.uuid,
+				PublisherField.name,
+				PublisherField.description,
+				PublisherField.websiteUrl,
+				PublisherField.facebookUsername,
+				PublisherField.instagramUsername,
+				PublisherField.twitterUsername,
+				PublisherField.logo
+			]
+		})
+
+		this.createPublisherDialogLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<PublisherResource>).data
+
+			// Add the publisher to the publishers of the admin in DataService
+			this.dataService.adminPublishers.push(
+				new Publisher(
+					responseData,
+					await this.dataService.GetStoreLanguages(),
+					this.apiService,
+					this.cachingService
+				)
+			)
+
+			// Redirect to the publisher page of the new publisher
+			this.router.navigate(['publisher', responseData.uuid])
+		} else {
+			for (let error of (response as ApiErrorResponse).errors) {
+				switch (error.code) {
+					case ErrorCodes.NameTooShort:
+						if (this.createPublisherDialogName.length == 0) {
+							this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameMissing
+						} else {
+							this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameTooShort
+						}
+						break
+					case ErrorCodes.NameTooLong:
+						this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameTooLong
+						break
+					default:
+						this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.unexpectedError
+						break
+				}
+			}
+		}
+	}
+
 	ShowCreateAuthorDialog() {
 		this.createAuthorDialogFirstName = ""
 		this.createAuthorDialogFirstNameError = ""
@@ -151,10 +225,6 @@ export class AuthorPageComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogVisible = true
 		this.createAuthorDialogLoading = false
-	}
-
-	ShowBook(uuid: string) {
-		this.router.navigate(["store", "book", uuid])
 	}
 
 	async CreateAuthor() {
