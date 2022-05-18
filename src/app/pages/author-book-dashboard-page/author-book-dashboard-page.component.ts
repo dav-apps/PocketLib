@@ -41,6 +41,13 @@ export class AuthorBookDashboardPageComponent {
 			// Get the author
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+
+			if (this.author == null) {
+				for (let publisher of this.dataService.adminPublishers) {
+					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					if (this.author != null) break
+				}
+			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 		}

@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { PromiseHolder, ApiResponse } from 'dav-js'
+import { PromiseHolder, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { RoutingService } from 'src/app/services/routing-service'
@@ -109,6 +109,13 @@ export class NewBookPageComponent {
 			// Find the author with the uuid
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 
+			if (author == null) {
+				for (let publisher of this.dataService.adminPublishers) {
+					author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					if (author != null) break
+				}
+			}
+
 			this.author = author
 		} else if (this.dataService.userAuthor) {
 			// Get the current author
@@ -116,7 +123,7 @@ export class NewBookPageComponent {
 		}
 
 		if (this.author == null) {
-			this.GoBack()
+			this.routingService.NavigateBack("/author")
 			return
 		}
 
@@ -365,7 +372,7 @@ export class NewBookPageComponent {
 			categories: this.selectedCategories
 		})
 
-		if (createStoreBookResponse.status != 201) {
+		if (!isSuccessStatusCode(createStoreBookResponse.status)) {
 			this.errorMessage = this.locale.errorMessage
 			this.HideLoadingScreen()
 			return
