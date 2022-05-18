@@ -119,4 +119,9 @@ export class Publisher {
 		this.authors.itemsPromiseHolder.Resolve(items)
 		return items
 	}
+
+	ClearAuthors() {
+		this.authors.loaded = false
+		this.cachingService.ClearApiRequestCache(this.apiService.ListAuthors.name)
+	}
 }

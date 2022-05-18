@@ -1,4 +1,5 @@
 import { Component, Input, ElementRef, ViewChild, HostListener } from "@angular/core"
+import { Router } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe } from "@fortawesome/free-solid-svg-icons"
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons"
@@ -18,7 +19,9 @@ import {
 	PublisherMode,
 	PublisherResource,
 	PublisherField,
-	PublisherLogoResource
+	PublisherLogoResource,
+	AuthorResource,
+	AuthorField
 } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
@@ -75,10 +78,20 @@ export class PublisherProfileComponent {
 	editProfileDialogTwitterUsernameError: string = ""
 	//#endregion
 
+	//#region CreateAuthorDialog
+	createAuthorDialogVisible: boolean = false
+	createAuthorDialogLoading: boolean = false
+	createAuthorDialogFirstName: string = ""
+	createAuthorDialogLastName: string = ""
+	createAuthorDialogFirstNameError: string = ""
+	createAuthorDialogLastNameError: string = ""
+	//#endregion
+
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private cachingService: CachingService
+		private cachingService: CachingService,
+		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().publisherProfile
 
@@ -373,5 +386,71 @@ export class PublisherProfileComponent {
 		this.editDescription = false
 		this.newDescription = ""
 		this.newDescriptionError = ""
+	}
+
+	ShowCreateAuthorDialog() {
+		this.createAuthorDialogFirstName = ""
+		this.createAuthorDialogFirstNameError = ""
+		this.createAuthorDialogLastName = ""
+		this.createAuthorDialogLastNameError = ""
+		this.createAuthorDialogVisible = true
+		this.createAuthorDialogLoading = false
+	}
+
+	async CreateAuthor() {
+		this.createAuthorDialogFirstNameError = ""
+		this.createAuthorDialogLastNameError = ""
+		this.createAuthorDialogLoading = true
+
+		let response = await this.apiService.CreateAuthor({
+			publisher: this.publisher.uuid,
+			firstName: this.createAuthorDialogFirstName,
+			lastName: this.createAuthorDialogLastName,
+			fields: [
+				AuthorField.uuid,
+				AuthorField.firstName,
+				AuthorField.lastName
+			]
+		})
+
+		this.createAuthorDialogLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = (response as ApiResponse<AuthorResource>).data
+
+			// Clear the authors of the publisher
+			this.publisher.ClearAuthors()
+
+			// Redirect to the author page of the new author
+			this.router.navigate(['author', responseData.uuid])
+		} else {
+			for (let error of (response as ApiErrorResponse).errors) {
+				switch (error.code) {
+					case ErrorCodes.FirstNameTooShort:
+						if (this.createAuthorDialogFirstName.length == 0) {
+							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
+						} else {
+							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+						}
+						break
+					case ErrorCodes.LastNameTooShort:
+						if (this.createAuthorDialogLastName.length == 0) {
+							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
+						} else {
+							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+						}
+						break
+					case ErrorCodes.FirstNameTooLong:
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
+						break
+					case ErrorCodes.LastNameTooLong:
+						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong
+						break
+					default:
+						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError
+						break
+				}
+			}
+		}
 	}
 }

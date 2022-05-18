@@ -139,7 +139,11 @@
 			</div>
 
 			<div *ngIf="authorsLoaded">
-				<a class="card my-4 cursor theme-background-color-secondary"
+				<pocketlib-add-list-item
+					(click)="ShowCreateAuthorDialog()">
+				</pocketlib-add-list-item>
+
+				<a class="card cursor my-4 theme-background-color-secondary"
 					style="text-decoration: none; transition: 0.12s"
 					[ngClass]="hoveredAuthorItem == i ? 'shadow' : 'shadow-sm'"
 					[routerLink]="'/author/' + author.uuid"
@@ -255,6 +259,47 @@
 				[errorMessage]="editProfileDialogTwitterUsernameError"
 				(change)="editProfileDialogTwitterUsername = $event.detail.value; editProfileDialogTwitterUsernameError = ''"
 				(enter)="SaveProfile()">
+			</dav-textfield>
+		</div>
+	</form>
+</dav-dialog>
+
+<dav-dialog
+	[header]="locale.createAuthorDialog.header"
+	[primaryButtonText]="locale.create"
+	[defaultButtonText]="locale.cancel"
+	[visible]="createAuthorDialogVisible"
+	[loading]="createAuthorDialogLoading"
+	maxWidth="340"
+	(dismiss)="createAuthorDialogVisible = false"
+	(primaryButtonClick)="CreateAuthor()"
+	(defaultButtonClick)="createAuthorDialogVisible = false">
+
+	<form>
+		<!-- First name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="createAuthorDialogFirstName"
+				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
+				[placeholder]="locale.createAuthorDialog.firstNameTextfieldPlaceholder"
+				autocomplete="given-name"
+				[disabled]="createAuthorDialogLoading"
+				[errorMessage]="createAuthorDialogFirstNameError"
+				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
+			</dav-textfield>
+		</div>
+
+		<!-- Last name -->
+		<div class="mb-3">
+			<dav-textfield
+				[value]="createAuthorDialogLastName"
+				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
+				[placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
+				autocomplete="family-name"
+				[disabled]="createAuthorDialogLoading"
+				[errorMessage]="createAuthorDialogLastNameError"
+				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
+				(enter)="CreateAuthor()">
 			</dav-textfield>
 		</div>
 	</form>

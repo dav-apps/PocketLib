@@ -192,24 +192,24 @@ export class AuthorPageComponent {
 				)
 			)
 
-			this.createAuthorDialogVisible = false
-
 			// Redirect to the author page of the new author
 			this.router.navigate(['author', responseData.uuid])
 		} else {
 			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
-					case ErrorCodes.FirstNameMissing:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
-						break
-					case ErrorCodes.LastNameMissing:
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
-						break
 					case ErrorCodes.FirstNameTooShort:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+						if (this.createAuthorDialogFirstName.length == 0) {
+							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
+						} else {
+							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+						}
 						break
 					case ErrorCodes.LastNameTooShort:
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+						if (this.createAuthorDialogLastName.length == 0) {
+							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
+						} else {
+							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+						}
 						break
 					case ErrorCodes.FirstNameTooLong:
 						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
