@@ -356,6 +356,7 @@ const enDefaults = {
 		page: "Page"
 	},
 	publisherProfile: {
+		yourAuthors: "Your authors",
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
@@ -863,6 +864,7 @@ const deDefaults = {
 		page: "Seite"
 	},
 	publisherProfile: {
+		yourAuthors: "Deine Autoren",
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",

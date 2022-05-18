@@ -30,6 +30,7 @@ export class Author {
 		url: string
 		blurhash: string
 	}
+	private profileImageContent: string
 	private bios: {
 		loaded: boolean
 		isLoading: boolean
@@ -69,6 +70,21 @@ export class Author {
 		this.series = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
 	}
 
+	async GetProfileImageContent(): Promise<string> {
+		if (this.profileImageContent != null) {
+			return this.profileImageContent
+		}
+
+		if (this.profileImage.url == null) return null
+
+		let response = await this.apiService.GetFile({ url: this.profileImage.url })
+		if (!isSuccessStatusCode(response.status)) return null
+
+		let responseData = (response as ApiResponse<string>).data
+		this.profileImageContent = responseData
+		return responseData
+	}
+
 	async ReloadProfileImage() {
 		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveAuthorProfileImage.name)
 
@@ -85,6 +101,7 @@ export class Author {
 
 			this.profileImage.url = responseData.url
 			this.profileImage.blurhash = responseData.blurhash
+			this.profileImageContent = null
 		}
 	}
 

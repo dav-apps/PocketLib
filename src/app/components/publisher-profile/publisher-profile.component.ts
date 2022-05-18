@@ -14,6 +14,7 @@ import {
 	GenerateTwitterLink
 } from 'src/app/misc/utils'
 import {
+	AuthorListItem,
 	PublisherMode,
 	PublisherResource,
 	PublisherField,
@@ -50,6 +51,9 @@ export class PublisherProfileComponent {
 	descriptionLoading: boolean = false
 	errorMessage: string = ""
 	storeContext: boolean = true		// Whether the component is shown in the Store
+	authorItems: AuthorListItem[] = []
+	authorsLoaded: boolean = false
+	hoveredAuthorItem: number = -1
 
 	//#region LogoDialog
 	@ViewChild('logoDialogImage', { static: true }) logoDialogImage: ElementRef<HTMLImageElement>
@@ -121,6 +125,30 @@ export class PublisherProfileComponent {
 		}
 
 		this.logoAlt = this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', this.publisher.name)
+
+		if (this.publisherMode != PublisherMode.Normal) {
+			// Get the authors of the publisher
+			for (let author of await this.publisher.GetAuthors()) {
+				let authorItem: AuthorListItem = {
+					uuid: author.uuid,
+					firstName: author.firstName,
+					lastName: author.lastName,
+					profileImageContent: this.dataService.defaultProfileImageUrl,
+					profileImageBlurhash: author.profileImage.blurhash,
+					profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
+				}
+
+				author.GetProfileImageContent().then((response: string) => {
+					if (response != null) {
+						authorItem.profileImageContent = response
+					}
+				})
+
+				this.authorItems.push(authorItem)
+			}
+
+			this.authorsLoaded = true
+		}
 	}
 
 	@HostListener('window:resize')
