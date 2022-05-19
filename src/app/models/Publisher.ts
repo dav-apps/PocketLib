@@ -25,10 +25,13 @@ export class Publisher {
 		blurhash: string
 	}
 	private authors: {
+		page: number,
+		pages: number,
+		limit: number,
 		loaded: boolean
 		isLoading: boolean
 		itemsPromiseHolder: PromiseHolder<Author[]>
-	}
+	}[]
 
 	constructor(
 		publisherResource: PublisherResource,
@@ -47,7 +50,7 @@ export class Publisher {
 			url: publisherResource?.logo?.url,
 			blurhash: publisherResource?.logo?.blurhash
 		}
-		this.authors = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+		this.authors = []
 	}
 
 	async ReloadLogo() {
@@ -69,59 +72,124 @@ export class Publisher {
 		}
 	}
 
-	async GetAuthors(): Promise<Author[]> {
-		if (this.authors.isLoading || this.authors.loaded) {
+	async GetAuthors(page: number = -1, limit: number = 50): Promise<Author[]> {
+		if (limit <= 0) limit = 1
+		let authorItem = this.authors.find(item => item.page == page && item.limit == limit)
+
+		if (authorItem != null && (authorItem.isLoading || authorItem.loaded)) {
 			let items = []
 
-			for (let item of await this.authors.itemsPromiseHolder.AwaitResult()) {
+			for (let item of await authorItem.itemsPromiseHolder.AwaitResult()) {
 				items.push(item)
 			}
 
 			return items
 		}
 
-		this.authors.isLoading = true
-		this.authors.itemsPromiseHolder.Setup()
-
-		// Get the authors of the publisher
-		let response = await this.apiService.ListAuthors({
-			publisher: this.uuid,
-			fields: [
-				AuthorListField.items_uuid,
-				AuthorListField.items_publisher,
-				AuthorListField.items_firstName,
-				AuthorListField.items_lastName,
-				AuthorListField.items_bio,
-				AuthorListField.items_websiteUrl,
-				AuthorListField.items_facebookUsername,
-				AuthorListField.items_instagramUsername,
-				AuthorListField.items_twitterUsername,
-				AuthorListField.items_profileImage
-			],
-			languages: this.languages
-		})
-
-		if (!isSuccessStatusCode(response.status)) {
-			this.authors.isLoading = false
-			this.authors.itemsPromiseHolder.Resolve([])
-			return []
+		authorItem = {
+			page,
+			pages: 1,
+			limit,
+			loaded: false,
+			isLoading: true,
+			itemsPromiseHolder: new PromiseHolder<Author[]>()
 		}
-
-		this.authors.loaded = true
-		this.authors.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+		this.authors.push(authorItem)
 		let items = []
 
-		for (let item of responseData.items) {
-			items.push(new Author(item, this.languages, this.apiService, this.cachingService))
+		if (page == -1) {
+			// Get all authors of the publisher
+			let authorPage = 0
+
+			while (authorItem.pages > authorPage) {
+				authorPage++
+
+				let response = await this.apiService.ListAuthors({
+					publisher: this.uuid,
+					fields: [
+						AuthorListField.pages,
+						AuthorListField.items_uuid,
+						AuthorListField.items_publisher,
+						AuthorListField.items_firstName,
+						AuthorListField.items_lastName,
+						AuthorListField.items_bio,
+						AuthorListField.items_websiteUrl,
+						AuthorListField.items_facebookUsername,
+						AuthorListField.items_instagramUsername,
+						AuthorListField.items_twitterUsername,
+						AuthorListField.items_profileImage
+					],
+					languages: this.languages,
+					limit,
+					page: authorPage
+				})
+
+				if (isSuccessStatusCode(response.status)) {
+					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+					authorItem.pages = responseData.pages
+
+					for (let item of responseData.items) {
+						items.push(new Author(item, this.languages, this.apiService, this.cachingService))
+					}
+				} else {
+					authorItem.isLoading = false
+					authorItem.itemsPromiseHolder.Resolve([])
+					return null
+				}
+			}
+		} else {
+			let response = await this.apiService.ListAuthors({
+				publisher: this.uuid,
+				fields: [
+					AuthorListField.pages,
+					AuthorListField.items_uuid,
+					AuthorListField.items_publisher,
+					AuthorListField.items_firstName,
+					AuthorListField.items_lastName,
+					AuthorListField.items_bio,
+					AuthorListField.items_websiteUrl,
+					AuthorListField.items_facebookUsername,
+					AuthorListField.items_instagramUsername,
+					AuthorListField.items_twitterUsername,
+					AuthorListField.items_profileImage
+				],
+				languages: this.languages,
+				limit,
+				page
+			})
+
+			if (isSuccessStatusCode(response.status)) {
+				let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+				authorItem.pages = responseData.pages
+
+				for (let item of responseData.items) {
+					items.push(new Author(item, this.languages, this.apiService, this.cachingService))
+				}
+			} else {
+				authorItem.isLoading = false
+				authorItem.itemsPromiseHolder.Resolve([])
+				return null
+			}
 		}
 
-		this.authors.itemsPromiseHolder.Resolve(items)
+		authorItem.loaded = true
+		authorItem.isLoading = false
+		authorItem.itemsPromiseHolder.Resolve(items)
 		return items
 	}
 
+	GetAuthorPages(page: number = -1, limit: number = 50) {
+		let authorItem = this.authors.find(item => item.page == page && item.limit == limit)
+
+		if (authorItem != null) {
+			return authorItem.pages
+		} else {
+			return 1
+		}
+	}
+
 	ClearAuthors() {
-		this.authors.loaded = false
+		this.authors = []
 		this.cachingService.ClearApiRequestCache(this.apiService.ListAuthors.name)
 	}
 }

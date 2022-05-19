@@ -1,5 +1,5 @@
 import { Component, Input, ElementRef, ViewChild, HostListener } from "@angular/core"
-import { Router } from "@angular/router"
+import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe } from "@fortawesome/free-solid-svg-icons"
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons"
@@ -27,6 +27,7 @@ import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
+const maxAuthorsPerPage = 5
 
 @Component({
 	selector: "pocketlib-publisher-profile",
@@ -57,6 +58,8 @@ export class PublisherProfileComponent {
 	authorItems: AuthorListItem[] = []
 	authorsLoaded: boolean = false
 	hoveredAuthorItem: number = -1
+	pages: number = 1
+	page: number = 1
 
 	//#region LogoDialog
 	@ViewChild('logoDialogImage', { static: true }) logoDialogImage: ElementRef<HTMLImageElement>
@@ -91,11 +94,23 @@ export class PublisherProfileComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private cachingService: CachingService,
-		private router: Router
+		private router: Router,
+		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().publisherProfile
 
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
+
+		this.activatedRoute.url.subscribe(() => {
+			let urlSegments = this.activatedRoute.snapshot.url
+			if (urlSegments.length == 0) return
+
+			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
+				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+			} else {
+				this.page = 1
+			}
+		})
 	}
 
 	async ngOnInit() {
@@ -140,25 +155,7 @@ export class PublisherProfileComponent {
 		this.logoAlt = this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', this.publisher.name)
 
 		// Get the authors of the publisher
-		for (let author of await this.publisher.GetAuthors()) {
-			let authorItem: AuthorListItem = {
-				uuid: author.uuid,
-				firstName: author.firstName,
-				lastName: author.lastName,
-				profileImageContent: this.dataService.defaultProfileImageUrl,
-				profileImageBlurhash: author.profileImage.blurhash,
-				profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
-			}
-
-			author.GetProfileImageContent().then((response: string) => {
-				if (response != null) {
-					authorItem.profileImageContent = response
-				}
-			})
-
-			this.authorItems.push(authorItem)
-		}
-
+		await this.LoadAuthors()
 		this.authorsLoaded = true
 	}
 
@@ -192,6 +189,37 @@ export class PublisherProfileComponent {
 			let responseData = (response as ApiResponse<PublisherResource>).data
 			this.publisher = new Publisher(responseData, await this.dataService.GetStoreLanguages(), this.apiService, this.cachingService)
 		}
+	}
+
+	async LoadAuthors() {
+		this.authorItems = []
+
+		for (let author of await this.publisher.GetAuthors(this.page, maxAuthorsPerPage)) {
+			let authorItem: AuthorListItem = {
+				uuid: author.uuid,
+				firstName: author.firstName,
+				lastName: author.lastName,
+				profileImageContent: this.dataService.defaultProfileImageUrl,
+				profileImageBlurhash: author.profileImage.blurhash,
+				profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
+			}
+
+			author.GetProfileImageContent().then((response: string) => {
+				if (response != null) {
+					authorItem.profileImageContent = response
+				}
+			})
+
+			this.authorItems.push(authorItem)
+		}
+
+		this.pages = this.publisher.GetAuthorPages(this.page, maxAuthorsPerPage)
+	}
+
+	PageChange(page: number) {
+		this.page = page
+		this.router.navigate([], { queryParams: { page } })
+		this.LoadAuthors()
 	}
 
 	UpdateSocialMediaLinks() {

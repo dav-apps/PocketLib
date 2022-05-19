@@ -169,6 +169,13 @@
 						<h4 class="card-title ms-4 my-auto text-color fw-light">{{ author.firstName }} {{ author.lastName }}</h4>
 					</div>
 				</a>
+
+				<dav-pagination
+					[pages]="pages"
+					[currentPage]="page"
+					(pageChange)="PageChange($event.detail.page)"
+					*ngIf="pages > 1">
+				</dav-pagination>
 			</div>
 		</div>
 	</div>
