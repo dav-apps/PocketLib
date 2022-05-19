@@ -18,6 +18,8 @@ import { UpdateBookOrder } from 'src/app/models/BookOrder'
 import { GetBook } from 'src/app/models/BookManager'
 import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
 import {
+	PublisherResource,
+	PublisherField,
 	AuthorResource,
 	AuthorField,
 	BookResource,
@@ -91,6 +93,13 @@ export class StoreBookPageComponent {
 	coverAlt: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageAlt: string = ""
+	publisher: {
+		uuid: string
+		name: string
+		logoBlurhash: string
+		logoContent: string
+		logoAlt: string
+	} = null
 	loginRequiredDialogVisible: boolean = false
 	noAccessDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
@@ -154,19 +163,23 @@ export class StoreBookPageComponent {
 
 	async GetData() {
 		// Get the StoreBook
-		let collectionUuid = await this.GetStoreBook()
+		let collectionUuid = await this.LoadStoreBook()
 		setTimeout(() => this.setSize(), 1)
 		if (!collectionUuid) return
 
 		// Get the StoreBookCollection
-		let authorUuid = await this.GetStoreBookCollection(collectionUuid)
+		let authorUuid = await this.LoadStoreBookCollection(collectionUuid)
 		if (!authorUuid) return
 
 		// Get the Author
-		await this.GetAuthor(authorUuid)
+		await this.LoadAuthor(authorUuid)
+
+		if (this.author.publisher != null) {
+			await this.LoadPublisher()
+		}
 	}
 
-	async GetStoreBook(): Promise<string> {
+	async LoadStoreBook(): Promise<string> {
 		let response = await this.apiService.RetrieveStoreBook({
 			uuid: this.uuid,
 			fields: [
@@ -268,7 +281,7 @@ export class StoreBookPageComponent {
 		return null
 	}
 
-	async GetStoreBookCollection(uuid: string): Promise<string> {
+	async LoadStoreBookCollection(uuid: string): Promise<string> {
 		let response = await this.apiService.RetrieveStoreBookCollection({
 			uuid,
 			fields: [StoreBookCollectionField.author]
@@ -281,11 +294,12 @@ export class StoreBookPageComponent {
 		return null
 	}
 
-	async GetAuthor(uuid: string) {
+	async LoadAuthor(uuid: string) {
 		let response = await this.apiService.RetrieveAuthor({
 			uuid,
 			fields: [
 				AuthorField.uuid,
+				AuthorField.publisher,
 				AuthorField.firstName,
 				AuthorField.lastName,
 				AuthorField.profileImage
@@ -301,6 +315,35 @@ export class StoreBookPageComponent {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.authorProfileImageContent = (fileResponse as ApiResponse<string>).data
 					}
+				})
+			}
+		}
+	}
+
+	async LoadPublisher() {
+		// Get the publisher
+		let publisherResponse = await this.apiService.RetrievePublisher({
+			uuid: this.author.publisher,
+			fields: [
+				PublisherField.name,
+				PublisherField.logo
+			]
+		})
+
+		if (isSuccessStatusCode(publisherResponse.status)) {
+			let responseData = (publisherResponse as ApiResponse<PublisherResource>).data
+
+			this.publisher = {
+				uuid: this.author.publisher,
+				name: responseData.name,
+				logoBlurhash: responseData.logo?.blurhash,
+				logoContent: this.dataService.defaultProfileImageUrl,
+				logoAlt: this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', responseData.name)
+			}
+
+			if (responseData.logo?.url != null) {
+				this.apiService.GetFile({ url: responseData.logo.url }).then((response: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(response.status)) this.publisher.logoContent = (response as ApiResponse<string>).data
 				})
 			}
 		}

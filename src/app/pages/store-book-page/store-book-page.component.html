@@ -41,6 +41,31 @@
 				</p>
 			</a>
 
+			<!-- Publisher profile and name -->
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/publisher/' + publisher.uuid"
+				*ngIf="publisher != null">
+
+				<pocketlib-blurhash-image
+					[src]="publisher.logoContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="publisher.logoBlurhash"
+					[title]="publisher.name"
+					[alt]="publisher.logoAlt"
+					width="30"
+					height="30"
+					shadowSm="true"
+					rounded="true"
+					cursor="true">
+				</pocketlib-blurhash-image>
+
+				<p class="fw-light my-auto cursor text-color"
+					style="font-size: 18px; margin-left: 13px">
+					{{ publisher.name }}
+				</p>
+			</a>
+
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased && book.price > 0">
 				<dav-button
@@ -186,6 +211,31 @@
 				</p>
 			</a>
 
+			<!-- Publisher profile and name -->
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/publisher/' + publisher.uuid"
+				*ngIf="publisher != null">
+
+				<pocketlib-blurhash-image
+					[src]="publisher.logoContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="publisher.logoBlurhash"
+					[title]="publisher.name"
+					[alt]="publisher.logoAlt"
+					width="30"
+					height="30"
+					shadowSm="true"
+					rounded="true"
+					cursor="true">
+				</pocketlib-blurhash-image>
+
+				<p class="fw-light my-auto cursor text-color"
+					style="font-size: 18px; margin-left: 13px">
+					{{ publisher.name }}
+				</p>
+			</a>
+
 			<!-- Buy button -->
 			<div *ngIf="!book.purchased && book.price > 0">
 				<dav-button
@@ -326,6 +376,31 @@
 				<p class="fw-light my-auto cursor text-color"
 					style="font-size: 18px; margin-left: 13px">
 					{{ author.firstName }} {{ author.lastName }}
+				</p>
+			</a>
+
+			<!-- Publisher profile and name -->
+			<a class="d-flex my-3"
+				style="text-decoration: none;"
+				[routerLink]="'/store/publisher/' + publisher.uuid"
+				*ngIf="publisher != null">
+
+				<pocketlib-blurhash-image
+					[src]="publisher.logoContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="publisher.logoBlurhash"
+					[title]="publisher.name"
+					[alt]="publisher.logoAlt"
+					width="30"
+					height="30"
+					shadowSm="true"
+					rounded="true"
+					cursor="true">
+				</pocketlib-blurhash-image>
+
+				<p class="fw-light my-auto cursor text-color"
+					style="font-size: 18px; margin-left: 13px">
+					{{ publisher.name }}
 				</p>
 			</a>
 
