@@ -139,29 +139,27 @@ export class PublisherProfileComponent {
 
 		this.logoAlt = this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', this.publisher.name)
 
-		if (this.publisherMode != PublisherMode.Normal) {
-			// Get the authors of the publisher
-			for (let author of await this.publisher.GetAuthors()) {
-				let authorItem: AuthorListItem = {
-					uuid: author.uuid,
-					firstName: author.firstName,
-					lastName: author.lastName,
-					profileImageContent: this.dataService.defaultProfileImageUrl,
-					profileImageBlurhash: author.profileImage.blurhash,
-					profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
-				}
-
-				author.GetProfileImageContent().then((response: string) => {
-					if (response != null) {
-						authorItem.profileImageContent = response
-					}
-				})
-
-				this.authorItems.push(authorItem)
+		// Get the authors of the publisher
+		for (let author of await this.publisher.GetAuthors()) {
+			let authorItem: AuthorListItem = {
+				uuid: author.uuid,
+				firstName: author.firstName,
+				lastName: author.lastName,
+				profileImageContent: this.dataService.defaultProfileImageUrl,
+				profileImageBlurhash: author.profileImage.blurhash,
+				profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
 			}
 
-			this.authorsLoaded = true
+			author.GetProfileImageContent().then((response: string) => {
+				if (response != null) {
+					authorItem.profileImageContent = response
+				}
+			})
+
+			this.authorItems.push(authorItem)
 		}
+
+		this.authorsLoaded = true
 	}
 
 	@HostListener('window:resize')

@@ -114,12 +114,12 @@
 			</dav-button>
 		</div>
 
-		<div class="col-12 col-md-6 pt-3 mx-auto" *ngIf="publisherMode != 0">
+		<div class="col-12 col-md-6 pt-3 mx-auto">
 			<!-- Error message -->
 			<div
 				class="mt-3 mx-auto"
 				style="min-width: 200px; max-width: 300px"
-				*ngIf="errorMessage.length > 0">
+				*ngIf="errorMessage.length > 0 && publisherMode != 0">
 
 				<dav-message-bar type="danger">
 					{{ errorMessage }}
@@ -140,13 +140,14 @@
 
 			<div *ngIf="authorsLoaded">
 				<pocketlib-add-list-item
-					(click)="ShowCreateAuthorDialog()">
+					(click)="ShowCreateAuthorDialog()"
+					*ngIf="publisherMode != 0">
 				</pocketlib-add-list-item>
 
 				<a class="card cursor my-4 theme-background-color-secondary"
 					style="text-decoration: none; transition: 0.12s"
 					[ngClass]="hoveredAuthorItem == i ? 'shadow' : 'shadow-sm'"
-					[routerLink]="'/author/' + author.uuid"
+					[routerLink]="publisherMode == 0 ? ('/store/author/' + author.uuid) : ('/author/' + author.uuid)"
 					(mouseover)="hoveredAuthorItem = i"
 					(mouseout)="hoveredAuthorItem = -1"
 					(focusin)="hoveredAuthorItem = i"
