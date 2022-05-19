@@ -446,6 +446,7 @@ export class ApiService {
 		fields?: AuthorListField[],
 		languages?: Language[],
 		limit?: number,
+		page?: number,
 		mine?: boolean,
 		latest?: boolean,
 		publisher?: string
@@ -457,6 +458,7 @@ export class ApiService {
 				fields: params.fields,
 				languages: params.languages,
 				limit: params.limit,
+				page: params.page,
 				mine: params.mine,
 				latest: params.latest,
 				publisher: params.publisher
@@ -483,6 +485,7 @@ export class ApiService {
 					fields: params.fields,
 					languages: params.languages,
 					limit: params.limit,
+					page: params.page,
 					mine: params.mine,
 					latest: params.latest,
 					publisher: params.publisher

@@ -150,34 +150,45 @@ export class DataService {
 
 				// Load the authors of the admin
 				this.adminAuthors = []
+				let authorPage = 0
+				let authorPages = 1
 
-				let listAuthorsResponse = await this.apiService.ListAuthors({
-					mine: true,
-					fields: [
-						AuthorListField.items_uuid,
-						AuthorListField.items_firstName,
-						AuthorListField.items_lastName,
-						AuthorListField.items_websiteUrl,
-						AuthorListField.items_facebookUsername,
-						AuthorListField.items_instagramUsername,
-						AuthorListField.items_twitterUsername,
-						AuthorListField.items_profileImage
-					],
-					languages: await this.GetStoreLanguages()
-				})
+				while (authorPages > authorPage) {
+					authorPage++
 
-				if (isSuccessStatusCode(listAuthorsResponse.status)) {
-					let listAuthorsResponseData = (listAuthorsResponse as ApiResponse<ListResponseData<AuthorResource>>).data
+					let listAuthorsResponse = await this.apiService.ListAuthors({
+						mine: true,
+						fields: [
+							AuthorListField.pages,
+							AuthorListField.items_uuid,
+							AuthorListField.items_firstName,
+							AuthorListField.items_lastName,
+							AuthorListField.items_websiteUrl,
+							AuthorListField.items_facebookUsername,
+							AuthorListField.items_instagramUsername,
+							AuthorListField.items_twitterUsername,
+							AuthorListField.items_profileImage
+						],
+						languages: await this.GetStoreLanguages(),
+						page: authorPage
+					})
 
-					for (let item of listAuthorsResponseData.items) {
-						this.adminAuthors.push(
-							new Author(
-								item,
-								await this.GetStoreLanguages(),
-								this.apiService,
-								this.cachingService
+					if (isSuccessStatusCode(listAuthorsResponse.status)) {
+						let listAuthorsResponseData = (listAuthorsResponse as ApiResponse<ListResponseData<AuthorResource>>).data
+						authorPages = listAuthorsResponseData.pages
+
+						for (let item of listAuthorsResponseData.items) {
+							this.adminAuthors.push(
+								new Author(
+									item,
+									await this.GetStoreLanguages(),
+									this.apiService,
+									this.cachingService
+								)
 							)
-						)
+						}
+					} else {
+						break
 					}
 				}
 			} else {

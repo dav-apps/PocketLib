@@ -175,6 +175,7 @@ export enum AuthorField {
 
 export enum AuthorListField {
 	type = "type",
+	pages = "pages",
 	items_uuid = "items.uuid",
 	items_publisher = "items.publisher",
 	items_firstName = "items.first_name",
