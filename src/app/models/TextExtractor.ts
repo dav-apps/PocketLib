@@ -378,8 +378,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
  */
 export function ExtractTextElements(
 	node: Node,
-	parentElement?: TextElement,
-	allowedTypes?: TextElementType[]
+	parentElement?: TextElement
 ): TextElement[] {
 	let textElements: TextElement[] = []
 
@@ -394,12 +393,6 @@ export function ExtractTextElements(
 			})
 		}
 	} else if (node.nodeType == Node.ELEMENT_NODE) {
-		if (allowedTypes && TextElementType[node.nodeName] != undefined) {
-			// Check if the allowed types list contains the name of the current node
-			let i = allowedTypes.findIndex(type => type.toString() == node.nodeName)
-			if (i == -1) return textElements
-		}
-
 		switch (node.nodeName) {
 			case "H1":
 			case "H2":
@@ -440,13 +433,13 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					}
 
-					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement, allowedTypesForHElements)
+					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement)
 					textElements.push(hTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < hElement.childNodes.length; i++) {
 						let childNode = hElement.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
+						textElements.push(...ExtractTextElements(childNode, parentElement))
 					}
 				}
 				break
@@ -458,7 +451,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement, allowedTypesForParagraphElement)
+				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement)
 				textElements.push(pTextElement)
 				break
 			case "SPAN":
@@ -470,7 +463,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				spanTextElement.TextElements = GetInnerTextElements(spanElement, spanTextElement, allowedTypesForSpanElement)
+				spanTextElement.TextElements = GetInnerTextElements(spanElement, spanTextElement)
 				textElements.push(spanTextElement)
 				break
 			case "I":
@@ -482,7 +475,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				iTextElement.TextElements = GetInnerTextElements(iElement, iTextElement, allowedTypesForIElement)
+				iTextElement.TextElements = GetInnerTextElements(iElement, iTextElement)
 				textElements.push(iTextElement)
 				break
 			case "EM":
@@ -494,7 +487,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				emTextElement.TextElements = GetInnerTextElements(emElement, emTextElement, allowedTypesForEmElement)
+				emTextElement.TextElements = GetInnerTextElements(emElement, emTextElement)
 				textElements.push(emTextElement)
 				break
 			case "B":
@@ -506,7 +499,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				bTextElement.TextElements = GetInnerTextElements(bElement, bTextElement, allowedTypesForBElement)
+				bTextElement.TextElements = GetInnerTextElements(bElement, bTextElement)
 				textElements.push(bTextElement)
 				break
 			case "Q":
@@ -518,7 +511,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				qTextElement.TextElements = GetInnerTextElements(qElement, qTextElement, allowedTypesForQElement)
+				qTextElement.TextElements = GetInnerTextElements(qElement, qTextElement)
 				textElements.push(qTextElement)
 				break
 			case "STRONG":
@@ -530,7 +523,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement, allowedTypesForStrongElement)
+				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement)
 				textElements.push(strongTextElement)
 				break
 			case "TIME":
@@ -542,7 +535,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				timeTextElement.TextElements = GetInnerTextElements(timeElement, timeTextElement, allowedTypesForTimeElement)
+				timeTextElement.TextElements = GetInnerTextElements(timeElement, timeTextElement)
 				textElements.push(timeTextElement)
 				break
 			case "BLOCKQUOTE":
@@ -554,7 +547,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement, allowedTypesForBlockquoteElement)
+				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement)
 				textElements.push(blockquoteTextElement)
 				break
 			case "SECTION":
@@ -567,7 +560,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement, allowedTypesForSectionElement)
+				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement)
 				textElements.push(sectionTextElement)
 				break
 			case "HGROUP":
@@ -579,7 +572,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				hgroupTextElement.TextElements = GetInnerTextElements(hgroupElement, hgroupTextElement, allowedTypesForHgroupElement)
+				hgroupTextElement.TextElements = GetInnerTextElements(hgroupElement, hgroupTextElement)
 				textElements.push(hgroupTextElement)
 				break
 			case "HEADER":
@@ -591,7 +584,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement, allowedTypesForHeaderElement)
+				headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement)
 				textElements.push(headerTextElement)
 				break
 			case "FOOTER":
@@ -603,7 +596,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement, allowedTypesForFooterElement)
+				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement)
 				textElements.push(footerTextElement)
 				break
 			case "CITE":
@@ -615,7 +608,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				citeTextElement.TextElements = GetInnerTextElements(citeElement, citeTextElement, allowedTypesForCiteElement)
+				citeTextElement.TextElements = GetInnerTextElements(citeElement, citeTextElement)
 				textElements.push(citeTextElement)
 				break
 			case "ABBR":
@@ -627,7 +620,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				abbrTextElement.TextElements = GetInnerTextElements(abbrElement, abbrTextElement, allowedTypesForAbbrElement)
+				abbrTextElement.TextElements = GetInnerTextElements(abbrElement, abbrTextElement)
 				textElements.push(abbrTextElement)
 				break
 			case "A":
@@ -643,13 +636,13 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					}
 
-					aTextElement.TextElements = GetInnerTextElements(aElement, aTextElement, allowedTypesForAnchorElement)
+					aTextElement.TextElements = GetInnerTextElements(aElement, aTextElement)
 					textElements.push(aTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < aElement.childNodes.length; i++) {
 						let childNode = aElement.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
+						textElements.push(...ExtractTextElements(childNode, parentElement))
 					}
 				}
 				break
@@ -673,7 +666,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				olTextElement.TextElements = GetInnerTextElements(olElement, olTextElement, allowedTypesForListElement)
+				olTextElement.TextElements = GetInnerTextElements(olElement, olTextElement)
 				textElements.push(olTextElement)
 				break
 			case "UL":
@@ -684,7 +677,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				ulTextElement.TextElements = GetInnerTextElements(ulElement, ulTextElement, allowedTypesForListElement)
+				ulTextElement.TextElements = GetInnerTextElements(ulElement, ulTextElement)
 				textElements.push(ulTextElement)
 				break
 			case "LI":
@@ -695,7 +688,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				liTextElement.TextElements = GetInnerTextElements(liElement, liTextElement, allowedTypesForListItemElement)
+				liTextElement.TextElements = GetInnerTextElements(liElement, liTextElement)
 				textElements.push(liTextElement)
 				break
 			case "HR":
@@ -720,7 +713,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				tableTextElement.TextElements = GetInnerTextElements(tableElement, tableTextElement, allowedTypesForTableElement)
+				tableTextElement.TextElements = GetInnerTextElements(tableElement, tableTextElement)
 				textElements.push(tableTextElement)
 				break
 			case "TR":
@@ -731,7 +724,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				trTextElement.TextElements = GetInnerTextElements(trElement, trTextElement, allowedTypesForTableRowElement)
+				trTextElement.TextElements = GetInnerTextElements(trElement, trTextElement)
 				textElements.push(trTextElement)
 				break
 			case "TH":
@@ -744,7 +737,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				thTextElement.TextElements = GetInnerTextElements(thElement, thTextElement, allowedTypesForTableCellElement)
+				thTextElement.TextElements = GetInnerTextElements(thElement, thTextElement)
 				textElements.push(thTextElement)
 				break
 			case "TD":
@@ -757,7 +750,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				tdTextElement.TextElements = GetInnerTextElements(tdElement, tdTextElement, allowedTypesForTableCellElement)
+				tdTextElement.TextElements = GetInnerTextElements(tdElement, tdTextElement)
 				textElements.push(tdTextElement)
 				break
 			case "PRE":
@@ -779,7 +772,7 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				codeTextElement.TextElements = GetInnerTextElements(codeElement, codeTextElement, allowedTypesForCodeElement)
+				codeTextElement.TextElements = GetInnerTextElements(codeElement, codeTextElement)
 				textElements.push(codeTextElement)
 				break
 			default:
@@ -795,7 +788,7 @@ export function ExtractTextElements(
 
 				for (let i = 0; i < element.childNodes.length; i++) {
 					let childNode = element.childNodes.item(i)
-					textElements.push(...ExtractTextElements(childNode, parentElement, allowedTypes))
+					textElements.push(...ExtractTextElements(childNode, parentElement))
 				}
 				break
 		}
@@ -806,8 +799,7 @@ export function ExtractTextElements(
 
 function GetInnerTextElements(
 	node: Node,
-	parentElement: TextElement,
-	allowedTypes?: TextElementType[]
+	parentElement: TextElement
 ): TextElement[] {
 	let textElements: TextElement[] = []
 
@@ -816,8 +808,7 @@ function GetInnerTextElements(
 		textElements.push(
 			...ExtractTextElements(
 				childNode,
-				parentElement,
-				allowedTypes
+				parentElement
 			)
 		)
 	}
@@ -957,302 +948,3 @@ export enum TextElementType {
 	PRE = "PRE",
 	CODE = "CODE"
 }
-
-const allowedTypesForHElements: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForParagraphElement: TextElementType[] = [
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.BLOCKQUOTE,
-	TextElementType.CITE,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR,
-	TextElementType.IMG,
-	TextElementType.CODE
-]
-
-const allowedTypesForSpanElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForIElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForEmElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForBElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForQElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG
-]
-
-const allowedTypesForStrongElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForTimeElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG
-]
-
-const allowedTypesForBlockquoteElement: TextElementType[] = [
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.BLOCKQUOTE,
-	TextElementType.HEADER,
-	TextElementType.FOOTER,
-	TextElementType.CITE,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForSectionElement: TextElementType[] = [
-	TextElementType.H1,
-	TextElementType.H2,
-	TextElementType.H3,
-	TextElementType.H4,
-	TextElementType.H5,
-	TextElementType.H6,
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.BLOCKQUOTE,
-	TextElementType.SECTION,
-	TextElementType.HGROUP,
-	TextElementType.HEADER,
-	TextElementType.FOOTER,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.IMG,
-	TextElementType.UL,
-	TextElementType.OL,
-	TextElementType.HR,
-	TextElementType.BR,
-	TextElementType.TABLE,
-	TextElementType.PRE
-]
-
-const allowedTypesForHgroupElement: TextElementType[] = [
-	TextElementType.H1,
-	TextElementType.H2,
-	TextElementType.H3,
-	TextElementType.H4,
-	TextElementType.H5,
-	TextElementType.H6
-]
-
-const allowedTypesForHeaderElement: TextElementType[] = [
-	TextElementType.H1,
-	TextElementType.H2,
-	TextElementType.H3,
-	TextElementType.H4,
-	TextElementType.H5,
-	TextElementType.H6,
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.BLOCKQUOTE,
-	TextElementType.HGROUP,
-	TextElementType.CITE,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.IMG,
-	TextElementType.BR
-]
-
-const allowedTypesForFooterElement: TextElementType[] = [
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForCiteElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.A
-]
-
-const allowedTypesForAbbrElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.A
-]
-
-const allowedTypesForAnchorElement: TextElementType[] = [
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.STRONG,
-	TextElementType.BR
-]
-
-const allowedTypesForListElement: TextElementType[] = [
-	TextElementType.LI,
-	TextElementType.OL,
-	TextElementType.UL
-]
-
-const allowedTypesForListItemElement: TextElementType[] = [
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.BLOCKQUOTE,
-	TextElementType.CITE,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForTableElement: TextElementType[] = [
-	TextElementType.TBODY,
-	TextElementType.TR,
-]
-
-const allowedTypesForTableRowElement: TextElementType[] = [
-	TextElementType.TH,
-	TextElementType.TD
-]
-
-const allowedTypesForTableCellElement: TextElementType[] = [
-	TextElementType.P,
-	TextElementType.SPAN,
-	TextElementType.TEXT,
-	TextElementType.I,
-	TextElementType.EM,
-	TextElementType.B,
-	TextElementType.Q,
-	TextElementType.STRONG,
-	TextElementType.TIME,
-	TextElementType.CITE,
-	TextElementType.ABBR,
-	TextElementType.A,
-	TextElementType.BR
-]
-
-const allowedTypesForCodeElement: TextElementType[] = [
-	TextElementType.TEXT
-]
