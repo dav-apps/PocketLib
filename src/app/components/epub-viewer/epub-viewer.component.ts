@@ -1586,17 +1586,25 @@ export class BookChapter {
 				font-size: 1.75em;
 			}
 
-			p {
-				text-align: justify;
-			}
-
 			blockquote > cite {
 				display: block;
 				text-align: right;
 			}
 
-			blockquote > header {
+			blockquote > header > p {
 				text-align: right;
+			}
+
+			section:not(#colophon) > p, blockquote > p, li > p {
+				text-align: justify;
+			}
+
+			section#dedication > p, section#dedication > header > p, section#dedication > blockquote > p {
+				text-align: center;
+			}
+
+			section#titlepage h1, section#titlepage p {
+				display: none;
 			}
 
 			section[role="doc-dedication"] {
