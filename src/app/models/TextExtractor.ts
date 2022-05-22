@@ -125,6 +125,18 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			}
 
 			return strongElement
+		case TextElementType.VAR:
+			let varElement = document.createElement("var") as HTMLElement
+			if (textElement.Id) varElement.id = textElement.Id
+
+			if (textElement.TextElements) {
+				for (let innerTextElement of textElement.TextElements) {
+					let varChild = CreateHtmlElementFromTextElement(innerTextElement)
+					if (varChild) varElement.appendChild(varChild)
+				}
+			}
+
+			return varElement
 		case TextElementType.TIME:
 			let timeElement = document.createElement("time") as HTMLTimeElement
 			if (textElement.Id) timeElement.id = textElement.Id
@@ -457,7 +469,6 @@ export function ExtractTextElements(
 				break
 			case "SPAN":
 				let spanElement = node as HTMLSpanElement
-
 				let spanTextElement: TextElement = {
 					Type: TextElementType.SPAN,
 					Id: spanElement.id,
@@ -469,7 +480,6 @@ export function ExtractTextElements(
 				break
 			case "I":
 				let iElement = node as HTMLElement
-
 				let iTextElement: TextElement = {
 					Type: TextElementType.I,
 					Id: iElement.id,
@@ -481,7 +491,6 @@ export function ExtractTextElements(
 				break
 			case "EM":
 				let emElement = node as HTMLElement
-
 				let emTextElement: TextElement = {
 					Type: TextElementType.EM,
 					Id: emElement.id,
@@ -493,7 +502,6 @@ export function ExtractTextElements(
 				break
 			case "B":
 				let bElement = node as HTMLElement
-
 				let bTextElement: TextElement = {
 					Type: TextElementType.B,
 					Id: bElement.id,
@@ -505,7 +513,6 @@ export function ExtractTextElements(
 				break
 			case "Q":
 				let qElement = node as HTMLQuoteElement
-
 				let qTextElement: TextElement = {
 					Type: TextElementType.Q,
 					Id: qElement.id,
@@ -517,7 +524,6 @@ export function ExtractTextElements(
 				break
 			case "STRONG":
 				let strongElement = node as HTMLElement
-
 				let strongTextElement: TextElement = {
 					Type: TextElementType.STRONG,
 					Id: strongElement.id,
@@ -527,9 +533,19 @@ export function ExtractTextElements(
 				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement)
 				textElements.push(strongTextElement)
 				break
+			case "VAR":
+				let varElement = node as HTMLElement
+				let varTextElement: TextElement = {
+					Type: TextElementType.VAR,
+					Id: varElement.id,
+					ParentElement: parentElement
+				}
+
+				varTextElement.TextElements = GetInnerTextElements(varElement, varTextElement)
+				textElements.push(varTextElement)
+				break
 			case "TIME":
 				let timeElement = node as HTMLTimeElement
-
 				let timeTextElement: TextElement = {
 					Type: TextElementType.TIME,
 					Id: timeElement.id,
@@ -541,7 +557,6 @@ export function ExtractTextElements(
 				break
 			case "BLOCKQUOTE":
 				let blockquoteElement = node as HTMLQuoteElement
-
 				let blockquoteTextElement: TextElement = {
 					Type: TextElementType.BLOCKQUOTE,
 					Id: blockquoteElement.id,
@@ -553,7 +568,6 @@ export function ExtractTextElements(
 				break
 			case "SECTION":
 				let sectionElement = node as HTMLElement
-
 				let sectionTextElement: TextElement = {
 					Type: TextElementType.SECTION,
 					Id: sectionElement.id,
@@ -566,7 +580,6 @@ export function ExtractTextElements(
 				break
 			case "HGROUP":
 				let hgroupElement = node as HTMLElement
-
 				let hgroupTextElement: TextElement = {
 					Type: TextElementType.HGROUP,
 					Id: hgroupElement.id,
@@ -578,7 +591,6 @@ export function ExtractTextElements(
 				break
 			case "HEADER":
 				let headerElement = node as HTMLElement
-
 				let headerTextElement: TextElement = {
 					Type: TextElementType.HEADER,
 					Id: headerElement.id,
@@ -590,7 +602,6 @@ export function ExtractTextElements(
 				break
 			case "FOOTER":
 				let footerElement = node as HTMLElement
-
 				let footerTextElement: TextElement = {
 					Type: TextElementType.FOOTER,
 					Id: footerElement.id,
@@ -602,7 +613,6 @@ export function ExtractTextElements(
 				break
 			case "CITE":
 				let citeElement = node as HTMLElement
-
 				let citeTextElement: TextElement = {
 					Type: TextElementType.CITE,
 					Id: citeElement.id,
@@ -614,7 +624,6 @@ export function ExtractTextElements(
 				break
 			case "ABBR":
 				let abbrElement = node as HTMLElement
-
 				let abbrTextElement: TextElement = {
 					Type: TextElementType.ABBR,
 					Id: abbrElement.id,
@@ -891,6 +900,8 @@ function NodeContainsText(node: Node): boolean {
 				|| childNode.nodeName == "EM"
 				|| childNode.nodeName == "B"
 				|| childNode.nodeName == "STRONG"
+				|| childNode.nodeName == "VAR"
+				|| childNode.nodeName == "TIME"
 				|| childNode.nodeName == "A"
 				|| childNode.nodeName == "ABBR"
 			)
@@ -932,6 +943,7 @@ export enum TextElementType {
 	B = "B",
 	Q = "Q",
 	STRONG = "STRONG",
+	VAR = "VAR",
 	TIME = "TIME",
 	BLOCKQUOTE = "BLOCKQUOTE",
 	SECTION = "SECTION",
