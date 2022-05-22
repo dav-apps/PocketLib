@@ -234,11 +234,22 @@ export class EpubChapter {
 			// Wait until the image loaded
 			await imageLoadPromise
 
-			// Set the width and height attributes
-			newImageTag.setAttribute("height", newImageTag.naturalHeight.toString())
-			newImageTag.setAttribute("width", newImageTag.naturalWidth.toString())
-			if (alt) newImageTag.setAttribute("alt", alt)
-			if (title) newImageTag.setAttribute("title", title)
+			// Set the attributes of the image
+			if (imageTag.hasAttribute("height")) {
+				newImageTag.setAttribute("height", imageTag.getAttribute("height"))
+			} else {
+				newImageTag.setAttribute("height", newImageTag.naturalHeight.toString())
+			}
+
+			if (imageTag.hasAttribute("width")) {
+				newImageTag.setAttribute("width", imageTag.getAttribute("width"))
+			} else {
+				newImageTag.setAttribute("width", newImageTag.naturalWidth.toString())
+			}
+
+			if (imageTag.hasAttribute("class")) newImageTag.setAttribute("class", imageTag.className)
+			if (imageTag.hasAttribute("alt")) newImageTag.setAttribute("alt", alt)
+			if (imageTag.hasAttribute("title")) newImageTag.setAttribute("title", title)
 
 			// Replace the old image tag with the new one
 			imageTag.parentNode.replaceChild(newImageTag, imageTag)

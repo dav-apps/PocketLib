@@ -135,7 +135,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 					if (timeChild) timeElement.appendChild(timeChild)
 				}
 			}
-			
+
 			return timeElement
 		case TextElementType.BLOCKQUOTE:
 			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
@@ -239,6 +239,7 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.IMG:
 			let imgElement = document.createElement("img") as HTMLImageElement
 			if (textElement.Id) imgElement.id = textElement.Id
+			if (textElement.Class) imgElement.className = textElement.Class
 			imgElement.setAttribute("src", textElement.Source)
 			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
 			if (textElement.Title) imgElement.setAttribute("title", textElement.Title)
@@ -648,15 +649,20 @@ export function ExtractTextElements(
 				break
 			case "IMG":
 				let imgElement = node as HTMLImageElement
-
-				textElements.push({
+				let imgTextElement: TextElement = {
 					Type: TextElementType.IMG,
 					Id: imgElement.id,
 					Source: imgElement.getAttribute("src"),
 					Alt: imgElement.getAttribute("alt"),
 					Title: imgElement.getAttribute("title"),
 					ParentElement: parentElement
-				})
+				}
+
+				if (imgElement.classList.contains("epub-type-se-image-color-depth-black-on-transparent")) {
+					imgTextElement.Class = "invert-colors"
+				}
+
+				textElements.push(imgTextElement)
 				break
 			case "OL":
 				let olElement = node as HTMLOListElement
@@ -898,6 +904,7 @@ function NodeContainsText(node: Node): boolean {
 export interface TextElement {
 	Type: TextElementType
 	Id?: string
+	Class?: string
 	Content?: string
 	Href?: string
 	Source?: string

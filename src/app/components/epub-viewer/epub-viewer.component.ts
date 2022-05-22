@@ -1576,6 +1576,10 @@ export class BookChapter {
 				font-family: Segoe UI;
 			}
 
+			body > p, body > div > p {
+				text-align: justify;
+			}
+
 			h1, h2, h3, h4, h5, h6 {
 				text-align: center;
 				margin: 2em 0;
@@ -1619,7 +1623,7 @@ export class BookChapter {
 
 			section[role="doc-epigraph"] > blockquote, section[role="doc-dedication"] > blockquote {
 				display: inline-block;
-				text-align: left;
+				text-align: justify;
 			}
 
 			header {
@@ -1629,12 +1633,12 @@ export class BookChapter {
 			header > p {
 				max-width: 70%;
 				margin: auto;
-				text-align: left;
+				text-align: justify;
 			}
 
 			header > blockquote {
 				display: inline-block;
-				text-align: left;
+				text-align: justify;
 			}
 
 			footer {
@@ -1656,6 +1660,10 @@ export class BookChapter {
 				text-align: center;
 			}
 
+			img.invert-colors {
+				filter: invert(1);
+			}
+
 			hr {
 				margin: 4em 25%;
 			}
@@ -1666,6 +1674,10 @@ export class BookChapter {
 
 			th, td {
 				vertical-align: top;
+			}
+
+			td {
+				text-align: justify;
 			}
 
 			td > p {
