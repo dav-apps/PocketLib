@@ -187,7 +187,7 @@ export class EpubChapter {
 		if (this.html != null) return this.html
 
 		let parser = new DOMParser()
-		let chapterDocument = parser.parseFromString(this.htmlContent, "text/html")
+		let chapterDocument = parser.parseFromString(this.htmlContent.replace(/>\s+</g, "><"), "text/html")
 		let chapterBody = chapterDocument.getElementsByTagName("body")[0]
 
 		await this.LoadBodyHtml(chapterBody)
@@ -206,6 +206,7 @@ export class EpubChapter {
 			if (child) body.appendChild(child)
 		}
 
+		this.html = html
 		return html
 	}
 
