@@ -256,18 +256,19 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
 			if (textElement.Title) imgElement.setAttribute("title", textElement.Title)
 
-			let imgContainerElement = document.createElement("div")
-			let imgContainerElementStyle = "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em"
-
 			// Check if the image is within a p tag
 			if (IsTextElementNestedWithinType(textElement, TextElementType.P)) {
-				imgContainerElementStyle = "margin-top: 2em; margin-bottom: 2em"
+				imgElement.style.height = "16px"		// TODO: Use the selected font size
+				return imgElement
+			} else {
+				// Create a container div for the image
+				let imgContainerElement = document.createElement("div")
+
+				imgContainerElement.setAttribute("style", "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em")
+				imgContainerElement.appendChild(imgElement)
+
+				return imgContainerElement
 			}
-
-			imgContainerElement.setAttribute("style", imgContainerElementStyle)
-			imgContainerElement.appendChild(imgElement)
-
-			return imgContainerElement
 		case TextElementType.OL:
 			let olElement = document.createElement("ol") as HTMLUListElement
 			if (textElement.Id) olElement.id = textElement.Id

@@ -1661,7 +1661,7 @@ export class BookChapter {
 			}
 
 			img.invert-colors {
-				filter: invert(1);
+				{6}
 			}
 
 			hr {
@@ -1674,6 +1674,14 @@ export class BookChapter {
 
 			th, td {
 				vertical-align: top;
+			}
+
+			th > h1, th > h2, th > h3, th > h4, th > h5, th > h6 {
+				margin: 0;
+			}
+
+			td > h1, td > h2, td > h3, td > h4, td > h5, td > h6 {
+				margin: 0;
 			}
 
 			td {
@@ -1723,6 +1731,7 @@ export class BookChapter {
 			.replace('{3}', width.toString())
 			.replace('{4}', height.toString())
 			.replace('{5}', darkTheme ? '#7eade8' : '#0000ee')
+			.replace('{6}', darkTheme ? "filter: invert(1);" : "")
 
 		return updatedHtml
 	}
