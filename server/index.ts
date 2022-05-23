@@ -2,6 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { JSDOM } from 'jsdom'
 import axios from 'axios'
+import { isSuccessStatusCode } from 'dav-js'
 
 const backendUrl = process.env.ENV == "production" ? `https://dav-backend-tfpik.ondigitalocean.app/v1` : `http://localhost:3111/v1`
 const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`
@@ -16,7 +17,7 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 			}
 		})
 
-		if (response.status == 200) {
+		if (isSuccessStatusCode(response.status)) {
 			let responseData = response.data as any
 
 			// Add the appropriate meta tags to the html
@@ -42,7 +43,7 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 			}
 		})
 
-		if (response.status == 200) {
+		if (isSuccessStatusCode(response.status)) {
 			let responseData = response.data as any
 
 			return getHtml({
@@ -54,6 +55,31 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 		}
 	} catch (error) { }
 
+	return getHtml()
+}
+
+export async function PrepareStorePublisherPage(uuid: string) {
+	try {
+		let response = await axios({
+			method: 'get',
+			url: `${backendUrl}/api/1/call/publishers/${uuid}`,
+			params: {
+				fields: "name,description,logo.url"
+			}
+		})
+
+		if (isSuccessStatusCode(response.status)) {
+			let responseData = response.data as any
+
+			return getHtml({
+				title: responseData.name,
+				description: responseData.description,
+				imageUrl: responseData.logo?.url,
+				url: `${websiteUrl}/store/publisher/${uuid}`
+			})
+		}
+	} catch (error) { }
+	
 	return getHtml()
 }
 

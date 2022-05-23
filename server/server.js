@@ -4,7 +4,8 @@ import { createServer } from 'http'
 import dotenv from 'dotenv'
 import {
 	PrepareStoreBookPage,
-	PrepareStoreAuthorPage
+	PrepareStoreAuthorPage,
+	PrepareStorePublisherPage
 } from './index.js'
 
 dotenv.config()
@@ -20,6 +21,11 @@ app.get('/store/book/:uuid', (req, res) => {
 app.get('/store/author/:uuid', (req, res) => {
 	let uuid = req.params.uuid
 	PrepareStoreAuthorPage(uuid).then(result => res.send(result))
+})
+
+app.get('/store/publisher/:uuid', (req, res) => {
+	let uuid = req.params.uuid
+	PrepareStorePublisherPage(uuid).then(result => res.send(result))
 })
 
 function getRoot(request, response) {
