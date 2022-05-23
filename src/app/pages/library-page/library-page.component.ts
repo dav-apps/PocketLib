@@ -9,7 +9,6 @@ import { CachingService } from 'src/app/services/caching-service'
 import { Book } from 'src/app/models/Book'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
-import { GetBook } from 'src/app/models/BookManager'
 import { UpdateBookOrder } from 'src/app/models/BookOrder'
 import { environment } from 'src/environments/environment'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
@@ -293,11 +292,13 @@ export class LibraryPageComponent {
 	async RemoveBook() {
 		this.removeBookDialogVisible = false
 		await this.selectedBook.Delete()
-		await this.dataService.LoadAllBooks()
 
-		if (this.allBooksVisible) {
-			this.LoadAllBooksList()
-		}
+		// Remove the selected book from the lists
+		let i = this.dataService.books.findIndex(b => b.uuid == this.selectedBook.uuid)
+		if (i != -1) this.dataService.books.splice(i, 1)
+
+		i = this.allBooks.findIndex(b => b.uuid == this.selectedBook.uuid)
+		if (i != -1) this.allBooks.splice(i, 1)
 
 		// Update the order of the books
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)

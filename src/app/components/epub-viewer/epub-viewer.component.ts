@@ -1710,7 +1710,7 @@ export class BookChapter {
 	 * @param height The max height for images
 	 * @param paddingX The left and right padding
 	 * @param marginTop The top margin
-	 * @param darktheme If true, makes the text color white
+	 * @param darkTheme If true, makes the text color white
 	 * @returns The html of the BookChapter
 	 */
 	GetHtml(

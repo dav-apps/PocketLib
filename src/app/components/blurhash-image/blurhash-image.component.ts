@@ -44,11 +44,11 @@ export class BlurhashImageComponent{
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		// Trigger Init if the src or the blurhash has changed
+		// Call Init if the src or the blurhash has changed
 		let change: SimpleChange
 		if (changes.src) change = changes.src
 		if (changes.blurhash) change = changes.blurhash
-		if (!change) return
+		if (change == null || change.previousValue == null) return
 		
 		this.Init()
 	}

@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	SimpleChange,
+	SimpleChanges
+} from '@angular/core'
 import { EpubBook } from 'src/app/models/EpubBook'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { DataService } from 'src/app/services/data-service'
@@ -22,6 +29,19 @@ export class LibraryPageBookCardComponent {
 	) { }
 
 	ngOnInit() {
+		this.Init()
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		// Call Init if the book has changed
+		let change: SimpleChange
+		if (changes.book) change = changes.book
+		if (change == null || change.previousValue == null) return
+
+		this.Init()
+	}
+
+	Init() {
 		if (this.book instanceof EpubBook && this.book.cover != null) {
 			this.cover = this.book.cover
 			this.showDefaultCover = false
