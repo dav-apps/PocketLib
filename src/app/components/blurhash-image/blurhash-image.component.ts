@@ -48,8 +48,8 @@ export class BlurhashImageComponent{
 		let change: SimpleChange
 		if (changes.src) change = changes.src
 		if (changes.blurhash) change = changes.blurhash
-		if (change == null || change.previousValue == null) return
-		
+		if (change == null) return
+
 		this.Init()
 	}
 
