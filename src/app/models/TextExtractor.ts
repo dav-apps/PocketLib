@@ -835,12 +835,20 @@ function GetInnerTextElements(
 	while (textElements.length > 0) {
 		let currentElement = textElements[0]
 
+		if (currentElement.TextElements == null) {
+			currentElement.TextElements = []
+		}
+
 		if (currentElement.Type == TextElementType.SPAN) {
 			if (
 				mergedSpanElements.length > 0
 				&& mergedSpanElements[mergedSpanElements.length - 1].Type == TextElementType.SPAN
 			) {
 				let previousElement = mergedSpanElements[mergedSpanElements.length - 1]
+
+				if (previousElement.TextElements == null) {
+					previousElement.TextElements = []
+				}
 
 				// Add the text elements of the current selected element to the last element of mergedSpanElements
 				previousElement.TextElements.push({
