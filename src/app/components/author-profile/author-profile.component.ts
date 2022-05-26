@@ -680,6 +680,7 @@ export class AuthorProfileComponent {
 				AuthorField.uuid,
 				AuthorField.firstName,
 				AuthorField.lastName,
+				AuthorField.bio_value,
 				AuthorField.websiteUrl,
 				AuthorField.facebookUsername,
 				AuthorField.instagramUsername,
@@ -691,12 +692,15 @@ export class AuthorProfileComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<AuthorResource>).data
+
 			this.author = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
 				this.apiService,
 				this.cachingService
 			)
+
+			this.currentBio = responseData.bio.value
 
 			// Get the store books of the author
 			let storeBooksResponse = await this.apiService.ListStoreBooks({
@@ -734,7 +738,6 @@ export class AuthorProfileComponent {
 
 			this.bioMode = BioMode.Normal
 			this.UpdateSocialMediaLinks()
-			this.SelectDefaultBio()
 		}
 	}
 
