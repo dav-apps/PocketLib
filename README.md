@@ -11,7 +11,7 @@ The PocketLib Store contains a large collection of literature in the public doma
 ☁ Save your data and read on any device\
 Log in with your dav Account to save your library and reading progress in the cloud. Read on any device, wherever and whenever you want.
 
-<img src="https://am3pap001files.storage.live.com/y4mNpd764ydZfBAtIrI_nj06vnmvfuEgN3Z8ozPNZjPEosGxIBPXZraRO5nRWPd1EhRV_V6VOG8jCARUcsoT5bP068VLgPVZwpQlvkr9bfToe5ZbJZJMX3cb4Rn6TwCKJwCFuVooEmBVRE5Jwd6VO0TZIMvSCen9KZ24ea4lymWE5Ru8fTJOj5E9j4DVznp3gN8?width=321&height=660&cropmode=none" alt="PocketLib Screenshot" width="320" />
+<img src="https://ams03pap003files.storage.live.com/y4mDc5Jjl7xkjk_WaopDgaSAbjMJn3r9EgU3r_73mWu3gZajsmb0mRLAzdjJC_bUJ9V4ErQ_hVl0EPyMga86PcYiYoa1UjWNL6ftsvAl6FYQxEWZC1azO_3qAPzHmGJeoBaaYsJ_MagJO7navsveemIdEcoRHbUTtdqsL_UCDczX5gNaWiOYS2jWizjlqJ0emfR?width=321&height=660&cropmode=none" alt="PocketLib Screenshot" width="320" />
 
 ## Getting started
 You can find the web app here: 
