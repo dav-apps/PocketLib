@@ -131,14 +131,14 @@
 				{{ locale.yourAuthors }}
 			</h3>
 
-			<div class="mt-3" *ngIf="publisherMode != 0 && !authorsLoaded">
+			<div class="mt-3" *ngIf="authorsLoading">
 				<dav-progress-ring
 					class="mx-auto"
 					style="width: 28px; height: 28px">
 				</dav-progress-ring>
 			</div>
 
-			<div *ngIf="authorsLoaded">
+			<div *ngIf="!authorsLoading">
 				<pocketlib-add-list-item
 					(click)="ShowCreateAuthorDialog()"
 					*ngIf="publisherMode != 0">

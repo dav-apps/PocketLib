@@ -56,7 +56,7 @@ export class PublisherProfileComponent {
 	errorMessage: string = ""
 	storeContext: boolean = true		// Whether the component is shown in the Store
 	authorItems: AuthorListItem[] = []
-	authorsLoaded: boolean = false
+	authorsLoading: boolean = true
 	hoveredAuthorItem: number = -1
 	pages: number = 1
 	page: number = 1
@@ -156,7 +156,7 @@ export class PublisherProfileComponent {
 
 		// Get the authors of the publisher
 		await this.LoadAuthors()
-		this.authorsLoaded = true
+		this.authorsLoading = false
 	}
 
 	@HostListener('window:resize')
@@ -193,6 +193,7 @@ export class PublisherProfileComponent {
 
 	async LoadAuthors() {
 		this.authorItems = []
+		this.authorsLoading = true
 
 		for (let author of await this.publisher.GetAuthors(this.page, maxAuthorsPerPage)) {
 			let authorItem: AuthorListItem = {
@@ -214,6 +215,7 @@ export class PublisherProfileComponent {
 		}
 
 		this.pages = this.publisher.GetAuthorPages(this.page, maxAuthorsPerPage)
+		this.authorsLoading = false
 	}
 
 	PageChange(page: number) {
