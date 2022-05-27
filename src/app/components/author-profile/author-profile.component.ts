@@ -700,7 +700,13 @@ export class AuthorProfileComponent {
 				this.cachingService
 			)
 
-			this.currentBio = responseData.bio.value
+			if (responseData.bio?.value == null) {
+				this.currentBio = ""
+				this.bioMode = BioMode.None
+			} else {
+				this.currentBio = responseData.bio.value
+				this.bioMode = BioMode.Normal
+			}
 
 			// Get the store books of the author
 			let storeBooksResponse = await this.apiService.ListStoreBooks({
@@ -736,7 +742,6 @@ export class AuthorProfileComponent {
 				}
 			}
 
-			this.bioMode = BioMode.Normal
 			this.UpdateSocialMediaLinks()
 		}
 	}
