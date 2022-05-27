@@ -126,7 +126,7 @@
 				</dav-message-bar>
 			</div>
 
-			<!-- List of authors for publishers / admins -->
+			<!-- List of authors -->
 			<h3 class="text-center text-color fw-light mb-3 mt-4" *ngIf="publisherMode != 0">
 				{{ locale.yourAuthors }}
 			</h3>
@@ -170,12 +170,14 @@
 					</div>
 				</a>
 
-				<dav-pagination
-					[pages]="pages"
-					[currentPage]="page"
-					(pageChange)="PageChange($event.detail.page)"
-					*ngIf="pages > 1">
-				</dav-pagination>
+				<div class="mb-3">
+					<dav-pagination
+						[pages]="pages"
+						[currentPage]="page"
+						(pageChange)="PageChange($event.detail.page)"
+						*ngIf="pages > 1">
+					</dav-pagination>
+				</div>
 			</div>
 		</div>
 	</div>
