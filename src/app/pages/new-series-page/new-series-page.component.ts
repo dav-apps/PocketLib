@@ -59,6 +59,13 @@ export class NewSeriesPageComponent {
 			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
 
 			if (author == null) {
+				for (let publisher of this.dataService.adminPublishers) {
+					author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					if (author != null) break
+				}
+			}
+
+			if (author == null) {
 				this.GoBack()
 				return
 			}

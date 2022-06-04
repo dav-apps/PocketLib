@@ -31,7 +31,6 @@ export class AuthorSeriesPageComponent {
 	editNameDialogName: string = ""
 	editNameDialogNameError: string = ""
 	addBookDialogVisible: boolean = false
-	backButtonLink: string = "/author"
 	addButtonHover: boolean = false
 	dragging: boolean = false
 	contextMenuVisible: boolean = false
@@ -69,7 +68,13 @@ export class AuthorSeriesPageComponent {
 			// Get the author
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
 			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
-			this.backButtonLink = `/author/${this.author.uuid}`
+
+			if (this.author == null) {
+				for (let publisher of this.dataService.adminPublishers) {
+					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					if (this.author != null) break
+				}
+			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
 		}
@@ -100,7 +105,11 @@ export class AuthorSeriesPageComponent {
 	}
 
 	BackButtonClick() {
-		this.router.navigate([this.backButtonLink])
+		if (this.dataService.userIsAdmin) {
+			this.router.navigate(["author", this.author.uuid])
+		} else {
+			this.router.navigate(["author"])
+		}
 	}
 
 	async LoadSelectableBooks() {
