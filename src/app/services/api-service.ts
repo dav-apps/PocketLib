@@ -1119,6 +1119,9 @@ export class ApiService {
 			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series`,
+				headers: PrepareRequestParams({
+					Authorization: Dav.accessToken
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields,
 					languages: params.languages,
@@ -1265,21 +1268,16 @@ export class ApiService {
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
-			let requestConfig: AxiosRequestConfig = {
+			let response = await axios({
 				method: 'get',
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}`,
+				headers: PrepareRequestParams({
+					Authorization: Dav.accessToken
+				}),
 				params: PrepareRequestParams({
 					fields: params.fields
 				}, true)
-			}
-
-			if (Dav.accessToken != null) {
-				requestConfig.headers = PrepareRequestParams({
-					Authorization: Dav.accessToken
-				})
-			}
-
-			let response = await axios(requestConfig)
+			})
 
 			let result = {
 				status: response.status,
