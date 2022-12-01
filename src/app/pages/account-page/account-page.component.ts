@@ -58,9 +58,9 @@ export class AccountPageComponent {
 				|| this.redirect.startsWith("store/book/")
 			)
 		) {
-			Dav.ShowLoginPage(environment.apiKey, `${environment.baseUrl}/${this.redirect}`)
+			Dav.ShowLoginPage(environment.apiKey, `${window.location.origin}/${this.redirect}`)
 		} else {
-			Dav.ShowLoginPage(environment.apiKey, environment.baseUrl)
+			Dav.ShowLoginPage(environment.apiKey, window.location.origin)
 		}
 	}
 
@@ -72,9 +72,9 @@ export class AccountPageComponent {
 				|| this.redirect.startsWith("store/book/")
 			)
 		) {
-			Dav.ShowSignupPage(environment.apiKey, `${environment.baseUrl}/${this.redirect}`)
+			Dav.ShowSignupPage(environment.apiKey, `${window.location.origin}/${this.redirect}`)
 		} else {
-			Dav.ShowSignupPage(environment.apiKey, environment.baseUrl)
+			Dav.ShowSignupPage(environment.apiKey, window.location.origin)
 		}
 	}
 

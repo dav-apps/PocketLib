@@ -443,7 +443,7 @@ export class StoreBookPageComponent {
 
 	private async CreatePurchaseForBook(): Promise<boolean> {
 		// Purchase this book directly
-		let currentUrl = environment.baseUrl + this.router.url
+		let currentUrl = window.location.origin + this.router.url
 
 		let response = await CheckoutSessionsController.CreateCheckoutSession({
 			mode: "payment",
@@ -550,7 +550,7 @@ export class StoreBookPageComponent {
 	}
 
 	async NavigateToPurchasePage() {
-		let currentUrl = environment.baseUrl + this.router.url
+		let currentUrl = window.location.origin + this.router.url
 
 		let response = await CheckoutSessionsController.CreateCheckoutSession({
 			mode: "payment",

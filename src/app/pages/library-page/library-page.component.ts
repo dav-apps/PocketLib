@@ -259,7 +259,7 @@ export class LibraryPageComponent {
 	}
 
 	GoToLoginPage() {
-		Dav.ShowLoginPage(environment.apiKey, environment.baseUrl)
+		Dav.ShowLoginPage(environment.apiKey, window.location.origin)
 	}
 
 	ShowRenameBookDialog() {
