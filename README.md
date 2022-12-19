@@ -16,7 +16,7 @@ Log in with your dav Account to save your library and reading progress in the cl
 ## Getting started
 You can find the web app here: 
 
-[pocketlib.dav-apps.tech](https://pocketlib.dav-apps.tech)
+[pocketlib.app](https://pocketlib.app)
 
 PocketLib is also available in the Microsoft Store and in the Google Play Store:
 
