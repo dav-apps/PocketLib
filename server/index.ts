@@ -5,7 +5,7 @@ import axios from 'axios'
 import { isSuccessStatusCode } from 'dav-js'
 
 const backendUrl = process.env.ENV == "production" ? `https://dav-backend-tfpik.ondigitalocean.app/v1` : `http://localhost:3111/v1`
-const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.dav-apps.tech` : `http://localhost:3001`
+const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.app/` : `http://localhost:3001`
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
@@ -79,7 +79,7 @@ export async function PrepareStorePublisherPage(uuid: string) {
 			})
 		}
 	} catch (error) { }
-	
+
 	return getHtml()
 }
 
@@ -133,7 +133,7 @@ function getHtml(params?: {
 			if (metaObj.content == null) continue
 
 			// Check if a meta tag with the name or property already exists
-			let meta
+			let meta: any
 
 			if (metaObj.name != null) {
 				meta = dom.window.document.querySelector(`meta[name='${metaObj.name}']`)
