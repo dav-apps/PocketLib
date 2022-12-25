@@ -21,6 +21,8 @@ export class AppComponent {
 	faAddressCardLight = faAddressCardLight
 	bottomToolbarStoreEntryActive: boolean = false
 	bottomToolbarAuthorEntryActive: boolean = false
+	libraryTabActive: boolean = false
+	storeTabActive: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -35,6 +37,9 @@ export class AppComponent {
 				this.dataService.currentUrl = data.url
 				this.bottomToolbarStoreEntryActive = this.dataService.currentUrl.startsWith("/store")
 				this.bottomToolbarAuthorEntryActive = this.dataService.currentUrl.startsWith("/author")
+
+				this.libraryTabActive = this.dataService.currentUrl == "/"
+				this.storeTabActive = this.dataService.currentUrl.startsWith("/store")
 			}
 		})
 	}
@@ -99,6 +104,14 @@ export class AppComponent {
 		let navbarHeight = document.getElementById('navbar').clientHeight
 		this.dataService.contentHeight = window.innerHeight - navbarHeight - (this.dataService.smallWindow ? toolbarHeight : 0)
 		this.dataService.UpdateBottomToolbarVisibility()
+	}
+
+	navigateToLibraryPage() {
+		this.router.navigate(['/'])
+	}
+
+	navigateToStorePage() {
+		this.router.navigate(['/store'])
 	}
 
 	//#region dav-js callback functions

@@ -1,9 +1,33 @@
+#navbar {
+	display: flex;
+	position: fixed;
+	width: 100%;
+	height: 76px;
+	z-index: 5;
+	background-color: white;
+}
+
 #navbar-header {
-	color: white;
+	display: inline-flex;
+	color: #4b4c4e;
 	background-color: transparent;
-	font-size: 22px;
+	font-size: 26px;
+	margin-right: 18px;
 	padding: 8px 16px;
 	border: none;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+#navbar-header-text {
+	display: flex;
+	align-self: center;
+	margin-left: 10px;
+}
+
+#navbar-tab-bar-container {
+	display: flex;
+	align-items: center;
 }
 
 #bottom-navigation-bar {

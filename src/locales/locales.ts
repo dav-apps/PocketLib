@@ -1,7 +1,6 @@
 //#region en
 const enDefaults = {
    libraryPage: {
-		title: "Your Library",
 		libraryEmpty: "Your library is currently empty...",
 		allBooks: "All books",
 		noBooks: "No books found",
@@ -539,7 +538,6 @@ export var enGB = enDefaults
 //#region de
 const deDefaults = {
    libraryPage: {
-		title: "Deine Bibliothek",
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
 		allBooks: "Alle Bücher",
 		noBooks: "Keine Bücher gefunden",

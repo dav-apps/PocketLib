@@ -2,9 +2,8 @@
 <div
 	class="container ms-motion-slideUpIn"
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
+	style="margin-top: 76px"
 	*ngIf="!dualScreenLayout">
-
-	<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
    <div class="d-flex justify-content-center my-3" *ngIf="!loading">
 		<div
@@ -205,8 +204,6 @@
 	<div
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
-
-		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
 		<div class="mx-auto px-5">
 			<pocketlib-library-page-cards

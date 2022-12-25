@@ -1,3 +1,4 @@
+<!--
 <mat-toolbar
 	id="navbar"
 	class="bg-primary mat-elevation-z10"
@@ -73,6 +74,22 @@
 		</button>
 	</mat-toolbar-row>
 </mat-toolbar>
+-->
+
+<div id="navbar">
+	<!-- Logo + name -->
+	<a id="navbar-header" routerLink="/">
+		<img src="/assets/icons/icon-72x72.png" width="60" height="60">
+		<span id="navbar-header-text">PocketLib</span>
+	</a>
+
+	<div id="navbar-tab-bar-container">
+		<dav-tab-bar>
+			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">Bibliothek</dav-tab-bar-item>
+			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">Store</dav-tab-bar-item>
+		</dav-tab-bar>
+	</div>
+</div>
 
 <router-outlet></router-outlet>
 
