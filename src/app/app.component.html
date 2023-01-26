@@ -76,7 +76,7 @@
 </mat-toolbar>
 -->
 
-<div id="navbar">
+<div id="navbar" [style.display]="dataService.navbarVisible ? '' : 'none'">
 	<!-- Logo + name -->
 	<a id="navbar-header" routerLink="/">
 		<img src="/assets/icons/icon-72x72.png" width="60" height="60">
@@ -88,6 +88,20 @@
 			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">Bibliothek</dav-tab-bar-item>
 			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">Store</dav-tab-bar-item>
 		</dav-tab-bar>
+	</div>
+
+	<div style="width: 100%"></div>
+
+	<div style="display: flex; padding: 8px 16px">
+		<dav-icon-button style="align-self: center; margin-right: 6px" [selected]="accountButtonSelected" (click)="navigateToAccountPage()">
+			<fa-icon [icon]="faCircleUserRegular" *ngIf="!accountButtonSelected"></fa-icon>
+			<fa-icon [icon]="faCircleUserSolid" *ngIf="accountButtonSelected"></fa-icon>
+		</dav-icon-button>
+
+		<dav-icon-button style="align-self: center;" [selected]="settingsButtonSelected" (click)="navigateToSettingsPage()">
+			<fa-icon [icon]="faGearRegular" *ngIf="!settingsButtonSelected"></fa-icon>
+			<fa-icon [icon]="faGearSolid" *ngIf="settingsButtonSelected"></fa-icon>
+		</dav-icon-button>
 	</div>
 </div>
 

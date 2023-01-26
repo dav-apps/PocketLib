@@ -1,6 +1,14 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, NavigationStart } from '@angular/router'
-import { faAddressCard as faAddressCardSolid } from '@fortawesome/free-solid-svg-icons'
+import {
+	faAddressCard as faAddressCardSolid,
+	faGear as faGearSolid,
+	faCircleUser as faCircleUserSolid
+} from '@fortawesome/free-solid-svg-icons'
+import {
+	faGear as faGearRegular,
+	faCircleUser as faCircleUserRegular
+} from '@fortawesome/pro-regular-svg-icons'
 import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
 import * as DavUIComponents from 'dav-ui-components'
@@ -19,10 +27,16 @@ import { environment } from 'src/environments/environment'
 export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faAddressCardLight = faAddressCardLight
+	faGearRegular = faGearRegular
+	faGearSolid = faGearSolid
+	faCircleUserRegular = faCircleUserRegular
+	faCircleUserSolid = faCircleUserSolid
 	bottomToolbarStoreEntryActive: boolean = false
 	bottomToolbarAuthorEntryActive: boolean = false
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
+	accountButtonSelected: boolean = false
+	settingsButtonSelected: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -40,6 +54,8 @@ export class AppComponent {
 
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive = this.dataService.currentUrl.startsWith("/store")
+				this.accountButtonSelected = this.dataService.currentUrl == "/account"
+				this.settingsButtonSelected = this.dataService.currentUrl == "/settings"
 			}
 		})
 	}
@@ -112,6 +128,14 @@ export class AppComponent {
 
 	navigateToStorePage() {
 		this.router.navigate(['/store'])
+	}
+
+	navigateToAccountPage() {
+		this.router.navigate(['/account'])
+	}
+
+	navigateToSettingsPage() {
+		this.router.navigate(['/settings'])
 	}
 
 	//#region dav-js callback functions
