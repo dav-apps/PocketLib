@@ -1,5 +1,11 @@
 import { Component, HostListener } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import {
+	faBagShopping as faBagShoppingLight,
+	faRotate as faRotateLight,
+	faLock as faLockLight,
+	faLockKeyhole as faLockKeyholeLight
+} from '@fortawesome/pro-light-svg-icons'
 import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { environment } from 'src/environments/environment'
@@ -11,6 +17,10 @@ import { GetDualScreenSettings } from 'src/app/misc/utils'
 	templateUrl: "./account-page.component.html"
 })
 export class AccountPageComponent {
+	faBagShoppingLight = faBagShoppingLight
+	faRotateLight = faRotateLight
+	faLockLight = faLockLight
+	faLockKeyholeLight = faLockKeyholeLight
 	locale = enUS.accountPage
 	width: number = window.innerWidth
 	textMaxWidth: number = 240
