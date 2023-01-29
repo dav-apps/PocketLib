@@ -83,7 +83,7 @@
 		<span id="navbar-header-text">PocketLib</span>
 	</a>
 
-	<div id="navbar-tab-bar-container">
+	<div id="navbar-tab-bar-container" *ngIf="!dataService.bottomToolbarVisible">
 		<dav-tab-bar>
 			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">Bibliothek</dav-tab-bar-item>
 			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">Store</dav-tab-bar-item>
@@ -107,45 +107,17 @@
 
 <router-outlet></router-outlet>
 
-<div
-	id="bottom-navigation-bar"
-	class="bg-primary d-flex d-row"
-	style="z-index: 1"
-	*ngIf="dataService.bottomToolbarVisible">
-
-	<button
-		mat-flat-button
-		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		role="link"
-		(click)="routingService.NavigateToLibraryPage()">
-
-		<i class="ms-Icon ms-Icon--Home" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl != '/'"></i>
-		<i class="ms-Icon ms-Icon--HomeSolid" style="font-size: 24px" aria-hidden="true" *ngIf="dataService.currentUrl == '/'"></i>
-	</button>
-
-	<button
-		mat-flat-button
-		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		role="link"
-		(click)="routingService.NavigateToStorePage()">
-		
-		<div class="d-flex justify-content-center">
-			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
-			<div
-				style="background-color: white; width: 13px; height: 16px; top: 23px; margin-left: -6px; position:absolute"
-				*ngIf="bottomToolbarStoreEntryActive">
-			</div>
-		</div>
-	</button>
-
-	<button
-		mat-flat-button
-		class="d-flex justify-content-center align-items-center bottom-navigation-button flex-fill"
-		role="link"
-		(click)="routingService.NavigateToAuthorPage()"
-		*ngIf="dataService.userAuthor || dataService.userIsAdmin">
-
-		<fa-icon [icon]="faAddressCardSolid" style="font-size: 24px" *ngIf="bottomToolbarAuthorEntryActive"></fa-icon>
-		<fa-icon [icon]="faAddressCardLight" style="font-size: 24px" *ngIf="!bottomToolbarAuthorEntryActive"></fa-icon>
-	</button>
+<div id="bottom-navigation-bar" *ngIf="dataService.bottomToolbarVisible">
+	<dav-navigation-bar>
+		<dav-navigation-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">
+			<fa-icon slot="icon" [icon]="faHouseRegular" *ngIf="!libraryTabActive"></fa-icon>
+			<fa-icon slot="icon" [icon]="faHouseSolid" *ngIf="libraryTabActive"></fa-icon>
+			<p slot="label">Bibliothek</p>
+		</dav-navigation-bar-item>
+		<dav-navigation-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">
+			<fa-icon slot="icon" [icon]="faBagShoppingRegular" *ngIf="!storeTabActive"></fa-icon>
+			<fa-icon slot="icon" [icon]="faBagShoppingSolid" *ngIf="storeTabActive"></fa-icon>
+			<p slot="label">Store</p>
+		</dav-navigation-bar-item>
+	</dav-navigation-bar>
 </div>

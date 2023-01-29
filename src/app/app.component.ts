@@ -2,12 +2,16 @@ import { Component, HostListener } from '@angular/core'
 import { Router, NavigationStart } from '@angular/router'
 import {
 	faAddressCard as faAddressCardSolid,
+	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
-	faCircleUser as faCircleUserSolid
+	faHouse as faHouseSolid,
+	faBagShopping as faBagShoppingSolid
 } from '@fortawesome/free-solid-svg-icons'
 import {
+	faCircleUser as faCircleUserRegular,
 	faGear as faGearRegular,
-	faCircleUser as faCircleUserRegular
+	faHouse as faHouseRegular,
+	faBagShopping as faBagShoppingRegular
 } from '@fortawesome/pro-regular-svg-icons'
 import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
@@ -27,12 +31,14 @@ import { environment } from 'src/environments/environment'
 export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faAddressCardLight = faAddressCardLight
-	faGearRegular = faGearRegular
-	faGearSolid = faGearSolid
 	faCircleUserRegular = faCircleUserRegular
 	faCircleUserSolid = faCircleUserSolid
-	bottomToolbarStoreEntryActive: boolean = false
-	bottomToolbarAuthorEntryActive: boolean = false
+	faGearRegular = faGearRegular
+	faGearSolid = faGearSolid
+	faHouseRegular = faHouseRegular
+	faHouseSolid = faHouseSolid
+	faBagShoppingRegular = faBagShoppingRegular
+	faBagShoppingSolid = faBagShoppingSolid
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
 	accountButtonSelected: boolean = false
@@ -49,8 +55,6 @@ export class AppComponent {
 			if (data instanceof NavigationStart) {
 				// Update the updated todo lists
 				this.dataService.currentUrl = data.url
-				this.bottomToolbarStoreEntryActive = this.dataService.currentUrl.startsWith("/store")
-				this.bottomToolbarAuthorEntryActive = this.dataService.currentUrl.startsWith("/author")
 
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive = this.dataService.currentUrl.startsWith("/store")
