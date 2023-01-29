@@ -4,7 +4,7 @@ import { faCheck } from '@fortawesome/pro-light-svg-icons'
 import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
-import { MatRadioChange } from '@angular/material/radio'
+import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
