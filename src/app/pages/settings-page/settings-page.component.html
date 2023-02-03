@@ -41,12 +41,13 @@
 	<div class="mx-auto">
 		<!-- App information -->
 		<div class="mt-5 text-color">
-			<p>
-				<a href="https://blog.dav-apps.tech/tag/pocketlib" target="blank" class="text-secondary">{{ locale.news }}</a><br>
-				<a href="https://github.com/dav-apps/PocketLib" target="blank" class="text-secondary">{{ locale.github }}</a><br>
-				<a href="https://dav-apps.tech/privacy" target="blank" class="text-secondary">{{ locale.privacy }}</a><br>
-			</p>
-			<p>
+			<div id="link-container">
+				<dav-link-button url="https://blog.dav-apps.tech/tag/pocketlib">{{ locale.news }}</dav-link-button>
+				<dav-link-button url="https://github.com/dav-apps/PocketLib">{{ locale.github }}</dav-link-button>
+				<dav-link-button url="https://dav-apps.tech/privacy">{{ locale.privacy }}</dav-link-button>
+			</div>
+
+			<p class="mt-2">
 				Version {{ version }}<br>
 				Copyright &copy; {{ year }} by dav
 			</p>
@@ -125,12 +126,13 @@
 		<div class="mx-auto">
 			<!-- App information -->
 			<div class="mt-5 text-color">
-				<p>
-					<a href="https://blog.dav-apps.tech/tag/pocketlib" target="blank" class="text-secondary">{{ locale.news }}</a><br>
-					<a href="https://github.com/dav-apps/PocketLib" target="blank" class="text-secondary">{{ locale.github }}</a><br>
-					<a href="https://dav-apps.tech/privacy" target="blank" class="text-secondary">{{ locale.privacy }}</a><br>
-				</p>
-				<p>
+				<div id="link-container">
+					<dav-link-button url="https://blog.dav-apps.tech/tag/pocketlib">{{ locale.news }}</dav-link-button>
+					<dav-link-button url="https://github.com/dav-apps/PocketLib">{{ locale.github }}</dav-link-button>
+					<dav-link-button url="https://dav-apps.tech/privacy">{{ locale.privacy }}</dav-link-button>
+				</div>
+
+				<p class="mt-2">
 					Version {{ version }}<br>
 					Copyright &copy; {{ year }} by dav
 				</p>
