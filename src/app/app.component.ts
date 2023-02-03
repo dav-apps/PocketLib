@@ -13,11 +13,9 @@ import {
 	faHouse as faHouseRegular,
 	faBagShopping as faBagShoppingRegular
 } from '@fortawesome/pro-regular-svg-icons'
-import { faAddressCard as faAddressCardLight } from '@fortawesome/pro-light-svg-icons'
 import { Dav, TableObject, Environment } from 'dav-js'
 import * as DavUIComponents from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
-import { RoutingService } from './services/routing-service'
 import { GetSettings } from 'src/app/models/Settings'
 import { GetBookOrder } from './models/BookOrder'
 import { toolbarHeight, smallWindowMaxSize } from 'src/constants/constants'
@@ -29,8 +27,6 @@ import { environment } from 'src/environments/environment'
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	faAddressCardSolid = faAddressCardSolid
-	faAddressCardLight = faAddressCardLight
 	faCircleUserRegular = faCircleUserRegular
 	faCircleUserSolid = faCircleUserSolid
 	faGearRegular = faGearRegular
@@ -46,7 +42,6 @@ export class AppComponent {
 
 	constructor(
 		public dataService: DataService,
-		public routingService: RoutingService,
 		private router: Router
 	) {
 		DavUIComponents.setLocale(this.dataService.locale)

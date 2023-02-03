@@ -1,81 +1,3 @@
-<!--
-<mat-toolbar
-	id="navbar"
-	class="bg-primary mat-elevation-z10"
-	style="z-index: 5"
-	[style.position]="routingService.showsStore ? 'fixed' : 'relative'"
-	[style.display]="dataService.navbarVisible ? '' : 'none'">
-
-	<mat-toolbar-row>
-		<button
-			mat-icon-button
-			(click)="dataService.sideNavOpened = !dataService.sideNavOpened"
-			*ngIf="routingService.showsStore && dataService.smallWindow">
-
-			<i class="material-icons" style="font-size: 25px; color: white">menu</i>
-		</button>
-
-		<a mat-icon-button
-			class="d-flex justify-content-center align-items-center"
-			routerLink="/"
-			*ngIf="routingService.showsStore && !dataService.smallWindow">
-
-			<i class="material-icons" style="font-size: 25px; color: white">arrow_back</i>
-		</a>
-
-		<button
-			id="navbar-header"
-			class="cursor"
-			role="link"
-			(click)="routingService.showsStore ? routingService.NavigateToStorePage() : routingService.NavigateToLibraryPage()">
-			{{ routingService.showsStore ? 'PocketLib Store' : 'PocketLib' }}
-		</button>
-
-		<span style="flex: 1 1 auto"></span>
-
-		<button
-			class="btn btn-primary me-2 cursor"
-			style="width: 50px; height: 50px"
-			role="link"
-			(click)="routingService.NavigateToStorePage()"
-			*ngIf="!dataService.smallWindow">
-
-			<i class="ms-Icon ms-Icon--Shop" style="font-size: 24px" aria-hidden="true"></i>
-		</button>
-		<button
-			class="btn btn-primary me-2 cursor"
-			style="width: 50px; height: 50px"
-			role="link"
-			(click)="routingService.NavigateToAuthorPage()"
-			*ngIf="(dataService.userAuthor || dataService.userIsAdmin) && !dataService.smallWindow">
-
-			<fa-icon [icon]="faAddressCardLight" class="d-flex align-items-center" style="font-size: 24px"></fa-icon>
-		</button>
-		<button
-			class="btn btn-primary me-2 cursor d-flex justify-content-center align-items-center"
-			style="width: 50px; height: 50px"
-			role="link"
-			(click)="routingService.NavigateToAccountPage()">
-
-         <i class="material-icons" style="font-size: 25px" *ngIf="!dataService.dav.isLoggedIn">account_circle</i>
-			<img
-				*ngIf="dataService.dav.isLoggedIn" 
-         	[src]="dataService.dav.user.ProfileImage" 
-         	class="rounded-circle" 
-         	height="28" width="28">
-		</button>
-		<button
-			class="btn btn-primary cursor d-flex justify-content-center align-items-center"
-			style="width: 50px; height: 50px"
-			role="link"
-			(click)="routingService.NavigateToSettingsPage()">
-
-			<i class="material-icons" style="font-size: 25px">settings</i>
-		</button>
-	</mat-toolbar-row>
-</mat-toolbar>
--->
-
 <div id="navbar" [style.display]="dataService.navbarVisible ? '' : 'none'">
 	<!-- Logo + name -->
 	<a id="navbar-header" routerLink="/">
@@ -94,8 +16,14 @@
 
 	<div style="display: flex; padding: 8px 16px">
 		<dav-icon-button style="align-self: center; margin-right: 6px" [selected]="accountButtonSelected" (click)="navigateToAccountPage()">
-			<fa-icon [icon]="faCircleUserRegular" *ngIf="!accountButtonSelected"></fa-icon>
-			<fa-icon [icon]="faCircleUserSolid" *ngIf="accountButtonSelected"></fa-icon>
+			<fa-icon [icon]="faCircleUserRegular" *ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn"></fa-icon>
+			<fa-icon [icon]="faCircleUserSolid" *ngIf="accountButtonSelected && !dataService.dav.isLoggedIn"></fa-icon>
+
+			<img
+				*ngIf="dataService.dav.isLoggedIn" 
+         	[src]="dataService.dav.user.ProfileImage" 
+         	class="rounded-circle" 
+         	height="28" width="28">
 		</dav-icon-button>
 
 		<dav-icon-button style="align-self: center;" [selected]="settingsButtonSelected" (click)="navigateToSettingsPage()">
