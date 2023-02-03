@@ -1,10 +1,10 @@
 import { Component } from '@angular/core'
 import { SwUpdate, VersionEvent } from '@angular/service-worker'
 import { faCheck } from '@fortawesome/pro-light-svg-icons'
+import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
 import { keys } from 'src/constants/keys'
 import { enUS } from 'src/locales/locales'
 import { DataService } from 'src/app/services/data-service'
-import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio'
 import { GetDualScreenSettings } from 'src/app/misc/utils'
 
 @Component({
@@ -19,20 +19,39 @@ export class SettingsPageComponent {
 	dualScreenFoldMargin: number = 0
 	version: string = keys.version
 	year = (new Date()).getFullYear()
-	themeKeys: string[] = [keys.lightThemeKey, keys.darkThemeKey, keys.systemThemeKey]
-	selectedTheme: string
 	openLastReadBook: boolean = false
 	updateMessage: string = ""
 	searchForUpdates: boolean = false
 	updateError: boolean = false
 	noUpdateAvailable: boolean = false
 	hideNoUpdateAvailable: boolean = false
+	selectedTheme: string = keys.systemThemeKey
+	themeDropdownOptions: DropdownOption[] = [
+		{
+			key: keys.systemThemeKey,
+			value: this.locale.systemTheme,
+			type: DropdownOptionType.option
+		},
+		{
+			key: keys.lightThemeKey,
+			value: this.locale.lightTheme,
+			type: DropdownOptionType.option
+		},
+		{
+			key: keys.darkThemeKey,
+			value: this.locale.darkTheme,
+			type: DropdownOptionType.option
+		}
+	]
 
 	constructor(
 		public dataService: DataService,
 		private swUpdate: SwUpdate
 	) {
 		this.locale = this.dataService.GetLocale().settingsPage
+		this.themeDropdownOptions[0].value = this.locale.systemTheme
+		this.themeDropdownOptions[1].value = this.locale.lightTheme
+		this.themeDropdownOptions[2].value = this.locale.darkTheme
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
@@ -41,15 +60,11 @@ export class SettingsPageComponent {
 	}
 
 	async ngOnInit() {
-		// Select the correct theme radio button
-		this.selectedTheme = await this.dataService.GetTheme()
-
 		// Set the openLastReadBook toggle
 		this.openLastReadBook = await this.dataService.GetOpenLastReadBook()
 
-		// Increase the font size of the toggle label
-		let labels = document.getElementsByClassName('ms-Toggle-label')
-		if (labels.length > 0) labels.item(0).setAttribute('style', 'font-size: 15px')
+		// Select the correct theme radio button
+		this.selectedTheme = await this.dataService.GetTheme()
 
 		if (this.swUpdate.isEnabled && !this.dataService.updateInstalled) {
 			// Check for updates
@@ -79,15 +94,17 @@ export class SettingsPageComponent {
 		}
 	}
 
-	onThemeRadioButtonSelected(event: MatRadioChange) {
-		this.selectedTheme = event.value
-		this.dataService.SetTheme(event.value)
-		this.dataService.ApplyTheme(event.value)
-	}
-
 	onOpenLastReadBookToggleChange(checked: boolean) {
 		this.openLastReadBook = !checked
 		this.dataService.SetOpenLastReadBook(!checked)
+	}
+
+	themeDropdownChange(event: CustomEvent) {
+		let selectedKey = event.detail.key
+
+		this.selectedTheme = selectedKey
+		this.dataService.SetTheme(selectedKey)
+		this.dataService.ApplyTheme(selectedKey)
 	}
 
 	ActivateUpdate() {

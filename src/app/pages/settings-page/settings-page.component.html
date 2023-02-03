@@ -6,36 +6,25 @@
 
    <h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
    
-   <div class="mx-auto mt-4" style="max-width: 240px">
+   <div class="setting-container mx-auto mt-4">
       <!-- Open last read book -->
-		<p class="text-color fw-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
-
-		<dav-toggle
-			[checked]="openLastReadBook"
-			(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
-		</dav-toggle>
+		<dav-setting [header]="locale.openLastReadBook">
+			<dav-toggle
+				[checked]="openLastReadBook"
+				(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
+			</dav-toggle>
+		</dav-setting>
    </div>
 
-   <div class="mx-auto mt-4" style="max-width: 170px">
+   <div class="setting-container mx-auto mt-3">
 		<!-- Theme -->
-		<p class="text-color" style="font-size: 20px">{{ locale.theme }}</p>
-		
-		<mat-radio-group
-			class="d-flex flex-column text-color" 
-			[color]="dataService.darkTheme ? 'accent' : 'primary'" 
-			[value]="selectedTheme" 
-			(change)="onThemeRadioButtonSelected($event)">
-
-			<mat-radio-button [value]="themeKeys[0]">
-				{{ locale.lightTheme }}
-			</mat-radio-button>
-			<mat-radio-button [value]="themeKeys[1]">
-				{{ locale.darkTheme }}
-			</mat-radio-button>
-			<mat-radio-button [value]="themeKeys[2]">
-				{{ locale.systemTheme }}
-			</mat-radio-button>
-		</mat-radio-group>
+		<dav-setting [header]="locale.theme">
+			<dav-dropdown
+				[options]="themeDropdownOptions"
+				[selectedKey]="selectedTheme"
+				(change)="themeDropdownChange($event)">
+			</dav-dropdown>
+		</dav-setting>
    </div>
 
 	<div class="mx-auto">
@@ -82,6 +71,7 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
+	style="margin-top: 80px"
 	*ngIf="dualScreenLayout">
 
 	<!-- Left screen -->
@@ -91,36 +81,24 @@
 
 		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
 
-		<div class="mx-auto mt-4 pb-2" style="max-width: 240px">
-			<!-- Open last read book -->
-			<p class="text-color fw-light" style="font-size: 16px">{{ locale.openLastReadBook }}</p>
-			
-			<dav-toggle
-				[checked]="openLastReadBook"
-				(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
-			</dav-toggle>
+		<div class="setting-container mx-auto mt-4">
+			<dav-setting [header]="locale.openLastReadBook">
+				<dav-toggle
+					[checked]="openLastReadBook"
+					(change)="onOpenLastReadBookToggleChange($event.detail.checked)">
+				</dav-toggle>
+			</dav-setting>
 		</div>
 
-		<div class="mx-auto mt-4" style="max-width: 170px">
+		<div class="setting-container mx-auto mt-3">
 			<!-- Theme -->
-			<p class="text-color" style="font-size: 20px">{{ locale.theme }}</p>
-			
-			<mat-radio-group
-				class="d-flex flex-column text-color" 
-				[color]="dataService.darkTheme ? 'accent' : 'primary'" 
-				[value]="selectedTheme" 
-				(change)="onThemeRadioButtonSelected($event)">
-	
-				<mat-radio-button [value]="themeKeys[0]">
-					{{ locale.lightTheme }}
-				</mat-radio-button>
-				<mat-radio-button [value]="themeKeys[1]">
-					{{ locale.darkTheme }}
-				</mat-radio-button>
-				<mat-radio-button [value]="themeKeys[2]">
-					{{ locale.systemTheme }}
-				</mat-radio-button>
-			</mat-radio-group>
+			<dav-setting [header]="locale.theme">
+				<dav-dropdown
+					[options]="themeDropdownOptions"
+					[selectedKey]="selectedTheme"
+					(change)="themeDropdownChange($event)">
+				</dav-dropdown>
+			</dav-setting>
 		</div>
 
 		<div class="mx-auto">
