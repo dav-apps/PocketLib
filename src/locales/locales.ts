@@ -40,7 +40,7 @@ const enDefaults = {
    accountPage: {
 		title: "Your Account",
 		text1: "Save your library and access it from anywhere",
-		text2: "Access the same library on all your devices",
+		text2: "Use the same library on all your devices",
 		text3: "Get books from the PocketLib Store",
 		text4: "Make sure your books don't get lost",
 		login: "Log in",
@@ -524,6 +524,8 @@ const enDefaults = {
 			en: "English",
 			de: "German"
 		},
+		library: "Library",
+		store: "Store",
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
 		authorProfileImageAlt: "The profile image of the author {0}"
@@ -1061,6 +1063,8 @@ const deDefaults = {
 			en: "Englisch",
 			de: "Deutsch"
 		},
+		library: "Bibliothek",
+		store: "Store",
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
 		authorProfileImageAlt: "Das Profilbild des Autors {0}"

@@ -7,8 +7,8 @@
 
 	<div id="navbar-tab-bar-container" *ngIf="!dataService.bottomToolbarVisible">
 		<dav-tab-bar>
-			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">Bibliothek</dav-tab-bar-item>
-			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">Store</dav-tab-bar-item>
+			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">{{ libraryLabel }}</dav-tab-bar-item>
+			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">{{ storeLabel }}</dav-tab-bar-item>
 		</dav-tab-bar>
 	</div>
 
@@ -40,12 +40,12 @@
 		<dav-navigation-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">
 			<fa-icon slot="icon" [icon]="faHouseRegular" *ngIf="!libraryTabActive"></fa-icon>
 			<fa-icon slot="icon" [icon]="faHouseSolid" *ngIf="libraryTabActive"></fa-icon>
-			<p slot="label">Bibliothek</p>
+			<p slot="label">{{ libraryLabel }}</p>
 		</dav-navigation-bar-item>
 		<dav-navigation-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">
 			<fa-icon slot="icon" [icon]="faBagShoppingRegular" *ngIf="!storeTabActive"></fa-icon>
 			<fa-icon slot="icon" [icon]="faBagShoppingSolid" *ngIf="storeTabActive"></fa-icon>
-			<p slot="label">Store</p>
+			<p slot="label">{{ storeLabel }}</p>
 		</dav-navigation-bar-item>
 	</dav-navigation-bar>
 </div>

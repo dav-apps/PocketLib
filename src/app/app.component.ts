@@ -1,7 +1,6 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, NavigationStart } from '@angular/router'
 import {
-	faAddressCard as faAddressCardSolid,
 	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
 	faHouse as faHouseSolid,
@@ -35,6 +34,8 @@ export class AppComponent {
 	faHouseSolid = faHouseSolid
 	faBagShoppingRegular = faBagShoppingRegular
 	faBagShoppingSolid = faBagShoppingSolid
+	libraryLabel: string = ""
+	storeLabel: string = ""
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
 	accountButtonSelected: boolean = false
@@ -44,6 +45,10 @@ export class AppComponent {
 		public dataService: DataService,
 		private router: Router
 	) {
+		let locale = this.dataService.GetLocale().misc
+		this.libraryLabel = locale.library
+		this.storeLabel = locale.store
+
 		DavUIComponents.setLocale(this.dataService.locale)
 
 		this.router.events.forEach(data => {
