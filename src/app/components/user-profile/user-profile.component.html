@@ -34,6 +34,13 @@
 			{{ usedStorageText }}
 		</p>
 
-		<button type="button" class="btn btn-outline-danger btn-sm mt-2" (click)="LogoutClick()">{{ locale.logout }}</button>
+		<dav-button
+			class="mt-2"
+			color="error"
+			outline
+			size="small"
+			(click)="LogoutClick()">
+			{{ locale.logout }}
+		</dav-button>
 	</div>
 </div>
