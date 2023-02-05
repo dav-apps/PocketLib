@@ -1,5 +1,19 @@
 import { Component, HostListener, NgZone, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
+import {
+	faBookmark as faBookmarkSolid
+} from '@fortawesome/free-solid-svg-icons'
+import {
+	faArrowLeft as faArrowLeftLight,
+	faHouse as faHouseLight,
+	faBookmark as faBookmarkLight,
+	faFolderBookmark as faFolderBookmarkLight,
+	faListUl as faListUlLight,
+	faChevronLeft as faChevronLeftLight,
+	faChevronRight as faChevronRightLight,
+	faChevronUp as faChevronUpLight,
+	faChevronDown as faChevronDownLight
+} from '@fortawesome/pro-light-svg-icons'
 import { PromiseHolder } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
@@ -48,6 +62,17 @@ const doubleTapToleranceTime = 400
 })
 export class EpubViewerComponent {
 	locale = enUS.epubViewer
+	faArrowLeftLight = faArrowLeftLight
+	faHouseLight = faHouseLight
+	faBookmarkSolid = faBookmarkSolid
+	faBookmarkLight = faBookmarkLight
+	faFolderBookmarkLight = faFolderBookmarkLight
+	faListUlLight = faListUlLight
+	faChevronLeftLight = faChevronLeftLight
+	faChevronRightLight = faChevronRightLight
+	faChevronUpLight = faChevronUpLight
+	faChevronDownLight = faChevronDownLight
+
 	book = new EpubReader()
 	currentBook: EpubBook
 	chapters: BookChapter[] = []
@@ -1573,7 +1598,7 @@ export class BookChapter {
 				margin: 0px 0px {1}px 0px;
 				color: {2};
 				background-color: transparent;
-				font-family: Segoe UI;
+				font-family: Roboto, sans-serif;
 			}
 
 			body > p, body > div > p {

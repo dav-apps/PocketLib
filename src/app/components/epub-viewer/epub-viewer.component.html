@@ -1,41 +1,79 @@
 <div
 	id="first-viewer"
-   style="position: absolute; transition-property: transform;"
-	class="d-flex theme-background-color-primary"
+	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="firstViewer.zIndex"
 	[style.transform]="'translateX(' + firstViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="firstViewer.transitionTime + 'ms'">
+	[style.transitionDuration]="firstViewer.transitionTime + 'ms'"
+>
+	<iframe
+		id="first-viewer-left"
+		class="viewer"
+		[style.width.px]="firstViewer.left.width"
+		[style.height.px]="firstViewer.left.height"
+		scrolling="no">
+	</iframe>
 
-	<iframe id="first-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="firstViewer.left.height"></iframe>
-	<iframe id="first-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="firstViewer.right.height"></iframe>
+	<iframe
+		id="first-viewer-right"
+		class="viewer viewer-right"
+		[style.width.px]="firstViewer.right.width"
+		[style.height.px]="firstViewer.right.height"
+		scrolling="no">
+	</iframe>
 </div>
 
-<div id="second-viewer"
-	style="position: absolute; transition-property: transform;"
-	class="d-flex theme-background-color-primary"
+<div
+	id="second-viewer"
+	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="secondViewer.zIndex"
 	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="secondViewer.transitionTime + 'ms'">
+	[style.transitionDuration]="secondViewer.transitionTime + 'ms'"
+>
+	<iframe
+		id="second-viewer-left"
+		class="viewer"
+		[style.width.px]="firstViewer.left.width"
+		[style.height.px]="secondViewer.left.height"
+		scrolling="no">
+	</iframe>
 
-	<iframe id="second-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="secondViewer.left.height"></iframe>
-	<iframe id="second-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="secondViewer.right.height"></iframe>
+	<iframe
+		id="second-viewer-right"
+		class="viewer viewer-right"
+		[style.width.px]="firstViewer.right.width"
+		[style.height.px]="secondViewer.right.height"
+		scrolling="no">
+	</iframe>
 </div>
 
-<div id="third-viewer"
-	style="position: absolute; transition-property: transform;"
-	class="d-flex theme-background-color-primary"
+<div
+	id="third-viewer"
+	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="thirdViewer.zIndex"
 	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'">
+	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'"
+>
+	<iframe
+		id="third-viewer-left"
+		class="viewer"
+		[style.width.px]="firstViewer.left.width"
+		[style.height.px]="thirdViewer.left.height"
+		scrolling="no">
+	</iframe>
 
-	<iframe id="third-viewer-left" scrolling="no" style="border: none; position: relative; margin-top: 60px" [style.width.px]="firstViewer.left.width" [style.height.px]="thirdViewer.left.height"></iframe>
-	<iframe id="third-viewer-right" scrolling="no" style="border: none; position: relative; margin-top: 60px; right: 0" [style.width.px]="firstViewer.right.width" [style.height.px]="thirdViewer.right.height"></iframe>
+	<iframe
+		id="third-viewer-right"
+		class="viewer viewer-right"
+		[style.width.px]="firstViewer.right.width"
+		[style.height.px]="thirdViewer.right.height"
+		scrolling="no">
+	</iframe>
 </div>
 
 <!-- Arrow buttons -->
@@ -45,9 +83,9 @@
 	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 	[style.height.px]="showBottomToolbar ? height : height - 40" 
 	(click)="PrevPage()" 
-	*ngIf="!firstPage && !showBottomToolbar">
-
-	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+	*ngIf="!firstPage && !showBottomToolbar"
+>
+	<fa-icon [icon]="faChevronLeftLight"></fa-icon>
 </button>
 <button mat-button 
 	class="book-toolbar-button text-color" 
@@ -55,9 +93,9 @@
 	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 	[style.height.px]="showBottomToolbar ? height : height - 40" 
 	(click)="NextPage()" 
-	*ngIf="!showBottomToolbar">
-
-	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
+	*ngIf="!showBottomToolbar"
+>
+	<fa-icon [icon]="faChevronRightLight"></fa-icon>
 </button>
 
 <!-- Chapter title -->
@@ -65,8 +103,8 @@
 	style="position: absolute; bottom: 0; right: 0; height: 50px"
 	class="d-flex justify-content-center"
 	[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
-	*ngIf="!showBottomToolbar">
-
+	*ngIf="!showBottomToolbar"
+>
 	<p class="align-self-center fw-light text-color"
 		style="display: inline-block; margin: 0; font-size: 14px">
 		{{ currentChapterTitle }}
@@ -79,27 +117,26 @@
 	<button
 		mat-button
 		class="book-toolbar-button text-color" 
-		style="font-size: 16px"
 		[disabled]="navigationHistory.length == 0"
-		(click)="GoBack()">
-
-		<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
+		(click)="GoBack()"
+	>
+		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</button>
 
 	<!-- Home button -->
 	<button
 		mat-button
 		class="book-toolbar-button text-color"
-		(click)="GoHome()">
-
-		<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
+		(click)="GoHome()"
+	>
+		<fa-icon [icon]="faHouseLight"></fa-icon>
 	</button>
 
 	<div class="d-flex" style="float: right">
 		<div
 			class="d-flex justify-content-center align-items-center"
-			style="width: 40px; height: 40px">
-
+			style="width: 40px; height: 40px"
+		>
 			<mat-progress-spinner
 				[style.display]="progressRingVisible ? '' : 'none'"
 				mode="indeterminate"
@@ -108,13 +145,14 @@
 			</mat-progress-spinner>
 		</div>
 		<button mat-button class="book-toolbar-button text-color" (click)="AddOrRemoveBookmark()">
-			<i class="ms-Icon" [ngClass]="currentPageBookmark ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
+			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
 		</button>
 		<button mat-button class="book-toolbar-button text-color" (click)="showBookmarksPanel = true">
-			<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 		</button>
 		<button mat-button class="book-toolbar-button text-color" (click)="showChaptersPanel = true">
-			<i class="ms-Icon ms-Icon--BulletedList" aria-hidden="true"></i>
+			<fa-icon [icon]="faListUlLight"></fa-icon>
 		</button>
 	</div>
 </div>
@@ -124,12 +162,13 @@
 	style="z-index: 2; position: fixed; bottom: 0;"
 	[style.marginBottom.px]="bottomToolbarMarginBottom"
 	[style.transition]="'all ' + bottomToolbarTransitionTime + 'ms'"
-	*ngIf="showBottomToolbar && initialized">
-	
+	*ngIf="showBottomToolbar && initialized"
+>
 	<div class="w-100" style="display: inline-block;">
 		<div class="d-flex justify-content-center">
 			<button mat-button class="book-toolbar-button text-color" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
-				<i class="ms-Icon" [ngClass]="bottomToolbarOpened ? 'ms-Icon--ChevronDownMed' : 'ms-Icon--ChevronUpMed'" aria-hidden="true"></i>
+				<fa-icon [icon]="faChevronDownLight" *ngIf="bottomToolbarOpened"></fa-icon>
+				<fa-icon [icon]="faChevronUpLight" *ngIf="!bottomToolbarOpened"></fa-icon>
 			</button>
 		</div>
 		<div class="w-100 d-flex">
@@ -139,29 +178,30 @@
 					class="book-toolbar-button text-color"
 					style="font-size: 16px"
 					[disabled]="navigationHistory.length == 0"
-					(click)="GoBack()">
-					
-					<i class="ms-Icon ms-Icon--Back" aria-hidden="true"></i>
+					(click)="GoBack()"
+				>
+					<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 				</button>
 	
 				<button
 					mat-button
 					class="book-toolbar-button text-color"
-					(click)="GoHome()">
-
-					<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
+					(click)="GoHome()"
+				>
+					<fa-icon [icon]="faHouseLight"></fa-icon>
 				</button>
 			</div>
 
 			<div class="mx-auto">
 				<button mat-button class="book-toolbar-button text-color" (click)="showChaptersPanel = true">
-					<i class="ms-Icon ms-Icon--BulletedList" aria-hidden="true"></i>
+					<fa-icon [icon]="faListUlLight"></fa-icon>
 				</button>
 				<button mat-button class="book-toolbar-button text-color" (click)="showBookmarksPanel = true">
-					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+					<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 				</button>
 				<button mat-button class="book-toolbar-button text-color" (click)="AddOrRemoveBookmark()">
-					<i class="ms-Icon" [ngClass]="currentPageBookmark ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+					<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
+					<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
 				</button>
 			</div>
 		</div>
