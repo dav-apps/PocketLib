@@ -238,8 +238,8 @@
 
 <dav-context-menu
 	[visible]="contextMenuVisible"
-	[posX]="contextMenuPositionY"
-	[posY]="contextMenuPositionX">
+	[posX]="contextMenuPositionX"
+	[posY]="contextMenuPositionY">
 
 	<!-- Export -->
 	<dav-context-menu-item
@@ -301,13 +301,12 @@
 	[primaryButtonText]="locale.remove"
 	[defaultButtonText]="locale.cancel"
 	[visible]="removeBookDialogVisible"
-	primaryButtonType="danger"
 	maxWidth="340"
 	(dismiss)="removeBookDialogVisible = false"
 	(primaryButtonClick)="RemoveBook()"
-	(defaultButtonClick)="removeBookDialogVisible = false">
-
-	<p class="text-color">{{ locale.removeBookDialog.description }}</p>
+	(defaultButtonClick)="removeBookDialogVisible = false"
+>
+	<p>{{ locale.removeBookDialog.description }}</p>
 </dav-dialog>
 
 <dav-dialog
@@ -318,9 +317,9 @@
 	maxWidth="340"
 	(dismiss)="loginToAccessBookDialogVisible = false"
 	(primaryButtonClick)="GoToLoginPage()"
-	(defaultButtonClick)="loginToAccessBookDialogVisible = false">
-
-	<p class="text-color">{{ locale.loginToAccessBookDialog.description }}</p>
+	(defaultButtonClick)="loginToAccessBookDialogVisible = false"
+>
+	<p>{{ locale.loginToAccessBookDialog.description }}</p>
 </dav-dialog>
 
 <dav-dialog
@@ -329,7 +328,7 @@
 	[visible]="addBookErrorDialogVisible"
 	maxWidth="340"
 	(dismiss)="addBookErrorDialogVisible = false"
-	(defaultButtonClick)="addBookErrorDialogVisible = false">
-
-	<p class="text-color">{{ locale.addBookErrorDialog.description }}</p>
+	(defaultButtonClick)="addBookErrorDialogVisible = false"
+>
+	<p>{{ locale.addBookErrorDialog.description }}</p>
 </dav-dialog>
