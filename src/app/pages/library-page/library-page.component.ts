@@ -1,7 +1,12 @@
 import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
 import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
-import { faAddressCard } from '@fortawesome/pro-light-svg-icons'
+import {
+	faAddressCard as faAddressCardLight,
+	faFileExport as faFileExportLight,
+	faPencil as faPencilLight,
+	faTrashCan as faTrashCanLight
+} from '@fortawesome/pro-light-svg-icons'
 import { Dav } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -21,7 +26,10 @@ const pdfType = "application/pdf"
 })
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
-	faAddressCard = faAddressCard
+	faAddressCardLight = faAddressCardLight
+	faFileExportLight = faFileExportLight
+	faPencilLight = faPencilLight
+	faTrashCanLight = faTrashCanLight
 	@ViewChild('leftContentContainer') leftContentContainer: ElementRef<HTMLDivElement>
 	@ViewChild('rightContentContainer') rightContentContainer: ElementRef<HTMLDivElement>
 	contextMenuVisible: boolean = false

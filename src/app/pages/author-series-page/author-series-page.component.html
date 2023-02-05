@@ -158,8 +158,9 @@
 	<!-- Remove -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRemove"
-		icon="Delete"
-		(click)="RemoveBook()">
+		(click)="RemoveBook()"
+	>
+		<fa-icon slot="icon" [icon]="faTrashCanLight"></fa-icon>
 	</dav-context-menu-item>
 </dav-context-menu>
 

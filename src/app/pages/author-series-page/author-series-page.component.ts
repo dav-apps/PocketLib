@@ -1,11 +1,11 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { DragulaService } from 'ng2-dragula'
+import { faTrashCan as faTrashCanLight } from '@fortawesome/pro-light-svg-icons'
 import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
 import { CachingService } from 'src/app/services/caching-service'
-import { RoutingService } from 'src/app/services/routing-service'
 import { Author } from 'src/app/models/Author'
 import { StoreBookSeries } from 'src/app/models/StoreBookSeries'
 import { StoreBook } from 'src/app/models/StoreBook'
@@ -19,6 +19,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorSeriesPageComponent {
 	locale = enUS.authorSeriesPage
+	faTrashCanLight = faTrashCanLight
 	uuid: string = ""
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -42,7 +43,6 @@ export class AuthorSeriesPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private cachingService: CachingService,
-		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService

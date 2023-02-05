@@ -87,7 +87,7 @@
 						<fa-icon
 							class="text-color"
 							style="font-size: 24px"
-							[icon]="faAddressCard">
+							[icon]="faAddressCardLight">
 						</fa-icon>
 					</div>
 				</a>
@@ -244,9 +244,10 @@
 	<!-- Export -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuExport"
-		icon="Export"
 		(click)="DownloadBook()"
-		*ngIf="showExportBookOption">
+		*ngIf="showExportBookOption"
+	>
+		<fa-icon slot="icon" [icon]="faFileExportLight"></fa-icon>
 	</dav-context-menu-item>
 
 	<dav-context-menu-divider
@@ -256,16 +257,18 @@
 	<!-- Rename -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRename"
-		icon="Edit"
 		(click)="ShowRenameBookDialog()"
-		*ngIf="showRenameBookOption">
+		*ngIf="true"
+	>
+		<fa-icon slot="icon" [icon]="faPencilLight"></fa-icon>
 	</dav-context-menu-item>
 
 	<!-- Remove -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRemove"
-		icon="Delete"
-		(click)="ShowRemoveBookDialog()">
+		(click)="ShowRemoveBookDialog()"
+	>
+		<fa-icon slot="icon" [icon]="faTrashCanLight"></fa-icon>
 	</dav-context-menu-item>
 </dav-context-menu>
 
