@@ -1,8 +1,28 @@
+.viewer-container {
+   position: absolute;
+   background-color: white;
+   overflow: hidden;
+   transition-property: transform;
+}
+
+.viewer {
+   display: block;
+}
+
+#bottom-toolbar {
+   display: flex;
+   justify-content: center;
+   position: fixed;
+   bottom: 0;
+   width: 100%;
+   z-index: 2;
+}
+
 .book-toolbar-button{
    min-width: 40px;
    height: 40px;
    outline: none;
    padding: 0px;
-   font-size: 19px;
+   font-size: 18px;
    z-index: 2;
 }

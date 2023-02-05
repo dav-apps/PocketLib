@@ -1,5 +1,17 @@
 import { Component, HostListener, NgZone } from '@angular/core'
 import { Router } from '@angular/router'
+import {
+	faBookmark as faBookmarkSolid
+} from '@fortawesome/free-solid-svg-icons'
+import {
+	faHouse as faHouseLight,
+	faBookmark as faBookmarkLight,
+	faFolderBookmark as faFolderBookmarkLight,
+	faChevronLeft as faChevronLeftLight,
+	faChevronRight as faChevronRightLight,
+	faChevronUp as faChevronUpLight,
+	faChevronDown as faChevronDownLight
+} from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { enUS } from 'src/locales/locales'
@@ -30,6 +42,15 @@ const doubleTapToleranceTime = 400
 })
 export class PdfViewerComponent {
 	locale = enUS.pdfViewer
+	faHouseLight = faHouseLight
+	faBookmarkSolid = faBookmarkSolid
+	faBookmarkLight = faBookmarkLight
+	faFolderBookmarkLight = faFolderBookmarkLight
+	faChevronLeftLight = faChevronLeftLight
+	faChevronRightLight = faChevronRightLight
+	faChevronUpLight = faChevronUpLight
+	faChevronDownLight = faChevronDownLight
+
 	pdfContent: Uint8Array = null
 	currentBook: PdfBook
 	currentPage: number = 1

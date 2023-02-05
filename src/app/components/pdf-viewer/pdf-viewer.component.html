@@ -1,14 +1,13 @@
-<div id="first-viewer"
-	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+<div
+	id="first-viewer"
+	class="viewer-container w-100 h-100 d-flex"
 	[style.z-index]="firstViewer.zIndex"
 	[style.transform]="'translateX(' + firstViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="firstViewer.transitionTime + 'ms'">
-
+	[style.transitionDuration]="firstViewer.transitionTime + 'ms'"
+>
 	<pdf-viewer
 		id="first-viewer-left"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -24,8 +23,7 @@
 
    <pdf-viewer
 		id="first-viewer-right"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[style.display]="(showSecondPage && (firstViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
@@ -40,16 +38,14 @@
 </div>
 
 <div id="second-viewer"
-	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+	class="viewer-container w-100 h-100 d-flex"
 	[style.z-index]="secondViewer.zIndex"
 	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="secondViewer.transitionTime + 'ms'">
-
+	[style.transitionDuration]="secondViewer.transitionTime + 'ms'"
+>
 	<pdf-viewer
 		id="second-viewer-left"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -63,8 +59,7 @@
 
 	<pdf-viewer
 		id="second-viewer-right"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[style.display]="(showSecondPage && (secondViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
@@ -79,16 +74,14 @@
 </div>
 
 <div id="third-viewer"
-	class="w-100 h-100 d-flex"
-	style="position: absolute; background-color: white; overflow: hidden; transition-property: transform"
+	class="viewer-container w-100 h-100 d-flex"
 	[style.z-index]="thirdViewer.zIndex"
 	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
-	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'">
-
+	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'"
+>
 	<pdf-viewer
 		id="third-viewer-left"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[src]="pdfContent"
 		[show-all]="false"
@@ -102,8 +95,7 @@
 
 	<pdf-viewer
 		id="third-viewer-right"
-		class="m-auto"
-		style="display: block"
+		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
 		[style.display]="(showSecondPage && (thirdViewer.page + 1) <= totalPages) ? '' : 'none'"
 		[src]="pdfContent"
@@ -124,9 +116,9 @@
 	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 	[style.height.px]="showBottomToolbar ? height : height - 40"
 	(click)="PrevPage()"
-	*ngIf="!firstPage && !showBottomToolbar">
-
-	<i class="ms-Icon ms-Icon--ChevronLeft" aria-hidden="true"></i>
+	*ngIf="!firstPage && !showBottomToolbar"
+>
+	<fa-icon [icon]="faChevronLeftLight"></fa-icon>
 </button>
 <button mat-button
 	class="book-toolbar-button"
@@ -134,9 +126,9 @@
 	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
 	[style.height.px]="showBottomToolbar ? height : height - 40"
 	(click)="NextPage()"
-	*ngIf="!showBottomToolbar">
-
-	<i class="ms-Icon ms-Icon--ChevronRight" aria-hidden="true"></i>
+	*ngIf="!showBottomToolbar"
+>
+	<fa-icon [icon]="faChevronRightLight"></fa-icon>
 </button>
 
 <!-- Top Toolbar -->
@@ -144,9 +136,9 @@
 	<button mat-button class="book-toolbar-button"
 		style="background-color: white; position: absolute;"
 		(click)="GoHome()"
-		*ngIf="!showBottomToolbar">
-
-		<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
+		*ngIf="!showBottomToolbar"
+	>
+		<fa-icon [icon]="faHouseLight"></fa-icon>
    </button>
 
 	<div style="float: right">
@@ -156,31 +148,33 @@
       </button>
 		-->
       <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
-         <i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmarked"></fa-icon>
+			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmarked"></fa-icon>
       </button>
       <button mat-button class="book-toolbar-button" style="float: right;" (click)="showBookmarksPanel = true">
-         <i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+         <fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
       </button>
    </div>
 </div>
 
 <!-- Bottom toolbar -->
-<div class="w-100 d-flex justify-content-center"
-	style="z-index: 2; position: fixed; bottom: 0;"
+<div
+	id="bottom-toolbar"
 	[style.marginBottom.px]="bottomToolbarMarginBottom"
 	[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
-	*ngIf="showBottomToolbar">
-
+	*ngIf="showBottomToolbar"
+>
 	<div class="w-100" style="display: inline-block;">
 		<div class="d-flex justify-content-center">
 			<button mat-button class="book-toolbar-button" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
-				<i class="ms-Icon" [ngClass]="bottomToolbarOpened ? 'ms-Icon--ChevronDownMed' : 'ms-Icon--ChevronUpMed'" aria-hidden="true"></i>
+				<fa-icon [icon]="faChevronDownLight" *ngIf="bottomToolbarOpened"></fa-icon>
+				<fa-icon [icon]="faChevronUpLight" *ngIf="!bottomToolbarOpened"></fa-icon>
 			</button>
 		</div>
 		<div class="w-100 d-flex">
 			<div style="position: absolute">
 				<button mat-button class="book-toolbar-button" (click)="GoHome()">
-					<i class="ms-Icon ms-Icon--Home" aria-hidden="true"></i>
+					<fa-icon [icon]="faHouseLight"></fa-icon>
 				</button>
 			</div>
 
@@ -191,10 +185,11 @@
 				</button>
 				-->
 				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
-					<i class="ms-Icon ms-Icon--DoubleBookmark" aria-hidden="true"></i>
+					<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 				</button>
 				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
-					<i class="ms-Icon" [ngClass]="currentPageBookmarked ? 'ms-Icon--SingleBookmarkSolid' : 'ms-Icon--AddBookmark'" aria-hidden="true"></i>
+					<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmarked"></fa-icon>
+					<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmarked"></fa-icon>
 				</button>
 			</div>
 		</div>
