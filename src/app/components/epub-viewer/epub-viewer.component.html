@@ -114,23 +114,14 @@
 <!-- Top Toolbar -->
 <div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar && initialized">
 	<!-- Back button -->
-	<button
-		mat-button
-		class="book-toolbar-button text-color" 
-		[disabled]="navigationHistory.length == 0"
-		(click)="GoBack()"
-	>
+	<dav-icon-button [disabled]="navigationHistory.length == 0" (click)="GoBack()">
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
-	</button>
+	</dav-icon-button>
 
 	<!-- Home button -->
-	<button
-		mat-button
-		class="book-toolbar-button text-color"
-		(click)="GoHome()"
-	>
+	<dav-icon-button (click)="GoHome()">
 		<fa-icon [icon]="faHouseLight"></fa-icon>
-	</button>
+	</dav-icon-button>
 
 	<div class="d-flex" style="float: right">
 		<div
@@ -144,16 +135,19 @@
 				strokeWidth="1.3">
 			</mat-progress-spinner>
 		</div>
-		<button mat-button class="book-toolbar-button text-color" (click)="AddOrRemoveBookmark()">
+
+		<dav-icon-button (click)="AddOrRemoveBookmark()">
 			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
 			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
-		</button>
-		<button mat-button class="book-toolbar-button text-color" (click)="showBookmarksPanel = true">
+		</dav-icon-button>
+
+		<dav-icon-button (click)="showBookmarksPanel = true">
 			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
-		</button>
-		<button mat-button class="book-toolbar-button text-color" (click)="showChaptersPanel = true">
+		</dav-icon-button>
+
+		<dav-icon-button (click)="showChaptersPanel = true">
 			<fa-icon [icon]="faListUlLight"></fa-icon>
-		</button>
+		</dav-icon-button>
 	</div>
 </div>
 
