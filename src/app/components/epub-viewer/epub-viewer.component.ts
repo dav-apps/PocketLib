@@ -1,4 +1,10 @@
-import { Component, HostListener, NgZone, ViewChild } from '@angular/core'
+import {
+	Component,
+	HostListener,
+	NgZone,
+	ViewChild,
+	ElementRef
+} from '@angular/core'
 import { Router } from '@angular/router'
 import {
 	faBookmark as faBookmarkSolid
@@ -15,6 +21,7 @@ import {
 	faChevronDown as faChevronDownLight
 } from '@fortawesome/pro-light-svg-icons'
 import { PromiseHolder } from 'dav-js'
+import { BottomSheet } from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { ChaptersTreeComponent } from '../chapters-tree/chapters-tree.component'
 import { EpubBook } from 'src/app/models/EpubBook'
@@ -48,10 +55,7 @@ const secondViewerLeftId = "second-viewer-left"
 const secondViewerRightId = "second-viewer-right"
 const thirdViewerLeftId = "third-viewer-left"
 const thirdViewerRightId = "third-viewer-right"
-const bottomToolbarMarginBottomOpened = 0
-const bottomToolbarMarginBottomClosed = -40
 const defaultViewerTransitionTime = 500
-const defaultBottomToolbarTransitionTime = 200
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
 
@@ -146,6 +150,7 @@ export class EpubViewerComponent {
 	firstPage: boolean = false		// If true, hides the previous button
 	lastPage: boolean = false		// If true, hides the next button
 	showSecondPage: boolean = false	// If true, the right viewers are visible
+	isMobile: boolean = false			// Is true on small devices with width < 600 px
 	dualScreenLayout: boolean = false	// If true, the app is displayed on a dual-screen like Surface Duo with a vertical fold
 	progressRingVisible: boolean = false	// If true, the progress ring is visible
 	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
@@ -163,15 +168,15 @@ export class EpubViewerComponent {
 	touchStartY: number = 0
 	touchDiffX: number = 0
 	touchDiffY: number = 0
-	touchStartBottomToolbarMarginBottom: number = -40		// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
 	doubleTapTimerRunning: boolean = false
 	//#endregion
 
 	//#region Variables for the bottom toolbar
-	showBottomToolbar: boolean = false			// Whether the bottom toolbar is visible
-	bottomToolbarOpened: boolean = false		// Whether the bottom toolbar is opened or closed
-	bottomToolbarMarginBottom: number = -40	// The margin bottom of the bottom toolbar
-	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime
+	@ViewChild('bottomSheet', { static: true }) bottomSheet: ElementRef<BottomSheet>
+	bottomSheetVisible: boolean = false
+	bottomSheetPosition: number = 0
+	bottomSheetStartPosition: number = 0
+	bottomSheetAnimatePosition: boolean = true
 	//#endregion
 
 	//#region Variables for the progress bar
@@ -264,17 +269,25 @@ export class EpubViewerComponent {
 		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(thirdViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		this.bottomSheet.nativeElement.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(firstViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(secondViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(thirdViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		this.bottomSheet.nativeElement.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(firstViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(secondViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 		document.getElementById(thirdViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		this.bottomSheet.nativeElement.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
 
 		// Bind the click event
 		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+
+		if (this.isMobile) {
+			// Show the BottomSheet
+			this.bottomSheetVisible = true
+		}
 	}
 
 	ngOnDestroy() {
@@ -320,7 +333,8 @@ export class EpubViewerComponent {
 		this.paddingX = Math.round(this.width * 0.1)
 
 		this.showSecondPage = this.width > secondPageMinWidth
-		this.showBottomToolbar = this.width < 500
+		this.isMobile = this.width < 600
+		this.bottomSheetVisible = this.initialized && this.isMobile
 
 		if (this.showSecondPage) {
 			// Show both pages
@@ -798,7 +812,7 @@ export class EpubViewerComponent {
 			this.firstViewer.transitionTime = 0
 			this.secondViewer.transitionTime = 0
 			this.thirdViewer.transitionTime = 0
-			this.bottomToolbarTransitionTime = 0
+			this.bottomSheetAnimatePosition = false
 		} else if (event.type == touchMove) {
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0)
@@ -808,7 +822,7 @@ export class EpubViewerComponent {
 			if (this.swipeStart) {
 				// Check if the user is swiping up or down
 				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical
-				this.touchStartBottomToolbarMarginBottom = this.bottomToolbarMarginBottom
+				this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 
 				this.swipeStart = false
 			} else if (this.swipeDirection == SwipeDirection.Horizontal) {
@@ -823,25 +837,15 @@ export class EpubViewerComponent {
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX)
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical && this.showBottomToolbar) {
-				// Update the margin bottom of the bottom toolbar
-				this.bottomToolbarMarginBottom = this.touchStartBottomToolbarMarginBottom + (this.touchDiffY / 2)
-
-				// Make sure the bottom toolbar does not move outside its area
-				if (this.bottomToolbarMarginBottom > bottomToolbarMarginBottomOpened) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-					this.bottomToolbarOpened = true
-				} else if (this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-					this.bottomToolbarOpened = false
-				}
+			} else if (this.swipeDirection == SwipeDirection.Vertical && this.bottomSheetVisible) {
+				// Set the new position of the bottom sheet
+				this.bottomSheetPosition = this.touchDiffY + this.bottomSheetStartPosition
 			}
 		} else if (event.type == touchEnd) {
 			// Reset the transition times
 			this.firstViewer.transitionTime = defaultViewerTransitionTime
 			this.secondViewer.transitionTime = defaultViewerTransitionTime
 			this.thirdViewer.transitionTime = defaultViewerTransitionTime
-			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 			if (this.swipeDirection == SwipeDirection.Horizontal) {
 				// Disable horizontal swiping until the next and previous pages are fully rendered
@@ -878,20 +882,14 @@ export class EpubViewerComponent {
 						this.SetLeftOfPreviousViewer(-this.width)
 					}
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical) {
-				if (this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed / 2) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-					this.bottomToolbarOpened = false
-				} else {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-					this.bottomToolbarOpened = true
-				}
 			}
 
 			this.touchStartX = 0
 			this.touchStartY = 0
 			this.touchDiffX = 0
 			this.touchDiffY = 0
+			this.bottomSheetStartPosition = 0
+			this.bottomSheetAnimatePosition = true
 		}
 	}
 
@@ -916,7 +914,6 @@ export class EpubViewerComponent {
 				this.firstViewer.transitionTime = defaultViewerTransitionTime
 				this.secondViewer.transitionTime = defaultViewerTransitionTime
 				this.thirdViewer.transitionTime = defaultViewerTransitionTime
-				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
 				if (clickedOnRightEdge) {
 					this.NextPage()
@@ -927,34 +924,12 @@ export class EpubViewerComponent {
 		}
 	}
 
-	OpenOrCloseBottomToolbar() {
-		if (this.bottomToolbarOpened) {
-			// Close the bottom toolbar
-			this.CloseBottomToolbar()
-		} else {
-			// Open the bottom toolbar
-			this.OpenBottomToolbar()
-		}
-	}
-
-	OpenBottomToolbar() {
-		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-		this.bottomToolbarOpened = true
-	}
-
-	CloseBottomToolbar() {
-		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-		this.bottomToolbarOpened = false
-	}
-
 	CloseBookmarksPanel() {
 		this.showBookmarksPanel = false
-		this.CloseBottomToolbar()
 	}
 
 	CloseChaptersPanel() {
 		this.showChaptersPanel = false
-		this.CloseBottomToolbar()
 	}
 
 	async AddOrRemoveBookmark() {

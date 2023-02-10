@@ -80,20 +80,20 @@
 <button mat-button 
 	class="book-toolbar-button text-color" 
 	style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
-	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	[style.marginTop.px]="isMobile ? 0 : 40"
+	[style.height.px]="isMobile ? height : height - 40" 
 	(click)="PrevPage()" 
-	*ngIf="!firstPage && !showBottomToolbar"
+	*ngIf="!firstPage && !isMobile"
 >
 	<fa-icon [icon]="faChevronLeftLight"></fa-icon>
 </button>
 <button mat-button 
 	class="book-toolbar-button text-color" 
 	style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
-	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-	[style.height.px]="showBottomToolbar ? height : height - 40" 
+	[style.marginTop.px]="isMobile ? 0 : 40"
+	[style.height.px]="isMobile ? height : height - 40" 
 	(click)="NextPage()" 
-	*ngIf="!showBottomToolbar"
+	*ngIf="!isMobile"
 >
 	<fa-icon [icon]="faChevronRightLight"></fa-icon>
 </button>
@@ -103,7 +103,7 @@
 	style="position: absolute; bottom: 0; right: 0; height: 50px"
 	class="d-flex justify-content-center"
 	[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
-	*ngIf="!showBottomToolbar"
+	*ngIf="!isMobile"
 >
 	<p class="align-self-center fw-light text-color"
 		style="display: inline-block; margin: 0; font-size: 14px">
@@ -112,7 +112,7 @@
 </div>
 
 <!-- Top Toolbar -->
-<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar && initialized">
+<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!isMobile && initialized">
 	<!-- Back button -->
 	<dav-icon-button [disabled]="navigationHistory.length == 0" (click)="GoBack()">
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
@@ -151,56 +151,15 @@
 	</div>
 </div>
 
-<!-- Bottom toolbar -->
-<div
-	id="bottom-toolbar"
-	[style.marginBottom.px]="bottomToolbarMarginBottom"
-	[style.transition]="'all ' + bottomToolbarTransitionTime + 'ms'"
-	*ngIf="showBottomToolbar && initialized"
+<dav-bottom-sheet
+	#bottomSheet
+	[visible]="bottomSheetVisible"
+	[dismissable]="false"
+	[position]="bottomSheetPosition"
+	[animatePosition]="bottomSheetAnimatePosition"
 >
-	<div class="w-100" style="display: inline-block;">
-		<div class="d-flex justify-content-center">
-			<button mat-button class="book-toolbar-button text-color" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
-				<fa-icon [icon]="faChevronDownLight" *ngIf="bottomToolbarOpened"></fa-icon>
-				<fa-icon [icon]="faChevronUpLight" *ngIf="!bottomToolbarOpened"></fa-icon>
-			</button>
-		</div>
-		<div class="w-100 d-flex">
-			<div style="position: absolute">
-				<button
-					mat-button
-					class="book-toolbar-button text-color"
-					style="font-size: 16px"
-					[disabled]="navigationHistory.length == 0"
-					(click)="GoBack()"
-				>
-					<fa-icon [icon]="faArrowLeftLight"></fa-icon>
-				</button>
-	
-				<button
-					mat-button
-					class="book-toolbar-button text-color"
-					(click)="GoHome()"
-				>
-					<fa-icon [icon]="faHouseLight"></fa-icon>
-				</button>
-			</div>
-
-			<div class="mx-auto">
-				<button mat-button class="book-toolbar-button text-color" (click)="showChaptersPanel = true">
-					<fa-icon [icon]="faListUlLight"></fa-icon>
-				</button>
-				<button mat-button class="book-toolbar-button text-color" (click)="showBookmarksPanel = true">
-					<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
-				</button>
-				<button mat-button class="book-toolbar-button text-color" (click)="AddOrRemoveBookmark()">
-					<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
-					<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
-				</button>
-			</div>
-		</div>
-	</div>
-</div>
+	<h1>Hello World</h1>
+</dav-bottom-sheet>
 
 <!-- Total progress -->
 <div
@@ -213,8 +172,8 @@
 <div
 	class="d-flex justify-content-center align-items-center"
 	style="position: absolute; bottom: 0; right: 0; width: 40px; height: 40px"
-	[style.visibility]="showBottomToolbar ? '' : 'hidden'">
-
+	[style.visibility]="isMobile ? '' : 'hidden'"
+>
 	<mat-progress-spinner
 		[style.display]="progressRingVisible ? '' : 'none'"
 		mode="indeterminate"
