@@ -158,7 +158,24 @@
 	[position]="bottomSheetPosition"
 	[animatePosition]="bottomSheetAnimatePosition"
 >
-	<h1>Hello World</h1>
+	<div id="bottom-sheet-container">
+		<dav-icon-text-button [label]="locale.bottomSheet.back">
+			<fa-icon [icon]="faHouseRegular"></fa-icon>
+		</dav-icon-text-button>
+
+		<dav-icon-text-button [label]="currentPageBookmark ? locale.bottomSheet.removeBookmark : locale.bottomSheet.addBookmark">
+			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
+			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
+		</dav-icon-text-button>
+
+		<dav-icon-text-button [label]="locale.bottomSheet.bookmarks">
+			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
+		</dav-icon-text-button>
+
+		<dav-icon-text-button [label]="locale.bottomSheet.toc">
+			<fa-icon [icon]="faListUlRegular"></fa-icon>
+		</dav-icon-text-button>
+	</div>
 </dav-bottom-sheet>
 
 <!-- Total progress -->

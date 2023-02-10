@@ -10,6 +10,12 @@ import {
 	faBookmark as faBookmarkSolid
 } from '@fortawesome/free-solid-svg-icons'
 import {
+	faHouse as faHouseRegular,
+	faBookmark as faBookmarkRegular,
+	faFolderBookmark as faFolderBookmarkRegular,
+	faListUl as faListUlRegular
+} from '@fortawesome/pro-regular-svg-icons'
+import {
 	faArrowLeft as faArrowLeftLight,
 	faHouse as faHouseLight,
 	faBookmark as faBookmarkLight,
@@ -67,10 +73,14 @@ const doubleTapToleranceTime = 400
 export class EpubViewerComponent {
 	locale = enUS.epubViewer
 	faArrowLeftLight = faArrowLeftLight
+	faHouseRegular = faHouseRegular
 	faHouseLight = faHouseLight
 	faBookmarkSolid = faBookmarkSolid
+	faBookmarkRegular = faBookmarkRegular
 	faBookmarkLight = faBookmarkLight
+	faFolderBookmarkRegular = faFolderBookmarkRegular
 	faFolderBookmarkLight = faFolderBookmarkLight
+	faListUlRegular = faListUlRegular
 	faListUlLight = faListUlLight
 	faChevronLeftLight = faChevronLeftLight
 	faChevronRightLight = faChevronRightLight

@@ -360,7 +360,14 @@ const enDefaults = {
       toc: "Table of contents",
       bookmarks: "Bookmarks",
       noBookmarks: "You have no bookmarks",
-      untitledBookmark: "Untitled bookmark"
+      untitledBookmark: "Untitled bookmark",
+		bottomSheet: {
+			back: "Back",
+			addBookmark: "Add bookmark",
+			removeBookmark: "Remove bookmark",
+			bookmarks: "Bookmarks",
+			toc: "Table of contents"
+		}
    },
    pdfViewer: {
       bookmarks: "Bookmarks",
@@ -899,7 +906,14 @@ const deDefaults = {
       toc: "Inhaltsverzeichnis",
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
-      untitledBookmark: "Unbenanntes Lesezeichen"
+      untitledBookmark: "Unbenanntes Lesezeichen",
+		bottomSheet: {
+			back: "Zurück",
+			addBookmark: "Lesezeichen hinzufügen",
+			removeBookmark: "Lesezeichen entfernen",
+			bookmarks: "Lesezeichen",
+			toc: "Inhalts-verzeichnis"
+		}
 	},
 	pdfViewer: {
       bookmarks: "Lesezeichen",

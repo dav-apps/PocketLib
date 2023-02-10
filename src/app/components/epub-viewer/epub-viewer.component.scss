@@ -13,13 +13,9 @@
    right: 0;
 }
 
-#bottom-toolbar {
+#bottom-sheet-container {
    display: flex;
-   justify-content: center;
-   position: fixed;
-   bottom: 0;
-   width: 100%;
-   z-index: 2;
+   gap: 12px;
 }
 
 .book-toolbar-button{
