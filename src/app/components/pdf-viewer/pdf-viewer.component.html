@@ -133,27 +133,19 @@
 
 <!-- Top Toolbar -->
 <div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar">
-	<button mat-button class="book-toolbar-button"
-		style="background-color: white; position: absolute;"
-		(click)="GoHome()"
-		*ngIf="!showBottomToolbar"
-	>
+	<dav-icon-button (click)="GoHome()">
 		<fa-icon [icon]="faHouseLight"></fa-icon>
-   </button>
+	</dav-icon-button>
 
 	<div style="float: right">
-		<!--
-		<button mat-button class="book-toolbar-button" id="zoomButtonTopToolbar">
-         <i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
-      </button>
-		-->
-      <button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
+		<dav-icon-button (click)="AddOrRemoveBookmark()">
 			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmarked"></fa-icon>
 			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmarked"></fa-icon>
-      </button>
-      <button mat-button class="book-toolbar-button" style="float: right;" (click)="showBookmarksPanel = true">
-         <fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
-      </button>
+		</dav-icon-button>
+
+		<dav-icon-button (click)="showBookmarksPanel = true">
+			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
+		</dav-icon-button>
    </div>
 </div>
 
