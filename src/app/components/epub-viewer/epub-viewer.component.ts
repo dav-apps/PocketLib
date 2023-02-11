@@ -815,7 +815,12 @@ export class EpubViewerComponent {
 	}
 
 	HandleTouch(event: TouchEvent) {
-		if (event.touches.length > 1 || window["visualViewport"].scale > 1.001) return
+		if (
+			event.touches.length > 1
+			|| window["visualViewport"].scale > 1.001
+		) return
+
+		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(event.target as Node)
 
 		if (event.type == touchStart) {
 			let touch = event.touches.item(0)
@@ -838,8 +843,14 @@ export class EpubViewerComponent {
 			if (this.swipeStart) {
 				// Check if the user is swiping up or down
 				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical
-				this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 
+				// Disable navigating through pages when touching the BottomSheet
+				if (
+					this.swipeDirection == SwipeDirection.Horizontal
+					&& bottomSheetTouch
+				) return
+
+				this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 				this.swipeStart = false
 			} else if (this.swipeDirection == SwipeDirection.Horizontal) {
 				// Disable horizontal swiping until the next and previous pages are fully rendered
@@ -863,7 +874,10 @@ export class EpubViewerComponent {
 			this.secondViewer.transitionTime = defaultViewerTransitionTime
 			this.thirdViewer.transitionTime = defaultViewerTransitionTime
 
-			if (this.swipeDirection == SwipeDirection.Horizontal) {
+			if (
+				this.swipeDirection == SwipeDirection.Horizontal
+				&& !bottomSheetTouch
+			) {
 				// Disable horizontal swiping until the next and previous pages are fully rendered
 				if (this.showPageRunningWhenSwipeStarted) {
 					if (this.isRenderingNextOrPrevPage) {
