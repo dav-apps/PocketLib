@@ -203,6 +203,12 @@ export class EpubViewerComponent {
 	showBookmarksPanel: boolean = false
 	//#endregion
 
+	//#region Variables for the bottom sheet
+	@ViewChild('bottomSheetChaptersTree', { static: false }) bottomSheetChapterTree: ChaptersTreeComponent
+	@ViewChild('bottomSheetChaptersPanel', {static: false}) bottomSheetChaptersPanel: ElementRef<HTMLDivElement>
+	bottomSheetContainerHeight: number = 0
+	//#endregion
+
 	//#region Global event listeners
 	keydownEventListener = (event: KeyboardEvent) => this.onKeyDown(event)
 	mouseWheelEventListener = (event: WheelEvent) => this.onMouseWheel(event)
@@ -934,12 +940,24 @@ export class EpubViewerComponent {
 		}
 	}
 
-	CloseBookmarksPanel() {
-		this.showBookmarksPanel = false
+	BottomSheetSnapBottom() {
+		setTimeout(() => {
+			this.bottomSheetAnimatePosition = false
+			this.showChaptersPanel = false
+			this.bottomSheetContainerHeight = 0
+		}, 200)
 	}
 
-	CloseChaptersPanel() {
-		this.showChaptersPanel = false
+	ShowChaptersPanel() {
+		this.showChaptersPanel = true
+
+		if (this.isMobile) {
+			// Show the toc on the BottomSheet
+			setTimeout(() => {
+				this.bottomSheetChapterTree.Init(this.book.toc)
+				this.bottomSheetContainerHeight = this.bottomSheetChaptersPanel.nativeElement.clientHeight
+			}, 1)
+		}
 	}
 
 	async AddOrRemoveBookmark() {

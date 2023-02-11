@@ -145,7 +145,7 @@
 			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 		</dav-icon-button>
 
-		<dav-icon-button (click)="showChaptersPanel = true">
+		<dav-icon-button (click)="ShowChaptersPanel()">
 			<fa-icon [icon]="faListUlLight"></fa-icon>
 		</dav-icon-button>
 	</div>
@@ -157,8 +157,9 @@
 	[dismissable]="false"
 	[position]="bottomSheetPosition"
 	[animatePosition]="bottomSheetAnimatePosition"
+	(snapBottom)="BottomSheetSnapBottom()"
 >
-	<div id="bottom-sheet-container">
+	<div id="bottom-sheet-button-container">
 		<dav-icon-text-button (click)="GoHome()" [label]="locale.bottomSheet.back">
 			<fa-icon [icon]="faHouseRegular"></fa-icon>
 		</dav-icon-text-button>
@@ -168,13 +169,41 @@
 			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="showBookmarksPanel = true" [label]="locale.bottomSheet.bookmarks">
+		<dav-icon-text-button (click)="showBookmarksPanel = !showBookmarksPanel" [label]="locale.bottomSheet.bookmarks">
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="showChaptersPanel = true" [label]="locale.bottomSheet.toc">
+		<dav-icon-text-button (click)="ShowChaptersPanel()" [label]="locale.bottomSheet.toc">
 			<fa-icon [icon]="faListUlRegular"></fa-icon>
 		</dav-icon-text-button>
+	</div>
+
+	<div id="bottom-sheet-container" [style.height.px]="bottomSheetContainerHeight">
+		<div *ngIf="showBookmarksPanel">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item d-flex theme-background-color-secondary"
+					style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
+					*ngFor="let bookmark of currentBook.bookmarks"
+				>
+					<a href="#" class="text-color" (click)="NavigateToBookmark(bookmark)" [ngClass]="bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''">
+						{{ bookmark.name }}
+					</a>
+				</li>
+			</ul>
+
+			<p class="fw-light text-color"
+				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
+			>
+				{{ locale.noBookmarks }}
+			</p>
+		</div>
+
+		<div #bottomSheetChaptersPanel *ngIf="showChaptersPanel">
+			<pocketlib-chapters-tree
+				#bottomSheetChaptersTree
+				(linkClick)="ChapterLinkClicked($event)">
+			</pocketlib-chapters-tree>
+		</div>
 	</div>
 </dav-bottom-sheet>
 
@@ -202,9 +231,9 @@
 <!-- Panel for Bookmarks -->
 <dav-panel
 	[header]="locale.bookmarks"
-	[visible]="showBookmarksPanel"
-	(dismiss)="CloseBookmarksPanel()">
-
+	[visible]="showBookmarksPanel && !isMobile"
+	(dismiss)="showBookmarksPanel = false"
+>
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item d-flex theme-background-color-secondary"
 			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
@@ -224,9 +253,9 @@
 <!-- Panel for TOC -->
 <dav-panel
 	[header]="locale.toc"
-	[visible]="showChaptersPanel"
-	(dismiss)="CloseChaptersPanel()">
-
+	[visible]="showChaptersPanel  && !isMobile"
+	(dismiss)="showChaptersPanel = false"
+>
 	<pocketlib-chapters-tree
 		#chaptersTree
 		(linkClick)="ChapterLinkClicked($event)">

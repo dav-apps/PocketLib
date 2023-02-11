@@ -1,31 +1,35 @@
 .viewer-container {
-   position: absolute;
-   transition-property: transform;
+	position: absolute;
+	transition-property: transform;
 }
 
 .viewer {
-   border: none;
-   position: relative;
-   margin-top: 60px;
+	border: none;
+	position: relative;
+	margin-top: 60px;
 }
 
 .viewer-right {
-   right: 0;
+	right: 0;
+}
+
+#bottom-sheet-button-container {
+	display: flex;
+	gap: 12px;
 }
 
 #bottom-sheet-container {
-   display: flex;
-   gap: 12px;
+	transition: 200ms;
 }
 
-.book-toolbar-button{
-   min-width: 40px;
-   height: 40px;
-   padding: 0px;
-   font-size: 18px;
-   z-index: 2;
+.book-toolbar-button {
+	min-width: 40px;
+	height: 40px;
+	padding: 0px;
+	font-size: 18px;
+	z-index: 2;
 }
 
-a.text-color:hover{
+a.text-color:hover {
 	color: var(--text-color);
 }
