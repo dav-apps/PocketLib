@@ -13,6 +13,7 @@ import { EpubTocItem } from 'src/app/models/EpubReader'
 })
 export class ChaptersTreeComponent {
 	@Output() linkClick = new EventEmitter()
+	initialized: boolean = false
 	dataSource: MatTreeNestedDataSource<ChapterNode>
 	treeControl: NestedTreeControl<ChapterNode>
 	dataChange: BehaviorSubject<ChapterNode[]> = new BehaviorSubject<ChapterNode[]>([])
@@ -27,6 +28,9 @@ export class ChaptersTreeComponent {
 	hasNestedChild = (i: number, node: ChapterNode) => { return node.chapters.length > 0 }
 
 	Init(toc: EpubTocItem[]) {
+		if (this.initialized) return
+		this.initialized = true
+
 		// Convert the EpubTocItems to ChapterNodes
 		this.chapters = this.ConvertEpubTocItemsToChapterNodes(toc)
 		this.dataChange.next(this.chapters)

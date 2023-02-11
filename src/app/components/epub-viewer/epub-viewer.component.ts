@@ -1088,8 +1088,8 @@ export class EpubViewerComponent {
 	}
 
 	ChapterLinkClicked(link: string) {
-		this.showChaptersPanel = false
 		this.NavigateToLink(link)
+		this.bottomSheetPosition = 0
 	}
 
 	/**
