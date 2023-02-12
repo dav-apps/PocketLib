@@ -178,6 +178,7 @@ export class EpubViewerComponent {
 	touchStartY: number = 0
 	touchDiffX: number = 0
 	touchDiffY: number = 0
+	touchMoveCount: number = 0
 	doubleTapTimerRunning: boolean = false
 	//#endregion
 
@@ -186,7 +187,6 @@ export class EpubViewerComponent {
 	bottomSheetVisible: boolean = false
 	bottomSheetPosition: number = 0
 	bottomSheetStartPosition: number = 0
-	bottomSheetAnimatePosition: boolean = true
 	//#endregion
 
 	//#region Variables for the progress bar
@@ -204,8 +204,9 @@ export class EpubViewerComponent {
 	//#endregion
 
 	//#region Variables for the bottom sheet
+	@ViewChild('bottomSheetBookmarksContainer', { static: false }) bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
+	@ViewChild('bottomSheetChaptersContainer', { static: false }) bottomSheetChaptersContainer: ElementRef<HTMLDivElement>
 	@ViewChild('bottomSheetChaptersTree', { static: false }) bottomSheetChapterTree: ChaptersTreeComponent
-	@ViewChild('bottomSheetChaptersPanel', {static: false}) bottomSheetChaptersPanel: ElementRef<HTMLDivElement>
 	bottomSheetContainerHeight: number = 0
 	//#endregion
 
@@ -826,19 +827,22 @@ export class EpubViewerComponent {
 			let touch = event.touches.item(0)
 			this.touchStartX = touch.screenX
 			this.touchStartY = touch.screenY
+			this.touchMoveCount = 0
 			this.swipeDirection = SwipeDirection.None
 			this.swipeStart = true
 			this.showPageRunningWhenSwipeStarted = this.showPageRunning
+			this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 
 			this.firstViewer.transitionTime = 0
 			this.secondViewer.transitionTime = 0
 			this.thirdViewer.transitionTime = 0
-			this.bottomSheetAnimatePosition = false
 		} else if (event.type == touchMove) {
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0)
+
 			this.touchDiffX = this.touchStartX - touch.screenX
 			this.touchDiffY = this.touchStartY - touch.screenY
+			this.touchMoveCount++
 
 			if (this.swipeStart) {
 				// Check if the user is swiping up or down
@@ -850,7 +854,6 @@ export class EpubViewerComponent {
 					&& bottomSheetTouch
 				) return
 
-				this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 				this.swipeStart = false
 			} else if (this.swipeDirection == SwipeDirection.Horizontal) {
 				// Disable horizontal swiping until the next and previous pages are fully rendered
@@ -914,12 +917,17 @@ export class EpubViewerComponent {
 				}
 			}
 
+			// Don't snap the bottom sheet on touch without swipe
+			if (this.touchMoveCount > 0) {
+				this.bottomSheet.nativeElement.snap()
+			}
+
 			this.touchStartX = 0
 			this.touchStartY = 0
 			this.touchDiffX = 0
 			this.touchDiffY = 0
+			this.touchMoveCount = 0
 			this.bottomSheetStartPosition = 0
-			this.bottomSheetAnimatePosition = true
 		}
 	}
 
@@ -956,20 +964,31 @@ export class EpubViewerComponent {
 
 	BottomSheetSnapBottom() {
 		setTimeout(() => {
-			this.bottomSheetAnimatePosition = false
 			this.showChaptersPanel = false
 			this.bottomSheetContainerHeight = 0
 		}, 200)
 	}
 
+	ShowBookmarksPanel() {
+		this.showBookmarksPanel = true
+		this.showChaptersPanel = false
+
+		if (this.isMobile) {
+			setTimeout(() => {
+				this.bottomSheetContainerHeight = this.bottomSheetBookmarksContainer.nativeElement.clientHeight
+			}, 1)
+		}
+	}
+
 	ShowChaptersPanel() {
+		this.showBookmarksPanel = false
 		this.showChaptersPanel = true
 
 		if (this.isMobile) {
 			// Show the toc on the BottomSheet
 			setTimeout(() => {
 				this.bottomSheetChapterTree.Init(this.book.toc)
-				this.bottomSheetContainerHeight = this.bottomSheetChaptersPanel.nativeElement.clientHeight
+				this.bottomSheetContainerHeight = this.bottomSheetChaptersContainer.nativeElement.clientHeight
 			}, 1)
 		}
 	}

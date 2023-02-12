@@ -156,7 +156,6 @@
 	[visible]="bottomSheetVisible"
 	[dismissable]="false"
 	[position]="bottomSheetPosition"
-	[animatePosition]="bottomSheetAnimatePosition"
 	(snapBottom)="BottomSheetSnapBottom()"
 >
 	<div id="bottom-sheet-button-container">
@@ -169,7 +168,7 @@
 			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="showBookmarksPanel = !showBookmarksPanel" [label]="locale.bottomSheet.bookmarks">
+		<dav-icon-text-button (click)="ShowBookmarksPanel()" [label]="locale.bottomSheet.bookmarks">
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 
@@ -179,7 +178,7 @@
 	</div>
 
 	<div id="bottom-sheet-container" [style.height.px]="bottomSheetContainerHeight">
-		<div *ngIf="showBookmarksPanel">
+		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item d-flex theme-background-color-secondary"
 					style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
@@ -198,7 +197,7 @@
 			</p>
 		</div>
 
-		<div #bottomSheetChaptersPanel *ngIf="showChaptersPanel">
+		<div #bottomSheetChaptersContainer *ngIf="showChaptersPanel">
 			<pocketlib-chapters-tree
 				#bottomSheetChaptersTree
 				(linkClick)="ChapterLinkClicked($event)">
