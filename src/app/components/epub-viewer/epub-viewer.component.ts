@@ -976,6 +976,10 @@ export class EpubViewerComponent {
 		if (this.isMobile) {
 			setTimeout(() => {
 				this.bottomSheetContainerHeight = this.bottomSheetBookmarksContainer.nativeElement.clientHeight
+
+				setTimeout(() => {
+					this.bottomSheet.nativeElement.snap("top")
+				}, 100)
 			}, 1)
 		}
 	}
@@ -989,6 +993,10 @@ export class EpubViewerComponent {
 			setTimeout(() => {
 				this.bottomSheetChapterTree.Init(this.book.toc)
 				this.bottomSheetContainerHeight = this.bottomSheetChaptersContainer.nativeElement.clientHeight
+
+				setTimeout(() => {
+					this.bottomSheet.nativeElement.snap("top")
+				}, 100)
 			}, 1)
 		}
 	}
@@ -1122,7 +1130,16 @@ export class EpubViewerComponent {
 
 	ChapterLinkClicked(link: string) {
 		this.NavigateToLink(link)
-		this.bottomSheetPosition = 0
+
+		if (this.isMobile) {
+			this.bottomSheet.nativeElement.snap("bottom")
+
+			setTimeout(() => {
+				this.showChaptersPanel = false
+			}, 200)
+		} else {
+			this.showChaptersPanel = false
+		}
 	}
 
 	/**
@@ -1592,10 +1609,19 @@ export class EpubViewerComponent {
 	}
 
 	NavigateToBookmark(bookmark: EpubBookmark) {
-		this.showBookmarksPanel = false
 		this.currentChapter = bookmark.chapter
-
 		this.ShowPage(NavigationDirection.None, bookmark.progress)
+
+		if (this.isMobile) {
+			this.bottomSheet.nativeElement.snap("bottom")
+
+			setTimeout(() => {
+				this.showBookmarksPanel = false
+			}, 200)
+		} else {
+			this.showBookmarksPanel = false
+		}
+
 		return false
 	}
 }
