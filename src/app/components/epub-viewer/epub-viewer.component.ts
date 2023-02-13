@@ -17,14 +17,11 @@ import {
 } from '@fortawesome/pro-regular-svg-icons'
 import {
 	faArrowLeft as faArrowLeftLight,
+	faArrowRight as faArrowRightLight,
 	faHouse as faHouseLight,
 	faBookmark as faBookmarkLight,
 	faFolderBookmark as faFolderBookmarkLight,
-	faListUl as faListUlLight,
-	faChevronLeft as faChevronLeftLight,
-	faChevronRight as faChevronRightLight,
-	faChevronUp as faChevronUpLight,
-	faChevronDown as faChevronDownLight
+	faListUl as faListUlLight
 } from '@fortawesome/pro-light-svg-icons'
 import { PromiseHolder } from 'dav-js'
 import { BottomSheet } from 'dav-ui-components'
@@ -73,6 +70,7 @@ const doubleTapToleranceTime = 400
 export class EpubViewerComponent {
 	locale = enUS.epubViewer
 	faArrowLeftLight = faArrowLeftLight
+	faArrowRightLight = faArrowRightLight
 	faHouseRegular = faHouseRegular
 	faHouseLight = faHouseLight
 	faBookmarkSolid = faBookmarkSolid
@@ -82,10 +80,6 @@ export class EpubViewerComponent {
 	faFolderBookmarkLight = faFolderBookmarkLight
 	faListUlRegular = faListUlRegular
 	faListUlLight = faListUlLight
-	faChevronLeftLight = faChevronLeftLight
-	faChevronRightLight = faChevronRightLight
-	faChevronUpLight = faChevronUpLight
-	faChevronDownLight = faChevronDownLight
 
 	book = new EpubReader()
 	currentBook: EpubBook

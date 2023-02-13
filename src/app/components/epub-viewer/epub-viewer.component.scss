@@ -13,19 +13,27 @@
 	right: 0;
 }
 
+a.text-color:hover {
+	color: var(--text-color);
+}
+
+.arrow-button-container {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	height: 100%;
+	margin: 0 12px;
+}
+
+.arrow-button-left {
+	left: 0;
+}
+
+.arrow-button-right {
+	right: 0;
+}
+
 #bottom-sheet-button-container {
 	display: flex;
 	gap: 12px;
-}
-
-.book-toolbar-button {
-	min-width: 40px;
-	height: 40px;
-	padding: 0px;
-	font-size: 18px;
-	z-index: 2;
-}
-
-a.text-color:hover {
-	color: var(--text-color);
 }

@@ -77,26 +77,25 @@
 </div>
 
 <!-- Arrow buttons -->
-<button mat-button 
-	class="book-toolbar-button text-color" 
-	style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2" 
-	[style.marginTop.px]="isMobile ? 0 : 40"
-	[style.height.px]="isMobile ? height : height - 40" 
-	(click)="PrevPage()" 
-	*ngIf="!firstPage && !isMobile"
+<div
+	class="arrow-button-container arrow-button-left"
+	(click)="PrevPage()"
+	*ngIf="!isMobile && !firstPage"
 >
-	<fa-icon [icon]="faChevronLeftLight"></fa-icon>
-</button>
-<button mat-button 
-	class="book-toolbar-button text-color" 
-	style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2" 
-	[style.marginTop.px]="isMobile ? 0 : 40"
-	[style.height.px]="isMobile ? height : height - 40" 
-	(click)="NextPage()" 
+	<dav-icon-button>
+		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
+	</dav-icon-button>
+</div>
+
+<div
+	class="arrow-button-container arrow-button-right"
+	(click)="NextPage()"
 	*ngIf="!isMobile"
 >
-	<fa-icon [icon]="faChevronRightLight"></fa-icon>
-</button>
+	<dav-icon-button>
+		<fa-icon [icon]="faArrowRightLight"></fa-icon>
+	</dav-icon-button>
+</div>
 
 <!-- Chapter title -->
 <div
