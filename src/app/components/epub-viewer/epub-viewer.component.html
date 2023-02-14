@@ -1,14 +1,18 @@
 <div
-	id="first-viewer"
+	#firstViewerContainer
 	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="firstViewer.zIndex"
 	[style.transform]="'translateX(' + firstViewer.positionLeft + 'px)'"
 	[style.transitionDuration]="firstViewer.transitionTime + 'ms'"
+	(click)="HandleClick($event)"
+	(touchstart)="HandleTouch($event)"
+	(touchmove)="HandleTouch($event)"
+	(touchend)="HandleTouch($event)"
 >
 	<iframe
-		id="first-viewer-left"
+		#firstViewerLeft
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="firstViewer.left.height"
@@ -16,7 +20,7 @@
 	</iframe>
 
 	<iframe
-		id="first-viewer-right"
+		#firstViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="firstViewer.right.height"
@@ -25,16 +29,20 @@
 </div>
 
 <div
-	id="second-viewer"
+	#secondViewerContainer
 	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="secondViewer.zIndex"
 	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
 	[style.transitionDuration]="secondViewer.transitionTime + 'ms'"
+	(click)="HandleClick($event)"
+	(touchstart)="HandleTouch($event)"
+	(touchmove)="HandleTouch($event)"
+	(touchend)="HandleTouch($event)"
 >
 	<iframe
-		id="second-viewer-left"
+		#secondViewerLeft
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="secondViewer.left.height"
@@ -42,7 +50,7 @@
 	</iframe>
 
 	<iframe
-		id="second-viewer-right"
+		#secondViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="secondViewer.right.height"
@@ -51,16 +59,20 @@
 </div>
 
 <div
-	id="third-viewer"
+	#thirdViewerContainer
 	class="viewer-container d-flex theme-background-color-primary"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="thirdViewer.zIndex"
 	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
 	[style.transitionDuration]="thirdViewer.transitionTime + 'ms'"
+	(click)="HandleClick($event)"
+	(touchstart)="HandleTouch($event)"
+	(touchmove)="HandleTouch($event)"
+	(touchend)="HandleTouch($event)"
 >
 	<iframe
-		id="third-viewer-left"
+		#thirdViewerLeft
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="thirdViewer.left.height"
@@ -68,7 +80,7 @@
 	</iframe>
 
 	<iframe
-		id="third-viewer-right"
+		#thirdViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="thirdViewer.right.height"
@@ -80,7 +92,7 @@
 <div
 	class="arrow-button-container arrow-button-left"
 	(click)="PrevPage()"
-	*ngIf="!isMobile && !firstPage"
+	*ngIf="!isMobile && !firstPage && showArrowButtons"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
@@ -90,7 +102,7 @@
 <div
 	class="arrow-button-container arrow-button-right"
 	(click)="NextPage()"
-	*ngIf="!isMobile"
+	*ngIf="!isMobile && showArrowButtons"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
@@ -156,6 +168,9 @@
 	[dismissable]="false"
 	[position]="bottomSheetPosition"
 	(snapBottom)="BottomSheetSnapBottom()"
+	(touchstart)="HandleTouch($event)"
+	(touchmove)="HandleTouch($event)"
+	(touchend)="HandleTouch($event)"
 >
 	<div id="bottom-sheet-button-container">
 		<dav-icon-text-button (click)="GoHome()" [label]="locale.bottomSheet.back">

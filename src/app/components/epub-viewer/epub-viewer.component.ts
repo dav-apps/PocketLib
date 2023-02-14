@@ -45,19 +45,13 @@ const progressFactor = 100000			// The factor which is used to save the progress
 const currentViewerZIndex = -2
 const nextPageViewerZIndex = -3
 const previousPageViewerZIndex = -1
-const touchStart = "touchstart"
-const touchMove = "touchmove"
-const touchEnd = "touchend"
-const click = "click"
-const firstViewerId = "first-viewer"
-const secondViewerId = "second-viewer"
-const thirdViewerId = "third-viewer"
-const firstViewerLeftId = "first-viewer-left"
-const firstViewerRightId = "first-viewer-right"
-const secondViewerLeftId = "second-viewer-left"
-const secondViewerRightId = "second-viewer-right"
-const thirdViewerLeftId = "third-viewer-left"
-const thirdViewerRightId = "third-viewer-right"
+const keydownEventName = "keydown"
+const wheelEventName = "wheel"
+const mouseMoveEventName = "mousemove"
+const touchStartEventName = "touchstart"
+const touchMoveEventName = "touchmove"
+const touchEndEventName = "touchend"
+const clickEventName = "click"
 const defaultViewerTransitionTime = 500
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
@@ -94,6 +88,16 @@ export class EpubViewerComponent {
 	paddingX: number = 0
 	paddingTop: number = 80
 	paddingBottom: number = 60
+
+	@ViewChild('firstViewerContainer', { static: true }) firstViewerContainer: ElementRef<HTMLDivElement>
+	@ViewChild('secondViewerContainer', { static: true }) secondViewerContainer: ElementRef<HTMLDivElement>
+	@ViewChild('thirdViewerContainer', { static: true }) thirdViewerContainer: ElementRef<HTMLDivElement>
+	@ViewChild('firstViewerLeft', { static: true }) firstViewerLeft: ElementRef<HTMLIFrameElement>
+	@ViewChild('firstViewerRight', { static: true }) firstViewerRight: ElementRef<HTMLIFrameElement>
+	@ViewChild('secondViewerLeft', { static: true }) secondViewerLeft: ElementRef<HTMLIFrameElement>
+	@ViewChild('secondViewerRight', { static: true }) secondViewerRight: ElementRef<HTMLIFrameElement>
+	@ViewChild('thirdViewerLeft', { static: true }) thirdViewerLeft: ElementRef<HTMLIFrameElement>
+	@ViewChild('thirdViewerRight', { static: true }) thirdViewerRight: ElementRef<HTMLIFrameElement>
 
 	firstViewer: Viewer = {
 		left: {
@@ -163,6 +167,8 @@ export class EpubViewerComponent {
 	renderPrevPageAfterShowPage: boolean = false		// If true, the viewer will navigate to the previous page after ShowPage
 	renderNextPageAfterShowPage: boolean = false		// If true, the viewer will navigate to the next page after ShowPage
 	navigationHistory: { chapter: number, page: number }[] = []		// The history of visited pages; is used when clicking a link
+	showArrowButtons: boolean = false		// If true, the arrow buttons for navigating through the pages are visible
+	mouseMoveTimeoutId: number = -1			// The timeout number for the mouse move event, used for hiding the arrow buttons
 
 	//#region Variables for touch events
 	swipeDirection: SwipeDirection = SwipeDirection.None	// Whether the user swipes vertically or horizontally
@@ -204,11 +210,6 @@ export class EpubViewerComponent {
 	bottomSheetContainerHeight: number = 0
 	//#endregion
 
-	//#region Global event listeners
-	keydownEventListener = (event: KeyboardEvent) => this.onKeyDown(event)
-	mouseWheelEventListener = (event: WheelEvent) => this.onMouseWheel(event)
-	//#endregion
-
 	constructor(
 		public dataService: DataService,
 		private router: Router,
@@ -227,12 +228,12 @@ export class EpubViewerComponent {
 		}
 
 		// Initialize the html element variables
-		this.firstViewer.left.iframe = document.getElementById(firstViewerLeftId) as HTMLIFrameElement
-		this.firstViewer.right.iframe = document.getElementById(firstViewerRightId) as HTMLIFrameElement
-		this.secondViewer.left.iframe = document.getElementById(secondViewerLeftId) as HTMLIFrameElement
-		this.secondViewer.right.iframe = document.getElementById(secondViewerRightId) as HTMLIFrameElement
-		this.thirdViewer.left.iframe = document.getElementById(thirdViewerLeftId) as HTMLIFrameElement
-		this.thirdViewer.right.iframe = document.getElementById(thirdViewerRightId) as HTMLIFrameElement
+		this.firstViewer.left.iframe = this.firstViewerLeft.nativeElement
+		this.firstViewer.right.iframe = this.firstViewerRight.nativeElement
+		this.secondViewer.left.iframe = this.secondViewerLeft.nativeElement
+		this.secondViewer.right.iframe = this.secondViewerRight.nativeElement
+		this.thirdViewer.left.iframe = this.thirdViewerLeft.nativeElement
+		this.thirdViewer.right.iframe = this.thirdViewerRight.nativeElement
 		this.navigationHistory = []
 
 		// Check if this is a dual-screen device with a vertical fold
@@ -246,6 +247,7 @@ export class EpubViewerComponent {
 
 		// Create a chapter for each chapter of the book
 		this.chapters = []
+
 		for (let i = 0; i < this.book.chapters.length; i++) {
 			let bookChapter = this.book.chapters[i]
 
@@ -273,40 +275,13 @@ export class EpubViewerComponent {
 		await this.LoadChapterPercentages()
 		this.CalculateTotalProgress(this.currentBook.progress)
 
-		// Bind the keydown and wheel events
-		document.addEventListener("keydown", this.keydownEventListener)
-		document.addEventListener("wheel", this.mouseWheelEventListener)
-
-		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		this.bottomSheet.nativeElement.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(firstViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		this.bottomSheet.nativeElement.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(firstViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		this.bottomSheet.nativeElement.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-
-		// Bind the click event
-		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-
 		if (this.isMobile) {
 			// Show the BottomSheet
 			this.bottomSheetVisible = true
 		}
 	}
 
-	ngOnDestroy() {
-		// Remove the event listeners for the document
-		document.removeEventListener("keydown", this.keydownEventListener)
-		document.removeEventListener("wheel", this.mouseWheelEventListener)
-	}
-
+	@HostListener('window:keydown', ['$event'])
 	async onKeyDown(event: KeyboardEvent) {
 		if (this.showChaptersPanel) return
 
@@ -323,6 +298,7 @@ export class EpubViewerComponent {
 		}
 	}
 
+	@HostListener('window:wheel', ['$event'])
 	async onMouseWheel(event: WheelEvent) {
 		if (this.showChaptersPanel) return
 
@@ -333,6 +309,18 @@ export class EpubViewerComponent {
 			// Wheel up
 			this.ngZone.run(() => this.PrevPage())
 		}
+	}
+
+	@HostListener('window:mousemove')
+	onMouseMove() {
+		if (this.isMobile) return
+
+		this.showArrowButtons = true
+		window.clearTimeout(this.mouseMoveTimeoutId)
+
+		this.mouseMoveTimeoutId = window.setTimeout(() => {
+			this.showArrowButtons = false
+		}, 4000)
 	}
 
 	@HostListener('window:resize')
@@ -817,7 +805,7 @@ export class EpubViewerComponent {
 
 		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(event.target as Node)
 
-		if (event.type == touchStart) {
+		if (event.type == touchStartEventName) {
 			let touch = event.touches.item(0)
 			this.touchStartX = touch.screenX
 			this.touchStartY = touch.screenY
@@ -830,7 +818,7 @@ export class EpubViewerComponent {
 			this.firstViewer.transitionTime = 0
 			this.secondViewer.transitionTime = 0
 			this.thirdViewer.transitionTime = 0
-		} else if (event.type == touchMove) {
+		} else if (event.type == touchMoveEventName) {
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0)
 
@@ -865,7 +853,7 @@ export class EpubViewerComponent {
 				// Set the new position of the bottom sheet
 				this.bottomSheetPosition = this.touchDiffY + this.bottomSheetStartPosition
 			}
-		} else if (event.type == touchEnd) {
+		} else if (event.type == touchEndEventName) {
 			// Reset the transition times
 			this.firstViewer.transitionTime = defaultViewerTransitionTime
 			this.secondViewer.transitionTime = defaultViewerTransitionTime
@@ -1504,14 +1492,15 @@ export class EpubViewerComponent {
 
 	SetEventListenersForViewer(viewer: HTMLIFrameElement) {
 		// Bind the keydown and wheel events to the viewers
-		viewer.contentWindow.addEventListener("keydown", (event: KeyboardEvent) => this.onKeyDown(event))
-		viewer.contentWindow.addEventListener("wheel", (event: WheelEvent) => this.onMouseWheel(event))
+		viewer.contentWindow.addEventListener(keydownEventName, (event: KeyboardEvent) => this.onKeyDown(event))
+		viewer.contentWindow.addEventListener(wheelEventName, (event: WheelEvent) => this.onMouseWheel(event))
+		viewer.contentWindow.addEventListener(mouseMoveEventName, () => this.ngZone.run(() => this.onMouseMove()))
 
 		// Bind the touch and click events to the viewers
-		viewer.contentWindow.addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		viewer.contentWindow.addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		viewer.contentWindow.addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		viewer.contentWindow.addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		viewer.contentWindow.addEventListener(touchStartEventName, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		viewer.contentWindow.addEventListener(touchMoveEventName, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		viewer.contentWindow.addEventListener(touchEndEventName, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		viewer.contentWindow.addEventListener(clickEventName, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 	}
 
 	/**
