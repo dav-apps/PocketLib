@@ -135,16 +135,12 @@
 	</dav-icon-button>
 
 	<div class="d-flex" style="float: right">
-		<div
-			class="d-flex justify-content-center align-items-center"
-			style="width: 40px; height: 40px"
-		>
-			<mat-progress-spinner
+		<div id="progress-ring-container">
+			<dav-progress-ring
 				[style.display]="progressRingVisible ? '' : 'none'"
-				mode="indeterminate"
-				diameter="18"
-				strokeWidth="1.3">
-			</mat-progress-spinner>
+				size="18"
+				color="black">
+			</dav-progress-ring>
 		</div>
 
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
@@ -229,13 +225,13 @@
 
 <!-- Progress ring for small window -->
 <div
-	id="progress-ring-container"
+	id="progress-ring-container-mobile"
 	[style.visibility]="isMobile ? '' : 'hidden'"
 >
 	<dav-progress-ring
+		[style.display]="progressRingVisible ? '' : 'none'"
 		size="18"
-		color="black"
-		[style.display]="progressRingVisible || true ? '' : 'none'">
+		color="black">
 	</dav-progress-ring>
 </div>
 

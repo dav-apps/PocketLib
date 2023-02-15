@@ -39,6 +39,12 @@ a.text-color:hover {
 }
 
 #progress-ring-container {
+	width: 18px;
+	height: 18px;
+	margin: 16px;
+}
+
+#progress-ring-container-mobile {
 	display: flex;
 	justify-content: center;
 	align-items: center;
