@@ -37,3 +37,16 @@ a.text-color:hover {
 	display: flex;
 	gap: 12px;
 }
+
+#progress-ring-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 18px;
+	height: 18px;
+	margin: 12px;
+	z-index: 100;
+}
