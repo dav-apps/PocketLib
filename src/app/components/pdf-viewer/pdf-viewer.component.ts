@@ -1,14 +1,18 @@
-import { Component, HostListener, NgZone } from '@angular/core'
+import {
+	Component,
+	HostListener,
+	NgZone
+} from '@angular/core'
 import { Router } from '@angular/router'
 import {
 	faBookmark as faBookmarkSolid
 } from '@fortawesome/free-solid-svg-icons'
 import {
+	faArrowLeft as faArrowLeftLight,
+	faArrowRight as faArrowRightLight,
 	faHouse as faHouseLight,
 	faBookmark as faBookmarkLight,
 	faFolderBookmark as faFolderBookmarkLight,
-	faChevronLeft as faChevronLeftLight,
-	faChevronRight as faChevronRightLight,
 	faChevronUp as faChevronUpLight,
 	faChevronDown as faChevronDownLight
 } from '@fortawesome/pro-light-svg-icons'
@@ -42,12 +46,12 @@ const doubleTapToleranceTime = 400
 })
 export class PdfViewerComponent {
 	locale = enUS.pdfViewer
+	faArrowLeftLight = faArrowLeftLight
+	faArrowRightLight = faArrowRightLight
 	faHouseLight = faHouseLight
 	faBookmarkSolid = faBookmarkSolid
 	faBookmarkLight = faBookmarkLight
 	faFolderBookmarkLight = faFolderBookmarkLight
-	faChevronLeftLight = faChevronLeftLight
-	faChevronRightLight = faChevronRightLight
 	faChevronUpLight = faChevronUpLight
 	faChevronDownLight = faChevronDownLight
 
@@ -60,6 +64,7 @@ export class PdfViewerComponent {
 	showSecondPage: boolean = false
 	firstPage: boolean = false		// If true, hides the previous button
 	lastPage: boolean = false		// If true, hides the next button
+	isMobile: boolean = false		// Is true on small devices with width < 600 px
 
 	viewerRatio: number = 0
 	viewerWidth: number = 500
@@ -102,7 +107,6 @@ export class PdfViewerComponent {
 	//#endregion
 
 	//#region Variables for the bottom toolbar
-	showBottomToolbar: boolean = false			// Whether the bottom toolbar is visible
 	bottomToolbarOpened: boolean = false		// Whether the bottom toolbar is opened or closed
 	bottomToolbarMarginBottom: number = -40	// The margin bottom of the bottom toolbar
 	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime
@@ -178,7 +182,7 @@ export class PdfViewerComponent {
 		this.height = window.innerHeight
 		this.setViewerSize()
 
-		this.showBottomToolbar = this.width < 500
+		this.isMobile = this.width < 600
 		this.showSecondPage = this.viewerWidth * 2 < this.width
 
 		if (this.showSecondPage && this.currentPage > 0 && this.currentPage % 2 == 0) this.currentPage--
@@ -455,7 +459,10 @@ export class PdfViewerComponent {
 	}
 
 	HandleTouch(event: TouchEvent) {
-		if (event.touches.length > 1 || window["visualViewport"].scale > 1.001) return
+		if (
+			event.touches.length > 1
+			|| window["visualViewport"].scale > 1.001
+		) return
 
 		if (event.type == touchStart) {
 			let touch = event.touches.item(0)
@@ -489,7 +496,7 @@ export class PdfViewerComponent {
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX)
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical && this.showBottomToolbar) {
+			} else if (this.swipeDirection == SwipeDirection.Vertical && this.isMobile) {
 				// Update the margin bottom of the bottom toolbar
 				this.bottomToolbarMarginBottom = this.touchStartBottomToolbarMarginBottom + (this.touchDiffY / 2)
 

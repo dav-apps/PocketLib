@@ -26,3 +26,19 @@
    font-size: 18px;
    z-index: 2;
 }
+
+.arrow-button-container {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	height: 100%;
+	margin: 0 12px;
+}
+
+.arrow-button-left {
+	left: 0;
+}
+
+.arrow-button-right {
+	right: 0;
+}

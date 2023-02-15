@@ -110,29 +110,28 @@
 </div>
 
 <!-- Arrow buttons -->
-<button mat-button
-	class="book-toolbar-button"
-	style="position: absolute; width: 40px; left: 0; top: 0px; z-index: 2"
-	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-	[style.height.px]="showBottomToolbar ? height : height - 40"
+<div
+	class="arrow-button-container arrow-button-left"
 	(click)="PrevPage()"
-	*ngIf="!firstPage && !showBottomToolbar"
+	*ngIf="!firstPage && !isMobile"
 >
-	<fa-icon [icon]="faChevronLeftLight"></fa-icon>
-</button>
-<button mat-button
-	class="book-toolbar-button"
-	style="position: absolute; width: 40px; right: 0; top: 0px; z-index: 2"
-	[style.marginTop.px]="showBottomToolbar ? 0 : 40"
-	[style.height.px]="showBottomToolbar ? height : height - 40"
+	<dav-icon-button>
+		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
+	</dav-icon-button>
+</div>
+
+<div
+	class="arrow-button-container arrow-button-right"
 	(click)="NextPage()"
-	*ngIf="!showBottomToolbar"
+	*ngIf="!isMobile"
 >
-	<fa-icon [icon]="faChevronRightLight"></fa-icon>
-</button>
+	<dav-icon-button>
+		<fa-icon [icon]="faArrowRightLight"></fa-icon>
+	</dav-icon-button>
+</div>
 
 <!-- Top Toolbar -->
-<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!showBottomToolbar">
+<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!isMobile">
 	<dav-icon-button (click)="GoHome()">
 		<fa-icon [icon]="faHouseLight"></fa-icon>
 	</dav-icon-button>
@@ -154,7 +153,7 @@
 	id="bottom-toolbar"
 	[style.marginBottom.px]="bottomToolbarMarginBottom"
 	[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
-	*ngIf="showBottomToolbar"
+	*ngIf="isMobile"
 >
 	<div class="w-100" style="display: inline-block;">
 		<div class="d-flex justify-content-center">
