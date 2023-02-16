@@ -258,7 +258,7 @@
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRename"
 		(click)="ShowRenameBookDialog()"
-		*ngIf="true"
+		*ngIf="showRenameBookOption"
 	>
 		<fa-icon slot="icon" [icon]="faPencilLight"></fa-icon>
 	</dav-context-menu-item>

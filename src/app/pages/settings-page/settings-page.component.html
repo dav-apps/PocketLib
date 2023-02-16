@@ -2,9 +2,9 @@
 <div
 	class="container d-flex flex-column ms-motion-slideUpIn"
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
-	*ngIf="!dualScreenLayout">
-
-   <h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
+	*ngIf="!dualScreenLayout"
+>
+   <h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
    
    <div class="setting-container mx-auto mt-4">
       <!-- Open last read book -->
@@ -72,14 +72,14 @@
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
 	style="margin-top: 80px"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50 d-flex flex-column"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
 
 		<div class="setting-container mx-auto mt-4">
 			<dav-setting [header]="locale.openLastReadBook">

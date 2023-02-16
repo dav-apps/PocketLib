@@ -2,9 +2,9 @@
 <div
 	class="container mb-4 ms-motion-slideUpIn"
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 80 : 0"
-	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout">
-
-	<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
+	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout"
+>
+	<h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
 	<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 	<div class="row mt-5">
@@ -49,14 +49,15 @@
 <!-- Dual-Screen layout for not logged in -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="!dataService.dav.isLoggedIn && dualScreenLayout">
-
+	style="margin-top: 80px"
+	*ngIf="!dataService.dav.isLoggedIn && dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
 		<h5 class="text-center mt-4 text-color">{{ locale.text1 }}</h5>
 
 		<div class="row" style="margin-top: 50px">
@@ -108,10 +109,11 @@
 <!-- Normal layout for logged in -->
 <div
 	class="container mb-4 ms-motion-slideUpIn"
+	style="margin-top: 80px"
 	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
 	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout">
 
-   <h1 class="text-center fw-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
+   <h1 class="text-center fw-light text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
    
    <pocketlib-user-profile
 		[compact]="width < 410"
@@ -130,14 +132,15 @@
 <!-- Dual-Screen layout for logged in -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="dataService.dav.isLoggedIn && dualScreenLayout">
-
+	style="margin-top: 80px"
+	*ngIf="dataService.dav.isLoggedIn && dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50"
 		[style.marginRight.px]="dualScreenFoldMargin">
 
-		<h1 class="text-center fw-light mt-3 text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
+		<h1 class="text-center fw-light text-color" style="margin-bottom: 40px">{{ locale.title }}</h1>
 
 		<pocketlib-user-profile
 			[compact]="width < 410"
