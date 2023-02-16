@@ -9,24 +9,6 @@
    display: block;
 }
 
-#bottom-toolbar {
-   display: flex;
-   justify-content: center;
-   position: fixed;
-   bottom: 0;
-   width: 100%;
-   z-index: 2;
-}
-
-.book-toolbar-button{
-   min-width: 40px;
-   height: 40px;
-   outline: none;
-   padding: 0px;
-   font-size: 18px;
-   z-index: 2;
-}
-
 .arrow-button-container {
 	position: absolute;
 	display: flex;
@@ -41,4 +23,9 @@
 
 .arrow-button-right {
 	right: 0;
+}
+
+#bottom-sheet-button-container {
+	display: flex;
+	gap: 12px;
 }

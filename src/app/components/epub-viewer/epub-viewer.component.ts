@@ -182,13 +182,6 @@ export class EpubViewerComponent {
 	doubleTapTimerRunning: boolean = false
 	//#endregion
 
-	//#region Variables for the bottom toolbar
-	@ViewChild('bottomSheet', { static: true }) bottomSheet: ElementRef<BottomSheet>
-	bottomSheetVisible: boolean = false
-	bottomSheetPosition: number = 0
-	bottomSheetStartPosition: number = 0
-	//#endregion
-
 	//#region Variables for the progress bar
 	totalProgress: number = 0						// The current progress in percent between 0 and 1
 	//#endregion
@@ -204,9 +197,13 @@ export class EpubViewerComponent {
 	//#endregion
 
 	//#region Variables for the bottom sheet
+	@ViewChild('bottomSheet', { static: true }) bottomSheet: ElementRef<BottomSheet>
 	@ViewChild('bottomSheetBookmarksContainer', { static: false }) bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
 	@ViewChild('bottomSheetChaptersContainer', { static: false }) bottomSheetChaptersContainer: ElementRef<HTMLDivElement>
 	@ViewChild('bottomSheetChaptersTree', { static: false }) bottomSheetChapterTree: ChaptersTreeComponent
+	bottomSheetVisible: boolean = false
+	bottomSheetPosition: number = 0
+	bottomSheetStartPosition: number = 0
 	bottomSheetContainerHeight: number = 0
 	//#endregion
 
@@ -947,6 +944,7 @@ export class EpubViewerComponent {
 	BottomSheetSnapBottom() {
 		setTimeout(() => {
 			this.showChaptersPanel = false
+			this.showBookmarksPanel = false
 			this.bottomSheetContainerHeight = 0
 		}, 200)
 	}

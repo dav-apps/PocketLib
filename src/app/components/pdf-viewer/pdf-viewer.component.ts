@@ -1,21 +1,27 @@
 import {
 	Component,
 	HostListener,
-	NgZone
+	NgZone,
+	ViewChild,
+	ElementRef
 } from '@angular/core'
 import { Router } from '@angular/router'
 import {
 	faBookmark as faBookmarkSolid
 } from '@fortawesome/free-solid-svg-icons'
 import {
+	faHouse as faHouseRegular,
+	faBookmark as faBookmarkRegular,
+	faFolderBookmark as faFolderBookmarkRegular
+} from '@fortawesome/pro-regular-svg-icons'
+import {
 	faArrowLeft as faArrowLeftLight,
 	faArrowRight as faArrowRightLight,
 	faHouse as faHouseLight,
 	faBookmark as faBookmarkLight,
-	faFolderBookmark as faFolderBookmarkLight,
-	faChevronUp as faChevronUpLight,
-	faChevronDown as faChevronDownLight
+	faFolderBookmark as faFolderBookmarkLight
 } from '@fortawesome/pro-light-svg-icons'
+import { BottomSheet } from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { PdfBook } from 'src/app/models/PdfBook'
 import { enUS } from 'src/locales/locales'
@@ -33,9 +39,6 @@ const secondViewerId = "second-viewer"
 const thirdViewerId = "third-viewer"
 const firstViewerLeftId = "first-viewer-left"
 const defaultViewerTransitionTime = 500
-const defaultBottomToolbarTransitionTime = 0.2
-const bottomToolbarMarginBottomOpened = 0
-const bottomToolbarMarginBottomClosed = -40
 const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
 
@@ -48,12 +51,13 @@ export class PdfViewerComponent {
 	locale = enUS.pdfViewer
 	faArrowLeftLight = faArrowLeftLight
 	faArrowRightLight = faArrowRightLight
+	faHouseRegular = faHouseRegular
 	faHouseLight = faHouseLight
 	faBookmarkSolid = faBookmarkSolid
+	faBookmarkRegular = faBookmarkRegular
 	faBookmarkLight = faBookmarkLight
+	faFolderBookmarkRegular = faFolderBookmarkRegular
 	faFolderBookmarkLight = faFolderBookmarkLight
-	faChevronUpLight = faChevronUpLight
-	faChevronDownLight = faChevronDownLight
 
 	pdfContent: Uint8Array = null
 	currentBook: PdfBook
@@ -102,14 +106,8 @@ export class PdfViewerComponent {
 	touchStartY: number = 0
 	touchDiffX: number = 0
 	touchDiffY: number = 0
-	touchStartBottomToolbarMarginBottom: number = -40			// The margin bottom of the bottom toolbar at the moment of the beginning of the swipe
+	touchMoveCount: number = 0
 	doubleTapTimerRunning: boolean = false
-	//#endregion
-
-	//#region Variables for the bottom toolbar
-	bottomToolbarOpened: boolean = false		// Whether the bottom toolbar is opened or closed
-	bottomToolbarMarginBottom: number = -40	// The margin bottom of the bottom toolbar
-	bottomToolbarTransitionTime: number = defaultBottomToolbarTransitionTime
 	//#endregion
 
 	//#region Variables for progress bar
@@ -117,8 +115,17 @@ export class PdfViewerComponent {
 	//#endregion
 
 	//#region Variables for Booksmarks panel
-	currentPageBookmarked: boolean = false
+	currentPageBookmark: boolean = false
 	showBookmarksPanel: boolean = false
+	//#endregion
+
+	//#region Variables for the bottom sheet
+	@ViewChild('bottomSheet', { static: true }) bottomSheet: ElementRef<BottomSheet>
+	@ViewChild('bottomSheetBookmarksContainer', { static: false }) bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
+	bottomSheetVisible: boolean = false
+	bottomSheetPosition: number = 0
+	bottomSheetStartPosition: number = 0
+	bottomSheetContainerHeight: number = 0
 	//#endregion
 
 	//#region Global event listeners
@@ -168,6 +175,11 @@ export class PdfViewerComponent {
 		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
 		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+
+		if (this.isMobile) {
+			// Show the BottomSheet
+			this.bottomSheetVisible = true
+		}
 	}
 
 	ngOnDestroy() {
@@ -183,6 +195,7 @@ export class PdfViewerComponent {
 		this.setViewerSize()
 
 		this.isMobile = this.width < 600
+		this.bottomSheetVisible = this.initialized && this.isMobile
 		this.showSecondPage = this.viewerWidth * 2 < this.width
 
 		if (this.showSecondPage && this.currentPage > 0 && this.currentPage % 2 == 0) this.currentPage--
@@ -297,9 +310,9 @@ export class PdfViewerComponent {
 
 		// Set currentPageBookmarked
 		if (this.showSecondPage) {
-			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
+			this.currentPageBookmark = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
 		} else {
-			this.currentPageBookmarked = this.currentBook.bookmarks.includes(this.currentPage)
+			this.currentPageBookmark = this.currentBook.bookmarks.includes(this.currentPage)
 		}
 
 		this.showPageRunning = false
@@ -464,27 +477,37 @@ export class PdfViewerComponent {
 			|| window["visualViewport"].scale > 1.001
 		) return
 
+		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(event.target as Node)
+
 		if (event.type == touchStart) {
 			let touch = event.touches.item(0)
 			this.touchStartX = touch.screenX
 			this.touchStartY = touch.screenY
+			this.touchMoveCount = 0
 			this.swipeDirection = SwipeDirection.None
 			this.swipeStart = true
+			this.bottomSheetStartPosition = this.bottomSheet.nativeElement.position
 
 			this.firstViewer.transitionTime = 0
 			this.secondViewer.transitionTime = 0
 			this.thirdViewer.transitionTime = 0
-			this.bottomToolbarTransitionTime = 0
 		} else if (event.type == touchMove) {
 			// Calculate the difference between the positions of the first touch and the current touch
 			let touch = event.touches.item(0)
+
 			this.touchDiffX = this.touchStartX - touch.screenX
 			this.touchDiffY = this.touchStartY - touch.screenY
+			this.touchMoveCount++
 
 			if (this.swipeStart) {
 				// Check if the user is swiping up or down
 				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical
-				this.touchStartBottomToolbarMarginBottom = this.bottomToolbarMarginBottom
+
+				// Disable navigating through pages when touching the BottomSheet
+				if (
+					this.swipeDirection == SwipeDirection.Horizontal
+					&& bottomSheetTouch
+				) return
 
 				this.swipeStart = false
 			} else if (this.swipeDirection == SwipeDirection.Horizontal) {
@@ -496,27 +519,20 @@ export class PdfViewerComponent {
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX)
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical && this.isMobile) {
-				// Update the margin bottom of the bottom toolbar
-				this.bottomToolbarMarginBottom = this.touchStartBottomToolbarMarginBottom + (this.touchDiffY / 2)
-
-				// Make sure the bottom toolbar does not move outside its area
-				if (this.bottomToolbarMarginBottom > bottomToolbarMarginBottomOpened) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-					this.bottomToolbarOpened = true
-				} else if (this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-					this.bottomToolbarOpened = false
-				}
+			} else if (this.swipeDirection == SwipeDirection.Vertical && this.bottomSheetVisible) {
+				// Set the new position of the bottom sheet
+				this.bottomSheetPosition = this.touchDiffY + this.bottomSheetStartPosition
 			}
 		} else if (event.type == touchEnd) {
 			// Reset the transition times
 			this.firstViewer.transitionTime = defaultViewerTransitionTime
 			this.secondViewer.transitionTime = defaultViewerTransitionTime
 			this.thirdViewer.transitionTime = defaultViewerTransitionTime
-			this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
 
-			if (this.swipeDirection == SwipeDirection.Horizontal) {
+			if (
+				this.swipeDirection == SwipeDirection.Horizontal
+				&& !bottomSheetTouch
+			) {
 				if (this.touchDiffX > 0) {
 					// If the page was swiped wide enough, show the next page
 					if (this.touchDiffX > this.width * 0.15) {
@@ -533,20 +549,19 @@ export class PdfViewerComponent {
 						this.SetLeftOfPreviousViewer(-this.width)
 					}
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical) {
-				if (this.bottomToolbarMarginBottom < bottomToolbarMarginBottomClosed / 2) {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-					this.bottomToolbarOpened = false
-				} else {
-					this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-					this.bottomToolbarOpened = true
-				}
+			}
+
+			// Don't snap the bottom sheet on touch without swipe
+			if (this.touchMoveCount > 0) {
+				this.bottomSheet.nativeElement.snap()
 			}
 
 			this.touchStartX = 0
 			this.touchStartY = 0
 			this.touchDiffX = 0
 			this.touchDiffY = 0
+			this.touchMoveCount = 0
+			this.bottomSheetStartPosition = 0
 		}
 	}
 
@@ -569,9 +584,8 @@ export class PdfViewerComponent {
 
 				// Reset the transition viewer times
 				this.firstViewer.transitionTime = defaultViewerTransitionTime
-			this.secondViewer.transitionTime = defaultViewerTransitionTime
-			this.thirdViewer.transitionTime = defaultViewerTransitionTime
-				this.bottomToolbarTransitionTime = defaultBottomToolbarTransitionTime
+				this.secondViewer.transitionTime = defaultViewerTransitionTime
+				this.thirdViewer.transitionTime = defaultViewerTransitionTime
 
 				if (clickedOnRightEdge) {
 					this.NextPage()
@@ -582,24 +596,25 @@ export class PdfViewerComponent {
 		}
 	}
 
-	OpenOrCloseBottomToolbar() {
-		if (this.bottomToolbarOpened) {
-			// Close the bottom toolbar
-			this.CloseBottomToolbar()
-		} else {
-			// Open the bottom toolbar
-			this.OpenBottomToolbar()
+	BottomSheetSnapBottom() {
+		setTimeout(() => {
+			this.showBookmarksPanel = false
+			this.bottomSheetContainerHeight = 0
+		}, 200)
+	}
+
+	ShowBookmarksPanel() {
+		this.showBookmarksPanel = true
+
+		if (this.isMobile) {
+			setTimeout(() => {
+				this.bottomSheetContainerHeight = this.bottomSheetBookmarksContainer.nativeElement.clientHeight
+
+				setTimeout(() => {
+					this.bottomSheet.nativeElement.snap("top")
+				}, 100)
+			}, 1)
 		}
-	}
-
-	OpenBottomToolbar() {
-		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomOpened
-		this.bottomToolbarOpened = true
-	}
-
-	CloseBottomToolbar() {
-		this.bottomToolbarMarginBottom = bottomToolbarMarginBottomClosed
-		this.bottomToolbarOpened = false
 	}
 
 	async AddOrRemoveBookmark() {
@@ -620,7 +635,7 @@ export class PdfViewerComponent {
 			this.currentBook.AddBookmark(this.currentPage)
 		}
 
-		this.currentPageBookmarked = !removeBookmark
+		this.currentPageBookmark = !removeBookmark
 	}
 
 	NavigateToPage(page: number) {

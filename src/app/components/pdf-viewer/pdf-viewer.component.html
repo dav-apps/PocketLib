@@ -138,54 +138,64 @@
 
 	<div style="float: right">
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
-			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmarked"></fa-icon>
-			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmarked"></fa-icon>
+			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
+			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
 		</dav-icon-button>
 
-		<dav-icon-button (click)="showBookmarksPanel = true">
+		<dav-icon-button (click)="ShowBookmarksPanel()">
 			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 		</dav-icon-button>
    </div>
 </div>
 
-<!-- Bottom toolbar -->
-<div
-	id="bottom-toolbar"
-	[style.marginBottom.px]="bottomToolbarMarginBottom"
-	[style.transition]="'all ' + bottomToolbarTransitionTime + 's'"
-	*ngIf="isMobile"
+<dav-bottom-sheet
+	#bottomSheet
+	[visible]="bottomSheetVisible"
+	[dismissable]="false"
+	[position]="bottomSheetPosition"
+	(snapBottom)="BottomSheetSnapBottom()"
+	(touchstart)="HandleTouch($event)"
+	(touchmove)="HandleTouch($event)"
+	(touchend)="HandleTouch($event)"
 >
-	<div class="w-100" style="display: inline-block;">
-		<div class="d-flex justify-content-center">
-			<button mat-button class="book-toolbar-button" style="font-size: 14px" (click)="OpenOrCloseBottomToolbar()">
-				<fa-icon [icon]="faChevronDownLight" *ngIf="bottomToolbarOpened"></fa-icon>
-				<fa-icon [icon]="faChevronUpLight" *ngIf="!bottomToolbarOpened"></fa-icon>
-			</button>
-		</div>
-		<div class="w-100 d-flex">
-			<div style="position: absolute">
-				<button mat-button class="book-toolbar-button" (click)="GoHome()">
-					<fa-icon [icon]="faHouseLight"></fa-icon>
-				</button>
-			</div>
+	<div id="bottom-sheet-button-container">
+		<dav-icon-text-button (click)="GoHome()" [label]="locale.bottomSheet.back">
+			<fa-icon [icon]="faHouseRegular"></fa-icon>
+		</dav-icon-text-button>
 
-			<div class="mx-auto">
-				<!--
-				<button mat-button class="book-toolbar-button" id="zoomButtonBottomToolbar">
-					<i class="ms-Icon ms-Icon--Zoom" aria-hidden="true"></i>
-				</button>
-				-->
-				<button mat-button class="book-toolbar-button" (click)="showBookmarksPanel = true">
-					<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
-				</button>
-				<button mat-button class="book-toolbar-button" (click)="AddOrRemoveBookmark()">
-					<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmarked"></fa-icon>
-					<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmarked"></fa-icon>
-				</button>
-			</div>
+		<dav-icon-text-button (click)="AddOrRemoveBookmark()" [label]="currentPageBookmark ? locale.bottomSheet.removeBookmark : locale.bottomSheet.addBookmark">
+			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
+			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
+		</dav-icon-text-button>
+
+		<dav-icon-text-button (click)="ShowBookmarksPanel()" [label]="locale.bottomSheet.bookmarks">
+			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
+		</dav-icon-text-button>
+	</div>
+
+	<div id="bottom-sheet-container" [style.height.px]="bottomSheetContainerHeight">
+		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item d-flex"
+					style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
+					*ngFor="let page of currentBook.bookmarks">
+		
+					<a href="#"
+						style="color: black;"
+						(click)="NavigateToPage(page)"
+						[ngClass]="currentPage == page ? 'font-weight-bold' : ''">
+						{{ locale.page }} {{ page }}
+					</a>
+				</li>
+			</ul>
+		
+			<p class="fw-light"
+				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
+				{{ locale.noBookmarks }}
+			</p>
 		</div>
 	</div>
-</div>
+</dav-bottom-sheet>
 
 <!-- Total progress -->
 <div
@@ -203,9 +213,9 @@
 
 <dav-panel
 	[header]="locale.bookmarks"
-	[visible]="showBookmarksPanel"
-	(dismiss)="showBookmarksPanel = false; CloseBottomToolbar()">
-
+	[visible]="showBookmarksPanel && !isMobile"
+	(dismiss)="showBookmarksPanel = false"
+>
 	<ul class="list-group list-group-flush">
 		<li class="list-group-item d-flex"
 			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
