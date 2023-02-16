@@ -59,7 +59,7 @@ const enDefaults = {
       lightTheme: "Light",
       darkTheme: "Dark",
       systemTheme: "System default",
-		openLastReadBook: "Open the last read book at startup",
+		openLastReadBook: "Open the last book read when starting the app",
 		news: "News and updates",
 		github: "PocketLib on GitHub",
 		privacy: "Privacy Policy",
@@ -372,7 +372,13 @@ const enDefaults = {
    pdfViewer: {
       bookmarks: "Bookmarks",
       noBookmarks: "You have no bookmarks",
-		page: "Page"
+		page: "Page",
+		bottomSheet: {
+			back: "Back",
+			addBookmark: "Add bookmark",
+			removeBookmark: "Remove bookmark",
+			bookmarks: "Bookmarks"
+		}
 	},
 	publisherProfile: {
 		yourAuthors: "Your authors",
@@ -605,7 +611,7 @@ const deDefaults = {
       lightTheme: "Hell",
       darkTheme: "Dunkel",
       systemTheme: "System-Standard",
-		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten",
+		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten der App",
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
 		privacy: "Datenschutzerklärung",
@@ -918,7 +924,13 @@ const deDefaults = {
 	pdfViewer: {
       bookmarks: "Lesezeichen",
       noBookmarks: "Du hast keine Lesezeichen",
-		page: "Seite"
+		page: "Seite",
+		bottomSheet: {
+			back: "Zurück",
+			addBookmark: "Lesezeichen hinzufügen",
+			removeBookmark: "Lesezeichen entfernen",
+			bookmarks: "Lesezeichen"
+		}
 	},
 	publisherProfile: {
 		yourAuthors: "Deine Autoren",
