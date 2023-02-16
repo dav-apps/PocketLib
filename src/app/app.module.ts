@@ -6,15 +6,7 @@ import { environment } from '../environments/environment'
 import { AppRoutingModule } from './app-routing.module'
 import { NgxFileHelpersModule } from 'ngx-file-helpers'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
-import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio'
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input'
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field'
 import { MatTreeModule } from '@angular/material/tree'
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner'
-import { MatSidenavModule } from '@angular/material/sidenav'
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list'
 import { PortalModule } from '@angular/cdk/portal'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
@@ -155,15 +147,7 @@ import { StoreBooksPageComponent } from './pages/store-books-page/store-books-pa
       AppRoutingModule,
       NgxFileHelpersModule,
       BrowserAnimationsModule,
-      MatToolbarModule,
-      MatButtonModule,
-      MatRadioModule,
-      MatInputModule,
-      MatFormFieldModule,
       MatTreeModule,
-		MatProgressSpinnerModule,
-		MatSidenavModule,
-		MatListModule,
       PortalModule,
 		PdfViewerModule,
 		FontAwesomeModule,
