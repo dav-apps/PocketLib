@@ -1,6 +1,10 @@
 import { Component, HostListener } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
-import { faCoins, faHandHoldingUsd } from '@fortawesome/free-solid-svg-icons'
+import {
+	faCoins,
+	faHandHoldingUsd
+} from '@fortawesome/free-solid-svg-icons'
+import { faPlus as faPlusLight } from '@fortawesome/pro-light-svg-icons'
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -23,14 +27,13 @@ import { Author } from 'src/app/models/Author'
 @Component({
 	selector: "pocketlib-author-page",
 	templateUrl: "./author-page.component.html",
-	styleUrls: [
-		'./author-page.component.scss'
-	]
+	styleUrls: ['./author-page.component.scss']
 })
 export class AuthorPageComponent {
 	locale = enUS.authorPage
 	faCoins = faCoins
 	faHandHoldingUsd = faHandHoldingUsd
+	faPlusLight = faPlusLight
 	section1Height: number = 600
 	section1TextMarginTop: number = 200
 	section2Height: number = 600
