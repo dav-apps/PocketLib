@@ -126,10 +126,16 @@
 				class="d-flex mt-3"
 				[ngClass]="smallBookList ? 'justify-content-center' : 'justify-content-end'"
 				[style.width.px]="largeBookCoverWidth + smallBookListWidth"
-				*ngIf="dataService.books.length > 5">
-				<dav-button (click)="ShowAllBooks()">
-					<p style="margin-bottom: 0; margin-top: -2px">{{ locale.allBooks }}</p>
-					<i class="ms-Icon ms-Icon--Forward ms-2" aria-hidden="true"></i>
+				*ngIf="dataService.books.length > 5"
+			>
+				<dav-button color="secondary" tonal (click)="ShowAllBooks()">
+					<div class="all-books-button-content">
+						<p>{{ locale.allBooks }}</p>
+
+						<div class="ms-2">
+							<fa-icon [icon]="faArrowRightLight" size="lg"></fa-icon>
+						</div>
+					</div>
 				</dav-button>
 			</div>
 		</div>
@@ -137,15 +143,19 @@
 		<div
 			#rightContentContainer
 			class="d-flex justify-content-center w-100"
-			style="position: absolute; transition: 0.3s all; transform: translateX(3000px)">
-
+			style="position: absolute; transition: 0.3s all; transform: translateX(3000px)"
+		>
 			<div class="container">
 				<div class="mx-auto" style="max-width: 700px">
 					<div class="d-flex">
-						<dav-button
-							(click)="HideAllBooks()">
-							<i class="ms-Icon ms-Icon--Back me-2" aria-hidden="true"></i>
-							<p style="margin-bottom: 0; margin-top: -2px">{{ locale.back }}</p>
+						<dav-button color="secondary" tonal (click)="HideAllBooks()">
+							<div class="all-books-button-content">
+								<div class="me-2">
+									<fa-icon [icon]="faArrowLeftLight" size="lg"></fa-icon>
+								</div>
+
+								<p>{{ locale.back }}</p>
+							</div>
 						</dav-button>
 
 						<dav-textfield

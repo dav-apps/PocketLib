@@ -3,6 +3,8 @@ import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
 import {
 	faAddressCard as faAddressCardLight,
+	faArrowLeft as faArrowLeftLight,
+	faArrowRight as faArrowRightLight,
 	faBagShopping as faBagShoppingLight,
 	faFileExport as faFileExportLight,
 	faPencil as faPencilLight,
@@ -24,11 +26,14 @@ import { enUS } from 'src/locales/locales'
 const pdfType = "application/pdf"
 
 @Component({
-	templateUrl: "./library-page.component.html"
+	templateUrl: "./library-page.component.html",
+	styleUrls: ["./library-page.component.scss"]
 })
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
 	faAddressCardLight = faAddressCardLight
+	faArrowLeftLight = faArrowLeftLight
+	faArrowRightLight = faArrowRightLight
 	faBagShoppingLight = faBagShoppingLight
 	faFileExportLight = faFileExportLight
 	faPencilLight = faPencilLight
