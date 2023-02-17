@@ -1,0 +1,22 @@
+.card {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: 28px 0;
+	transition: 200ms;
+}
+
+a.card {
+	text-decoration: none;
+}
+
+.card-text {
+	font-size: 18px;
+	margin-top: 12px;
+	margin-bottom: 0;
+}
+
+fa-icon {
+	font-size: 28px;
+}
