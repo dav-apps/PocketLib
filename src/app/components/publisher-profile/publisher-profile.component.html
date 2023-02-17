@@ -1,7 +1,7 @@
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 56 : 0">
-
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 80 : 0"
+>
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
 			<pocketlib-blurhash-image
@@ -20,12 +20,12 @@
 			<br>
 
 			<dav-button
-				type="accent"
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				[disabled]="logoLoading"
 				(filePick)="LogoFileSelected($event)"
-				*ngIf="publisherMode != 0">
+				*ngIf="publisherMode != 0"
+			>
 				{{ locale.uploadLogo }}
 			</dav-button>
 
@@ -37,18 +37,19 @@
 					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 					style="height: 32px; font-size: 17px; margin-top: -4px; padding: 0px 4px"
 					(click)="ShowEditProfileDialog()"
-					*ngIf="publisherMode > 0">
-					<i class="ms-Icon ms-Icon--Edit" style="font-size: 17px" aria-hidden="true"></i>
+					*ngIf="publisherMode > 0"
+				>
+					<fa-icon [icon]="faPenLight"></fa-icon>
 				</button>
 			</h4>
 
 			<div
 				class="d-flex justify-content-center"
-				*ngIf="publisher.websiteUrl || publisher.facebookUsername || publisher.instagramUsername || publisher.twitterUsername">
-
+				*ngIf="publisher.websiteUrl || publisher.facebookUsername || publisher.instagramUsername || publisher.twitterUsername"
+			>
 				<!-- Website -->
 				<pocketlib-link-icon-button
-					[icon]="faGlobe"
+					[icon]="faGlobeLight"
 					[link]="publisher.websiteUrl"
 					*ngIf="publisher.websiteUrl">
 				</pocketlib-link-icon-button>
@@ -77,12 +78,14 @@
 
 			<p class="mt-3 text-color"
 				style="white-space: pre-line; text-align: justify"
-				*ngIf="!editDescription">
+				*ngIf="!editDescription"
+			>
 				{{ publisher.description }}
 			</p>
 
 			<p class="mt-3 fw-light fst-italic text-color"
-				*ngIf="(publisher.description == null || publisher.description.length == 0) && !editDescription">
+				*ngIf="(publisher.description == null || publisher.description.length == 0) && !editDescription"
+			>
 				{{ locale.noDescription }}
 			</p>
 
@@ -98,18 +101,20 @@
 			</div>
 
 			<dav-button
-				type="accent"
 				[disabled]="descriptionLoading"
 				(click)="EditDescription()"
-				*ngIf="publisherMode != 0">
+				*ngIf="publisherMode != 0"
+			>
 				{{ editDescription ? locale.save : locale.edit }}
 			</dav-button>
 
 			<dav-button
+				color="secondary"
 				style="margin-left: 10px"
 				[disabled]="descriptionLoading"
 				(click)="CancelEditDescription()"
-				*ngIf="editDescription">
+				*ngIf="editDescription"
+			>
 				{{ locale.cancel }}
 			</dav-button>
 		</div>
@@ -119,8 +124,8 @@
 			<div
 				class="mt-3 mx-auto"
 				style="min-width: 200px; max-width: 300px"
-				*ngIf="errorMessage.length > 0 && publisherMode != 0">
-
+				*ngIf="errorMessage.length > 0 && publisherMode != 0"
+			>
 				<dav-message-bar type="danger">
 					{{ errorMessage }}
 				</dav-message-bar>
@@ -134,7 +139,7 @@
 			<div class="mt-3" *ngIf="authorsLoading">
 				<dav-progress-ring
 					class="mx-auto"
-					style="width: 28px; height: 28px">
+					size="28">
 				</dav-progress-ring>
 			</div>
 
@@ -152,8 +157,8 @@
 					(mouseout)="hoveredAuthorItem = -1"
 					(focusin)="hoveredAuthorItem = i"
 					(focusout)="hoveredAuthorItem = -1"
-					*ngFor="let author of authorItems; let i = index">
-
+					*ngFor="let author of authorItems; let i = index"
+				>
 					<div class="card-body d-flex">
 						<pocketlib-blurhash-image
 							[src]="author.profileImageContent"
@@ -166,7 +171,9 @@
 							rounded="true">
 						</pocketlib-blurhash-image>
 
-						<h4 class="card-title ms-4 my-auto text-color fw-light">{{ author.firstName }} {{ author.lastName }}</h4>
+						<h4 class="card-title ms-4 my-auto text-color fw-light">
+							{{ author.firstName }} {{ author.lastName }}
+						</h4>
 					</div>
 				</a>
 
@@ -190,8 +197,8 @@
 	[visible]="logoDialogVisible"
 	(dismiss)="logoDialogVisible = false"
 	(primaryButtonClick)="UploadLogo()"
-	(defaultButtonClick)="logoDialogVisible = false">
-
+	(defaultButtonClick)="logoDialogVisible = false"
+>
 	<div class="mb-3" style="max-height: 400px">
 		<img #logoDialogImage style="max-width: 100%">
 	</div>
@@ -204,8 +211,8 @@
 	[visible]="editProfileDialogVisible"
 	(dismiss)="editProfileDialogVisible = false"
 	(primaryButtonClick)="SaveProfile()"
-	(defaultButtonClick)="editProfileDialogVisible = false">
-
+	(defaultButtonClick)="editProfileDialogVisible = false"
+>
 	<form>
 		<!-- Name -->
 		<div class="mb-3">
@@ -283,8 +290,8 @@
 	maxWidth="340"
 	(dismiss)="createAuthorDialogVisible = false"
 	(primaryButtonClick)="CreateAuthor()"
-	(defaultButtonClick)="createAuthorDialogVisible = false">
-
+	(defaultButtonClick)="createAuthorDialogVisible = false"
+>
 	<form>
 		<!-- First name -->
 		<div class="mb-3">

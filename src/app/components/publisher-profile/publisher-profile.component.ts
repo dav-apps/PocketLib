@@ -1,7 +1,10 @@
 import { Component, Input, ElementRef, ViewChild, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
-import { faGlobe } from "@fortawesome/free-solid-svg-icons"
+import {
+	faGlobe as faGlobeLight,
+	faPen as faPenLight
+} from "@fortawesome/pro-light-svg-icons"
 import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons"
 import Cropper from "cropperjs"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
@@ -35,7 +38,8 @@ const maxAuthorsPerPage = 5
 })
 export class PublisherProfileComponent {
 	locale = enUS.publisherProfile
-	faGlobe = faGlobe
+	faPenLight = faPenLight
+	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
