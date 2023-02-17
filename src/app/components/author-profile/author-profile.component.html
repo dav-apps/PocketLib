@@ -1,9 +1,9 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 56 : 0"
-	*ngIf="!dualScreenLayout">
-
+	[style.paddingBottom.px]="dataService.bottomToolbarVisible && !storeContext ? 80 : 0"
+	*ngIf="!dualScreenLayout"
+>
 	<div class="row">
 		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
 			<pocketlib-blurhash-image
@@ -22,12 +22,12 @@
 			<br>
 
 			<dav-button
-				type="accent"
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				[disabled]="profileImageLoading"
 				(filePick)="ProfileImageFileSelected($event)"
-				*ngIf="authorMode != 0">
+				*ngIf="authorMode != 0"
+			>
 				{{ locale.uploadProfileImage }}
 			</dav-button>
 
@@ -39,8 +39,9 @@
 					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 					style="height: 32px; font-size: 17px; margin-top: -4px; padding: 0px 4px"
 					(click)="ShowEditProfileDialog()"
-					*ngIf="authorMode > 0">
-					<i class="ms-Icon ms-Icon--Edit" style="font-size: 17px" aria-hidden="true"></i>
+					*ngIf="authorMode > 0"
+				>
+					<fa-icon [icon]="faPenLight"></fa-icon>
 				</button>
 			</h4>
 
@@ -50,7 +51,7 @@
 
 				<!-- Website -->
 				<pocketlib-link-icon-button
-					[icon]="faGlobe"
+					[icon]="faGlobeLight"
 					[link]="author.websiteUrl"
 					*ngIf="author.websiteUrl">
 				</pocketlib-link-icon-button>
@@ -77,19 +78,21 @@
 				</pocketlib-link-icon-button>
 			</div>
 
-			<dav-dropdown
-				class="mx-auto my-3"
-				width="170"
-				[options]="bioLanguageDropdownOptions"
-				[selectedKey]="bioLanguageDropdownSelectedKey"
-				(change)="BioLanguageDropdownChange($event)"
-				*ngIf="authorMode != 0">
-			</dav-dropdown>
+			<div class="mt-2">
+				<dav-dropdown
+					width="170"
+					[options]="bioLanguageDropdownOptions"
+					[selectedKey]="bioLanguageDropdownSelectedKey"
+					(change)="BioLanguageDropdownChange($event)"
+					*ngIf="authorMode != 0">
+				</dav-dropdown>
+			</div>
 
 			<!-- Display the content of the bio in the selected language -->
 			<p class="mt-3 text-color"
 				style="white-space: pre-line; text-align: justify"
-				*ngIf="bioMode == 2">
+				*ngIf="bioMode == 2"
+			>
 				{{ currentBio }}
 			</p>
 
@@ -110,18 +113,20 @@
 			</div>
 
 			<dav-button
-				type="accent"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
-				*ngIf="authorMode != 0 && bioMode != 0">
+				*ngIf="authorMode != 0 && bioMode != 0"
+			>
 				{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}
 			</dav-button>
 
 			<dav-button
 				style="margin-left: 10px"
+				color="secondary"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
-				*ngIf="authorMode != 0 && bioMode == 3">
+				*ngIf="authorMode != 0 && bioMode == 3"
+			>
 				{{ locale.cancel }}
 			</dav-button>
 		</div>
@@ -131,8 +136,8 @@
 			<div
 				class="mt-3 mx-auto"
 				style="min-width: 200px; max-width: 300px"
-				*ngIf="errorMessage.length > 0">
-
+				*ngIf="errorMessage.length > 0"
+			>
 				<dav-message-bar type="danger">
 					{{ errorMessage }}
 				</dav-message-bar>
@@ -142,8 +147,8 @@
 			<div
 				class="mt-3 mx-auto"
 				style="min-width: 200px; max-width: 300px"
-				*ngIf="providerMessage.length > 0">
-
+				*ngIf="providerMessage.length > 0"
+			>
 				<dav-message-bar type="warning">
 					<span [innerHtml]="providerMessage"></span>
 				</dav-message-bar>
@@ -152,14 +157,15 @@
 			<!-- List of collections -->
 			<h3
 				class="text-center fw-light mb-3 mb-md-4 mt-4 text-color"
-				[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'">
+				[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'"
+			>
 				{{ locale.yourBooks }}
 			</h3>
 
 			<div class="mt-3" *ngIf="!collectionsLoaded">
 				<dav-progress-ring
 					class="mx-auto"
-					style="width: 28px; height: 28px">
+					size="28">
 				</dav-progress-ring>
 			</div>
 
@@ -186,7 +192,7 @@
 			<div class="mt-3" *ngIf="!seriesLoaded">
 				<dav-progress-ring
 					class="mx-auto"
-					style="width: 28px; height: 28px">
+					size="28">
 				</dav-progress-ring>
 			</div>
 
@@ -221,16 +227,16 @@
 <!-- Dual-Screen layout -->
 <div
 	class="ms-motion-slideUpIn"
-	style="display: grid; grid-template-rows: auto"
+	style="display: grid; grid-template-rows: auto; margin-top: 80px"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="d-flex justify-content-center"
 		style="grid-row: 1; grid-column: 1;"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
 		<div class="text-center">
 			<div class="mx-auto pt-5">
 				<pocketlib-blurhash-image
@@ -254,7 +260,8 @@
 					accept="image/png,image/jpeg"
 					[disabled]="profileImageLoading"
 					(filePick)="ProfileImageFileSelected($event)"
-					*ngIf="authorMode != 0">
+					*ngIf="authorMode != 0"
+				>
 					{{ locale.uploadProfileImage }}
 				</dav-button>
 			</div>
@@ -267,18 +274,19 @@
 					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 					style="height: 32px; font-size: 17px; margin-top: -4px; padding: 0px 4px"
 					(click)="ShowEditProfileDialog()"
-					*ngIf="authorMode > 0">
-					<i class="ms-Icon ms-Icon--Edit" style="font-size: 17px" aria-hidden="true"></i>
+					*ngIf="authorMode > 0"
+				>
+					<fa-icon [icon]="faPenLight"></fa-icon>
 				</button>
 			</h4>
 	
 			<div
 				class="d-flex justify-content-center"
-				*ngIf="author.websiteUrl || author.facebookUsername || author.instagramUsername || author.twitterUsername">
-				
+				*ngIf="author.websiteUrl || author.facebookUsername || author.instagramUsername || author.twitterUsername"
+			>
 				<!-- Website -->
 				<pocketlib-link-icon-button
-					[icon]="faGlobe"
+					[icon]="faGlobeLight"
 					[link]="author.websiteUrl"
 					*ngIf="author.websiteUrl">
 				</pocketlib-link-icon-button>
@@ -305,19 +313,21 @@
 				</pocketlib-link-icon-button>
 			</div>
 
-			<dav-dropdown
-				class="mx-auto my-3"
-				width="170"
-				[options]="bioLanguageDropdownOptions"
-				[selectedKey]="bioLanguageDropdownSelectedKey"
-				(change)="BioLanguageDropdownChange($event)"
-				*ngIf="authorMode != 0">
-			</dav-dropdown>
+			<div class="mt-2">
+				<dav-dropdown
+					width="170"
+					[options]="bioLanguageDropdownOptions"
+					[selectedKey]="bioLanguageDropdownSelectedKey"
+					(change)="BioLanguageDropdownChange($event)"
+					*ngIf="authorMode != 0">
+				</dav-dropdown>
+			</div>
 
 			<!-- Display the content of the bio in the selected language -->
 			<p class="mt-3 text-color"
 				style="white-space: pre-line; text-align: justify; max-width: 250px"
-				*ngIf="bioMode == 2">
+				*ngIf="bioMode == 2"
+			>
 				{{ currentBio }}
 			</p>
 
@@ -337,18 +347,20 @@
 			</div>
 
 			<dav-button
-				type="accent"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
-				*ngIf="authorMode != 0 && bioMode != 0">
+				*ngIf="authorMode != 0 && bioMode != 0"
+			>
 				{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}
 			</dav-button>
 
 			<dav-button
 				style="margin-left: 10px"
+				color="secondary"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
-				*ngIf="authorMode != 0 && bioMode == 3">
+				*ngIf="authorMode != 0 && bioMode == 3"
+			>
 				{{ locale.cancel }}
 			</dav-button>
 		</div>
@@ -357,20 +369,20 @@
 	<!-- Right screen -->
 	<div
 		style="grid-row: 1; grid-column: 2;"
-		[style.marginLeft.px]="dualScreenFoldMargin">
-
+		[style.marginLeft.px]="dualScreenFoldMargin"
+	>
 		<div
 			class="px-5"
 			style="overflow: scroll"
-			[style.height.px]="dataService.contentHeight">
-
+			[style.height.px]="dataService.contentHeight"
+		>
 			<div *ngIf="authorMode != 0">
 				<!-- Error message -->
 				<div
 					class="mt-4 mx-auto"
 					style="min-width: 200px; max-width: 300px"
-					*ngIf="errorMessage.length > 0">
-
+					*ngIf="errorMessage.length > 0"
+				>
 					<dav-message-bar type="danger">
 						{{ errorMessage }}
 					</dav-message-bar>
@@ -380,8 +392,8 @@
 				<div
 					class="mt-4 mx-auto"
 					style="min-width: 200px; max-width: 300px"
-					*ngIf="providerMessage.length > 0">
-
+					*ngIf="providerMessage.length > 0"
+				>
 					<dav-message-bar type="warning">
 						<span [innerHtml]="providerMessage"></span>
 					</dav-message-bar>
@@ -390,14 +402,15 @@
 				<!-- List of collections -->
 				<h3
 					class="text-center fw-light mb-3 mt-4 mb-md-4 text-color"
-					[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'">
+					[ngClass]="providerMessage.length > 0 || errorMessage.length > 0 ? 'mt-md-4' : 'mt-md-5'"
+				>
 					{{ locale.yourBooks }}
 				</h3>
 
 				<div class="mt-3" *ngIf="!collectionsLoaded">
 					<dav-progress-ring
 						class="mx-auto"
-						style="width: 28px; height: 28px">
+						size="28">
 					</dav-progress-ring>
 				</div>
 
@@ -464,8 +477,8 @@
 	[visible]="profileImageDialogVisible"
 	(dismiss)="profileImageDialogVisible = false"
 	(primaryButtonClick)="UploadProfileImage()"
-	(defaultButtonClick)="profileImageDialogVisible = false">
-
+	(defaultButtonClick)="profileImageDialogVisible = false"
+>
 	<div class="mb-3" style="max-height: 400px">
 		<img #profileImageDialogImage style="max-width: 100%">
 	</div>
@@ -478,8 +491,8 @@
 	[visible]="editProfileDialogVisible"
 	(dismiss)="editProfileDialogVisible = false"
 	(primaryButtonClick)="SaveProfile()"
-	(defaultButtonClick)="editProfileDialogVisible = false">
-
+	(defaultButtonClick)="editProfileDialogVisible = false"
+>
 	<form>
 		<!-- First name -->
 		<div class="mb-3">

@@ -8,7 +8,10 @@ import {
 	ElementRef
 } from '@angular/core'
 import { ReadFile } from 'ngx-file-helpers'
-import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import {
+	faPen as faPenLight,
+	faGlobe as faGlobeLight
+} from '@fortawesome/pro-light-svg-icons'
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Cropper from 'cropperjs'
 import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
@@ -70,7 +73,8 @@ const maxProfileImageFileSize = 2000000
 })
 export class AuthorProfileComponent {
 	locale = enUS.authorProfile
-	faGlobe = faGlobe
+	faPenLight = faPenLight
+	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
