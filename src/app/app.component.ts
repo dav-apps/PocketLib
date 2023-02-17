@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core'
-import { Router, NavigationStart } from '@angular/router'
+import { Router, ActivatedRoute, NavigationStart } from '@angular/router'
 import {
 	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
@@ -43,7 +43,8 @@ export class AppComponent {
 
 	constructor(
 		public dataService: DataService,
-		private router: Router
+		private router: Router,
+		private activatedRoute: ActivatedRoute
 	) {
 		let locale = this.dataService.GetLocale().misc
 		this.libraryLabel = locale.library
@@ -60,6 +61,15 @@ export class AppComponent {
 				this.storeTabActive = this.dataService.currentUrl.startsWith("/store")
 				this.accountButtonSelected = this.dataService.currentUrl == "/account"
 				this.settingsButtonSelected = this.dataService.currentUrl == "/settings"
+			}
+		})
+
+		// Log the user in if there is an access token in the url
+		this.activatedRoute.queryParams.subscribe(async params => {
+			if (params["accessToken"]) {
+				// Login with the access token
+				await this.dataService.dav.Login(params["accessToken"])
+				window.location.href = this.router.url.slice(0, this.router.url.indexOf('?'))
 			}
 		})
 	}

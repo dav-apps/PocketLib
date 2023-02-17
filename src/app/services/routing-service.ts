@@ -14,15 +14,6 @@ export class RoutingService {
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		// Log the user in if there is an access token in the url
-		this.activatedRoute.queryParams.subscribe(async params => {
-			if (params["accessToken"]) {
-				// Login with the access token
-				await this.dataService.dav.Login(params["accessToken"])
-				window.location.href = this.router.url.slice(0, this.router.url.indexOf('?'))
-			}
-		})
-
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
 				let url = event.url.includes('?') ? event.url.substring(0, event.url.indexOf("?")) : event.url
