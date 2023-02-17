@@ -5,6 +5,7 @@ import { faPlus as faPlusLight } from '@fortawesome/pro-light-svg-icons'
 @Component({
 	selector: 'pocketlib-add-list-item',
 	templateUrl: './add-list-item.component.html',
+	styleUrls: ['./add-list-item.component.scss'],
 	animations: [
 		trigger('hover', [
 			state('false', style({

@@ -1,0 +1,13 @@
+a.card {
+	text-decoration: none;
+}
+
+.card {
+	transition: 120ms;
+}
+
+.card-body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
