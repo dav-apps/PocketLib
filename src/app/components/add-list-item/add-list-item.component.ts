@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { transition, trigger, state, style, animate } from '@angular/animations'
+import { faPlus as faPlusLight } from '@fortawesome/pro-light-svg-icons'
 
 @Component({
 	selector: 'pocketlib-add-list-item',
@@ -26,5 +27,6 @@ import { transition, trigger, state, style, animate } from '@angular/animations'
 export class AddListItemComponent {
 	@Input() link: string = ""
 	@Input() linkParams = {}
+	faPlusLight = faPlusLight
 	hover: boolean = false
 }

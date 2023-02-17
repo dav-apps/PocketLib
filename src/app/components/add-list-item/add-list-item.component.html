@@ -7,14 +7,10 @@
 	(mouseout)="hover = false"
 	(focusin)="hover = true"
 	(focusout)="hover = false"
-	*ngIf="link != null && link.length > 0">
-
-	<div class="card-body d-flex justify-content-center align-items-center">
-		<i class="ms-Icon ms-Icon--Add text-color"
-			aria-hidden="true"
-			style="font-size: 18px"
-			[@hover]="hover">
-		</i>
+	*ngIf="link != null && link.length > 0"
+>
+	<div class="card-body d-flex justify-content-center align-items-center" [@hover]="hover">
+		<fa-icon [icon]="faPlusLight"></fa-icon>
 	</div>
 </a>
 
@@ -25,13 +21,9 @@
 	(mouseout)="hover = false"
 	(focusin)="hover = true"
 	(focusout)="hover = false"
-	*ngIf="link == null || link.length == 0">
-
-	<div class="card-body d-flex justify-content-center align-items-center">
-		<i class="ms-Icon ms-Icon--Add text-color"
-			aria-hidden="true"
-			style="font-size: 18px"
-			[@hover]="hover">
-		</i>
+	*ngIf="link == null || link.length == 0"
+>
+	<div class="card-body d-flex justify-content-center align-items-center" [@hover]="hover">
+		<fa-icon [icon]="faPlusLight"></fa-icon>
 	</div>
 </div>
