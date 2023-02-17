@@ -3,8 +3,10 @@ import { Router } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
 import {
 	faAddressCard as faAddressCardLight,
+	faBagShopping as faBagShoppingLight,
 	faFileExport as faFileExportLight,
 	faPencil as faPencilLight,
+	faPlus as faPlusLight,
 	faTrashCan as faTrashCanLight
 } from '@fortawesome/pro-light-svg-icons'
 import { Dav } from 'dav-js'
@@ -27,8 +29,10 @@ const pdfType = "application/pdf"
 export class LibraryPageComponent {
 	locale = enUS.libraryPage
 	faAddressCardLight = faAddressCardLight
+	faBagShoppingLight = faBagShoppingLight
 	faFileExportLight = faFileExportLight
 	faPencilLight = faPencilLight
+	faPlusLight = faPlusLight
 	faTrashCanLight = faTrashCanLight
 	@ViewChild('leftContentContainer') leftContentContainer: ElementRef<HTMLDivElement>
 	@ViewChild('rightContentContainer') rightContentContainer: ElementRef<HTMLDivElement>

@@ -42,13 +42,14 @@
 					(mouseout)="addBookHover = false"
 					(focusin)="addBookHover = true"
 					(focusout)="addBookHover = false"
-					*ngIf="dataService.books.length > 0">
-
+					*ngIf="dataService.books.length > 0"
+				>
 					<div class="card-body d-flex align-items-center" style="padding: 1rem">
-						<i class="ms-Icon ms-Icon--Add text-color"
-							aria-hidden="true"
-							style="font-size: 24px">
-						</i>
+						<fa-icon
+							class="text-color"
+							[icon]="faPlusLight"
+							size="xl">
+						</fa-icon>
 					</div>
 				</button>
 
@@ -61,13 +62,14 @@
 					(mouseover)="discoverBooksHover = true"
 					(mouseout)="discoverBooksHover = false"
 					(focusin)="discoverBooksHover = true"
-					(focusout)="discoverBooksHover = false">
-
+					(focusout)="discoverBooksHover = false"
+				>
 					<div class="card-body d-flex align-items-center" style="padding: 1rem">
-						<i class="ms-Icon ms-Icon--Shop text-color"
-							aria-hidden="true"
-							style="font-size: 24px">
-						</i>
+						<fa-icon
+							class="text-color"
+							[icon]="faBagShoppingLight"
+							size="xl">
+						</fa-icon>
 					</div>
 				</a>
 
@@ -81,13 +83,13 @@
 					(mouseover)="goToAuthorPageHover = true"
 					(mouseout)="goToAuthorPageHover = false"
 					(focusin)="goToAuthorPageHover = true"
-					(focusout)="goToAuthorPageHover = false">
-
+					(focusout)="goToAuthorPageHover = false"
+				>
 					<div class="card-body d-flex align-items-center" style="padding: 1rem">
 						<fa-icon
 							class="text-color"
-							style="font-size: 24px"
-							[icon]="faAddressCardLight">
+							[icon]="faAddressCardLight"
+							size="xl">
 						</fa-icon>
 					</div>
 				</a>
