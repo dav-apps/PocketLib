@@ -87,6 +87,10 @@ body {
 	color: var(--text-color);
 }
 
+a.text-color:hover {
+	color: var(--text-color);
+}
+
 .cursor:hover {
    cursor: pointer !important;
 }
