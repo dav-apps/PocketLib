@@ -5,3 +5,15 @@ a.text-color:hover{
 a {
 	font-size: 16px;
 }
+
+.toggle-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 30px;
+	width: 30px;
+	border-radius: 15px;
+	margin-right: 6px;
+	border: none;
+	background-color: white;
+}

@@ -2,6 +2,10 @@ import { Component, Output, EventEmitter } from '@angular/core'
 import { MatTreeNestedDataSource } from '@angular/material/tree'
 import { NestedTreeControl } from '@angular/cdk/tree'
 import { BehaviorSubject } from 'rxjs'
+import {
+	faChevronDown as faChevronDownLight,
+	faChevronRight as faChevronRightLight
+} from '@fortawesome/pro-light-svg-icons'
 import { EpubTocItem } from 'src/app/models/EpubReader'
 
 @Component({
@@ -13,6 +17,8 @@ import { EpubTocItem } from 'src/app/models/EpubReader'
 })
 export class ChaptersTreeComponent {
 	@Output() linkClick = new EventEmitter()
+	faChevronDownLight = faChevronDownLight
+	faChevronRightLight = faChevronRightLight
 	initialized: boolean = false
 	dataSource: MatTreeNestedDataSource<ChapterNode>
 	treeControl: NestedTreeControl<ChapterNode>
