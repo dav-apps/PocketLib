@@ -133,7 +133,8 @@
 						<span
 							class="badge rounded-pill me-2"
 							[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-							*ngFor="let category of book.categories; let i = index">
+							*ngFor="let category of book.categories; let i = index"
+						>
 							{{ category.name }}
 						</span>
 					</div>
@@ -142,8 +143,9 @@
 						class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
 						style="height: 35px; padding: 3px 6px; font-size: 16px"
 						(click)="ShowCategoriesDialog()"
-						*ngIf="release == null">
-						<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
+						*ngIf="release == null"
+					>
+						<fa-icon [icon]="faPenLight"></fa-icon>
 					</button>
 				</div>
 			</div>
@@ -390,7 +392,8 @@
 							<span
 								class="badge rounded-pill me-2"
 								[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-								*ngFor="let category of book.categories; let i = index">
+								*ngFor="let category of book.categories; let i = index"
+							>
 								{{ category.name }}
 							</span>
 						</div>
@@ -398,8 +401,9 @@
 						<button type="button"
 							class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 							style="height: 35px; padding: 3px 6px; font-size: 16px"
-							(click)="ShowCategoriesDialog()">
-							<i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i>
+							(click)="ShowCategoriesDialog()"
+						>
+							<fa-icon [icon]="faPenLight"></fa-icon>
 						</button>
 					</div>
 				</div>

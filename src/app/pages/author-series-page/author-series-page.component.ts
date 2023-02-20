@@ -1,7 +1,10 @@
 import { Component } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { DragulaService } from 'ng2-dragula'
-import { faTrashCan as faTrashCanLight } from '@fortawesome/pro-light-svg-icons'
+import {
+	faPlus as faPlusLight,
+	faTrashCan as faTrashCanLight
+} from '@fortawesome/pro-light-svg-icons'
 import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -19,6 +22,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorSeriesPageComponent {
 	locale = enUS.authorSeriesPage
+	faPlusLight = faPlusLight
 	faTrashCanLight = faTrashCanLight
 	uuid: string = ""
 	dualScreenLayout: boolean = false

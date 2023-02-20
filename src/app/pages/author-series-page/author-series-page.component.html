@@ -25,16 +25,13 @@
 				(mouseout)="addButtonHover = false"
 				(focusin)="addButtonHover = true"
 				(focusout)="addButtonHover = false"
-				(click)="addBookDialogVisible = true">
-
+				(click)="addBookDialogVisible = true"
+			>
 				<div
 					class="card-body d-flex justify-content-center align-items-center"
-					style="padding: 12px 14px">
-
-					<i class="ms-Icon ms-Icon--Add text-color"
-						aria-hidden="true"
-						style="font-size: 20px">
-					</i>
+					style="padding: 12px 14px"
+				>
+					<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 				</div>
 			</button>
 		</div>
@@ -102,16 +99,13 @@
 					(mouseout)="addButtonHover = false"
 					(focusin)="addButtonHover = true"
 					(focusout)="addButtonHover = false"
-					(click)="addBookDialogVisible = true">
-	
+					(click)="addBookDialogVisible = true"
+				>
 					<div
 						class="card-body d-flex justify-content-center align-items-center"
-						style="padding: 12px 14px">
-	
-						<i class="ms-Icon ms-Icon--Add text-color"
-							aria-hidden="true"
-							style="font-size: 20px">
-						</i>
+						style="padding: 12px 14px"
+					>
+						<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 					</div>
 				</button>
 			</div>

@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ReadFile } from 'ngx-file-helpers'
+import { faPen as faPenLight } from '@fortawesome/pro-light-svg-icons'
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -28,6 +29,7 @@ import { enUS } from 'src/locales/locales'
 })
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
+	faPenLight = faPenLight
 	@ViewChild('categoriesSelection') categoriesSelectionComponent: CategoriesSelectionComponent
 	@ViewChild('priceInput') priceInput: PriceInputComponent
 	@ViewChild('isbnInput') isbnInput: IsbnInputComponent
