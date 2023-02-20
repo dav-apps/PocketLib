@@ -1,9 +1,12 @@
 <div class="d-flex">
-	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ isbn }}</p>
+	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">
+		{{ isbn }}
+	</p>
 
 	<p class="fw-light fst-italic text-color"
 		style="margin-top: 3px; margin-bottom: 3px"
-		*ngIf="!edit && isbn.length == 0">
+		*ngIf="!edit && isbn.length == 0"
+	>
 		{{ locale.noIsbn }}
 	</p>
 
@@ -21,18 +24,18 @@
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
-			(click)="UpdateValue()">
-
-			<i class="ms-Icon ms-Icon--Save" style="font-size: 16px" aria-hidden="true"></i>
+			(click)="UpdateValue()"
+		>
+			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
 		</button>
 
 		<button
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px"
-			(click)="Cancel()">
-
-			<i class="ms-Icon ms-Icon--Clear" style="font-size: 16px" aria-hidden="true"></i>
+			(click)="Cancel()"
+		>
+			<fa-icon [icon]="faXmarkLight"></fa-icon>
 		</button>
 	</div>
 
@@ -41,8 +44,8 @@
 		class="btn ms-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
 		style="height: 32px; padding: 3px 6px; font-size: 16px"
 		*ngIf="!edit && canEdit"
-		(click)="EnableEditing()">
-
-		<i class="ms-Icon ms-Icon--Edit" style="font-size: 16px" aria-hidden="true"></i>
+		(click)="EnableEditing()"
+	>
+		<fa-icon [icon]="faPenLight"></fa-icon>
 	</button>
 </div>

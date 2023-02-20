@@ -1,4 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
+import {
+	faFloppyDisk as faFloppyDiskLight,
+	faPen as faPenLight,
+	faXmark as faXmarkLight
+} from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
 import { enUS } from 'src/locales/locales'
 
@@ -10,6 +15,9 @@ const isbnValidityRegex = /^[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ 
 })
 export class IsbnInputComponent{
 	locale = enUS.isbnInput
+	faFloppyDiskLight = faFloppyDiskLight
+	faPenLight = faPenLight
+	faXmarkLight = faXmarkLight
 	edit: boolean = false
 	@Input() canEdit: boolean = false
 	@Output() update = new EventEmitter()

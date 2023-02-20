@@ -17,9 +17,9 @@
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
-			(click)="UpdatePrice()">
-
-			<i class="ms-Icon ms-Icon--Save" style="font-size: 16px" aria-hidden="true"></i>
+			(click)="UpdatePrice()"
+		>
+			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
 		</button>
 	</div>
 
@@ -28,8 +28,8 @@
 		class="btn ms-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
 		style="height: 32px; padding: 3px 6px; font-size: 16px"
 		*ngIf="canEdit && !edit"
-		(click)="ShowEditPrice()">
-
-		<i class="ms-Icon ms-Icon--Edit" style="font-size: 16px" aria-hidden="true"></i>
+		(click)="ShowEditPrice()"
+	>
+		<fa-icon [icon]="faPenLight"></fa-icon>
 	</button>
 </div>

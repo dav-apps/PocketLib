@@ -91,6 +91,11 @@ body {
    cursor: pointer !important;
 }
 
+.icon-button {
+	display: flex;
+	align-items: center;
+}
+
 .icon-button:hover {
 	background-color: var(--hover-background-color);
 	color: var(--text-color);

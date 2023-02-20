@@ -1,4 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
+import {
+	faFloppyDisk as faFloppyDiskLight,
+	faPen as faPenLight
+} from '@fortawesome/pro-light-svg-icons'
 import { DataService } from 'src/app/services/data-service'
 import { enUS } from 'src/locales/locales'
 
@@ -8,6 +12,8 @@ import { enUS } from 'src/locales/locales'
 })
 export class PriceInputComponent{
 	locale = enUS.priceInput
+	faFloppyDiskLight = faFloppyDiskLight
+	faPenLight = faPenLight
 	price: string = "0"
 	@Input() canEdit: boolean = false
 	@Output() update = new EventEmitter()
