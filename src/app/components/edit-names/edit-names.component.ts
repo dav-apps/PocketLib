@@ -1,4 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
+import {
+	faFloppyDisk as faFloppyDiskLight,
+	faPen as faPenLight
+} from '@fortawesome/pro-light-svg-icons'
 import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
 import { DataService } from 'src/app/services/data-service'
 import { ApiService } from 'src/app/services/api-service'
@@ -22,6 +26,8 @@ export class EditNamesComponent {
 	@Input() names: Name[] = []
 	@Input() uuid: string
 	@Output() update = new EventEmitter()
+	faFloppyDiskLight = faFloppyDiskLight
+	faPenLight = faPenLight
 
 	constructor(
 		private dataService: DataService,
