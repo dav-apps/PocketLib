@@ -305,15 +305,6 @@ const enDefaults = {
 			unexpectedErrorLong: "An unexpected error occured. Please try it again."
 		}
 	},
-	storePage: {
-		startPage: "Start",
-		categories: "Categories",
-		selectLanguagesDialog: {
-			header: "Select languages",
-			description: "Select the languages for which books should be displayed.",
-			close: "Close"
-		}
-	},
 	storeBookPage: {
 		readNow: "Read now",
 		continueReading: "Continue reading",
@@ -855,15 +846,6 @@ const deDefaults = {
 			passwordMissing: "Bitte gib dein Passwort ein",
 			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
 			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
-		}
-	},
-	storePage: {
-		startPage: "Startseite",
-		categories: "Kategorien",
-		selectLanguagesDialog: {
-			header: "Sprachen auswählen",
-			description: "Wähle die Sprachen, für die Bücher angezeigt werden sollen.",
-			close: "Schließen"
 		}
 	},
 	storeBookPage: {

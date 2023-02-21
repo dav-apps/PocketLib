@@ -15,7 +15,6 @@ import { AuthorBookPageComponent } from './pages/author-book-page/author-book-pa
 import { NewBookPageComponent } from './pages/new-book-page/new-book-page.component'
 import { AuthorReleasesPageComponent } from './pages/author-releases-page/author-releases-page.component'
 import { LoadingPageComponent } from './pages/loading-page/loading-page.component'
-import { StorePageComponent } from './pages/store-page/store-page.component'
 import { StoreStartPageComponent } from './pages/store-start-page/store-start-page.component'
 import { StorePublisherPageComponent } from './pages/store-publisher-page/store-publisher-page.component'
 import { StoreAuthorPageComponent } from './pages/store-author-page/store-author-page.component'
@@ -47,16 +46,12 @@ const routes: Routes = [
 	{ path: "author/:author_uuid/book/:book_uuid/releases", component: AuthorReleasesPageComponent },
 	{ path: "author/:author_uuid/book/:book_uuid/releases/:release_uuid", component: AuthorBookPageComponent },
 	{ path: "loading", component: LoadingPageComponent },
-	{
-		path: "store", component: StorePageComponent, children: [
-			{ path: "", component: StoreStartPageComponent },
-			{ path: "publisher/:uuid", component: StorePublisherPageComponent },
-			{ path: "author/:uuid", component: StoreAuthorPageComponent },
-			{ path: "book/:uuid", component: StoreBookPageComponent },
-			{ path: "category/:key", component: StoreBooksPageComponent },
-			{ path: "books/all", component: StoreBooksPageComponent }
-		]
-	}
+	{ path: "store", component: StoreStartPageComponent },
+	{ path: "store/publisher/:uuid", component: StorePublisherPageComponent },
+	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
+	{ path: "store/book/:uuid", component: StoreBookPageComponent },
+	{ path: "store/category/:key", component: StoreBooksPageComponent },
+	{ path: "store/books/all", component: StoreBooksPageComponent }
 ]
 
 @NgModule({
