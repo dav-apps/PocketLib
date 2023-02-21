@@ -1,4 +1,4 @@
-import { Injectable, ElementRef } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { SwUpdate, VersionEvent } from '@angular/service-worker'
 import * as localforage from 'localforage'
 import {
@@ -78,8 +78,6 @@ export class DataService {
 	adminAuthors: Author[] = []
 	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
 	userIsAdmin: boolean = false
-	storePageContentContainer: ElementRef<HTMLDivElement>
-	sideNavOpened: boolean = false
 	contentHeight: number = 200
 	categories: Category[] = []
 	categoriesPromiseHolder = new PromiseHolder()
@@ -364,12 +362,6 @@ export class DataService {
 
 	UpdateBottomToolbarVisibility() {
 		this.bottomToolbarVisible = this.navbarVisible && this.smallWindow
-	}
-
-	ScrollStoreContentToTop() {
-		if (this.storePageContentContainer != null){
-			this.storePageContentContainer.nativeElement.scrollTo(0, 0)
-		}
 	}
 
 	async ApplyTheme(theme?: string) {

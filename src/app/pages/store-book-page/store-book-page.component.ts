@@ -150,9 +150,6 @@ export class StoreBookPageComponent {
 	}
 
 	async Init() {
-		// Scroll to the top of the page
-		this.dataService.ScrollStoreContentToTop()
-
 		// Get StoreBook, StoreBookCollection and Author
 		await this.GetData()
 	}
