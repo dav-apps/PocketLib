@@ -1,10 +1,11 @@
 <!-- Normal layout -->
 <div
 	class="container d-flex flex-column ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="!dualScreenLayout"
 >
-   <h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
+   <h1 class="text-center fw-light text-color">
+		{{ locale.title }}
+	</h1>
    
    <div class="setting-container mx-auto mt-4">
       <!-- Open last read book -->
@@ -42,11 +43,14 @@
 			</p>
 
 			<div class="d-flex" *ngIf="searchForUpdates">
-				<dav-progress-ring
-					style="width: 16px; height: 16px">
+				<dav-progress-ring size="16">
 				</dav-progress-ring>
 
-				<p class="mb-0" style="line-height: 20px; margin-left: 0.75rem">{{ updateMessage }}</p>
+				<p class="mb-0"
+					style="line-height: 20px; margin-left: 0.75rem"
+				>
+					{{ updateMessage }}
+				</p>
 			</div>
 
 			<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'ms-motion-slideDownOut' : ''" *ngIf="noUpdateAvailable">
@@ -61,7 +65,8 @@
 			<dav-button
 				type="accent"
 				(click)="ActivateUpdate()"
-				*ngIf="dataService.updateInstalled">
+				*ngIf="dataService.updateInstalled"
+			>
 				{{ locale.activateUpdate }}
 			</dav-button>
 		</div>
@@ -71,15 +76,16 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	style="margin-top: 80px"
 	*ngIf="dualScreenLayout"
 >
 	<!-- Left screen -->
 	<div
 		class="w-50 d-flex flex-column"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
-		<h1 class="text-center fw-light text-color">{{ locale.title }}</h1>
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
+		<h1 class="text-center fw-light text-color">
+			{{ locale.title }}
+		</h1>
 
 		<div class="setting-container mx-auto mt-4">
 			<dav-setting [header]="locale.openLastReadBook">
@@ -116,11 +122,14 @@
 				</p>
 
 				<div class="d-flex" *ngIf="searchForUpdates">
-					<dav-progress-ring
-						style="width: 16px; height: 16px">
+					<dav-progress-ring size="16">
 					</dav-progress-ring>
 
-					<p class="mb-0" style="line-height: 20px; margin-left: 0.75rem">{{ updateMessage }}</p>
+					<p class="mb-0"
+						style="line-height: 20px; margin-left: 0.75rem"
+					>
+						{{ updateMessage }}
+					</p>
 				</div>
 
 				<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'ms-motion-slideDownOut' : ''" *ngIf="noUpdateAvailable">
@@ -135,7 +144,8 @@
 				<dav-button
 					type="accent"
 					(click)="ActivateUpdate()"
-					*ngIf="dataService.updateInstalled">
+					*ngIf="dataService.updateInstalled"
+				>
 					{{ locale.activateUpdate  }}
 				</dav-button>
 			</div>

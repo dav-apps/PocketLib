@@ -1,7 +1,4 @@
-<div
-	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
->
+<div class="container ms-motion-slideUpIn">
 	<div class="mt-3 mb-4">
 		<dav-header
 			[header]="title"
@@ -13,7 +10,8 @@
 	<!-- Published -->
 	<div *ngIf="status == 2">
 		<p class="text-color text-center"
-			style="font-size: 22px">
+			style="font-size: 22px"
+		>
 			{{ locale.published }}
 		</p>
 
@@ -22,7 +20,8 @@
 				<dav-button
 					type="danger"
 					[disabled]="loading"
-					(click)="UnpublishButtonClick()">
+					(click)="UnpublishButtonClick()"
+				>
 					{{ locale.unpublish }}
 				</dav-button>
 			</div>
@@ -30,7 +29,8 @@
 			<div class="m-1">
 				<dav-button
 					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()">
+					(click)="ShowDetailsButtonClick()"
+				>
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
@@ -38,7 +38,8 @@
 			<div class="m-1">
 				<dav-button
 					[disabled]="loading"
-					(click)="ShowReleasesButtonClick()">
+					(click)="ShowReleasesButtonClick()"
+				>
 					{{ locale.showReleases }}
 				</dav-button>
 			</div>
@@ -48,7 +49,8 @@
 	<!-- Hidden -->
 	<div *ngIf="status == 3">
 		<p class="text-color text-center"
-			style="font-size: 22px">
+			style="font-size: 22px"
+		>
 			{{ locale.hidden }}
 		</p>
 
@@ -57,7 +59,8 @@
 				<dav-button
 					type="accent"
 					[disabled]="loading"
-					(click)="PublishButtonClick()">
+					(click)="PublishButtonClick()"
+				>
 					{{ locale.publish }}
 				</dav-button>
 			</div>
@@ -65,7 +68,8 @@
 			<div class="m-1">
 				<dav-button
 					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()">
+					(click)="ShowDetailsButtonClick()"
+				>
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
@@ -73,7 +77,8 @@
 			<div class="m-1">
 				<dav-button
 					[disabled]="loading"
-					(click)="ShowReleasesButtonClick()">
+					(click)="ShowReleasesButtonClick()"
+				>
 					{{ locale.showReleases }}
 				</dav-button>
 			</div>
@@ -83,12 +88,14 @@
 	<!-- In Review -->
 	<div *ngIf="status == 1">
 		<p class="text-color text-center"
-			style="font-size: 22px">
+			style="font-size: 22px"
+		>
 			{{ locale.inReview }}
 		</p>
 
 		<p class="text-color text-center"
-			style="font-size: 18px">
+			style="font-size: 18px"
+		>
 			{{ locale.inReviewDescription }}
 		</p>
 
@@ -97,7 +104,8 @@
 				<dav-button
 					type="danger"
 					[disabled]="loading"
-					(click)="CancelPublishingButtonClick()">
+					(click)="CancelPublishingButtonClick()"
+				>
 					{{ locale.cancelPublishing }}
 				</dav-button>
 			</div>
@@ -105,7 +113,8 @@
 			<div class="m-1">
 				<dav-button
 					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()">
+					(click)="ShowDetailsButtonClick()"
+				>
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>

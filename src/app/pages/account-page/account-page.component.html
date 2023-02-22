@@ -1,7 +1,6 @@
 <!-- Normal layout for not logged in -->
 <div
 	class="container mb-4 ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 80 : 0"
 	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout"
 >
 	<h1 class="text-center fw-light text-color">
@@ -68,7 +67,6 @@
 <!-- Dual-Screen layout for not logged in -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	style="margin-top: 80px"
 	*ngIf="!dataService.dav.isLoggedIn && dualScreenLayout"
 >
 	<!-- Left screen -->
@@ -147,7 +145,6 @@
 <!-- Normal layout for logged in -->
 <div
 	class="container mb-4 ms-motion-slideUpIn"
-	style="margin-top: 80px"
 	[style.paddingBottom.px]="dataService.isMobile? 56 : 0"
 	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout"
 >
@@ -172,7 +169,6 @@
 <!-- Dual-Screen layout for logged in -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	style="margin-top: 80px"
 	*ngIf="dataService.dav.isLoggedIn && dualScreenLayout"
 >
 	<!-- Left screen -->

@@ -1,10 +1,9 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="!dualScreenLayout"
 >
-	<div class="mt-3 mb-4">
+	<div class="mb-4">
 		<dav-header
 			[header]="series.name"
 			backButtonVisible
@@ -36,13 +35,18 @@
 			</button>
 		</div>
 
-		<div class="d-flex flex-column" dragula="books" [dragulaModel]="books" (dragulaModelChange)="BooksReordered($event)">
+		<div
+			class="d-flex flex-column"
+			dragula="books"
+			[dragulaModel]="books"
+			(dragulaModelChange)="BooksReordered($event)"
+		>
 			<div
 				class="mx-auto"
 				[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
 				style="display: inline-block"
-				*ngFor="let book of books; let i = index">
-
+				*ngFor="let book of books; let i = index"
+			>
 				<hr
 					class="mx-2"
 					[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'"
@@ -53,8 +57,8 @@
 					class="card cursor shadow-sm theme-background-color-secondary"
 					style="display: inline-block"
 					[style.marginTop.rem]="selectableBooks.length == 0 && i == 0 ? 2 : 0"
-					(contextmenu)="ShowBookContextMenu($event, book)">
-
+					(contextmenu)="ShowBookContextMenu($event, book)"
+				>
 					<pocketlib-blurhash-image
 						[src]="book.coverContent"
 						[fallback]="dataService.defaultStoreBookCover"
@@ -71,13 +75,13 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
 				[header]="series.name"
@@ -115,8 +119,8 @@
 					class="mx-auto"
 					[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
 					style="display: inline-block"
-					*ngFor="let book of books; let i = index">
-	
+					*ngFor="let book of books; let i = index"
+				>
 					<hr
 						class="mx-2"
 						[style.backgroundColor]="dataService.darkTheme ? '#707070' : '#ededed'"
@@ -127,8 +131,8 @@
 						class="card cursor shadow-sm theme-background-color-secondary"
 						style="display: inline-block"
 						[style.marginTop.rem]="selectableBooks.length == 0 && i == 0 ? 2 : 0"
-						(contextmenu)="ShowBookContextMenu($event, book)">
-	
+						(contextmenu)="ShowBookContextMenu($event, book)"
+					>
 						<pocketlib-blurhash-image
 							[src]="book.coverContent"
 							[fallback]="dataService.defaultStoreBookCover"
@@ -147,8 +151,8 @@
 	#contextMenu
 	[visible]="contextMenuVisible"
 	[posX]="contextMenuPositionY"
-	[posY]="contextMenuPositionX">
-
+	[posY]="contextMenuPositionX"
+>
 	<!-- Remove -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRemove"
@@ -166,8 +170,8 @@
 	[loading]="editNameDialogLoading"
 	(dismiss)="editNameDialogVisible = false"
 	(primaryButtonClick)="UpdateName()"
-	(defaultButtonClick)="editNameDialogVisible = false">
-
+	(defaultButtonClick)="editNameDialogVisible = false"
+>
 	<form>
 		<!-- Name -->
 		<div class="mb-3">
@@ -189,13 +193,13 @@
 	[defaultButtonText]="locale.cancel"
 	[visible]="addBookDialogVisible"
 	(dismiss)="addBookDialogVisible = false"
-	(defaultButtonClick)="addBookDialogVisible = false">
-
+	(defaultButtonClick)="addBookDialogVisible = false"
+>
 	<div class="d-flex flex-wrap mb-4" style="max-width: 500px">
 		<div
 			class="card cursor theme-background-color-secondary shadow-sm m-2"
-			*ngFor="let book of selectableBooks">
-
+			*ngFor="let book of selectableBooks"
+		>
 			<pocketlib-blurhash-image
 				[src]="book.coverContent"
 				[fallback]="dataService.defaultStoreBookCover"

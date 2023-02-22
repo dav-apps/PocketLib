@@ -1,7 +1,6 @@
 <!-- Normal layout -->
 <div
 	class="container d-flex flex-column ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="!dualScreenLayout"
 >
 	<h2 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h2>
@@ -62,14 +61,16 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
-		<h2 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h2>
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
+		<h2 class="text-center fw-light mt-3 text-color">
+			{{ locale.title }}
+		</h2>
 
 		<div class="mt-3 mx-auto" *ngIf="generalError.length > 0" style="width: 300px">
 			<dav-message-bar>
@@ -111,12 +112,14 @@
 					<dav-button
 						type="accent"
 						[disabled]="loading"
-						(click)="Submit()">
+						(click)="Submit()"
+					>
 						{{ locale.create }}
 					</dav-button>
 
 					<dav-progress-ring
-						style="margin: 8px 0px 0px 14px; width: 16px; height: 16px"
+						style="margin: 8px 0px 0px 14px"
+						size="16"
 						*ngIf="loading">
 					</dav-progress-ring>
 				</div>

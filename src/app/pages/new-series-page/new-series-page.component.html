@@ -1,10 +1,9 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="!dualScreenLayout"
 >
-	<div class="mt-3 mb-4">
+	<div class="mb-4">
 		<dav-header
 			[header]="locale.title"
 			backButtonVisible
@@ -16,7 +15,8 @@
 	<div
 		class="mb-3 mx-auto"
 		style="max-width: 300px"
-		*ngIf="errorMessage.length > 0">
+		*ngIf="errorMessage.length > 0"
+	>
 		<dav-message-bar type="danger">
 			{{ errorMessage }}
 		</dav-message-bar>
@@ -48,7 +48,8 @@
 	</div>
 
 	<dav-progress-ring
-		style="margin: 50px auto 0; width: 28px; height: 28px"
+		style="margin: 50px auto 0"
+		size="28"
 		*ngIf="booksLoading">
 	</dav-progress-ring>
 
@@ -56,8 +57,8 @@
 		<div
 			class="card theme-background-color-secondary shadow-sm m-2"
 			style="padding: 0.8rem 0.8rem 0.5rem"
-			*ngFor="let book of bookItems">
-
+			*ngFor="let book of bookItems"
+		>
 			<div class="d-flex flex-column">
 				<img
 					class="rounded cursor"
@@ -81,21 +82,26 @@
 	<div
 		class="mx-auto mt-3 text-center"
 		style="max-width: 300px"
-		*ngIf="bookItems.length == 0 && !booksLoading">
-		<p class="text-color fw-light">{{ locale.noBooksMessage }}</p>
+		*ngIf="bookItems.length == 0 && !booksLoading"
+	>
+		<p class="text-color fw-light">
+			{{ locale.noBooksMessage }}
+		</p>
 	</div>
 
 	<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
 		<div class="d-flex" style="float: right">
 			<dav-progress-ring
-				style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
+				style="margin: 8px 14px 0px 0px"
+				size="16"
 				*ngIf="loading">
 			</dav-progress-ring>
 
 			<dav-button
 				type="accent"
 				[disabled]="selectedBooks.length <= 1 || name.length < 3 || loading"
-				(click)="Submit()">
+				(click)="Submit()"
+			>
 				{{ locale.create }}
 			</dav-button>
 		</div>
@@ -105,13 +111,13 @@
 <!-- Dual-Screen layout -->
 <div
 	class="d-flex flex-row ms-motion-slideUpIn"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div
 		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
 				[header]="locale.title"
@@ -124,7 +130,8 @@
 		<div
 			class="mb-3 mx-auto"
 			style="max-width: 300px"
-			*ngIf="errorMessage.length > 0">
+			*ngIf="errorMessage.length > 0"
+		>
 			<dav-message-bar type="danger">
 				{{ errorMessage }}
 			</dav-message-bar>
@@ -163,7 +170,8 @@
 		[style.marginLeft.px]="dualScreenFoldMargin">
 
 		<dav-progress-ring
-			style="margin: 50px auto 0; width: 28px; height: 28px"
+			style="margin: 50px auto 0"
+			size="28"
 			*ngIf="booksLoading">
 		</dav-progress-ring>
 
@@ -171,8 +179,8 @@
 			<div
 				class="card theme-background-color-secondary shadow-sm m-2"
 				style="padding: 0.8rem 0.8rem 0.5rem"
-				*ngFor="let book of bookItems">
-
+				*ngFor="let book of bookItems"
+			>
 				<div class="d-flex flex-column">
 					<img
 						class="rounded cursor"
@@ -196,21 +204,26 @@
 		<div
 			class="mx-auto mt-3 text-center"
 			style="max-width: 300px"
-			*ngIf="bookItems.length == 0 && !booksLoading">
-			<p class="text-color fw-light">{{ locale.noBooksMessage }}</p>
+			*ngIf="bookItems.length == 0 && !booksLoading"
+		>
+			<p class="text-color fw-light">
+				{{ locale.noBooksMessage }}
+			</p>
 		</div>
 
 		<div class="mx-auto" style="width: 300px" *ngIf="!booksLoading && bookItems.length > 0">
 			<div class="d-flex" style="float: right">
 				<dav-progress-ring
-					style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
+					style="margin: 8px 14px 0px 0px"
+					size="16"
 					*ngIf="loading">
 				</dav-progress-ring>
 
 				<dav-button
 					type="accent"
 					[disabled]="selectedBooks.length <= 1 || name.length < 3 || loading"
-					(click)="Submit()">
+					(click)="Submit()"
+				>
 					{{ locale.create }}
 				</dav-button>
 			</div>

@@ -3,7 +3,7 @@
 	class="container mb-4 px-0 ms-motion-slideUpIn"
 	*ngIf="!dualScreenLayout">
 
-	<div class="mt-3 mb-2">
+	<div class="mb-2">
 		<dav-header
 			[header]="header"
 			size="big"
@@ -14,8 +14,8 @@
 
 	<div
 		class="mt-3 d-flex flex-wrap justify-content-center"
-		*ngIf="books.length > 0">
-
+		*ngIf="books.length > 0"
+	>
 		<pocketlib-store-book-card
 			[book]="book"
 			*ngFor="let book of books">
@@ -24,8 +24,8 @@
 
 	<div
 		class="mt-4 d-flex justify-content-center"
-		*ngIf="pages > 1 && !loading">
-
+		*ngIf="pages > 1 && !loading"
+	>
 		<dav-pagination
 			[pages]="pages"
 			[currentPage]="page"
@@ -35,7 +35,9 @@
 
 	<dav-progress-ring
 		class="mx-auto"
-		style="margin-top: 36px; width: 28px; height: 28px" *ngIf="loading">
+		style="margin-top: 36px"
+		size="28"
+		*ngIf="loading">
 	</dav-progress-ring>
 </div>
 
@@ -44,11 +46,11 @@
 	class="ms-motion-slideUpIn"
 	style="display: grid; grid-template-rows: auto"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
-	*ngIf="dualScreenLayout">
-
+	*ngIf="dualScreenLayout"
+>
 	<!-- Left screen -->
 	<div style="grid-row: 1; grid-column: 1;" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="mt-3 mb-2">
+		<div class="mb-2">
 			<dav-header
 				[header]="header"
 				size="big"
@@ -59,8 +61,8 @@
 
 		<div
 			class="d-flex flex-wrap justify-content-center"
-			*ngIf="leftScreenBooks.length > 0">
-
+			*ngIf="leftScreenBooks.length > 0"
+		>
 			<pocketlib-store-book-card
 				[book]="book"
 				*ngFor="let book of leftScreenBooks">
@@ -69,7 +71,9 @@
 
 		<dav-progress-ring
 			class="mx-auto"
-			style="margin-top: 36px; width: 28px; height: 28px" *ngIf="loading">
+			style="margin-top: 36px"
+			size="28"
+			*ngIf="loading">
 		</dav-progress-ring>
 	</div>
 
@@ -84,8 +88,8 @@
 
 		<div
 			class="mt-4 d-flex justify-content-center"
-			*ngIf="pages > 1 && !loading">
-
+			*ngIf="pages > 1 && !loading"
+		>
 			<dav-pagination
 				[pages]="pages"
 				[currentPage]="page"
