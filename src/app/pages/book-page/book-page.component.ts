@@ -21,6 +21,7 @@ export class BookPageComponent {
 		private router: Router
 	) {
 		this.dataService.navbarVisible = false
+		this.dataService.bookPageVisible = true
 	}
 
 	async ngOnInit() {

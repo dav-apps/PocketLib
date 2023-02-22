@@ -1,11 +1,11 @@
-<div id="navbar" [style.display]="dataService.navbarVisible ? '' : 'none'">
+<div id="navbar" *ngIf="dataService.navbarVisible && !dataService.bookPageVisible">
 	<!-- Logo + name -->
 	<a id="navbar-header" routerLink="/">
 		<img src="/assets/icons/icon-72x72.png" width="60" height="60">
 		<span>PocketLib</span>
 	</a>
 
-	<div id="navbar-tab-bar-container" *ngIf="!dataService.bottomNavbarVisible">
+	<div id="navbar-tab-bar-container" *ngIf="!dataService.isMobile">
 		<dav-tab-bar>
 			<dav-tab-bar-item
 				[active]="libraryTabActive"
@@ -59,11 +59,14 @@
 	</div>
 </div>
 
-<div id="content-container">
+<div
+	[class.content-padding-top]="!dataService.bookPageVisible"
+	[class.content-padding-bottom]="dataService.isMobile && !dataService.bookPageVisible"
+>
 	<router-outlet></router-outlet>
 </div>
 
-<div id="bottom-navbar" *ngIf="dataService.bottomNavbarVisible">
+<div id="bottom-navbar" *ngIf="dataService.isMobile && !dataService.bookPageVisible">
 	<dav-navigation-bar>
 		<dav-navigation-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">
 			<fa-icon slot="icon" [icon]="faHouseRegular" *ngIf="!libraryTabActive"></fa-icon>

@@ -47,19 +47,12 @@ export class DataService {
 	locale: string = navigator.language
 	supportedLocale: string = "en"
 	currentUrl: string = "/"
-	private _navbarVisible: boolean = true
-	get navbarVisible(): boolean {
-		return this._navbarVisible
-	}
-	set navbarVisible(value: boolean) {
-		this._navbarVisible = value
-		this.UpdateBottomNavbarVisibility()
-	}
-	bottomNavbarVisible: boolean = false
+	navbarVisible: boolean = true
 	books: Book[] = []
 	currentBook: Book = null
+	isMobile: boolean = false
 	darkTheme: boolean = false
-	smallWindow: boolean = false
+	bookPageVisible: boolean = false
 	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
 	settings: Settings
@@ -78,7 +71,6 @@ export class DataService {
 	adminAuthors: Author[] = []
 	adminAuthorsPromiseHolder = new PromiseHolder<Author[]>()
 	userIsAdmin: boolean = false
-	contentHeight: number = 200
 	categories: Category[] = []
 	categoriesPromiseHolder = new PromiseHolder()
 	settingsCache: {
@@ -358,10 +350,6 @@ export class DataService {
 		}
 
 		return locales.enUS
-	}
-
-	UpdateBottomNavbarVisibility() {
-		this.bottomNavbarVisible = this.navbarVisible && this.smallWindow
 	}
 
 	async ApplyTheme(theme?: string) {

@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomNavbarVisible && !storeContext ? 80 : 0"
+	[style.paddingBottom.px]="dataService.isMobile && !storeContext ? 80 : 0"
 	*ngIf="!dualScreenLayout"
 >
 	<div class="row">
@@ -374,7 +374,6 @@
 		<div
 			class="px-5"
 			style="overflow: scroll"
-			[style.height.px]="dataService.contentHeight"
 		>
 			<div *ngIf="authorMode != 0">
 				<!-- Error message -->

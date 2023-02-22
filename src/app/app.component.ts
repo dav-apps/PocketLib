@@ -17,7 +17,7 @@ import * as DavUIComponents from 'dav-ui-components'
 import { DataService } from 'src/app/services/data-service'
 import { GetSettings } from 'src/app/models/Settings'
 import { GetBookOrder } from './models/BookOrder'
-import { toolbarHeight, smallWindowMaxSize } from 'src/constants/constants'
+import { smallWindowMaxSize } from 'src/constants/constants'
 import { environment } from 'src/environments/environment'
 
 @Component({
@@ -129,11 +129,7 @@ export class AppComponent {
 
 	@HostListener('window:resize')
 	setSize() {
-		this.dataService.smallWindow = (window.innerWidth <= smallWindowMaxSize)
-
-		let navbarHeight = document.getElementById('navbar').clientHeight
-		this.dataService.contentHeight = window.innerHeight - navbarHeight - (this.dataService.smallWindow ? toolbarHeight : 0)
-		this.dataService.UpdateBottomNavbarVisibility()
+		this.dataService.isMobile = (window.innerWidth <= smallWindowMaxSize)
 	}
 
 	navigateToLibraryPage() {

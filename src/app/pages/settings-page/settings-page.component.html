@@ -1,7 +1,7 @@
 <!-- Normal layout -->
 <div
 	class="container d-flex flex-column ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomNavbarVisible ? 56 : 0"
+	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="!dualScreenLayout"
 >
    <h1 class="text-center fw-light text-color">{{ locale.title }}</h1>

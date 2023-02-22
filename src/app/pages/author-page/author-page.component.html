@@ -1,6 +1,6 @@
 <div
 	class="container-fluid m-0"
-	[style.padding]="dataService.smallWindow ? '0px 0px 56px 0px' : '0px'"
+	[style.padding]="dataService.isMobile ? '0px 0px 56px 0px' : '0px'"
 	*ngIf="!dataService.userAuthor && !dataService.userIsAdmin"
 >
 	<div
@@ -97,7 +97,7 @@
 <!-- Normal layout for Admin view -->
 <div
 	class="container text-center ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomNavbarVisible ? 80 : 0"
+	[style.paddingBottom.px]="dataService.isMobile ? 80 : 0"
 	*ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout"
 >
 	<!-- List of publishers -->

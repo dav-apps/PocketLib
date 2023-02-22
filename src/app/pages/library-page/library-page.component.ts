@@ -77,6 +77,7 @@ export class LibraryPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
+		this.dataService.bookPageVisible = false
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
