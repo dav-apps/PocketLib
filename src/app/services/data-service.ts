@@ -53,9 +53,9 @@ export class DataService {
 	}
 	set navbarVisible(value: boolean) {
 		this._navbarVisible = value
-		this.UpdateBottomToolbarVisibility()
+		this.UpdateBottomNavbarVisibility()
 	}
-	bottomToolbarVisible: boolean = false
+	bottomNavbarVisible: boolean = false
 	books: Book[] = []
 	currentBook: Book = null
 	darkTheme: boolean = false
@@ -360,8 +360,8 @@ export class DataService {
 		return locales.enUS
 	}
 
-	UpdateBottomToolbarVisibility() {
-		this.bottomToolbarVisible = this.navbarVisible && this.smallWindow
+	UpdateBottomNavbarVisibility() {
+		this.bottomNavbarVisible = this.navbarVisible && this.smallWindow
 	}
 
 	async ApplyTheme(theme?: string) {

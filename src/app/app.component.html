@@ -2,22 +2,44 @@
 	<!-- Logo + name -->
 	<a id="navbar-header" routerLink="/">
 		<img src="/assets/icons/icon-72x72.png" width="60" height="60">
-		<span id="navbar-header-text">PocketLib</span>
+		<span>PocketLib</span>
 	</a>
 
-	<div id="navbar-tab-bar-container" *ngIf="!dataService.bottomToolbarVisible">
+	<div id="navbar-tab-bar-container" *ngIf="!dataService.bottomNavbarVisible">
 		<dav-tab-bar>
-			<dav-tab-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">{{ libraryLabel }}</dav-tab-bar-item>
-			<dav-tab-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">{{ storeLabel }}</dav-tab-bar-item>
+			<dav-tab-bar-item
+				[active]="libraryTabActive"
+				(click)="navigateToLibraryPage()"
+			>
+				{{ libraryLabel }}
+			</dav-tab-bar-item>
+
+			<dav-tab-bar-item
+				[active]="storeTabActive"
+				(click)="navigateToStorePage()"
+			>
+				{{ storeLabel }}
+			</dav-tab-bar-item>
 		</dav-tab-bar>
 	</div>
 
-	<div style="width: 100%"></div>
+	<div id="navbar-spacer"></div>
 
-	<div style="display: flex; padding: 8px 16px">
-		<dav-icon-button style="align-self: center; margin-right: 6px" [selected]="accountButtonSelected" (click)="navigateToAccountPage()">
-			<fa-icon [icon]="faCircleUserRegular" *ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn"></fa-icon>
-			<fa-icon [icon]="faCircleUserSolid" *ngIf="accountButtonSelected && !dataService.dav.isLoggedIn"></fa-icon>
+	<div id="navbar-icon-buttons-container">
+		<dav-icon-button
+			id="account-icon-button"
+			[selected]="accountButtonSelected"
+			(click)="navigateToAccountPage()"
+		>
+			<fa-icon
+				[icon]="faCircleUserRegular"
+				*ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn">
+			</fa-icon>
+
+			<fa-icon
+				[icon]="faCircleUserSolid"
+				*ngIf="accountButtonSelected && !dataService.dav.isLoggedIn">
+			</fa-icon>
 
 			<img
 				*ngIf="dataService.dav.isLoggedIn" 
@@ -26,16 +48,22 @@
          	height="28" width="28">
 		</dav-icon-button>
 
-		<dav-icon-button style="align-self: center;" [selected]="settingsButtonSelected" (click)="navigateToSettingsPage()">
+		<dav-icon-button
+			id="settings-icon-button"
+			[selected]="settingsButtonSelected"
+			(click)="navigateToSettingsPage()"
+		>
 			<fa-icon [icon]="faGearRegular" *ngIf="!settingsButtonSelected"></fa-icon>
 			<fa-icon [icon]="faGearSolid" *ngIf="settingsButtonSelected"></fa-icon>
 		</dav-icon-button>
 	</div>
 </div>
 
-<router-outlet></router-outlet>
+<div id="content-container">
+	<router-outlet></router-outlet>
+</div>
 
-<div id="bottom-navigation-bar" *ngIf="dataService.bottomToolbarVisible">
+<div id="bottom-navbar" *ngIf="dataService.bottomNavbarVisible">
 	<dav-navigation-bar>
 		<dav-navigation-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">
 			<fa-icon slot="icon" [icon]="faHouseRegular" *ngIf="!libraryTabActive"></fa-icon>

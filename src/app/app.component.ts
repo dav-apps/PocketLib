@@ -133,7 +133,7 @@ export class AppComponent {
 
 		let navbarHeight = document.getElementById('navbar').clientHeight
 		this.dataService.contentHeight = window.innerHeight - navbarHeight - (this.dataService.smallWindow ? toolbarHeight : 0)
-		this.dataService.UpdateBottomToolbarVisibility()
+		this.dataService.UpdateBottomNavbarVisibility()
 	}
 
 	navigateToLibraryPage() {

@@ -1,9 +1,9 @@
 <!-- Normal layout -->
 <div
 	class="container ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
-	*ngIf="!dualScreenLayout">
-
+	[style.paddingBottom.px]="dataService.bottomNavbarVisible ? 56 : 0"
+	*ngIf="!dualScreenLayout"
+>
 	<div class="mt-3 mb-4">
 		<dav-header
 			[header]="locale.title"

@@ -1,7 +1,7 @@
 <!-- Normal layout for not logged in -->
 <div
 	class="container mb-4 ms-motion-slideUpIn"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 80 : 0"
+	[style.paddingBottom.px]="dataService.bottomNavbarVisible ? 80 : 0"
 	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout"
 >
 	<h1 class="text-center fw-light text-color">
@@ -148,7 +148,7 @@
 <div
 	class="container mb-4 ms-motion-slideUpIn"
 	style="margin-top: 80px"
-	[style.paddingBottom.px]="dataService.bottomToolbarVisible ? 56 : 0"
+	[style.paddingBottom.px]="dataService.bottomNavbarVisible ? 56 : 0"
 	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout"
 >
    <h1 class="text-center fw-light text-color" style="margin-bottom: 40px">

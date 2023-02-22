@@ -19,7 +19,7 @@
 	text-decoration: none;
 }
 
-#navbar-header-text {
+#navbar-header > span {
 	display: flex;
 	align-self: center;
 	margin-left: 10px;
@@ -30,7 +30,30 @@
 	align-items: center;
 }
 
-#bottom-navigation-bar {
+#navbar-spacer {
+	width: 100%;
+}
+
+#navbar-icon-buttons-container {
+	display: flex;
+	padding: 8px 16px;
+}
+
+#account-icon-button {
+	align-self: center;
+	margin-right: 6px;
+}
+
+#settings-icon-button {
+	align-self: center;
+}
+
+#content-container {
+	padding-top: 76px;
+	padding-bottom: 80px;
+}
+
+#bottom-navbar {
 	position: fixed;
 	bottom: 0;
 	left: 0;
