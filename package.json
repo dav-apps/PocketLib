@@ -58,7 +58,6 @@
 		"ng2-dragula": "^2.1.1",
 		"ng2-pdf-viewer": "^6.4.1",
 		"ngx-file-helpers": "^9.0.0",
-		"office-ui-fabric-core": "^11.0.1",
 		"pocketlib-server": "file:server",
 		"rxjs": "~6.5.2",
 		"tslib": "^2.0.0",

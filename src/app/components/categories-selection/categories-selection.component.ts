@@ -13,19 +13,6 @@ export class CategoriesSelectionComponent {
 		public dataService: DataService
 	) { }
 
-	async ngOnInit() {
-		await this.dataService.categoriesPromiseHolder.AwaitResult()
-
-		setTimeout(() => {
-			// Set the text color of the checkbox labels
-			let checkboxes = document.getElementsByClassName('ms-Checkbox-text')
-
-			for (let i = 0; i < checkboxes.length; i++) {
-				checkboxes.item(i).setAttribute("style", "color: var(--text-color)")
-			}
-		}, 1)
-	}
-
 	public SetSelectedCategories(categories: string[]) {
 		this.selectedCategories = categories
 	}

@@ -10,7 +10,7 @@ import { enUS } from 'src/locales/locales'
 	selector: 'pocketlib-price-input',
 	templateUrl: './price-input.component.html'
 })
-export class PriceInputComponent{
+export class PriceInputComponent {
 	locale = enUS.priceInput
 	faFloppyDiskLight = faFloppyDiskLight
 	faPenLight = faPenLight
@@ -33,15 +33,6 @@ export class PriceInputComponent{
 
 	ShowEditPrice() {
 		this.edit = true
-
-		setTimeout(() => {
-			// Set the text color of the textfield labels
-			let labels = document.getElementsByClassName('ms-Label')
-
-			for (let i = 0; i < labels.length; i++){
-				labels.item(i).setAttribute("style", "color: var(--text-color)")
-			}
-		}, 1)
 	}
 
 	UpdatePrice() {

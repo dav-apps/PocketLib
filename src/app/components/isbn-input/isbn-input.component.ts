@@ -13,7 +13,7 @@ const isbnValidityRegex = /^[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ 
 	selector: 'pocketlib-isbn-input',
 	templateUrl: './isbn-input.component.html'
 })
-export class IsbnInputComponent{
+export class IsbnInputComponent {
 	locale = enUS.isbnInput
 	faFloppyDiskLight = faFloppyDiskLight
 	faPenLight = faPenLight
@@ -38,15 +38,6 @@ export class IsbnInputComponent{
 	SetEdit(edit: boolean) {
 		this.edit = edit
 		this.errorMessage = ""
-
-		setTimeout(() => {
-			// Set the text color of the textfield labels
-			let labels = document.getElementsByClassName('ms-Label')
-
-			for (let i = 0; i < labels.length; i++){
-				labels.item(i).setAttribute("style", "color: var(--text-color)")
-			}
-		}, 1)
 	}
 
 	UpdateValue() {
