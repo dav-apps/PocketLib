@@ -95,7 +95,7 @@
 
 <!-- Normal layout for Admin view -->
 <div
-	class="container text-center ms-motion-slideUpIn"
+	class="container text-center slide-up-in"
 	*ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout"
 >
 	<!-- List of publishers -->
@@ -158,7 +158,7 @@
 
 <!-- Dual-Screen layout for Admin view -->
 <div
-	class="d-flex flex-row ms-motion-slideUpIn"
+	class="d-flex flex-row slide-up-in"
 	*ngIf="dataService.userIsAdmin && !uuid && dualScreenLayout"
 >
 	<!-- Left screen -->

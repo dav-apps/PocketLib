@@ -1,6 +1,6 @@
 <!-- Normal layout -->
 <div
-	class="container mb-4 px-0 ms-motion-slideUpIn"
+	class="container mb-4 px-0 slide-up-in"
 	*ngIf="!dualScreenLayout">
 
 	<div class="mb-2">
@@ -43,7 +43,7 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="ms-motion-slideUpIn"
+	class="slide-up-in"
 	style="display: grid; grid-template-rows: auto"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
 	*ngIf="dualScreenLayout"

@@ -1,6 +1,6 @@
 <!-- Normal layout -->
 <div
-	class="container d-flex flex-column ms-motion-slideUpIn"
+	class="container d-flex flex-column slide-up-in"
 	*ngIf="!dualScreenLayout"
 >
    <h1 class="text-center fw-light text-color">
@@ -53,7 +53,7 @@
 				</p>
 			</div>
 
-			<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'ms-motion-slideDownOut' : ''" *ngIf="noUpdateAvailable">
+			<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''" *ngIf="noUpdateAvailable">
 				<fa-icon [icon]="faCheck"></fa-icon>
 				<p class="mb-0" style="margin-left: 0.75rem">{{ locale.noUpdateAvailable }}</p>
 			</div>
@@ -75,7 +75,7 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="d-flex flex-row ms-motion-slideUpIn"
+	class="d-flex flex-row slide-up-in"
 	*ngIf="dualScreenLayout"
 >
 	<!-- Left screen -->
@@ -132,7 +132,7 @@
 					</p>
 				</div>
 
-				<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'ms-motion-slideDownOut' : ''" *ngIf="noUpdateAvailable">
+				<div class="d-flex align-items-center" [ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''" *ngIf="noUpdateAvailable">
 					<fa-icon [icon]="faCheck"></fa-icon>
 					<p class="mb-0" style="margin-left: 0.75rem">{{ locale.noUpdateAvailable }}</p>
 				</div>

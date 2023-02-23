@@ -13,7 +13,7 @@
 			</div>
 		</div>
 
-		<div class="d-flex mb-3 ps-4 ms-motion-slideUpIn" style="width: max-content" *ngIf="!loading">
+		<div class="d-flex mb-3 ps-4 slide-up-in" style="width: max-content" *ngIf="!loading">
 			<pocketlib-store-book-card
 				[book]="book"
 				[highlighted]="type == 'series' && book.uuid == currentBookUuid"

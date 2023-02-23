@@ -1,6 +1,6 @@
 <!-- Normal layout -->
 <div
-	class="container ms-motion-slideUpIn"
+	class="container slide-up-in"
 	[style.paddingBottom.px]="dataService.isMobile && !storeContext ? 80 : 0"
 	*ngIf="!dualScreenLayout"
 >
@@ -226,7 +226,7 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="ms-motion-slideUpIn"
+	class="slide-up-in"
 	style="display: grid; grid-template-rows: auto; margin-top: 80px"
 	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
 	*ngIf="dualScreenLayout"

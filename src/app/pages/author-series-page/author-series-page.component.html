@@ -1,6 +1,6 @@
 <!-- Normal layout -->
 <div
-	class="container ms-motion-slideUpIn"
+	class="container slide-up-in"
 	*ngIf="!dualScreenLayout"
 >
 	<div class="mb-4">
@@ -43,7 +43,7 @@
 		>
 			<div
 				class="mx-auto"
-				[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
+				[ngClass]="dragging ? '' : 'slide-up-in'"
 				style="display: inline-block"
 				*ngFor="let book of books; let i = index"
 			>
@@ -74,7 +74,7 @@
 
 <!-- Dual-Screen layout -->
 <div
-	class="d-flex flex-row ms-motion-slideUpIn"
+	class="d-flex flex-row slide-up-in"
 	*ngIf="dualScreenLayout"
 >
 	<!-- Left screen -->
@@ -117,7 +117,7 @@
 			<div class="d-flex flex-column" dragula="books" [dragulaModel]="books" (dragulaModelChange)="BooksReordered($event)">
 				<div
 					class="mx-auto"
-					[ngClass]="dragging ? '' : 'ms-motion-slideUpIn'"
+					[ngClass]="dragging ? '' : 'slide-up-in'"
 					style="display: inline-block"
 					*ngFor="let book of books; let i = index"
 				>
