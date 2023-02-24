@@ -1,17 +1,14 @@
-import { Component, HostListener } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import {
-	faCoins,
-	faHandHoldingUsd
-} from '@fortawesome/free-solid-svg-icons'
-import { faPlus as faPlusLight } from '@fortawesome/pro-light-svg-icons'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import * as ErrorCodes from 'src/constants/errorCodes'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+import { Component, HostListener } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { faCoins, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons"
+import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import * as ErrorCodes from "src/constants/errorCodes"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 import {
 	PublisherResource,
 	PublisherField,
@@ -20,14 +17,14 @@ import {
 	ListResponseData,
 	StoreBookListField,
 	StoreBookResource
-} from 'src/app/misc/types'
-import { Publisher } from 'src/app/models/Publisher'
-import { Author } from 'src/app/models/Author'
+} from "src/app/misc/types"
+import { Publisher } from "src/app/models/Publisher"
+import { Author } from "src/app/models/Author"
 
 @Component({
 	selector: "pocketlib-author-page",
 	templateUrl: "./author-page.component.html",
-	styleUrls: ['./author-page.component.scss']
+	styleUrls: ["./author-page.component.scss"]
 })
 export class AuthorPageComponent {
 	locale = enUS.authorPage
@@ -53,7 +50,7 @@ export class AuthorPageComponent {
 	createAuthorDialogFirstNameError: string = ""
 	createAuthorDialogLastNameError: string = ""
 	booksInReview: {
-		uuid: string,
+		uuid: string
 		title: string
 	}[] = []
 
@@ -72,7 +69,7 @@ export class AuthorPageComponent {
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
 	}
 
 	async ngOnInit() {
@@ -92,7 +89,11 @@ export class AuthorPageComponent {
 			})
 
 			if (isSuccessStatusCode(listStoreBooksResponse.status)) {
-				let listStoreBooksResponseData = (listStoreBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+				let listStoreBooksResponseData = (
+					listStoreBooksResponse as ApiResponse<
+						ListResponseData<StoreBookResource>
+					>
+				).data
 				this.booksInReview = []
 
 				for (let book of listStoreBooksResponseData.items) {
@@ -105,7 +106,7 @@ export class AuthorPageComponent {
 		}
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		let navbarHeight = window.innerWidth < 600 ? 56 : 64
 		this.section1Height = window.innerHeight - navbarHeight
@@ -135,7 +136,7 @@ export class AuthorPageComponent {
 	createProfileButtonClick() {
 		if (this.dataService.dav.isLoggedIn) {
 			// Redirect to the Author setup page
-			this.router.navigate(['author', 'setup'])
+			this.router.navigate(["author", "setup"])
 		} else {
 			// Redirect to the Account page
 			this.router.navigate(["account"], {
@@ -147,11 +148,11 @@ export class AuthorPageComponent {
 	}
 
 	ShowPublisher(uuid: string) {
-		this.router.navigate(['publisher', uuid])
+		this.router.navigate(["publisher", uuid])
 	}
 
 	ShowAuthor(uuid: string) {
-		this.router.navigate(['author', uuid])
+		this.router.navigate(["author", uuid])
 	}
 
 	ShowBook(uuid: string) {
@@ -199,22 +200,26 @@ export class AuthorPageComponent {
 			)
 
 			// Redirect to the publisher page of the new publisher
-			this.router.navigate(['publisher', responseData.uuid])
+			this.router.navigate(["publisher", responseData.uuid])
 		} else {
 			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.NameTooShort:
 						if (this.createPublisherDialogName.length == 0) {
-							this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameMissing
+							this.createPublisherDialogNameError =
+								this.locale.createPublisherDialog.errors.nameMissing
 						} else {
-							this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameTooShort
+							this.createPublisherDialogNameError =
+								this.locale.createPublisherDialog.errors.nameTooShort
 						}
 						break
 					case ErrorCodes.NameTooLong:
-						this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.nameTooLong
+						this.createPublisherDialogNameError =
+							this.locale.createPublisherDialog.errors.nameTooLong
 						break
 					default:
-						this.createPublisherDialogNameError = this.locale.createPublisherDialog.errors.unexpectedError
+						this.createPublisherDialogNameError =
+							this.locale.createPublisherDialog.errors.unexpectedError
 						break
 				}
 			}
@@ -266,32 +271,39 @@ export class AuthorPageComponent {
 			)
 
 			// Redirect to the author page of the new author
-			this.router.navigate(['author', responseData.uuid])
+			this.router.navigate(["author", responseData.uuid])
 		} else {
 			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.createAuthorDialogFirstName.length == 0) {
-							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
+							this.createAuthorDialogFirstNameError =
+								this.locale.createAuthorDialog.errors.firstNameMissing
 						} else {
-							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+							this.createAuthorDialogFirstNameError =
+								this.locale.createAuthorDialog.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.LastNameTooShort:
 						if (this.createAuthorDialogLastName.length == 0) {
-							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
+							this.createAuthorDialogLastNameError =
+								this.locale.createAuthorDialog.errors.lastNameMissing
 						} else {
-							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+							this.createAuthorDialogLastNameError =
+								this.locale.createAuthorDialog.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.FirstNameTooLong:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
+						this.createAuthorDialogFirstNameError =
+							this.locale.createAuthorDialog.errors.firstNameTooLong
 						break
 					case ErrorCodes.LastNameTooLong:
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong
+						this.createAuthorDialogLastNameError =
+							this.locale.createAuthorDialog.errors.lastNameTooLong
 						break
 					default:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError
+						this.createAuthorDialogFirstNameError =
+							this.locale.createAuthorDialog.errors.unexpectedError
 						break
 				}
 			}

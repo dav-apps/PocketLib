@@ -14,12 +14,13 @@
 				[alt]="coverAlt"
 				width="160"
 				height="270"
-				shadow="true">
-			</pocketlib-blurhash-image>
+				shadow="true"
+			></pocketlib-blurhash-image>
 
 			<!-- Author profile image and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
 				[routerLink]="'/store/author/' + author.uuid"
 			>
 				<pocketlib-blurhash-image
@@ -32,10 +33,11 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
+					cursor="true"
+				></pocketlib-blurhash-image>
 
-				<p class="fw-light my-auto cursor text-color"
+				<p
+					class="fw-light my-auto cursor text-color"
 					style="font-size: 18px; margin-left: 13px"
 				>
 					{{ author.firstName }} {{ author.lastName }}
@@ -43,8 +45,9 @@
 			</a>
 
 			<!-- Publisher profile and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
 				[routerLink]="'/store/publisher/' + publisher.uuid"
 				*ngIf="publisher != null"
 			>
@@ -58,188 +61,11 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
+					cursor="true"
+				></pocketlib-blurhash-image>
 
-				<p class="fw-light my-auto cursor text-color"
-					style="font-size: 18px; margin-left: 13px"
-				>
-					{{ publisher.name }}
-				</p>
-			</a>
-
-			<!-- Buy button -->
-			<div *ngIf="!book.purchased && book.price > 0">
-				<dav-button
-					(click)="BuyBook()">
-					{{ price }}
-				</dav-button>
-			</div>
-
-			<!-- Read now / continue reading button -->
-			<div class="mt-2" style="min-width: 194px">
-				<dav-button
-					type="accent"
-					(click)="Read()"
-				>
-					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
-				</dav-button>
-			</div>
-
-			<!-- Status and Publish button (only for admins) -->
-			<div *ngIf="dataService.userIsAdmin && book.status != 2">
-				<p class="mt-3 mb-2 text-color">
-					{{ bookStatus }}
-				</p>
-
-				<div class="d-flex">
-					<dav-button
-						type="accent"
-						[disabled]="publishLoading"
-						(click)="PublishStoreBook()"
-						*ngIf="book.status == 1">
-						{{ locale.publish }}
-					</dav-button>
-
-					<dav-progress-ring
-						style="margin: 8px 0px 0px 14px"
-						size="16"
-						*ngIf="publishLoading">
-					</dav-progress-ring>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Title and back button -->
-	<div class="col-8 col-lg-7">
-		<div class="mt-1 mb-4 px-4">
-			<dav-header
-				[header]="book.title"
-				backButtonVisible
-				(backButtonClick)="BackButtonClick()">
-			</dav-header>
-		</div>
-
-		<div style="max-width: 600px" class="mx-auto px-4">
-			<!-- Description -->
-			<p class="mb-1 text-color" style="white-space: pre-line; text-align: justify">
-				{{ book.description }}
-			</p>
-
-			<!-- Categories -->
-			<a class="badge rounded-pill me-2 cursor"
-				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-				[routerLink]="'/store/category/' + category.key"
-				*ngFor="let category of book.categories; let i = index">
-				{{ category.name }}
-			</a>
-		</div>
-	</div>
-
-	<div
-		class="offset-lg-1 col-12 col-lg-10"
-		style="margin-top: 4rem"
-		[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
-	</div>
-
-	<!-- List of books of the series -->
-	<div
-		class="offset-lg-1 col-12 col-lg-10"
-		style="padding: 0px 15px; margin-top: 2.5rem"
-		*ngIf="book.series.length > 0"
-	>
-		<pocketlib-horizontal-book-list
-			type="series"
-			[series]="book.series[0]"
-			[currentBookUuid]="uuid">
-		</pocketlib-horizontal-book-list>
-	</div>
-
-	<!-- List of books with the same categories -->
-	<div
-		class="offset-lg-1 col-12 col-lg-10"
-		style="padding: 0px 15px; margin-top: 2.5rem"
-	>
-		<pocketlib-horizontal-book-list
-			type="categories"
-			[currentBookUuid]="uuid"
-			[categories]="categoryKeys">
-		</pocketlib-horizontal-book-list>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div
-	class="slide-up-in mb-3"
-	style="display: grid; grid-template-rows: auto"
-	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
-	*ngIf="!showMobileLayout && dualScreenLayout"
->
-	<!-- Left screen -->
-	<div
-		class="d-flex justify-content-center"
-		style="grid-row: 1; grid-column: 1;"
-		[style.marginRight.px]="dualScreenFoldMargin">
-
-		<div class="mt-4">
-			<!-- Cover -->
-			<pocketlib-blurhash-image
-				[src]="coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
-				[blurhash]="book.coverBlurhash"
-				[title]="book.title"
-				[alt]="coverAlt"
-				width="160"
-				height="270"
-				shadow="true">
-			</pocketlib-blurhash-image>
-
-			<!-- Author profile image and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
-				[routerLink]="'/store/author/' + author.uuid"
-			>
-				<pocketlib-blurhash-image
-					[src]="authorProfileImageContent"
-					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImage?.blurhash"
-					[title]="author.firstName + ' ' + author.lastName"
-					[alt]="authorProfileImageAlt"
-					width="30"
-					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
-
-				<p class="fw-light my-auto cursor text-color"
-					style="font-size: 18px; margin-left: 13px"
-				>
-					{{ author.firstName }} {{ author.lastName }}
-				</p>
-			</a>
-
-			<!-- Publisher profile and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
-				[routerLink]="'/store/publisher/' + publisher.uuid"
-				*ngIf="publisher != null"
-			>
-				<pocketlib-blurhash-image
-					[src]="publisher.logoContent"
-					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="publisher.logoBlurhash"
-					[title]="publisher.name"
-					[alt]="publisher.logoAlt"
-					width="30"
-					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
-
-				<p class="fw-light my-auto cursor text-color"
+				<p
+					class="fw-light my-auto cursor text-color"
 					style="font-size: 18px; margin-left: 13px"
 				>
 					{{ publisher.name }}
@@ -255,10 +81,7 @@
 
 			<!-- Read now / continue reading button -->
 			<div class="mt-2" style="min-width: 194px">
-				<dav-button
-					type="accent"
-					(click)="Read()"
-				>
+				<dav-button type="accent" (click)="Read()">
 					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
@@ -282,36 +105,35 @@
 					<dav-progress-ring
 						style="margin: 8px 0px 0px 14px"
 						size="16"
-						*ngIf="publishLoading">
-					</dav-progress-ring>
+						*ngIf="publishLoading"
+					></dav-progress-ring>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Right screen -->
-	<div
-		class="px-5"
-		style="grid-row: 1; grid-column: 2;"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
-		<!-- Title and back button -->
-		<div class="mx-auto mt-4">
-			<div class="mt-1 mb-4">
-				<dav-header
-					[header]="book.title"
-					backButtonVisible
-					(backButtonClick)="BackButtonClick()">
-				</dav-header>
-			</div>
+	<!-- Title and back button -->
+	<div class="col-8 col-lg-7">
+		<div class="mt-1 mb-4 px-4">
+			<dav-header
+				[header]="book.title"
+				backButtonVisible
+				(backButtonClick)="BackButtonClick()"
+			></dav-header>
+		</div>
 
+		<div style="max-width: 600px" class="mx-auto px-4">
 			<!-- Description -->
-			<p class="mb-1 text-color" style="white-space: pre-line; text-align: justify">
+			<p
+				class="mb-1 text-color"
+				style="white-space: pre-line; text-align: justify"
+			>
 				{{ book.description }}
 			</p>
 
 			<!-- Categories -->
-			<a class="badge rounded-pill me-2 cursor"
+			<a
+				class="badge rounded-pill me-2 cursor"
 				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 				[routerLink]="'/store/category/' + category.key"
 				*ngFor="let category of book.categories; let i = index"
@@ -319,47 +141,56 @@
 				{{ category.name }}
 			</a>
 		</div>
+	</div>
 
-		<div
-			class="mx-3"
-			style="margin-top: 3.5rem"
-			[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
-		</div>
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="margin-top: 4rem"
+		[style.borderTop]="
+			dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'
+		"
+	></div>
 
-		<div style="margin-top: 2.5rem" *ngIf="book.series.length > 0">
-			<pocketlib-horizontal-book-list
-				type="series"
-				[series]="book.series[0]"
-				[currentBookUuid]="uuid">
-			</pocketlib-horizontal-book-list>
-		</div>
+	<!-- List of books of the series -->
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="padding: 0px 15px; margin-top: 2.5rem"
+		*ngIf="book.series.length > 0"
+	>
+		<pocketlib-horizontal-book-list
+			type="series"
+			[series]="book.series[0]"
+			[currentBookUuid]="uuid"
+		></pocketlib-horizontal-book-list>
+	</div>
 
-		<div style="margin-top: 2.5rem">
-			<pocketlib-horizontal-book-list
-				type="categories"
-				[currentBookUuid]="uuid"
-				[categories]="categoryKeys">
-			</pocketlib-horizontal-book-list>
-		</div>
+	<!-- List of books with the same categories -->
+	<div
+		class="offset-lg-1 col-12 col-lg-10"
+		style="padding: 0px 15px; margin-top: 2.5rem"
+	>
+		<pocketlib-horizontal-book-list
+			type="categories"
+			[currentBookUuid]="uuid"
+			[categories]="categoryKeys"
+		></pocketlib-horizontal-book-list>
 	</div>
 </div>
 
-<!-- Mobile layout -->
+<!-- Dual-Screen layout -->
 <div
-	class="container slide-up-in mb-3"
-	*ngIf="showMobileLayout"
+	class="slide-up-in mb-3"
+	style="display: grid; grid-template-rows: auto"
+	[style.gridTemplateColumns]="'auto ' + width / 2 + 'px'"
+	*ngIf="!showMobileLayout && dualScreenLayout"
 >
-	<!-- Title and back button -->
-	<div class="mt-3 mb-4">
-		<dav-header
-			[header]="book.title"
-			backButtonVisible
-			(backButtonClick)="BackButtonClick()">
-		</dav-header>
-	</div>
-
-	<div class="d-flex">
-		<div class="mx-auto">
+	<!-- Left screen -->
+	<div
+		class="d-flex justify-content-center"
+		style="grid-row: 1; grid-column: 1"
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
+		<div class="mt-4">
 			<!-- Cover -->
 			<pocketlib-blurhash-image
 				[src]="coverContent"
@@ -369,12 +200,13 @@
 				[alt]="coverAlt"
 				width="160"
 				height="270"
-				shadow="true">
-			</pocketlib-blurhash-image>
+				shadow="true"
+			></pocketlib-blurhash-image>
 
 			<!-- Author profile image and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
 				[routerLink]="'/store/author/' + author.uuid"
 			>
 				<pocketlib-blurhash-image
@@ -387,10 +219,11 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
+					cursor="true"
+				></pocketlib-blurhash-image>
 
-				<p class="fw-light my-auto cursor text-color"
+				<p
+					class="fw-light my-auto cursor text-color"
 					style="font-size: 18px; margin-left: 13px"
 				>
 					{{ author.firstName }} {{ author.lastName }}
@@ -398,8 +231,9 @@
 			</a>
 
 			<!-- Publisher profile and name -->
-			<a class="d-flex my-3"
-				style="text-decoration: none;"
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
 				[routerLink]="'/store/publisher/' + publisher.uuid"
 				*ngIf="publisher != null"
 			>
@@ -413,10 +247,11 @@
 					height="30"
 					shadowSm="true"
 					rounded="true"
-					cursor="true">
-				</pocketlib-blurhash-image>
+					cursor="true"
+				></pocketlib-blurhash-image>
 
-				<p class="fw-light my-auto cursor text-color"
+				<p
+					class="fw-light my-auto cursor text-color"
 					style="font-size: 18px; margin-left: 13px"
 				>
 					{{ publisher.name }}
@@ -432,10 +267,188 @@
 
 			<!-- Read now / continue reading button -->
 			<div class="mt-2" style="min-width: 194px">
-				<dav-button
-					type="accent"
-					(click)="Read()"
+				<dav-button type="accent" (click)="Read()">
+					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
+				</dav-button>
+			</div>
+
+			<!-- Status and Publish button (only for admins) -->
+			<div *ngIf="dataService.userIsAdmin && book.status != 2">
+				<p class="mt-3 mb-2 text-color">
+					{{ bookStatus }}
+				</p>
+
+				<div class="d-flex">
+					<dav-button
+						type="accent"
+						[disabled]="publishLoading"
+						(click)="PublishStoreBook()"
+						*ngIf="book.status == 1"
+					>
+						{{ locale.publish }}
+					</dav-button>
+
+					<dav-progress-ring
+						style="margin: 8px 0px 0px 14px"
+						size="16"
+						*ngIf="publishLoading"
+					></dav-progress-ring>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Right screen -->
+	<div
+		class="px-5"
+		style="grid-row: 1; grid-column: 2"
+		[style.marginLeft.px]="dualScreenFoldMargin"
+	>
+		<!-- Title and back button -->
+		<div class="mx-auto mt-4">
+			<div class="mt-1 mb-4">
+				<dav-header
+					[header]="book.title"
+					backButtonVisible
+					(backButtonClick)="BackButtonClick()"
+				></dav-header>
+			</div>
+
+			<!-- Description -->
+			<p
+				class="mb-1 text-color"
+				style="white-space: pre-line; text-align: justify"
+			>
+				{{ book.description }}
+			</p>
+
+			<!-- Categories -->
+			<a
+				class="badge rounded-pill me-2 cursor"
+				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
+				[routerLink]="'/store/category/' + category.key"
+				*ngFor="let category of book.categories; let i = index"
+			>
+				{{ category.name }}
+			</a>
+		</div>
+
+		<div
+			class="mx-3"
+			style="margin-top: 3.5rem"
+			[style.borderTop]="
+				dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'
+			"
+		></div>
+
+		<div style="margin-top: 2.5rem" *ngIf="book.series.length > 0">
+			<pocketlib-horizontal-book-list
+				type="series"
+				[series]="book.series[0]"
+				[currentBookUuid]="uuid"
+			></pocketlib-horizontal-book-list>
+		</div>
+
+		<div style="margin-top: 2.5rem">
+			<pocketlib-horizontal-book-list
+				type="categories"
+				[currentBookUuid]="uuid"
+				[categories]="categoryKeys"
+			></pocketlib-horizontal-book-list>
+		</div>
+	</div>
+</div>
+
+<!-- Mobile layout -->
+<div class="container slide-up-in mb-3" *ngIf="showMobileLayout">
+	<!-- Title and back button -->
+	<div class="mt-3 mb-4">
+		<dav-header
+			[header]="book.title"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()"
+		></dav-header>
+	</div>
+
+	<div class="d-flex">
+		<div class="mx-auto">
+			<!-- Cover -->
+			<pocketlib-blurhash-image
+				[src]="coverContent"
+				[fallback]="dataService.defaultStoreBookCover"
+				[blurhash]="book.coverBlurhash"
+				[title]="book.title"
+				[alt]="coverAlt"
+				width="160"
+				height="270"
+				shadow="true"
+			></pocketlib-blurhash-image>
+
+			<!-- Author profile image and name -->
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
+				[routerLink]="'/store/author/' + author.uuid"
+			>
+				<pocketlib-blurhash-image
+					[src]="authorProfileImageContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="author.profileImage?.blurhash"
+					[title]="author.firstName + ' ' + author.lastName"
+					[alt]="authorProfileImageAlt"
+					width="30"
+					height="30"
+					shadowSm="true"
+					rounded="true"
+					cursor="true"
+				></pocketlib-blurhash-image>
+
+				<p
+					class="fw-light my-auto cursor text-color"
+					style="font-size: 18px; margin-left: 13px"
 				>
+					{{ author.firstName }} {{ author.lastName }}
+				</p>
+			</a>
+
+			<!-- Publisher profile and name -->
+			<a
+				class="d-flex my-3"
+				style="text-decoration: none"
+				[routerLink]="'/store/publisher/' + publisher.uuid"
+				*ngIf="publisher != null"
+			>
+				<pocketlib-blurhash-image
+					[src]="publisher.logoContent"
+					[fallback]="dataService.defaultProfileImageUrl"
+					[blurhash]="publisher.logoBlurhash"
+					[title]="publisher.name"
+					[alt]="publisher.logoAlt"
+					width="30"
+					height="30"
+					shadowSm="true"
+					rounded="true"
+					cursor="true"
+				></pocketlib-blurhash-image>
+
+				<p
+					class="fw-light my-auto cursor text-color"
+					style="font-size: 18px; margin-left: 13px"
+				>
+					{{ publisher.name }}
+				</p>
+			</a>
+
+			<!-- Buy button -->
+			<div *ngIf="!book.purchased && book.price > 0">
+				<dav-button (click)="BuyBook()">
+					{{ price }}
+				</dav-button>
+			</div>
+
+			<!-- Read now / continue reading button -->
+			<div class="mt-2" style="min-width: 194px">
+				<dav-button type="accent" (click)="Read()">
 					{{ book.inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
@@ -457,8 +470,8 @@
 					<dav-progress-ring
 						style="margin: 8px 0px 0px 14px"
 						size="16"
-						*ngIf="publishLoading">
-					</dav-progress-ring>
+						*ngIf="publishLoading"
+					></dav-progress-ring>
 				</div>
 			</div>
 		</div>
@@ -470,7 +483,8 @@
 	</p>
 
 	<!-- Categories -->
-	<a class="badge rounded-pill me-2 cursor"
+	<a
+		class="badge rounded-pill me-2 cursor"
 		[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
 		[routerLink]="'/store/category/' + category.key"
 		*ngFor="let category of book.categories; let i = index"
@@ -481,28 +495,29 @@
 	<div
 		class="mx-3"
 		style="margin-top: 3.5rem"
-		[style.borderTop]="dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'">
-	</div>
+		[style.borderTop]="
+			dataService.darkTheme ? '1px solid #4e4e4e' : '1px solid #c1c1c1'
+		"
+	></div>
 
 	<div style="margin-top: 2.5rem" *ngIf="book.series.length > 0">
 		<pocketlib-horizontal-book-list
 			type="series"
 			[series]="book.series[0]"
-			[currentBookUuid]="uuid">
-		</pocketlib-horizontal-book-list>
+			[currentBookUuid]="uuid"
+		></pocketlib-horizontal-book-list>
 	</div>
 
 	<div style="margin-top: 2.5rem">
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[currentBookUuid]="uuid"
-			[categories]="categoryKeys">
-		</pocketlib-horizontal-book-list>
+			[categories]="categoryKeys"
+		></pocketlib-horizontal-book-list>
 	</div>
 </div>
 
-<pocketlib-loading-screen
-	*ngIf="loadingScreenVisible">
+<pocketlib-loading-screen *ngIf="loadingScreenVisible">
 </pocketlib-loading-screen>
 
 <dav-dialog
@@ -538,12 +553,21 @@
 	[visible]="buyBookDialogVisible"
 	maxWidth="400"
 	(dismiss)="buyBookDialogVisible = false"
-	(primaryButtonClick)="buyBookDialogLoginRequired ? NavigateToAccountPage() : NavigateToPurchasePage()"
+	(primaryButtonClick)="
+		buyBookDialogLoginRequired
+			? NavigateToAccountPage()
+			: NavigateToPurchasePage()
+	"
 	(defaultButtonClick)="buyBookDialogVisible = false"
 >
-	<p class="text-color"
-		[innerHTML]="buyBookDialogLoginRequired ? locale.buyBookDialog.descriptionNotLoggedIn : locale.buyBookDialog.description">
-	</p>
+	<p
+		class="text-color"
+		[innerHTML]="
+			buyBookDialogLoginRequired
+				? locale.buyBookDialog.descriptionNotLoggedIn
+				: locale.buyBookDialog.description
+		"
+	></p>
 </dav-dialog>
 
 <dav-dialog

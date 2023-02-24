@@ -1,22 +1,21 @@
 <!-- Normal layout -->
-<div
-	class="container slide-up-in"
-	*ngIf="!dualScreenLayout"
->
-   <div class="d-flex justify-content-center my-3" *ngIf="!loading">
-		<div
-			class="d-flex w-100"
-			*ngIf="dataService.books.length == 0"
-		>
-			<div class="mx-auto" style="width: 100%; height: 100%; max-width: 600px">
-				<p class="fw-light text-center text-color mt-2 mb-3"
-					style="font-size: 19px">
+<div class="container slide-up-in" *ngIf="!dualScreenLayout">
+	<div class="d-flex justify-content-center my-3" *ngIf="!loading">
+		<div class="d-flex w-100" *ngIf="dataService.books.length == 0">
+			<div
+				class="mx-auto"
+				style="width: 100%; height: 100%; max-width: 600px"
+			>
+				<p
+					class="fw-light text-center text-color mt-2 mb-3"
+					style="font-size: 19px"
+				>
 					{{ locale.libraryEmpty }}
 				</p>
 
 				<pocketlib-library-page-cards
-					(addBookFilePick)="AddBookFilePick($event)">
-				</pocketlib-library-page-cards>
+					(addBookFilePick)="AddBookFilePick($event)"
+				></pocketlib-library-page-cards>
 			</div>
 		</div>
 
@@ -42,17 +41,18 @@
 					(focusout)="addBookHover = false"
 					*ngIf="dataService.books.length > 0"
 				>
-					<div class="card-body d-flex align-items-center" style="padding: 1rem">
-						<fa-icon
-							class="text-color"
-							[icon]="faPlusLight"
-							size="xl">
+					<div
+						class="card-body d-flex align-items-center"
+						style="padding: 1rem"
+					>
+						<fa-icon class="text-color" [icon]="faPlusLight" size="xl">
 						</fa-icon>
 					</div>
 				</button>
 
 				<!-- Card for discovering books in the Store -->
-				<a class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
+				<a
+					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
 					style="text-decoration: none; transition: 0.12s"
 					[style.width.px]="smallCardsWidth"
 					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
@@ -62,17 +62,21 @@
 					(focusin)="discoverBooksHover = true"
 					(focusout)="discoverBooksHover = false"
 				>
-					<div class="card-body d-flex align-items-center" style="padding: 1rem">
+					<div
+						class="card-body d-flex align-items-center"
+						style="padding: 1rem"
+					>
 						<fa-icon
 							class="text-color"
 							[icon]="faBagShoppingLight"
-							size="xl">
-						</fa-icon>
+							size="xl"
+						></fa-icon>
 					</div>
 				</a>
 
 				<!-- Card for going to the author page, if the user is an author -->
-				<a class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
+				<a
+					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
 					style="text-decoration: none; transition: 0.12s"
 					[style.width.px]="smallCardsWidth"
 					[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
@@ -83,12 +87,15 @@
 					(focusin)="goToAuthorPageHover = true"
 					(focusout)="goToAuthorPageHover = false"
 				>
-					<div class="card-body d-flex align-items-center" style="padding: 1rem">
+					<div
+						class="card-body d-flex align-items-center"
+						style="padding: 1rem"
+					>
 						<fa-icon
 							class="text-color"
 							[icon]="faAddressCardLight"
-							size="xl">
-						</fa-icon>
+							size="xl"
+						></fa-icon>
 					</div>
 				</a>
 			</div>
@@ -99,30 +106,32 @@
 					[book]="dataService.books[0]"
 					[width]="largeBookCoverWidth"
 					(click)="ShowBook(dataService.books[0])"
-					(contextMenu)="BookContextMenu($event, dataService.books[0])">
-				</pocketlib-library-page-book-card>
+					(contextMenu)="BookContextMenu($event, dataService.books[0])"
+				></pocketlib-library-page-book-card>
 
 				<div
 					class="d-flex"
 					[style.flexFlow]="smallBookList ? 'row wrap' : 'column wrap'"
-					[style.maxHeight.px]="(largeBookCoverWidth * 1.5) + 200"
-					[style.width.px]="smallBookListWidth">
-
+					[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
+					[style.width.px]="smallBookListWidth"
+				>
 					<div *ngFor="let book of dataService.books; let i = index">
 						<pocketlib-library-page-book-card
 							[book]="book"
 							[width]="smallBookCoverWidth"
 							(click)="ShowBook(book)"
 							(contextMenu)="BookContextMenu($event, book)"
-							*ngIf="i != 0 && i < 5">
-						</pocketlib-library-page-book-card>
+							*ngIf="i != 0 && i < 5"
+						></pocketlib-library-page-book-card>
 					</div>
 				</div>
 			</div>
 
 			<div
 				class="d-flex mt-3"
-				[ngClass]="smallBookList ? 'justify-content-center' : 'justify-content-end'"
+				[ngClass]="
+					smallBookList ? 'justify-content-center' : 'justify-content-end'
+				"
 				[style.width.px]="largeBookCoverWidth + smallBookListWidth"
 				*ngIf="dataService.books.length > 5"
 			>
@@ -141,7 +150,11 @@
 		<div
 			#rightContentContainer
 			class="d-flex justify-content-center w-100"
-			style="position: absolute; transition: 0.3s all; transform: translateX(3000px)"
+			style="
+				position: absolute;
+				transition: 0.3s all;
+				transform: translateX(3000px);
+			"
 		>
 			<div class="container">
 				<div class="mx-auto" style="max-width: 700px">
@@ -149,7 +162,10 @@
 						<dav-button color="secondary" tonal (click)="HideAllBooks()">
 							<div class="all-books-button-content">
 								<div class="me-2">
-									<fa-icon [icon]="faArrowLeftLight" size="lg"></fa-icon>
+									<fa-icon
+										[icon]="faArrowLeftLight"
+										size="lg"
+									></fa-icon>
 								</div>
 
 								<p>{{ locale.back }}</p>
@@ -159,12 +175,14 @@
 						<dav-textfield
 							class="ms-3 w-100"
 							[placeholder]="locale.search"
-							(change)="SearchTextChange($event.detail.value)">
-						</dav-textfield>
+							(change)="SearchTextChange($event.detail.value)"
+						></dav-textfield>
 					</div>
 
-					<p class="text-color text-center fw-light mt-5 fs-5"
-						*ngIf="allBooks.length == 0">
+					<p
+						class="text-color text-center fw-light mt-5 fs-5"
+						*ngIf="allBooks.length == 0"
+					>
 						{{ locale.noBooks }}
 					</p>
 
@@ -178,18 +196,23 @@
 						(mouseout)="allBooksHoveredIndex = -1"
 						(focusin)="allBooksHoveredIndex = i"
 						(focusout)="allBooksHoveredIndex = -1"
-						*ngFor="let book of allBooks; let i = index">
-
+						*ngFor="let book of allBooks; let i = index"
+					>
 						<div class="d-flex">
 							<div style="height: 100px">
 								<img
 									class="img-fluid rounded-start"
 									style="height: 100%"
-									[src]="book.cover ?? dataService.defaultStoreBookCover">
+									[src]="
+										book.cover ?? dataService.defaultStoreBookCover
+									"
+								/>
 							</div>
 
 							<div class="card-body d-flex align-items-center">
-								<h5 class="card-title text-color mb-0">{{ book.title }}</h5>
+								<h5 class="card-title text-color mb-0">
+									{{ book.title }}
+								</h5>
 							</div>
 						</div>
 					</button>
@@ -201,32 +224,23 @@
 	<dav-progress-ring
 		class="mx-auto"
 		style="width: 32px; height: 32px; margin-top: 36px"
-		*ngIf="loading">
-	</dav-progress-ring>
+		*ngIf="loading"
+	></dav-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
-<div
-	class="d-flex flex-row slide-up-in"
-	*ngIf="dualScreenLayout"
->
+<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
 	<!-- Left screen -->
-	<div
-		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
 		<div class="mx-auto px-5">
 			<pocketlib-library-page-cards
-				(addBookFilePick)="AddBookFilePick($event)">
-			</pocketlib-library-page-cards>
+				(addBookFilePick)="AddBookFilePick($event)"
+			></pocketlib-library-page-cards>
 		</div>
 	</div>
 
 	<!-- Right screen -->
-	<div
-		class="w-50"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
 		<div
 			class="d-flex flex-wrap justify-content-center pt-3"
 			style="overflow: scroll"
@@ -235,14 +249,13 @@
 				*ngFor="let book of dataService.books"
 				[book]="book"
 				(click)="ShowBook(book)"
-				(contextMenu)="BookContextMenu($event, book)">
-			</pocketlib-library-page-book-card>
+				(contextMenu)="BookContextMenu($event, book)"
+			></pocketlib-library-page-book-card>
 		</div>
 	</div>
 </div>
 
-<pocketlib-loading-screen
-	*ngIf="loadingScreenVisible">
+<pocketlib-loading-screen *ngIf="loadingScreenVisible">
 </pocketlib-loading-screen>
 
 <dav-context-menu
@@ -259,8 +272,7 @@
 		<fa-icon slot="icon" [icon]="faFileExportLight"></fa-icon>
 	</dav-context-menu-item>
 
-	<dav-context-menu-divider
-		*ngIf="showExportBookOption">
+	<dav-context-menu-divider *ngIf="showExportBookOption">
 	</dav-context-menu-divider>
 
 	<!-- Rename -->
@@ -298,9 +310,12 @@
 				[label]="locale.renameBookDialog.titleTextfieldLabel"
 				[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
 				[errorMessage]="renameBookDialogError"
-				(change)="renameBookDialogTitle = $event.detail.value; renameBookDialogError = ''"
-				(enter)="RenameBook()">
-			</dav-textfield>
+				(change)="
+					renameBookDialogTitle = $event.detail.value;
+					renameBookDialogError = ''
+				"
+				(enter)="RenameBook()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>

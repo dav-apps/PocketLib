@@ -1,19 +1,17 @@
 <!-- Normal layout -->
-<div
-	class="container slide-up-in"
-	*ngIf="!dualScreenLayout"
->
+<div class="container slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mt-3 mb-4">
 		<dav-header
 			[header]="collectionName.name"
 			backButtonVisible
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
-			(editButtonClick)="ShowNamesDialog()">
-		</dav-header>
+			(editButtonClick)="ShowNamesDialog()"
+		></dav-header>
 	</div>
 
-	<p class="fw-light text-center mt-3 text-color"
+	<p
+		class="fw-light text-center mt-3 text-color"
 		style="font-size: 18px; font-family: 'Segoe UI'"
 		*ngIf="books.length == 0"
 	>
@@ -24,40 +22,35 @@
 		<pocketlib-add-list-item
 			[link]="newBookPageLink.path"
 			[linkParams]="newBookPageLink.params"
-			*ngIf="books.length > 0">
-		</pocketlib-add-list-item>
+			*ngIf="books.length > 0"
+		></pocketlib-add-list-item>
 
 		<pocketlib-horizontal-book-card
 			[title]="book.title"
 			[coverContent]="book.coverContent"
 			[coverBlurhash]="book.coverBlurhash"
 			[link]="book.link"
-			*ngFor="let book of books">
-		</pocketlib-horizontal-book-card>
+			*ngFor="let book of books"
+		></pocketlib-horizontal-book-card>
 	</div>
 </div>
 
 <!-- Dual-Screen layout -->
-<div
-	class="d-flex flex-row slide-up-in"
-	*ngIf="dualScreenLayout"
->
+<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
 	<!-- Left screen -->
-	<div
-		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
 				[header]="collectionName.name"
 				backButtonVisible
 				editButtonVisible
 				(backButtonClick)="BackButtonClick()"
-				(editButtonClick)="ShowNamesDialog()">
-			</dav-header>
+				(editButtonClick)="ShowNamesDialog()"
+			></dav-header>
 		</div>
 
-		<p class="fw-light text-center mt-3 text-color"
+		<p
+			class="fw-light text-center mt-3 text-color"
 			style="font-size: 18px; font-family: 'Segoe UI'"
 			*ngIf="leftScreenBooks.length == 0 && rightScreenBooks.length == 0"
 		>
@@ -68,32 +61,29 @@
 			<pocketlib-add-list-item
 				[link]="newBookPageLink.path"
 				[linkParams]="newBookPageLink.params"
-				*ngIf="leftScreenBooks.length > 0 || rightScreenBooks.length > 0">
-			</pocketlib-add-list-item>
-	
+				*ngIf="leftScreenBooks.length > 0 || rightScreenBooks.length > 0"
+			></pocketlib-add-list-item>
+
 			<pocketlib-horizontal-book-card
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
 				[link]="book.link"
-				*ngFor="let book of leftScreenBooks">
-			</pocketlib-horizontal-book-card>
+				*ngFor="let book of leftScreenBooks"
+			></pocketlib-horizontal-book-card>
 		</div>
 	</div>
 
 	<!-- Right screen -->
-	<div
-		class="w-50"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
 		<div class="mx-auto px-5" style="margin-top: 78px">
 			<pocketlib-horizontal-book-card
 				[title]="book.title"
 				[coverContent]="book.coverContent"
 				[coverBlurhash]="book.coverBlurhash"
 				[link]="book.link"
-				*ngFor="let book of rightScreenBooks">
-			</pocketlib-horizontal-book-card>
+				*ngFor="let book of rightScreenBooks"
+			></pocketlib-horizontal-book-card>
 		</div>
 	</div>
 </div>
@@ -109,6 +99,6 @@
 	<pocketlib-edit-names
 		[names]="collectionNames"
 		[uuid]="uuid"
-		(update)="UpdateCollectionName($event)">
-	</pocketlib-edit-names>
+		(update)="UpdateCollectionName($event)"
+	></pocketlib-edit-names>
 </dav-dialog>

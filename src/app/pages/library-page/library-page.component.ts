@@ -1,6 +1,6 @@
-import { Component, HostListener, ViewChild, ElementRef } from '@angular/core'
-import { Router } from '@angular/router'
-import { ReadFile } from 'ngx-file-helpers'
+import { Component, HostListener, ViewChild, ElementRef } from "@angular/core"
+import { Router } from "@angular/router"
+import { ReadFile } from "ngx-file-helpers"
 import {
 	faAddressCard as faAddressCardLight,
 	faArrowLeft as faArrowLeftLight,
@@ -10,18 +10,18 @@ import {
 	faPencil as faPencilLight,
 	faPlus as faPlusLight,
 	faTrashCan as faTrashCanLight
-} from '@fortawesome/pro-light-svg-icons'
-import { Dav } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { Book } from 'src/app/models/Book'
-import { EpubBook } from 'src/app/models/EpubBook'
-import { PdfBook } from 'src/app/models/PdfBook'
-import { UpdateBookOrder } from 'src/app/models/BookOrder'
-import { environment } from 'src/environments/environment'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { Dav } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { Book } from "src/app/models/Book"
+import { EpubBook } from "src/app/models/EpubBook"
+import { PdfBook } from "src/app/models/PdfBook"
+import { UpdateBookOrder } from "src/app/models/BookOrder"
+import { environment } from "src/environments/environment"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 const pdfType = "application/pdf"
 
@@ -39,8 +39,10 @@ export class LibraryPageComponent {
 	faPencilLight = faPencilLight
 	faPlusLight = faPlusLight
 	faTrashCanLight = faTrashCanLight
-	@ViewChild('leftContentContainer') leftContentContainer: ElementRef<HTMLDivElement>
-	@ViewChild('rightContentContainer') rightContentContainer: ElementRef<HTMLDivElement>
+	@ViewChild("leftContentContainer")
+	leftContentContainer: ElementRef<HTMLDivElement>
+	@ViewChild("rightContentContainer")
+	rightContentContainer: ElementRef<HTMLDivElement>
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -51,8 +53,8 @@ export class LibraryPageComponent {
 	selectedBook: Book
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	showRenameBookOption: boolean = false		// If the option in the context menu to rename the book is visible. Only for PdfBook
-	showExportBookOption: boolean = false		// If the option in the context menu to export the book is visible
+	showRenameBookOption: boolean = false // If the option in the context menu to rename the book is visible. Only for PdfBook
+	showExportBookOption: boolean = false // If the option in the context menu to export the book is visible
 	renameBookDialogVisible: boolean = false
 	renameBookDialogTitle: string = ""
 	renameBookDialogError: string = ""
@@ -104,24 +106,24 @@ export class LibraryPageComponent {
 		}
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		this.smallBookList = window.innerWidth < 650
 
 		if (this.smallBookList) {
-			this.smallBookCoverWidth = (this.largeBookCoverWidth / 2) - 9
+			this.smallBookCoverWidth = this.largeBookCoverWidth / 2 - 9
 		} else {
-			this.smallBookCoverWidth = (this.largeBookCoverWidth / 2) - 6
+			this.smallBookCoverWidth = this.largeBookCoverWidth / 2 - 6
 		}
 
 		if (this.smallBookList) {
 			this.smallBookListWidth = this.largeBookCoverWidth + 18
 		} else if (this.dataService.books.length > 3) {
-			this.smallBookListWidth = ((this.largeBookCoverWidth / 2) + 16) * 2
+			this.smallBookListWidth = (this.largeBookCoverWidth / 2 + 16) * 2
 		} else if (this.dataService.books.length == 1) {
 			this.smallBookListWidth = 0
 		} else {
-			this.smallBookListWidth = ((this.largeBookCoverWidth / 2) + 16)
+			this.smallBookListWidth = this.largeBookCoverWidth / 2 + 16
 		}
 
 		if (window.innerWidth < 450) {
@@ -139,7 +141,10 @@ export class LibraryPageComponent {
 
 		// Create a new book
 		if (file.type == pdfType) {
-			uuid = await PdfBook.Create(file.underlyingFile, file.name.slice(0, file.name.lastIndexOf('.')))
+			uuid = await PdfBook.Create(
+				file.underlyingFile,
+				file.name.slice(0, file.name.lastIndexOf("."))
+			)
 		} else {
 			uuid = await EpubBook.Create(file.underlyingFile)
 		}
@@ -169,7 +174,11 @@ export class LibraryPageComponent {
 
 		// Update the settings with the position of the current book
 		if (book instanceof EpubBook) {
-			await this.dataService.settings.SetBook(book.uuid, book.chapter, book.progress)
+			await this.dataService.settings.SetBook(
+				book.uuid,
+				book.chapter,
+				book.progress
+			)
 		} else if (book instanceof PdfBook) {
 			await this.dataService.settings.SetBook(book.uuid, null, book.page)
 		}
@@ -296,13 +305,18 @@ export class LibraryPageComponent {
 		this.renameBookDialogError = ""
 
 		if (this.renameBookDialogTitle.length == 0) {
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleMissing
+			this.renameBookDialogError =
+				this.locale.renameBookDialog.errors.titleMissing
 		} else if (this.renameBookDialogTitle.length < 2) {
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooShort
+			this.renameBookDialogError =
+				this.locale.renameBookDialog.errors.titleTooShort
 		} else if (this.renameBookDialogTitle.length > 50) {
-			this.renameBookDialogError = this.locale.renameBookDialog.errors.titleTooLong
+			this.renameBookDialogError =
+				this.locale.renameBookDialog.errors.titleTooLong
 		} else {
-			await (this.selectedBook as PdfBook).SetTitle(this.renameBookDialogTitle)
+			await (this.selectedBook as PdfBook).SetTitle(
+				this.renameBookDialogTitle
+			)
 			this.renameBookDialogVisible = false
 		}
 	}
@@ -312,7 +326,9 @@ export class LibraryPageComponent {
 		await this.selectedBook.Delete()
 
 		// Remove the selected book from the lists
-		let i = this.dataService.books.findIndex(b => b.uuid == this.selectedBook.uuid)
+		let i = this.dataService.books.findIndex(
+			b => b.uuid == this.selectedBook.uuid
+		)
 		if (i != -1) this.dataService.books.splice(i, 1)
 
 		i = this.allBooks.findIndex(b => b.uuid == this.selectedBook.uuid)
@@ -322,7 +338,9 @@ export class LibraryPageComponent {
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
 
 		// Clear the ApiCache for GetStoreBook
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.RetrieveStoreBook.name
+		)
 	}
 
 	SearchTextChange(value: string) {
@@ -334,7 +352,11 @@ export class LibraryPageComponent {
 
 			// Find all books, which include the search value in the title
 			for (let book of this.dataService.books) {
-				if ((book as EpubBook | PdfBook).title.toLowerCase().includes(value.toLowerCase().trim())) {
+				if (
+					(book as EpubBook | PdfBook).title
+						.toLowerCase()
+						.includes(value.toLowerCase().trim())
+				) {
 					this.allBooks.push(book)
 				}
 			}

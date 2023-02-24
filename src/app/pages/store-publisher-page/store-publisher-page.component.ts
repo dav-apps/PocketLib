@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Component } from "@angular/core"
+import { ActivatedRoute } from "@angular/router"
 
 @Component({
 	templateUrl: "./store-publisher-page.component.html"
@@ -7,10 +7,8 @@ import { ActivatedRoute } from '@angular/router'
 export class StorePublisherPageComponent {
 	uuid: string
 
-	constructor(
-		private activatedRoute: ActivatedRoute
-	) {
+	constructor(private activatedRoute: ActivatedRoute) {
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
 	}
 }

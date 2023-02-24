@@ -1,38 +1,39 @@
-import { Component, ViewChild } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { ReadFile } from 'ngx-file-helpers'
-import { faPen as faPenLight } from '@fortawesome/pro-light-svg-icons'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { CategoriesSelectionComponent } from 'src/app/components/categories-selection/categories-selection.component'
-import { PriceInputComponent } from 'src/app/components/price-input/price-input.component'
-import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
-import { Author } from 'src/app/models/Author'
-import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
-import { StoreBook } from 'src/app/models/StoreBook'
-import { StoreBookRelease } from 'src/app/models/StoreBookRelease'
-import * as ErrorCodes from 'src/constants/errorCodes'
+import { Component, ViewChild } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { ReadFile } from "ngx-file-helpers"
+import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
+import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
+import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
+import { Author } from "src/app/models/Author"
+import { StoreBookCollection } from "src/app/models/StoreBookCollection"
+import { StoreBook } from "src/app/models/StoreBook"
+import { StoreBookRelease } from "src/app/models/StoreBookRelease"
+import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	StoreBookStatus,
 	StoreBookReleaseStatus,
 	StoreBookField,
 	StoreBookResource
-} from 'src/app/misc/types'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+} from "src/app/misc/types"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	templateUrl: './author-book-page.component.html',
-	styleUrls: ['./author-book-page.component.scss']
+	templateUrl: "./author-book-page.component.html",
+	styleUrls: ["./author-book-page.component.scss"]
 })
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
 	faPenLight = faPenLight
-	@ViewChild('categoriesSelection') categoriesSelectionComponent: CategoriesSelectionComponent
-	@ViewChild('priceInput') priceInput: PriceInputComponent
-	@ViewChild('isbnInput') isbnInput: IsbnInputComponent
+	@ViewChild("categoriesSelection")
+	categoriesSelectionComponent: CategoriesSelectionComponent
+	@ViewChild("priceInput") priceInput: PriceInputComponent
+	@ViewChild("isbnInput") isbnInput: IsbnInputComponent
 	showMobileLayout: boolean = false
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
@@ -43,31 +44,31 @@ export class AuthorBookPageComponent {
 	releases: StoreBookRelease[]
 	release: StoreBookRelease
 	book: {
-		collection: string,
-		title: string,
-		description: string,
-		language: string,
-		price: number,
-		isbn: string,
-		status: StoreBookStatus,
-		coverBlurhash: string,
-		fileName: string,
+		collection: string
+		title: string
+		description: string
+		language: string
+		price: number
+		isbn: string
+		status: StoreBookStatus
+		coverBlurhash: string
+		fileName: string
 		categories: {
-			key: string,
+			key: string
 			name: string
 		}[]
 	} = {
-			collection: "",
-			title: "",
-			description: "",
-			language: "en",
-			price: 0,
-			isbn: "",
-			status: StoreBookStatus.Unpublished,
-			coverBlurhash: null,
-			fileName: null,
-			categories: []
-		}
+		collection: "",
+		title: "",
+		description: "",
+		language: "en",
+		price: 0,
+		isbn: "",
+		status: StoreBookStatus.Unpublished,
+		coverBlurhash: null,
+		fileName: null,
+		categories: []
+	}
 	editTitleDialogVisible: boolean = false
 	editTitleDialogLoading: boolean = false
 	editTitleDialogTitle: string = ""
@@ -119,12 +120,17 @@ export class AuthorBookPageComponent {
 
 		if (this.dataService.userIsAdmin) {
 			// Get the author
-			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
-			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let authorUuid =
+				this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (this.author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					this.author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (this.author != null) break
 				}
 			}
@@ -133,7 +139,7 @@ export class AuthorBookPageComponent {
 		}
 
 		if (this.author == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -144,7 +150,9 @@ export class AuthorBookPageComponent {
 		let book: StoreBook = null
 
 		for (let collection of await this.author.GetCollections()) {
-			book = (await collection.GetStoreBooks()).find(b => b.uuid == this.uuid)
+			book = (await collection.GetStoreBooks()).find(
+				b => b.uuid == this.uuid
+			)
 
 			if (book != null) {
 				this.storeBook = book
@@ -154,12 +162,13 @@ export class AuthorBookPageComponent {
 		}
 
 		if (book == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
 		this.releases = await book.GetReleases()
-		let releaseUuid = this.activatedRoute.snapshot.paramMap.get("release_uuid")
+		let releaseUuid =
+			this.activatedRoute.snapshot.paramMap.get("release_uuid")
 
 		if (releaseUuid != null) {
 			// Get the release
@@ -205,10 +214,10 @@ export class AuthorBookPageComponent {
 			// Check if there are any changes
 			let lastRelease = this.releases[0]
 
-			this.changes = (
-				(this.book.status == StoreBookStatus.Published || this.book.status == StoreBookStatus.Hidden)
-				&& lastRelease.status == StoreBookReleaseStatus.Unpublished
-			)
+			this.changes =
+				(this.book.status == StoreBookStatus.Published ||
+					this.book.status == StoreBookStatus.Hidden) &&
+				lastRelease.status == StoreBookReleaseStatus.Unpublished
 		}
 
 		this.priceInput.SetPrice(this.book.price)
@@ -217,7 +226,8 @@ export class AuthorBookPageComponent {
 
 	async BackButtonClick() {
 		if (this.book.status == StoreBookStatus.Unpublished) {
-			let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+			let singleBookInCollection =
+				(await this.collection.GetStoreBooks()).length == 1
 
 			if (singleBookInCollection) {
 				if (this.dataService.userIsAdmin) {
@@ -227,16 +237,36 @@ export class AuthorBookPageComponent {
 				}
 			} else {
 				if (this.dataService.userIsAdmin) {
-					this.router.navigate(["author", this.author.uuid, "collection", this.book.collection])
+					this.router.navigate([
+						"author",
+						this.author.uuid,
+						"collection",
+						this.book.collection
+					])
 				} else {
-					this.router.navigate(["author", "collection", this.book.collection])
+					this.router.navigate([
+						"author",
+						"collection",
+						this.book.collection
+					])
 				}
 			}
 		} else if (this.dataService.userIsAdmin) {
 			if (this.release != null) {
-				this.router.navigate(["author", this.author.uuid, "book", this.uuid, "releases"])
+				this.router.navigate([
+					"author",
+					this.author.uuid,
+					"book",
+					this.uuid,
+					"releases"
+				])
 			} else {
-				this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+				this.router.navigate([
+					"author",
+					this.author.uuid,
+					"book",
+					this.uuid
+				])
 			}
 		} else if (this.release != null) {
 			this.router.navigate(["author", "book", this.uuid, "releases"])
@@ -295,7 +325,9 @@ export class AuthorBookPageComponent {
 				})
 			)
 		} else {
-			this.newDescription = this.book.description ? this.book.description : ""
+			this.newDescription = this.book.description
+				? this.book.description
+				: ""
 			this.newDescriptionError = ""
 			this.editDescription = true
 		}
@@ -371,7 +403,7 @@ export class AuthorBookPageComponent {
 		// Get the content of the image file
 		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
 			let reader = new FileReader()
-			reader.addEventListener('loadend', () => {
+			reader.addEventListener("loadend", () => {
 				resolve(reader.result as ArrayBuffer)
 			})
 			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
@@ -419,9 +451,9 @@ export class AuthorBookPageComponent {
 	}
 
 	async BookFileUpload(file: ReadFile) {
-		let readPromise: Promise<ArrayBuffer> = new Promise((resolve) => {
+		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
 			let reader = new FileReader()
-			reader.addEventListener('loadend', () => {
+			reader.addEventListener("loadend", () => {
 				resolve(reader.result as ArrayBuffer)
 			})
 			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
@@ -464,7 +496,12 @@ export class AuthorBookPageComponent {
 
 			// Navigate to the dashboard
 			if (this.dataService.userIsAdmin) {
-				this.router.navigate(["author", this.author.uuid, "book", this.uuid])
+				this.router.navigate([
+					"author",
+					this.author.uuid,
+					"book",
+					this.uuid
+				])
 			} else {
 				this.router.navigate(["author", "book", this.uuid])
 			}
@@ -524,16 +561,20 @@ export class AuthorBookPageComponent {
 
 			switch (errorCode) {
 				case ErrorCodes.ReleaseNameTooShort:
-					this.publishChangesDialogReleaseNameError = this.locale.errors.releaseNameTooShort
+					this.publishChangesDialogReleaseNameError =
+						this.locale.errors.releaseNameTooShort
 					break
 				case ErrorCodes.ReleaseNameTooLong:
-					this.publishChangesDialogReleaseNameError = this.locale.errors.releaseNameTooLong
+					this.publishChangesDialogReleaseNameError =
+						this.locale.errors.releaseNameTooLong
 					break
 				case ErrorCodes.ReleaseNotesTooShort:
-					this.publishChangesDialogReleaseNotesError = this.locale.errors.releaseNotesTooShort
+					this.publishChangesDialogReleaseNotesError =
+						this.locale.errors.releaseNotesTooShort
 					break
 				case ErrorCodes.ReleaseNotesTooLong:
-					this.publishChangesDialogReleaseNotesError = this.locale.errors.releaseNotesTooLong
+					this.publishChangesDialogReleaseNotesError =
+						this.locale.errors.releaseNotesTooLong
 					break
 			}
 		}
@@ -543,17 +584,21 @@ export class AuthorBookPageComponent {
 		if (this.editDescription) {
 			// The description was updated
 			if (isSuccessStatusCode(response.status)) {
-				this.book.description = (response as ApiResponse<any>).data.description
+				this.book.description = (
+					response as ApiResponse<any>
+				).data.description
 				this.editDescription = false
 			} else {
 				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.DescriptionTooShort:
-						this.newDescriptionError = this.locale.errors.descriptionTooShort
+						this.newDescriptionError =
+							this.locale.errors.descriptionTooShort
 						break
 					case ErrorCodes.DescriptionTooLong:
-						this.newDescriptionError = this.locale.errors.descriptionTooLong
+						this.newDescriptionError =
+							this.locale.errors.descriptionTooLong
 						break
 					default:
 						this.newDescriptionError = this.locale.errors.unexpectedError
@@ -610,20 +655,25 @@ export class AuthorBookPageComponent {
 		} else {
 			// The title was updated
 			if (isSuccessStatusCode(response.status)) {
-				this.book.title = (response as ApiResponse<StoreBookResource>).data.title
+				this.book.title = (
+					response as ApiResponse<StoreBookResource>
+				).data.title
 				this.editTitleDialogVisible = false
 			} else {
 				let errorCode = (response as ApiErrorResponse).errors[0].code
 
 				switch (errorCode) {
 					case ErrorCodes.TitleTooShort:
-						this.editTitleDialogTitleError = this.locale.errors.titleTooShort
+						this.editTitleDialogTitleError =
+							this.locale.errors.titleTooShort
 						break
 					case ErrorCodes.TitleTooLong:
-						this.editTitleDialogTitleError = this.locale.errors.titleTooLong
+						this.editTitleDialogTitleError =
+							this.locale.errors.titleTooLong
 						break
 					default:
-						this.editTitleDialogTitleError = this.locale.errors.unexpectedError
+						this.editTitleDialogTitleError =
+							this.locale.errors.unexpectedError
 						break
 				}
 			}

@@ -1,16 +1,16 @@
-import { Component, HostListener } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Component, HostListener } from "@angular/core"
+import { ActivatedRoute } from "@angular/router"
 import {
 	faBagShopping as faBagShoppingLight,
 	faRotate as faRotateLight,
 	faLock as faLockLight,
 	faLockKeyhole as faLockKeyholeLight
-} from '@fortawesome/pro-light-svg-icons'
-import { Dav } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { environment } from 'src/environments/environment'
-import { enUS } from 'src/locales/locales'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+} from "@fortawesome/pro-light-svg-icons"
+import { Dav } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { environment } from "src/environments/environment"
+import { enUS } from "src/locales/locales"
+import { GetDualScreenSettings } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-account-page",
@@ -49,7 +49,7 @@ export class AccountPageComponent {
 		this.setSize()
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	onResize() {
 		this.setSize()
 	}
@@ -62,13 +62,14 @@ export class AccountPageComponent {
 
 	ShowLoginPage() {
 		if (
-			this.redirect != null
-			&& (
-				this.redirect == "author/setup"
-				|| this.redirect.startsWith("store/book/")
-			)
+			this.redirect != null &&
+			(this.redirect == "author/setup" ||
+				this.redirect.startsWith("store/book/"))
 		) {
-			Dav.ShowLoginPage(environment.apiKey, `${window.location.origin}/${this.redirect}`)
+			Dav.ShowLoginPage(
+				environment.apiKey,
+				`${window.location.origin}/${this.redirect}`
+			)
 		} else {
 			Dav.ShowLoginPage(environment.apiKey, window.location.origin)
 		}
@@ -76,13 +77,14 @@ export class AccountPageComponent {
 
 	ShowSignupPage() {
 		if (
-			this.redirect != null
-			&& (
-				this.redirect == "author/setup"
-				|| this.redirect.startsWith("store/book/")
-			)
+			this.redirect != null &&
+			(this.redirect == "author/setup" ||
+				this.redirect.startsWith("store/book/"))
 		) {
-			Dav.ShowSignupPage(environment.apiKey, `${window.location.origin}/${this.redirect}`)
+			Dav.ShowSignupPage(
+				environment.apiKey,
+				`${window.location.origin}/${this.redirect}`
+			)
 		} else {
 			Dav.ShowSignupPage(environment.apiKey, window.location.origin)
 		}
@@ -90,6 +92,8 @@ export class AccountPageComponent {
 
 	Logout() {
 		this.logoutDialogVisible = false
-		this.dataService.dav.Logout().then(() => window.location.href = "/account")
+		this.dataService.dav
+			.Logout()
+			.then(() => (window.location.href = "/account"))
 	}
 }

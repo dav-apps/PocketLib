@@ -1,16 +1,16 @@
-import { Component } from '@angular/core'
-import { SwUpdate, VersionEvent } from '@angular/service-worker'
-import { faCheck } from '@fortawesome/pro-light-svg-icons'
-import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
-import { keys } from 'src/constants/keys'
-import { enUS } from 'src/locales/locales'
-import { DataService } from 'src/app/services/data-service'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { Component } from "@angular/core"
+import { SwUpdate, VersionEvent } from "@angular/service-worker"
+import { faCheck } from "@fortawesome/pro-light-svg-icons"
+import { DropdownOption, DropdownOptionType } from "dav-ui-components"
+import { keys } from "src/constants/keys"
+import { enUS } from "src/locales/locales"
+import { DataService } from "src/app/services/data-service"
+import { GetDualScreenSettings } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-settings-page",
 	templateUrl: "./settings-page.component.html",
-	styleUrls: ['./settings-page.component.scss']
+	styleUrls: ["./settings-page.component.scss"]
 })
 export class SettingsPageComponent {
 	locale = enUS.settingsPage
@@ -18,7 +18,7 @@ export class SettingsPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	version: string = keys.version
-	year = (new Date()).getFullYear()
+	year = new Date().getFullYear()
 	openLastReadBook: boolean = false
 	updateMessage: string = ""
 	searchForUpdates: boolean = false
@@ -44,10 +44,7 @@ export class SettingsPageComponent {
 		}
 	]
 
-	constructor(
-		public dataService: DataService,
-		private swUpdate: SwUpdate
-	) {
+	constructor(public dataService: DataService, private swUpdate: SwUpdate) {
 		this.locale = this.dataService.GetLocale().settingsPage
 		this.themeDropdownOptions[0].value = this.locale.systemTheme
 		this.themeDropdownOptions[1].value = this.locale.lightTheme
@@ -83,7 +80,7 @@ export class SettingsPageComponent {
 				}
 			})
 
-			if (!await this.swUpdate.checkForUpdate()) {
+			if (!(await this.swUpdate.checkForUpdate())) {
 				this.searchForUpdates = false
 				this.noUpdateAvailable = true
 

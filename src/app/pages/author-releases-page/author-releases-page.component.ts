@@ -27,7 +27,7 @@ export class AuthorReleasesPageComponent {
 		public dataService: DataService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) { }
+	) {}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded
@@ -37,12 +37,17 @@ export class AuthorReleasesPageComponent {
 
 		if (this.dataService.userIsAdmin) {
 			// Get the author
-			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
-			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let authorUuid =
+				this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (this.author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					this.author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (this.author != null) break
 				}
 			}
@@ -51,7 +56,7 @@ export class AuthorReleasesPageComponent {
 		}
 
 		if (this.author == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -59,7 +64,9 @@ export class AuthorReleasesPageComponent {
 		let storeBookUuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
 		for (let collection of await this.author.GetCollections()) {
-			this.book = (await collection.GetStoreBooks()).find(b => b.uuid == storeBookUuid)
+			this.book = (await collection.GetStoreBooks()).find(
+				b => b.uuid == storeBookUuid
+			)
 
 			if (this.book != null) {
 				this.collection = collection
@@ -68,7 +75,7 @@ export class AuthorReleasesPageComponent {
 		}
 
 		if (this.book == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -96,7 +103,12 @@ export class AuthorReleasesPageComponent {
 
 	BackButtonClick() {
 		if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid])
+			this.router.navigate([
+				"author",
+				this.author.uuid,
+				"book",
+				this.book.uuid
+			])
 		} else {
 			this.router.navigate(["author", "book", this.book.uuid])
 		}

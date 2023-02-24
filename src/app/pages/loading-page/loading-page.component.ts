@@ -1,22 +1,19 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
-import { DataService } from 'src/app/services/data-service'
-import { GetBook } from 'src/app/models/BookManager'
-import { EpubBook } from 'src/app/models/EpubBook'
-import { PdfBook } from 'src/app/models/PdfBook'
+import { Component } from "@angular/core"
+import { Router } from "@angular/router"
+import { DataService } from "src/app/services/data-service"
+import { GetBook } from "src/app/models/BookManager"
+import { EpubBook } from "src/app/models/EpubBook"
+import { PdfBook } from "src/app/models/PdfBook"
 
 @Component({
-	selector: 'pocketlib-loading-page',
-	templateUrl: './loading-page.component.html'
+	selector: "pocketlib-loading-page",
+	templateUrl: "./loading-page.component.html"
 })
 export class LoadingPageComponent {
 	height: number = 500
 	dualScreenLayout: boolean = false
 
-	constructor(
-		private dataService: DataService,
-		private router: Router
-	) {
+	constructor(private dataService: DataService, private router: Router) {
 		this.dataService.navbarVisible = false
 	}
 
@@ -37,12 +34,14 @@ export class LoadingPageComponent {
 				let resolved: boolean = false
 
 				// Wait for the settings to be synced
-				this.dataService.settingsSyncPromiseHolder.AwaitResult().then(() => {
-					if (!resolved) {
-						resolved = true
-						resolve()
-					}
-				})
+				this.dataService.settingsSyncPromiseHolder
+					.AwaitResult()
+					.then(() => {
+						if (!resolved) {
+							resolved = true
+							resolve()
+						}
+					})
 
 				// Wait for max 8 seconds
 				setTimeout(() => {
@@ -60,23 +59,31 @@ export class LoadingPageComponent {
 
 	async LoadCurrentBook() {
 		// Load the current book
-		this.dataService.currentBook = await GetBook(this.dataService.settings.book)
+		this.dataService.currentBook = await GetBook(
+			this.dataService.settings.book
+		)
 
 		// Check if the book exits and if the user can access the book
-		if (!this.dataService.currentBook || (this.dataService.currentBook.storeBook && !this.dataService.dav.isLoggedIn)) {
-			this.router.navigate(['/'])
+		if (
+			!this.dataService.currentBook ||
+			(this.dataService.currentBook.storeBook &&
+				!this.dataService.dav.isLoggedIn)
+		) {
+			this.router.navigate(["/"])
 			return
 		}
 
 		// Load the progress of the current book
 		if (this.dataService.currentBook instanceof EpubBook) {
-			this.dataService.currentBook.chapter = this.dataService.settings.chapter
-			this.dataService.currentBook.progress = this.dataService.settings.progress
+			this.dataService.currentBook.chapter =
+				this.dataService.settings.chapter
+			this.dataService.currentBook.progress =
+				this.dataService.settings.progress
 		} else if (this.dataService.currentBook instanceof PdfBook) {
 			this.dataService.currentBook.page = this.dataService.settings.progress
 		}
 
 		// Go to the book page to show the current book
-		this.router.navigate(['book'])
+		this.router.navigate(["book"])
 	}
 }

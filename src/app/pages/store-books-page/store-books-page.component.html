@@ -1,24 +1,19 @@
 <!-- Normal layout -->
-<div
-	class="container mb-4 px-0 slide-up-in"
-	*ngIf="!dualScreenLayout">
-
+<div class="container mb-4 px-0 slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mb-2">
 		<dav-header
 			[header]="header"
 			size="big"
 			backButtonVisible
-			(backButtonClick)="BackButtonClick()">
-		</dav-header>
+			(backButtonClick)="BackButtonClick()"
+		></dav-header>
 	</div>
 
 	<div
 		class="mt-3 d-flex flex-wrap justify-content-center"
 		*ngIf="books.length > 0"
 	>
-		<pocketlib-store-book-card
-			[book]="book"
-			*ngFor="let book of books">
+		<pocketlib-store-book-card [book]="book" *ngFor="let book of books">
 		</pocketlib-store-book-card>
 	</div>
 
@@ -29,34 +24,37 @@
 		<dav-pagination
 			[pages]="pages"
 			[currentPage]="page"
-			(pageChange)="PageChange($event.detail.page)">
-		</dav-pagination>
+			(pageChange)="PageChange($event.detail.page)"
+		></dav-pagination>
 	</div>
 
 	<dav-progress-ring
 		class="mx-auto"
 		style="margin-top: 36px"
 		size="28"
-		*ngIf="loading">
-	</dav-progress-ring>
+		*ngIf="loading"
+	></dav-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
 <div
 	class="slide-up-in"
 	style="display: grid; grid-template-rows: auto"
-	[style.gridTemplateColumns]="'auto ' + (width / 2) + 'px'"
+	[style.gridTemplateColumns]="'auto ' + width / 2 + 'px'"
 	*ngIf="dualScreenLayout"
 >
 	<!-- Left screen -->
-	<div style="grid-row: 1; grid-column: 1;" [style.marginRight.px]="dualScreenFoldMargin">
+	<div
+		style="grid-row: 1; grid-column: 1"
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
 		<div class="mb-2">
 			<dav-header
 				[header]="header"
 				size="big"
 				backButtonVisible
-				(backButtonClick)="BackButtonClick()">
-			</dav-header>
+				(backButtonClick)="BackButtonClick()"
+			></dav-header>
 		</div>
 
 		<div
@@ -65,25 +63,31 @@
 		>
 			<pocketlib-store-book-card
 				[book]="book"
-				*ngFor="let book of leftScreenBooks">
-			</pocketlib-store-book-card>
+				*ngFor="let book of leftScreenBooks"
+			></pocketlib-store-book-card>
 		</div>
 
 		<dav-progress-ring
 			class="mx-auto"
 			style="margin-top: 36px"
 			size="28"
-			*ngIf="loading">
-		</dav-progress-ring>
+			*ngIf="loading"
+		></dav-progress-ring>
 	</div>
 
 	<!-- Right screen -->
-	<div style="grid-row: 1; grid-column: 2;" [style.marginLeft.px]="dualScreenFoldMargin">
-		<div class="d-flex flex-wrap justify-content-center" style="margin-top: 72px">
+	<div
+		style="grid-row: 1; grid-column: 2"
+		[style.marginLeft.px]="dualScreenFoldMargin"
+	>
+		<div
+			class="d-flex flex-wrap justify-content-center"
+			style="margin-top: 72px"
+		>
 			<pocketlib-store-book-card
 				[book]="book"
-				*ngFor="let book of rightScreenBooks">
-			</pocketlib-store-book-card>
+				*ngFor="let book of rightScreenBooks"
+			></pocketlib-store-book-card>
 		</div>
 
 		<div
@@ -93,8 +97,8 @@
 			<dav-pagination
 				[pages]="pages"
 				[currentPage]="page"
-				(pageChange)="PageChange($event.detail.page)">
-			</dav-pagination>
+				(pageChange)="PageChange($event.detail.page)"
+			></dav-pagination>
 		</div>
 	</div>
 </div>

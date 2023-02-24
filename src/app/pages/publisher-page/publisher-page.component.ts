@@ -8,10 +8,8 @@ import { ActivatedRoute } from "@angular/router"
 export class PublisherPageComponent {
 	uuid: string
 
-	constructor(
-		public activatedRoute: ActivatedRoute
-	) {
+	constructor(public activatedRoute: ActivatedRoute) {
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get('uuid')
+		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
 	}
 }

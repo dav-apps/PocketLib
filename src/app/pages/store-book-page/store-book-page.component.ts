@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core'
-import { Router, ActivatedRoute, ParamMap } from '@angular/router'
+import { Component, HostListener } from "@angular/core"
+import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
 	ApiResponse,
 	ApiErrorResponse,
@@ -7,16 +7,19 @@ import {
 	CreateCheckoutSessionResponseData,
 	DownloadTableObject,
 	isSuccessStatusCode
-} from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { RoutingService } from 'src/app/services/routing-service'
-import { EpubBook } from 'src/app/models/EpubBook'
-import { PdfBook } from 'src/app/models/PdfBook'
-import { UpdateBookOrder } from 'src/app/models/BookOrder'
-import { GetBook } from 'src/app/models/BookManager'
-import { GetDualScreenSettings, GetStoreBookStatusByString } from 'src/app/misc/utils'
+} from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { RoutingService } from "src/app/services/routing-service"
+import { EpubBook } from "src/app/models/EpubBook"
+import { PdfBook } from "src/app/models/PdfBook"
+import { UpdateBookOrder } from "src/app/models/BookOrder"
+import { GetBook } from "src/app/models/BookManager"
+import {
+	GetDualScreenSettings,
+	GetStoreBookStatusByString
+} from "src/app/misc/utils"
 import {
 	PublisherResource,
 	PublisherField,
@@ -32,13 +35,12 @@ import {
 	ListResponseData,
 	StoreBookSeriesResource,
 	StoreBookSeriesListField
-} from 'src/app/misc/types'
-import { environment } from 'src/environments/environment'
-import { enUS } from 'src/locales/locales'
+} from "src/app/misc/types"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-store-book-page',
-	templateUrl: './store-book-page.component.html'
+	selector: "pocketlib-store-book-page",
+	templateUrl: "./store-book-page.component.html"
 })
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
@@ -48,31 +50,31 @@ export class StoreBookPageComponent {
 	dualScreenFoldMargin: number = 0
 	uuid: string
 	book: {
-		collection: string,
-		title: string,
-		description: string,
-		price: number,
-		status: StoreBookStatus,
-		coverBlurhash: string,
+		collection: string
+		title: string
+		description: string
+		price: number
+		status: StoreBookStatus
+		coverBlurhash: string
 		categories: {
-			key: string,
+			key: string
 			name: string
-		}[],
-		inLibrary: boolean,
-		purchased: boolean,
+		}[]
+		inLibrary: boolean
+		purchased: boolean
 		series: string[]
 	} = {
-			collection: "",
-			title: "",
-			description: "",
-			price: 0,
-			status: StoreBookStatus.Unpublished,
-			coverBlurhash: null,
-			categories: [],
-			inLibrary: false,
-			purchased: false,
-			series: []
-		}
+		collection: "",
+		title: "",
+		description: "",
+		price: 0,
+		status: StoreBookStatus.Unpublished,
+		coverBlurhash: null,
+		categories: [],
+		inLibrary: false,
+		purchased: false,
+		series: []
+	}
 	categoryKeys: string[] = []
 	price: string = ""
 	bookStatus: string = ""
@@ -143,7 +145,7 @@ export class StoreBookPageComponent {
 		this.setSize()
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
 		this.showMobileLayout = window.innerWidth < 768 && !this.dualScreenLayout
@@ -204,17 +206,23 @@ export class StoreBookPageComponent {
 			this.book.inLibrary = responseData.inLibrary
 			this.book.purchased = responseData.purchased
 			this.categoryKeys = responseData.categories
-			this.coverAlt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
+			this.coverAlt = this.dataService
+				.GetLocale()
+				.misc.bookCoverAlt.replace("{0}", this.book.title)
 
 			// Load the cover
 			if (responseData.cover?.url != null) {
 				this.coverUrl = responseData.cover?.url
 
-				this.apiService.GetFile({ url: responseData.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						this.coverContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+				this.apiService
+					.GetFile({ url: responseData.cover.url })
+					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							this.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
 			}
 
 			// Load the price
@@ -224,7 +232,7 @@ export class StoreBookPageComponent {
 				this.price = (this.book.price / 100).toFixed(2) + " €"
 
 				if (this.dataService.supportedLocale == "de") {
-					this.price = this.price.replace('.', ',')
+					this.price = this.price.replace(".", ",")
 				}
 			}
 
@@ -265,7 +273,11 @@ export class StoreBookPageComponent {
 			})
 
 			if (isSuccessStatusCode(listSeriesResponse.status)) {
-				let listSeriesResponseData = (listSeriesResponse as ApiResponse<ListResponseData<StoreBookSeriesResource>>).data
+				let listSeriesResponseData = (
+					listSeriesResponse as ApiResponse<
+						ListResponseData<StoreBookSeriesResource>
+					>
+				).data
 
 				if (listSeriesResponseData.items.length > 0) {
 					this.book.series.push(listSeriesResponseData.items[0].uuid)
@@ -285,7 +297,8 @@ export class StoreBookPageComponent {
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			return (response as ApiResponse<StoreBookCollectionResource>).data.author
+			return (response as ApiResponse<StoreBookCollectionResource>).data
+				.author
 		}
 
 		return null
@@ -305,14 +318,23 @@ export class StoreBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.author = (response as ApiResponse<AuthorResource>).data
-			this.authorProfileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
+			this.authorProfileImageAlt = this.dataService
+				.GetLocale()
+				.misc.authorProfileImageAlt.replace(
+					"{0}",
+					`${this.author.firstName} ${this.author.lastName}`
+				)
 
 			if (this.author.profileImage?.url != null) {
-				this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						this.authorProfileImageContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+				this.apiService
+					.GetFile({ url: this.author.profileImage.url })
+					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							this.authorProfileImageContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
 			}
 		}
 	}
@@ -321,27 +343,33 @@ export class StoreBookPageComponent {
 		// Get the publisher
 		let publisherResponse = await this.apiService.RetrievePublisher({
 			uuid: this.author.publisher,
-			fields: [
-				PublisherField.name,
-				PublisherField.logo
-			]
+			fields: [PublisherField.name, PublisherField.logo]
 		})
 
 		if (isSuccessStatusCode(publisherResponse.status)) {
-			let responseData = (publisherResponse as ApiResponse<PublisherResource>).data
+			let responseData = (
+				publisherResponse as ApiResponse<PublisherResource>
+			).data
 
 			this.publisher = {
 				uuid: this.author.publisher,
 				name: responseData.name,
 				logoBlurhash: responseData.logo?.blurhash,
 				logoContent: this.dataService.defaultProfileImageUrl,
-				logoAlt: this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', responseData.name)
+				logoAlt: this.dataService
+					.GetLocale()
+					.misc.publisherLogoAlt.replace("{0}", responseData.name)
 			}
 
 			if (responseData.logo?.url != null) {
-				this.apiService.GetFile({ url: responseData.logo.url }).then((response: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(response.status)) this.publisher.logoContent = (response as ApiResponse<string>).data
-				})
+				this.apiService
+					.GetFile({ url: responseData.logo.url })
+					.then((response: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(response.status))
+							this.publisher.logoContent = (
+								response as ApiResponse<string>
+							).data
+					})
 			}
 		}
 	}
@@ -386,7 +414,7 @@ export class StoreBookPageComponent {
 
 			// Check if the user has purchased the book
 			if (this.book.purchased) {
-				if (!await this.AddBookToLibrary()) {
+				if (!(await this.AddBookToLibrary())) {
 					// Show error
 					this.loadingScreenVisible = false
 					this.errorDialogVisible = true
@@ -397,14 +425,14 @@ export class StoreBookPageComponent {
 			} else {
 				// Check if the book is free
 				if (this.book.price == 0) {
-					if (!await this.CreatePurchaseForBook()) {
+					if (!(await this.CreatePurchaseForBook())) {
 						// Show error
 						this.loadingScreenVisible = false
 						this.errorDialogVisible = true
 						return
 					}
 
-					if (!await this.AddBookToLibrary()) {
+					if (!(await this.AddBookToLibrary())) {
 						// Show error
 						this.loadingScreenVisible = false
 						this.errorDialogVisible = true
@@ -417,13 +445,19 @@ export class StoreBookPageComponent {
 					let isAuthorOfBook = false
 					if (this.dataService.userAuthor) {
 						// Try to find the book in the books of the author
-						isAuthorOfBook = (await this.dataService.userAuthor.GetCollections()).findIndex(collection => collection.uuid == this.book.collection) != -1
+						isAuthorOfBook =
+							(
+								await this.dataService.userAuthor.GetCollections()
+							).findIndex(
+								collection => collection.uuid == this.book.collection
+							) != -1
 					}
 
 					if (
-						!this.dataService.userIsAdmin
-						&& !isAuthorOfBook
-						&& (this.book.price > 0 && this.dataService.dav.user.Plan != 2)
+						!this.dataService.userIsAdmin &&
+						!isAuthorOfBook &&
+						this.book.price > 0 &&
+						this.dataService.dav.user.Plan != 2
 					) {
 						// Show dav Pro dialog
 						this.loadingScreenVisible = false
@@ -456,7 +490,9 @@ export class StoreBookPageComponent {
 			this.book.purchased = true
 
 			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
+			this.cachingService.ClearApiRequestCache(
+				this.apiService.RetrieveStoreBook.name
+			)
 
 			return true
 		}
@@ -485,16 +521,21 @@ export class StoreBookPageComponent {
 				this.dataService.books.unshift(book)
 
 				// Update the order of the books
-				await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
+				await UpdateBookOrder(
+					this.dataService.bookOrder,
+					this.dataService.books
+				)
 			}
 
 			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
+			this.cachingService.ClearApiRequestCache(
+				this.apiService.RetrieveStoreBook.name
+			)
 
 			return true
 		} else {
 			let error = (response as ApiErrorResponse).errors[0]
-			
+
 			if (error.code == 3005) {
 				// StoreBook is already in library
 				return true
@@ -519,7 +560,11 @@ export class StoreBookPageComponent {
 
 		// Update the settings with the position of the current book
 		if (book instanceof EpubBook) {
-			await this.dataService.settings.SetBook(book.uuid, book.chapter, book.progress)
+			await this.dataService.settings.SetBook(
+				book.uuid,
+				book.chapter,
+				book.progress
+			)
 		} else if (book instanceof PdfBook) {
 			await this.dataService.settings.SetBook(book.uuid, null, book.page)
 		}
@@ -543,7 +588,9 @@ export class StoreBookPageComponent {
 	}
 
 	NavigateToAccountPage() {
-		this.router.navigate(['account'], { queryParams: { redirect: `store/book/${this.uuid}` } })
+		this.router.navigate(["account"], {
+			queryParams: { redirect: `store/book/${this.uuid}` }
+		})
 	}
 
 	async NavigateToPurchasePage() {
@@ -561,7 +608,9 @@ export class StoreBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			// Navigate to the checkout session url
-			let responseData = (response as ApiResponse<CreateCheckoutSessionResponseData>).data
+			let responseData = (
+				response as ApiResponse<CreateCheckoutSessionResponseData>
+			).data
 			window.location.href = responseData.sessionUrl
 		} else {
 			// Show error
@@ -580,10 +629,12 @@ export class StoreBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.status = StoreBookStatus.Published
-			
+
 			// Find the author and clear the collections
 			if (this.dataService.userIsAdmin) {
-				let author = this.dataService.adminAuthors.find(a => a.uuid == this.author.uuid)
+				let author = this.dataService.adminAuthors.find(
+					a => a.uuid == this.author.uuid
+				)
 
 				if (author != null) {
 					author.ClearCollections()
@@ -594,8 +645,12 @@ export class StoreBookPageComponent {
 		}
 
 		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveStoreBook.name)
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.RetrieveStoreBook.name
+		)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBooks.name
+		)
 
 		this.publishLoading = false
 	}

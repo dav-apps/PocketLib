@@ -1,16 +1,15 @@
-<div
-	class="container slide-up-in"
->
+<div class="container slide-up-in">
 	<div class="mt-3 mb-4">
 		<dav-header
 			[header]="title"
 			backButtonVisible
-			(backButtonClick)="BackButtonClick()">
-		</dav-header>
+			(backButtonClick)="BackButtonClick()"
+		></dav-header>
 	</div>
 
 	<div>
-		<a class="card my-2 mx-auto cursor theme-background-color-secondary"
+		<a
+			class="card my-2 mx-auto cursor theme-background-color-secondary"
 			style="text-decoration: none; transition: 0.12s; max-width: 400px"
 			[routerLink]="release.link"
 			*ngFor="let release of releaseItems"
@@ -25,7 +24,11 @@
 				</div>
 
 				<div class="col-2 my-auto d-flex justify-content-center">
-					<fa-icon [icon]="faAngleRight" class="text-color" style="font-size: 24px"></fa-icon>
+					<fa-icon
+						[icon]="faAngleRight"
+						class="text-color"
+						style="font-size: 24px"
+					></fa-icon>
 				</div>
 			</div>
 		</a>

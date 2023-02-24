@@ -1,19 +1,17 @@
 <!-- Normal layout -->
-<div
-	class="container slide-up-in"
-	*ngIf="!dualScreenLayout"
->
+<div class="container slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mt-3 mb-4">
 		<dav-header
 			[header]="book.title"
 			backButtonVisible
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
-			(editButtonClick)="ShowEditTitleDialog()">
-		</dav-header>
+			(editButtonClick)="ShowEditTitleDialog()"
+		></dav-header>
 	</div>
 
-	<div class="mt-3 mb-4 mx-auto"
+	<div
+		class="mt-3 mb-4 mx-auto"
 		style="min-width: 200px; max-width: 300px"
 		*ngIf="errorMessage.length > 0"
 	>
@@ -25,14 +23,22 @@
 	<div class="d-flex justify-content-center mb-4">
 		<div id="book-details-container">
 			<!-- Release notes -->
-			<div id="book-details-release-notes-label" *ngIf="release != null && release.releaseNotes">
+			<div
+				id="book-details-release-notes-label"
+				*ngIf="release != null && release.releaseNotes"
+			>
 				<p class="me-3 fw-light text-color" style="font-size: 19px">
 					{{ locale.releaseNotes }}:
 				</p>
 			</div>
 
-			<div id="book-details-release-notes-data" class="book-details-data" *ngIf="release != null && release.releaseNotes">
-				<p class="text-color"
+			<div
+				id="book-details-release-notes-data"
+				class="book-details-data"
+				*ngIf="release != null && release.releaseNotes"
+			>
+				<p
+					class="text-color"
 					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
 				>
 					{{ release.releaseNotes }}
@@ -41,11 +47,19 @@
 
 			<!-- Cover -->
 			<div id="book-details-cover-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">{{ locale.cover }}:</p>
+				<p class="me-3 fw-light text-color" style="font-size: 19px">
+					{{ locale.cover }}:
+				</p>
 			</div>
 
 			<div id="book-details-cover-data" class="book-details-data">
-				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+				<p
+					class="fw-light fst-italic text-color"
+					style="margin-top: 3px"
+					*ngIf="!coverContent"
+				>
+					{{ locale.noCover }}
+				</p>
 				<div class="mb-3" *ngIf="coverContent">
 					<pocketlib-blurhash-image
 						[src]="coverContent"
@@ -53,8 +67,8 @@
 						[blurhash]="book.coverBlurhash"
 						height="200"
 						width="140"
-						[loading]="coverLoading">
-					</pocketlib-blurhash-image>
+						[loading]="coverLoading"
+					></pocketlib-blurhash-image>
 				</div>
 
 				<dav-button
@@ -77,16 +91,23 @@
 			</div>
 
 			<div id="book-details-description-data" class="book-details-data">
-				<p class="text-color"
+				<p
+					class="text-color"
 					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
 					*ngIf="book.description && !editDescription"
 				>
 					{{ book.description }}
 				</p>
-				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+				<p
+					class="fw-light fst-italic text-color"
+					style="margin-top: 3px"
+					*ngIf="!book.description && !editDescription"
+				>
+					{{ locale.noDescription }}
+				</p>
 
 				<div
-					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
+					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px"
 					*ngIf="editDescription"
 				>
 					<dav-textarea
@@ -94,8 +115,11 @@
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
 						resize="vertical"
 						[errorMessage]="newDescriptionError"
-						(change)="newDescription = $event.detail.value; newDescriptionError = ''">
-					</dav-textarea>
+						(change)="
+							newDescription = $event.detail.value;
+							newDescriptionError = ''
+						"
+					></dav-textarea>
 				</div>
 
 				<dav-button
@@ -119,20 +143,26 @@
 
 			<!-- Language -->
 			<div id="book-details-language-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">{{ locale.language }}:</p>
+				<p class="me-3 fw-light text-color" style="font-size: 19px">
+					{{ locale.language }}:
+				</p>
 			</div>
 
 			<div id="book-details-language-data" class="d-flex book-details-data">
 				<pocketlib-language-dropdown
 					[language]="book.language"
-					[disabled]="(book.status == 2 || book.status == 3) && release != null"
-					(updated)="SetLanguage($event)">
-				</pocketlib-language-dropdown>
+					[disabled]="
+						(book.status == 2 || book.status == 3) && release != null
+					"
+					(updated)="SetLanguage($event)"
+				></pocketlib-language-dropdown>
 			</div>
 
 			<!-- Categories -->
 			<div id="book-details-categories-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">{{ locale.categories }}:</p>
+				<p class="me-3 fw-light text-color" style="font-size: 19px">
+					{{ locale.categories }}:
+				</p>
 			</div>
 
 			<div id="book-details-categories-data" class="book-details-data">
@@ -147,8 +177,9 @@
 						</span>
 					</div>
 
-					<button type="button" 
-						class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button" 
+					<button
+						type="button"
+						class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 						style="height: 35px; padding: 3px 6px; font-size: 16px"
 						(click)="ShowCategoriesDialog()"
 						*ngIf="release == null"
@@ -169,21 +200,26 @@
 				<pocketlib-price-input
 					#priceInput
 					[canEdit]="release == null"
-					(update)="UpdatePrice($event)">
-				</pocketlib-price-input>
+					(update)="UpdatePrice($event)"
+				></pocketlib-price-input>
 			</div>
 
 			<!-- ISBN -->
 			<div id="book-details-isbn-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">ISBN:</p>
+				<p class="me-3 fw-light text-color" style="font-size: 19px">
+					ISBN:
+				</p>
 			</div>
 
-			<div id="book-details-isbn-data" class="d-flex text-color book-details-data">
+			<div
+				id="book-details-isbn-data"
+				class="d-flex text-color book-details-data"
+			>
 				<pocketlib-isbn-input
 					#isbnInput
 					[canEdit]="release == null"
-					(update)="UpdateIsbn($event)">
-				</pocketlib-isbn-input>
+					(update)="UpdateIsbn($event)"
+				></pocketlib-isbn-input>
 			</div>
 
 			<!-- Book file -->
@@ -194,10 +230,32 @@
 			</div>
 
 			<div id="book-details-book-file-data" class="book-details-data">
-				<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
-				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
-				<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
-				<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
+				<p
+					class="fw-light fst-italic text-color"
+					style="margin-top: 3px"
+					*ngIf="!bookFileUploaded && !bookFileLoading"
+				>
+					{{ locale.noBookFile }}
+				</p>
+				<p
+					class="fw-light text-color"
+					*ngIf="
+						bookFileUploaded && book.fileName == null && !bookFileLoading
+					"
+				>
+					{{ locale.bookFileUploaded }}
+				</p>
+				<p
+					class="fw-light text-color"
+					*ngIf="
+						bookFileUploaded && book.fileName != null && !bookFileLoading
+					"
+				>
+					{{ book.fileName }}
+				</p>
+				<p class="fw-light text-color" *ngIf="bookFileLoading">
+					{{ locale.bookFileUploading }}
+				</p>
 
 				<div class="d-flex">
 					<dav-button
@@ -214,13 +272,16 @@
 					<dav-progress-ring
 						style="margin: 8px 0px 0px 14px"
 						size="16"
-						*ngIf="bookFileLoading">
-					</dav-progress-ring>
+						*ngIf="bookFileLoading"
+					></dav-progress-ring>
 				</div>
 			</div>
 
 			<!-- Status -->
-			<div id="book-details-status-label" *ngIf="book.status == 0 && release == null">
+			<div
+				id="book-details-status-label"
+				*ngIf="book.status == 0 && release == null"
+			>
 				<p class="me-3 fw-light text-color" style="font-size: 19px">
 					{{ locale.status }}:
 				</p>
@@ -233,7 +294,12 @@
 					<div class="d-flex">
 						<dav-button
 							type="accent"
-							[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
+							[disabled]="
+								!coverContent ||
+								!bookFileUploaded ||
+								!book.description ||
+								statusLoading
+							"
 							(click)="PublishBook()"
 						>
 							{{ locale.publish }}
@@ -242,14 +308,18 @@
 						<dav-progress-ring
 							style="margin: 8px 0px 0px 14px"
 							size="16"
-							*ngIf="statusLoading">
-						</dav-progress-ring>
+							*ngIf="statusLoading"
+						></dav-progress-ring>
 					</div>
 				</div>
 
 				<div
 					class="d-flex"
-					*ngIf="(book.status == 2 || book.status == 3) && release == null && changes"
+					*ngIf="
+						(book.status == 2 || book.status == 3) &&
+						release == null &&
+						changes
+					"
 				>
 					<dav-button
 						type="accent"
@@ -265,26 +335,21 @@
 </div>
 
 <!-- Dual-Screen layout -->
-<div
-	class="d-flex flex-row slide-up-in"
-	*ngIf="dualScreenLayout"
->
+<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
 	<!-- Left screen -->
-	<div
-		class="w-50"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
 				[header]="book.title"
 				backButtonVisible
 				editButtonVisible
 				(backButtonClick)="BackButtonClick()"
-				(editButtonClick)="ShowEditTitleDialog()">
-			</dav-header>
+				(editButtonClick)="ShowEditTitleDialog()"
+			></dav-header>
 		</div>
 
-		<div class="mt-3 mb-4 mx-auto"
+		<div
+			class="mt-3 mb-4 mx-auto"
 			style="min-width: 200px; max-width: 300px"
 			*ngIf="errorMessage.length > 0"
 		>
@@ -294,28 +359,55 @@
 		</div>
 
 		<div class="d-flex justify-content-center mb-4 px-5">
-			<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
+			<div
+				style="
+					display: inline-grid;
+					grid-template-columns: auto auto;
+					grid-template-rows: auto auto;
+					grid-gap: 28px 8px;
+				"
+			>
 				<!-- Release notes -->
-				<div style="grid-column: 1; grid-row: 1;" *ngIf="release != null && release.releaseNotes">
-					<p class="me-3 fw-light text-color" style="font-size: 19px">{{ locale.releaseNotes }}:</p>
+				<div
+					style="grid-column: 1; grid-row: 1"
+					*ngIf="release != null && release.releaseNotes"
+				>
+					<p class="me-3 fw-light text-color" style="font-size: 19px">
+						{{ locale.releaseNotes }}:
+					</p>
 				</div>
 
-				<div style="grid-column: 2; grid-row: 1;" *ngIf="release != null && release.releaseNotes">
-					<p class="text-color"
-						style="margin-top: 3px; max-width: 400px; white-space: pre-line">
+				<div
+					style="grid-column: 2; grid-row: 1"
+					*ngIf="release != null && release.releaseNotes"
+				>
+					<p
+						class="text-color"
+						style="
+							margin-top: 3px;
+							max-width: 400px;
+							white-space: pre-line;
+						"
+					>
 						{{ release.releaseNotes }}
 					</p>
 				</div>
 
 				<!-- Cover -->
-				<div style="grid-column: 1; grid-row: 2;">
+				<div style="grid-column: 1; grid-row: 2">
 					<p class="me-3 fw-light text-color" style="font-size: 19px">
 						{{ locale.cover }}:
 					</p>
 				</div>
 
-				<div style="grid-column: 2; grid-row: 2;">
-					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!coverContent">{{ locale.noCover }}</p>
+				<div style="grid-column: 2; grid-row: 2">
+					<p
+						class="fw-light fst-italic text-color"
+						style="margin-top: 3px"
+						*ngIf="!coverContent"
+					>
+						{{ locale.noCover }}
+					</p>
 					<div class="mb-3" *ngIf="coverContent">
 						<pocketlib-blurhash-image
 							[src]="coverContent"
@@ -323,8 +415,8 @@
 							[blurhash]="book.coverBlurhash"
 							height="200"
 							width="140"
-							[loading]="coverLoading">
-						</pocketlib-blurhash-image>
+							[loading]="coverLoading"
+						></pocketlib-blurhash-image>
 					</div>
 
 					<dav-button
@@ -339,23 +431,34 @@
 				</div>
 
 				<!-- Description -->
-				<div style="grid-column: 1; grid-row: 3;">
+				<div style="grid-column: 1; grid-row: 3">
 					<p class="me-3 fw-light text-color" style="font-size: 19px">
 						{{ locale.description }}:
 					</p>
 				</div>
 
 				<div style="grid-column: 2; grid-row: 3; min-width: 300px">
-					<p class="text-color"
-						style="margin-top: 3px; max-width: 400px; white-space: pre-line"
+					<p
+						class="text-color"
+						style="
+							margin-top: 3px;
+							max-width: 400px;
+							white-space: pre-line;
+						"
 						*ngIf="book.description && !editDescription"
 					>
 						{{ book.description }}
 					</p>
-					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!book.description && !editDescription">{{ locale.noDescription }}</p>
+					<p
+						class="fw-light fst-italic text-color"
+						style="margin-top: 3px"
+						*ngIf="!book.description && !editDescription"
+					>
+						{{ locale.noDescription }}
+					</p>
 
 					<div
-						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px;"
+						style="margin-top: 3px; margin-bottom: 16px; min-width: 300px"
 						*ngIf="editDescription"
 					>
 						<dav-textarea
@@ -363,7 +466,11 @@
 							[placeholder]="locale.descriptionTextfieldPlaceholder"
 							resize="vertical"
 							[errorMessage]="newDescriptionError"
-							(change)="newDescription = $event.detail.value; newDescriptionError = ''">
+							(change)="
+								newDescription = $event.detail.value;
+								newDescriptionError = ''
+							"
+						>
 						</dav-textarea>
 					</div>
 
@@ -389,14 +496,21 @@
 	</div>
 
 	<!-- Right screen -->
-	<div
-		class="w-50"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
-		<div class="d-flex justify-content-center mb-4 px-5" style="margin-top: 78px">
-			<div style="display: inline-grid; grid-template-columns: auto auto; grid-template-rows: auto auto; grid-gap: 28px 8px">
+	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
+		<div
+			class="d-flex justify-content-center mb-4 px-5"
+			style="margin-top: 78px"
+		>
+			<div
+				style="
+					display: inline-grid;
+					grid-template-columns: auto auto;
+					grid-template-rows: auto auto;
+					grid-gap: 28px 8px;
+				"
+			>
 				<!-- Language -->
-				<div style="grid-column: 1; grid-row: 1;">
+				<div style="grid-column: 1; grid-row: 1">
 					<p class="me-3 fw-light text-color" style="font-size: 19px">
 						{{ locale.language }}:
 					</p>
@@ -406,8 +520,8 @@
 					<pocketlib-language-dropdown
 						[language]="book.language"
 						[disabled]="book.status == 2 || book.status == 3"
-						(updated)="SetLanguage($event)">
-					</pocketlib-language-dropdown>
+						(updated)="SetLanguage($event)"
+					></pocketlib-language-dropdown>
 				</div>
 
 				<!-- Categories -->
@@ -429,7 +543,8 @@
 							</span>
 						</div>
 
-						<button type="button"
+						<button
+							type="button"
 							class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
 							style="height: 35px; padding: 3px 6px; font-size: 16px"
 							(click)="ShowCategoriesDialog()"
@@ -450,35 +565,63 @@
 					<pocketlib-price-input
 						#priceInput
 						[canEdit]="release == null"
-						(update)="UpdatePrice($event)">
-					</pocketlib-price-input>
+						(update)="UpdatePrice($event)"
+					></pocketlib-price-input>
 				</div>
 
 				<!-- ISBN -->
-				<div style="grid-column: 1; grid-row: 4;">
+				<div style="grid-column: 1; grid-row: 4">
 					<p class="me-3 fw-light text-color" style="font-size: 19px">
 						ISBN:
 					</p>
 				</div>
 
-				<div class="d-flex text-color" style="grid-column: 2; grid-row: 4;">
+				<div class="d-flex text-color" style="grid-column: 2; grid-row: 4">
 					<pocketlib-isbn-input
 						#isbnInput
 						[canEdit]="release == null"
-						(update)="UpdateIsbn($event)">
-					</pocketlib-isbn-input>
+						(update)="UpdateIsbn($event)"
+					></pocketlib-isbn-input>
 				</div>
 
 				<!-- Book file -->
-				<div style="grid-column: 1; grid-row: 5;">
-					<p class="me-3 fw-light text-color" style="font-size: 19px">{{ locale.bookFile }}:</p>
+				<div style="grid-column: 1; grid-row: 5">
+					<p class="me-3 fw-light text-color" style="font-size: 19px">
+						{{ locale.bookFile }}:
+					</p>
 				</div>
 
-				<div style="grid-column: 2; grid-row: 5;">
-					<p class="fw-light fst-italic text-color" style="margin-top: 3px" *ngIf="!bookFileUploaded && !bookFileLoading">{{ locale.noBookFile }}</p>
-					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName == null && !bookFileLoading">{{ locale.bookFileUploaded }}</p>
-					<p class="fw-light text-color" *ngIf="bookFileUploaded && book.fileName != null && !bookFileLoading">{{ book.fileName }}</p>
-					<p class="fw-light text-color" *ngIf="bookFileLoading">{{ locale.bookFileUploading }}</p>
+				<div style="grid-column: 2; grid-row: 5">
+					<p
+						class="fw-light fst-italic text-color"
+						style="margin-top: 3px"
+						*ngIf="!bookFileUploaded && !bookFileLoading"
+					>
+						{{ locale.noBookFile }}
+					</p>
+					<p
+						class="fw-light text-color"
+						*ngIf="
+							bookFileUploaded &&
+							book.fileName == null &&
+							!bookFileLoading
+						"
+					>
+						{{ locale.bookFileUploaded }}
+					</p>
+					<p
+						class="fw-light text-color"
+						*ngIf="
+							bookFileUploaded &&
+							book.fileName != null &&
+							!bookFileLoading
+						"
+					>
+						{{ book.fileName }}
+					</p>
+					<p class="fw-light text-color" *ngIf="bookFileLoading">
+						{{ locale.bookFileUploading }}
+					</p>
 
 					<div class="d-flex">
 						<dav-button
@@ -487,49 +630,62 @@
 							accept="application/epub+zip"
 							[disabled]="bookFileLoading"
 							(filePick)="BookFileUpload($event)"
-							*ngIf="release == null">
+							*ngIf="release == null"
+						>
 							{{ locale.uploadBookFile }}
 						</dav-button>
 
 						<dav-progress-ring
 							style="margin: 8px 0px 0px 14px"
 							size="16"
-							*ngIf="bookFileLoading">
-						</dav-progress-ring>
+							*ngIf="bookFileLoading"
+						></dav-progress-ring>
 					</div>
 				</div>
 
 				<!-- Status -->
-				<div style="grid-column: 1; grid-row: 6;" *ngIf="book.status == 0 && release == null">
+				<div
+					style="grid-column: 1; grid-row: 6"
+					*ngIf="book.status == 0 && release == null"
+				>
 					<p class="me-3 fw-light text-color" style="font-size: 19px">
 						{{ locale.status }}:
 					</p>
 				</div>
 
-				<div style="grid-column: 2; grid-row: 6;">
+				<div style="grid-column: 2; grid-row: 6">
 					<div *ngIf="book.status == 0">
 						<p class="text-color">{{ locale.unpublished }}</p>
 
 						<div class="d-flex">
 							<dav-button
 								type="accent"
-								[disabled]="!coverContent || !bookFileUploaded || !book.description || statusLoading"
+								[disabled]="
+									!coverContent ||
+									!bookFileUploaded ||
+									!book.description ||
+									statusLoading
+								"
 								(click)="PublishBook()"
 							>
 								{{ locale.publish }}
 							</dav-button>
-	
+
 							<dav-progress-ring
 								style="margin: 8px 0px 0px 14px"
 								size="16"
-								*ngIf="statusLoading">
-							</dav-progress-ring>
+								*ngIf="statusLoading"
+							></dav-progress-ring>
 						</div>
 					</div>
 
 					<div
 						class="d-flex"
-						*ngIf="(book.status == 2 || book.status == 3) && release == null && changes"
+						*ngIf="
+							(book.status == 2 || book.status == 3) &&
+							release == null &&
+							changes
+						"
 					>
 						<dav-button
 							type="accent"
@@ -564,9 +720,12 @@
 				[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
 				[errorMessage]="editTitleDialogTitleError"
 				[disabled]="editTitleDialogLoading"
-				(change)="editTitleDialogTitle = $event.detail.value; editTitleDialogTitleError = ''"
-				(enter)="UpdateTitle()">
-			</dav-textfield>
+				(change)="
+					editTitleDialogTitle = $event.detail.value;
+					editTitleDialogTitleError = ''
+				"
+				(enter)="UpdateTitle()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>
@@ -582,8 +741,7 @@
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false"
 >
 	<div class="mb-3">
-		<pocketlib-categories-selection
-			#categoriesSelection>
+		<pocketlib-categories-selection #categoriesSelection>
 		</pocketlib-categories-selection>
 	</div>
 </dav-dialog>
@@ -603,12 +761,17 @@
 			<dav-textfield
 				[value]="publishChangesDialogReleaseName"
 				[label]="locale.publishChangesDialog.releaseNameTextfieldLabel"
-				[placeholder]="locale.publishChangesDialog.releaseNameTextfieldPlaceholder"
+				[placeholder]="
+					locale.publishChangesDialog.releaseNameTextfieldPlaceholder
+				"
 				[errorMessage]="publishChangesDialogReleaseNameError"
 				[disabled]="publishChangesDialogLoading"
-				(change)="publishChangesDialogReleaseName = $event.detail.value; ClearPublishChangesErrors()"
-				(enter)="PublishChanges()">
-			</dav-textfield>
+				(change)="
+					publishChangesDialogReleaseName = $event.detail.value;
+					ClearPublishChangesErrors()
+				"
+				(enter)="PublishChanges()"
+			></dav-textfield>
 		</div>
 
 		<!-- Release notes -->
@@ -616,10 +779,15 @@
 			<dav-textarea
 				[value]="publishChangesDialogReleaseNotes"
 				[label]="locale.publishChangesDialog.releaseNotesTextfieldLabel"
-				[placeholder]="locale.publishChangesDialog.releaseNotesTextfieldPlaceholder"
+				[placeholder]="
+					locale.publishChangesDialog.releaseNotesTextfieldPlaceholder
+				"
 				[disabled]="publishChangesDialogLoading"
-				(change)="publishChangesDialogReleaseNotes = $event.detail.value; ClearPublishChangesErrors()">
-			</dav-textarea>
+				(change)="
+					publishChangesDialogReleaseNotes = $event.detail.value;
+					ClearPublishChangesErrors()
+				"
+			></dav-textarea>
 		</div>
 	</form>
 </dav-dialog>

@@ -39,12 +39,17 @@ export class AuthorBookDashboardPageComponent {
 
 		if (this.dataService.userIsAdmin) {
 			// Get the author
-			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
-			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let authorUuid =
+				this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (this.author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					this.author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (this.author != null) break
 				}
 			}
@@ -53,7 +58,7 @@ export class AuthorBookDashboardPageComponent {
 		}
 
 		if (this.author == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -61,7 +66,9 @@ export class AuthorBookDashboardPageComponent {
 		let storeBookUuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
 		for (let collection of await this.author.GetCollections()) {
-			this.book = (await collection.GetStoreBooks()).find(b => b.uuid == storeBookUuid)
+			this.book = (await collection.GetStoreBooks()).find(
+				b => b.uuid == storeBookUuid
+			)
 
 			if (this.book != null) {
 				this.collection = collection
@@ -70,7 +77,7 @@ export class AuthorBookDashboardPageComponent {
 		}
 
 		if (this.book == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -80,7 +87,8 @@ export class AuthorBookDashboardPageComponent {
 	}
 
 	async LoadBackButtonLink() {
-		let singleBookInCollection = (await this.collection.GetStoreBooks()).length == 1
+		let singleBookInCollection =
+			(await this.collection.GetStoreBooks()).length == 1
 
 		if (singleBookInCollection && this.dataService.userIsAdmin) {
 			this.backButtonLink = `/author/${this.author.uuid}`
@@ -99,7 +107,13 @@ export class AuthorBookDashboardPageComponent {
 
 	ShowDetailsButtonClick() {
 		if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "details"])
+			this.router.navigate([
+				"author",
+				this.author.uuid,
+				"book",
+				this.book.uuid,
+				"details"
+			])
 		} else {
 			this.router.navigate(["author", "book", this.book.uuid, "details"])
 		}
@@ -107,7 +121,13 @@ export class AuthorBookDashboardPageComponent {
 
 	ShowReleasesButtonClick() {
 		if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "releases"])
+			this.router.navigate([
+				"author",
+				this.author.uuid,
+				"book",
+				this.book.uuid,
+				"releases"
+			])
 		} else {
 			this.router.navigate(["author", "book", this.book.uuid, "releases"])
 		}
@@ -123,9 +143,15 @@ export class AuthorBookDashboardPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.collection.ClearStoreBooks()
-			
+
 			if (this.dataService.userIsAdmin) {
-				this.router.navigate(["author", this.author.uuid, "book", this.book.uuid, "details"])
+				this.router.navigate([
+					"author",
+					this.author.uuid,
+					"book",
+					this.book.uuid,
+					"details"
+				])
 			} else {
 				this.router.navigate(["author", "book", this.book.uuid, "details"])
 			}

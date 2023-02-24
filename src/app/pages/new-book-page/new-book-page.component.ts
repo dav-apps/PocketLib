@@ -1,16 +1,16 @@
-import { Component, HostListener } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { PromiseHolder, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { RoutingService } from 'src/app/services/routing-service'
-import { Author } from 'src/app/models/Author'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+import { Component, HostListener } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { PromiseHolder, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { RoutingService } from "src/app/services/routing-service"
+import { Author } from "src/app/models/Author"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-new-book-page',
-	templateUrl: './new-book-page.component.html'
+	selector: "pocketlib-new-book-page",
+	templateUrl: "./new-book-page.component.html"
 })
 export class NewBookPageComponent {
 	//#region Navigation variables
@@ -38,8 +38,8 @@ export class NewBookPageComponent {
 
 	//#region Collection variables
 	collections: {
-		uuid: string,
-		name: string,
+		uuid: string
+		name: string
 		coverContent: string
 	}[] = []
 	selectedCollection: number = -2
@@ -90,7 +90,8 @@ export class NewBookPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().newBookPage
-		this.routingService.toolbarNavigationEvent = async () => await this.HandleToolbarNavigationEvent()
+		this.routingService.toolbarNavigationEvent = async () =>
+			await this.HandleToolbarNavigationEvent()
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
@@ -107,11 +108,15 @@ export class NewBookPageComponent {
 			let authorUuid = this.activatedRoute.snapshot.paramMap.get("uuid")
 
 			// Find the author with the uuid
-			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (author != null) break
 				}
 			}
@@ -149,7 +154,8 @@ export class NewBookPageComponent {
 		}
 
 		// If the user navigated from the collection view, preselect the appropriate collection
-		let collectionUuid = this.activatedRoute.snapshot.queryParamMap.get("collection")
+		let collectionUuid =
+			this.activatedRoute.snapshot.queryParamMap.get("collection")
 
 		if (collectionUuid) {
 			let i = this.collections.findIndex(c => c.uuid == collectionUuid)
@@ -164,7 +170,7 @@ export class NewBookPageComponent {
 		this.routingService.toolbarNavigationEvent = null
 	}
 
-	@HostListener('window:beforeunload', ['$event'])
+	@HostListener("window:beforeunload", ["$event"])
 	ShowAlert(event: any) {
 		event.returnValue = true
 	}
@@ -302,8 +308,8 @@ export class NewBookPageComponent {
 
 	//#region Cover functions
 	SetCover(coverDetails: {
-		coverContentBase64: string,
-		coverContent: ArrayBuffer,
+		coverContentBase64: string
+		coverContent: ArrayBuffer
 		coverType: string
 	}) {
 		this.coverContentBase64 = coverDetails.coverContentBase64
@@ -318,8 +324,8 @@ export class NewBookPageComponent {
 
 	//#region Book file functions
 	SetBookFile(bookFileDetails: {
-		bookFileName: string,
-		bookFileContent: ArrayBuffer,
+		bookFileName: string
+		bookFileContent: ArrayBuffer
 		bookFileType: string
 	}) {
 		this.bookFileName = bookFileDetails.bookFileName
@@ -336,10 +342,13 @@ export class NewBookPageComponent {
 			this.dataService.navbarVisible = false
 
 			// Set the color of the progress ring
-			let progress = document.getElementsByTagName('circle')
+			let progress = document.getElementsByTagName("circle")
 			if (progress.length > 0) {
 				let item = progress.item(0)
-				item.setAttribute('style', item.getAttribute('style') + ' stroke: white')
+				item.setAttribute(
+					"style",
+					item.getAttribute("style") + " stroke: white"
+				)
 			}
 		}, 1)
 	}
@@ -378,7 +387,9 @@ export class NewBookPageComponent {
 			return
 		}
 
-		let createStoreBookResponseData = (createStoreBookResponse as ApiResponse<any>).data
+		let createStoreBookResponseData = (
+			createStoreBookResponse as ApiResponse<any>
+		).data
 
 		if (this.coverContent) {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
@@ -414,9 +425,20 @@ export class NewBookPageComponent {
 		this.dataService.navbarVisible = true
 
 		if (this.dataService.userIsAdmin) {
-			this.router.navigate(["author", this.author.uuid, "book", createStoreBookResponseData.uuid, "details"])
+			this.router.navigate([
+				"author",
+				this.author.uuid,
+				"book",
+				createStoreBookResponseData.uuid,
+				"details"
+			])
 		} else {
-			this.router.navigate(["author", "book", createStoreBookResponseData.uuid, "details"])
+			this.router.navigate([
+				"author",
+				"book",
+				createStoreBookResponseData.uuid,
+				"details"
+			])
 		}
 	}
 	//#endregion

@@ -1,24 +1,24 @@
-import { Component } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { DragulaService } from 'ng2-dragula'
+import { Component } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { DragulaService } from "ng2-dragula"
 import {
 	faPlus as faPlusLight,
 	faTrashCan as faTrashCanLight
-} from '@fortawesome/pro-light-svg-icons'
-import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { Author } from 'src/app/models/Author'
-import { StoreBookSeries } from 'src/app/models/StoreBookSeries'
-import { StoreBook } from 'src/app/models/StoreBook'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import * as ErrorCodes from 'src/constants/errorCodes'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { Author } from "src/app/models/Author"
+import { StoreBookSeries } from "src/app/models/StoreBookSeries"
+import { StoreBook } from "src/app/models/StoreBook"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import * as ErrorCodes from "src/constants/errorCodes"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-author-series-page',
-	templateUrl: './author-series-page.component.html'
+	selector: "pocketlib-author-series-page",
+	templateUrl: "./author-series-page.component.html"
 })
 export class AuthorSeriesPageComponent {
 	locale = enUS.authorSeriesPage
@@ -28,7 +28,11 @@ export class AuthorSeriesPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	author: Author
-	series: StoreBookSeries = new StoreBookSeries(null, this.apiService, this.cachingService)
+	series: StoreBookSeries = new StoreBookSeries(
+		null,
+		this.apiService,
+		this.cachingService
+	)
 	books: StoreBook[] = []
 	selectableBooks: StoreBook[] = []
 	editNameDialogVisible: boolean = false
@@ -58,8 +62,10 @@ export class AuthorSeriesPageComponent {
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
-		this.dragulaService.drag("books").subscribe(() => this.dragging = true)
-		this.dragulaService.dragend("books").subscribe(() => this.dragging = false)
+		this.dragulaService.drag("books").subscribe(() => (this.dragging = true))
+		this.dragulaService
+			.dragend("books")
+			.subscribe(() => (this.dragging = false))
 	}
 
 	async ngOnInit() {
@@ -70,12 +76,17 @@ export class AuthorSeriesPageComponent {
 
 		if (this.dataService.userIsAdmin) {
 			// Get the author
-			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
-			this.author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let authorUuid =
+				this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			this.author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (this.author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					this.author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (this.author != null) break
 				}
 			}
@@ -84,7 +95,7 @@ export class AuthorSeriesPageComponent {
 		}
 
 		if (this.author == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -92,10 +103,12 @@ export class AuthorSeriesPageComponent {
 		this.uuid = this.activatedRoute.snapshot.paramMap.get("series_uuid")
 
 		// Get the series
-		this.series = (await this.author.GetSeries()).find(s => s.uuid == this.uuid)
+		this.series = (await this.author.GetSeries()).find(
+			s => s.uuid == this.uuid
+		)
 
 		if (this.series == null) {
-			this.router.navigate(['author'])
+			this.router.navigate(["author"])
 			return
 		}
 
@@ -123,11 +136,13 @@ export class AuthorSeriesPageComponent {
 		for (let collection of await this.author.GetCollections()) {
 			for (let book of await collection.GetStoreBooks()) {
 				if (
-					this.books.findIndex(b => b.uuid == book.uuid) == -1
-					&& book.status > 0
-					&& book.cover.url != null
-					&& book.language == this.series.language
-				) this.selectableBooks.push(book)
+					this.books.findIndex(b => b.uuid == book.uuid) == -1 &&
+					book.status > 0 &&
+					book.cover.url != null &&
+					book.language == this.series.language
+				) {
+					this.selectableBooks.push(book)
+				}
 			}
 		}
 	}
@@ -253,7 +268,7 @@ export class AuthorSeriesPageComponent {
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX
 		this.contextMenuPositionY = event.pageY
-		
+
 		if (this.contextMenuVisible) {
 			this.contextMenuVisible = false
 

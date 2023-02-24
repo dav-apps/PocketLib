@@ -1,12 +1,12 @@
-import { Component } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { RoutingService } from 'src/app/services/routing-service'
-import { Author } from 'src/app/models/Author'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+import { Component } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { RoutingService } from "src/app/services/routing-service"
+import { Author } from "src/app/models/Author"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 interface BookItem {
 	uuid: string
@@ -16,8 +16,8 @@ interface BookItem {
 }
 
 @Component({
-	selector: 'pocketlib-new-series-page',
-	templateUrl: './new-series-page.component.html'
+	selector: "pocketlib-new-series-page",
+	templateUrl: "./new-series-page.component.html"
 })
 export class NewSeriesPageComponent {
 	locale = enUS.newSeriesPage
@@ -53,14 +53,19 @@ export class NewSeriesPageComponent {
 		// Get the author
 		if (this.dataService.userIsAdmin) {
 			// Get the uuid of the author from the url
-			let authorUuid = this.activatedRoute.snapshot.paramMap.get("author_uuid")
+			let authorUuid =
+				this.activatedRoute.snapshot.paramMap.get("author_uuid")
 
 			// Find the author with the uuid
-			let author = this.dataService.adminAuthors.find(a => a.uuid == authorUuid)
+			let author = this.dataService.adminAuthors.find(
+				a => a.uuid == authorUuid
+			)
 
 			if (author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(a => a.uuid == authorUuid)
+					author = (await publisher.GetAuthors()).find(
+						a => a.uuid == authorUuid
+					)
 					if (author != null) break
 				}
 			}
@@ -90,7 +95,11 @@ export class NewSeriesPageComponent {
 		// Get the books that can be selected (status = review, published or hidden; language = current language)
 		for (let collection of await this.author.GetCollections()) {
 			for (let book of await collection.GetStoreBooks()) {
-				if (book.status > 0 && book.cover.url != null && book.language == this.language) {
+				if (
+					book.status > 0 &&
+					book.cover.url != null &&
+					book.language == this.language
+				) {
 					let bookItem: BookItem = {
 						uuid: book.uuid,
 						title: book.title,
@@ -98,7 +107,7 @@ export class NewSeriesPageComponent {
 						checked: false
 					}
 
-					book.GetCoverContent().then(result => bookItem.cover = result)
+					book.GetCoverContent().then(result => (bookItem.cover = result))
 					this.bookItems.push(bookItem)
 					break
 				}
@@ -148,12 +157,13 @@ export class NewSeriesPageComponent {
 		}
 
 		// Create the StoreBookSeries
-		let createStoreBookSeriesResponse = await this.apiService.CreateStoreBookSeries({
-			author: authorUuid,
-			name: this.name,
-			language: this.language,
-			storeBooks: storeBookUuids
-		})
+		let createStoreBookSeriesResponse =
+			await this.apiService.CreateStoreBookSeries({
+				author: authorUuid,
+				name: this.name,
+				language: this.language,
+				storeBooks: storeBookUuids
+			})
 
 		if (!isSuccessStatusCode(createStoreBookSeriesResponse.status)) {
 			this.errorMessage = this.locale.errorMessage

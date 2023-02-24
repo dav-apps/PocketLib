@@ -1,20 +1,20 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
-import { environment } from 'src/environments/environment'
-import * as ErrorCodes from 'src/constants/errorCodes'
-import { enUS } from 'src/locales/locales'
-import { AuthorField, AuthorResource } from 'src/app/misc/types'
-import { Author } from 'src/app/models/Author'
+import { Component } from "@angular/core"
+import { Router } from "@angular/router"
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser"
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { GetDualScreenSettings } from "src/app/misc/utils"
+import { environment } from "src/environments/environment"
+import * as ErrorCodes from "src/constants/errorCodes"
+import { enUS } from "src/locales/locales"
+import { AuthorField, AuthorResource } from "src/app/misc/types"
+import { Author } from "src/app/models/Author"
 
 @Component({
-	selector: 'pocketlib-author-setup-page',
-	templateUrl: './author-setup-page.component.html'
+	selector: "pocketlib-author-setup-page",
+	templateUrl: "./author-setup-page.component.html"
 })
 export class AuthorSetupPageComponent {
 	locale = enUS.authorSetupPage
@@ -52,8 +52,11 @@ export class AuthorSetupPageComponent {
 		// Set the terms of service text
 		this.terms = this.domSanitizer.bypassSecurityTrustHtml(
 			this.locale.terms
-				.replace('{0}', environment.websiteBaseUrl)
-				.replace('{1}', this.dataService.darkTheme ? `style="color: #74aaff"` : "")
+				.replace("{0}", environment.websiteBaseUrl)
+				.replace(
+					"{1}",
+					this.dataService.darkTheme ? `style="color: #74aaff"` : ""
+				)
 		)
 	}
 
@@ -66,11 +69,7 @@ export class AuthorSetupPageComponent {
 		let response = await this.apiService.CreateAuthor({
 			firstName: this.firstName,
 			lastName: this.lastName,
-			fields: [
-				AuthorField.uuid,
-				AuthorField.firstName,
-				AuthorField.lastName
-			]
+			fields: [AuthorField.uuid, AuthorField.firstName, AuthorField.lastName]
 		})
 
 		if (isSuccessStatusCode(response.status)) {
@@ -83,10 +82,12 @@ export class AuthorSetupPageComponent {
 				this.apiService,
 				this.cachingService
 			)
-			this.dataService.userAuthorPromiseHolder.Resolve(this.dataService.userAuthor)
+			this.dataService.userAuthorPromiseHolder.Resolve(
+				this.dataService.userAuthor
+			)
 
 			// Redirect to the author page
-			this.router.navigate(['/author'])
+			this.router.navigate(["/author"])
 		} else {
 			this.loading = false
 

@@ -1,15 +1,23 @@
-import { Component, HostListener } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
-import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { RoutingService } from 'src/app/services/routing-service'
-import { BookListItem, ListResponseData, StoreBookResource, StoreBookListField } from 'src/app/misc/types'
-import { GetDualScreenSettings, AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+import { Component, HostListener } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
+import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { RoutingService } from "src/app/services/routing-service"
+import {
+	BookListItem,
+	ListResponseData,
+	StoreBookResource,
+	StoreBookListField
+} from "src/app/misc/types"
+import {
+	GetDualScreenSettings,
+	AdaptCoverWidthHeightToAspectRatio
+} from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	templateUrl: './store-books-page.component.html'
+	templateUrl: "./store-books-page.component.html"
 })
 export class StoreBooksPageComponent {
 	locale = enUS.storeBooksPage
@@ -60,7 +68,7 @@ export class StoreBooksPageComponent {
 			switch (urlSegments[0].path) {
 				case "category":
 					// Show the selected category
-					this.key = this.activatedRoute.snapshot.paramMap.get('key')
+					this.key = this.activatedRoute.snapshot.paramMap.get("key")
 					this.context = StoreBooksPageContext.Category
 					await this.UpdateView()
 					break
@@ -81,7 +89,7 @@ export class StoreBooksPageComponent {
 		this.setSize()
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
 	}
@@ -111,7 +119,9 @@ export class StoreBooksPageComponent {
 		this.rightScreenBooks = []
 		this.loading = true
 
-		let response: ApiResponse<ListResponseData<StoreBookResource>> | ApiErrorResponse
+		let response:
+			| ApiResponse<ListResponseData<StoreBookResource>>
+			| ApiErrorResponse
 
 		switch (this.context) {
 			case StoreBooksPageContext.Category:
@@ -149,7 +159,9 @@ export class StoreBooksPageComponent {
 		this.loading = false
 
 		if (!isSuccessStatusCode(response.status)) return
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookResource>>
+		).data
 
 		let responseBooks = responseData.items
 		this.pages = responseData.pages
@@ -158,7 +170,11 @@ export class StoreBooksPageComponent {
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
 			let height = 230
-			let width = AdaptCoverWidthHeightToAspectRatio(153, height, storeBook.cover?.aspectRatio)
+			let width = AdaptCoverWidthHeightToAspectRatio(
+				153,
+				height,
+				storeBook.cover?.aspectRatio
+			)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
@@ -170,11 +186,15 @@ export class StoreBooksPageComponent {
 			}
 
 			if (storeBook.cover?.url != null) {
-				this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+				this.apiService
+					.GetFile({ url: storeBook.cover.url })
+					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
 			}
 
 			if (this.dualScreenLayout) {

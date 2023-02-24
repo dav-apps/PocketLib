@@ -18,7 +18,11 @@
 
 			<div class="mt-4 me-2">
 				<dav-button (click)="createProfileButtonClick()">
-					{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
+					{{
+						dataService.dav.isLoggedIn
+							? locale.createProfile
+							: locale.login
+					}}
 				</dav-button>
 			</div>
 		</div>
@@ -34,7 +38,11 @@
 
 				<div class="mt-4 me-2">
 					<dav-button (click)="createProfileButtonClick()">
-						{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
+						{{
+							dataService.dav.isLoggedIn
+								? locale.createProfile
+								: locale.login
+						}}
 					</dav-button>
 				</div>
 			</div>
@@ -48,14 +56,24 @@
 		[style.height.px]="section2Height"
 	>
 		<div class="col-12 col-md-6 px-5 my-auto" style="width: 100%">
-			<h3 class="mt-3 fw-light text-center">{{ locale.landingSection2Header }}</h3>
-			<p class="mt-5 mx-auto" style="font-size: 20px; max-width: 560px" [innerHtml]="locale.landingSection2Description"></p>
+			<h3 class="mt-3 fw-light text-center">
+				{{ locale.landingSection2Header }}
+			</h3>
+			<p
+				class="mt-5 mx-auto"
+				style="font-size: 20px; max-width: 560px"
+				[innerHtml]="locale.landingSection2Description"
+			></p>
 		</div>
-		<div class="col-12 col-md-6 d-flex align-items-center" style="width: 100%">
+		<div
+			class="col-12 col-md-6 d-flex align-items-center"
+			style="width: 100%"
+		>
 			<img
 				class="my-auto mx-auto"
 				src="/assets/images/author-sample-profile.png"
-				[style.width.px]="authorSampleProfileImageWidth">
+				[style.width.px]="authorSampleProfileImageWidth"
+			/>
 		</div>
 	</div>
 
@@ -65,12 +83,21 @@
 		style="background-color: white"
 		[style.height.px]="section3Height"
 	>
-		<div class="col-12 col-md-6 d-flex align-items-center justify-content-center" style="width: 100%">
+		<div
+			class="col-12 col-md-6 d-flex align-items-center justify-content-center"
+			style="width: 100%"
+		>
 			<fa-icon [icon]="faCoins" size="6x"></fa-icon>
 		</div>
 		<div class="col-12 col-md-6 px-5 my-auto" style="width: 100%">
-			<h3 class="mt-3 fw-light text-center">{{ locale.landingSection3Header }}</h3>
-			<p class="mt-5 mx-auto" style="font-size: 20px; max-width: 560px" [innerHtml]="locale.landingSection3Description"></p>
+			<h3 class="mt-3 fw-light text-center">
+				{{ locale.landingSection3Header }}
+			</h3>
+			<p
+				class="mt-5 mx-auto"
+				style="font-size: 20px; max-width: 560px"
+				[innerHtml]="locale.landingSection3Description"
+			></p>
 		</div>
 	</div>
 
@@ -82,16 +109,18 @@
 			<h4 class="pt-5 mb-4">{{ locale.landingSection4Header }}</h4>
 
 			<dav-button (click)="createProfileButtonClick()">
-				{{ dataService.dav.isLoggedIn ? locale.createProfile : locale.login }}
+				{{
+					dataService.dav.isLoggedIn ? locale.createProfile : locale.login
+				}}
 			</dav-button>
 		</div>
 	</div>
 </div>
 
-<pocketlib-author-profile 
+<pocketlib-author-profile
 	*ngIf="dataService.userAuthor || (dataService.userIsAdmin && uuid)"
-	[uuid]="uuid">
-</pocketlib-author-profile>
+	[uuid]="uuid"
+></pocketlib-author-profile>
 
 <!-- Normal layout for Admin view -->
 <div
@@ -104,13 +133,15 @@
 	</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor theme-background-color-secondary"
+		<p
+			class="list-group-item cursor theme-background-color-secondary"
 			(click)="ShowCreatePublisherDialog()"
 		>
 			<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 		</p>
 
-		<p class="list-group-item cursor theme-background-color-secondary text-color"
+		<p
+			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
 			(click)="ShowPublisher(publisher.uuid)"
 			*ngFor="let publisher of dataService.adminPublishers"
@@ -125,13 +156,15 @@
 	</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor theme-background-color-secondary"
+		<p
+			class="list-group-item cursor theme-background-color-secondary"
 			(click)="ShowCreateAuthorDialog()"
 		>
 			<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 		</p>
 
-		<p class="list-group-item cursor theme-background-color-secondary text-color" 
+		<p
+			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
 			(click)="ShowAuthor(author.uuid)"
 			*ngFor="let author of dataService.adminAuthors"
@@ -146,7 +179,8 @@
 	</h1>
 
 	<div class="list-group" style="display: inline-block">
-		<p class="list-group-item cursor theme-background-color-secondary text-color"
+		<p
+			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
 			(click)="ShowBook(book.uuid)"
 			*ngFor="let book of booksInReview"
@@ -162,10 +196,7 @@
 	*ngIf="dataService.userIsAdmin && !uuid && dualScreenLayout"
 >
 	<!-- Left screen -->
-	<div
-		class="w-50 text-center"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50 text-center" [style.marginRight.px]="dualScreenFoldMargin">
 		<!-- List of publishers -->
 		<h1 class="mt-3 mb-4 fw-light text-color">
 			{{ locale.yourPublishers }}
@@ -175,8 +206,9 @@
 			<p class="list-group-item cursor theme-background-color-secondary">
 				<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 			</p>
-	
-			<p class="list-group-item cursor theme-background-color-secondary text-color"
+
+			<p
+				class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
 				(click)="ShowPublisher(publisher.uuid)"
 				*ngFor="let publisher of dataService.adminPublishers"
@@ -189,13 +221,15 @@
 		<h1 class="mt-3 mb-4 fw-light text-color">{{ locale.yourAuthors }}</h1>
 
 		<div class="list-group" style="display: inline-block">
-			<p class="list-group-item cursor theme-background-color-secondary"
+			<p
+				class="list-group-item cursor theme-background-color-secondary"
 				(click)="ShowCreateAuthorDialog()"
 			>
 				<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
 			</p>
 
-			<p class="list-group-item cursor theme-background-color-secondary text-color" 
+			<p
+				class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
 				(click)="ShowAuthor(author.uuid)"
 				*ngFor="let author of dataService.adminAuthors"
@@ -206,17 +240,15 @@
 	</div>
 
 	<!-- Right screen -->
-	<div
-		class="w-50 text-center"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
+	<div class="w-50 text-center" [style.marginLeft.px]="dualScreenFoldMargin">
 		<!-- List of books in review -->
 		<h1 class="mt-3 mb-4 fw-light text-color">
 			{{ locale.booksInReview }}
 		</h1>
 
 		<div class="list-group" style="display: inline-block">
-			<p class="list-group-item cursor theme-background-color-secondary text-color"
+			<p
+				class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
 				(click)="ShowBook(book.uuid)"
 				*ngFor="let book of booksInReview"
@@ -244,12 +276,17 @@
 			<dav-textfield
 				[value]="createPublisherDialogName"
 				[label]="locale.createPublisherDialog.nameTextfieldLabel"
-				[placeholder]="locale.createPublisherDialog.nameTextfieldPlaceholder"
+				[placeholder]="
+					locale.createPublisherDialog.nameTextfieldPlaceholder
+				"
 				[disabled]="createPublisherDialogLoading"
 				[errorMessage]="createPublisherDialogNameError"
-				(change)="createPublisherDialogName = $event.detail.value; createPublisherDialogNameError = ''"
-				(enter)="CreatePublisher()">
-			</dav-textfield>
+				(change)="
+					createPublisherDialogName = $event.detail.value;
+					createPublisherDialogNameError = ''
+				"
+				(enter)="CreatePublisher()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>
@@ -271,12 +308,17 @@
 			<dav-textfield
 				[value]="createAuthorDialogFirstName"
 				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
-				[placeholder]="locale.createAuthorDialog.firstNameTextfieldPlaceholder"
+				[placeholder]="
+					locale.createAuthorDialog.firstNameTextfieldPlaceholder
+				"
 				autocomplete="given-name"
 				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogFirstNameError"
-				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
-			</dav-textfield>
+				(change)="
+					createAuthorDialogFirstName = $event.detail.value;
+					createAuthorDialogFirstNameError = ''
+				"
+			></dav-textfield>
 		</div>
 
 		<!-- Last name -->
@@ -284,13 +326,18 @@
 			<dav-textfield
 				[value]="createAuthorDialogLastName"
 				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
-				[placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
+				[placeholder]="
+					locale.createAuthorDialog.lastNameTextfieldPlaceholder
+				"
 				autocomplete="family-name"
 				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogLastNameError"
-				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
-				(enter)="CreateAuthor()">
-			</dav-textfield>
+				(change)="
+					createAuthorDialogLastName = $event.detail.value;
+					createAuthorDialogLastNameError = ''
+				"
+				(enter)="CreateAuthor()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>

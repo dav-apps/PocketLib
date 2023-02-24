@@ -3,15 +3,13 @@
 		<dav-header
 			[header]="title"
 			backButtonVisible
-			(backButtonClick)="BackButtonClick()">
-		</dav-header>
+			(backButtonClick)="BackButtonClick()"
+		></dav-header>
 	</div>
 
 	<!-- Published -->
 	<div *ngIf="status == 2">
-		<p class="text-color text-center"
-			style="font-size: 22px"
-		>
+		<p class="text-color text-center" style="font-size: 22px">
 			{{ locale.published }}
 		</p>
 
@@ -27,10 +25,7 @@
 			</div>
 
 			<div class="m-1">
-				<dav-button
-					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()"
-				>
+				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
@@ -48,9 +43,7 @@
 
 	<!-- Hidden -->
 	<div *ngIf="status == 3">
-		<p class="text-color text-center"
-			style="font-size: 22px"
-		>
+		<p class="text-color text-center" style="font-size: 22px">
 			{{ locale.hidden }}
 		</p>
 
@@ -66,10 +59,7 @@
 			</div>
 
 			<div class="m-1">
-				<dav-button
-					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()"
-				>
+				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
@@ -87,15 +77,11 @@
 
 	<!-- In Review -->
 	<div *ngIf="status == 1">
-		<p class="text-color text-center"
-			style="font-size: 22px"
-		>
+		<p class="text-color text-center" style="font-size: 22px">
 			{{ locale.inReview }}
 		</p>
 
-		<p class="text-color text-center"
-			style="font-size: 18px"
-		>
+		<p class="text-color text-center" style="font-size: 18px">
 			{{ locale.inReviewDescription }}
 		</p>
 
@@ -111,10 +97,7 @@
 			</div>
 
 			<div class="m-1">
-				<dav-button
-					[disabled]="loading"
-					(click)="ShowDetailsButtonClick()"
-				>
+				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
 					{{ locale.showDetails }}
 				</dav-button>
 			</div>
