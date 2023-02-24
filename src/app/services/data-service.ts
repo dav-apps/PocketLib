@@ -1,32 +1,32 @@
-import { Injectable } from '@angular/core'
-import { SwUpdate, VersionEvent } from '@angular/service-worker'
-import * as localforage from 'localforage'
+import { Injectable } from "@angular/core"
+import { SwUpdate, VersionEvent } from "@angular/service-worker"
+import * as localforage from "localforage"
 import {
 	Dav,
 	ApiResponse,
 	GetAllTableObjects,
 	PromiseHolder,
 	isSuccessStatusCode
-} from 'dav-js'
-import * as DavUIComponents from 'dav-ui-components'
-import { ApiService } from './api-service'
-import { CachingService } from './caching-service'
-import { Book } from '../models/Book'
-import { EpubBook } from '../models/EpubBook'
-import { PdfBook } from '../models/PdfBook'
-import { GetAllBooks, GetBook } from '../models/BookManager'
-import { Settings } from '../models/Settings'
-import { BookOrder } from '../models/BookOrder'
-import { Publisher } from '../models/Publisher'
-import { Author } from 'src/app/models/Author'
-import * as locales from 'src/locales/locales'
+} from "dav-js"
+import * as DavUIComponents from "dav-ui-components"
+import { ApiService } from "./api-service"
+import { CachingService } from "./caching-service"
+import { Book } from "../models/Book"
+import { EpubBook } from "../models/EpubBook"
+import { PdfBook } from "../models/PdfBook"
+import { GetAllBooks, GetBook } from "../models/BookManager"
+import { Settings } from "../models/Settings"
+import { BookOrder } from "../models/BookOrder"
+import { Publisher } from "../models/Publisher"
+import { Author } from "src/app/models/Author"
+import * as locales from "src/locales/locales"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
 	defaultProfileImageUrl
-} from 'src/constants/constants'
-import { keys } from 'src/constants/keys'
-import { environment } from 'src/environments/environment'
+} from "src/constants/constants"
+import { keys } from "src/constants/keys"
+import { environment } from "src/environments/environment"
 import {
 	PublisherResource,
 	PublisherField,
@@ -39,7 +39,7 @@ import {
 	CategoryResource,
 	Language,
 	ListResponseData
-} from 'src/app/misc/types'
+} from "src/app/misc/types"
 
 @Injectable()
 export class DataService {
@@ -53,7 +53,9 @@ export class DataService {
 	isMobile: boolean = false
 	darkTheme: boolean = false
 	bookPageVisible: boolean = false
-	defaultStoreBookCover: string = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
+	defaultStoreBookCover: string = this.darkTheme
+		? defaultDarkStoreBookCoverUrl
+		: defaultLightStoreBookCoverUrl
 	defaultProfileImageUrl: string = defaultProfileImageUrl
 	settings: Settings
 	settingsLoadPromiseHolder = new PromiseHolder<Settings>()
@@ -124,7 +126,11 @@ export class DataService {
 				})
 
 				if (isSuccessStatusCode(listPublishersResponse.status)) {
-					let listPublishersResponseData = (listPublishersResponse as ApiResponse<ListResponseData<PublisherResource>>).data
+					let listPublishersResponseData = (
+						listPublishersResponse as ApiResponse<
+							ListResponseData<PublisherResource>
+						>
+					).data
 
 					for (let item of listPublishersResponseData.items) {
 						this.adminPublishers.push(
@@ -164,7 +170,11 @@ export class DataService {
 					})
 
 					if (isSuccessStatusCode(listAuthorsResponse.status)) {
-						let listAuthorsResponseData = (listAuthorsResponse as ApiResponse<ListResponseData<AuthorResource>>).data
+						let listAuthorsResponseData = (
+							listAuthorsResponse as ApiResponse<
+								ListResponseData<AuthorResource>
+							>
+						).data
 						authorPages = listAuthorsResponseData.pages
 
 						for (let item of listAuthorsResponseData.items) {
@@ -199,7 +209,9 @@ export class DataService {
 				})
 
 				if (isSuccessStatusCode(authorResponse.status)) {
-					let authorResponseData = (authorResponse as ApiResponse<AuthorResource>).data
+					let authorResponseData = (
+						authorResponse as ApiResponse<AuthorResource>
+					).data
 
 					this.userAuthor = new Author(
 						authorResponseData,
@@ -224,7 +236,9 @@ export class DataService {
 					})
 
 					if (isSuccessStatusCode(publisherResponse.status)) {
-						let publisherResponseData = (publisherResponse as ApiResponse<PublisherResource>).data
+						let publisherResponseData = (
+							publisherResponse as ApiResponse<PublisherResource>
+						).data
 
 						this.userPublisher = new Publisher(
 							publisherResponseData,
@@ -253,7 +267,9 @@ export class DataService {
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<ListResponseData<CategoryResource>>).data
+			let responseData = (
+				response as ApiResponse<ListResponseData<CategoryResource>>
+			).data
 
 			for (let category of responseData.items) {
 				this.categories.push({
@@ -265,7 +281,9 @@ export class DataService {
 		}
 
 		// Sort the categories by name
-		this.categories.sort((a: Category, b: Category) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+		this.categories.sort((a: Category, b: Category) =>
+			a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+		)
 
 		this.categoriesPromiseHolder.Resolve()
 	}
@@ -319,8 +337,13 @@ export class DataService {
 
 	async ReloadBookByFile(uuid: string) {
 		// Find the book with the file uuid
-		let tableObjects = await GetAllTableObjects(environment.bookTableId, false)
-		let bookObject = tableObjects.find(obj => obj.GetPropertyValue(keys.bookTableFileKey) == uuid)
+		let tableObjects = await GetAllTableObjects(
+			environment.bookTableId,
+			false
+		)
+		let bookObject = tableObjects.find(
+			obj => obj.GetPropertyValue(keys.bookTableFileKey) == uuid
+		)
 		if (!bookObject) return
 
 		await this.ReloadBook(bookObject.Uuid)
@@ -340,10 +363,12 @@ export class DataService {
 	GetLocale() {
 		let l = this.locale.toLowerCase()
 
-		if (l.startsWith("en")) {            // en
+		if (l.startsWith("en")) {
+			// en
 			if (l == "en-gb") return locales.enGB
 			else return locales.enUS
-		} else if (l.startsWith("de")) {      // de
+		} else if (l.startsWith("de")) {
+			// de
 			if (l == "de-at") return locales.deAT
 			else if (l == "de-ch") return locales.deCH
 			else return locales.deDE
@@ -367,7 +392,9 @@ export class DataService {
 				let darkTheme = false
 
 				if (window.matchMedia) {
-					let colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
+					let colorScheme = window.matchMedia(
+						"(prefers-color-scheme: dark)"
+					)
 
 					darkTheme = colorScheme.matches
 					colorScheme.onchange = () => this.ApplyTheme()
@@ -386,7 +413,9 @@ export class DataService {
 			this.darkTheme ? keys.darkThemeKey : keys.lightThemeKey
 		)
 
-		this.defaultStoreBookCover = this.darkTheme ? defaultDarkStoreBookCoverUrl : defaultLightStoreBookCoverUrl
+		this.defaultStoreBookCover = this.darkTheme
+			? defaultDarkStoreBookCoverUrl
+			: defaultLightStoreBookCoverUrl
 		DavUIComponents.setTheme(this.darkTheme)
 	}
 
@@ -439,10 +468,10 @@ export class DataService {
 	private async GetSetting<T>(key: string, defaultValue: T): Promise<T> {
 		let cachedValue = this.settingsCache[key]
 		if (cachedValue != null) return cachedValue
-		
-		let value = await localforage.getItem(key) as T
+
+		let value = (await localforage.getItem(key)) as T
 		if (value == null) value = defaultValue
-		
+
 		this.settingsCache[key] = value
 		return value
 	}
@@ -462,7 +491,10 @@ export function FindElement(currentElement: Element, tagName: string): Element {
 	return null
 }
 
-export function FindAppropriateLanguage(targetLanguage: string, objects: { language: string }[]): number {
+export function FindAppropriateLanguage(
+	targetLanguage: string,
+	objects: { language: string }[]
+): number {
 	if (objects.length == 0) return -1
 	if (objects.length == 1) return 0
 
@@ -478,6 +510,9 @@ export function FindAppropriateLanguage(targetLanguage: string, objects: { langu
 	return 0
 }
 
-export function GetContentAsInlineSource(content: string, contentType: string): string {
+export function GetContentAsInlineSource(
+	content: string,
+	contentType: string
+): string {
 	return `data:${contentType};base64,${btoa(content)}`
 }

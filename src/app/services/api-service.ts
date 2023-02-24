@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core'
-import axios, { AxiosRequestConfig } from 'axios'
+import { Injectable } from "@angular/core"
+import axios, { AxiosRequestConfig } from "axios"
 import {
 	Dav,
 	ApiResponse,
@@ -8,9 +8,9 @@ import {
 	ConvertErrorToApiErrorResponse,
 	HandleApiError,
 	PrepareRequestParams
-} from 'dav-js'
-import { CachingService } from './caching-service'
-import { environment } from 'src/environments/environment'
+} from "dav-js"
+import { CachingService } from "./caching-service"
+import { environment } from "src/environments/environment"
 import {
 	ListResponseData,
 	Language,
@@ -50,7 +50,7 @@ import {
 	CategoryListField,
 	BookResource,
 	BookField
-} from 'src/app/misc/types'
+} from "src/app/misc/types"
 import {
 	ResponseDataToPublisherResource,
 	ResponseDataToPublisherLogoResource,
@@ -66,30 +66,31 @@ import {
 	ResponseDataToStoreBookReleaseResource,
 	ResponseDataToCategoryResource,
 	ResponseDataToBookResource
-} from 'src/app/misc/utils'
+} from "src/app/misc/utils"
 
 @Injectable()
 export class ApiService {
-	constructor(
-		private cachingService: CachingService
-	) { }
+	constructor(private cachingService: CachingService) {}
 
 	//#region Publisher functions
 	async CreatePublisher(params: {
-		name: string,
+		name: string
 		fields?: PublisherField[]
 	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/publishers`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					name: params.name
 				})
@@ -108,37 +109,44 @@ export class ApiService {
 	}
 
 	async RetrievePublisher(params: {
-		uuid: string,
+		uuid: string
 		fields?: PublisherField[]
 	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrievePublisher.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -163,35 +171,44 @@ export class ApiService {
 
 	async ListPublishers(params: {
 		fields?: PublisherListField[]
-	}): Promise<ApiResponse<ListResponseData<PublisherResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<PublisherResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListPublishers.name,
-			PrepareRequestParams({
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/publishers`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields,
-					mine: true
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						mine: true
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -223,26 +240,29 @@ export class ApiService {
 	}
 
 	async UpdatePublisher(params: {
-		uuid: string,
-		name?: string,
-		description?: string,
-		websiteUrl?: string,
-		facebookUsername?: string,
-		instagramUsername?: string,
-		twitterUsername?: string,
+		uuid: string
+		name?: string
+		description?: string
+		websiteUrl?: string
+		facebookUsername?: string
+		instagramUsername?: string
+		twitterUsername?: string
 		fields?: PublisherField[]
 	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					name: params.name,
 					description: params.description,
@@ -268,34 +288,41 @@ export class ApiService {
 
 	//#region PublisherLogo
 	async RetrievePublisherLogo(params: {
-		uuid: string,
+		uuid: string
 		fields?: PublisherLogoField[]
 	}): Promise<ApiResponse<PublisherLogoResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrievePublisherLogo.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -316,22 +343,25 @@ export class ApiService {
 	}
 
 	async UploadPublisherLogo(params: {
-		uuid: string,
-		type: string,
-		file: any,
+		uuid: string
+		type: string
+		file: any
 		fields?: PublisherLogoField[]
 	}): Promise<ApiResponse<PublisherLogoResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': params.type
+					"Content-Type": params.type
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: params.file
 			})
 
@@ -350,22 +380,25 @@ export class ApiService {
 
 	//#region Author functions
 	async CreateAuthor(params: {
-		publisher?: string,
-		firstName: string,
-		lastName: string,
+		publisher?: string
+		firstName: string
+		lastName: string
 		fields?: AuthorField[]
 	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/authors`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					publisher: params.publisher,
 					first_name: params.firstName,
@@ -386,40 +419,47 @@ export class ApiService {
 	}
 
 	async RetrieveAuthor(params: {
-		uuid: string,
-		fields?: AuthorField[],
+		uuid: string
+		fields?: AuthorField[]
 		languages?: Language[]
 	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveAuthor.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields,
-				languages: params.languages
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields,
+					languages: params.languages
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -443,45 +483,21 @@ export class ApiService {
 	}
 
 	async ListAuthors(params: {
-		fields?: AuthorListField[],
-		languages?: Language[],
-		limit?: number,
-		page?: number,
-		mine?: boolean,
-		latest?: boolean,
+		fields?: AuthorListField[]
+		languages?: Language[]
+		limit?: number
+		page?: number
+		mine?: boolean
+		latest?: boolean
 		publisher?: string
-	}): Promise<ApiResponse<ListResponseData<AuthorResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<AuthorResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListAuthors.name,
-			PrepareRequestParams({
-				fields: params.fields,
-				languages: params.languages,
-				limit: params.limit,
-				page: params.page,
-				mine: params.mine,
-				latest: params.latest,
-				publisher: params.publisher
-			}, true)
-		)
-
-		// Check if the request is currently running
-		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
-		if (promiseHolder != null) await promiseHolder.AwaitResult()
-
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
-		if (cachedResponse) return cachedResponse
-
-		this.cachingService.SetupApiRequest(cacheResponseKey)
-
-		try {
-			let response = await axios({
-				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/authors`,
-				headers: PrepareRequestParams({
-					Authorization: params.mine || params.publisher != null ? Dav.accessToken : null
-				}),
-				params: PrepareRequestParams({
+			PrepareRequestParams(
+				{
 					fields: params.fields,
 					languages: params.languages,
 					limit: params.limit,
@@ -489,7 +505,43 @@ export class ApiService {
 					mine: params.mine,
 					latest: params.latest,
 					publisher: params.publisher
-				}, true)
+				},
+				true
+			)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: "get",
+				url: `${environment.pocketlibApiBaseUrl}/authors`,
+				headers: PrepareRequestParams({
+					Authorization:
+						params.mine || params.publisher != null
+							? Dav.accessToken
+							: null
+				}),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages,
+						limit: params.limit,
+						page: params.page,
+						mine: params.mine,
+						latest: params.latest,
+						publisher: params.publisher
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -521,28 +573,31 @@ export class ApiService {
 	}
 
 	async UpdateAuthor(params: {
-		uuid: string,
-		firstName?: string,
-		lastName?: string,
-		websiteUrl?: string,
-		facebookUsername?: string,
-		instagramUsername?: string,
-		twitterUsername?: string,
-		fields?: AuthorField[],
+		uuid: string
+		firstName?: string
+		lastName?: string
+		websiteUrl?: string
+		facebookUsername?: string
+		instagramUsername?: string
+		twitterUsername?: string
+		fields?: AuthorField[]
 		languages?: Language[]
 	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					first_name: params.firstName,
 					last_name: params.lastName,
@@ -568,37 +623,46 @@ export class ApiService {
 
 	//#region AuthorBio
 	async ListAuthorBios(params: {
-		uuid: string,
+		uuid: string
 		fields?: AuthorBioListField[]
-	}): Promise<ApiResponse<ListResponseData<AuthorBioResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<AuthorBioResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListAuthorBios.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/bios`,
 				headers: PrepareRequestParams({
 					Authorization: params.uuid == "mine" ? Dav.accessToken : null
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -630,22 +694,25 @@ export class ApiService {
 	}
 
 	async SetAuthorBio(params: {
-		uuid: string,
-		language: string,
-		bio: string,
+		uuid: string
+		language: string
+		bio: string
 		fields?: AuthorBioField[]
 	}): Promise<ApiResponse<AuthorBioResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/bios/${params.language}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					bio: params.bio
 				})
@@ -666,34 +733,41 @@ export class ApiService {
 
 	//#region AuthorProfileImage
 	async RetrieveAuthorProfileImage(params: {
-		uuid: string,
+		uuid: string
 		fields?: AuthorProfileImageField[]
 	}): Promise<ApiResponse<AuthorProfileImageResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveAuthorProfileImage.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/profile_image`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -714,22 +788,25 @@ export class ApiService {
 	}
 
 	async UploadAuthorProfileImage(params: {
-		uuid: string,
-		type: string,
-		file: any,
+		uuid: string
+		type: string
+		file: any
 		fields?: AuthorProfileImageField[]
 	}): Promise<ApiResponse<AuthorProfileImageResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/profile_image`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': params.type
+					"Content-Type": params.type
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: params.file
 			})
 
@@ -748,22 +825,25 @@ export class ApiService {
 
 	//#region StoreBookCollection
 	async CreateStoreBookCollection(params: {
-		author?: string,
-		name: string,
-		language: string,
+		author?: string
+		name: string
+		language: string
 		fields?: StoreBookCollectionField[]
 	}): Promise<ApiResponse<StoreBookCollectionResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					author: params.author,
 					name: params.name,
@@ -784,37 +864,44 @@ export class ApiService {
 	}
 
 	async RetrieveStoreBookCollection(params: {
-		uuid: string,
-		fields?: StoreBookCollectionField[],
+		uuid: string
+		fields?: StoreBookCollectionField[]
 		languages?: Language[]
 	}): Promise<ApiResponse<StoreBookCollectionResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookCollection.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields,
-				languages: params.languages
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields,
+					languages: params.languages
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections/${params.uuid}`,
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -838,41 +925,51 @@ export class ApiService {
 	}
 
 	async ListStoreBookCollections(params: {
-		author?: string,
-		fields?: StoreBookCollectionListField[],
+		author?: string
+		fields?: StoreBookCollectionListField[]
 		languages?: Language[]
-	}): Promise<ApiResponse<ListResponseData<StoreBookCollectionResource>> | ApiErrorResponse> {
+	}): Promise<
+		| ApiResponse<ListResponseData<StoreBookCollectionResource>>
+		| ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListStoreBookCollections.name,
-			PrepareRequestParams({
-				author: params.author,
-				fields: params.fields,
-				languages: params.languages
-			}, true)
+			PrepareRequestParams(
+				{
+					author: params.author,
+					fields: params.fields,
+					languages: params.languages
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					author: params.author,
-					fields: params.fields,
-					languages: params.languages
-				}, true)
+				params: PrepareRequestParams(
+					{
+						author: params.author,
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -885,7 +982,9 @@ export class ApiService {
 			}
 
 			for (let item of response.data.items) {
-				result.data.items.push(ResponseDataToStoreBookCollectionResource(item))
+				result.data.items.push(
+					ResponseDataToStoreBookCollectionResource(item)
+				)
 			}
 
 			// Add the response to the cache
@@ -906,34 +1005,44 @@ export class ApiService {
 
 	//#region StoreBookCollectionName
 	async ListStoreBookCollectionNames(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookCollectionNameListField[]
-	}): Promise<ApiResponse<ListResponseData<StoreBookCollectionNameResource>> | ApiErrorResponse> {
+	}): Promise<
+		| ApiResponse<ListResponseData<StoreBookCollectionNameResource>>
+		| ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListStoreBookCollectionNames.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections/${params.uuid}/names`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -946,7 +1055,9 @@ export class ApiService {
 			}
 
 			for (let item of response.data.items) {
-				result.data.items.push(ResponseDataToStoreBookCollectionNameResource(item))
+				result.data.items.push(
+					ResponseDataToStoreBookCollectionNameResource(item)
+				)
 			}
 
 			// Add the response to the cache
@@ -961,22 +1072,27 @@ export class ApiService {
 	}
 
 	async SetStoreBookCollectionName(params: {
-		uuid: string,
-		name: string,
-		language: string,
+		uuid: string
+		name: string
+		language: string
 		fields?: StoreBookCollectionNameField[]
-	}): Promise<ApiResponse<StoreBookCollectionNameResource> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<StoreBookCollectionNameResource> | ApiErrorResponse
+	> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_collections/${params.uuid}/names/${params.language}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					name: params.name
 				})
@@ -997,23 +1113,26 @@ export class ApiService {
 
 	//#region StoreBookSeries
 	async CreateStoreBookSeries(params: {
-		author?: string,
-		name: string,
-		language: string,
-		storeBooks?: string[],
+		author?: string
+		name: string
+		language: string
+		storeBooks?: string[]
 		fields?: StoreBookSeriesField[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					author: params.author,
 					name: params.name,
@@ -1035,34 +1154,41 @@ export class ApiService {
 	}
 
 	async RetrieveStoreBookSeries(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookSeriesField[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookSeries.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1086,50 +1212,59 @@ export class ApiService {
 	}
 
 	async ListStoreBookSeries(params: {
-		fields?: StoreBookSeriesListField[],
-		languages?: Language[],
-		limit?: number,
-		latest?: boolean,
-		author?: string,
+		fields?: StoreBookSeriesListField[]
+		languages?: Language[]
+		limit?: number
+		latest?: boolean
+		author?: string
 		storeBook?: string
-	}): Promise<ApiResponse<ListResponseData<StoreBookSeriesResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<StoreBookSeriesResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListStoreBookSeries.name,
-			PrepareRequestParams({
-				fields: params.fields,
-				languages: params.languages,
-				limit: params.limit,
-				latest: params.latest,
-				author: params.author,
-				storeBook: params.storeBook
-			}, true)
+			PrepareRequestParams(
+				{
+					fields: params.fields,
+					languages: params.languages,
+					limit: params.limit,
+					latest: params.latest,
+					author: params.author,
+					storeBook: params.storeBook
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages,
-					limit: params.limit,
-					latest: params.latest,
-					author: params.author,
-					store_book: params.storeBook
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages,
+						limit: params.limit,
+						latest: params.latest,
+						author: params.author,
+						store_book: params.storeBook
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1161,24 +1296,27 @@ export class ApiService {
 	}
 
 	async UpdateStoreBookSeries(params: {
-		uuid: string,
-		name?: string,
-		storeBooks?: string[],
-		fields?: StoreBookSeriesField[],
+		uuid: string
+		name?: string
+		storeBooks?: string[]
+		fields?: StoreBookSeriesField[]
 		languages?: Language[]
 	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					name: params.name,
 					store_books: params.storeBooks
@@ -1200,27 +1338,30 @@ export class ApiService {
 
 	//#region StoreBook
 	async CreateStoreBook(params: {
-		author?: string,
-		collection?: string,
-		title: string,
-		description?: string,
-		language: string,
-		price?: number,
-		isbn?: string,
-		categories?: string[],
+		author?: string
+		collection?: string
+		title: string
+		description?: string
+		language: string
+		price?: number
+		isbn?: string
+		categories?: string[]
 		fields?: StoreBookField[]
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/store_books`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					author: params.author,
 					collection: params.collection,
@@ -1246,37 +1387,44 @@ export class ApiService {
 	}
 
 	async RetrieveStoreBook(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookField[]
 	}): Promise<ApiResponse<StoreBookResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBook.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1300,48 +1448,24 @@ export class ApiService {
 	}
 
 	async ListStoreBooks(params: {
-		fields?: StoreBookListField[],
-		languages?: Language[],
-		limit?: number,
-		page?: number,
-		latest?: boolean,
-		review?: boolean,
-		author?: string,
-		collection?: string,
-		series?: string,
+		fields?: StoreBookListField[]
+		languages?: Language[]
+		limit?: number
+		page?: number
+		latest?: boolean
+		review?: boolean
+		author?: string
+		collection?: string
+		series?: string
 		categories?: string[]
-	}): Promise<ApiResponse<ListResponseData<StoreBookResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<StoreBookResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListStoreBooks.name,
-			PrepareRequestParams({
-				fields: params.fields,
-				languages: params.languages,
-				limit: params.limit,
-				page: params.page,
-				latest: params.latest,
-				review: params.review,
-				author: params.author,
-				collection: params.collection,
-				series: params.series,
-				categories: params.categories
-			}, true)
-		)
-
-		// Check if the request is currently running
-		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
-		if (promiseHolder != null) await promiseHolder.AwaitResult()
-
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
-		if (cachedResponse) return cachedResponse
-
-		this.cachingService.SetupApiRequest(cacheResponseKey)
-
-		try {
-			let requestConfig: AxiosRequestConfig = {
-				method: 'get',
-				url: `${environment.pocketlibApiBaseUrl}/store_books`,
-				params: PrepareRequestParams({
+			PrepareRequestParams(
+				{
 					fields: params.fields,
 					languages: params.languages,
 					limit: params.limit,
@@ -1352,23 +1476,56 @@ export class ApiService {
 					collection: params.collection,
 					series: params.series,
 					categories: params.categories
-				}, true)
+				},
+				true
+			)
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let requestConfig: AxiosRequestConfig = {
+				method: "get",
+				url: `${environment.pocketlibApiBaseUrl}/store_books`,
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages,
+						limit: params.limit,
+						page: params.page,
+						latest: params.latest,
+						review: params.review,
+						author: params.author,
+						collection: params.collection,
+						series: params.series,
+						categories: params.categories
+					},
+					true
+				)
 			}
 
 			if (
-				Dav.accessToken != null
-				&& (
-					params.review
-					|| (
-						params.fields != null
-						&& (
-							params.fields.includes(StoreBookListField.items_file)
-							|| params.fields.includes(StoreBookListField.items_file_fileName)
-							|| params.fields.includes(StoreBookListField.items_inLibrary)
-							|| params.fields.includes(StoreBookListField.items_purchased)
-						)
-					)
-				)
+				Dav.accessToken != null &&
+				(params.review ||
+					(params.fields != null &&
+						(params.fields.includes(StoreBookListField.items_file) ||
+							params.fields.includes(
+								StoreBookListField.items_file_fileName
+							) ||
+							params.fields.includes(
+								StoreBookListField.items_inLibrary
+							) ||
+							params.fields.includes(
+								StoreBookListField.items_purchased
+							))))
 			) {
 				requestConfig.headers = PrepareRequestParams({
 					Authorization: Dav.accessToken
@@ -1406,27 +1563,30 @@ export class ApiService {
 	}
 
 	async UpdateStoreBook(params: {
-		uuid: string,
-		title?: string,
-		description?: string,
-		language?: string,
-		price?: number,
-		isbn?: string,
-		status?: string,
-		categories?: string[],
+		uuid: string
+		title?: string
+		description?: string
+		language?: string
+		price?: number
+		isbn?: string
+		status?: string
+		categories?: string[]
 		fields?: StoreBookField[]
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					title: params.title,
 					description: params.description,
@@ -1453,34 +1613,41 @@ export class ApiService {
 
 	//#region StoreBookCover
 	async RetrieveStoreBookCover(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookCoverField[]
 	}): Promise<ApiResponse<StoreBookCoverResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookCover.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/cover`,
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1501,22 +1668,25 @@ export class ApiService {
 	}
 
 	async UploadStoreBookCover(params: {
-		uuid: string,
-		type: string,
-		file: any,
+		uuid: string
+		type: string
+		file: any
 		fields?: StoreBookCoverField[]
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/cover`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': params.type
+					"Content-Type": params.type
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: params.file
 			})
 
@@ -1535,37 +1705,44 @@ export class ApiService {
 
 	//#region StoreBookFile
 	async RetrieveStoreBookFile(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookFileField[]
 	}): Promise<ApiResponse<StoreBookFileResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookFile.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/file`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1589,24 +1766,29 @@ export class ApiService {
 	}
 
 	async UploadStoreBookFile(params: {
-		uuid: string,
-		type: string,
-		name: string,
-		file: any,
+		uuid: string
+		type: string
+		name: string
+		file: any
 		fields?: StoreBookFileField[]
 	}): Promise<ApiResponse<any> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}/file`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': params.type,
-					'Content-Disposition': `attachment; filename="${encodeURIComponent(params.name)}"`
+					"Content-Type": params.type,
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.name
+					)}"`
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: params.file
 			})
 
@@ -1625,37 +1807,44 @@ export class ApiService {
 
 	//#region StoreBookRelease
 	async RetrieveStoreBookRelease(params: {
-		uuid: string,
+		uuid: string
 		fields?: StoreBookReleaseField[]
 	}): Promise<ApiResponse<StoreBookReleaseResource> | ApiErrorResponse> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.RetrieveStoreBookRelease.name,
-			PrepareRequestParams({
-				uuid: params.uuid,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					uuid: params.uuid,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1679,38 +1868,47 @@ export class ApiService {
 	}
 
 	async ListStoreBookReleases(params: {
-		storeBook: string,
+		storeBook: string
 		fields?: StoreBookReleaseListField[]
-	}): Promise<ApiResponse<ListResponseData<StoreBookReleaseResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<StoreBookReleaseResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListStoreBookReleases.name,
-			PrepareRequestParams({
-				storeBook: params.storeBook,
-				fields: params.fields
-			}, true)
+			PrepareRequestParams(
+				{
+					storeBook: params.storeBook,
+					fields: params.fields
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken
 				}),
-				params: PrepareRequestParams({
-					store_book: params.storeBook,
-					fields: params.fields
-				}, true)
+				params: PrepareRequestParams(
+					{
+						store_book: params.storeBook,
+						fields: params.fields
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1742,22 +1940,25 @@ export class ApiService {
 	}
 
 	async PublishStoreBookRelease(params: {
-		uuid: string,
-		releaseName: string,
-		releaseNotes?: string,
+		uuid: string
+		releaseName: string
+		releaseNotes?: string
 		fields?: StoreBookReleaseField[]
 	}): Promise<ApiResponse<StoreBookReleaseResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'put',
+				method: "put",
 				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}/publish`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					release_name: params.releaseName,
 					release_notes: params.releaseNotes
@@ -1779,35 +1980,44 @@ export class ApiService {
 
 	//#region Category
 	async ListCategories(params: {
-		fields?: CategoryListField[],
+		fields?: CategoryListField[]
 		languages?: Language[]
-	}): Promise<ApiResponse<ListResponseData<CategoryResource>> | ApiErrorResponse> {
+	}): Promise<
+		ApiResponse<ListResponseData<CategoryResource>> | ApiErrorResponse
+	> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
 			this.ListCategories.name,
-			PrepareRequestParams({
-				fields: params.fields,
-				languages: params.languages
-			}, true)
+			PrepareRequestParams(
+				{
+					fields: params.fields,
+					languages: params.languages
+				},
+				true
+			)
 		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: `${environment.pocketlibApiBaseUrl}/categories`,
-				params: PrepareRequestParams({
-					fields: params.fields,
-					languages: params.languages
-				}, true)
+				params: PrepareRequestParams(
+					{
+						fields: params.fields,
+						languages: params.languages
+					},
+					true
+				)
 			})
 
 			let result = {
@@ -1837,20 +2047,23 @@ export class ApiService {
 
 	//#region Book
 	async CreateBook(params: {
-		storeBook: string,
+		storeBook: string
 		fields?: BookField[]
 	}): Promise<ApiResponse<BookResource> | ApiErrorResponse> {
 		try {
 			let response = await axios({
-				method: 'post',
+				method: "post",
 				url: `${environment.pocketlibApiBaseUrl}/books`,
 				headers: PrepareRequestParams({
 					Authorization: Dav.accessToken,
-					'Content-Type': 'application/json'
+					"Content-Type": "application/json"
 				}),
-				params: PrepareRequestParams({
-					fields: params.fields
-				}, true),
+				params: PrepareRequestParams(
+					{
+						fields: params.fields
+					},
+					true
+				),
 				data: PrepareRequestParams({
 					store_book: params.storeBook
 				})
@@ -1874,24 +2087,28 @@ export class ApiService {
 		url: string
 	}): Promise<ApiResponse<string> | ApiErrorResponse> {
 		// Check if the response is cached
-		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(this.GetFile.name, {
-			url: params.url
-		})
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.GetFile.name,
+			{
+				url: params.url
+			}
+		)
 
 		// Check if the request is currently running
 		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
 		if (promiseHolder != null) await promiseHolder.AwaitResult()
 
-		let cachedResponse = this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
 		if (cachedResponse) return cachedResponse
 
 		this.cachingService.SetupApiRequest(cacheResponseKey)
 
 		try {
 			let response = await axios({
-				method: 'get',
+				method: "get",
 				url: params.url,
-				responseType: 'blob'
+				responseType: "blob"
 			})
 
 			let result = {

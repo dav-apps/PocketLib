@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core'
-import { ApiResponse, PromiseHolder } from 'dav-js'
+import { Injectable } from "@angular/core"
+import { ApiResponse, PromiseHolder } from "dav-js"
 
 @Injectable()
 export class CachingService {
@@ -14,7 +14,7 @@ export class CachingService {
 	} = {}
 
 	//#region api request cache
-	GetApiRequestCacheKey(functionName: string, params: object): string{
+	GetApiRequestCacheKey(functionName: string, params: object): string {
 		let apiRequestCacheKey = functionName
 
 		for (let key of Object.keys(params)) {
@@ -35,7 +35,9 @@ export class CachingService {
 
 	ClearApiRequestCache(...functionNames: string[]) {
 		for (let functionName of functionNames) {
-			for (let selectedKey of Object.keys(this.apiRequestCache).filter(key => key.startsWith(functionName))) {
+			for (let selectedKey of Object.keys(this.apiRequestCache).filter(key =>
+				key.startsWith(functionName)
+			)) {
 				delete this.apiRequestCache[selectedKey]
 			}
 		}
@@ -63,7 +65,11 @@ export class CachingService {
 	//#endregion
 
 	//#region blurhash image cache
-	GetBlurhashImageCacheKey(blurhash: string, width: number, height: number): string {
+	GetBlurhashImageCacheKey(
+		blurhash: string,
+		width: number,
+		height: number
+	): string {
 		return `${blurhash}:${width},${height}`
 	}
 

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core'
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'
-import { DataService } from './data-service'
-import { Route } from 'src/app/misc/types'
+import { Injectable } from "@angular/core"
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router"
+import { DataService } from "./data-service"
+import { Route } from "src/app/misc/types"
 
 @Injectable()
 export class RoutingService {
@@ -16,8 +16,10 @@ export class RoutingService {
 	) {
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
-				let url = event.url.includes('?') ? event.url.substring(0, event.url.indexOf("?")) : event.url
-				this.showsStore = url.startsWith('/store')
+				let url = event.url.includes("?")
+					? event.url.substring(0, event.url.indexOf("?"))
+					: event.url
+				this.showsStore = url.startsWith("/store")
 
 				this.history.push({
 					url,
