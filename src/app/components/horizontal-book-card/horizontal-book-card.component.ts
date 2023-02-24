@@ -1,9 +1,9 @@
-import { Component, Input, HostListener } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
+import { Component, Input, HostListener } from "@angular/core"
+import { DataService } from "src/app/services/data-service"
 
 @Component({
-	selector: 'pocketlib-horizontal-book-card',
-	templateUrl: './horizontal-book-card.component.html'
+	selector: "pocketlib-horizontal-book-card",
+	templateUrl: "./horizontal-book-card.component.html"
 })
 export class HorizontalBookCardComponent {
 	@Input() title: string = ""
@@ -14,18 +14,20 @@ export class HorizontalBookCardComponent {
 	fontSize: number = 20
 	alt: string = ""
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
 	ngOnInit() {
 		this.setSize()
-		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.title)
+		this.alt = this.dataService
+			.GetLocale()
+			.misc.bookCoverAlt.replace("{0}", this.title)
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
-		let bookCardParent = document.getElementById("book-card-parent") as HTMLDivElement
+		let bookCardParent = document.getElementById(
+			"book-card-parent"
+		) as HTMLDivElement
 		let bookCardParentWidth = bookCardParent.clientWidth
 
 		if (bookCardParentWidth <= 360) {

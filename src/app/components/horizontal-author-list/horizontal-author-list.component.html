@@ -3,21 +3,33 @@
 		{{ locale.newAuthors }}
 	</h4>
 
-	<div class="horizontal-store-list" style="height: 150px; overflow-x: scroll; overflow-y: hidden; padding-top: 10px">
+	<div
+		class="horizontal-store-list"
+		style="
+			height: 150px;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			padding-top: 10px;
+		"
+	>
 		<div class="d-flex mb-3 ps-4" style="width: max-content" *ngIf="loading">
-			<div class="d-flex justify-content-center align-items-center" style="width: 100px; height: 100px">
-				<dav-progress-ring
-					style="margin: 0"
-					size="32">
-				</dav-progress-ring>
+			<div
+				class="d-flex justify-content-center align-items-center"
+				style="width: 100px; height: 100px"
+			>
+				<dav-progress-ring style="margin: 0" size="32"> </dav-progress-ring>
 			</div>
 		</div>
 
-		<div class="d-flex mb-3 px-4 slide-up-in" style="width: max-content" *ngIf="!loading">
+		<div
+			class="d-flex mb-3 px-4 slide-up-in"
+			style="width: max-content"
+			*ngIf="!loading"
+		>
 			<pocketlib-horizontal-author-list-item
 				[author]="author"
-				*ngFor="let author of authors">
-			</pocketlib-horizontal-author-list-item>
+				*ngFor="let author of authors"
+			></pocketlib-horizontal-author-list-item>
 		</div>
 	</div>
 </div>

@@ -1,19 +1,17 @@
-import { Component, Output, EventEmitter } from '@angular/core'
-import { MatTreeNestedDataSource } from '@angular/material/tree'
-import { NestedTreeControl } from '@angular/cdk/tree'
-import { BehaviorSubject } from 'rxjs'
+import { Component, Output, EventEmitter } from "@angular/core"
+import { MatTreeNestedDataSource } from "@angular/material/tree"
+import { NestedTreeControl } from "@angular/cdk/tree"
+import { BehaviorSubject } from "rxjs"
 import {
 	faChevronDown as faChevronDownLight,
 	faChevronRight as faChevronRightLight
-} from '@fortawesome/pro-light-svg-icons'
-import { EpubTocItem } from 'src/app/models/EpubReader'
+} from "@fortawesome/pro-light-svg-icons"
+import { EpubTocItem } from "src/app/models/EpubReader"
 
 @Component({
-	selector: 'pocketlib-chapters-tree',
-	templateUrl: './chapters-tree.component.html',
-	styleUrls: [
-		'./chapters-tree.component.scss'
-	]
+	selector: "pocketlib-chapters-tree",
+	templateUrl: "./chapters-tree.component.html",
+	styleUrls: ["./chapters-tree.component.scss"]
 })
 export class ChaptersTreeComponent {
 	@Output() linkClick = new EventEmitter()
@@ -22,16 +20,22 @@ export class ChaptersTreeComponent {
 	initialized: boolean = false
 	dataSource: MatTreeNestedDataSource<ChapterNode>
 	treeControl: NestedTreeControl<ChapterNode>
-	dataChange: BehaviorSubject<ChapterNode[]> = new BehaviorSubject<ChapterNode[]>([])
+	dataChange: BehaviorSubject<ChapterNode[]> = new BehaviorSubject<
+		ChapterNode[]
+	>([])
 	chapters: ChapterNode[] = []
 
 	constructor() {
 		this.dataSource = new MatTreeNestedDataSource()
-		this.treeControl = new NestedTreeControl<ChapterNode>((node: ChapterNode) => node.chapters)
-		this.dataChange.subscribe(data => this.dataSource.data = data)
+		this.treeControl = new NestedTreeControl<ChapterNode>(
+			(node: ChapterNode) => node.chapters
+		)
+		this.dataChange.subscribe(data => (this.dataSource.data = data))
 	}
 
-	hasNestedChild = (i: number, node: ChapterNode) => { return node.chapters.length > 0 }
+	hasNestedChild = (i: number, node: ChapterNode) => {
+		return node.chapters.length > 0
+	}
 
 	Init(toc: EpubTocItem[]) {
 		if (this.initialized) return

@@ -1,28 +1,32 @@
 <div
 	class="mx-auto mb-4"
-	[ngClass]="section != 4 ? (forwardNavigation ? 'slide-left-out' : 'slide-right-out') : (forwardNavigation ? 'slide-left-in' : 'slide-right-in')"
+	[ngClass]="
+		section != 4
+			? forwardNavigation
+				? 'slide-left-out'
+				: 'slide-right-out'
+			: forwardNavigation
+				? 'slide-left-in'
+				: 'slide-right-in'
+	"
 	style="max-width: 300px"
-	[style.display]="visibleSection != 4 ? 'none' : null">
-
+	[style.display]="visibleSection != 4 ? 'none' : null"
+>
 	<div class="mb-4">
 		<p class="text-color">{{ locale.priceSection.description }}</p>
 
 		<pocketlib-price-input
 			#priceInput
 			[canEdit]="true"
-			(update)="SetPrice($event)">
-		</pocketlib-price-input>
+			(update)="SetPrice($event)"
+		></pocketlib-price-input>
 	</div>
 
-	<dav-button
-		(click)="Previous()">
+	<dav-button (click)="Previous()">
 		{{ locale.previous }}
 	</dav-button>
 
-	<dav-button
-		style="float: right"
-		type="accent"
-		(click)="Submit()">
+	<dav-button style="float: right" type="accent" (click)="Submit()">
 		{{ locale.next }}
 	</dav-button>
 </div>

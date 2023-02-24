@@ -1,18 +1,25 @@
-import { Component, Input, SimpleChanges } from '@angular/core'
-import { faArrowRight as faArrowRightLight } from '@fortawesome/pro-light-svg-icons'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { BookListItem, ListResponseData, StoreBookListField, StoreBookResource, StoreBookSeriesField, StoreBookSeriesResource } from 'src/app/misc/types'
-import { AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+import { Component, Input, SimpleChanges } from "@angular/core"
+import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import {
+	BookListItem,
+	ListResponseData,
+	StoreBookListField,
+	StoreBookResource,
+	StoreBookSeriesField,
+	StoreBookSeriesResource
+} from "src/app/misc/types"
+import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 const maxVisibleStoreBooks = 10
 type HorizontalBookListType = "latest" | "categories" | "series"
 
 @Component({
-	selector: 'pocketlib-horizontal-book-list',
-	templateUrl: './horizontal-book-list.component.html'
+	selector: "pocketlib-horizontal-book-list",
+	templateUrl: "./horizontal-book-list.component.html"
 })
 export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"
@@ -47,9 +54,11 @@ export class HorizontalBookListComponent {
 
 	async ngOnChanges(changes: SimpleChanges) {
 		if (
-			changes.categories == null
-			|| changes.categories.currentValue.length == 0
-		) return
+			changes.categories == null ||
+			changes.categories.currentValue.length == 0
+		) {
+			return
+		}
 
 		this.SetHeader()
 		await this.LoadStoreBooksByCategories()
@@ -59,7 +68,10 @@ export class HorizontalBookListComponent {
 		if (this.type == "latest") {
 			this.header = this.locale.recentlyPublished
 		} else if (this.type == "categories") {
-			this.header = this.categories.length == 1 ? this.locale.moreBooksInCategory : this.locale.moreBooksInCategories
+			this.header =
+				this.categories.length == 1
+					? this.locale.moreBooksInCategory
+					: this.locale.moreBooksInCategories
 		}
 	}
 
@@ -76,8 +88,11 @@ export class HorizontalBookListComponent {
 			latest: true
 		})
 
-		if(!isSuccessStatusCode(response.status)) return
-		this.ShowBooks((response as ApiResponse<ListResponseData<StoreBookResource>>).data.items)
+		if (!isSuccessStatusCode(response.status)) return
+		this.ShowBooks(
+			(response as ApiResponse<ListResponseData<StoreBookResource>>).data
+				.items
+		)
 	}
 
 	async LoadStoreBooksByCategories() {
@@ -94,7 +109,8 @@ export class HorizontalBookListComponent {
 
 		if (!isSuccessStatusCode(response.status)) return
 
-		let books = (response as ApiResponse<ListResponseData<StoreBookResource>>).data.items
+		let books = (response as ApiResponse<ListResponseData<StoreBookResource>>)
+			.data.items
 
 		// Remove the current book
 		let i = books.findIndex(book => book.uuid == this.currentBookUuid)
@@ -113,9 +129,14 @@ export class HorizontalBookListComponent {
 		})
 
 		if (!isSuccessStatusCode(seriesResponse.status)) return
-		let seriesResponseData = (seriesResponse as ApiResponse<StoreBookSeriesResource>).data
+		let seriesResponseData = (
+			seriesResponse as ApiResponse<StoreBookSeriesResource>
+		).data
 
-		this.header = this.locale.moreOfSeries.replace('{0}', seriesResponseData.name)
+		this.header = this.locale.moreOfSeries.replace(
+			"{0}",
+			seriesResponseData.name
+		)
 
 		// Get the store books of the series
 		let response = await this.apiService.ListStoreBooks({
@@ -130,7 +151,9 @@ export class HorizontalBookListComponent {
 
 		if (!isSuccessStatusCode(response.status)) return
 
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookResource>>
+		).data
 
 		this.ShowBooks(responseData.items)
 	}
@@ -142,7 +165,11 @@ export class HorizontalBookListComponent {
 			if (storeBook.cover == null) continue
 
 			let height = 190
-			let width = AdaptCoverWidthHeightToAspectRatio(123, height, storeBook.cover.aspectRatio)
+			let width = AdaptCoverWidthHeightToAspectRatio(
+				123,
+				height,
+				storeBook.cover.aspectRatio
+			)
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
@@ -153,11 +180,15 @@ export class HorizontalBookListComponent {
 				coverHeight: height
 			}
 
-			this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-				if (isSuccessStatusCode(fileResponse.status)) {
-					bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-				}
-			})
+			this.apiService
+				.GetFile({ url: storeBook.cover.url })
+				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						bookItem.coverContent = (
+							fileResponse as ApiResponse<string>
+						).data
+					}
+				})
 
 			this.books.push(bookItem)
 		}

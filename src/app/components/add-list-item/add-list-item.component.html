@@ -1,4 +1,5 @@
-<a class="card cursor my-4 theme-background-color-secondary"
+<a
+	class="card cursor my-4 theme-background-color-secondary"
 	[ngClass]="hover ? 'shadow' : 'shadow-sm'"
 	[routerLink]="[link]"
 	[queryParams]="linkParams"
@@ -13,7 +14,8 @@
 	</div>
 </a>
 
-<div class="card cursor my-4 theme-background-color-secondary"
+<div
+	class="card cursor my-4 theme-background-color-secondary"
 	[ngClass]="hover ? 'shadow' : 'shadow-sm'"
 	(mouseover)="hover = true"
 	(mouseout)="hover = false"

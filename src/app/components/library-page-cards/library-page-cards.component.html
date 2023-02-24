@@ -17,7 +17,8 @@
 </button>
 
 <!-- Card for discovering books in the Store -->
-<a class="card cursor theme-background-color-secondary"
+<a
+	class="card cursor theme-background-color-secondary"
 	[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
 	routerLink="/store"
 	(mouseover)="discoverBooksHover = true"
@@ -32,7 +33,8 @@
 </a>
 
 <!-- Card for going to the author page, if the user is an author -->
-<a class="card cursor theme-background-color-secondary"
+<a
+	class="card cursor theme-background-color-secondary"
 	[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
 	routerLink="/author"
 	*ngIf="dataService.userAuthor || dataService.userIsAdmin"

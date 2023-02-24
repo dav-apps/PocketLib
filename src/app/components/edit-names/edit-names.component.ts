@@ -1,13 +1,13 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight
-} from '@fortawesome/pro-light-svg-icons'
-import { ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import * as ErrorCodes from 'src/constants/errorCodes'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import * as ErrorCodes from "src/constants/errorCodes"
+import { enUS } from "src/locales/locales"
 
 interface Name {
 	name: string
@@ -18,8 +18,8 @@ interface Name {
 }
 
 @Component({
-	selector: 'pocketlib-edit-names',
-	templateUrl: './edit-names.component.html'
+	selector: "pocketlib-edit-names",
+	templateUrl: "./edit-names.component.html"
 })
 export class EditNamesComponent {
 	locale = enUS.editNames

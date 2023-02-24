@@ -1,14 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight
-} from '@fortawesome/pro-light-svg-icons'
-import { DataService } from 'src/app/services/data-service'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-price-input',
-	templateUrl: './price-input.component.html'
+	selector: "pocketlib-price-input",
+	templateUrl: "./price-input.component.html"
 })
 export class PriceInputComponent {
 	locale = enUS.priceInput
@@ -21,9 +21,7 @@ export class PriceInputComponent {
 	edit: boolean
 	errorMessage: string = ""
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().priceInput
 	}
 
@@ -43,7 +41,7 @@ export class PriceInputComponent {
 		}
 
 		this.errorMessage = ""
-		
+
 		if (this.price == "") this.price = "0"
 		this.update.emit(parseInt(this.price))
 	}
@@ -67,7 +65,7 @@ export class PriceInputComponent {
 			this.formattedPrice = (price / 100).toFixed(2) + " €"
 
 			if (this.dataService.supportedLocale == "de") {
-				this.formattedPrice = this.formattedPrice.replace('.', ',')
+				this.formattedPrice = this.formattedPrice.replace(".", ",")
 			}
 		}
 	}

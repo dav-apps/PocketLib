@@ -1,11 +1,11 @@
 <div class="mb-3" style="font-size: 16px" *ngFor="let name of names">
-	<p class="mb-1 fw-light text-color">
-		{{ name.fullLanguage }}:
-	</p>
+	<p class="mb-1 fw-light text-color">{{ name.fullLanguage }}:</p>
 
 	<div class="d-flex">
 		<div style="width: 80%" *ngIf="!name.edit">
-			<p class="mb-0 text-color" style="line-height: 30px">{{ name.name }}</p>
+			<p class="mb-0 text-color" style="line-height: 30px">
+				{{ name.name }}
+			</p>
 		</div>
 
 		<form style="width: 80%" *ngIf="name.edit">
@@ -14,15 +14,15 @@
 				[placeholder]="locale.collectionNameTextfieldPlaceholder"
 				[errorMessage]="name.errorMessage"
 				(change)="name.name = $event.detail.value; name.errorMessage = ''"
-				(enter)="name.edit ? UpdateName(name) : name.edit = true">
-			</dav-textfield>
+				(enter)="name.edit ? UpdateName(name) : (name.edit = true)"
+			></dav-textfield>
 		</form>
 
 		<button
 			type="button"
 			class="btn btn-sm ms-2 text-color icon-button"
 			style="height: 30px; width: 30px; padding: 3px 6px; font-size: 16px"
-			(click)="name.edit ? UpdateName(name) : name.edit = true"
+			(click)="name.edit ? UpdateName(name) : (name.edit = true)"
 		>
 			<fa-icon [icon]="faFloppyDiskLight" *ngIf="name.edit"></fa-icon>
 			<fa-icon [icon]="faPenLight" *ngIf="!name.edit"></fa-icon>

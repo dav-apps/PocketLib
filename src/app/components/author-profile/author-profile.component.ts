@@ -6,27 +6,31 @@ import {
 	HostListener,
 	ViewChild,
 	ElementRef
-} from '@angular/core'
-import { ReadFile } from 'ngx-file-helpers'
+} from "@angular/core"
+import { ReadFile } from "ngx-file-helpers"
 import {
 	faPen as faPenLight,
 	faGlobe as faGlobeLight
-} from '@fortawesome/pro-light-svg-icons'
-import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import Cropper from 'cropperjs'
-import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
-import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from 'src/app/services/caching-service'
-import { Author } from 'src/app/models/Author'
+} from "@fortawesome/pro-light-svg-icons"
+import {
+	faFacebook,
+	faInstagram,
+	faTwitter
+} from "@fortawesome/free-brands-svg-icons"
+import Cropper from "cropperjs"
+import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { DropdownOption, DropdownOptionType } from "dav-ui-components"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "src/app/services/caching-service"
+import { Author } from "src/app/models/Author"
 import {
 	GetDualScreenSettings,
 	GetLanguageByString,
 	GenerateFacebookLink,
 	GenerateInstagramLink,
 	GenerateTwitterLink
-} from 'src/app/misc/utils'
+} from "src/app/misc/utils"
 import {
 	BookListItem,
 	AuthorMode,
@@ -40,9 +44,9 @@ import {
 	StoreBookItem,
 	StoreBookStatus,
 	AuthorProfileImageResource
-} from 'src/app/misc/types'
-import * as ErrorCodes from 'src/constants/errorCodes'
-import { enUS } from 'src/locales/locales'
+} from "src/app/misc/types"
+import * as ErrorCodes from "src/constants/errorCodes"
+import { enUS } from "src/locales/locales"
 
 interface CollectionItem {
 	uuid: string
@@ -59,17 +63,17 @@ interface SeriesItem {
 }
 
 enum BioMode {
-	None = 0,		// If the author has no bios and has not selected to add a bio, show nothing
-	New = 1,			// If the author has selected a language to add, show the input for creating a bio
-	Normal = 2,		// If the author has one or more bios, show the selected bio
-	NormalEdit = 3	// If the author has one or more bios and the user is editing the bio of the selected language
+	None = 0, // If the author has no bios and has not selected to add a bio, show nothing
+	New = 1, // If the author has selected a language to add, show the input for creating a bio
+	Normal = 2, // If the author has one or more bios, show the selected bio
+	NormalEdit = 3 // If the author has one or more bios and the user is editing the bio of the selected language
 }
 
 const maxProfileImageFileSize = 2000000
 
 @Component({
-	selector: 'pocketlib-author-profile',
-	templateUrl: './author-profile.component.html'
+	selector: "pocketlib-author-profile",
+	templateUrl: "./author-profile.component.html"
 })
 export class AuthorProfileComponent {
 	locale = enUS.authorProfile
@@ -85,13 +89,13 @@ export class AuthorProfileComponent {
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	storeContext: boolean = true		// Whether the component is shown in the Store
+	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
 	author: Author = new Author(null, [], this.apiService, this.cachingService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
-	bios: { language: string, value: string }[] = []
+	bios: { language: string; value: string }[] = []
 	books: BookListItem[] = []
 	profileImageWidth: number = 200
 	bioLanguageDropdownOptions: DropdownOption[] = []
@@ -110,16 +114,17 @@ export class AuthorProfileComponent {
 	errorMessage: string = ""
 	providerMessage: string = ""
 	newBookPageLink: {
-		path: string,
+		path: string
 		params: any
 	} = { path: "/author/book/new", params: {} }
 	newSeriesPageLink: {
-		path: string,
+		path: string
 		params: any
 	} = { path: "/author/series/new", params: {} }
 
 	//#region ProfileImageDialog
-	@ViewChild('profileImageDialogImage', { static: true }) profileImageDialogImage: ElementRef<HTMLImageElement>
+	@ViewChild("profileImageDialogImage", { static: true })
+	profileImageDialogImage: ElementRef<HTMLImageElement>
 	profileImageDialogVisible: boolean = false
 	profileImageCropper: Cropper
 	//#endregion
@@ -165,11 +170,15 @@ export class AuthorProfileComponent {
 
 		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
-			author = this.dataService.adminAuthors.find(author => author.uuid == this.uuid)
+			author = this.dataService.adminAuthors.find(
+				author => author.uuid == this.uuid
+			)
 
 			if (author == null) {
 				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(a => a.uuid == this.uuid)
+					author = (await publisher.GetAuthors()).find(
+						a => a.uuid == this.uuid
+					)
 					if (author != null) break
 				}
 			}
@@ -189,7 +198,10 @@ export class AuthorProfileComponent {
 				await this.SelectDefaultBio()
 
 				// Set the text and visibility for the provider message
-				this.providerMessage = this.locale.messages.providerMessage.replace('{0}', Dav.GetUserPageLink('provider'))
+				this.providerMessage = this.locale.messages.providerMessage.replace(
+					"{0}",
+					Dav.GetUserPageLink("provider")
+				)
 			}
 		}
 
@@ -206,11 +218,15 @@ export class AuthorProfileComponent {
 
 		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
-			this.apiService.GetFile({ url: this.author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-				if (isSuccessStatusCode(fileResponse.status)) {
-					this.profileImageContent = (fileResponse as ApiResponse<string>).data
-				}
-			})
+			this.apiService
+				.GetFile({ url: this.author.profileImage.url })
+				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.profileImageContent = (
+							fileResponse as ApiResponse<string>
+						).data
+					}
+				})
 		}
 
 		// Set the new book page link
@@ -220,14 +236,19 @@ export class AuthorProfileComponent {
 		}
 
 		this.SetupBioLanguageDropdown()
-		this.profileImageAlt = this.dataService.GetLocale().misc.authorProfileImageAlt.replace('{0}', `${this.author.firstName} ${this.author.lastName}`)
+		this.profileImageAlt = this.dataService
+			.GetLocale()
+			.misc.authorProfileImageAlt.replace(
+				"{0}",
+				`${this.author.firstName} ${this.author.lastName}`
+			)
 
 		await this.LoadCollections()
 		await this.LoadSeries()
 		this.loaded.emit()
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
 
@@ -262,7 +283,9 @@ export class AuthorProfileComponent {
 					coverBlurhash: book.cover.blurhash
 				}
 
-				book.GetCoverContent().then(result => bookItem.coverContent = result)
+				book
+					.GetCoverContent()
+					.then(result => (bookItem.coverContent = result))
 				collectionItem.books.push(bookItem)
 			}
 
@@ -342,7 +365,9 @@ export class AuthorProfileComponent {
 	}
 
 	async SelectDefaultBio() {
-		let i = this.bios.findIndex(bio => bio.language == this.dataService.supportedLocale)
+		let i = this.bios.findIndex(
+			bio => bio.language == this.dataService.supportedLocale
+		)
 
 		if (i != -1) {
 			this.bioLanguageDropdownSelectedKey = this.dataService.supportedLocale
@@ -356,7 +381,9 @@ export class AuthorProfileComponent {
 	}
 
 	async UpdateCurrentBio() {
-		let i = this.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+		let i = this.bios.findIndex(
+			bio => bio.language == this.bioLanguageDropdownSelectedKey
+		)
 
 		if (i == -1) {
 			this.currentBio = ""
@@ -374,7 +401,9 @@ export class AuthorProfileComponent {
 		for (let bio of this.bios) {
 			this.bioLanguageDropdownOptions.push({
 				key: bio.language,
-				value: this.dataService.GetFullLanguage(GetLanguageByString(bio.language)),
+				value: this.dataService.GetFullLanguage(
+					GetLanguageByString(bio.language)
+				),
 				type: DropdownOptionType.option
 			})
 		}
@@ -400,16 +429,20 @@ export class AuthorProfileComponent {
 			}
 		} else {
 			// Add a divider and all possible languages to add
-			let newOptions: DropdownOption[] = [{
-				key: "divider",
-				value: null,
-				type: DropdownOptionType.divider
-			}]
+			let newOptions: DropdownOption[] = [
+				{
+					key: "divider",
+					value: null,
+					type: DropdownOptionType.divider
+				}
+			]
 
 			let languages = this.dataService.GetLocale().misc.languages
 			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
-				let index = this.bioLanguageDropdownOptions.findIndex(option => option.key == language)
+				let index = this.bioLanguageDropdownOptions.findIndex(
+					option => option.key == language
+				)
 
 				if (index == -1) {
 					// There is no bio in that language
@@ -478,7 +511,9 @@ export class AuthorProfileComponent {
 		if (this.bioLanguageDropdownSelectedKey == "default") {
 			this.bioMode = BioMode.None
 		} else {
-			let i = this.bios.findIndex(bio => bio.language == this.bioLanguageDropdownSelectedKey)
+			let i = this.bios.findIndex(
+				bio => bio.language == this.bioLanguageDropdownSelectedKey
+			)
 
 			if (i == -1) {
 				this.bioMode = BioMode.New
@@ -495,11 +530,14 @@ export class AuthorProfileComponent {
 		this.profileImageDialogVisible = true
 
 		this.profileImageDialogImage.nativeElement.onload = () => {
-			this.profileImageCropper = new Cropper(this.profileImageDialogImage.nativeElement, {
-				aspectRatio: 1,
-				autoCropArea: 1,
-				viewMode: 2
-			})
+			this.profileImageCropper = new Cropper(
+				this.profileImageDialogImage.nativeElement,
+				{
+					aspectRatio: 1,
+					autoCropArea: 1,
+					viewMode: 2
+				}
+			)
 		}
 
 		this.profileImageDialogImage.nativeElement.src = file.content
@@ -612,42 +650,54 @@ export class AuthorProfileComponent {
 				switch (error.code) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
-							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameMissing
+							this.editProfileDialogFirstNameError =
+								this.locale.editProfileDialog.errors.firstNameMissing
 						} else {
-							this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooShort
+							this.editProfileDialogFirstNameError =
+								this.locale.editProfileDialog.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.LastNameTooShort:
 						if (this.editProfileDialogLastName.length == 0) {
-							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameMissing
+							this.editProfileDialogLastNameError =
+								this.locale.editProfileDialog.errors.lastNameMissing
 						} else {
-							this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooShort
+							this.editProfileDialogLastNameError =
+								this.locale.editProfileDialog.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.FirstNameTooLong:
-						this.editProfileDialogFirstNameError = this.locale.editProfileDialog.errors.firstNameTooLong
+						this.editProfileDialogFirstNameError =
+							this.locale.editProfileDialog.errors.firstNameTooLong
 						break
 					case ErrorCodes.LastNameTooLong:
-						this.editProfileDialogLastNameError = this.locale.editProfileDialog.errors.lastNameTooLong
+						this.editProfileDialogLastNameError =
+							this.locale.editProfileDialog.errors.lastNameTooLong
 						break
 					case ErrorCodes.WebsiteUrlInvalid:
-						this.editProfileDialogWebsiteUrlError = this.locale.editProfileDialog.errors.websiteUrlInvalid
+						this.editProfileDialogWebsiteUrlError =
+							this.locale.editProfileDialog.errors.websiteUrlInvalid
 						break
 					case ErrorCodes.FacebookUsernameInvalid:
-						this.editProfileDialogFacebookUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogFacebookUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 					case ErrorCodes.InstagramUsernameInvalid:
-						this.editProfileDialogInstagramUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogInstagramUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 					case ErrorCodes.TwitterUsernameInvalid:
-						this.editProfileDialogTwitterUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogTwitterUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 				}
 			}
 		}
 	}
 
-	async ProcessSetBioResponse(response: ApiResponse<AuthorBioResource> | ApiErrorResponse) {
+	async ProcessSetBioResponse(
+		response: ApiResponse<AuthorBioResource> | ApiErrorResponse
+	) {
 		if (isSuccessStatusCode(response.status)) {
 			this.author.ClearBios()
 			await this.LoadBios()
@@ -724,7 +774,11 @@ export class AuthorProfileComponent {
 			})
 
 			if (isSuccessStatusCode(storeBooksResponse.status)) {
-				let storeBooksResponseData = (storeBooksResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+				let storeBooksResponseData = (
+					storeBooksResponse as ApiResponse<
+						ListResponseData<StoreBookResource>
+					>
+				).data
 
 				for (let storeBook of storeBooksResponseData.items) {
 					let bookItem: BookListItem = {
@@ -735,11 +789,19 @@ export class AuthorProfileComponent {
 					}
 
 					if (storeBook.cover?.url != null) {
-						this.apiService.GetFile({ url: storeBook.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-							if (isSuccessStatusCode(fileResponse.status)) {
-								bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-							}
-						})
+						this.apiService
+							.GetFile({ url: storeBook.cover.url })
+							.then(
+								(
+									fileResponse: ApiResponse<string> | ApiErrorResponse
+								) => {
+									if (isSuccessStatusCode(fileResponse.status)) {
+										bookItem.coverContent = (
+											fileResponse as ApiResponse<string>
+										).data
+									}
+								}
+							)
 					}
 
 					this.books.push(bookItem)

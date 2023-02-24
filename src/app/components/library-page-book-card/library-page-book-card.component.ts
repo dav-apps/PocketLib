@@ -5,14 +5,14 @@ import {
 	EventEmitter,
 	SimpleChange,
 	SimpleChanges
-} from '@angular/core'
-import { EpubBook } from 'src/app/models/EpubBook'
-import { PdfBook } from 'src/app/models/PdfBook'
-import { DataService } from 'src/app/services/data-service'
+} from "@angular/core"
+import { EpubBook } from "src/app/models/EpubBook"
+import { PdfBook } from "src/app/models/PdfBook"
+import { DataService } from "src/app/services/data-service"
 
 @Component({
-	selector: 'pocketlib-library-page-book-card',
-	templateUrl: './library-page-book-card.component.html'
+	selector: "pocketlib-library-page-book-card",
+	templateUrl: "./library-page-book-card.component.html"
 })
 export class LibraryPageBookCardComponent {
 	@Input() book: EpubBook | PdfBook = new EpubBook(null, null, true, null)
@@ -24,9 +24,7 @@ export class LibraryPageBookCardComponent {
 	alt: string = ""
 	showDefaultCover: boolean = false
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
 	ngOnInit() {
 		this.Init()
@@ -50,7 +48,9 @@ export class LibraryPageBookCardComponent {
 			this.showDefaultCover = true
 		}
 
-		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
+		this.alt = this.dataService
+			.GetLocale()
+			.misc.bookCoverAlt.replace("{0}", this.book.title)
 	}
 
 	ContextMenu(event: MouseEvent) {

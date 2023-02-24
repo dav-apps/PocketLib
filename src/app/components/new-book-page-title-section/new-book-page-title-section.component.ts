@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
-import { enUS } from 'src/locales/locales'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-new-book-page-title-section',
-	templateUrl: './new-book-page-title-section.component.html'
+	selector: "pocketlib-new-book-page-title-section",
+	templateUrl: "./new-book-page-title-section.component.html"
 })
-export class NewBookPageTitleSectionComponent{
+export class NewBookPageTitleSectionComponent {
 	locale = enUS.newBookPage
 	@Input() loading: boolean = false
 	@Input() section: number = 0
@@ -15,9 +15,7 @@ export class NewBookPageTitleSectionComponent{
 	@Output() submit = new EventEmitter()
 	title: string = ""
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().newBookPage
 	}
 

@@ -1,39 +1,43 @@
 <div
 	class="mx-auto mb-4"
-	[ngClass]="section != 2 ? (forwardNavigation ? 'slide-left-out' : 'slide-right-out') : (forwardNavigation ? 'slide-left-in' : 'slide-right-in')"
+	[ngClass]="
+		section != 2
+			? forwardNavigation
+				? 'slide-left-out'
+				: 'slide-right-out'
+			: forwardNavigation
+				? 'slide-left-in'
+				: 'slide-right-in'
+	"
 	style="max-width: 300px"
-	[style.display]="visibleSection != 2 ? 'none' : null">
-
+	[style.display]="visibleSection != 2 ? 'none' : null"
+>
 	<div class="form-group mb-3">
-		<label
-			class="col-form-label text-color mb-1"
-			style="font-size: 15px">
+		<label class="col-form-label text-color mb-1" style="font-size: 15px">
 			{{ locale.descriptionSection.description }}
 		</label>
 
 		<div class="d-flex mb-3">
 			<pocketlib-language-dropdown
 				[language]="language"
-				(updated)="SetLanguage($event)">
-			</pocketlib-language-dropdown>
+				(updated)="SetLanguage($event)"
+			></pocketlib-language-dropdown>
 		</div>
 
 		<dav-textarea
 			[value]="description"
-			[placeholder]="locale.descriptionSection.descriptionTextfieldPlaceholder"
-			(change)="description = $event.detail.value">
-		</dav-textarea>
+			[placeholder]="
+				locale.descriptionSection.descriptionTextfieldPlaceholder
+			"
+			(change)="description = $event.detail.value"
+		></dav-textarea>
 	</div>
 
-	<dav-button
-		(click)="Previous()">
+	<dav-button (click)="Previous()">
 		{{ locale.previous }}
 	</dav-button>
 
-	<dav-button
-		style="float: right"
-		type="accent"
-		(click)="Submit()">
+	<dav-button style="float: right" type="accent" (click)="Submit()">
 		{{ locale.next }}
 	</dav-button>
 </div>

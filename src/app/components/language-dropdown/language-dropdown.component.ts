@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { DropdownOption, DropdownOptionType } from 'dav-ui-components'
-import { DataService } from 'src/app/services/data-service'
-import { enUS } from 'src/locales/locales'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { DropdownOption, DropdownOptionType } from "dav-ui-components"
+import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-language-dropdown',
-	templateUrl: './language-dropdown.component.html'
+	selector: "pocketlib-language-dropdown",
+	templateUrl: "./language-dropdown.component.html"
 })
 export class LanguageDropdownComponent {
 	@Input() language: string = "en"
@@ -25,9 +25,7 @@ export class LanguageDropdownComponent {
 		}
 	]
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.languages = this.dataService.GetLocale().misc.languages
 		this.options[0].value = this.languages.en
 		this.options[1].value = this.languages.de

@@ -16,16 +16,16 @@
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="firstViewer.left.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 
 	<iframe
 		#firstViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="firstViewer.right.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 </div>
 
 <div
@@ -46,16 +46,16 @@
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="secondViewer.left.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 
 	<iframe
 		#secondViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="secondViewer.right.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 </div>
 
 <div
@@ -76,16 +76,16 @@
 		class="viewer"
 		[style.width.px]="firstViewer.left.width"
 		[style.height.px]="thirdViewer.left.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 
 	<iframe
 		#thirdViewerRight
 		class="viewer viewer-right"
 		[style.width.px]="firstViewer.right.width"
 		[style.height.px]="thirdViewer.right.height"
-		scrolling="no">
-	</iframe>
+		scrolling="no"
+	></iframe>
 </div>
 
 <!-- Arrow buttons -->
@@ -116,16 +116,25 @@
 	[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
 	*ngIf="!isMobile"
 >
-	<p class="align-self-center fw-light text-color"
-		style="display: inline-block; margin: 0; font-size: 14px">
+	<p
+		class="align-self-center fw-light text-color"
+		style="display: inline-block; margin: 0; font-size: 14px"
+	>
 		{{ currentChapterTitle }}
 	</p>
 </div>
 
 <!-- Top Toolbar -->
-<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!isMobile && initialized">
+<div
+	class="w-100"
+	style="z-index: 2; position: absolute"
+	*ngIf="!isMobile && initialized"
+>
 	<!-- Back button -->
-	<dav-icon-button [disabled]="navigationHistory.length == 0" (click)="GoBack()">
+	<dav-icon-button
+		[disabled]="navigationHistory.length == 0"
+		(click)="GoBack()"
+	>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</dav-icon-button>
 
@@ -139,13 +148,20 @@
 			<dav-progress-ring
 				[style.display]="progressRingVisible ? '' : 'none'"
 				size="18"
-				color="black">
+				color="black"
+			>
 			</dav-progress-ring>
 		</div>
 
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
-			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
-			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkSolid"
+				*ngIf="currentPageBookmark"
+			></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkLight"
+				*ngIf="!currentPageBookmark"
+			></fa-icon>
 		</dav-icon-button>
 
 		<dav-icon-button (click)="ShowBookmarksPanel()">
@@ -169,38 +185,80 @@
 	(touchend)="HandleTouch($event)"
 >
 	<div id="bottom-sheet-button-container">
-		<dav-icon-text-button (click)="GoHome()" [label]="locale.bottomSheet.back">
+		<dav-icon-text-button
+			(click)="GoHome()"
+			[label]="locale.bottomSheet.back"
+		>
 			<fa-icon [icon]="faHouseRegular"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="AddOrRemoveBookmark()" [label]="currentPageBookmark ? locale.bottomSheet.removeBookmark : locale.bottomSheet.addBookmark">
-			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
-			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
+		<dav-icon-text-button
+			(click)="AddOrRemoveBookmark()"
+			[label]="
+				currentPageBookmark
+					? locale.bottomSheet.removeBookmark
+					: locale.bottomSheet.addBookmark
+			"
+		>
+			<fa-icon
+				[icon]="faBookmarkSolid"
+				*ngIf="currentPageBookmark"
+			></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkRegular"
+				*ngIf="!currentPageBookmark"
+			></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="ShowBookmarksPanel()" [label]="locale.bottomSheet.bookmarks">
+		<dav-icon-text-button
+			(click)="ShowBookmarksPanel()"
+			[label]="locale.bottomSheet.bookmarks"
+		>
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="ShowChaptersPanel()" [label]="locale.bottomSheet.toc">
+		<dav-icon-text-button
+			(click)="ShowChaptersPanel()"
+			[label]="locale.bottomSheet.toc"
+		>
 			<fa-icon [icon]="faListUlRegular"></fa-icon>
 		</dav-icon-text-button>
 	</div>
 
-	<div id="bottom-sheet-container" [style.height.px]="bottomSheetContainerHeight">
+	<div
+		id="bottom-sheet-container"
+		[style.height.px]="bottomSheetContainerHeight"
+	>
 		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
 			<ul class="list-group list-group-flush">
-				<li class="list-group-item d-flex theme-background-color-secondary"
-					style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
+				<li
+					class="list-group-item d-flex theme-background-color-secondary"
+					style="
+						padding: 5px 0px;
+						margin-left: 20px;
+						border: none;
+						min-height: 35px;
+						font-size: 16px;
+					"
 					*ngFor="let bookmark of currentBook.bookmarks"
 				>
-					<a href="#" class="text-color" (click)="NavigateToBookmark(bookmark)" [ngClass]="bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''">
+					<a
+						href="#"
+						class="text-color"
+						(click)="NavigateToBookmark(bookmark)"
+						[ngClass]="
+							bookmark.uuid == currentPageBookmark
+								? 'font-weight-bold'
+								: ''
+						"
+					>
 						{{ bookmark.name }}
 					</a>
 				</li>
 			</ul>
 
-			<p class="fw-light text-color"
+			<p
+				class="fw-light text-color"
 				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
 			>
 				{{ locale.noBookmarks }}
@@ -210,7 +268,8 @@
 		<div #bottomSheetChaptersContainer *ngIf="showChaptersPanel">
 			<pocketlib-chapters-tree
 				#bottomSheetChaptersTree
-				(linkClick)="ChapterLinkClicked($event)">
+				(linkClick)="ChapterLinkClicked($event)"
+			>
 			</pocketlib-chapters-tree>
 		</div>
 	</div>
@@ -219,9 +278,11 @@
 <!-- Total progress -->
 <div
 	style="position: absolute; bottom: 0; width: 2px; transition-duration: 400ms"
-	[style.borderTop]="dataService.darkTheme ? '2px solid #b9b9b9' : '4px solid #7b7b7b'"
-	[style.transform]="'scaleX(' + width * totalProgress + ')'">
-</div>
+	[style.borderTop]="
+		dataService.darkTheme ? '2px solid #b9b9b9' : '4px solid #7b7b7b'
+	"
+	[style.transform]="'scaleX(' + width * totalProgress + ')'"
+></div>
 
 <!-- Progress ring for small window -->
 <div
@@ -231,7 +292,8 @@
 	<dav-progress-ring
 		[style.display]="progressRingVisible ? '' : 'none'"
 		size="18"
-		color="black">
+		color="black"
+	>
 	</dav-progress-ring>
 </div>
 
@@ -242,17 +304,34 @@
 	(dismiss)="showBookmarksPanel = false"
 >
 	<ul class="list-group list-group-flush">
-		<li class="list-group-item d-flex theme-background-color-secondary"
-			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
-			*ngFor="let bookmark of currentBook.bookmarks">
-			<a href="#" class="text-color" (click)="NavigateToBookmark(bookmark)" [ngClass]="bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''">
+		<li
+			class="list-group-item d-flex theme-background-color-secondary"
+			style="
+				padding: 5px 0px;
+				margin-left: 20px;
+				border: none;
+				min-height: 35px;
+				font-size: 16px;
+			"
+			*ngFor="let bookmark of currentBook.bookmarks"
+		>
+			<a
+				href="#"
+				class="text-color"
+				(click)="NavigateToBookmark(bookmark)"
+				[ngClass]="
+					bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''
+				"
+			>
 				{{ bookmark.name }}
 			</a>
 		</li>
 	</ul>
 
-	<p class="fw-light text-color"
-		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
+	<p
+		class="fw-light text-color"
+		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
+	>
 		{{ locale.noBookmarks }}
 	</p>
 </dav-panel>
@@ -260,13 +339,13 @@
 <!-- Panel for TOC -->
 <dav-panel
 	[header]="locale.toc"
-	[visible]="showChaptersPanel  && !isMobile"
+	[visible]="showChaptersPanel && !isMobile"
 	(dismiss)="showChaptersPanel = false"
 >
 	<div class="chapters-panel-container">
 		<pocketlib-chapters-tree
 			#chaptersTree
-			(linkClick)="ChapterLinkClicked($event)">
-		</pocketlib-chapters-tree>
+			(linkClick)="ChapterLinkClicked($event)"
+		></pocketlib-chapters-tree>
 	</div>
 </dav-panel>

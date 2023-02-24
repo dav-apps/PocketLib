@@ -1,17 +1,15 @@
-import { Component, Output, EventEmitter } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
+import { Component, Output, EventEmitter } from "@angular/core"
+import { DataService } from "src/app/services/data-service"
 
 @Component({
-	selector: 'pocketlib-categories-selection',
-	templateUrl: './categories-selection.component.html'
+	selector: "pocketlib-categories-selection",
+	templateUrl: "./categories-selection.component.html"
 })
 export class CategoriesSelectionComponent {
 	@Output() change = new EventEmitter()
 	selectedCategories: string[] = []
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
 	public SetSelectedCategories(categories: string[]) {
 		this.selectedCategories = categories

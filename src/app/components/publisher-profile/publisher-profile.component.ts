@@ -1,11 +1,21 @@
-import { Component, Input, ElementRef, ViewChild, HostListener } from "@angular/core"
+import {
+	Component,
+	Input,
+	ElementRef,
+	ViewChild,
+	HostListener
+} from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import {
 	faGlobe as faGlobeLight,
 	faPen as faPenLight
 } from "@fortawesome/pro-light-svg-icons"
-import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons"
+import {
+	faFacebook,
+	faInstagram,
+	faTwitter
+} from "@fortawesome/free-brands-svg-icons"
 import Cropper from "cropperjs"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { Publisher } from "src/app/models/Publisher"
@@ -16,7 +26,7 @@ import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
 	GenerateTwitterLink
-} from 'src/app/misc/utils'
+} from "src/app/misc/utils"
 import {
 	AuthorListItem,
 	PublisherMode,
@@ -45,7 +55,12 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, [], this.apiService, this.cachingService)
+	publisher: Publisher = new Publisher(
+		null,
+		[],
+		this.apiService,
+		this.cachingService
+	)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -58,7 +73,7 @@ export class PublisherProfileComponent {
 	newDescriptionError: string = ""
 	descriptionLoading: boolean = false
 	errorMessage: string = ""
-	storeContext: boolean = true		// Whether the component is shown in the Store
+	storeContext: boolean = true // Whether the component is shown in the Store
 	authorItems: AuthorListItem[] = []
 	authorsLoading: boolean = true
 	hoveredAuthorItem: number = -1
@@ -66,7 +81,8 @@ export class PublisherProfileComponent {
 	page: number = 1
 
 	//#region LogoDialog
-	@ViewChild('logoDialogImage', { static: true }) logoDialogImage: ElementRef<HTMLImageElement>
+	@ViewChild("logoDialogImage", { static: true })
+	logoDialogImage: ElementRef<HTMLImageElement>
 	logoDialogVisible: boolean = false
 	logoCropper: Cropper
 	//#endregion
@@ -127,7 +143,9 @@ export class PublisherProfileComponent {
 
 		if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
-			publisher = this.dataService.adminPublishers.find(publisher => publisher.uuid == this.uuid)
+			publisher = this.dataService.adminPublishers.find(
+				publisher => publisher.uuid == this.uuid
+			)
 		} else if (this.dataService.userPublisher) {
 			this.publisherMode = PublisherMode.PublisherOfUser
 			publisher = this.dataService.userPublisher
@@ -149,21 +167,25 @@ export class PublisherProfileComponent {
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
-			this.apiService.GetFile({ url: this.publisher.logo.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-				if (isSuccessStatusCode(fileResponse.status)) {
-					this.logoContent = (fileResponse as ApiResponse<string>).data
-				}
-			})
+			this.apiService
+				.GetFile({ url: this.publisher.logo.url })
+				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.logoContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
 		}
 
-		this.logoAlt = this.dataService.GetLocale().misc.publisherLogoAlt.replace('{0}', this.publisher.name)
+		this.logoAlt = this.dataService
+			.GetLocale()
+			.misc.publisherLogoAlt.replace("{0}", this.publisher.name)
 
 		// Get the authors of the publisher
 		await this.LoadAuthors()
 		this.authorsLoading = false
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		if (window.innerWidth < 768) {
 			this.logoWidth = 110
@@ -191,7 +213,12 @@ export class PublisherProfileComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			let responseData = (response as ApiResponse<PublisherResource>).data
-			this.publisher = new Publisher(responseData, await this.dataService.GetStoreLanguages(), this.apiService, this.cachingService)
+			this.publisher = new Publisher(
+				responseData,
+				await this.dataService.GetStoreLanguages(),
+				this.apiService,
+				this.cachingService
+			)
 		}
 	}
 
@@ -199,14 +226,22 @@ export class PublisherProfileComponent {
 		this.authorItems = []
 		this.authorsLoading = true
 
-		for (let author of await this.publisher.GetAuthors(this.page, maxAuthorsPerPage)) {
+		for (let author of await this.publisher.GetAuthors(
+			this.page,
+			maxAuthorsPerPage
+		)) {
 			let authorItem: AuthorListItem = {
 				uuid: author.uuid,
 				firstName: author.firstName,
 				lastName: author.lastName,
 				profileImageContent: this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profileImage.blurhash,
-				profileImageAlt: this.dataService.GetLocale().misc.authorProfileImageAlt.replace("{0}", `${author.firstName} ${author.lastName}`)
+				profileImageAlt: this.dataService
+					.GetLocale()
+					.misc.authorProfileImageAlt.replace(
+						"{0}",
+						`${author.firstName} ${author.lastName}`
+					)
 			}
 
 			author.GetProfileImageContent().then((response: string) => {
@@ -230,7 +265,9 @@ export class PublisherProfileComponent {
 
 	UpdateSocialMediaLinks() {
 		this.facebookLink = GenerateFacebookLink(this.publisher.facebookUsername)
-		this.instagramLink = GenerateInstagramLink(this.publisher.instagramUsername)
+		this.instagramLink = GenerateInstagramLink(
+			this.publisher.instagramUsername
+		)
 		this.twitterLink = GenerateTwitterLink(this.publisher.twitterUsername)
 	}
 
@@ -254,7 +291,7 @@ export class PublisherProfileComponent {
 		let oldLogoContent = this.logoContent
 
 		let canvas = this.logoCropper.getCroppedCanvas()
-		let blob = await new Promise<Blob>((r: Function) => 
+		let blob = await new Promise<Blob>((r: Function) =>
 			canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
 		)
 		this.logoCropper.destroy()
@@ -350,25 +387,32 @@ export class PublisherProfileComponent {
 				switch (error.code) {
 					case ErrorCodes.NameTooShort:
 						if (this.editProfileDialogName.length == 0) {
-							this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameMissing
+							this.editProfileDialogNameError =
+								this.locale.editProfileDialog.errors.nameMissing
 						} else {
-							this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameTooShort
+							this.editProfileDialogNameError =
+								this.locale.editProfileDialog.errors.nameTooShort
 						}
 						break
 					case ErrorCodes.NameTooLong:
-						this.editProfileDialogNameError = this.locale.editProfileDialog.errors.nameTooLong
+						this.editProfileDialogNameError =
+							this.locale.editProfileDialog.errors.nameTooLong
 						break
 					case ErrorCodes.WebsiteUrlInvalid:
-						this.editProfileDialogWebsiteUrlError = this.locale.editProfileDialog.errors.websiteUrlInvalid
+						this.editProfileDialogWebsiteUrlError =
+							this.locale.editProfileDialog.errors.websiteUrlInvalid
 						break
 					case ErrorCodes.FacebookUsernameInvalid:
-						this.editProfileDialogFacebookUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogFacebookUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 					case ErrorCodes.InstagramUsernameInvalid:
-						this.editProfileDialogInstagramUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogInstagramUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 					case ErrorCodes.TwitterUsernameInvalid:
-						this.editProfileDialogTwitterUsernameError = this.locale.editProfileDialog.errors.usernameInvalid
+						this.editProfileDialogTwitterUsernameError =
+							this.locale.editProfileDialog.errors.usernameInvalid
 						break
 				}
 			}
@@ -397,10 +441,12 @@ export class PublisherProfileComponent {
 
 				switch (errorCode) {
 					case ErrorCodes.DescriptionTooShort:
-						this.newDescriptionError = this.locale.errors.descriptionTooShort
+						this.newDescriptionError =
+							this.locale.errors.descriptionTooShort
 						break
 					case ErrorCodes.DescriptionTooLong:
-						this.newDescriptionError = this.locale.errors.descriptionTooLong
+						this.newDescriptionError =
+							this.locale.errors.descriptionTooLong
 						break
 					default:
 						this.newDescriptionError = this.locale.errors.unexpectedError
@@ -438,11 +484,7 @@ export class PublisherProfileComponent {
 			publisher: this.publisher.uuid,
 			firstName: this.createAuthorDialogFirstName,
 			lastName: this.createAuthorDialogLastName,
-			fields: [
-				AuthorField.uuid,
-				AuthorField.firstName,
-				AuthorField.lastName
-			]
+			fields: [AuthorField.uuid, AuthorField.firstName, AuthorField.lastName]
 		})
 
 		this.createAuthorDialogLoading = false
@@ -454,32 +496,39 @@ export class PublisherProfileComponent {
 			this.publisher.ClearAuthors()
 
 			// Redirect to the author page of the new author
-			this.router.navigate(['author', responseData.uuid])
+			this.router.navigate(["author", responseData.uuid])
 		} else {
 			for (let error of (response as ApiErrorResponse).errors) {
 				switch (error.code) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.createAuthorDialogFirstName.length == 0) {
-							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameMissing
+							this.createAuthorDialogFirstNameError =
+								this.locale.createAuthorDialog.errors.firstNameMissing
 						} else {
-							this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooShort
+							this.createAuthorDialogFirstNameError =
+								this.locale.createAuthorDialog.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.LastNameTooShort:
 						if (this.createAuthorDialogLastName.length == 0) {
-							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameMissing
+							this.createAuthorDialogLastNameError =
+								this.locale.createAuthorDialog.errors.lastNameMissing
 						} else {
-							this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooShort
+							this.createAuthorDialogLastNameError =
+								this.locale.createAuthorDialog.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.FirstNameTooLong:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.firstNameTooLong
+						this.createAuthorDialogFirstNameError =
+							this.locale.createAuthorDialog.errors.firstNameTooLong
 						break
 					case ErrorCodes.LastNameTooLong:
-						this.createAuthorDialogLastNameError = this.locale.createAuthorDialog.errors.lastNameTooLong
+						this.createAuthorDialogLastNameError =
+							this.locale.createAuthorDialog.errors.lastNameTooLong
 						break
 					default:
-						this.createAuthorDialogFirstNameError = this.locale.createAuthorDialog.errors.unexpectedError
+						this.createAuthorDialogFirstNameError =
+							this.locale.createAuthorDialog.errors.unexpectedError
 						break
 				}
 			}

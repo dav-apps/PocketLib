@@ -1,7 +1,7 @@
-import { Component } from '@angular/core'
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
+import { Component } from "@angular/core"
+import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
 import {
 	BookListItem,
 	ListResponseData,
@@ -10,13 +10,13 @@ import {
 	StoreBookResource,
 	StoreBookSeriesListField,
 	StoreBookSeriesResource
-} from 'src/app/misc/types'
-import { AdaptCoverWidthHeightToAspectRatio } from 'src/app/misc/utils'
-import { enUS } from 'src/locales/locales'
+} from "src/app/misc/types"
+import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-horizontal-series-list',
-	templateUrl: './horizontal-series-list.component.html'
+	selector: "pocketlib-horizontal-series-list",
+	templateUrl: "./horizontal-series-list.component.html"
 })
 export class HorizontalSeriesListComponent {
 	locale = enUS.horizontalSeriesList
@@ -39,7 +39,11 @@ export class HorizontalSeriesListComponent {
 		})
 
 		if (!isSuccessStatusCode(seriesResponse.status)) return
-		let seriesResponseData = (seriesResponse as ApiResponse<ListResponseData<StoreBookSeriesResource>>).data
+		let seriesResponseData = (
+			seriesResponse as ApiResponse<
+				ListResponseData<StoreBookSeriesResource>
+			>
+		).data
 
 		for (let series of seriesResponseData.items) {
 			let storeBookResponse = await this.apiService.ListStoreBooks({
@@ -53,7 +57,11 @@ export class HorizontalSeriesListComponent {
 			})
 
 			if (!isSuccessStatusCode(storeBookResponse.status)) continue
-			let storeBookResponseData = (storeBookResponse as ApiResponse<ListResponseData<StoreBookResource>>).data
+			let storeBookResponseData = (
+				storeBookResponse as ApiResponse<
+					ListResponseData<StoreBookResource>
+				>
+			).data
 
 			let seriesItem: SeriesListItem = {
 				uuid: series.uuid,
@@ -62,7 +70,11 @@ export class HorizontalSeriesListComponent {
 
 			for (let book of storeBookResponseData.items) {
 				let height = 150
-				let width = AdaptCoverWidthHeightToAspectRatio(96, height, book.cover.aspectRatio)
+				let width = AdaptCoverWidthHeightToAspectRatio(
+					96,
+					height,
+					book.cover.aspectRatio
+				)
 
 				let bookItem: BookListItem = {
 					uuid: book.uuid,
@@ -73,11 +85,15 @@ export class HorizontalSeriesListComponent {
 					coverHeight: height
 				}
 
-				this.apiService.GetFile({ url: book.cover.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						bookItem.coverContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+				this.apiService
+					.GetFile({ url: book.cover.url })
+					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
 
 				seriesItem.books.push(bookItem)
 			}

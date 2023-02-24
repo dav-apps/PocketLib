@@ -1,19 +1,17 @@
-import { Component } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
-import { GetLanguageByString } from 'src/app/misc/utils'
-import { Language as LangCode } from 'src/app/misc/types'
+import { Component } from "@angular/core"
+import { DataService } from "src/app/services/data-service"
+import { GetLanguageByString } from "src/app/misc/utils"
+import { Language as LangCode } from "src/app/misc/types"
 
 @Component({
-	selector: 'pocketlib-languages-selection',
-	templateUrl: './languages-selection.component.html'
+	selector: "pocketlib-languages-selection",
+	templateUrl: "./languages-selection.component.html"
 })
-export class LanguagesSelectionComponent{
+export class LanguagesSelectionComponent {
 	languages: Language[] = []
 	selectedLanguages: string[] = []
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
 	async ngOnInit() {
 		// Get the languages
@@ -58,14 +56,14 @@ export class LanguagesSelectionComponent{
 				selectedLanguage = lang
 			}
 		}
-		if(count != 1) return
+		if (count != 1) return
 
 		selectedLanguage.disabled = true
 	}
 
 	async ToggleLanguage(code: string) {
 		let i = this.languages.findIndex(l => l.code == code)
-		if(i == -1) return
+		if (i == -1) return
 
 		this.languages[i].checked = !this.languages[i].checked
 		this.DisableOnlySelectedLanguage()
@@ -84,8 +82,8 @@ export class LanguagesSelectionComponent{
 }
 
 interface Language {
-	code: string,
-	name: string,
-	checked: boolean,
+	code: string
+	name: string
+	checked: boolean
 	disabled: boolean
 }

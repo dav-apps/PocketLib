@@ -1,15 +1,18 @@
-<a class="card cursor m-2 theme-background-color-secondary"
+<a
+	class="card cursor m-2 theme-background-color-secondary"
 	[ngClass]="hovered && !highlighted ? 'shadow' : 'shadow-sm'"
 	style="transition: 0.16s"
 	[style.width.px]="book.coverWidth"
 	[style.opacity]="highlighted ? 0.6 : 1"
-	[style.transform]="hovered && !highlighted ? 'translateY(-8px)' : 'translateY(0px)'"
+	[style.transform]="
+		hovered && !highlighted ? 'translateY(-8px)' : 'translateY(0px)'
+	"
 	[routerLink]="link"
 	(mouseover)="hovered = true"
 	(mouseout)="hovered = false"
 	(focusin)="hovered = true"
-	(focusout)="hovered = false">
-
+	(focusout)="hovered = false"
+>
 	<pocketlib-blurhash-image
 		[src]="book.coverContent"
 		[fallback]="dataService.defaultStoreBookCover"
@@ -18,6 +21,6 @@
 		[alt]="alt"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
-		fillWidth="true">
-	</pocketlib-blurhash-image>
+		fillWidth="true"
+	></pocketlib-blurhash-image>
 </a>

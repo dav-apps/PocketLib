@@ -4,27 +4,25 @@ import {
 	NgZone,
 	ViewChild,
 	ElementRef
-} from '@angular/core'
-import { Router } from '@angular/router'
-import {
-	faBookmark as faBookmarkSolid
-} from '@fortawesome/free-solid-svg-icons'
+} from "@angular/core"
+import { Router } from "@angular/router"
+import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons"
 import {
 	faHouse as faHouseRegular,
 	faBookmark as faBookmarkRegular,
 	faFolderBookmark as faFolderBookmarkRegular
-} from '@fortawesome/pro-regular-svg-icons'
+} from "@fortawesome/pro-regular-svg-icons"
 import {
 	faArrowLeft as faArrowLeftLight,
 	faArrowRight as faArrowRightLight,
 	faHouse as faHouseLight,
 	faBookmark as faBookmarkLight,
 	faFolderBookmark as faFolderBookmarkLight
-} from '@fortawesome/pro-light-svg-icons'
-import { BottomSheet } from 'dav-ui-components'
-import { DataService } from 'src/app/services/data-service'
-import { PdfBook } from 'src/app/models/PdfBook'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { BottomSheet } from "dav-ui-components"
+import { DataService } from "src/app/services/data-service"
+import { PdfBook } from "src/app/models/PdfBook"
+import { enUS } from "src/locales/locales"
 
 const progressFactor = 100000
 const currentViewerZIndex = -2
@@ -43,8 +41,8 @@ const navigationDoubleTapAreaWidth = 50
 const doubleTapToleranceTime = 400
 
 @Component({
-	selector: 'pocketlib-pdf-viewer',
-	templateUrl: './pdf-viewer.component.html',
+	selector: "pocketlib-pdf-viewer",
+	templateUrl: "./pdf-viewer.component.html",
 	styleUrls: ["./pdf-viewer.component.scss"]
 })
 export class PdfViewerComponent {
@@ -66,20 +64,20 @@ export class PdfViewerComponent {
 	isLoaded: boolean = false
 	initialized: boolean = false
 	showSecondPage: boolean = false
-	firstPage: boolean = false		// If true, hides the previous button
-	lastPage: boolean = false		// If true, hides the next button
-	isMobile: boolean = false		// Is true on small devices with width < 600 px
+	firstPage: boolean = false // If true, hides the previous button
+	lastPage: boolean = false // If true, hides the next button
+	isMobile: boolean = false // Is true on small devices with width < 600 px
 
 	viewerRatio: number = 0
 	viewerWidth: number = 500
-	width: number = 500			// The width of the entire window
-	height: number = 500			// The height of the entire window
+	width: number = 500 // The width of the entire window
+	height: number = 500 // The height of the entire window
 
 	firstViewer: Viewer = {
-		page: 1,													// The currently displayed page
-		zIndex: -1,												// The z-index of the viewer; -1, -2 or -3
-		positionLeft: 0,										// How much the viewer is moved to the right
-		transitionTime: defaultViewerTransitionTime	// The time for the transition animation
+		page: 1, // The currently displayed page
+		zIndex: -1, // The z-index of the viewer; -1, -2 or -3
+		positionLeft: 0, // How much the viewer is moved to the right
+		transitionTime: defaultViewerTransitionTime // The time for the transition animation
 	}
 
 	secondViewer: Viewer = {
@@ -96,11 +94,11 @@ export class PdfViewerComponent {
 		transitionTime: defaultViewerTransitionTime
 	}
 
-	currentViewer: CurrentViewer = CurrentViewer.First		// Shows which viewer is currently visible
-	showPageRunning: boolean = false								// If true, ShowPage is currently executing
+	currentViewer: CurrentViewer = CurrentViewer.First // Shows which viewer is currently visible
+	showPageRunning: boolean = false // If true, ShowPage is currently executing
 
 	//#region Variables for touch events
-	swipeDirection: SwipeDirection = SwipeDirection.None		// Whether the user swipes vertically or horizontally
+	swipeDirection: SwipeDirection = SwipeDirection.None // Whether the user swipes vertically or horizontally
 	swipeStart: boolean = false
 	touchStartX: number = 0
 	touchStartY: number = 0
@@ -111,7 +109,7 @@ export class PdfViewerComponent {
 	//#endregion
 
 	//#region Variables for progress bar
-	totalProgress: number = 0				// The current progress in percent between 0 and 1
+	totalProgress: number = 0 // The current progress in percent between 0 and 1
 	//#endregion
 
 	//#region Variables for Booksmarks panel
@@ -120,8 +118,10 @@ export class PdfViewerComponent {
 	//#endregion
 
 	//#region Variables for the bottom sheet
-	@ViewChild('bottomSheet', { static: true }) bottomSheet: ElementRef<BottomSheet>
-	@ViewChild('bottomSheetBookmarksContainer', { static: false }) bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
+	@ViewChild("bottomSheet", { static: true })
+	bottomSheet: ElementRef<BottomSheet>
+	@ViewChild("bottomSheetBookmarksContainer", { static: false })
+	bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
 	bottomSheetVisible: boolean = false
 	bottomSheetPosition: number = 0
 	bottomSheetStartPosition: number = 0
@@ -161,20 +161,68 @@ export class PdfViewerComponent {
 		document.addEventListener("wheel", this.mouseWheelEventListener)
 
 		// Bind the touch events
-		document.getElementById(firstViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchStart, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(firstViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchMove, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(firstViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(secondViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
-		document.getElementById(thirdViewerId).addEventListener(touchEnd, (e: TouchEvent) => this.ngZone.run(() => this.HandleTouch(e)))
+		document
+			.getElementById(firstViewerId)
+			.addEventListener(touchStart, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(secondViewerId)
+			.addEventListener(touchStart, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(thirdViewerId)
+			.addEventListener(touchStart, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(firstViewerId)
+			.addEventListener(touchMove, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(secondViewerId)
+			.addEventListener(touchMove, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(thirdViewerId)
+			.addEventListener(touchMove, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(firstViewerId)
+			.addEventListener(touchEnd, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(secondViewerId)
+			.addEventListener(touchEnd, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
+		document
+			.getElementById(thirdViewerId)
+			.addEventListener(touchEnd, (e: TouchEvent) =>
+				this.ngZone.run(() => this.HandleTouch(e))
+			)
 
 		// Bind the click event
-		document.getElementById(firstViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(secondViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
-		document.getElementById(thirdViewerId).addEventListener(click, (e: MouseEvent) => this.ngZone.run(() => this.HandleClick(e)))
+		document
+			.getElementById(firstViewerId)
+			.addEventListener(click, (e: MouseEvent) =>
+				this.ngZone.run(() => this.HandleClick(e))
+			)
+		document
+			.getElementById(secondViewerId)
+			.addEventListener(click, (e: MouseEvent) =>
+				this.ngZone.run(() => this.HandleClick(e))
+			)
+		document
+			.getElementById(thirdViewerId)
+			.addEventListener(click, (e: MouseEvent) =>
+				this.ngZone.run(() => this.HandleClick(e))
+			)
 
 		if (this.isMobile) {
 			// Show the BottomSheet
@@ -188,7 +236,7 @@ export class PdfViewerComponent {
 		document.removeEventListener("wheel", this.mouseWheelEventListener)
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	async setSize() {
 		this.width = window.innerWidth
 		this.height = window.innerHeight
@@ -198,7 +246,12 @@ export class PdfViewerComponent {
 		this.bottomSheetVisible = this.initialized && this.isMobile
 		this.showSecondPage = this.viewerWidth * 2 < this.width
 
-		if (this.showSecondPage && this.currentPage > 0 && this.currentPage % 2 == 0) this.currentPage--
+		if (
+			this.showSecondPage &&
+			this.currentPage > 0 &&
+			this.currentPage % 2 == 0
+		)
+			this.currentPage--
 
 		if (this.initialized) {
 			await this.ShowPage(NavigationDirection.None, this.currentPage)
@@ -218,13 +271,13 @@ export class PdfViewerComponent {
 	}
 
 	async PrevPage() {
-		if (
-			this.firstPage
-			|| this.showPageRunning
-		) return
+		if (this.firstPage || this.showPageRunning) return
 
 		this.showPageRunning = true
-		await this.ShowPage(NavigationDirection.Back, this.currentPage - (this.showSecondPage ? 2 : 1))
+		await this.ShowPage(
+			NavigationDirection.Back,
+			this.currentPage - (this.showSecondPage ? 2 : 1)
+		)
 	}
 
 	async NextPage() {
@@ -241,7 +294,10 @@ export class PdfViewerComponent {
 		}
 
 		this.showPageRunning = true
-		await this.ShowPage(NavigationDirection.Forward, this.currentPage + (this.showSecondPage ? 2 : 1))
+		await this.ShowPage(
+			NavigationDirection.Forward,
+			this.currentPage + (this.showSecondPage ? 2 : 1)
+		)
 	}
 
 	/**
@@ -250,36 +306,39 @@ export class PdfViewerComponent {
 	 * |     |  |     | 2.|
 	 * |  3. |  |  1. |   |
 	 * |_____|  |_____|---|
-	 * 
+	 *
 	 * When going to the next page, move the viewers clockwise (1 -> 3, 3 -> 2, 2 -> 1):
-	 * 
+	 *
 	 *  _____    _____----|
 	 * |     |  |     | 3.|
 	 * |  1. |  |  2. |   |
 	 * |_____|  |_____|---|
-	 * 
+	 *
 	 * When going to the previous page, move the viewers counterclockwise (1 -> 2, 2 -> 3, 3 -> 1):
-	 * 
+	 *
 	 *  _____    _____----|
 	 * |     |  |     | 1.|
 	 * |  2. |  |  3. |   |
 	 * |_____|  |_____|---|
-	 * 
+	 *
 	 * @param direction Specifies the direction of the navigation
 	 * @param newPage The page that is shown after the navigation
 	 */
-	async ShowPage(direction: NavigationDirection = NavigationDirection.None, newPage: number) {
+	async ShowPage(
+		direction: NavigationDirection = NavigationDirection.None,
+		newPage: number
+	) {
 		// direction == Forward ?
-			// Move 1 -> 3, 3 -> 2 and 2 -> 1
-			// viewer 2 is now the currently visible viewer
-			// Update the page of viewer 3
+		// 	Move 1 -> 3, 3 -> 2 and 2 -> 1
+		// 	viewer 2 is now the currently visible viewer
+		// 	Update the page of viewer 3
 		// direction == back ?
-			// Move 1 -> 2, 2 -> 3 and 3 -> 1
-			// viewer 3 is now the currently visible viewer
-			// Update the page of viewer 2
+		// 	Move 1 -> 2, 2 -> 3 and 3 -> 1
+		// 	viewer 3 is now the currently visible viewer
+		// 	Update the page of viewer 2
 		// direction == None ?
-			// Update the pages
-			// Update the position and z-index of the viewers
+		// 	Update the pages
+		// 	Update the position and z-index of the viewers
 
 		if (direction == NavigationDirection.Forward) {
 			// Move to the next viewer
@@ -310,20 +369,30 @@ export class PdfViewerComponent {
 
 		// Set currentPageBookmarked
 		if (this.showSecondPage) {
-			this.currentPageBookmark = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
+			this.currentPageBookmark =
+				this.currentBook.bookmarks.includes(this.currentPage) ||
+				this.currentBook.bookmarks.includes(this.currentPage + 1)
 		} else {
-			this.currentPageBookmark = this.currentBook.bookmarks.includes(this.currentPage)
+			this.currentPageBookmark = this.currentBook.bookmarks.includes(
+				this.currentPage
+			)
 		}
 
 		this.showPageRunning = false
 
 		// Save the new progress
 		await this.currentBook.SetPage(this.currentPage)
-		await this.dataService.settings.SetBook(this.currentBook.uuid, null, this.currentPage)
+		await this.dataService.settings.SetBook(
+			this.currentBook.uuid,
+			null,
+			this.currentPage
+		)
 
 		// Save the new total progress
 		this.totalProgress = this.currentBook.page / this.totalPages
-		await this.currentBook.SetTotalProgress(Math.ceil(this.totalProgress * 100 * progressFactor))
+		await this.currentBook.SetTotalProgress(
+			Math.ceil(this.totalProgress * 100 * progressFactor)
+		)
 	}
 
 	async MoveViewersForward() {
@@ -355,7 +424,9 @@ export class PdfViewerComponent {
 				break
 		}
 
-		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
+		await new Promise(resolve =>
+			setTimeout(resolve, defaultViewerTransitionTime)
+		)
 
 		// Reset the transition times
 		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
@@ -392,7 +463,9 @@ export class PdfViewerComponent {
 				break
 		}
 
-		await new Promise(resolve => setTimeout(resolve, defaultViewerTransitionTime))
+		await new Promise(resolve =>
+			setTimeout(resolve, defaultViewerTransitionTime)
+		)
 
 		// Reset the transition times
 		this.SetTransitionTimeOfCurrentViewer(defaultViewerTransitionTime)
@@ -437,8 +510,8 @@ export class PdfViewerComponent {
 		let pdfViewerHeightString = getComputedStyle(pdfViewer).height
 		let pdfViewerWidthString = getComputedStyle(pdfViewer).width
 
-		let pdfViewerHeight = +pdfViewerHeightString.replace('px', '')
-		let pdfViewerWidth = +pdfViewerWidthString.replace('px', '')
+		let pdfViewerHeight = +pdfViewerHeightString.replace("px", "")
+		let pdfViewerWidth = +pdfViewerWidthString.replace("px", "")
 
 		this.viewerRatio = pdfViewerWidth / pdfViewerHeight
 
@@ -449,13 +522,13 @@ export class PdfViewerComponent {
 
 	onKeyDown(event: KeyboardEvent) {
 		switch (event.code) {
-			case "Backspace":		// Back key
+			case "Backspace": // Back key
 				this.ngZone.run(() => this.GoHome())
 				break
-			case "ArrowLeft":		// Left arrow key
+			case "ArrowLeft": // Left arrow key
 				this.ngZone.run(() => this.PrevPage())
 				break
-			case "ArrowRight":	// Right arrow key
+			case "ArrowRight": // Right arrow key
 				this.ngZone.run(() => this.NextPage())
 				break
 		}
@@ -472,12 +545,13 @@ export class PdfViewerComponent {
 	}
 
 	HandleTouch(event: TouchEvent) {
-		if (
-			event.touches.length > 1
-			|| window["visualViewport"].scale > 1.001
-		) return
+		if (event.touches.length > 1 || window["visualViewport"].scale > 1.001) {
+			return
+		}
 
-		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(event.target as Node)
+		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(
+			event.target as Node
+		)
 
 		if (event.type == touchStart) {
 			let touch = event.touches.item(0)
@@ -501,13 +575,18 @@ export class PdfViewerComponent {
 
 			if (this.swipeStart) {
 				// Check if the user is swiping up or down
-				this.swipeDirection = Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY) ? SwipeDirection.Horizontal : SwipeDirection.Vertical
+				this.swipeDirection =
+					Math.abs(this.touchDiffX) > Math.abs(this.touchDiffY)
+						? SwipeDirection.Horizontal
+						: SwipeDirection.Vertical
 
 				// Disable navigating through pages when touching the BottomSheet
 				if (
-					this.swipeDirection == SwipeDirection.Horizontal
-					&& bottomSheetTouch
-				) return
+					this.swipeDirection == SwipeDirection.Horizontal &&
+					bottomSheetTouch
+				) {
+					return
+				}
 
 				this.swipeStart = false
 			} else if (this.swipeDirection == SwipeDirection.Horizontal) {
@@ -519,9 +598,13 @@ export class PdfViewerComponent {
 					// Swipe to the right; move the left viewer to the right
 					this.SetLeftOfPreviousViewer(-this.width - this.touchDiffX)
 				}
-			} else if (this.swipeDirection == SwipeDirection.Vertical && this.bottomSheetVisible) {
+			} else if (
+				this.swipeDirection == SwipeDirection.Vertical &&
+				this.bottomSheetVisible
+			) {
 				// Set the new position of the bottom sheet
-				this.bottomSheetPosition = this.touchDiffY + this.bottomSheetStartPosition
+				this.bottomSheetPosition =
+					this.touchDiffY + this.bottomSheetStartPosition
 			}
 		} else if (event.type == touchEnd) {
 			// Reset the transition times
@@ -530,8 +613,8 @@ export class PdfViewerComponent {
 			this.thirdViewer.transitionTime = defaultViewerTransitionTime
 
 			if (
-				this.swipeDirection == SwipeDirection.Horizontal
-				&& !bottomSheetTouch
+				this.swipeDirection == SwipeDirection.Horizontal &&
+				!bottomSheetTouch
 			) {
 				if (this.touchDiffX > 0) {
 					// If the page was swiped wide enough, show the next page
@@ -567,7 +650,8 @@ export class PdfViewerComponent {
 
 	HandleClick(event: MouseEvent) {
 		let clickedOnLeftEdge = event.pageX < navigationDoubleTapAreaWidth
-		let clickedOnRightEdge = this.width - navigationDoubleTapAreaWidth < event.pageX
+		let clickedOnRightEdge =
+			this.width - navigationDoubleTapAreaWidth < event.pageX
 
 		// Double tap
 		if (clickedOnLeftEdge || clickedOnRightEdge) {
@@ -608,7 +692,8 @@ export class PdfViewerComponent {
 
 		if (this.isMobile) {
 			setTimeout(() => {
-				this.bottomSheetContainerHeight = this.bottomSheetBookmarksContainer.nativeElement.clientHeight
+				this.bottomSheetContainerHeight =
+					this.bottomSheetBookmarksContainer.nativeElement.clientHeight
 
 				setTimeout(() => {
 					this.bottomSheet.nativeElement.snap("top")
@@ -622,13 +707,18 @@ export class PdfViewerComponent {
 		let removeBookmark: boolean = false
 
 		if (this.showSecondPage) {
-			removeBookmark = this.currentBook.bookmarks.includes(this.currentPage) || this.currentBook.bookmarks.includes(this.currentPage + 1)
+			removeBookmark =
+				this.currentBook.bookmarks.includes(this.currentPage) ||
+				this.currentBook.bookmarks.includes(this.currentPage + 1)
 		} else {
 			removeBookmark = this.currentBook.bookmarks.includes(this.currentPage)
 		}
 
 		if (removeBookmark && this.showSecondPage) {
-			await this.currentBook.RemoveBookmarks(this.currentPage, this.currentPage + 1)
+			await this.currentBook.RemoveBookmarks(
+				this.currentPage,
+				this.currentPage + 1
+			)
 		} else if (removeBookmark) {
 			await this.currentBook.RemoveBookmark(this.currentPage)
 		} else {
@@ -647,14 +737,17 @@ export class PdfViewerComponent {
 
 	UpdateZoom(zoom: number) {
 		// Set the transform scale of the first divs of the pdf-viewers
-		let pdfViewer = document.getElementsByTagName('pdf-viewer')
+		let pdfViewer = document.getElementsByTagName("pdf-viewer")
 
 		for (let i = 0; i < pdfViewer.length; i++) {
 			let viewer = pdfViewer.item(i)
-			let viewerDiv = viewer.getElementsByTagName('div')[0]
+			let viewerDiv = viewer.getElementsByTagName("div")[0]
 			if (!viewerDiv) continue
 
-			viewerDiv.setAttribute('style', `overflow: hidden; transform: scale(${zoom});`)
+			viewerDiv.setAttribute(
+				"style",
+				`overflow: hidden; transform: scale(${zoom});`
+			)
 		}
 
 		// Update the zoom in the database
@@ -762,7 +855,7 @@ export class PdfViewerComponent {
 	SetZIndexOfNextViewer(zIndex: number) {
 		switch (this.currentViewer) {
 			case CurrentViewer.First:
-				this.secondViewer.zIndex= zIndex
+				this.secondViewer.zIndex = zIndex
 				break
 			case CurrentViewer.Second:
 				this.thirdViewer.zIndex = zIndex
@@ -833,7 +926,7 @@ export class PdfViewerComponent {
 interface Viewer {
 	page: number
 	positionLeft: number
-	zIndex: number,
+	zIndex: number
 	transitionTime: number
 }
 

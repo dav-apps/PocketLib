@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
-import { BookListItem } from 'src/app/misc/types'
+import { Component, Input } from "@angular/core"
+import { DataService } from "src/app/services/data-service"
+import { BookListItem } from "src/app/misc/types"
 
 @Component({
-	selector: 'pocketlib-store-book-card',
-	templateUrl: './store-book-card.component.html'
+	selector: "pocketlib-store-book-card",
+	templateUrl: "./store-book-card.component.html"
 })
 export class StoreBookCardComponent {
 	@Input() book: BookListItem
@@ -13,12 +13,12 @@ export class StoreBookCardComponent {
 	alt: string = ""
 	link: string = ""
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
 	ngOnInit() {
-		this.alt = this.dataService.GetLocale().misc.bookCoverAlt.replace('{0}', this.book.title)
+		this.alt = this.dataService
+			.GetLocale()
+			.misc.bookCoverAlt.replace("{0}", this.book.title)
 		this.link = `/store/book/${this.book.uuid}`
 	}
 }

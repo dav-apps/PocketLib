@@ -1,5 +1,7 @@
 <div class="d-flex">
-	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">{{ formattedPrice }}</p>
+	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">
+		{{ formattedPrice }}
+	</p>
 
 	<div class="d-flex" *ngIf="edit">
 		<dav-textfield
@@ -10,13 +12,18 @@
 			min="0"
 			max="100000"
 			(change)="price = $event.detail.value"
-			(enter)="UpdatePrice()">
-		</dav-textfield>
+			(enter)="UpdatePrice()"
+		></dav-textfield>
 
 		<button
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
+			style="
+				height: 32px;
+				font-size: 16px;
+				padding: 3px 6px;
+				margin-top: 25px;
+			"
 			(click)="UpdatePrice()"
 		>
 			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>

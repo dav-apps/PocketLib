@@ -1,10 +1,11 @@
-<a style="margin: 1rem 0.5rem 1rem 0.5rem"
+<a
+	style="margin: 1rem 0.5rem 1rem 0.5rem"
 	[routerLink]="'/store/author/' + author.uuid"
 	(mouseover)="ShowImageShadow()"
 	(mouseout)="HideImageShadow()"
 	(focusin)="ShowImageShadow()"
-	(focusout)="HideImageShadow()">
-
+	(focusout)="HideImageShadow()"
+>
 	<pocketlib-blurhash-image
 		#blurhashImage
 		[src]="author.profileImageContent"
@@ -15,6 +16,6 @@
 		width="100"
 		height="100"
 		[transform]="hovered ? 'translateY(-8px)' : 'translateY(0px)'"
-		rounded="true">
-	</pocketlib-blurhash-image>
+		rounded="true"
+	></pocketlib-blurhash-image>
 </a>

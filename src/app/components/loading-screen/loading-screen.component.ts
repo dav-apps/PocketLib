@@ -1,10 +1,10 @@
-import { Component, Input, HostListener } from '@angular/core'
-import { GetDualScreenSettings } from 'src/app/misc/utils'
+import { Component, Input, HostListener } from "@angular/core"
+import { GetDualScreenSettings } from "src/app/misc/utils"
 
 @Component({
-	selector: 'pocketlib-loading-screen',
-	templateUrl: './loading-screen.component.html',
-	styleUrls: ['./loading-screen.component.scss']
+	selector: "pocketlib-loading-screen",
+	templateUrl: "./loading-screen.component.html",
+	styleUrls: ["./loading-screen.component.scss"]
 })
 export class LoadingScreenComponent {
 	@Input() message: string = ""
@@ -20,7 +20,7 @@ export class LoadingScreenComponent {
 
 	ngAfterViewInit() {
 		// Set the color of the progress ring
-		let progress = document.getElementsByTagName('circle')
+		let progress = document.getElementsByTagName("circle")
 
 		if (progress.length > 0) {
 			let item = progress.item(0)
@@ -28,7 +28,7 @@ export class LoadingScreenComponent {
 		}
 	}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
 		this.height = window.innerHeight
 	}

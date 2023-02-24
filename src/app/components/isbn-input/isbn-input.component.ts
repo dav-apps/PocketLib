@@ -1,17 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight,
 	faXmark as faXmarkLight
-} from '@fortawesome/pro-light-svg-icons'
-import { DataService } from 'src/app/services/data-service'
-import { enUS } from 'src/locales/locales'
+} from "@fortawesome/pro-light-svg-icons"
+import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
-const isbnValidityRegex = /^[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]$/
+const isbnValidityRegex =
+	/^[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]$/
 
 @Component({
-	selector: 'pocketlib-isbn-input',
-	templateUrl: './isbn-input.component.html'
+	selector: "pocketlib-isbn-input",
+	templateUrl: "./isbn-input.component.html"
 })
 export class IsbnInputComponent {
 	locale = enUS.isbnInput
@@ -25,9 +26,7 @@ export class IsbnInputComponent {
 	isbn: string = ""
 	errorMessage: string = ""
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().isbnInput
 	}
 

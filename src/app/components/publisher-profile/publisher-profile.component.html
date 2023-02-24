@@ -1,6 +1,8 @@
 <div class="container slide-up-in">
 	<div class="row">
-		<div class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5">
+		<div
+			class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5"
+		>
 			<pocketlib-blurhash-image
 				[src]="logoContent"
 				[fallback]="dataService.defaultProfileImageUrl"
@@ -12,9 +14,9 @@
 				margin="0 0 1rem 0"
 				shadow="true"
 				rounded="true"
-				[loading]="logoLoading">
-			</pocketlib-blurhash-image>
-			<br>
+				[loading]="logoLoading"
+			></pocketlib-blurhash-image>
+			<br />
 
 			<dav-button
 				ngxFilePicker
@@ -32,7 +34,12 @@
 				<button
 					type="button"
 					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-					style="height: 32px; font-size: 17px; margin-top: -4px; padding: 0px 4px"
+					style="
+						height: 32px;
+						font-size: 17px;
+						margin-top: -4px;
+						padding: 0px 4px;
+					"
 					(click)="ShowEditProfileDialog()"
 					*ngIf="publisherMode > 0"
 				>
@@ -42,46 +49,57 @@
 
 			<div
 				class="d-flex justify-content-center"
-				*ngIf="publisher.websiteUrl || publisher.facebookUsername || publisher.instagramUsername || publisher.twitterUsername"
+				*ngIf="
+					publisher.websiteUrl ||
+					publisher.facebookUsername ||
+					publisher.instagramUsername ||
+					publisher.twitterUsername
+				"
 			>
 				<!-- Website -->
 				<pocketlib-link-icon-button
 					[icon]="faGlobeLight"
 					[link]="publisher.websiteUrl"
-					*ngIf="publisher.websiteUrl">
-				</pocketlib-link-icon-button>
+					*ngIf="publisher.websiteUrl"
+				></pocketlib-link-icon-button>
 
 				<!-- Facebook -->
 				<pocketlib-link-icon-button
 					[icon]="faFacebook"
 					[link]="facebookLink"
-					*ngIf="publisher.facebookUsername">
-				</pocketlib-link-icon-button>
+					*ngIf="publisher.facebookUsername"
+				></pocketlib-link-icon-button>
 
 				<!-- Instagram -->
 				<pocketlib-link-icon-button
 					[icon]="faInstagram"
 					[link]="instagramLink"
-					*ngIf="publisher.instagramUsername">
-				</pocketlib-link-icon-button>
+					*ngIf="publisher.instagramUsername"
+				></pocketlib-link-icon-button>
 
 				<!-- Twitter -->
 				<pocketlib-link-icon-button
 					[icon]="faTwitter"
 					[link]="twitterLink"
-					*ngIf="publisher.twitterUsername">
-				</pocketlib-link-icon-button>
+					*ngIf="publisher.twitterUsername"
+				></pocketlib-link-icon-button>
 			</div>
 
-			<p class="mt-3 text-color"
+			<p
+				class="mt-3 text-color"
 				style="white-space: pre-line; text-align: justify"
 				*ngIf="!editDescription"
 			>
 				{{ publisher.description }}
 			</p>
 
-			<p class="mt-3 fw-light fst-italic text-color"
-				*ngIf="(publisher.description == null || publisher.description.length == 0) && !editDescription"
+			<p
+				class="mt-3 fw-light fst-italic text-color"
+				*ngIf="
+					(publisher.description == null ||
+						publisher.description.length == 0) &&
+					!editDescription
+				"
 			>
 				{{ locale.noDescription }}
 			</p>
@@ -93,8 +111,10 @@
 					[disabled]="descriptionLoading"
 					resize="vertical"
 					[errorMessage]="newDescriptionError"
-					(change)="newDescription = $event.detail.value; newDescriptionError = ''">
-				</dav-textarea>
+					(change)="
+						newDescription = $event.detail.value; newDescriptionError = ''
+					"
+				></dav-textarea>
 			</div>
 
 			<dav-button
@@ -129,27 +149,32 @@
 			</div>
 
 			<!-- List of authors -->
-			<h3 class="text-center text-color fw-light mb-3 mt-4" *ngIf="publisherMode != 0">
+			<h3
+				class="text-center text-color fw-light mb-3 mt-4"
+				*ngIf="publisherMode != 0"
+			>
 				{{ locale.yourAuthors }}
 			</h3>
 
 			<div class="mt-3" *ngIf="authorsLoading">
-				<dav-progress-ring
-					class="mx-auto"
-					size="28">
-				</dav-progress-ring>
+				<dav-progress-ring class="mx-auto" size="28"></dav-progress-ring>
 			</div>
 
 			<div *ngIf="!authorsLoading">
 				<pocketlib-add-list-item
 					(click)="ShowCreateAuthorDialog()"
-					*ngIf="publisherMode != 0">
-				</pocketlib-add-list-item>
+					*ngIf="publisherMode != 0"
+				></pocketlib-add-list-item>
 
-				<a class="card cursor my-4 theme-background-color-secondary"
+				<a
+					class="card cursor my-4 theme-background-color-secondary"
 					style="text-decoration: none; transition: 0.12s"
 					[ngClass]="hoveredAuthorItem == i ? 'shadow' : 'shadow-sm'"
-					[routerLink]="publisherMode == 0 ? ('/store/author/' + author.uuid) : ('/author/' + author.uuid)"
+					[routerLink]="
+						publisherMode == 0
+							? '/store/author/' + author.uuid
+							: '/author/' + author.uuid
+					"
 					(mouseover)="hoveredAuthorItem = i"
 					(mouseout)="hoveredAuthorItem = -1"
 					(focusin)="hoveredAuthorItem = i"
@@ -165,8 +190,8 @@
 							[alt]="author.profileImageAlt"
 							width="80"
 							height="80"
-							rounded="true">
-						</pocketlib-blurhash-image>
+							rounded="true"
+						></pocketlib-blurhash-image>
 
 						<h4 class="card-title ms-4 my-auto text-color fw-light">
 							{{ author.firstName }} {{ author.lastName }}
@@ -179,8 +204,8 @@
 						[pages]="pages"
 						[currentPage]="page"
 						(pageChange)="PageChange($event.detail.page)"
-						*ngIf="pages > 1">
-					</dav-pagination>
+						*ngIf="pages > 1"
+					></dav-pagination>
 				</div>
 			</div>
 		</div>
@@ -197,7 +222,7 @@
 	(defaultButtonClick)="logoDialogVisible = false"
 >
 	<div class="mb-3" style="max-height: 400px">
-		<img #logoDialogImage style="max-width: 100%">
+		<img #logoDialogImage style="max-width: 100%" />
 	</div>
 </dav-dialog>
 
@@ -218,9 +243,12 @@
 				[label]="locale.editProfileDialog.nameTextfieldLabel"
 				[placeholder]="locale.editProfileDialog.nameTextfieldPlaceholder"
 				[errorMessage]="editProfileDialogNameError"
-				(change)="editProfileDialogName = $event.detail.value; editProfileDialogNameError = ''"
-				(enter)="SaveProfile()">
-			</dav-textfield>
+				(change)="
+					editProfileDialogName = $event.detail.value;
+					editProfileDialogNameError = ''
+				"
+				(enter)="SaveProfile()"
+			></dav-textfield>
 		</div>
 
 		<!-- Website url -->
@@ -228,13 +256,18 @@
 			<dav-textfield
 				[value]="editProfileDialogWebsiteUrl"
 				[label]="locale.editProfileDialog.websiteUrlTextfieldLabel"
-				[placeholder]="locale.editProfileDialog.websiteUrlTextfieldPlaceholder"
+				[placeholder]="
+					locale.editProfileDialog.websiteUrlTextfieldPlaceholder
+				"
 				type="url"
 				autocomplete="url"
 				[errorMessage]="editProfileDialogWebsiteUrlError"
-				(change)="editProfileDialogWebsiteUrl = $event.detail.value; editProfileDialogWebsiteUrlError = ''"
-				(enter)="SaveProfile()">
-			</dav-textfield>
+				(change)="
+					editProfileDialogWebsiteUrl = $event.detail.value;
+					editProfileDialogWebsiteUrlError = ''
+				"
+				(enter)="SaveProfile()"
+			></dav-textfield>
 		</div>
 
 		<!-- Facebook username -->
@@ -242,12 +275,17 @@
 			<dav-textfield
 				[value]="editProfileDialogFacebookUsername"
 				[label]="locale.editProfileDialog.facebookUsernameTextfieldLabel"
-				[placeholder]="locale.editProfileDialog.facebookUsernameTextfieldPlaceholder"
+				[placeholder]="
+					locale.editProfileDialog.facebookUsernameTextfieldPlaceholder
+				"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogFacebookUsernameError"
-				(change)="editProfileDialogFacebookUsername = $event.detail.value; editProfileDialogFacebookUsernameError = ''"
-				(enter)="SaveProfile()">
-			</dav-textfield>
+				(change)="
+					editProfileDialogFacebookUsername = $event.detail.value;
+					editProfileDialogFacebookUsernameError = ''
+				"
+				(enter)="SaveProfile()"
+			></dav-textfield>
 		</div>
 
 		<!-- Instagram username -->
@@ -255,12 +293,17 @@
 			<dav-textfield
 				[value]="editProfileDialogInstagramUsername"
 				[label]="locale.editProfileDialog.instagramUsernameTextfieldLabel"
-				[placeholder]="locale.editProfileDialog.instagramUsernameTextfieldPlaceholder"
+				[placeholder]="
+					locale.editProfileDialog.instagramUsernameTextfieldPlaceholder
+				"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogInstagramUsernameError"
-				(change)="editProfileDialogInstagramUsername = $event.detail.value; editProfileDialogInstagramUsernameError = ''"
-				(enter)="SaveProfile()">
-			</dav-textfield>
+				(change)="
+					editProfileDialogInstagramUsername = $event.detail.value;
+					editProfileDialogInstagramUsernameError = ''
+				"
+				(enter)="SaveProfile()"
+			></dav-textfield>
 		</div>
 
 		<!-- Twitter username -->
@@ -268,12 +311,17 @@
 			<dav-textfield
 				[value]="editProfileDialogTwitterUsername"
 				[label]="locale.editProfileDialog.twitterUsernameTextfieldLabel"
-				[placeholder]="locale.editProfileDialog.twitterUsernameTextfieldPlaceholder"
+				[placeholder]="
+					locale.editProfileDialog.twitterUsernameTextfieldPlaceholder
+				"
 				autocomplete="username"
 				[errorMessage]="editProfileDialogTwitterUsernameError"
-				(change)="editProfileDialogTwitterUsername = $event.detail.value; editProfileDialogTwitterUsernameError = ''"
-				(enter)="SaveProfile()">
-			</dav-textfield>
+				(change)="
+					editProfileDialogTwitterUsername = $event.detail.value;
+					editProfileDialogTwitterUsernameError = ''
+				"
+				(enter)="SaveProfile()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>
@@ -295,12 +343,17 @@
 			<dav-textfield
 				[value]="createAuthorDialogFirstName"
 				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
-				[placeholder]="locale.createAuthorDialog.firstNameTextfieldPlaceholder"
+				[placeholder]="
+					locale.createAuthorDialog.firstNameTextfieldPlaceholder
+				"
 				autocomplete="given-name"
 				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogFirstNameError"
-				(change)="createAuthorDialogFirstName = $event.detail.value; createAuthorDialogFirstNameError = ''">
-			</dav-textfield>
+				(change)="
+					createAuthorDialogFirstName = $event.detail.value;
+					createAuthorDialogFirstNameError = ''
+				"
+			></dav-textfield>
 		</div>
 
 		<!-- Last name -->
@@ -308,13 +361,18 @@
 			<dav-textfield
 				[value]="createAuthorDialogLastName"
 				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
-				[placeholder]="locale.createAuthorDialog.lastNameTextfieldPlaceholder"
+				[placeholder]="
+					locale.createAuthorDialog.lastNameTextfieldPlaceholder
+				"
 				autocomplete="family-name"
 				[disabled]="createAuthorDialogLoading"
 				[errorMessage]="createAuthorDialogLastNameError"
-				(change)="createAuthorDialogLastName = $event.detail.value; createAuthorDialogLastNameError = ''"
-				(enter)="CreateAuthor()">
-			</dav-textfield>
+				(change)="
+					createAuthorDialogLastName = $event.detail.value;
+					createAuthorDialogLastNameError = ''
+				"
+				(enter)="CreateAuthor()"
+			></dav-textfield>
 		</div>
 	</form>
 </dav-dialog>

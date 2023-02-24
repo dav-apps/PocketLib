@@ -2,8 +2,11 @@
 	<dav-checkbox
 		[label]="category.name"
 		[checked]="selectedCategories.includes(category.key)"
-		[disabled]="selectedCategories.length >= 3 && !selectedCategories.includes(category.key)"
+		[disabled]="
+			selectedCategories.length >= 3 &&
+			!selectedCategories.includes(category.key)
+		"
 		(change)="CategoryCheckboxSelected($event.detail.checked, category.key)"
-		*ngFor="let category of dataService.categories">
-	</dav-checkbox>
+		*ngFor="let category of dataService.categories"
+	></dav-checkbox>
 </div>

@@ -1,15 +1,38 @@
-<div class="card text-center shadow mx-auto theme-background-color-secondary" style="width: 300px; margin-top: 35px">
+<div
+	class="card text-center shadow mx-auto theme-background-color-secondary"
+	style="width: 300px; margin-top: 35px"
+>
 	<div class="card-body">
 		<h4 class="card-title">{{ locale.plan }}</h4>
 		<h6 class="card-subtitle text-muted">{{ locale.price }}</h6>
 	</div>
 
 	<ul class="list-group">
-		<li class="list-group-item border-start-0 border-end-0 theme-background-color-secondary">{{ locale.feature1 }}</li>
-		<li class="list-group-item border-start-0 border-end-0 theme-background-color-secondary">{{ locale.feature2 }}</li>
-		<li class="list-group-item border-start-0 border-end-0 theme-background-color-secondary">{{ locale.feature3 }}</li>
-		<li class="list-group-item border-start-0 border-end-0 theme-background-color-secondary">
-			<button type="button" class="btn btn-primary" (click)="ShowPlansAccountPage()">{{ locale.selectPlan }}</button>
+		<li
+			class="list-group-item border-start-0 border-end-0 theme-background-color-secondary"
+		>
+			{{ locale.feature1 }}
+		</li>
+		<li
+			class="list-group-item border-start-0 border-end-0 theme-background-color-secondary"
+		>
+			{{ locale.feature2 }}
+		</li>
+		<li
+			class="list-group-item border-start-0 border-end-0 theme-background-color-secondary"
+		>
+			{{ locale.feature3 }}
+		</li>
+		<li
+			class="list-group-item border-start-0 border-end-0 theme-background-color-secondary"
+		>
+			<button
+				type="button"
+				class="btn btn-primary"
+				(click)="ShowPlansAccountPage()"
+			>
+				{{ locale.selectPlan }}
+			</button>
 		</li>
 	</ul>
 </div>

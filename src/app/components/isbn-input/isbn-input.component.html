@@ -3,7 +3,8 @@
 		{{ isbn }}
 	</p>
 
-	<p class="fw-light fst-italic text-color"
+	<p
+		class="fw-light fst-italic text-color"
 		style="margin-top: 3px; margin-bottom: 3px"
 		*ngIf="!edit && isbn.length == 0"
 	>
@@ -17,13 +18,18 @@
 			placeholder="9780064407663"
 			[errorMessage]="errorMessage"
 			(change)="isbn = $event.detail.value; errorMessage = ''"
-			(enter)="UpdateValue()">
-		</dav-textfield>
+			(enter)="UpdateValue()"
+		></dav-textfield>
 
 		<button
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px;"
+			style="
+				height: 32px;
+				font-size: 16px;
+				padding: 3px 6px;
+				margin-top: 25px;
+			"
 			(click)="UpdateValue()"
 		>
 			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
@@ -32,7 +38,12 @@
 		<button
 			type="button"
 			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="height: 32px; font-size: 16px; padding: 3px 6px; margin-top: 25px"
+			style="
+				height: 32px;
+				font-size: 16px;
+				padding: 3px 6px;
+				margin-top: 25px;
+			"
 			(click)="Cancel()"
 		>
 			<fa-icon [icon]="faXmarkLight"></fa-icon>

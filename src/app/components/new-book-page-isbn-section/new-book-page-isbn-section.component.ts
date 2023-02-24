@@ -1,13 +1,19 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core'
-import { DataService } from 'src/app/services/data-service'
-import { IsbnInputComponent } from 'src/app/components/isbn-input/isbn-input.component'
-import { enUS } from 'src/locales/locales'
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	ViewChild
+} from "@angular/core"
+import { DataService } from "src/app/services/data-service"
+import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-new-book-page-isbn-section',
-	templateUrl: './new-book-page-isbn-section.component.html'
+	selector: "pocketlib-new-book-page-isbn-section",
+	templateUrl: "./new-book-page-isbn-section.component.html"
 })
-export class NewBookPageIsbnSectionComponent{
+export class NewBookPageIsbnSectionComponent {
 	locale = enUS.newBookPage
 	@Input() section: number = 0
 	@Input() visibleSection: number = 0
@@ -15,12 +21,10 @@ export class NewBookPageIsbnSectionComponent{
 	@Output() setIsbn = new EventEmitter()
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
-	@ViewChild('isbnInput') isbnInput: IsbnInputComponent
+	@ViewChild("isbnInput") isbnInput: IsbnInputComponent
 	isbn: string = ""
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().newBookPage
 	}
 

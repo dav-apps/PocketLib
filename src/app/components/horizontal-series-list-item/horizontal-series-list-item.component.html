@@ -1,15 +1,34 @@
-<a class="d-flex"
+<a
+	class="d-flex"
 	style="width: 220px"
-	[style.height.px]="120 + (series.books.length * 10)"
+	[style.height.px]="120 + series.books.length * 10"
 	[routerLink]="link"
 	(mouseover)="hover = true"
 	(mouseout)="hover = false"
 	(focusin)="hover = true"
-	(focusout)="hover = false">
-
+	(focusout)="hover = false"
+>
 	<pocketlib-blurhash-image
 		style="margin-left: 15px; position: absolute; transition: 0.16s"
-		[style.transform]="hover ? 'translate(' + (((advancedHoverAnimation ? 90 : 100) / series.books.length) * (advancedHoverAnimation ? i - advancedHoverAnimationIndexTransform : i)) + 'px, 10px) rotate(' + (((advancedHoverAnimation ? 60 : 26) / series.books.length) * (advancedHoverAnimation ? i - advancedHoverAnimationIndexTransform : i)) + 'deg)' : 'translate(' + ((50 / series.books.length) * i) + 'px, ' + ((25 / series.books.length) * i) + 'px)'"
+		[style.transform]="
+			hover
+				? 'translate(' +
+				  ((advancedHoverAnimation ? 90 : 100) / series.books.length) *
+						(advancedHoverAnimation
+							? i - advancedHoverAnimationIndexTransform
+							: i) +
+				  'px, 10px) rotate(' +
+				  ((advancedHoverAnimation ? 60 : 26) / series.books.length) *
+						(advancedHoverAnimation
+							? i - advancedHoverAnimationIndexTransform
+							: i) +
+				  'deg)'
+				: 'translate(' +
+				  (50 / series.books.length) * i +
+				  'px, ' +
+				  (25 / series.books.length) * i +
+				  'px)'
+		"
 		[style.zIndex]="series.books.length - i"
 		[src]="book.coverContent"
 		[fallback]="dataService.defaultStoreBookCover"
@@ -17,6 +36,6 @@
 		[title]="book.title"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
-		*ngFor="let book of series.books; let i = index">
-	</pocketlib-blurhash-image>
+		*ngFor="let book of series.books; let i = index"
+	></pocketlib-blurhash-image>
 </a>

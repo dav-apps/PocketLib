@@ -1,9 +1,17 @@
 <div
 	class="mx-auto mb-4"
-	[ngClass]="section != 1 ? (forwardNavigation ? 'slide-left-out' : 'slide-right-out') : (forwardNavigation ? 'slide-left-in' : 'slide-right-in')"
+	[ngClass]="
+		section != 1
+			? forwardNavigation
+				? 'slide-left-out'
+				: 'slide-right-out'
+			: forwardNavigation
+				? 'slide-left-in'
+				: 'slide-right-in'
+	"
 	style="max-width: 500px"
-	[style.display]="visibleSection != 1 ? 'none' : null">
-
+	[style.display]="visibleSection != 1 ? 'none' : null"
+>
 	<div>
 		<p class="text-color">{{ locale.collectionSection.description }}</p>
 
@@ -12,7 +20,8 @@
 				class="list-group-item mb-3 cursor text-center text-color theme-background-color-secondary"
 				[ngClass]="selectedCollection == -1 ? 'shadow' : ''"
 				style="transition: 0.12s"
-				(click)="Select(-1)">
+				(click)="Select(-1)"
+			>
 				{{ locale.collectionSection.newPublication }}
 			</p>
 
@@ -21,18 +30,19 @@
 				[ngClass]="selectedCollection == i ? 'shadow' : ''"
 				style="transition: 0.12s"
 				*ngFor="let collection of collections; let i = index"
-				(click)="Select(i)">
-
+				(click)="Select(i)"
+			>
 				<div class="row no-gutters">
 					<div class="col-4">
-						<img [src]="collection.coverContent" style="width: 100px">
+						<img [src]="collection.coverContent" style="width: 100px" />
 					</div>
 
 					<div class="col-8 my-auto">
 						<div class="card-body">
 							<h5
 								class="card-title my-auto text-color"
-								style="font-size: 18px">
+								style="font-size: 18px"
+							>
 								{{ collection.name }}
 							</h5>
 						</div>
@@ -42,8 +52,7 @@
 		</div>
 	</div>
 
-	<dav-button
-		(click)="Previous()">
+	<dav-button (click)="Previous()">
 		{{ locale.previous }}
 	</dav-button>
 
@@ -51,7 +60,8 @@
 		style="float: right"
 		type="accent"
 		[disabled]="selectedCollection == -2"
-		(click)="Submit()">
+		(click)="Submit()"
+	>
 		{{ locale.next }}
 	</dav-button>
 </div>

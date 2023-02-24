@@ -18,14 +18,16 @@
 		[original-size]="false"
 		[render-text-mode]="2"
 		(after-load-complete)="PdfLoaded($event)"
-		(page-rendered)="PageRendered($event)">
-   </pdf-viewer>
+		(page-rendered)="PageRendered($event)"
+	></pdf-viewer>
 
-   <pdf-viewer
+	<pdf-viewer
 		id="first-viewer-right"
 		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (firstViewer.page + 1) <= totalPages) ? '' : 'none'"
+		[style.display]="
+			showSecondPage && firstViewer.page + 1 <= totalPages ? '' : 'none'
+		"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="firstViewer.page + 1"
@@ -33,11 +35,12 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		[render-text-mode]="2">
-   </pdf-viewer>
+		[render-text-mode]="2"
+	></pdf-viewer>
 </div>
 
-<div id="second-viewer"
+<div
+	id="second-viewer"
 	class="viewer-container w-100 h-100 d-flex"
 	[style.z-index]="secondViewer.zIndex"
 	[style.transform]="'translateX(' + secondViewer.positionLeft + 'px)'"
@@ -54,14 +57,16 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		[render-text-mode]="2">
-	</pdf-viewer>
+		[render-text-mode]="2"
+	></pdf-viewer>
 
 	<pdf-viewer
 		id="second-viewer-right"
 		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (secondViewer.page + 1) <= totalPages) ? '' : 'none'"
+		[style.display]="
+			showSecondPage && secondViewer.page + 1 <= totalPages ? '' : 'none'
+		"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="secondViewer.page + 1"
@@ -69,11 +74,12 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		[render-text-mode]="2">
-	</pdf-viewer>
+		[render-text-mode]="2"
+	></pdf-viewer>
 </div>
 
-<div id="third-viewer"
+<div
+	id="third-viewer"
 	class="viewer-container w-100 h-100 d-flex"
 	[style.z-index]="thirdViewer.zIndex"
 	[style.transform]="'translateX(' + thirdViewer.positionLeft + 'px)'"
@@ -90,23 +96,25 @@
 		[fit-to-page]="false"
 		[autoresize]="true"
 		[original-size]="false"
-		[render-text-mode]="2">
-	</pdf-viewer>
+		[render-text-mode]="2"
+	></pdf-viewer>
 
 	<pdf-viewer
 		id="third-viewer-right"
 		class="viewer m-auto"
 		[style.width.px]="viewerWidth"
-		[style.display]="(showSecondPage && (thirdViewer.page + 1) <= totalPages) ? '' : 'none'"
+		[style.display]="
+			showSecondPage && thirdViewer.page + 1 <= totalPages ? '' : 'none'
+		"
 		[src]="pdfContent"
 		[show-all]="false"
 		[page]="thirdViewer.page + 1"
 		[stick-to-page]="false"
-      [fit-to-page]="false"
-      [autoresize]="true"
+		[fit-to-page]="false"
+		[autoresize]="true"
 		[original-size]="false"
-		[render-text-mode]="2">
-	</pdf-viewer>
+		[render-text-mode]="2"
+	></pdf-viewer>
 </div>
 
 <!-- Arrow buttons -->
@@ -138,14 +146,20 @@
 
 	<div style="float: right">
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
-			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
-			<fa-icon [icon]="faBookmarkLight" *ngIf="!currentPageBookmark"></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkSolid"
+				*ngIf="currentPageBookmark"
+			></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkLight"
+				*ngIf="!currentPageBookmark"
+			></fa-icon>
 		</dav-icon-button>
 
 		<dav-icon-button (click)="ShowBookmarksPanel()">
 			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 		</dav-icon-button>
-   </div>
+	</div>
 </div>
 
 <dav-bottom-sheet
@@ -159,38 +173,71 @@
 	(touchend)="HandleTouch($event)"
 >
 	<div id="bottom-sheet-button-container">
-		<dav-icon-text-button (click)="GoHome()" [label]="locale.bottomSheet.back">
+		<dav-icon-text-button
+			(click)="GoHome()"
+			[label]="locale.bottomSheet.back"
+		>
 			<fa-icon [icon]="faHouseRegular"></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="AddOrRemoveBookmark()" [label]="currentPageBookmark ? locale.bottomSheet.removeBookmark : locale.bottomSheet.addBookmark">
-			<fa-icon [icon]="faBookmarkSolid" *ngIf="currentPageBookmark"></fa-icon>
-			<fa-icon [icon]="faBookmarkRegular" *ngIf="!currentPageBookmark"></fa-icon>
+		<dav-icon-text-button
+			(click)="AddOrRemoveBookmark()"
+			[label]="
+				currentPageBookmark
+					? locale.bottomSheet.removeBookmark
+					: locale.bottomSheet.addBookmark
+			"
+		>
+			<fa-icon
+				[icon]="faBookmarkSolid"
+				*ngIf="currentPageBookmark"
+			></fa-icon>
+			<fa-icon
+				[icon]="faBookmarkRegular"
+				*ngIf="!currentPageBookmark"
+			></fa-icon>
 		</dav-icon-text-button>
 
-		<dav-icon-text-button (click)="ShowBookmarksPanel()" [label]="locale.bottomSheet.bookmarks">
+		<dav-icon-text-button
+			(click)="ShowBookmarksPanel()"
+			[label]="locale.bottomSheet.bookmarks"
+		>
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 	</div>
 
-	<div id="bottom-sheet-container" [style.height.px]="bottomSheetContainerHeight">
+	<div
+		id="bottom-sheet-container"
+		[style.height.px]="bottomSheetContainerHeight"
+	>
 		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
 			<ul class="list-group list-group-flush">
-				<li class="list-group-item d-flex"
-					style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
-					*ngFor="let page of currentBook.bookmarks">
-		
-					<a href="#"
-						style="color: black;"
+				<li
+					class="list-group-item d-flex"
+					style="
+						padding: 5px 0px;
+						margin-left: 20px;
+						border: none;
+						min-height: 35px;
+						font-size: 16px;
+					"
+					*ngFor="let page of currentBook.bookmarks"
+				>
+					<a
+						href="#"
+						style="color: black"
 						(click)="NavigateToPage(page)"
-						[ngClass]="currentPage == page ? 'font-weight-bold' : ''">
+						[ngClass]="currentPage == page ? 'font-weight-bold' : ''"
+					>
 						{{ locale.page }} {{ page }}
 					</a>
 				</li>
 			</ul>
-		
-			<p class="fw-light"
-				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
+
+			<p
+				class="fw-light"
+				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
+			>
 				{{ locale.noBookmarks }}
 			</p>
 		</div>
@@ -199,16 +246,32 @@
 
 <!-- Total progress -->
 <div
-	style="position: absolute; bottom: 0; width: 2px; transition-duration: 400ms; border-top: 4px solid #7b7b7b"
-	[style.transform]="'scaleX(' + width * totalProgress + ')'">
-</div>
+	style="
+		position: absolute;
+		bottom: 0;
+		width: 2px;
+		transition-duration: 400ms;
+		border-top: 4px solid #7b7b7b;
+	"
+	[style.transform]="'scaleX(' + width * totalProgress + ')'"
+></div>
 
 <!-- Page indicators -->
-<div style="z-index: 3; position: absolute; bottom: 0; left: 0" *ngIf="showSecondPage">
-   <p class="fw-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage }}</p>
+<div
+	style="z-index: 3; position: absolute; bottom: 0; left: 0"
+	*ngIf="showSecondPage"
+>
+	<p class="fw-light" style="font-size: 13px; margin: 6px 10px">
+		{{ currentPage }}
+	</p>
 </div>
-<div style="z-index: 3; position: absolute; bottom: 0; right: 0" *ngIf="!showSecondPage || (!lastPage && showSecondPage)">
-   <p class="fw-light" style="font-size: 13px; margin: 6px 10px;">{{ currentPage + (showSecondPage ? 1 : 0) }}</p>
+<div
+	style="z-index: 3; position: absolute; bottom: 0; right: 0"
+	*ngIf="!showSecondPage || (!lastPage && showSecondPage)"
+>
+	<p class="fw-light" style="font-size: 13px; margin: 6px 10px">
+		{{ currentPage + (showSecondPage ? 1 : 0) }}
+	</p>
 </div>
 
 <dav-panel
@@ -217,21 +280,32 @@
 	(dismiss)="showBookmarksPanel = false"
 >
 	<ul class="list-group list-group-flush">
-		<li class="list-group-item d-flex"
-			style="padding: 5px 0px; margin-left: 20px; border: none; min-height: 35px; font-size: 16px"
-			*ngFor="let page of currentBook.bookmarks">
-
-			<a href="#"
-				style="color: black;"
+		<li
+			class="list-group-item d-flex"
+			style="
+				padding: 5px 0px;
+				margin-left: 20px;
+				border: none;
+				min-height: 35px;
+				font-size: 16px;
+			"
+			*ngFor="let page of currentBook.bookmarks"
+		>
+			<a
+				href="#"
+				style="color: black"
 				(click)="NavigateToPage(page)"
-				[ngClass]="currentPage == page ? 'font-weight-bold' : ''">
+				[ngClass]="currentPage == page ? 'font-weight-bold' : ''"
+			>
 				{{ locale.page }} {{ page }}
 			</a>
 		</li>
 	</ul>
 
-	<p class="fw-light"
-		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'">
+	<p
+		class="fw-light"
+		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
+	>
 		{{ locale.noBookmarks }}
 	</p>
 </dav-panel>

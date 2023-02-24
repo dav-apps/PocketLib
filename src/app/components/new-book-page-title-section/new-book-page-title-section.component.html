@@ -1,13 +1,19 @@
 <div
 	class="mx-auto mb-4"
-	[ngClass]="section != 0 ? (forwardNavigation ? 'slide-left-out' : 'slide-right-out') : (forwardNavigation ? 'slide-left-in' : 'slide-right-in')"
+	[ngClass]="
+		section != 0
+			? forwardNavigation
+				? 'slide-left-out'
+				: 'slide-right-out'
+			: forwardNavigation
+				? 'slide-left-in'
+				: 'slide-right-in'
+	"
 	style="max-width: 300px; overflow: hidden"
-	[style.display]="visibleSection != 0 ? 'none' : null">
-
+	[style.display]="visibleSection != 0 ? 'none' : null"
+>
 	<div class="form-group mb-3">
-		<label
-			class="col-form-label text-color mb-1"
-			style="font-size: 15px">
+		<label class="col-form-label text-color mb-1" style="font-size: 15px">
 			{{ locale.titleSection.description }}
 		</label>
 
@@ -15,20 +21,21 @@
 			[value]="title"
 			[placeholder]="locale.titleSection.titleTextfieldPlaceholder"
 			(change)="title = $event.detail.value"
-			(enter)="Submit()">
-		</dav-textfield>
+			(enter)="Submit()"
+		></dav-textfield>
 	</div>
 
 	<div class="d-flex" style="float: right">
 		<dav-progress-ring
 			style="margin: 8px 14px 0px 0px; width: 16px; height: 16px"
-			*ngIf="loading">
-		</dav-progress-ring>
+			*ngIf="loading"
+		></dav-progress-ring>
 
 		<dav-button
 			type="accent"
 			[disabled]="title.length < 3 || loading"
-			(click)="Submit()">
+			(click)="Submit()"
+		>
 			{{ locale.next }}
 		</dav-button>
 	</div>

@@ -1,11 +1,11 @@
 <div style="position: relative; display: inline-block">
 	<div
 		style="position: absolute"
-		[style.marginTop.px]="(height / 2) - 10"
-		[style.marginLeft.px]="(width / 2) - 10"
-		*ngIf="loading">
-		<dav-progress-ring
-			style="width: 20px; height: 20px; margin: 0">
+		[style.marginTop.px]="height / 2 - 10"
+		[style.marginLeft.px]="width / 2 - 10"
+		*ngIf="loading"
+	>
+		<dav-progress-ring style="width: 20px; height: 20px; margin: 0">
 		</dav-progress-ring>
 	</div>
 
@@ -20,5 +20,6 @@
 		[alt]="alt"
 		[height]="height"
 		(mouseover)="SetHover(true)"
-		(mouseout)="SetHover(false)">
+		(mouseout)="SetHover(false)"
+	/>
 </div>

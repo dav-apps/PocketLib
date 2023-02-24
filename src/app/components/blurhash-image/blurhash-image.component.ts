@@ -5,15 +5,15 @@ import {
 	ElementRef,
 	SimpleChange,
 	SimpleChanges
-} from '@angular/core'
-import { decode } from 'blurhash'
-import { CachingService } from 'src/app/services/caching-service'
+} from "@angular/core"
+import { decode } from "blurhash"
+import { CachingService } from "src/app/services/caching-service"
 
 @Component({
-	selector: 'pocketlib-blurhash-image',
+	selector: "pocketlib-blurhash-image",
 	templateUrl: "./blurhash-image.component.html"
 })
-export class BlurhashImageComponent{
+export class BlurhashImageComponent {
 	@Input() src: string = ""
 	@Input() fallback: string = ""
 	@Input() blurhash: string = null
@@ -21,23 +21,21 @@ export class BlurhashImageComponent{
 	@Input() alt: string = ""
 	@Input() width: number = 0
 	@Input() height: number = 0
-	@Input() fillWidth: boolean = false			// If true, the entire width will be used by the image
+	@Input() fillWidth: boolean = false // If true, the entire width will be used by the image
 	@Input() margin: string = ""
-	@Input() shadowSm: boolean = false			// Show shadow-sm on the image
-	@Input() shadow: boolean = false				// Show shadow on the image
-	@Input() shadowOnHover: boolean = false	// Show shadow-sm on the image and shadow on the image on hover
-	@Input() transform: string = ""				// The transform applied to the image
-	@Input() rounded: boolean = false			// Show the image as a circle
+	@Input() shadowSm: boolean = false // Show shadow-sm on the image
+	@Input() shadow: boolean = false // Show shadow on the image
+	@Input() shadowOnHover: boolean = false // Show shadow-sm on the image and shadow on the image on hover
+	@Input() transform: string = "" // The transform applied to the image
+	@Input() rounded: boolean = false // Show the image as a circle
 	@Input() cursor: boolean = false
-	@Input() loading: boolean = false			// Show the opacity on the image and the spinner if true
-	@ViewChild('image', { static: true }) image: ElementRef<HTMLImageElement>
+	@Input() loading: boolean = false // Show the opacity on the image and the spinner if true
+	@ViewChild("image", { static: true }) image: ElementRef<HTMLImageElement>
 
 	classes: string[] = []
 	hover: boolean = false
 
-	constructor(
-		private cachingService: CachingService
-	) { }
+	constructor(private cachingService: CachingService) {}
 
 	ngOnInit() {
 		this.Init()
@@ -57,7 +55,7 @@ export class BlurhashImageComponent{
 		this.classes = []
 		if (this.shadowOnHover || this.cursor) this.classes.push("cursor")
 		if (this.shadowSm || this.shadowOnHover) this.classes.push("shadow-sm")
-		else if(this.shadow) this.classes.push("shadow")
+		else if (this.shadow) this.classes.push("shadow")
 		if (this.rounded) {
 			this.classes.push("rounded-circle")
 		} else {
@@ -70,7 +68,11 @@ export class BlurhashImageComponent{
 		if (typeof this.height == "string") this.height = +this.height
 
 		if (this.blurhash != null && this.blurhash.length >= 6) {
-			let cacheKey = this.cachingService.GetBlurhashImageCacheKey(this.blurhash, this.width, this.height)
+			let cacheKey = this.cachingService.GetBlurhashImageCacheKey(
+				this.blurhash,
+				this.width,
+				this.height
+			)
 			let cacheItem = this.cachingService.GetBlurhashImageCacheItem(cacheKey)
 
 			if (cacheItem != null) {
@@ -81,9 +83,13 @@ export class BlurhashImageComponent{
 				canvas.width = this.width
 				canvas.height = this.height
 
-				if (canvas.getContext && Number.isFinite(this.width) && Number.isFinite(this.height)) {
+				if (
+					canvas.getContext &&
+					Number.isFinite(this.width) &&
+					Number.isFinite(this.height)
+				) {
 					// Decode the blurhash and set the canvas
-					let ctx = canvas.getContext('2d')
+					let ctx = canvas.getContext("2d")
 					let pixels = decode(this.blurhash, this.width, this.height)
 					let imageData = ctx.createImageData(this.width, this.height)
 					imageData.data.set(pixels)
@@ -93,7 +99,10 @@ export class BlurhashImageComponent{
 					fallbackSrc = canvas.toDataURL()
 
 					// Save the blurhash in the cache
-					this.cachingService.SetBlurhashImageCacheItem(cacheKey, fallbackSrc)
+					this.cachingService.SetBlurhashImageCacheItem(
+						cacheKey,
+						fallbackSrc
+					)
 				}
 			}
 		}
@@ -101,7 +110,7 @@ export class BlurhashImageComponent{
 		// Show the fallback image or the blurhash, if there is one
 		this.image.nativeElement.src = fallbackSrc
 
-		if(this.src == null) return
+		if (this.src == null) return
 
 		// Start loading the proper image
 		let img = document.createElement("img")
@@ -130,17 +139,17 @@ export class BlurhashImageComponent{
 		// Remove shadow-sm
 		let i = this.classes.indexOf("shadow-sm")
 		if (i != -1) this.classes.splice(i, 1)
-		
+
 		// Add shadow
-		this.classes.push('shadow')
+		this.classes.push("shadow")
 	}
 
 	RemoveShadow() {
 		// Remove shadow
 		let i = this.classes.indexOf("shadow")
 		if (i != -1) this.classes.splice(i, 1)
-		
+
 		// Add shadow-sm
-		this.classes.push('shadow-sm')
+		this.classes.push("shadow-sm")
 	}
 }

@@ -1,10 +1,10 @@
-import { Component, Input, HostListener } from '@angular/core'
-import { StoreBookItem } from 'src/app/misc/types'
-import { DataService } from 'src/app/services/data-service'
+import { Component, Input, HostListener } from "@angular/core"
+import { StoreBookItem } from "src/app/misc/types"
+import { DataService } from "src/app/services/data-service"
 
 @Component({
-	selector: 'pocketlib-horizontal-books-card',
-	templateUrl: './horizontal-books-card.component.html'
+	selector: "pocketlib-horizontal-books-card",
+	templateUrl: "./horizontal-books-card.component.html"
 })
 export class HorizontalBooksCardComponent {
 	@Input() title: string = ""
@@ -13,13 +13,13 @@ export class HorizontalBooksCardComponent {
 	hovered: boolean = false
 	fontSize: number = 20
 
-	constructor(
-		public dataService: DataService
-	) { }
+	constructor(public dataService: DataService) {}
 
-	@HostListener('window:resize')
+	@HostListener("window:resize")
 	setSize() {
-		let bookCardParent = document.getElementById("book-card-parent") as HTMLDivElement
+		let bookCardParent = document.getElementById(
+			"book-card-parent"
+		) as HTMLDivElement
 		let bookCardParentWidth = bookCardParent.clientWidth
 
 		if (bookCardParentWidth <= 360) {

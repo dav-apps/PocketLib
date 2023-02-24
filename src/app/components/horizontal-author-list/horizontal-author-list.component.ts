@@ -1,16 +1,21 @@
-import { Component } from '@angular/core'
-import { Router } from '@angular/router'
-import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from 'dav-js'
-import { DataService } from 'src/app/services/data-service'
-import { ApiService } from 'src/app/services/api-service'
-import { AuthorListField, AuthorListItem, AuthorResource, ListResponseData } from 'src/app/misc/types'
-import { enUS } from 'src/locales/locales'
+import { Component } from "@angular/core"
+import { Router } from "@angular/router"
+import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import {
+	AuthorListField,
+	AuthorListItem,
+	AuthorResource,
+	ListResponseData
+} from "src/app/misc/types"
+import { enUS } from "src/locales/locales"
 
 const maxVisibleAuthors = 8
 
 @Component({
-	selector: 'pocketlib-horizontal-author-list',
-	templateUrl: './horizontal-author-list.component.html'
+	selector: "pocketlib-horizontal-author-list",
+	templateUrl: "./horizontal-author-list.component.html"
 })
 export class HorizontalAuthorListComponent {
 	locale = enUS.horizontalAuthorList
@@ -43,8 +48,11 @@ export class HorizontalAuthorListComponent {
 
 		if (!isSuccessStatusCode(response.status)) return
 
-		let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
-		let profileImageAltTemplate = this.dataService.GetLocale().misc.authorProfileImageAlt
+		let responseData = (
+			response as ApiResponse<ListResponseData<AuthorResource>>
+		).data
+		let profileImageAltTemplate =
+			this.dataService.GetLocale().misc.authorProfileImageAlt
 
 		for (let author of responseData.items) {
 			let authorItem = {
@@ -53,15 +61,22 @@ export class HorizontalAuthorListComponent {
 				lastName: author.lastName,
 				profileImageContent: null,
 				profileImageBlurhash: author.profileImage?.blurhash,
-				profileImageAlt: profileImageAltTemplate.replace('{0}', `${author.firstName} ${author.lastName}`)
+				profileImageAlt: profileImageAltTemplate.replace(
+					"{0}",
+					`${author.firstName} ${author.lastName}`
+				)
 			}
 
 			if (author.profileImage?.url != null) {
-				this.apiService.GetFile({ url: author.profileImage.url }).then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						authorItem.profileImageContent = (fileResponse as ApiResponse<string>).data
-					}
-				})
+				this.apiService
+					.GetFile({ url: author.profileImage.url })
+					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							authorItem.profileImageContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
 			}
 
 			this.authors.push(authorItem)

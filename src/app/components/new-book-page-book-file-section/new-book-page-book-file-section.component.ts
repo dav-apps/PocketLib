@@ -1,11 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { ReadFile } from 'ngx-file-helpers'
-import { DataService } from 'src/app/services/data-service'
-import { enUS } from 'src/locales/locales'
+import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { ReadFile } from "ngx-file-helpers"
+import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: 'pocketlib-new-book-page-book-file-section',
-	templateUrl: './new-book-page-book-file-section.component.html'
+	selector: "pocketlib-new-book-page-book-file-section",
+	templateUrl: "./new-book-page-book-file-section.component.html"
 })
 export class NewBookPageBookFileSectionComponent {
 	locale = enUS.newBookPage
@@ -19,9 +19,7 @@ export class NewBookPageBookFileSectionComponent {
 	bookFileContent: ArrayBuffer
 	bookFileType: string = ""
 
-	constructor(
-		public dataService: DataService
-	) {
+	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().newBookPage
 	}
 
@@ -32,7 +30,7 @@ export class NewBookPageBookFileSectionComponent {
 		// Read the content of the book file
 		this.bookFileContent = await new Promise(resolve => {
 			let reader = new FileReader()
-			reader.addEventListener('loadend', () => {
+			reader.addEventListener("loadend", () => {
 				resolve(reader.result as ArrayBuffer)
 			})
 			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
