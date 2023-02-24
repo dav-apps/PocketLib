@@ -39,13 +39,14 @@ $badge-font-size: 12px;
 
 body {
 	background-color: $primary;
-	font-family: 'Roboto', sans-serif;
+	font-family: Roboto, Arial, sans-serif;
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
 }
 
 #root {
 	background-color: var(--theme-color-primary);
+	min-height: 100vh;
 	height: fit-content;
 	overflow: hidden;
 }
