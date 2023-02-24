@@ -31,7 +31,11 @@ export class StoreBookSeries {
 		this.author = seriesResource?.author ?? ""
 		this.name = seriesResource?.name ?? ""
 		this.language = GetLanguageByString(seriesResource?.language)
-		this.storeBooks = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+		this.storeBooks = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
 	}
 
 	async GetStoreBooks(): Promise<StoreBook[]> {
@@ -77,7 +81,9 @@ export class StoreBookSeries {
 
 		this.storeBooks.loaded = true
 		this.storeBooks.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
@@ -90,6 +96,8 @@ export class StoreBookSeries {
 
 	ClearStoreBooks() {
 		this.storeBooks.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBooks.name
+		)
 	}
 }

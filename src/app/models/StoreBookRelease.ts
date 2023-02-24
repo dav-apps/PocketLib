@@ -1,5 +1,8 @@
 import { ApiResponse, isSuccessStatusCode } from "dav-js"
-import { StoreBookReleaseStatus, StoreBookReleaseResource } from "src/app/misc/types"
+import {
+	StoreBookReleaseStatus,
+	StoreBookReleaseResource
+} from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
 
@@ -24,7 +27,10 @@ export class StoreBookRelease {
 	public categories: string[]
 	private coverContent: string
 
-	constructor(storeBookRelease: StoreBookReleaseResource, private apiService: ApiService) {
+	constructor(
+		storeBookRelease: StoreBookReleaseResource,
+		private apiService: ApiService
+	) {
 		this.uuid = storeBookRelease.uuid
 		this.storeBook = storeBookRelease.storeBook
 		this.releaseName = storeBookRelease.releaseName

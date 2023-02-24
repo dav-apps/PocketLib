@@ -1,9 +1,9 @@
-import * as JSZip from 'jszip'
+import * as JSZip from "jszip"
 import {
 	TextElement,
 	ExtractTextElements,
 	CreateHtmlElementFromTextElement
-} from './TextExtractor'
+} from "./TextExtractor"
 
 export class EpubReader {
 	private initialized: boolean = false
@@ -72,7 +72,13 @@ export class EpubReader {
 
 		for (let i = 0; i < manifestItemTags.length; i++) {
 			let manifestItemTag = manifestItemTags[i]
-			this.manifestItems.push(new EpubManifestItem(manifestItemTag.getAttribute("id"), this.opfFileDir + manifestItemTag.getAttribute("href"), manifestItemTag.getAttribute("media-type")))
+			this.manifestItems.push(
+				new EpubManifestItem(
+					manifestItemTag.getAttribute("id"),
+					this.opfFileDir + manifestItemTag.getAttribute("href"),
+					manifestItemTag.getAttribute("media-type")
+				)
+			)
 		}
 
 		// Get the metadata content
@@ -93,7 +99,10 @@ export class EpubReader {
 				let metaTagContent = metaTags.item(i).getAttribute("content")
 
 				// Find the manifest item with id = metaTagContent
-				let index = this.manifestItems.findIndex(item => item.id == metaTagContent)
+				let index = this.manifestItems.findIndex(
+					item => item.id == metaTagContent
+				)
+
 				if (index !== -1) {
 					this.cover = this.manifestItems[index]
 
@@ -117,10 +126,7 @@ export class EpubReader {
 		if (this.chaptersLoaded) return false
 
 		// Make sure the metadata is loaded
-		if (
-			!this.metadataLoaded
-			&& !await this.LoadMetadata()
-		) return false
+		if (!this.metadataLoaded && !(await this.LoadMetadata())) return false
 
 		// Get the spine content
 		let spineTag = this.opfDoc.getElementsByTagName("spine")[0]
@@ -135,12 +141,16 @@ export class EpubReader {
 				let itemPath = this.manifestItems[index].href
 
 				// Find the entry with the filename
-				var key = Object.keys(this.entries).find(entry => entry.includes(itemPath))
+				var key = Object.keys(this.entries).find(entry =>
+					entry.includes(itemPath)
+				)
 				if (!key) continue
 
 				// Read the content of the entry
 				let entryContent = await this.entries[key].async("text")
-				this.chapters.push(new EpubChapter(this, idref, itemPath, entryContent))
+				this.chapters.push(
+					new EpubChapter(this, idref, itemPath, entryContent)
+				)
 			}
 		}
 
@@ -148,8 +158,9 @@ export class EpubReader {
 		let tocFilePath = "toc.ncx"
 		let tocDirectory = ""
 
-		if (this.opfFilePath.includes('/')) {
-			tocDirectory = this.opfFilePath.slice(0, this.opfFilePath.lastIndexOf('/')) + "/"
+		if (this.opfFilePath.includes("/")) {
+			tocDirectory =
+				this.opfFilePath.slice(0, this.opfFilePath.lastIndexOf("/")) + "/"
 			tocFilePath = tocDirectory + "toc.ncx"
 		}
 
@@ -187,7 +198,10 @@ export class EpubChapter {
 		if (this.html != null) return this.html
 
 		let parser = new DOMParser()
-		let chapterDocument = parser.parseFromString(this.htmlContent.replace(/>\s+</g, "><"), "text/html")
+		let chapterDocument = parser.parseFromString(
+			this.htmlContent.replace(/>\s+</g, "><"),
+			"text/html"
+		)
 		let chapterBody = chapterDocument.getElementsByTagName("body")[0]
 
 		await this.LoadBodyHtml(chapterBody)
@@ -239,18 +253,32 @@ export class EpubChapter {
 			if (imageTag.hasAttribute("height")) {
 				newImageTag.setAttribute("height", imageTag.getAttribute("height"))
 			} else {
-				newImageTag.setAttribute("height", newImageTag.naturalHeight.toString())
+				newImageTag.setAttribute(
+					"height",
+					newImageTag.naturalHeight.toString()
+				)
 			}
 
 			if (imageTag.hasAttribute("width")) {
 				newImageTag.setAttribute("width", imageTag.getAttribute("width"))
 			} else {
-				newImageTag.setAttribute("width", newImageTag.naturalWidth.toString())
+				newImageTag.setAttribute(
+					"width",
+					newImageTag.naturalWidth.toString()
+				)
 			}
 
-			if (imageTag.hasAttribute("class")) newImageTag.setAttribute("class", imageTag.className)
-			if (imageTag.hasAttribute("alt")) newImageTag.setAttribute("alt", alt)
-			if (imageTag.hasAttribute("title")) newImageTag.setAttribute("title", title)
+			if (imageTag.hasAttribute("class")) {
+				newImageTag.setAttribute("class", imageTag.className)
+			}
+
+			if (imageTag.hasAttribute("alt")) {
+				newImageTag.setAttribute("alt", alt)
+			}
+
+			if (imageTag.hasAttribute("title")) {
+				newImageTag.setAttribute("title", title)
+			}
 
 			// Replace the old image tag with the new one
 			imageTag.parentNode.replaceChild(newImageTag, imageTag)
@@ -299,12 +327,14 @@ export class EpubChapter {
 
 			// Check if the link is a local file
 			if (
-				href == null
-				|| href.startsWith('http://')
-				|| href.startsWith('https://')
-				|| href.startsWith('www.')
-				|| href.startsWith('mailto:')
-			) continue
+				href == null ||
+				href.startsWith("http://") ||
+				href.startsWith("https://") ||
+				href.startsWith("www.") ||
+				href.startsWith("mailto:")
+			) {
+				continue
+			}
 
 			// Update the href with the absolute path
 			if (href) aTag.setAttribute("href", MergePaths(this.currentPath, href))
@@ -322,8 +352,13 @@ export class EpubChapter {
 			let imageContent = await entry.async("base64")
 
 			// Get the mime type from the manifest items
-			let index = this.book.manifestItems.findIndex(item => item.href == imagePath)
-			let mimeType = index !== -1 ? this.book.manifestItems[index].mediaType : "image/jpg"
+			let index = this.book.manifestItems.findIndex(
+				item => item.href == imagePath
+			)
+			let mimeType =
+				index !== -1
+					? this.book.manifestItems[index].mediaType
+					: "image/jpg"
 
 			return `data:${mimeType};base64,${imageContent}`
 		}
@@ -337,7 +372,7 @@ export class EpubManifestItem {
 		public id: string,
 		public href: string,
 		public mediaType: string
-	) { }
+	) {}
 }
 
 export class EpubTocItem {
@@ -346,10 +381,12 @@ export class EpubTocItem {
 		public title: string,
 		public href: string,
 		public items: EpubTocItem[]
-	) { }
+	) {}
 }
 
-async function GetOpfFilePath(containerEntry: JSZip.JSZipObject): Promise<string> {
+async function GetOpfFilePath(
+	containerEntry: JSZip.JSZipObject
+): Promise<string> {
 	let containerContent = await containerEntry.async("text")
 
 	let parser = new DOMParser()
@@ -361,16 +398,16 @@ async function GetOpfFilePath(containerEntry: JSZip.JSZipObject): Promise<string
 }
 
 function GetFileDirectory(filePath: string) {
-	let directory = filePath.split('/').slice(0, -1).join('/')
+	let directory = filePath.split("/").slice(0, -1).join("/")
 	if (directory.length > 0) {
-		directory += '/'
+		directory += "/"
 	}
 	return directory
 }
 
 function GetParentDirectory(directoryPath: string) {
 	// If the path is not root, remove the deepest directory (the last two parts of the directory parts array)
-	let directoryParts = directoryPath.split('/')
+	let directoryParts = directoryPath.split("/")
 
 	let removedNumberOfElements = 1
 	if (directoryParts.length > 2) {
@@ -378,20 +415,23 @@ function GetParentDirectory(directoryPath: string) {
 	}
 	directoryParts = directoryParts.slice(0, -removedNumberOfElements)
 
-	return directoryParts.join('/') + '/'
+	return directoryParts.join("/") + "/"
 }
 
 function MergePaths(currentPath: string, source: string) {
 	let path = currentPath
 	while (source.includes("../")) {
 		// For each ../ go one directory up in the path
-		source = source.replace('../', '')
+		source = source.replace("../", "")
 		path = GetParentDirectory(path)
 	}
 	return path + source
 }
 
-function GetTocItems(parentElement: Element, tocDirectory: string): EpubTocItem[] {
+function GetTocItems(
+	parentElement: Element,
+	tocDirectory: string
+): EpubTocItem[] {
 	let navpoints = parentElement.getElementsByTagName("navPoint")
 	let tocItems: EpubTocItem[] = []
 
@@ -407,7 +447,7 @@ function GetTocItems(parentElement: Element, tocDirectory: string): EpubTocItem[
 
 function GetTocItem(navpoint: Element, tocDirectory: string): EpubTocItem {
 	// Get the id
-	let id = navpoint.getAttribute('id')
+	let id = navpoint.getAttribute("id")
 
 	// Get the title
 	let navlabel = navpoint.getElementsByTagName("navLabel")[0]

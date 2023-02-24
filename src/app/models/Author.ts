@@ -1,4 +1,4 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from 'dav-js'
+import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
 import {
 	Language,
 	ListResponseData,
@@ -12,10 +12,10 @@ import {
 	StoreBookSeriesResource,
 	StoreBookSeriesListField
 } from "../misc/types"
-import { ApiService } from 'src/app/services/api-service'
-import { CachingService } from '../services/caching-service'
-import { StoreBookCollection } from 'src/app/models/StoreBookCollection'
-import { StoreBookSeries } from 'src/app/models/StoreBookSeries'
+import { ApiService } from "src/app/services/api-service"
+import { CachingService } from "../services/caching-service"
+import { StoreBookCollection } from "src/app/models/StoreBookCollection"
+import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 
 export class Author {
 	public uuid: string
@@ -65,9 +65,21 @@ export class Author {
 			url: authorResource?.profileImage?.url,
 			blurhash: authorResource?.profileImage?.blurhash
 		}
-		this.bios = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
-		this.collections = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
-		this.series = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+		this.bios = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
+		this.collections = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
+		this.series = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
 	}
 
 	async GetProfileImageContent(): Promise<string> {
@@ -77,7 +89,9 @@ export class Author {
 
 		if (this.profileImage.url == null) return null
 
-		let response = await this.apiService.GetFile({ url: this.profileImage.url })
+		let response = await this.apiService.GetFile({
+			url: this.profileImage.url
+		})
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data
@@ -86,18 +100,19 @@ export class Author {
 	}
 
 	async ReloadProfileImage() {
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrieveAuthorProfileImage.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.RetrieveAuthorProfileImage.name
+		)
 
 		let response = await this.apiService.RetrieveAuthorProfileImage({
 			uuid: this.uuid,
-			fields: [
-				AuthorProfileImageField.url,
-				AuthorProfileImageField.blurhash
-			]
+			fields: [AuthorProfileImageField.url, AuthorProfileImageField.blurhash]
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorProfileImageResource>).data
+			let responseData = (
+				response as ApiResponse<AuthorProfileImageResource>
+			).data
 
 			this.profileImage.url = responseData.url
 			this.profileImage.blurhash = responseData.blurhash
@@ -137,7 +152,9 @@ export class Author {
 
 		this.bios.loaded = true
 		this.bios.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<AuthorBioResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<AuthorBioResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
@@ -150,7 +167,9 @@ export class Author {
 
 	ClearBios() {
 		this.bios.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListAuthorBios.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListAuthorBios.name
+		)
 	}
 
 	async GetCollections(): Promise<StoreBookCollection[]> {
@@ -186,11 +205,15 @@ export class Author {
 
 		this.collections.loaded = true
 		this.collections.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookCollectionResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookCollectionResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(new StoreBookCollection(item, this.apiService, this.cachingService))
+			items.push(
+				new StoreBookCollection(item, this.apiService, this.cachingService)
+			)
 		}
 
 		this.collections.itemsPromiseHolder.Resolve(items)
@@ -199,7 +222,9 @@ export class Author {
 
 	ClearCollections() {
 		this.collections.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookCollections.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBookCollections.name
+		)
 	}
 
 	async GetSeries(): Promise<StoreBookSeries[]> {
@@ -235,11 +260,15 @@ export class Author {
 
 		this.series.loaded = true
 		this.series.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookSeriesResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookSeriesResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
-			items.push(new StoreBookSeries(item, this.apiService, this.cachingService))
+			items.push(
+				new StoreBookSeries(item, this.apiService, this.cachingService)
+			)
 		}
 
 		this.series.itemsPromiseHolder.Resolve(items)
@@ -248,6 +277,8 @@ export class Author {
 
 	ClearSeries() {
 		this.series.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookSeries.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBookSeries.name
+		)
 	}
 }

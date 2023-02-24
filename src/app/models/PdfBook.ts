@@ -1,6 +1,6 @@
-import { Property } from 'dav-js'
-import { keys } from 'src/constants/keys'
-import { Book } from './Book'
+import { Property } from "dav-js"
+import { keys } from "src/constants/keys"
+import { Book } from "./Book"
 
 const pdfExt = "pdf"
 
@@ -32,7 +32,13 @@ export class PdfBook extends Book {
 
 	public static async Create(file: File, title: string): Promise<string> {
 		// Convert the file to a blob
-		let book = new PdfBook(new Blob([file], { type: file.type }), null, true, null, title)
+		let book = new PdfBook(
+			new Blob([file], { type: file.type }),
+			null,
+			true,
+			null,
+			title
+		)
 		await book.Save()
 		return book.uuid
 	}
@@ -105,8 +111,15 @@ export class PdfBook extends Book {
 			{ name: keys.pdfBookTableTitleKey, value: this.title },
 			{ name: keys.pdfBookTablePageKey, value: this.page },
 			{ name: keys.pdfBookTableTotalProgressKey, value: this.totalProgress },
-			{ name: keys.pdfBookTableBookmarksKey, value: this.bookmarks.join(',') },
-			{ name: keys.pdfBookTableZoomKey, value: this.zoom, options: { local: true } }
+			{
+				name: keys.pdfBookTableBookmarksKey,
+				value: this.bookmarks.join(",")
+			},
+			{
+				name: keys.pdfBookTableZoomKey,
+				value: this.zoom,
+				options: { local: true }
+			}
 		]
 
 		await super.Save(pdfExt, properties)

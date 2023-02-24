@@ -1,4 +1,6 @@
-export function CreateHtmlElementFromTextElement(textElement: TextElement): HTMLElement {
+export function CreateHtmlElementFromTextElement(
+	textElement: TextElement
+): HTMLElement {
 	switch (textElement.Type) {
 		case TextElementType.H1:
 		case TextElementType.H2:
@@ -6,12 +8,15 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.H4:
 		case TextElementType.H5:
 		case TextElementType.H6:
-			let hElement = document.createElement(textElement.Type) as HTMLHeadingElement
+			let hElement = document.createElement(
+				textElement.Type
+			) as HTMLHeadingElement
 			if (textElement.Id) hElement.id = textElement.Id
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let headerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let headerChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (headerChild) hElement.appendChild(headerChild)
 				}
 			}
@@ -35,7 +40,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let spanChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let spanChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (spanChild) spanElement.appendChild(spanChild)
 				}
 			}
@@ -43,7 +49,11 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			return spanElement
 		case TextElementType.TEXT:
 			let spanTextElement = document.createElement("span") as HTMLSpanElement
-			if (textElement.Content) spanTextElement.innerHTML = textElement.Content.replace(/ /g, '<span> </span>')
+			if (textElement.Content)
+				spanTextElement.innerHTML = textElement.Content.replace(
+					/ /g,
+					"<span> </span>"
+				)
 			return spanTextElement
 		case TextElementType.I:
 			let iElement = document.createElement("i") as HTMLElement
@@ -88,22 +98,33 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.TextElements) {
 				// Check if the quote element contains unnecessary additional "" chars
 				if (
-					textElement.TextElements.length == 1
-					&& textElement.TextElements[0].Type == TextElementType.TEXT
-					&& textElement.TextElements[0].Content.length > 1
-					&& textElement.TextElements[0].Content[0] == "“"
-					&& textElement.TextElements[0].Content[textElement.TextElements[0].Content.length - 1] == "”"
+					textElement.TextElements.length == 1 &&
+					textElement.TextElements[0].Type == TextElementType.TEXT &&
+					textElement.TextElements[0].Content.length > 1 &&
+					textElement.TextElements[0].Content[0] == "“" &&
+					textElement.TextElements[0].Content[
+						textElement.TextElements[0].Content.length - 1
+					] == "”"
 				) {
-					textElement.TextElements[0].Content = textElement.TextElements[0].Content.slice(1, textElement.TextElements[0].Content.length - 1)
+					textElement.TextElements[0].Content =
+						textElement.TextElements[0].Content.slice(
+							1,
+							textElement.TextElements[0].Content.length - 1
+						)
 				} else if (
-					textElement.TextElements.length > 1
-					&& textElement.TextElements[0].Type == TextElementType.TEXT
-					&& textElement.TextElements[textElement.TextElements.length - 1].Type == TextElementType.TEXT
-					&& textElement.TextElements[0].Content == "“"
-					&& textElement.TextElements[textElement.TextElements.length - 1].Content == "”"
+					textElement.TextElements.length > 1 &&
+					textElement.TextElements[0].Type == TextElementType.TEXT &&
+					textElement.TextElements[textElement.TextElements.length - 1]
+						.Type == TextElementType.TEXT &&
+					textElement.TextElements[0].Content == "“" &&
+					textElement.TextElements[textElement.TextElements.length - 1]
+						.Content == "”"
 				) {
 					textElement.TextElements.splice(0, 1)
-					textElement.TextElements.splice(textElement.TextElements.length - 1, 1)
+					textElement.TextElements.splice(
+						textElement.TextElements.length - 1,
+						1
+					)
 				}
 
 				for (let innerTextElement of textElement.TextElements) {
@@ -119,7 +140,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let strongChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let strongChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (strongChild) strongElement.appendChild(strongChild)
 				}
 			}
@@ -143,20 +165,25 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let timeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let timeChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (timeChild) timeElement.appendChild(timeChild)
 				}
 			}
 
 			return timeElement
 		case TextElementType.BLOCKQUOTE:
-			let blockquoteElement = document.createElement("blockquote") as HTMLQuoteElement
+			let blockquoteElement = document.createElement(
+				"blockquote"
+			) as HTMLQuoteElement
 			if (textElement.Id) blockquoteElement.id = textElement.Id
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let blockquoteChild = CreateHtmlElementFromTextElement(innerTextElement)
-					if (blockquoteChild) blockquoteElement.appendChild(blockquoteChild)
+					let blockquoteChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
+					if (blockquoteChild)
+						blockquoteElement.appendChild(blockquoteChild)
 				}
 			}
 
@@ -164,11 +191,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.SECTION:
 			let sectionElement = document.createElement("section") as HTMLElement
 			if (textElement.Id) sectionElement.id = textElement.Id
-			if (textElement.Role) sectionElement.setAttribute("role", textElement.Role)
+			if (textElement.Role)
+				sectionElement.setAttribute("role", textElement.Role)
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let sectionChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let sectionChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (sectionChild) sectionElement.appendChild(sectionChild)
 				}
 			}
@@ -180,7 +209,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let hgroupChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let hgroupChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (hgroupChild) hgroupElement.appendChild(hgroupChild)
 				}
 			}
@@ -192,7 +222,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let headerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let headerChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (headerChild) headerElement.appendChild(headerChild)
 				}
 			}
@@ -204,7 +235,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let footerChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let footerChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (footerChild) footerElement.appendChild(footerChild)
 				}
 			}
@@ -216,7 +248,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let citeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let citeChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (citeChild) citeElement.appendChild(citeChild)
 				}
 			}
@@ -228,7 +261,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let abbrChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let abbrChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (abbrChild) abbrElement.appendChild(abbrChild)
 				}
 			}
@@ -254,17 +288,21 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 			if (textElement.Class) imgElement.className = textElement.Class
 			imgElement.setAttribute("src", textElement.Source)
 			if (textElement.Alt) imgElement.setAttribute("alt", textElement.Alt)
-			if (textElement.Title) imgElement.setAttribute("title", textElement.Title)
+			if (textElement.Title)
+				imgElement.setAttribute("title", textElement.Title)
 
 			// Check if the image is within a p tag
 			if (IsTextElementNestedWithinType(textElement, TextElementType.P)) {
-				imgElement.style.height = "16px"		// TODO: Use the selected font size
+				imgElement.style.height = "16px" // TODO: Use the selected font size
 				return imgElement
 			} else {
 				// Create a container div for the image
 				let imgContainerElement = document.createElement("div")
 
-				imgContainerElement.setAttribute("style", "display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em")
+				imgContainerElement.setAttribute(
+					"style",
+					"display: flex; justify-content: center; margin-top: 2em; margin-bottom: 2em"
+				)
 				imgContainerElement.appendChild(imgElement)
 
 				return imgContainerElement
@@ -275,11 +313,13 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 		case TextElementType.UL:
 			let ulElement = document.createElement("ul") as HTMLOListElement
 			if (textElement.Id) ulElement.id = textElement.Id
-			let listElement = textElement.Type == TextElementType.OL ? olElement : ulElement
+			let listElement =
+				textElement.Type == TextElementType.OL ? olElement : ulElement
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let listChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let listChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (listChild) listElement.appendChild(listChild)
 				}
 			}
@@ -311,7 +351,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let tableChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let tableChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (tableChild) tableElement.appendChild(tableChild)
 				}
 			}
@@ -375,7 +416,8 @@ export function CreateHtmlElementFromTextElement(textElement: TextElement): HTML
 
 			if (textElement.TextElements) {
 				for (let innerTextElement of textElement.TextElements) {
-					let codeChild = CreateHtmlElementFromTextElement(innerTextElement)
+					let codeChild =
+						CreateHtmlElementFromTextElement(innerTextElement)
 					if (codeChild) codeElement.appendChild(codeChild)
 				}
 			}
@@ -447,13 +489,18 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					}
 
-					hTextElement.TextElements = GetInnerTextElements(hElement, hTextElement)
+					hTextElement.TextElements = GetInnerTextElements(
+						hElement,
+						hTextElement
+					)
 					textElements.push(hTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < hElement.childNodes.length; i++) {
 						let childNode = hElement.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode, parentElement))
+						textElements.push(
+							...ExtractTextElements(childNode, parentElement)
+						)
 					}
 				}
 				break
@@ -465,7 +512,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				pTextElement.TextElements = GetInnerTextElements(pElement, pTextElement)
+				pTextElement.TextElements = GetInnerTextElements(
+					pElement,
+					pTextElement
+				)
 				textElements.push(pTextElement)
 				break
 			case "SPAN":
@@ -476,7 +526,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				spanTextElement.TextElements = GetInnerTextElements(spanElement, spanTextElement)
+				spanTextElement.TextElements = GetInnerTextElements(
+					spanElement,
+					spanTextElement
+				)
 				textElements.push(spanTextElement)
 				break
 			case "I":
@@ -487,7 +540,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				iTextElement.TextElements = GetInnerTextElements(iElement, iTextElement)
+				iTextElement.TextElements = GetInnerTextElements(
+					iElement,
+					iTextElement
+				)
 				textElements.push(iTextElement)
 				break
 			case "EM":
@@ -498,7 +554,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				emTextElement.TextElements = GetInnerTextElements(emElement, emTextElement)
+				emTextElement.TextElements = GetInnerTextElements(
+					emElement,
+					emTextElement
+				)
 				textElements.push(emTextElement)
 				break
 			case "B":
@@ -509,7 +568,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				bTextElement.TextElements = GetInnerTextElements(bElement, bTextElement)
+				bTextElement.TextElements = GetInnerTextElements(
+					bElement,
+					bTextElement
+				)
 				textElements.push(bTextElement)
 				break
 			case "Q":
@@ -520,7 +582,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				qTextElement.TextElements = GetInnerTextElements(qElement, qTextElement)
+				qTextElement.TextElements = GetInnerTextElements(
+					qElement,
+					qTextElement
+				)
 				textElements.push(qTextElement)
 				break
 			case "STRONG":
@@ -531,7 +596,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				strongTextElement.TextElements = GetInnerTextElements(strongElement, strongTextElement)
+				strongTextElement.TextElements = GetInnerTextElements(
+					strongElement,
+					strongTextElement
+				)
 				textElements.push(strongTextElement)
 				break
 			case "VAR":
@@ -542,7 +610,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				varTextElement.TextElements = GetInnerTextElements(varElement, varTextElement)
+				varTextElement.TextElements = GetInnerTextElements(
+					varElement,
+					varTextElement
+				)
 				textElements.push(varTextElement)
 				break
 			case "TIME":
@@ -553,7 +624,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				timeTextElement.TextElements = GetInnerTextElements(timeElement, timeTextElement)
+				timeTextElement.TextElements = GetInnerTextElements(
+					timeElement,
+					timeTextElement
+				)
 				textElements.push(timeTextElement)
 				break
 			case "BLOCKQUOTE":
@@ -564,7 +638,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				blockquoteTextElement.TextElements = GetInnerTextElements(blockquoteElement, blockquoteTextElement)
+				blockquoteTextElement.TextElements = GetInnerTextElements(
+					blockquoteElement,
+					blockquoteTextElement
+				)
 				textElements.push(blockquoteTextElement)
 				break
 			case "SECTION":
@@ -576,7 +653,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				sectionTextElement.TextElements = GetInnerTextElements(sectionElement, sectionTextElement)
+				sectionTextElement.TextElements = GetInnerTextElements(
+					sectionElement,
+					sectionTextElement
+				)
 				textElements.push(sectionTextElement)
 				break
 			case "HGROUP":
@@ -587,7 +667,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				hgroupTextElement.TextElements = GetInnerTextElements(hgroupElement, hgroupTextElement)
+				hgroupTextElement.TextElements = GetInnerTextElements(
+					hgroupElement,
+					hgroupTextElement
+				)
 				textElements.push(hgroupTextElement)
 				break
 			case "HEADER":
@@ -598,7 +681,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				headerTextElement.TextElements = GetInnerTextElements(headerElement, headerTextElement)
+				headerTextElement.TextElements = GetInnerTextElements(
+					headerElement,
+					headerTextElement
+				)
 				textElements.push(headerTextElement)
 				break
 			case "FOOTER":
@@ -609,7 +695,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				footerTextElement.TextElements = GetInnerTextElements(footerElement, footerTextElement)
+				footerTextElement.TextElements = GetInnerTextElements(
+					footerElement,
+					footerTextElement
+				)
 				textElements.push(footerTextElement)
 				break
 			case "CITE":
@@ -620,7 +709,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				citeTextElement.TextElements = GetInnerTextElements(citeElement, citeTextElement)
+				citeTextElement.TextElements = GetInnerTextElements(
+					citeElement,
+					citeTextElement
+				)
 				textElements.push(citeTextElement)
 				break
 			case "ABBR":
@@ -631,7 +723,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				abbrTextElement.TextElements = GetInnerTextElements(abbrElement, abbrTextElement)
+				abbrTextElement.TextElements = GetInnerTextElements(
+					abbrElement,
+					abbrTextElement
+				)
 				textElements.push(abbrTextElement)
 				break
 			case "A":
@@ -647,13 +742,18 @@ export function ExtractTextElements(
 						ParentElement: parentElement
 					}
 
-					aTextElement.TextElements = GetInnerTextElements(aElement, aTextElement)
+					aTextElement.TextElements = GetInnerTextElements(
+						aElement,
+						aTextElement
+					)
 					textElements.push(aTextElement)
 				} else {
 					// Add the child elements
 					for (let i = 0; i < aElement.childNodes.length; i++) {
 						let childNode = aElement.childNodes.item(i)
-						textElements.push(...ExtractTextElements(childNode, parentElement))
+						textElements.push(
+							...ExtractTextElements(childNode, parentElement)
+						)
 					}
 				}
 				break
@@ -668,7 +768,11 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				if (imgElement.classList.contains("epub-type-se-image-color-depth-black-on-transparent")) {
+				if (
+					imgElement.classList.contains(
+						"epub-type-se-image-color-depth-black-on-transparent"
+					)
+				) {
 					imgTextElement.Class = "invert-colors"
 				}
 
@@ -682,7 +786,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				olTextElement.TextElements = GetInnerTextElements(olElement, olTextElement)
+				olTextElement.TextElements = GetInnerTextElements(
+					olElement,
+					olTextElement
+				)
 				textElements.push(olTextElement)
 				break
 			case "UL":
@@ -693,7 +800,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				ulTextElement.TextElements = GetInnerTextElements(ulElement, ulTextElement)
+				ulTextElement.TextElements = GetInnerTextElements(
+					ulElement,
+					ulTextElement
+				)
 				textElements.push(ulTextElement)
 				break
 			case "LI":
@@ -704,7 +814,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				liTextElement.TextElements = GetInnerTextElements(liElement, liTextElement)
+				liTextElement.TextElements = GetInnerTextElements(
+					liElement,
+					liTextElement
+				)
 				textElements.push(liTextElement)
 				break
 			case "HR":
@@ -729,7 +842,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				tableTextElement.TextElements = GetInnerTextElements(tableElement, tableTextElement)
+				tableTextElement.TextElements = GetInnerTextElements(
+					tableElement,
+					tableTextElement
+				)
 				textElements.push(tableTextElement)
 				break
 			case "TR":
@@ -740,7 +856,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				trTextElement.TextElements = GetInnerTextElements(trElement, trTextElement)
+				trTextElement.TextElements = GetInnerTextElements(
+					trElement,
+					trTextElement
+				)
 				textElements.push(trTextElement)
 				break
 			case "TH":
@@ -753,7 +872,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				thTextElement.TextElements = GetInnerTextElements(thElement, thTextElement)
+				thTextElement.TextElements = GetInnerTextElements(
+					thElement,
+					thTextElement
+				)
 				textElements.push(thTextElement)
 				break
 			case "TD":
@@ -766,7 +888,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				tdTextElement.TextElements = GetInnerTextElements(tdElement, tdTextElement)
+				tdTextElement.TextElements = GetInnerTextElements(
+					tdElement,
+					tdTextElement
+				)
 				textElements.push(tdTextElement)
 				break
 			case "PRE":
@@ -777,7 +902,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				preTextElement.TextElements = GetInnerTextElements(preElement, preTextElement)
+				preTextElement.TextElements = GetInnerTextElements(
+					preElement,
+					preTextElement
+				)
 				textElements.push(preTextElement)
 				break
 			case "CODE":
@@ -788,7 +916,10 @@ export function ExtractTextElements(
 					ParentElement: parentElement
 				}
 
-				codeTextElement.TextElements = GetInnerTextElements(codeElement, codeTextElement)
+				codeTextElement.TextElements = GetInnerTextElements(
+					codeElement,
+					codeTextElement
+				)
 				textElements.push(codeTextElement)
 				break
 			default:
@@ -804,7 +935,9 @@ export function ExtractTextElements(
 
 				for (let i = 0; i < element.childNodes.length; i++) {
 					let childNode = element.childNodes.item(i)
-					textElements.push(...ExtractTextElements(childNode, parentElement))
+					textElements.push(
+						...ExtractTextElements(childNode, parentElement)
+					)
 				}
 				break
 		}
@@ -821,12 +954,7 @@ function GetInnerTextElements(
 
 	for (let i = 0; i < node.childNodes.length; i++) {
 		let childNode = node.childNodes.item(i)
-		textElements.push(
-			...ExtractTextElements(
-				childNode,
-				parentElement
-			)
-		)
+		textElements.push(...ExtractTextElements(childNode, parentElement))
 	}
 
 	// Merge adjacent span elements
@@ -841,10 +969,12 @@ function GetInnerTextElements(
 
 		if (currentElement.Type == TextElementType.SPAN) {
 			if (
-				mergedSpanElements.length > 0
-				&& mergedSpanElements[mergedSpanElements.length - 1].Type == TextElementType.SPAN
+				mergedSpanElements.length > 0 &&
+				mergedSpanElements[mergedSpanElements.length - 1].Type ==
+					TextElementType.SPAN
 			) {
-				let previousElement = mergedSpanElements[mergedSpanElements.length - 1]
+				let previousElement =
+					mergedSpanElements[mergedSpanElements.length - 1]
 
 				if (previousElement.TextElements == null) {
 					previousElement.TextElements = []
@@ -875,13 +1005,19 @@ function GetInnerTextElements(
 	return mergedSpanElements
 }
 
-function IsTextElementNestedWithinType(textElement: TextElement, elementType: TextElementType): boolean {
+function IsTextElementNestedWithinType(
+	textElement: TextElement,
+	elementType: TextElementType
+): boolean {
 	if (textElement.ParentElement) {
 		if (textElement.ParentElement.Type == elementType) {
 			return true
 		}
 
-		return IsTextElementNestedWithinType(textElement.ParentElement, elementType)
+		return IsTextElementNestedWithinType(
+			textElement.ParentElement,
+			elementType
+		)
 	}
 
 	return false
@@ -897,25 +1033,25 @@ function NodeContainsText(node: Node): boolean {
 		let childNode = node.childNodes.item(i)
 
 		if (
-			childNode.nodeType == Node.TEXT_NODE
-			&& childNode.textContent.trim().length > 0
-		) return true
+			childNode.nodeType == Node.TEXT_NODE &&
+			childNode.textContent.trim().length > 0
+		)
+			return true
 
 		if (
-			childNode.nodeType == Node.ELEMENT_NODE
-			&& (
-				childNode.nodeName == "SPAN"
-				|| childNode.nodeName == "I"
-				|| childNode.nodeName == "EM"
-				|| childNode.nodeName == "B"
-				|| childNode.nodeName == "STRONG"
-				|| childNode.nodeName == "VAR"
-				|| childNode.nodeName == "TIME"
-				|| childNode.nodeName == "A"
-				|| childNode.nodeName == "ABBR"
-			)
-			&& childNode.textContent.trim().length > 0
-		) return true
+			childNode.nodeType == Node.ELEMENT_NODE &&
+			(childNode.nodeName == "SPAN" ||
+				childNode.nodeName == "I" ||
+				childNode.nodeName == "EM" ||
+				childNode.nodeName == "B" ||
+				childNode.nodeName == "STRONG" ||
+				childNode.nodeName == "VAR" ||
+				childNode.nodeName == "TIME" ||
+				childNode.nodeName == "A" ||
+				childNode.nodeName == "ABBR") &&
+			childNode.textContent.trim().length > 0
+		)
+			return true
 	}
 
 	return false
@@ -933,7 +1069,7 @@ export interface TextElement {
 	Role?: string
 	Colspan?: number
 	Rowspan?: number
-	TextElements?: TextElement[],
+	TextElements?: TextElement[]
 	ParentElement?: TextElement
 }
 

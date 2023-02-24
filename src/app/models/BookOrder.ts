@@ -1,15 +1,17 @@
-import { TableObject, Property, GetTableObject, GetAllTableObjects } from 'dav-js'
-import { Book } from './Book'
-import { environment } from 'src/environments/environment'
+import {
+	TableObject,
+	Property,
+	GetTableObject,
+	GetAllTableObjects
+} from "dav-js"
+import { Book } from "./Book"
+import { environment } from "src/environments/environment"
 
 export class BookOrder {
 	public uuid: string
 	public bookUuids: string[] = []
 
-	constructor(
-		uuid: string = null,
-		bookUuids: string[] = []
-	) {
+	constructor(uuid: string = null, bookUuids: string[] = []) {
 		this.uuid = uuid
 		this.bookUuids = bookUuids
 	}
@@ -20,7 +22,10 @@ export class BookOrder {
 	}
 
 	private async Save() {
-		let tableObject = await GetTableObject(this.uuid, environment.bookOrderTableId)
+		let tableObject = await GetTableObject(
+			this.uuid,
+			environment.bookOrderTableId
+		)
 
 		if (tableObject == null) {
 			// Create the table object
@@ -51,7 +56,10 @@ export class BookOrder {
 	}
 
 	public async Delete() {
-		let tableObject = await GetTableObject(this.uuid, environment.bookOrderTableId)
+		let tableObject = await GetTableObject(
+			this.uuid,
+			environment.bookOrderTableId
+		)
 		if (tableObject == null) return
 
 		await tableObject.Delete()
@@ -76,7 +84,10 @@ export async function GetBookOrder(): Promise<BookOrder> {
 }
 
 async function GetAllBookOrders(): Promise<BookOrder[]> {
-	let tableObjects = await GetAllTableObjects(environment.bookOrderTableId, false)
+	let tableObjects = await GetAllTableObjects(
+		environment.bookOrderTableId,
+		false
+	)
 	let bookOrders: BookOrder[] = []
 
 	for (let tableObject of tableObjects) {
@@ -89,9 +100,11 @@ async function GetAllBookOrders(): Promise<BookOrder[]> {
 
 function ConvertTableObjectToBookOrder(tableObject: TableObject): BookOrder {
 	if (
-		tableObject == null
-		|| tableObject.TableId != environment.bookOrderTableId
-	) return null
+		tableObject == null ||
+		tableObject.TableId != environment.bookOrderTableId
+	) {
+		return null
+	}
 
 	// Get all book uuids
 	let lastProperty = false
@@ -110,10 +123,7 @@ function ConvertTableObjectToBookOrder(tableObject: TableObject): BookOrder {
 		i++
 	}
 
-	return new BookOrder(
-		tableObject.Uuid,
-		uuids
-	)
+	return new BookOrder(tableObject.Uuid, uuids)
 }
 
 export async function UpdateBookOrder(bookOrder: BookOrder, books: Book[]) {

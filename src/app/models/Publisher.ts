@@ -25,9 +25,9 @@ export class Publisher {
 		blurhash: string
 	}
 	private authors: {
-		page: number,
-		pages: number,
-		limit: number,
+		page: number
+		pages: number
+		limit: number
 		loaded: boolean
 		isLoading: boolean
 		itemsPromiseHolder: PromiseHolder<Author[]>
@@ -54,18 +54,18 @@ export class Publisher {
 	}
 
 	async ReloadLogo() {
-		this.cachingService.ClearApiRequestCache(this.apiService.RetrievePublisherLogo.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.RetrievePublisherLogo.name
+		)
 
 		let response = await this.apiService.RetrievePublisherLogo({
 			uuid: this.uuid,
-			fields: [
-				PublisherLogoField.url,
-				PublisherLogoField.blurhash
-			]
+			fields: [PublisherLogoField.url, PublisherLogoField.blurhash]
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<PublisherLogoResource>).data
+			let responseData = (response as ApiResponse<PublisherLogoResource>)
+				.data
 
 			this.logo.url = responseData.url
 			this.logo.blurhash = responseData.blurhash
@@ -74,7 +74,9 @@ export class Publisher {
 
 	async GetAuthors(page: number = -1, limit: number = 50): Promise<Author[]> {
 		if (limit <= 0) limit = 1
-		let authorItem = this.authors.find(item => item.page == page && item.limit == limit)
+		let authorItem = this.authors.find(
+			item => item.page == page && item.limit == limit
+		)
 
 		if (authorItem != null && (authorItem.isLoading || authorItem.loaded)) {
 			let items = []
@@ -125,11 +127,20 @@ export class Publisher {
 				})
 
 				if (isSuccessStatusCode(response.status)) {
-					let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+					let responseData = (
+						response as ApiResponse<ListResponseData<AuthorResource>>
+					).data
 					authorItem.pages = responseData.pages
 
 					for (let item of responseData.items) {
-						items.push(new Author(item, this.languages, this.apiService, this.cachingService))
+						items.push(
+							new Author(
+								item,
+								this.languages,
+								this.apiService,
+								this.cachingService
+							)
+						)
 					}
 				} else {
 					authorItem.isLoading = false
@@ -159,11 +170,20 @@ export class Publisher {
 			})
 
 			if (isSuccessStatusCode(response.status)) {
-				let responseData = (response as ApiResponse<ListResponseData<AuthorResource>>).data
+				let responseData = (
+					response as ApiResponse<ListResponseData<AuthorResource>>
+				).data
 				authorItem.pages = responseData.pages
 
 				for (let item of responseData.items) {
-					items.push(new Author(item, this.languages, this.apiService, this.cachingService))
+					items.push(
+						new Author(
+							item,
+							this.languages,
+							this.apiService,
+							this.cachingService
+						)
+					)
 				}
 			} else {
 				authorItem.isLoading = false
@@ -179,7 +199,9 @@ export class Publisher {
 	}
 
 	GetAuthorPages(page: number = -1, limit: number = 50) {
-		let authorItem = this.authors.find(item => item.page == page && item.limit == limit)
+		let authorItem = this.authors.find(
+			item => item.page == page && item.limit == limit
+		)
 
 		if (authorItem != null) {
 			return authorItem.pages

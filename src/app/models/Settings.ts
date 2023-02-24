@@ -1,18 +1,19 @@
-import { TableObject, Property, GetTableObject, GetAllTableObjects } from 'dav-js'
-import { environment } from 'src/environments/environment'
-import { keys } from 'src/constants/keys'
+import {
+	TableObject,
+	Property,
+	GetTableObject,
+	GetAllTableObjects
+} from "dav-js"
+import { environment } from "src/environments/environment"
+import { keys } from "src/constants/keys"
 
 export class Settings {
 	public uuid: string
-	public book: string			// The uuid of the current book
-	public chapter: number		// The chapter of the current book
-	public progress: number		// The progress or the page of the current book
+	public book: string // The uuid of the current book
+	public chapter: number // The chapter of the current book
+	public progress: number // The progress or the page of the current book
 
-	constructor(
-		book: string = "",
-		chapter: number = 0,
-		progress: number = 0
-	) {
+	constructor(book: string = "", chapter: number = 0, progress: number = 0) {
 		this.book = book
 		this.chapter = chapter
 		this.progress = progress
@@ -26,7 +27,10 @@ export class Settings {
 	}
 
 	private async Save() {
-		let tableObject = await GetTableObject(this.uuid, environment.settingsTableId)
+		let tableObject = await GetTableObject(
+			this.uuid,
+			environment.settingsTableId
+		)
 
 		if (tableObject == null) {
 			// Create the table object
@@ -45,7 +49,10 @@ export class Settings {
 	}
 
 	public async Delete() {
-		let tableObject = await GetTableObject(this.uuid, environment.settingsTableId)
+		let tableObject = await GetTableObject(
+			this.uuid,
+			environment.settingsTableId
+		)
 		if (tableObject == null) return
 
 		await tableObject.Delete()
@@ -70,7 +77,10 @@ export async function GetSettings(): Promise<Settings> {
 }
 
 async function GetAllSettings(): Promise<Settings[]> {
-	let tableObjects = await GetAllTableObjects(environment.settingsTableId, false)
+	let tableObjects = await GetAllTableObjects(
+		environment.settingsTableId,
+		false
+	)
 	let settings: Settings[] = []
 
 	for (let tableObject of tableObjects) {
@@ -83,19 +93,25 @@ async function GetAllSettings(): Promise<Settings[]> {
 
 function ConvertTableObjectToSettings(tableObject: TableObject): Settings {
 	if (
-		tableObject == null
-		|| tableObject.TableId != environment.settingsTableId
-	) return null
+		tableObject == null ||
+		tableObject.TableId != environment.settingsTableId
+	) {
+		return null
+	}
 
 	// book
 	let book = tableObject.GetPropertyValue(keys.settingsTableBookKey) as string
 
 	// chapter
-	let chapter = tableObject.GetPropertyValue(keys.settingsTableChapterKey) as number
+	let chapter = tableObject.GetPropertyValue(
+		keys.settingsTableChapterKey
+	) as number
 	if (chapter == null) chapter = 0
 
 	// progress
-	let progress = tableObject.GetPropertyValue(keys.settingsTableProgressKey) as number
+	let progress = tableObject.GetPropertyValue(
+		keys.settingsTableProgressKey
+	) as number
 	if (progress == null) progress = 0
 
 	let settings = new Settings(book, chapter, progress)

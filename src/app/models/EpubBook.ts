@@ -1,8 +1,8 @@
-import { Property } from 'dav-js'
-import { keys } from 'src/constants/keys'
-import { Book } from './Book'
-import { EpubBookmark } from './EpubBookmark'
-import { EpubReader } from './EpubReader'
+import { Property } from "dav-js"
+import { keys } from "src/constants/keys"
+import { Book } from "./Book"
+import { EpubBookmark } from "./EpubBookmark"
+import { EpubReader } from "./EpubReader"
 
 const epubExt = "epub"
 
@@ -43,7 +43,7 @@ export class EpubBook extends Book {
 
 		// Check if the file is a valid epub file
 		let epubReader = new EpubReader()
-		if(!await epubReader.Init(fileBlob)) return null
+		if (!(await epubReader.Init(fileBlob))) return null
 
 		// Create and save the epub book
 		let book = new EpubBook(fileBlob, null, true, null)
@@ -68,8 +68,17 @@ export class EpubBook extends Book {
 		await this.Save()
 	}
 
-	public async AddBookmark(name: string, chapter: number, progress: number): Promise<string> {
-		let bookmark = await EpubBookmark.Create(this.uuid, name, chapter, progress)
+	public async AddBookmark(
+		name: string,
+		chapter: number,
+		progress: number
+	): Promise<string> {
+		let bookmark = await EpubBookmark.Create(
+			this.uuid,
+			name,
+			chapter,
+			progress
+		)
 		this.bookmarks.push(bookmark)
 		await this.Save()
 		return bookmark.uuid
@@ -98,9 +107,19 @@ export class EpubBook extends Book {
 		let properties: Property[] = [
 			{ name: keys.epubBookTableChapterKey, value: this.chapter },
 			{ name: keys.epubBookTableProgressKey, value: this.progress },
-			{ name: keys.epubBookTableTotalProgressKey, value: this.totalProgress },
-			{ name: keys.epubBookTableChapterPercentagesKey, value: this.chapterPercentages.join(','), options: { local: true } },
-			{ name: keys.epubBookTableBookmarksKey, value: bookmarkUuids.join(',') }
+			{
+				name: keys.epubBookTableTotalProgressKey,
+				value: this.totalProgress
+			},
+			{
+				name: keys.epubBookTableChapterPercentagesKey,
+				value: this.chapterPercentages.join(","),
+				options: { local: true }
+			},
+			{
+				name: keys.epubBookTableBookmarksKey,
+				value: bookmarkUuids.join(",")
+			}
 		]
 
 		await super.Save(epubExt, properties)

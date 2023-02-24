@@ -1,6 +1,6 @@
-import { TableObject, GetTableObject, Property } from 'dav-js'
-import { environment } from 'src/environments/environment'
-import { keys } from 'src/constants/keys'
+import { TableObject, GetTableObject, Property } from "dav-js"
+import { environment } from "src/environments/environment"
+import { keys } from "src/constants/keys"
 
 export class Book {
 	public uuid: string
@@ -10,7 +10,7 @@ export class Book {
 		public storeBook: string,
 		public belongsToUser: boolean,
 		public purchase: string
-	) { }
+	) {}
 
 	protected async Save(fileExt: string, properties: Property[]) {
 		let tableObject = await GetTableObject(this.uuid)
@@ -23,7 +23,9 @@ export class Book {
 			this.uuid = tableObject.Uuid
 		} else {
 			// Check if the table object has a file table object
-			let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey) as string
+			let fileUuid = tableObject.GetPropertyValue(
+				keys.bookTableFileKey
+			) as string
 			if (fileUuid) fileTableObject = await GetTableObject(fileUuid)
 		}
 
@@ -49,7 +51,9 @@ export class Book {
 		let tableObject = await GetTableObject(this.uuid)
 		if (!tableObject) return
 
-		let fileUuid = tableObject.GetPropertyValue(keys.bookTableFileKey) as string
+		let fileUuid = tableObject.GetPropertyValue(
+			keys.bookTableFileKey
+		) as string
 		let fileTableObject = await GetTableObject(fileUuid)
 
 		// Delete the file table object

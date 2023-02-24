@@ -59,7 +59,11 @@ export class StoreBook {
 			fileName: storeBookResource.file?.fileName
 		}
 		this.categories = storeBookResource.categories
-		this.releases = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+		this.releases = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
 	}
 
 	async GetCoverContent(): Promise<string> {
@@ -118,7 +122,9 @@ export class StoreBook {
 
 		this.releases.loaded = true
 		this.releases.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookReleaseResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookReleaseResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
@@ -131,6 +137,8 @@ export class StoreBook {
 
 	ClearReleases() {
 		this.releases.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookReleases.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBookReleases.name
+		)
 	}
 }

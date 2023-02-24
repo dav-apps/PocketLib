@@ -42,8 +42,16 @@ export class StoreBookCollection {
 			value: collectionResource?.name?.value ?? "",
 			language: GetLanguageByString(collectionResource?.name?.language)
 		}
-		this.names = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
-		this.storeBooks = { loaded: false, isLoading: false, itemsPromiseHolder: new PromiseHolder() }
+		this.names = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
+		this.storeBooks = {
+			loaded: false,
+			isLoading: false,
+			itemsPromiseHolder: new PromiseHolder()
+		}
 	}
 
 	async GetNames(): Promise<StoreBookCollectionNameResource[]> {
@@ -78,7 +86,11 @@ export class StoreBookCollection {
 
 		this.names.loaded = true
 		this.names.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookCollectionNameResource>>).data
+		let responseData = (
+			response as ApiResponse<
+				ListResponseData<StoreBookCollectionNameResource>
+			>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
@@ -91,7 +103,9 @@ export class StoreBookCollection {
 
 	ClearNames() {
 		this.names.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBookCollectionNames.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBookCollectionNames.name
+		)
 	}
 
 	async GetStoreBooks(): Promise<StoreBook[]> {
@@ -136,7 +150,9 @@ export class StoreBookCollection {
 
 		this.storeBooks.loaded = true
 		this.storeBooks.isLoading = false
-		let responseData = (response as ApiResponse<ListResponseData<StoreBookResource>>).data
+		let responseData = (
+			response as ApiResponse<ListResponseData<StoreBookResource>>
+		).data
 		let items = []
 
 		for (let item of responseData.items) {
@@ -149,6 +165,8 @@ export class StoreBookCollection {
 
 	ClearStoreBooks() {
 		this.storeBooks.loaded = false
-		this.cachingService.ClearApiRequestCache(this.apiService.ListStoreBooks.name)
+		this.cachingService.ClearApiRequestCache(
+			this.apiService.ListStoreBooks.name
+		)
 	}
 }
