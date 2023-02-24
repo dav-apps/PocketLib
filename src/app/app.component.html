@@ -1,7 +1,10 @@
-<div id="navbar" *ngIf="dataService.navbarVisible && !dataService.bookPageVisible">
+<div
+	id="navbar"
+	*ngIf="dataService.navbarVisible && !dataService.bookPageVisible"
+>
 	<!-- Logo + name -->
 	<a id="navbar-header" routerLink="/">
-		<img src="/assets/icons/icon-72x72.png" width="60" height="60">
+		<img src="/assets/icons/icon-72x72.png" width="60" height="60" />
 		<span>PocketLib</span>
 	</a>
 
@@ -33,19 +36,21 @@
 		>
 			<fa-icon
 				[icon]="faCircleUserRegular"
-				*ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn">
-			</fa-icon>
+				*ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn"
+			></fa-icon>
 
 			<fa-icon
 				[icon]="faCircleUserSolid"
-				*ngIf="accountButtonSelected && !dataService.dav.isLoggedIn">
-			</fa-icon>
+				*ngIf="accountButtonSelected && !dataService.dav.isLoggedIn"
+			></fa-icon>
 
 			<img
-				*ngIf="dataService.dav.isLoggedIn" 
-         	[src]="dataService.dav.user.ProfileImage" 
-         	class="rounded-circle" 
-         	height="28" width="28">
+				*ngIf="dataService.dav.isLoggedIn"
+				[src]="dataService.dav.user.ProfileImage"
+				class="rounded-circle"
+				height="28"
+				width="28"
+			/>
 		</dav-icon-button>
 
 		<dav-icon-button
@@ -53,7 +58,10 @@
 			[selected]="settingsButtonSelected"
 			(click)="navigateToSettingsPage()"
 		>
-			<fa-icon [icon]="faGearRegular" *ngIf="!settingsButtonSelected"></fa-icon>
+			<fa-icon
+				[icon]="faGearRegular"
+				*ngIf="!settingsButtonSelected"
+			></fa-icon>
 			<fa-icon [icon]="faGearSolid" *ngIf="settingsButtonSelected"></fa-icon>
 		</dav-icon-button>
 	</div>
@@ -61,21 +69,48 @@
 
 <div
 	[class.content-padding-top]="!dataService.bookPageVisible"
-	[class.content-padding-bottom]="dataService.isMobile && !dataService.bookPageVisible"
+	[class.content-padding-bottom]="
+		dataService.isMobile && !dataService.bookPageVisible
+	"
 >
 	<router-outlet></router-outlet>
 </div>
 
-<div id="bottom-navbar" *ngIf="dataService.isMobile && !dataService.bookPageVisible">
+<div
+	id="bottom-navbar"
+	*ngIf="dataService.isMobile && !dataService.bookPageVisible"
+>
 	<dav-navigation-bar>
-		<dav-navigation-bar-item [active]="libraryTabActive" (click)="navigateToLibraryPage()">
-			<fa-icon slot="icon" [icon]="faHouseRegular" *ngIf="!libraryTabActive"></fa-icon>
-			<fa-icon slot="icon" [icon]="faHouseSolid" *ngIf="libraryTabActive"></fa-icon>
+		<dav-navigation-bar-item
+			[active]="libraryTabActive"
+			(click)="navigateToLibraryPage()"
+		>
+			<fa-icon
+				slot="icon"
+				[icon]="faHouseRegular"
+				*ngIf="!libraryTabActive"
+			></fa-icon>
+			<fa-icon
+				slot="icon"
+				[icon]="faHouseSolid"
+				*ngIf="libraryTabActive"
+			></fa-icon>
 			<p slot="label">{{ libraryLabel }}</p>
 		</dav-navigation-bar-item>
-		<dav-navigation-bar-item [active]="storeTabActive" (click)="navigateToStorePage()">
-			<fa-icon slot="icon" [icon]="faBagShoppingRegular" *ngIf="!storeTabActive"></fa-icon>
-			<fa-icon slot="icon" [icon]="faBagShoppingSolid" *ngIf="storeTabActive"></fa-icon>
+		<dav-navigation-bar-item
+			[active]="storeTabActive"
+			(click)="navigateToStorePage()"
+		>
+			<fa-icon
+				slot="icon"
+				[icon]="faBagShoppingRegular"
+				*ngIf="!storeTabActive"
+			></fa-icon>
+			<fa-icon
+				slot="icon"
+				[icon]="faBagShoppingSolid"
+				*ngIf="storeTabActive"
+			></fa-icon>
 			<p slot="label">{{ storeLabel }}</p>
 		</dav-navigation-bar-item>
 	</dav-navigation-bar>

@@ -22,12 +22,12 @@ export interface AuthorListItem {
 }
 
 export interface StoreBookItem {
-	uuid: string,
-	title: string,
-	description: string,
-	language: string,
-	status: StoreBookStatus,
-	coverContent: string,
+	uuid: string
+	title: string
+	description: string
+	language: string
+	status: StoreBookStatus
+	coverContent: string
 	coverBlurhash: string
 }
 
@@ -38,21 +38,21 @@ export interface Category {
 }
 
 export interface Route {
-	url: string,
-	fullUrl?: string,
+	url: string
+	fullUrl?: string
 	params: { [key: string]: any }
 }
 
 export enum PublisherMode {
-	Normal = 0,				// If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
-	PublisherOfUser = 1,	// If the publisher belongs to the user
-	PublisherOfAdmin = 2	// If the user is an admin and the publisher belongs to the admin
+	Normal = 0, // If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
+	PublisherOfUser = 1, // If the publisher belongs to the user
+	PublisherOfAdmin = 2 // If the user is an admin and the publisher belongs to the admin
 }
 
 export enum AuthorMode {
-	Normal = 0,			// If the user is not an author and not an admin or an admin but author does not belong to admin
-	AuthorOfUser = 1,	// If the author belongs to the user
-	AuthorOfAdmin = 2	// If the user is an admin and the author belongs to the admin
+	Normal = 0, // If the user is not an author and not an admin or an admin but author does not belong to admin
+	AuthorOfUser = 1, // If the author belongs to the user
+	AuthorOfAdmin = 2 // If the user is an admin and the author belongs to the admin
 }
 
 export enum StoreBookStatus {
@@ -143,7 +143,7 @@ export interface AuthorResource {
 	firstName: string
 	lastName: string
 	bio: {
-		value: string,
+		value: string
 		language: string
 	}
 	websiteUrl: string
@@ -233,7 +233,7 @@ export interface StoreBookCollectionResource {
 	uuid: string
 	author: string
 	name: {
-		value: string,
+		value: string
 		language: string
 	}
 }
@@ -395,7 +395,7 @@ export enum StoreBookFileField {
 }
 //#endregion
 
-//#region 
+//#region
 export interface StoreBookReleaseResource {
 	uuid: string
 	storeBook: string

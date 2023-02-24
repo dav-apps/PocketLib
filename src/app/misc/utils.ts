@@ -16,14 +16,17 @@ import {
 	CategoryResource,
 	BookResource,
 	Language
-} from './types'
+} from "./types"
 
 /**
  * Recursively finds all positions in the given element and adds them to the array
- * @param element 
- * @param positions 
+ * @param element
+ * @param positions
  */
-export function FindPositionsInHtmlElement(element: Element, positions: number[]) {
+export function FindPositionsInHtmlElement(
+	element: Element,
+	positions: number[]
+) {
 	for (let i = 0; i < element.children.length; i++) {
 		// Call this function for each child
 		let child = element.children.item(i)
@@ -44,7 +47,10 @@ export function FindPositionsInHtmlElement(element: Element, positions: number[]
  * @param pageHeight The height of the page
  * @returns The optimal page break positions based on the given positions
  */
-export function FindPageBreakPositions(positions: number[], pageHeight: number): number[] {
+export function FindPageBreakPositions(
+	positions: number[],
+	pageHeight: number
+): number[] {
 	let pageBreakPositions: number[] = [0]
 
 	for (let i = 0; i < positions.length; i++) {
@@ -81,8 +87,13 @@ export function FindPositionById(currentElement: Element, id: string): number {
 	return -1
 }
 
-export function FindPageForPosition(position: number, pagePositions: number[]): number {
-	if (position >= pagePositions[pagePositions.length - 1]) return pagePositions.length - 1
+export function FindPageForPosition(
+	position: number,
+	pagePositions: number[]
+): number {
+	if (position >= pagePositions[pagePositions.length - 1]) {
+		return pagePositions.length - 1
+	}
 
 	for (let i = 0; i < pagePositions.length - 1; i++) {
 		if (position >= pagePositions[i] && position < pagePositions[i + 1]) {
@@ -101,13 +112,13 @@ export function AdaptLinkTag(tag: Node, callback: Function) {
 	if (link == null) return
 
 	if (
-		link.startsWith('http://')
-		|| link.startsWith('https://')
-		|| link.startsWith('www.')
+		link.startsWith("http://") ||
+		link.startsWith("https://") ||
+		link.startsWith("www.")
 	) {
 		// Set target = blank
 		linkTag.setAttribute("target", "blank")
-	} else if (link.indexOf('mailto:') != 0) {
+	} else if (link.indexOf("mailto:") != 0) {
 		linkTag.onclick = () => {
 			callback(link)
 			return false
@@ -136,7 +147,10 @@ export function GetDualScreenSettings() {
 	}
 
 	if (screenSegments) {
-		if (screenSegments.length > 1 && screenSegments[0].width == screenSegments[1].width) {
+		if (
+			screenSegments.length > 1 &&
+			screenSegments[0].width == screenSegments[1].width
+		) {
 			settings.dualScreenLayout = true
 
 			// Calculate the width of the fold
@@ -151,10 +165,7 @@ export function GetDualScreenSettings() {
 }
 
 export function GetAllLanguages(): Language[] {
-	return [
-		Language.en,
-		Language.de
-	]
+	return [Language.en, Language.de]
 }
 
 export function GetStoreBookStatusByString(status: string): StoreBookStatus {
@@ -170,7 +181,9 @@ export function GetStoreBookStatusByString(status: string): StoreBookStatus {
 	}
 }
 
-export function GetStoreBookReleaseStatusByString(status: string): StoreBookReleaseStatus {
+export function GetStoreBookReleaseStatusByString(
+	status: string
+): StoreBookReleaseStatus {
 	switch (status) {
 		case "published":
 			return StoreBookReleaseStatus.Published
@@ -194,7 +207,7 @@ export function AdaptCoverWidthHeightToAspectRatio(
 	aspectRatio: string
 ): number {
 	if (aspectRatio == null) return aproxWidth
-	let parts = aspectRatio.split(':')
+	let parts = aspectRatio.split(":")
 
 	if (parts.length > 1 && parts[0].length > 0 && parts[1].length > 0) {
 		let widthAspectRatio = +parts[0]
@@ -226,7 +239,9 @@ export function GenerateTwitterLink(twitterUsername: string): string {
 	return `https://twitter.com/${twitterUsername}`
 }
 
-export function ResponseDataToPublisherResource(responseData: any): PublisherResource {
+export function ResponseDataToPublisherResource(
+	responseData: any
+): PublisherResource {
 	let publisherResource: PublisherResource = {
 		uuid: responseData.uuid,
 		name: responseData.name,
@@ -248,7 +263,9 @@ export function ResponseDataToPublisherResource(responseData: any): PublisherRes
 	return publisherResource
 }
 
-export function ResponseDataToPublisherLogoResource(responseData: any): PublisherLogoResource {
+export function ResponseDataToPublisherLogoResource(
+	responseData: any
+): PublisherLogoResource {
 	return {
 		uuid: responseData.uuid,
 		url: responseData.url,
@@ -256,7 +273,9 @@ export function ResponseDataToPublisherLogoResource(responseData: any): Publishe
 	}
 }
 
-export function ResponseDataToAuthorResource(responseData: any): AuthorResource {
+export function ResponseDataToAuthorResource(
+	responseData: any
+): AuthorResource {
 	let authorResource: AuthorResource = {
 		uuid: responseData.uuid,
 		publisher: responseData.publisher,
@@ -287,7 +306,9 @@ export function ResponseDataToAuthorResource(responseData: any): AuthorResource 
 	return authorResource
 }
 
-export function ResponseDataToAuthorBioResource(responseData: any): AuthorBioResource {
+export function ResponseDataToAuthorBioResource(
+	responseData: any
+): AuthorBioResource {
 	return {
 		uuid: responseData.uuid,
 		bio: responseData.bio,
@@ -295,7 +316,9 @@ export function ResponseDataToAuthorBioResource(responseData: any): AuthorBioRes
 	}
 }
 
-export function ResponseDataToAuthorProfileImageResource(responseData: any): AuthorProfileImageResource {
+export function ResponseDataToAuthorProfileImageResource(
+	responseData: any
+): AuthorProfileImageResource {
 	return {
 		uuid: responseData.uuid,
 		url: responseData.url,
@@ -303,7 +326,9 @@ export function ResponseDataToAuthorProfileImageResource(responseData: any): Aut
 	}
 }
 
-export function ResponseDataToStoreBookCollectionResource(responseData: any): StoreBookCollectionResource {
+export function ResponseDataToStoreBookCollectionResource(
+	responseData: any
+): StoreBookCollectionResource {
 	let storeBookCollectionResource: StoreBookCollectionResource = {
 		uuid: responseData.uuid,
 		author: responseData.author,
@@ -320,7 +345,9 @@ export function ResponseDataToStoreBookCollectionResource(responseData: any): St
 	return storeBookCollectionResource
 }
 
-export function ResponseDataToStoreBookCollectionNameResource(responseData: any): StoreBookCollectionNameResource {
+export function ResponseDataToStoreBookCollectionNameResource(
+	responseData: any
+): StoreBookCollectionNameResource {
 	return {
 		uuid: responseData.uuid,
 		name: responseData.name,
@@ -328,7 +355,9 @@ export function ResponseDataToStoreBookCollectionNameResource(responseData: any)
 	}
 }
 
-export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreBookSeriesResource {
+export function ResponseDataToStoreBookSeriesResource(
+	responseData: any
+): StoreBookSeriesResource {
 	return {
 		uuid: responseData.uuid,
 		author: responseData.author,
@@ -337,7 +366,9 @@ export function ResponseDataToStoreBookSeriesResource(responseData: any): StoreB
 	}
 }
 
-export function ResponseDataToStoreBookResource(responseData: any): StoreBookResource {
+export function ResponseDataToStoreBookResource(
+	responseData: any
+): StoreBookResource {
 	let storeBookResource: StoreBookResource = {
 		uuid: responseData.uuid,
 		collection: responseData.collection,
@@ -371,7 +402,9 @@ export function ResponseDataToStoreBookResource(responseData: any): StoreBookRes
 	return storeBookResource
 }
 
-export function ResponseDataToStoreBookCoverResource(responseData: any): StoreBookCoverResource {
+export function ResponseDataToStoreBookCoverResource(
+	responseData: any
+): StoreBookCoverResource {
 	return {
 		uuid: responseData.uuid,
 		url: responseData.url,
@@ -380,14 +413,18 @@ export function ResponseDataToStoreBookCoverResource(responseData: any): StoreBo
 	}
 }
 
-export function ResponseDataToStoreBookFileResource(responseData: any): StoreBookFileResource {
+export function ResponseDataToStoreBookFileResource(
+	responseData: any
+): StoreBookFileResource {
 	return {
 		uuid: responseData.uuid,
 		fileName: responseData.file_name
 	}
 }
 
-export function ResponseDataToStoreBookReleaseResource(responseData: any): StoreBookReleaseResource {
+export function ResponseDataToStoreBookReleaseResource(
+	responseData: any
+): StoreBookReleaseResource {
 	let storeBookReleaseResource: StoreBookReleaseResource = {
 		uuid: responseData.uuid,
 		storeBook: responseData.store_book,
@@ -421,7 +458,9 @@ export function ResponseDataToStoreBookReleaseResource(responseData: any): Store
 	return storeBookReleaseResource
 }
 
-export function ResponseDataToCategoryResource(responseData: any): CategoryResource {
+export function ResponseDataToCategoryResource(
+	responseData: any
+): CategoryResource {
 	let categoryResource: CategoryResource = {
 		uuid: responseData.uuid,
 		key: responseData.key,
