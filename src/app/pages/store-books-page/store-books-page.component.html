@@ -2,11 +2,12 @@
 <div class="container mb-4 px-0 slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mb-2">
 		<dav-header
-			[header]="header"
 			size="large"
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
-		></dav-header>
+		>
+			{{ header }}
+		</dav-header>
 	</div>
 
 	<div
@@ -50,11 +51,12 @@
 	>
 		<div class="mb-2">
 			<dav-header
-				[header]="header"
 				size="large"
 				backButtonVisible
 				(backButtonClick)="BackButtonClick()"
-			></dav-header>
+			>
+				{{ header }}
+			</dav-header>
 		</div>
 
 		<div

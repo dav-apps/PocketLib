@@ -2,10 +2,11 @@
 <div class="container slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mb-4">
 		<dav-header
-			[header]="locale.title"
 			backButtonVisible
 			(backButtonClick)="GoBack()"
-		></dav-header>
+		>
+			{{ locale.title }}
+		</dav-header>
 	</div>
 
 	<!-- Error message bar -->
@@ -123,10 +124,11 @@
 	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
-				[header]="locale.title"
 				backButtonVisible
 				(backButtonClick)="GoBack()"
-			></dav-header>
+			>
+				{{ locale.title }}
+			</dav-header>
 		</div>
 
 		<!-- Error message bar -->

@@ -2,12 +2,13 @@
 <div class="container slide-up-in" *ngIf="!dualScreenLayout">
 	<div class="mt-3 mb-4">
 		<dav-header
-			[header]="book.title"
 			backButtonVisible
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
 			(editButtonClick)="ShowEditTitleDialog()"
-		></dav-header>
+		>
+			{{ book.title }}
+		</dav-header>
 	</div>
 
 	<div
@@ -340,12 +341,13 @@
 	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
-				[header]="book.title"
 				backButtonVisible
 				editButtonVisible
 				(backButtonClick)="BackButtonClick()"
 				(editButtonClick)="ShowEditTitleDialog()"
-			></dav-header>
+			>
+				{{ book.title }}
+			</dav-header>
 		</div>
 
 		<div
