@@ -3,9 +3,9 @@
 	class="container mb-4 slide-up-in"
 	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout"
 >
-	<h1 class="text-center fw-light text-color">
+	<dav-header size="large">
 		{{ locale.title }}
-	</h1>
+	</dav-header>
 
 	<h5 class="text-center mt-4 text-color">
 		{{ locale.text1 }}
@@ -84,9 +84,9 @@
 >
 	<!-- Left screen -->
 	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<h1 class="text-center fw-light text-color">
+		<dav-header size="large">
 			{{ locale.title }}
-		</h1>
+		</dav-header>
 
 		<h5 class="text-center mt-4 text-color">
 			{{ locale.text1 }}
@@ -171,15 +171,16 @@
 	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
 	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout"
 >
-	<h1 class="text-center fw-light text-color" style="margin-bottom: 40px">
-		{{ locale.title }}
-	</h1>
+	<div class="header-logged-in-container">
+		<dav-header size="large">
+			{{ locale.title }}
+		</dav-header>
+	</div>
 
 	<pocketlib-user-profile
 		[compact]="width < 410"
 		(logoutClick)="logoutDialogVisible = true"
-	>
-	</pocketlib-user-profile>
+	></pocketlib-user-profile>
 
 	<!--
 	<div class="text-color" style="margin-top: 90px" *ngIf="dataService.dav.user.Plan < 2">
@@ -197,9 +198,11 @@
 >
 	<!-- Left screen -->
 	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<h1 class="text-center fw-light text-color" style="margin-bottom: 40px">
-			{{ locale.title }}
-		</h1>
+		<div class="header-logged-in-container">
+			<dav-header size="large">
+				{{ locale.title }}
+			</dav-header>
+		</div>
 
 		<pocketlib-user-profile
 			[compact]="width < 410"
