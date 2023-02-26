@@ -1,8 +1,8 @@
 <!-- Normal layout -->
 <div class="container d-flex flex-column slide-up-in" *ngIf="!dualScreenLayout">
-	<h1 class="text-center fw-light text-color">
+	<dav-header size="large">
 		{{ locale.title }}
-	</h1>
+	</dav-header>
 
 	<div class="setting-container mx-auto mt-4">
 		<!-- Open last read book -->
@@ -86,9 +86,9 @@
 		class="w-50 d-flex flex-column"
 		[style.marginRight.px]="dualScreenFoldMargin"
 	>
-		<h1 class="text-center fw-light text-color">
+		<dav-header size="large">
 			{{ locale.title }}
-		</h1>
+		</dav-header>
 
 		<div class="setting-container mx-auto mt-4">
 			<dav-setting [header]="locale.openLastReadBook">
