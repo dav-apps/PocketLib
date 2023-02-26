@@ -109,20 +109,28 @@ export class BlurhashImageComponent {
 
 		// Show the fallback image or the blurhash, if there is one
 		this.image.nativeElement.src = fallbackSrc
-
 		if (this.src == null) return
 
-		// Start loading the proper image
-		let img = document.createElement("img")
-		img.src = this.src
-		img.onload = () => {
-			// Show the proper image
-			this.image.nativeElement.src = this.src
+		const intersectionObserver = new IntersectionObserver(entries => {
+			if (entries[0].intersectionRatio <= 0) return
 
-			if (this.fillWidth) {
-				this.image.nativeElement.width = this.width
+			// Start loading the proper image
+			let img = document.createElement("img")
+			img.src = this.src
+
+			img.onload = () => {
+				// Show the proper image
+				this.image.nativeElement.src = this.src
+
+				if (this.fillWidth) {
+					this.image.nativeElement.width = this.width
+				}
 			}
-		}
+
+			intersectionObserver.disconnect()
+		})
+
+		intersectionObserver.observe(this.image.nativeElement)
 	}
 
 	SetHover(hover: boolean) {
