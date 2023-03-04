@@ -1,6 +1,5 @@
-import { Component, HostListener } from "@angular/core"
+import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { faCoins, faHandHoldingUsd } from "@fortawesome/free-solid-svg-icons"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
@@ -23,19 +22,11 @@ import { Author } from "src/app/models/Author"
 
 @Component({
 	selector: "pocketlib-author-page",
-	templateUrl: "./author-page.component.html",
-	styleUrls: ["./author-page.component.scss"]
+	templateUrl: "./author-page.component.html"
 })
 export class AuthorPageComponent {
 	locale = enUS.authorPage
-	faCoins = faCoins
-	faHandHoldingUsd = faHandHoldingUsd
 	faPlusLight = faPlusLight
-	section1Height: number = 600
-	section1TextMarginTop: number = 200
-	section2Height: number = 600
-	section3Height: number = 400
-	authorSampleProfileImageWidth: number = 392
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	uuid: string
@@ -73,8 +64,6 @@ export class AuthorPageComponent {
 	}
 
 	async ngOnInit() {
-		this.setSize()
-
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		if (this.dataService.userIsAdmin && !this.uuid) {
@@ -103,47 +92,11 @@ export class AuthorPageComponent {
 					})
 				}
 			}
-		}
-	}
-
-	@HostListener("window:resize")
-	setSize() {
-		let navbarHeight = window.innerWidth < 600 ? 56 : 64
-		this.section1Height = window.innerHeight - navbarHeight
-		this.section1TextMarginTop = this.section1Height * 0.36
-
-		if (window.innerWidth < 600) {
-			// Small width
-			this.section2Height = 850
-			this.section3Height = 500
-		} else if (window.innerWidth < 768) {
-			// Medium width
-			this.section2Height = 800
-			this.section3Height = 450
-		} else {
-			// Large width
-			this.section2Height = 600
-			this.section3Height = 400
-		}
-
-		if (window.innerWidth < 980 && window.innerWidth >= 768) {
-			this.authorSampleProfileImageWidth = 350
-		} else {
-			this.authorSampleProfileImageWidth = 392
-		}
-	}
-
-	createProfileButtonClick() {
-		if (this.dataService.dav.isLoggedIn) {
-			// Redirect to the Author setup page
-			this.router.navigate(["author", "setup"])
-		} else {
-			// Redirect to the Account page
-			this.router.navigate(["account"], {
-				queryParams: {
-					redirect: "author/setup"
-				}
-			})
+		} else if (
+			!this.dataService.userAuthor &&
+			!this.dataService.userIsAdmin
+		) {
+			this.router.navigate(["/"])
 		}
 	}
 

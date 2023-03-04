@@ -1,6 +1,6 @@
 //#region en
 const enDefaults = {
-   libraryPage: {
+	libraryPage: {
 		libraryEmpty: "Your library is currently empty...",
 		allBooks: "All books",
 		noBooks: "No books found",
@@ -20,7 +20,8 @@ const enDefaults = {
 		},
 		removeBookDialog: {
 			header: "Remove book",
-			description: "Are you sure you want to remove this book from your library?"
+			description:
+				"Are you sure you want to remove this book from your library?"
 		},
 		loginToAccessBookDialog: {
 			header: "Login required",
@@ -36,8 +37,8 @@ const enDefaults = {
 		remove: "Remove",
 		close: "Close",
 		cancel: "Cancel"
-   },
-   accountPage: {
+	},
+	accountPage: {
 		title: "Your Account",
 		text1: "Save your library and access it from anywhere",
 		text2: "Use the same library on all your devices",
@@ -52,13 +53,13 @@ const enDefaults = {
 			description: "Are you sure you want to log out?"
 		},
 		cancel: "Cancel"
-   },
+	},
 	settingsPage: {
-      title: "Settings",
-      theme: "App theme",
-      lightTheme: "Light",
-      darkTheme: "Dark",
-      systemTheme: "System default",
+		title: "Settings",
+		theme: "App theme",
+		lightTheme: "Light",
+		darkTheme: "Dark",
+		systemTheme: "System default",
 		openLastReadBook: "Open the last book read when starting the app",
 		news: "News and updates",
 		github: "PocketLib on GitHub",
@@ -68,31 +69,14 @@ const enDefaults = {
 		updateError: "Error while installing the update",
 		noUpdateAvailable: "The app is up-to-date",
 		activateUpdate: "Activate update"
-   },
-   developerPage: {
-      landingHeader1: "Build on PocketLib",
-      landingSubheader1: "Integrate PocketLib into your app or Ebook-Reader",
-      viewDocs: "View documentation",
-      createApp: "Create your first app",
-      login: "Log in to create your first app",
-      header: "Your Apps"
-   },
-   newAppPage: {
+	},
+	newAppPage: {
 		title: "New app",
 		create: "Create",
 		name: "Name",
 		redirectUrl: "Redirect url"
-   },
-   authorPage: {
-      landingSection1Header: "Publish on PocketLib",
-		landingSection1Subheader: "Put your book into the PocketLib Store",
-		landingSection2Header: "Create your profile",
-		landingSection2Description: "Customize your profile with your profile picture and a description. You can link to your website and your social media pages.<br><br>All your published books are listed here.",
-		landingSection3Header: "Earn money",
-		landingSection3Description: "80 percent of the revenue from your books go directly to you.<br>For users with a subscription, the monthly amount is divided equally between the authors of the books they read.",
-		landingSection4Header: "Join a growing number of authors",
-      createProfile: "Create your profile",
-		login: "Log in to create your profile",
+	},
+	authorPage: {
 		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
@@ -104,7 +88,8 @@ const enDefaults = {
 				nameMissing: "Please enter a name",
 				nameTooShort: "The name is too short",
 				nameTooLong: "The name is too long",
-				unexpectedError: "An unexpected error occured. Please try it again later."
+				unexpectedError:
+					"An unexpected error occured. Please try it again later."
 			}
 		},
 		createAuthorDialog: {
@@ -120,7 +105,8 @@ const enDefaults = {
 				lastNameTooShort: "The last name is too short",
 				firstNameTooLong: "The first name is too long",
 				lastNameTooLong: "The last name is too long",
-				unexpectedError: "An unexpected error occured. Please try again later."
+				unexpectedError:
+					"An unexpected error occured. Please try again later."
 			}
 		},
 		cancel: "Cancel",
@@ -145,7 +131,8 @@ const enDefaults = {
 	authorBookDashboardPage: {
 		published: "Your book is published!",
 		inReview: "You book is being reviewed...",
-		inReviewDescription: "We will notify you as soon as your book is published.",
+		inReviewDescription:
+			"We will notify you as soon as your book is published.",
 		hidden: "Your book is not listed",
 		showDetails: "Show details",
 		showReleases: "Show releases",
@@ -167,7 +154,8 @@ const enDefaults = {
 			releaseNameTextfieldLabel: "Release name",
 			releaseNameTextfieldPlaceholder: "What was changed?",
 			releaseNotesTextfieldLabel: "Release details",
-			releaseNotesTextfieldPlaceholder: "Here you can describe in detail what changes you have made (optional)"
+			releaseNotesTextfieldPlaceholder:
+				"Here you can describe in detail what changes you have made (optional)"
 		},
 		releaseNotes: "Release details",
 		cover: "Cover",
@@ -204,7 +192,8 @@ const enDefaults = {
 			priceInvalid: "The price is invalid",
 			isbnInvalid: "The ISBN is invalid",
 			unexpectedError: "An unexpected error occured",
-			unexpectedErrorLong: "An unexpected error occured. Please try it again."
+			unexpectedErrorLong:
+				"An unexpected error occured. Please try it again."
 		}
 	},
 	authorCollectionPage: {
@@ -239,15 +228,18 @@ const enDefaults = {
 			titleTextfieldPlaceholder: "The Littlest Elf"
 		},
 		collectionSection: {
-			description: "Is this book a different version, a new edition or a translation of another book you have already published on PocketLib?",
+			description:
+				"Is this book a different version, a new edition or a translation of another book you have already published on PocketLib?",
 			newPublication: "New publication"
 		},
 		descriptionSection: {
 			description: "Enter a description.",
-			descriptionTextfieldPlaceholder: "This book tells the story of a teensy-weensy little man who scurries around Fairyland having all sorts of adorable adventures."
+			descriptionTextfieldPlaceholder:
+				"This book tells the story of a teensy-weensy little man who scurries around Fairyland having all sorts of adorable adventures."
 		},
 		categoriesSection: {
-			description: "Choose the appropriate categories for your book (maximum 3)."
+			description:
+				"Choose the appropriate categories for your book (maximum 3)."
 		},
 		priceSection: {
 			description: "Specify the price for your book."
@@ -271,7 +263,8 @@ const enDefaults = {
 		},
 		leavePageDialog: {
 			header: "Leave page",
-			description: "Are you sure? The data you have entered will not be saved.",
+			description:
+				"Are you sure? The data you have entered will not be saved.",
 			cancel: "Cancel",
 			leave: "Leave"
 		},
@@ -282,7 +275,8 @@ const enDefaults = {
 	},
 	newSeriesPage: {
 		title: "Create book series",
-		description: "Choose the language and the name for the book series.<br>Then you can select the books that belong to the series.",
+		description:
+			"Choose the language and the name for the book series.<br>Then you can select the books that belong to the series.",
 		nameTextfieldLabel: "Name",
 		nameTextfieldPlaceholder: "Name of the book series",
 		noBooksMessage: "There are no available books in the selected language.",
@@ -302,7 +296,8 @@ const enDefaults = {
 			emailMissing: "Please enter your email",
 			passwordMissing: "Please enter your password",
 			unexpectedErrorShort: "Unexpected error ({0})",
-			unexpectedErrorLong: "An unexpected error occured. Please try it again."
+			unexpectedErrorLong:
+				"An unexpected error occured. Please try it again."
 		}
 	},
 	storeBookPage: {
@@ -315,21 +310,26 @@ const enDefaults = {
 		free: "Free",
 		loginRequiredDialog: {
 			header: "Login required",
-			description: "Log in to get access to this book and to automatically save your books and your progress."
+			description:
+				"Log in to get access to this book and to automatically save your books and your progress."
 		},
 		noAccessDialog: {
 			header: "No access",
-			description: "Purchase this book or upgrade to dav Pro to read this book."
+			description:
+				"Purchase this book or upgrade to dav Pro to read this book."
 		},
 		buyBookDialog: {
 			header: "Buy book",
-			description: "When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
-			descriptionNotLoggedIn: "When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
+			description:
+				"When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
+			descriptionNotLoggedIn:
+				"When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
 			continue: "Continue"
 		},
 		errorDialog: {
 			header: "Error",
-			description: "An error occured. Please check your internet connection or try it again later."
+			description:
+				"An error occured. Please check your internet connection or try it again later."
 		},
 		learnMore: "Learn more",
 		cancel: "Cancel",
@@ -344,14 +344,15 @@ const enDefaults = {
 			nameMissing: "Please enter a name",
 			nameTooShort: "The name is too short",
 			nameTooLong: "The name is too long",
-			unexpectedError: "An unexpected error occured. Please try it again later."
+			unexpectedError:
+				"An unexpected error occured. Please try it again later."
 		}
 	},
-   epubViewer: {
-      toc: "Table of contents",
-      bookmarks: "Bookmarks",
-      noBookmarks: "You have no bookmarks",
-      untitledBookmark: "Untitled bookmark",
+	epubViewer: {
+		toc: "Table of contents",
+		bookmarks: "Bookmarks",
+		noBookmarks: "You have no bookmarks",
+		untitledBookmark: "Untitled bookmark",
 		bottomSheet: {
 			back: "Back",
 			addBookmark: "Add bookmark",
@@ -359,10 +360,10 @@ const enDefaults = {
 			bookmarks: "Bookmarks",
 			toc: "Table of contents"
 		}
-   },
-   pdfViewer: {
-      bookmarks: "Bookmarks",
-      noBookmarks: "You have no bookmarks",
+	},
+	pdfViewer: {
+		bookmarks: "Bookmarks",
+		noBookmarks: "You have no bookmarks",
 		page: "Page",
 		bottomSheet: {
 			back: "Back",
@@ -397,7 +398,8 @@ const enDefaults = {
 				nameTooLong: "The name is too long",
 				websiteUrlInvalid: "The link is invalid",
 				usernameInvalid: "The username is invalid",
-				unexpectedError: "An unexpected error occured. Please try again later."
+				unexpectedError:
+					"An unexpected error occured. Please try again later."
 			}
 		},
 		createAuthorDialog: {
@@ -413,7 +415,8 @@ const enDefaults = {
 				lastNameTooShort: "The last name is too short",
 				firstNameTooLong: "The first name is too long",
 				lastNameTooLong: "The last name is too long",
-				unexpectedError: "An unexpected error occured. Please try again later."
+				unexpectedError:
+					"An unexpected error occured. Please try again later."
 			}
 		},
 		errors: {
@@ -459,18 +462,21 @@ const enDefaults = {
 				lastNameTooLong: "The last name is too long",
 				websiteUrlInvalid: "The link is invalid",
 				usernameInvalid: "The username is invalid",
-				unexpectedError: "An unexpected error occured. Please try again later."
+				unexpectedError:
+					"An unexpected error occured. Please try again later."
 			}
 		},
 		errors: {
 			profileImageFileTooLarge: "The image file is too large",
-			profileImageUploadFailed: "There was an error in uploading the profile image",
+			profileImageUploadFailed:
+				"There was an error in uploading the profile image",
 			bioTooShort: "Your biography is too short",
 			bioTooLong: "Your biography is too long",
 			unexpectedError: "An unexpected error occured"
 		},
 		messages: {
-			providerMessage: "<a href='{0}' target='blank'>Register as a provider</a> so that your earnings can be transferred."
+			providerMessage:
+				"<a href='{0}' target='blank'>Register as a provider</a> so that your earnings can be transferred."
 		},
 		edit: "Edit",
 		cancel: "Cancel",
@@ -481,7 +487,7 @@ const enDefaults = {
 		recentlyPublished: "Recently published books",
 		moreBooksInCategory: "More books in this category",
 		moreBooksInCategories: "More books in these categories",
-		moreOfSeries: "More from the series \"{0}\""
+		moreOfSeries: 'More from the series "{0}"'
 	},
 	horizontalAuthorList: {
 		newAuthors: "New authors"
@@ -543,7 +549,7 @@ export var enGB = enDefaults
 
 //#region de
 const deDefaults = {
-   libraryPage: {
+	libraryPage: {
 		libraryEmpty: "Deine Bibliothek ist zurzeit leer...",
 		allBooks: "Alle Bücher",
 		noBooks: "Keine Bücher gefunden",
@@ -563,7 +569,8 @@ const deDefaults = {
 		},
 		removeBookDialog: {
 			header: "Buch entfernen",
-			description: "Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
+			description:
+				"Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
 		},
 		loginToAccessBookDialog: {
 			header: "Anmeldung erforderlich",
@@ -579,8 +586,8 @@ const deDefaults = {
 		remove: "Entfernen",
 		close: "Schließen",
 		cancel: "Abbrechen"
-   },
-   accountPage: {
+	},
+	accountPage: {
 		title: "Dein Account",
 		text1: "Sichere deine Bibliothek und greife von überall darauf zu",
 		text2: "Nutze die gleiche Bibliothek auf all deinen Geräten",
@@ -595,13 +602,13 @@ const deDefaults = {
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
 		},
 		cancel: "Abbrechen"
-   },
-   settingsPage: {
-      title: "Einstellungen",
-      theme: "App-Design",
-      lightTheme: "Hell",
-      darkTheme: "Dunkel",
-      systemTheme: "System-Standard",
+	},
+	settingsPage: {
+		title: "Einstellungen",
+		theme: "App-Design",
+		lightTheme: "Hell",
+		darkTheme: "Dunkel",
+		systemTheme: "System-Standard",
 		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten der App",
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
@@ -612,29 +619,14 @@ const deDefaults = {
 		noUpdateAvailable: "Die App ist aktuell",
 		activateUpdate: "Update aktivieren"
 	},
-	developerPage: {
-      landingHeader1: "Baue auf PocketLib",
-      landingSubheader1: "Integriere PocketLib in deine App oder deinen Ebook-Reader",
-      viewDocs: "Dokumentation ansehen",
-      createApp: "Erstelle deine erste App",
-		login: "Melde dich an und erstelle deine erste App",
-		header: "Deine Apps"
-   },
-   newAppPage: {
+	newAppPage: {
 		title: "Neue App",
 		create: "Erstellen",
 		name: "Name",
 		redirectUrl: "Weiterleitungs-URL"
-   },
-   authorPage: {
-      landingSection1Header: "Veröffentliche auf PocketLib",
-		landingSection1Subheader: "Setze dein Buch in den PocketLib Store",
-		landingSection2Header: "Erstelle dein Profil",
-		landingSection2Description: "Gestalte dein Profil mit deinem Profilbild und einer Beschreibung. Du kannst auf deine Webseite und deine Seiten in sozialen Medien verlinken.<br><br>Hier werden alle deine veröffentlichten Bücher aufgelistet.",
-		landingSection3Header: "Verdiene Geld",
-		landingSection3Description: "80 Prozent der Einnahmen deiner Bücher gehen direkt an dich.<br>Bei Nutzern mit Abo wird der monatliche Betrag gleichmäßig zwischen den Autoren der gelesenen Bücher aufgeteilt.",
-		landingSection4Header: "Trete einer wachsenden Anzahl an Autoren bei",
-      createProfile: "Erstelle dein Profil",
+	},
+	authorPage: {
+		createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
 		yourPublishers: "Deine Verlage",
 		yourAuthors: "Deine Autoren",
@@ -647,7 +639,8 @@ const deDefaults = {
 				nameMissing: "Bitte gib einen Namen ein",
 				nameTooShort: "Der Name ist zu kurz",
 				nameTooLong: "Der Name ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+				unexpectedError:
+					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		createAuthorDialog: {
@@ -663,7 +656,8 @@ const deDefaults = {
 				lastNameTooShort: "Der Nachname ist zu kurz",
 				firstNameTooLong: "Der Vorname ist zu lang",
 				lastNameTooLong: "Der Nachname ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+				unexpectedError:
+					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		cancel: "Abbrechen",
@@ -682,13 +676,15 @@ const deDefaults = {
 			lastNameTooShort: "Der Nachname ist zu kurz",
 			firstNameTooLong: "Der Vorname ist zu lang",
 			lastNameTooLong: "Der Nachname ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+			unexpectedError:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
 	},
 	authorBookDashboardPage: {
 		published: "Dein Buch ist veröffentlicht!",
 		inReview: "Dein Buch wird überprüft...",
-		inReviewDescription: "Wir benachrichtigen dich, sobald dein Buch veröffentlicht wurde.",
+		inReviewDescription:
+			"Wir benachrichtigen dich, sobald dein Buch veröffentlicht wurde.",
 		hidden: "Dein Buch ist nicht gelistet.",
 		showDetails: "Details anzeigen",
 		showReleases: "Änderungsverlauf anzeigen",
@@ -710,7 +706,8 @@ const deDefaults = {
 			releaseNameTextfieldLabel: "Name der Veröffentlichung",
 			releaseNameTextfieldPlaceholder: "Was wurde geändert?",
 			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
-			releaseNotesTextfieldPlaceholder: "Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)"
+			releaseNotesTextfieldPlaceholder:
+				"Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)"
 		},
 		releaseNotes: "Details der Veröffentlichung",
 		cover: "Cover",
@@ -747,7 +744,8 @@ const deDefaults = {
 			priceInvalid: "Der Preis ist ungültig",
 			isbnInvalid: "Die ISBN ist ungültig",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten",
-			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+			unexpectedErrorLong:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
 	},
 	authorCollectionPage: {
@@ -782,21 +780,25 @@ const deDefaults = {
 			titleTextfieldPlaceholder: "Das winzigste Elflein"
 		},
 		collectionSection: {
-			description: "Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?",
+			description:
+				"Handelt es sich bei diesem Buch um eine andere Version, eine neue Auflage oder eine Übersetzung eines anderen Buches, das du bereits auf PocketLib veröffentlicht hast?",
 			newPublication: "Neue Veröffentlichung"
 		},
 		descriptionSection: {
 			description: "Gib eine Beschreibung an.",
-			descriptionTextfieldPlaceholder: "Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt."
+			descriptionTextfieldPlaceholder:
+				"Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt."
 		},
 		categoriesSection: {
-			description: "Wähle die passenden Kategorien für dein Buch (maximal 3)."
+			description:
+				"Wähle die passenden Kategorien für dein Buch (maximal 3)."
 		},
 		priceSection: {
 			description: "Gib den Preis für dein Buch an."
 		},
 		isbnSection: {
-			description: "Falls dein Buch eine ISBN hat, kannst du sie hier eintragen."
+			description:
+				"Falls dein Buch eine ISBN hat, kannst du sie hier eintragen."
 		},
 		coverSection: {
 			description: "Lade ein Cover für dein Buch hoch.",
@@ -814,22 +816,27 @@ const deDefaults = {
 		},
 		leavePageDialog: {
 			header: "Seite verlassen",
-			description: "Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
+			description:
+				"Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
 			cancel: "Abbrechen",
 			leave: "Verlassen"
 		},
-		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
+		errorMessage:
+			"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
 		previous: "Zurück",
 		next: "Weiter",
 		finish: "Fertigstellen"
 	},
 	newSeriesPage: {
 		title: "Buch-Reihe erstellen",
-		description: "Wähle die Sprache und den Namen für die Buch-Reihe.<br>Anschließend kannst du die Bücher auswählen, die zu der Reihe gehören.",
+		description:
+			"Wähle die Sprache und den Namen für die Buch-Reihe.<br>Anschließend kannst du die Bücher auswählen, die zu der Reihe gehören.",
 		nameTextfieldLabel: "Name",
 		nameTextfieldPlaceholder: "Name der Buch-Reihe",
-		noBooksMessage: "In der ausgewählten Sprache gibt es keine verfügbaren Bücher.",
-		errorMessage: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
+		noBooksMessage:
+			"In der ausgewählten Sprache gibt es keine verfügbaren Bücher.",
+		errorMessage:
+			"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
 		create: "Erstellen"
 	},
 	loginPage: {
@@ -840,12 +847,13 @@ const deDefaults = {
 		passwordTextfieldPlaceholder: "Dein Passwort",
 		login: "Anmelden",
 		deviceInfoUnknown: "Unbekannt",
-      errors: {
+		errors: {
 			loginFailed: "Anmeldung fehlgeschlagen",
 			emailMissing: "Bitte gib deine Email-Adresse ein",
 			passwordMissing: "Bitte gib dein Passwort ein",
 			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
-			unexpectedErrorLong: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
+			unexpectedErrorLong:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
 	},
 	storeBookPage: {
@@ -858,21 +866,26 @@ const deDefaults = {
 		free: "Kostenlos",
 		loginRequiredDialog: {
 			header: "Anmeldung erforderlich",
-			description: "Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
+			description:
+				"Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
 		},
 		noAccessDialog: {
 			header: "Kein Zugriff",
-			description: "Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen."
+			description:
+				"Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen."
 		},
 		buyBookDialog: {
 			header: "Buch kaufen",
-			description: "Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
-			descriptionNotLoggedIn: "Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
+			description:
+				"Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
+			descriptionNotLoggedIn:
+				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 			continue: "Weiter"
 		},
 		errorDialog: {
 			header: "Fehler",
-			description: "Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
+			description:
+				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
 		learnMore: "Mehr erfahren",
 		cancel: "Abbrechen",
@@ -887,14 +900,15 @@ const deDefaults = {
 			nameMissing: "Bitte gib einen Namen ein",
 			nameTooShort: "Der Name ist zu kurz",
 			nameTooLong: "Der Name ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+			unexpectedError:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
 	},
-   epubViewer: {
-      toc: "Inhaltsverzeichnis",
-      bookmarks: "Lesezeichen",
-      noBookmarks: "Du hast keine Lesezeichen",
-      untitledBookmark: "Unbenanntes Lesezeichen",
+	epubViewer: {
+		toc: "Inhaltsverzeichnis",
+		bookmarks: "Lesezeichen",
+		noBookmarks: "Du hast keine Lesezeichen",
+		untitledBookmark: "Unbenanntes Lesezeichen",
 		bottomSheet: {
 			back: "Zurück",
 			addBookmark: "Lesezeichen hinzufügen",
@@ -904,8 +918,8 @@ const deDefaults = {
 		}
 	},
 	pdfViewer: {
-      bookmarks: "Lesezeichen",
-      noBookmarks: "Du hast keine Lesezeichen",
+		bookmarks: "Lesezeichen",
+		noBookmarks: "Du hast keine Lesezeichen",
 		page: "Seite",
 		bottomSheet: {
 			back: "Zurück",
@@ -940,7 +954,8 @@ const deDefaults = {
 				nameTooLong: "Der Name ist zu lang",
 				websiteUrlInvalid: "Der Link ist ungültig",
 				usernameInvalid: "Der Nutzername ist ungültig",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+				unexpectedError:
+					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		createAuthorDialog: {
@@ -956,12 +971,14 @@ const deDefaults = {
 				lastNameTooShort: "Der Nachname ist zu kurz",
 				firstNameTooLong: "Der Vorname ist zu lang",
 				lastNameTooLong: "Der Nachname ist zu lang",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+				unexpectedError:
+					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
-			logoUploadFailed: "Beim Hochladen des Logos ist ein Fehler aufgetreten",
+			logoUploadFailed:
+				"Beim Hochladen des Logos ist ein Fehler aufgetreten",
 			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
@@ -1002,18 +1019,21 @@ const deDefaults = {
 				lastNameTooLong: "Der Nachname ist zu lang",
 				websiteUrlInvalid: "Der Link ist ungültig",
 				usernameInvalid: "Der Nutzername ist ungültig",
-				unexpectedError: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+				unexpectedError:
+					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 			}
 		},
 		errors: {
 			profileImageFileTooLarge: "Die Bilddatei ist zu groß",
-			profileImageUploadFailed: "Beim Hochladen des Profilbilds ist ein Fehler aufgetreten",
+			profileImageUploadFailed:
+				"Beim Hochladen des Profilbilds ist ein Fehler aufgetreten",
 			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
 		messages: {
-			providerMessage: "<a href='{0}' target='blank'>Registriere dich als Anbieter</a>, damit deine Einnahmen überwiesen werden können."
+			providerMessage:
+				"<a href='{0}' target='blank'>Registriere dich als Anbieter</a>, damit deine Einnahmen überwiesen werden können."
 		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
@@ -1024,7 +1044,7 @@ const deDefaults = {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher",
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
 		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		moreOfSeries: "Mehr aus der Reihe \"{0}\""
+		moreOfSeries: 'Mehr aus der Reihe "{0}"'
 	},
 	horizontalAuthorList: {
 		newAuthors: "Neue Autoren"
@@ -1064,7 +1084,7 @@ const deDefaults = {
 	libraryPageCards: {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addBook: "Öffne eine lokale Datei",
-		goToAuthorPage: "Gehe zu deinem Autor-Profil",
+		goToAuthorPage: "Gehe zu deinem Autor-Profil"
 	},
 	misc: {
 		languages: {
