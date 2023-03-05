@@ -40,9 +40,9 @@ import { GetDualScreenSettings } from "src/app/misc/utils"
 
 const secondPageMinWidth = 1050 // Show two pages on the window if the window width is greater than this
 const progressFactor = 100000 // The factor which is used to save the progress
-const currentViewerZIndex = -2
-const nextPageViewerZIndex = -3
-const previousPageViewerZIndex = -1
+const currentViewerZIndex = 1
+const nextPageViewerZIndex = 0
+const previousPageViewerZIndex = 2
 const keydownEventName = "keydown"
 const wheelEventName = "wheel"
 const mouseMoveEventName = "mousemove"
