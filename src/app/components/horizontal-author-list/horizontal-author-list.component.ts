@@ -11,7 +11,7 @@ import {
 } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
-const maxVisibleAuthors = 8
+const maxVisibleAuthors = 10
 
 @Component({
 	selector: "pocketlib-horizontal-author-list",

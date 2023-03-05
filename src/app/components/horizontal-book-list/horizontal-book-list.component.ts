@@ -1,5 +1,4 @@
 import { Component, Input, SimpleChanges } from "@angular/core"
-import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -14,7 +13,7 @@ import {
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
-const maxVisibleStoreBooks = 10
+const maxVisibleStoreBooks = 8
 type HorizontalBookListType = "latest" | "categories" | "series"
 
 @Component({
@@ -27,10 +26,8 @@ export class HorizontalBookListComponent {
 	@Input() categories: string[] = []
 	@Input() series: string = ""
 	locale = enUS.horizontalBookList
-	faArrowRightLight = faArrowRightLight
 	header: string = ""
 	books: BookListItem[] = []
-	showAllHovered: boolean = false
 	loading: boolean = true
 
 	constructor(

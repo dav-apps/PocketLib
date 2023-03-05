@@ -13,12 +13,12 @@
 			*ngIf="loading"
 		>
 			<div class="mx-auto my-auto">
-				<dav-progress-ring style="margin: 0" size="32"> </dav-progress-ring>
+				<dav-progress-ring style="margin: 0" size="32"></dav-progress-ring>
 			</div>
 		</div>
 
 		<div
-			class="d-flex mb-3 ps-4 slide-up-in"
+			class="d-flex mb-3 px-4 slide-up-in"
 			style="width: max-content"
 			*ngIf="!loading"
 		>
@@ -27,31 +27,6 @@
 				[highlighted]="type == 'series' && book.uuid == currentBookUuid"
 				*ngFor="let book of books"
 			></pocketlib-store-book-card>
-
-			<div
-				class="mx-2 my-3"
-				style="display: inline-flex; width: 100px"
-				*ngIf="type == 'latest' && books.length > 0"
-			>
-				<a
-					class="d-flex mx-auto my-auto align-items-center justify-content-center cursor text-color"
-					[ngClass]="showAllHovered ? 'shadow' : 'shadow-sm'"
-					style="
-						width: 50px;
-						height: 50px;
-						border-radius: 50%;
-						text-decoration: none;
-						transition: 0.12s;
-					"
-					routerLink="/store/books/all"
-					(mouseover)="showAllHovered = true"
-					(mouseout)="showAllHovered = false"
-					(focusin)="showAllHovered = true"
-					(focusout)="showAllHovered = false"
-				>
-					<fa-icon [icon]="faArrowRightLight" size="lg"></fa-icon>
-				</a>
-			</div>
 		</div>
 	</div>
 </div>

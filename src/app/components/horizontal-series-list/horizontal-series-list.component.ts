@@ -14,6 +14,8 @@ import {
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
+const maxVisibleSeries = 5
+
 @Component({
 	selector: "pocketlib-horizontal-series-list",
 	templateUrl: "./horizontal-series-list.component.html"
@@ -35,7 +37,7 @@ export class HorizontalSeriesListComponent {
 			fields: [StoreBookSeriesListField.items_uuid],
 			languages: await this.dataService.GetStoreLanguages(),
 			latest: true,
-			limit: 4
+			limit: maxVisibleSeries
 		})
 
 		if (!isSuccessStatusCode(seriesResponse.status)) return
