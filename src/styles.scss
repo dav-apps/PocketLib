@@ -38,7 +38,6 @@ $badge-font-size: 12px;
 }
 
 body {
-	background-color: $primary;
 	font-family: Roboto, Arial, sans-serif;
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
@@ -101,6 +100,10 @@ a.text-color:hover {
 	background-color: var(--hover-background-color);
 	color: var(--text-color);
 	border-color: var(--hover-background-color);
+}
+
+.store-list-header {
+	font-weight: 400;
 }
 
 .horizontal-store-list::-webkit-scrollbar {
