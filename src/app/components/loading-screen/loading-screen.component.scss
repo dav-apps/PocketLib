@@ -1,4 +1,4 @@
-#container {
+.loading-page-container {
 	color: white;
 	background-color: var(--primary);
 	position: fixed;
@@ -6,11 +6,29 @@
 	bottom: 0;
 	left: 0;
 	right: 0;
+	width: 100vw;
+	height: 100vh;
 	z-index: 10;
 }
 
-#loading-screen-message {
+.loading-screen-content-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.loading-screen-content {
+	display: inline-block;
+	text-align: center;
+}
+
+.loading-screen-logo {
+	margin-bottom: 38px
+}
+
+.loading-screen-message {
+	color: white;
 	margin-top: 30px;
 	font-size: 18px;
-	color: white;
 }

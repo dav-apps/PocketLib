@@ -1,23 +1,18 @@
-<div id="container" class="slide-up-in" [style.height.px]="height">
+<div class="loading-page-container slide-up-in">
 	<div
-		class="d-flex justify-content-center"
+		class="loading-screen-content-container"
 		[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
-		[style.height.px]="height"
 	>
-		<div style="display: inline-block" class="m-auto text-center">
+		<div class="loading-screen-content">
 			<img
+				class="loading-screen-logo"
 				src="/assets/images/pocketlib-logo.png"
 				width="150"
-				style="margin-bottom: 38px"
 			/>
 
 			<dav-progress-ring size="30" color="white"></dav-progress-ring>
 
-			<p
-				id="loading-screen-message"
-				class="fw-light"
-				*ngIf="message.length > 0"
-			>
+			<p class="loading-screen-message" *ngIf="message.length > 0">
 				{{ message }}
 			</p>
 		</div>
