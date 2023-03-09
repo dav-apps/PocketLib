@@ -53,6 +53,7 @@ export class DataService {
 	isMobile: boolean = false
 	darkTheme: boolean = false
 	bookPageVisible: boolean = false
+	simpleLoadingScreenVisible: boolean = false
 	defaultStoreBookCover: string = this.darkTheme
 		? defaultDarkStoreBookCoverUrl
 		: defaultLightStoreBookCoverUrl
