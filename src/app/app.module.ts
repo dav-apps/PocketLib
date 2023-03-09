@@ -56,6 +56,7 @@ import { NewBookPagePriceSectionComponent } from "./components/new-book-page-pri
 import { NewBookPageIsbnSectionComponent } from "./components/new-book-page-isbn-section/new-book-page-isbn-section.component"
 import { NewBookPageCoverSectionComponent } from "./components/new-book-page-cover-section/new-book-page-cover-section.component"
 import { NewBookPageBookFileSectionComponent } from "./components/new-book-page-book-file-section/new-book-page-book-file-section.component"
+import { SimpleLoadingScreenComponent } from "./components/simple-loading-screen/simple-loading-screen.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -118,6 +119,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		NewBookPageIsbnSectionComponent,
 		NewBookPageCoverSectionComponent,
 		NewBookPageBookFileSectionComponent,
+		SimpleLoadingScreenComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
