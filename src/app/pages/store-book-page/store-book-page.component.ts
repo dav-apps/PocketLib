@@ -40,7 +40,8 @@ import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-store-book-page",
-	templateUrl: "./store-book-page.component.html"
+	templateUrl: "./store-book-page.component.html",
+	styleUrls: ["./store-book-page.component.scss"]
 })
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
