@@ -8,7 +8,8 @@ import {
 	BookListItem,
 	ListResponseData,
 	StoreBookResource,
-	StoreBookListField
+	StoreBookListField,
+	StoreBooksPageContext
 } from "src/app/misc/types"
 import {
 	GetDualScreenSettings,
@@ -28,7 +29,6 @@ export class StoreBooksPageComponent {
 	width: number = 500
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	loading: boolean = false
 
 	//#region Variables for pagination
 	pages: number = 1
@@ -49,11 +49,20 @@ export class StoreBooksPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().storeBooksPage
+		this.dataService.simpleLoadingScreenVisible = true
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
+
+		this.key = this.activatedRoute.snapshot.paramMap.get("key")
+
+		if (this.key == "all") {
+			this.context = StoreBooksPageContext.AllBooks
+		}
+
+		this.UpdateView()
 
 		this.activatedRoute.url.subscribe(async () => {
 			let urlSegments = this.activatedRoute.snapshot.url
@@ -63,20 +72,6 @@ export class StoreBooksPageComponent {
 				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
 			} else {
 				this.page = 1
-			}
-
-			switch (urlSegments[0].path) {
-				case "category":
-					// Show the selected category
-					this.key = this.activatedRoute.snapshot.paramMap.get("key")
-					this.context = StoreBooksPageContext.Category
-					await this.UpdateView()
-					break
-				default:
-					// Show all books
-					this.context = StoreBooksPageContext.AllBooks
-					await this.UpdateView()
-					break
 			}
 
 			setTimeout(() => {
@@ -117,7 +112,7 @@ export class StoreBooksPageComponent {
 		this.books = []
 		this.leftScreenBooks = []
 		this.rightScreenBooks = []
-		this.loading = true
+		this.dataService.simpleLoadingScreenVisible = true
 
 		let response:
 			| ApiResponse<ListResponseData<StoreBookResource>>
@@ -156,7 +151,7 @@ export class StoreBooksPageComponent {
 				break
 		}
 
-		this.loading = false
+		this.dataService.simpleLoadingScreenVisible = false
 
 		if (!isSuccessStatusCode(response.status)) return
 		let responseData = (
@@ -217,9 +212,4 @@ export class StoreBooksPageComponent {
 		this.router.navigate([], { queryParams: { page } })
 		this.UpdateView()
 	}
-}
-
-enum StoreBooksPageContext {
-	Category,
-	AllBooks
 }

@@ -72,6 +72,11 @@ export enum Language {
 	de = "de"
 }
 
+export enum StoreBooksPageContext {
+	AllBooks,
+	Category
+}
+
 export interface ListResponseData<T> {
 	type: string
 	pages: number
@@ -395,7 +400,7 @@ export enum StoreBookFileField {
 }
 //#endregion
 
-//#region
+//#region StoreBookRelease
 export interface StoreBookReleaseResource {
 	uuid: string
 	storeBook: string

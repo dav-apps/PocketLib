@@ -1,8 +1,7 @@
 <!-- Normal layout -->
-<div class="container mb-4 px-0 slide-up-in" *ngIf="!dualScreenLayout">
-	<div class="mb-2">
+<div class="container mb-3 px-0 slide-up-in" *ngIf="!dualScreenLayout">
+	<div class="mb-2" *ngIf="header.length > 0">
 		<dav-header
-			size="large"
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
 		>
@@ -28,13 +27,6 @@
 			(pageChange)="PageChange($event.detail.page)"
 		></dav-pagination>
 	</div>
-
-	<dav-progress-ring
-		class="mx-auto"
-		style="margin-top: 36px"
-		size="28"
-		*ngIf="loading"
-	></dav-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
@@ -51,7 +43,6 @@
 	>
 		<div class="mb-2">
 			<dav-header
-				size="large"
 				backButtonVisible
 				(backButtonClick)="BackButtonClick()"
 			>
@@ -68,13 +59,6 @@
 				*ngFor="let book of leftScreenBooks"
 			></pocketlib-store-book-card>
 		</div>
-
-		<dav-progress-ring
-			class="mx-auto"
-			style="margin-top: 36px"
-			size="28"
-			*ngIf="loading"
-		></dav-progress-ring>
 	</div>
 
 	<!-- Right screen -->

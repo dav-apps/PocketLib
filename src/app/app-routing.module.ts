@@ -83,8 +83,7 @@ const routes: Routes = [
 	{ path: "store/publisher/:uuid", component: StorePublisherPageComponent },
 	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
 	{ path: "store/book/:uuid", component: StoreBookPageComponent },
-	{ path: "store/category/:key", component: StoreBooksPageComponent },
-	{ path: "store/books/all", component: StoreBooksPageComponent }
+	{ path: "store/category/:key", component: StoreBooksPageComponent }
 ]
 
 @NgModule({
