@@ -24,6 +24,8 @@
 			<br />
 
 			<dav-button
+				size="small"
+				tonal
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				[disabled]="profileImageLoading"
@@ -125,6 +127,8 @@
 			</div>
 
 			<dav-button
+				size="small"
+				[tonal]="bioMode != 1 && bioMode != 3"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
 				*ngIf="authorMode != 0 && bioMode != 0"
@@ -135,6 +139,7 @@
 			<dav-button
 				style="margin-left: 10px"
 				color="secondary"
+				size="small"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
 				*ngIf="authorMode != 0 && bioMode == 3"
@@ -275,7 +280,8 @@
 				<br />
 
 				<dav-button
-					type="accent"
+					size="small"
+					tonal
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="profileImageLoading"
@@ -376,6 +382,8 @@
 			</div>
 
 			<dav-button
+				size="small"
+				[tonal]="bioMode != 1 && bioMode != 3"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
 				*ngIf="authorMode != 0 && bioMode != 0"
@@ -386,6 +394,7 @@
 			<dav-button
 				style="margin-left: 10px"
 				color="secondary"
+				size="small"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
 				*ngIf="authorMode != 0 && bioMode == 3"
