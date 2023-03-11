@@ -36,20 +36,14 @@
 			<h4 class="d-flex justify-content-center mt-3 text-color">
 				{{ author.firstName }} {{ author.lastName }}
 
-				<button
-					type="button"
-					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-					style="
-						height: 32px;
-						font-size: 17px;
-						margin-top: -4px;
-						padding: 0px 4px;
-					"
+				<dav-icon-button
+					class="ms-2"
+					size="small"
 					(click)="ShowEditProfileDialog()"
 					*ngIf="authorMode > 0"
 				>
 					<fa-icon [icon]="faPenLight"></fa-icon>
-				</button>
+				</dav-icon-button>
 			</h4>
 
 			<div
@@ -253,7 +247,7 @@
 <!-- Dual-Screen layout -->
 <div
 	class="slide-up-in"
-	style="display: grid; grid-template-rows: auto; margin-top: 80px"
+	style="display: grid; grid-template-rows: auto"
 	[style.gridTemplateColumns]="'auto ' + width / 2 + 'px'"
 	*ngIf="dualScreenLayout"
 >
@@ -295,20 +289,14 @@
 			<h4 class="d-flex justify-content-center mt-3 text-color">
 				{{ author.firstName }} {{ author.lastName }}
 
-				<button
-					type="button"
-					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-					style="
-						height: 32px;
-						font-size: 17px;
-						margin-top: -4px;
-						padding: 0px 4px;
-					"
+				<dav-icon-button
+					class="ms-2"
+					size="small"
 					(click)="ShowEditProfileDialog()"
 					*ngIf="authorMode > 0"
 				>
 					<fa-icon [icon]="faPenLight"></fa-icon>
-				</button>
+				</dav-icon-button>
 			</h4>
 
 			<div
