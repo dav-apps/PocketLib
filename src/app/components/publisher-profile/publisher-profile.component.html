@@ -19,6 +19,8 @@
 			<br />
 
 			<dav-button
+				size="small"
+				tonal
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				[disabled]="logoLoading"
@@ -31,20 +33,14 @@
 			<h4 class="d-flex justify-content-center mt-3 text-color">
 				{{ publisher.name }}
 
-				<button
-					type="button"
-					class="d-flex align-items-center btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-					style="
-						height: 32px;
-						font-size: 17px;
-						margin-top: -4px;
-						padding: 0px 4px;
-					"
+				<dav-icon-button
+					class="ms-2"
+					size="small"
 					(click)="ShowEditProfileDialog()"
 					*ngIf="publisherMode > 0"
 				>
 					<fa-icon [icon]="faPenLight"></fa-icon>
-				</button>
+				</dav-icon-button>
 			</h4>
 
 			<div
@@ -118,6 +114,8 @@
 			</div>
 
 			<dav-button
+				size="small"
+				[tonal]="!editDescription"
 				[disabled]="descriptionLoading"
 				(click)="EditDescription()"
 				*ngIf="publisherMode != 0"
@@ -126,8 +124,9 @@
 			</dav-button>
 
 			<dav-button
-				color="secondary"
 				style="margin-left: 10px"
+				color="secondary"
+				size="small"
 				[disabled]="descriptionLoading"
 				(click)="CancelEditDescription()"
 				*ngIf="editDescription"
