@@ -9,18 +9,17 @@
 	*ngIf="dataService.userIsAdmin && !uuid && !dualScreenLayout"
 >
 	<!-- List of publishers -->
-	<h1 class="mt-3 mb-4 fw-light text-color">
-		{{ locale.yourPublishers }}
-	</h1>
+	<div class="mt-3 mb-4">
+		<dav-header
+			size="small"
+			addButtonVisible
+			(addButtonClick)="ShowCreatePublisherDialog()"
+		>
+			{{ locale.yourPublishers }}
+		</dav-header>
+	</div>
 
 	<div class="list-group" style="display: inline-block">
-		<p
-			class="list-group-item cursor theme-background-color-secondary"
-			(click)="ShowCreatePublisherDialog()"
-		>
-			<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-		</p>
-
 		<p
 			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
@@ -32,18 +31,17 @@
 	</div>
 
 	<!-- List of authors -->
-	<h1 class="mt-3 mb-4 fw-light text-color">
-		{{ locale.yourAuthors }}
-	</h1>
+	<div class="mt-3 mb-4">
+		<dav-header
+			size="small"
+			addButtonVisible
+			(addButtonClick)="ShowCreateAuthorDialog()"
+		>
+			{{ locale.yourAuthors }}
+		</dav-header>
+	</div>
 
 	<div class="list-group" style="display: inline-block">
-		<p
-			class="list-group-item cursor theme-background-color-secondary"
-			(click)="ShowCreateAuthorDialog()"
-		>
-			<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-		</p>
-
 		<p
 			class="list-group-item cursor theme-background-color-secondary text-color"
 			style="font-size: 18px"
@@ -55,9 +53,11 @@
 	</div>
 
 	<!-- List of books in review -->
-	<h1 class="mt-5 mb-4 fw-light text-color">
-		{{ locale.booksInReview }}
-	</h1>
+	<div class="mt-5 mb-4">
+		<dav-header size="small">
+			{{ locale.booksInReview }}
+		</dav-header>
+	</div>
 
 	<div class="list-group" style="display: inline-block">
 		<p
@@ -79,15 +79,17 @@
 	<!-- Left screen -->
 	<div class="w-50 text-center" [style.marginRight.px]="dualScreenFoldMargin">
 		<!-- List of publishers -->
-		<h1 class="mt-3 mb-4 fw-light text-color">
-			{{ locale.yourPublishers }}
-		</h1>
+		<div class="mt-3 mb-4">
+			<dav-header
+				size="small"
+				addButtonVisible
+				(addButtonClick)="ShowCreatePublisherDialog()"
+			>
+				{{ locale.yourPublishers }}
+			</dav-header>
+		</div>
 
 		<div class="list-group" style="display: inline-block">
-			<p class="list-group-item cursor theme-background-color-secondary">
-				<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-			</p>
-
 			<p
 				class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
@@ -99,16 +101,17 @@
 		</div>
 
 		<!-- List of authors -->
-		<h1 class="mt-3 mb-4 fw-light text-color">{{ locale.yourAuthors }}</h1>
+		<div class="mt-3 mb-4">
+			<dav-header
+				size="small"
+				addButtonVisible
+				(addButtonClick)="ShowCreateAuthorDialog()"
+			>
+				{{ locale.yourAuthors }}
+			</dav-header>
+		</div>
 
 		<div class="list-group" style="display: inline-block">
-			<p
-				class="list-group-item cursor theme-background-color-secondary"
-				(click)="ShowCreateAuthorDialog()"
-			>
-				<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-			</p>
-
 			<p
 				class="list-group-item cursor theme-background-color-secondary text-color"
 				style="font-size: 18px"
@@ -123,9 +126,11 @@
 	<!-- Right screen -->
 	<div class="w-50 text-center" [style.marginLeft.px]="dualScreenFoldMargin">
 		<!-- List of books in review -->
-		<h1 class="mt-3 mb-4 fw-light text-color">
-			{{ locale.booksInReview }}
-		</h1>
+		<div class="mt-3 mb-4">
+			<dav-header size="small">
+				{{ locale.booksInReview }}
+			</dav-header>
+		</div>
 
 		<div class="list-group" style="display: inline-block">
 			<p
