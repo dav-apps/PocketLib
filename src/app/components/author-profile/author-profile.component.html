@@ -172,27 +172,28 @@
 			</div>
 
 			<!-- List of collections -->
-			<h3
-				class="text-center fw-light mb-3 mb-md-4 mt-4 text-color"
+			<div
+				class="mb-3 mb-md-4 mt-4"
 				[ngClass]="
 					providerMessage.length > 0 || errorMessage.length > 0
 						? 'mt-md-4'
 						: 'mt-md-5'
 				"
 			>
-				{{ locale.yourBooks }}
-			</h3>
+				<dav-header
+					size="small"
+					addButtonVisible
+					(addButtonClick)="NavigateToNewBookPage()"
+				>
+					{{ locale.yourBooks }}
+				</dav-header>
+			</div>
 
 			<div class="mt-3" *ngIf="!collectionsLoaded">
 				<dav-progress-ring class="mx-auto" size="28"></dav-progress-ring>
 			</div>
 
 			<div *ngIf="collectionsLoaded">
-				<pocketlib-add-list-item
-					[link]="newBookPageLink.path"
-					[linkParams]="newBookPageLink.params"
-				></pocketlib-add-list-item>
-
 				<pocketlib-horizontal-book-card
 					[title]="collection.name"
 					[coverContent]="
@@ -213,20 +214,21 @@
 			</div>
 
 			<!-- List of series -->
-			<h3 class="text-center fw-light mb-3 mt-4 mb-md-4 mt-md-5 text-color">
-				{{ locale.yourBookSeries }}
-			</h3>
+			<div class="mb-3 mt-4 mb-md-4 mt-md-5">
+				<dav-header
+					size="small"
+					addButtonVisible
+					(addButtonClick)="NavigateToNewSeriesPage()"
+				>
+					{{ locale.yourBookSeries }}
+				</dav-header>
+			</div>
 
 			<div class="mt-3" *ngIf="!seriesLoaded">
 				<dav-progress-ring class="mx-auto" size="28"> </dav-progress-ring>
 			</div>
 
 			<div *ngIf="seriesLoaded">
-				<pocketlib-add-list-item
-					[link]="newSeriesPageLink.path"
-					[linkParams]="newSeriesPageLink.params"
-				></pocketlib-add-list-item>
-
 				<pocketlib-horizontal-books-card
 					[title]="s.name"
 					[books]="s.books"
@@ -434,16 +436,22 @@
 				</div>
 
 				<!-- List of collections -->
-				<h3
-					class="text-center fw-light mb-3 mt-4 mb-md-4 text-color"
+				<div
+					class="mb-3 mt-4 mb-md-4"
 					[ngClass]="
 						providerMessage.length > 0 || errorMessage.length > 0
 							? 'mt-md-4'
 							: 'mt-md-5'
 					"
 				>
-					{{ locale.yourBooks }}
-				</h3>
+					<dav-header
+						size="small"
+						addButtonVisible
+						(addButtonClick)="NavigateToNewBookPage()"
+					>
+						{{ locale.yourBooks }}
+					</dav-header>
+				</div>
 
 				<div class="mt-3" *ngIf="!collectionsLoaded">
 					<dav-progress-ring class="mx-auto" size="28">
@@ -451,11 +459,6 @@
 				</div>
 
 				<div *ngIf="collectionsLoaded">
-					<pocketlib-add-list-item
-						[link]="newBookPageLink.path"
-						[linkParams]="newBookPageLink.params"
-					></pocketlib-add-list-item>
-
 					<pocketlib-horizontal-book-card
 						[title]="collection.name"
 						[coverContent]="
@@ -476,11 +479,15 @@
 				</div>
 
 				<!-- List of series -->
-				<h3
-					class="text-center fw-light mb-3 mt-4 mb-md-4 mt-md-5 text-color"
-				>
-					{{ locale.yourBookSeries }}
-				</h3>
+				<div class="mb-3 mt-4 mb-md-4 mt-md-5">
+					<dav-header
+						size="small"
+						addButtonVisible
+						(addButtonClick)="NavigateToNewSeriesPage()"
+					>
+						{{ locale.yourBookSeries }}
+					</dav-header>
+				</div>
 
 				<div class="mt-3" *ngIf="!seriesLoaded">
 					<dav-progress-ring
@@ -490,11 +497,6 @@
 				</div>
 
 				<div *ngIf="seriesLoaded">
-					<pocketlib-add-list-item
-						[link]="newSeriesPageLink.path"
-						[linkParams]="newSeriesPageLink.params"
-					></pocketlib-add-list-item>
-
 					<pocketlib-horizontal-books-card
 						[title]="s.name"
 						[books]="s.books"

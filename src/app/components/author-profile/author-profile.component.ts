@@ -7,6 +7,7 @@ import {
 	ViewChild,
 	ElementRef
 } from "@angular/core"
+import { Router } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import {
 	faPen as faPenLight,
@@ -113,14 +114,6 @@ export class AuthorProfileComponent {
 	bookTitleFontSize: number = 20
 	errorMessage: string = ""
 	providerMessage: string = ""
-	newBookPageLink: {
-		path: string
-		params: any
-	} = { path: "/author/book/new", params: {} }
-	newSeriesPageLink: {
-		path: string
-		params: any
-	} = { path: "/author/series/new", params: {} }
 
 	//#region ProfileImageDialog
 	@ViewChild("profileImageDialogImage", { static: true })
@@ -148,7 +141,8 @@ export class AuthorProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private cachingService: CachingService
+		private cachingService: CachingService,
+		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
 
@@ -227,12 +221,6 @@ export class AuthorProfileComponent {
 						).data
 					}
 				})
-		}
-
-		// Set the new book page link
-		if (this.dataService.userIsAdmin) {
-			this.newBookPageLink.path = `/author/${this.author.uuid}/book/new`
-			this.newSeriesPageLink.path = `/author/${this.author.uuid}/series/new`
 		}
 
 		this.SetupBioLanguageDropdown()
@@ -523,6 +511,14 @@ export class AuthorProfileComponent {
 		}
 
 		this.UpdateCurrentBio()
+	}
+
+	NavigateToNewBookPage() {
+		this.router.navigate(["author", this.author.uuid, "book", "new"])
+	}
+
+	NavigateToNewSeriesPage() {
+		this.router.navigate(["author", this.author.uuid, "series", "new"])
 	}
 
 	async ProfileImageFileSelected(file: ReadFile) {
