@@ -19,7 +19,7 @@
 
 	<div
 		class="mt-4 d-flex justify-content-center"
-		*ngIf="pages > 1 && !loading"
+		*ngIf="pages > 1 && !dataService.simpleLoadingScreenVisible"
 	>
 		<dav-pagination
 			[pages]="pages"
@@ -78,7 +78,7 @@
 
 		<div
 			class="mt-4 d-flex justify-content-center"
-			*ngIf="pages > 1 && !loading"
+			*ngIf="pages > 1 && !dataService.simpleLoadingScreenVisible"
 		>
 			<dav-pagination
 				[pages]="pages"
