@@ -91,6 +91,12 @@ a.text-color:hover {
    cursor: pointer !important;
 }
 
+.social-media-buttons-container {
+	display: flex;
+	justify-content: center;
+	gap: 4px;
+}
+
 .icon-button {
 	display: flex;
 	align-items: center;
