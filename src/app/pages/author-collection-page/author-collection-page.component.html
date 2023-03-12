@@ -3,8 +3,10 @@
 	<div class="mt-3 mb-4">
 		<dav-header
 			backButtonVisible
+			[addButtonVisible]="books.length > 0"
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
+			(addButtonClick)="NavigateToNewBookPage()"
 			(editButtonClick)="ShowNamesDialog()"
 		>
 			{{ collectionName.name }}
@@ -13,19 +15,13 @@
 
 	<p
 		class="fw-light text-center mt-3 text-color"
-		style="font-size: 18px; font-family: 'Segoe UI'"
+		style="font-size: 18px"
 		*ngIf="books.length == 0"
 	>
 		{{ locale.noBooks }}
 	</p>
 
 	<div class="col-12 col-md-6 mx-auto">
-		<pocketlib-add-list-item
-			[link]="newBookPageLink.path"
-			[linkParams]="newBookPageLink.params"
-			*ngIf="books.length > 0"
-		></pocketlib-add-list-item>
-
 		<pocketlib-horizontal-book-card
 			[title]="book.title"
 			[coverContent]="book.coverContent"
@@ -43,8 +39,10 @@
 		<div class="mt-3 mb-4 mx-3">
 			<dav-header
 				backButtonVisible
+				[addButtonVisible]="leftScreenBooks.length > 0 || rightScreenBooks.length > 0"
 				editButtonVisible
 				(backButtonClick)="BackButtonClick()"
+				(addButtonClick)="NavigateToNewBookPage()"
 				(editButtonClick)="ShowNamesDialog()"
 			>
 				{{ collectionName.name }}
@@ -53,19 +51,13 @@
 
 		<p
 			class="fw-light text-center mt-3 text-color"
-			style="font-size: 18px; font-family: 'Segoe UI'"
+			style="font-size: 18px"
 			*ngIf="leftScreenBooks.length == 0 && rightScreenBooks.length == 0"
 		>
 			{{ locale.noBooks }}
 		</p>
 
 		<div class="mx-auto px-5">
-			<pocketlib-add-list-item
-				[link]="newBookPageLink.path"
-				[linkParams]="newBookPageLink.params"
-				*ngIf="leftScreenBooks.length > 0 || rightScreenBooks.length > 0"
-			></pocketlib-add-list-item>
-
 			<pocketlib-horizontal-book-card
 				[title]="book.title"
 				[coverContent]="book.coverContent"

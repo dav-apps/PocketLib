@@ -169,6 +169,12 @@ export class AuthorCollectionPageComponent {
 		}
 	}
 
+	NavigateToNewBookPage() {
+		this.router.navigate([this.newBookPageLink.path], {
+			queryParams: this.newBookPageLink.params
+		})
+	}
+
 	async ShowNamesDialog() {
 		await this.LoadCollectionNames()
 		this.namesDialogVisible = true
