@@ -9,7 +9,7 @@ import {
 	faFileExport as faFileExportLight,
 	faPencil as faPencilLight,
 	faPlus as faPlusLight,
-	faTrashCan as faTrashCanLight
+	faTrash as faTrashLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { DataService } from "src/app/services/data-service"
@@ -38,7 +38,7 @@ export class LibraryPageComponent {
 	faFileExportLight = faFileExportLight
 	faPencilLight = faPencilLight
 	faPlusLight = faPlusLight
-	faTrashCanLight = faTrashCanLight
+	faTrashLight = faTrashLight
 	@ViewChild("leftContentContainer")
 	leftContentContainer: ElementRef<HTMLDivElement>
 	@ViewChild("rightContentContainer")
