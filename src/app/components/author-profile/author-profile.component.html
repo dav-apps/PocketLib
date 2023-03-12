@@ -189,8 +189,8 @@
 				</dav-header>
 			</div>
 
-			<div class="mt-3" *ngIf="!collectionsLoaded">
-				<dav-progress-ring class="mx-auto" size="28"></dav-progress-ring>
+			<div class="d-flex justify-content-center mt-3" *ngIf="!collectionsLoaded">
+				<dav-progress-ring size="28"></dav-progress-ring>
 			</div>
 
 			<div *ngIf="collectionsLoaded">
@@ -224,8 +224,8 @@
 				</dav-header>
 			</div>
 
-			<div class="mt-3" *ngIf="!seriesLoaded">
-				<dav-progress-ring class="mx-auto" size="28"> </dav-progress-ring>
+			<div class="d-flex justify-content-center mt-3" *ngIf="!seriesLoaded">
+				<dav-progress-ring size="28"></dav-progress-ring>
 			</div>
 
 			<div *ngIf="seriesLoaded">
@@ -453,9 +453,8 @@
 					</dav-header>
 				</div>
 
-				<div class="mt-3" *ngIf="!collectionsLoaded">
-					<dav-progress-ring class="mx-auto" size="28">
-					</dav-progress-ring>
+				<div class="d-flex justify-content-center mt-3" *ngIf="!collectionsLoaded">
+					<dav-progress-ring size="28"></dav-progress-ring>
 				</div>
 
 				<div *ngIf="collectionsLoaded">
@@ -489,11 +488,8 @@
 					</dav-header>
 				</div>
 
-				<div class="mt-3" *ngIf="!seriesLoaded">
-					<dav-progress-ring
-						class="mx-auto"
-						style="width: 28px; height: 28px"
-					></dav-progress-ring>
+				<div class="d-flex justify-content-center mt-3" *ngIf="!seriesLoaded">
+					<dav-progress-ring size="28"></dav-progress-ring>
 				</div>
 
 				<div *ngIf="seriesLoaded">
