@@ -15,6 +15,7 @@ import {
 import { Dav, TableObject, Environment } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
+import { RoutingService } from "src/app/services/routing-service"
 import { GetSettings } from "src/app/models/Settings"
 import { GetBookOrder } from "./models/BookOrder"
 import { smallWindowMaxSize } from "src/constants/constants"
@@ -43,6 +44,7 @@ export class AppComponent {
 
 	constructor(
 		public dataService: DataService,
+		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {

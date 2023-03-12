@@ -16,16 +16,7 @@ export class RoutingService {
 	) {
 		this.router.events.subscribe(event => {
 			if (event instanceof NavigationEnd) {
-				let url = event.url.includes("?")
-					? event.url.substring(0, event.url.indexOf("?"))
-					: event.url
-				this.showsStore = url.startsWith("/store")
-
-				this.history.push({
-					url,
-					fullUrl: event.url,
-					params: this.activatedRoute.snapshot.queryParams
-				})
+				this.addUrlToHistory(event.url)
 
 				if (this.showsStore && this.dataService.updateInstalled) {
 					window.location.reload()
@@ -60,26 +51,39 @@ export class RoutingService {
 	}
 
 	NavigateToLibraryPage() {
-		this.NavigateToPage(["/"])
+		this.navigateToPage(["/"])
 	}
 
 	NavigateToAuthorPage() {
-		this.NavigateToPage(["author"])
+		this.navigateToPage(["author"])
 	}
 
 	NavigateToStorePage() {
-		this.NavigateToPage(["store"])
+		this.navigateToPage(["store"])
 	}
 
 	NavigateToAccountPage() {
-		this.NavigateToPage(["account"])
+		this.navigateToPage(["account"])
 	}
 
 	NavigateToSettingsPage() {
-		this.NavigateToPage(["settings"])
+		this.navigateToPage(["settings"])
 	}
 
-	private async NavigateToPage(route: string[]) {
+	private addUrlToHistory(url: string) {
+		let cuttedUrl = url.includes("?")
+			? url.substring(0, url.indexOf("?"))
+			: url
+		this.showsStore = cuttedUrl.startsWith("/store")
+
+		this.history.push({
+			url: cuttedUrl,
+			fullUrl: url,
+			params: this.activatedRoute.snapshot.queryParams
+		})
+	}
+
+	private async navigateToPage(route: string[]) {
 		if (this.toolbarNavigationEvent) {
 			if (await this.toolbarNavigationEvent()) this.router.navigate(route)
 		} else {
