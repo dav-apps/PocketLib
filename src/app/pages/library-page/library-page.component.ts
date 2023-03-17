@@ -61,7 +61,6 @@ export class LibraryPageComponent {
 	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
-	loading: boolean = true
 	loadingScreenVisible: boolean = false
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
@@ -84,8 +83,9 @@ export class LibraryPageComponent {
 	}
 
 	async ngOnInit() {
+		this.dataService.simpleLoadingScreenVisible = true
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
-		this.loading = false
+		this.dataService.simpleLoadingScreenVisible = false
 
 		this.setSize()
 	}

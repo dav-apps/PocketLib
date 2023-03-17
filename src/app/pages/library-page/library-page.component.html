@@ -1,6 +1,6 @@
 <!-- Normal layout -->
 <div class="container slide-up-in" *ngIf="!dualScreenLayout">
-	<div class="d-flex justify-content-center my-3" *ngIf="!loading">
+	<div class="d-flex justify-content-center my-3">
 		<div class="d-flex w-100" *ngIf="dataService.books.length == 0">
 			<div
 				class="mx-auto"
@@ -175,12 +175,6 @@
 			</div>
 		</div>
 	</div>
-
-	<dav-progress-ring
-		class="mx-auto"
-		style="width: 32px; height: 32px; margin-top: 36px"
-		*ngIf="loading"
-	></dav-progress-ring>
 </div>
 
 <!-- Dual-Screen layout -->
