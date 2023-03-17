@@ -26,7 +26,15 @@
 			*ngIf="dataService.books.length > 0"
 		>
 			<div class="d-flex justify-content-center mb-3">
-				<!-- Card for adding new book -->
+				<!-- Card for discovering books in the Store -->
+				<dav-icon-card
+					class="quick-action-button"
+					(click)="NavigateToStorePage()"
+				>
+					<fa-icon [icon]="faBagShoppingLight"></fa-icon>
+				</dav-icon-card>
+
+				<!-- Card for adding book file -->
 				<dav-icon-card
 					class="quick-action-button"
 					ngxFilePicker
@@ -34,15 +42,7 @@
 					(filePick)="AddBookFilePick($event)"
 					*ngIf="dataService.books.length > 0"
 				>
-					<fa-icon [icon]="faPlusLight"></fa-icon>
-				</dav-icon-card>
-
-				<!-- Card for discovering books in the Store -->
-				<dav-icon-card
-					class="quick-action-button"
-					(click)="NavigateToStorePage()"
-				>
-					<fa-icon [icon]="faBagShoppingLight"></fa-icon>
+					<fa-icon [icon]="faFileLight"></fa-icon>
 				</dav-icon-card>
 
 				<!-- Card for going to the author page, if the user is an author -->
