@@ -27,77 +27,32 @@
 		>
 			<div class="d-flex justify-content-center mb-3">
 				<!-- Card for adding new book -->
-				<button
-					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
-					style="transition: 0.12s"
-					[style.width.px]="smallCardsWidth"
-					[ngClass]="addBookHover ? 'shadow' : 'shadow-sm'"
+				<dav-icon-card
+					class="quick-action-button"
 					ngxFilePicker
 					accept="application/epub+zip"
 					(filePick)="AddBookFilePick($event)"
-					(mouseover)="addBookHover = true"
-					(mouseout)="addBookHover = false"
-					(focusin)="addBookHover = true"
-					(focusout)="addBookHover = false"
 					*ngIf="dataService.books.length > 0"
 				>
-					<div
-						class="card-body d-flex align-items-center"
-						style="padding: 1rem"
-					>
-						<fa-icon class="text-color" [icon]="faPlusLight" size="xl">
-						</fa-icon>
-					</div>
-				</button>
+					<fa-icon [icon]="faPlusLight"></fa-icon>
+				</dav-icon-card>
 
 				<!-- Card for discovering books in the Store -->
-				<a
-					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
-					style="text-decoration: none; transition: 0.12s"
-					[style.width.px]="smallCardsWidth"
-					[ngClass]="discoverBooksHover ? 'shadow' : 'shadow-sm'"
-					routerLink="/store"
-					(mouseover)="discoverBooksHover = true"
-					(mouseout)="discoverBooksHover = false"
-					(focusin)="discoverBooksHover = true"
-					(focusout)="discoverBooksHover = false"
+				<dav-icon-card
+					class="quick-action-button"
+					(click)="NavigateToStorePage()"
 				>
-					<div
-						class="card-body d-flex align-items-center"
-						style="padding: 1rem"
-					>
-						<fa-icon
-							class="text-color"
-							[icon]="faBagShoppingLight"
-							size="xl"
-						></fa-icon>
-					</div>
-				</a>
+					<fa-icon [icon]="faBagShoppingLight"></fa-icon>
+				</dav-icon-card>
 
 				<!-- Card for going to the author page, if the user is an author -->
-				<a
-					class="card cursor mx-3 d-flex justify-content-center align-items-center theme-background-color-secondary"
-					style="text-decoration: none; transition: 0.12s"
-					[style.width.px]="smallCardsWidth"
-					[ngClass]="goToAuthorPageHover ? 'shadow' : 'shadow-sm'"
-					routerLink="/author"
+				<dav-icon-card
+					class="quick-action-button"
+					(click)="NavigateToAuthorPage()"
 					*ngIf="dataService.userAuthor || dataService.userIsAdmin"
-					(mouseover)="goToAuthorPageHover = true"
-					(mouseout)="goToAuthorPageHover = false"
-					(focusin)="goToAuthorPageHover = true"
-					(focusout)="goToAuthorPageHover = false"
 				>
-					<div
-						class="card-body d-flex align-items-center"
-						style="padding: 1rem"
-					>
-						<fa-icon
-							class="text-color"
-							[icon]="faAddressCardLight"
-							size="xl"
-						></fa-icon>
-					</div>
-				</a>
+					<fa-icon [icon]="faAddressCardLight"></fa-icon>
+				</dav-icon-card>
 			</div>
 
 			<div [ngClass]="smallBookList ? '' : 'd-flex justify-content-center'">
