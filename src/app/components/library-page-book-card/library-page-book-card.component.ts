@@ -12,14 +12,14 @@ import { DataService } from "src/app/services/data-service"
 
 @Component({
 	selector: "pocketlib-library-page-book-card",
-	templateUrl: "./library-page-book-card.component.html"
+	templateUrl: "./library-page-book-card.component.html",
+	styleUrls: ["./library-page-book-card.component.scss"]
 })
 export class LibraryPageBookCardComponent {
 	@Input() book: EpubBook | PdfBook = new EpubBook(null, null, true, null)
 	@Input() width: number = 180
 	@Output() click = new EventEmitter()
 	@Output() contextMenu = new EventEmitter()
-	hovered: boolean = false
 	cover: string = ""
 	alt: string = ""
 	showDefaultCover: boolean = false

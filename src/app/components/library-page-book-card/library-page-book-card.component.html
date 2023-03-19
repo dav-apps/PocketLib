@@ -1,16 +1,10 @@
 <button
-	class="card m-2 p-0 cursor theme-background-color-secondary"
-	[ngClass]="hovered ? 'shadow' : 'shadow-sm'"
-	style="transition: 0.12s"
+	class="book-card card m-2 p-0 theme-background-color-secondary"
 	(contextmenu)="ContextMenu($event)"
-	(mouseover)="hovered = true"
-	(mouseout)="hovered = false"
-	(focusin)="hovered = true"
-	(focusout)="hovered = false"
 >
 	<img
 		[src]="cover"
-		style="object-fit: cover; border-radius: 0.25rem; transition: 0.12s"
+		style="object-fit: cover; border-radius: 0.25rem; transition: 200ms"
 		[style.width.px]="width"
 		[style.height.px]="width * 1.5"
 		[title]="book.title"

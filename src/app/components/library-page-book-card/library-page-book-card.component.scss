@@ -1,0 +1,11 @@
+.book-card {
+	cursor: pointer;
+	transition: 200ms;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.book-card:hover,
+.book-card:focus {
+	transform: translateY(-8px);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
