@@ -33,6 +33,7 @@ import { HorizontalAuthorListComponent } from "./components/horizontal-author-li
 import { HorizontalAuthorListItemComponent } from "./components/horizontal-author-list-item/horizontal-author-list-item.component"
 import { HorizontalSeriesListComponent } from "./components/horizontal-series-list/horizontal-series-list.component"
 import { HorizontalSeriesListItemComponent } from "./components/horizontal-series-list-item/horizontal-series-list-item.component"
+import { HorizontalCategoryListComponent } from "./components/horizontal-category-list/horizontal-category-list.component"
 import { StoreBookCardComponent } from "./components/store-book-card/store-book-card.component"
 import { LanguageDropdownComponent } from "./components/language-dropdown/language-dropdown.component"
 import { CategoriesSelectionComponent } from "./components/categories-selection/categories-selection.component"
@@ -95,6 +96,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		HorizontalAuthorListItemComponent,
 		HorizontalSeriesListComponent,
 		HorizontalSeriesListItemComponent,
+		HorizontalCategoryListComponent,
 		StoreBookCardComponent,
 		LanguageDropdownComponent,
 		CategoriesSelectionComponent,
