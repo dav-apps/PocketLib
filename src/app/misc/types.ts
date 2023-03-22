@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
+
 export interface BookListItem {
 	uuid: string
 	title: string
@@ -35,6 +37,11 @@ export interface Category {
 	key: string
 	name: string
 	language: string
+}
+
+export interface CategoryCard {
+	icon: IconDefinition
+	text: string
 }
 
 export interface Route {

@@ -1,4 +1,23 @@
 import {
+	faBooks as faBooksLight,
+	faChildren as faChildrenLight,
+	faComments as faCommentsLight,
+	faDragon as faDragonLight,
+	faFaceAwesome as faFaceAwesomeLight,
+	faGlobeStand as faGlobeStandLight,
+	faGhost as faGhostLight,
+	faHandsPraying as faHandsPrayingLight,
+	faHeadSide as faHeadSideLight,
+	faMasksTheater as faMasksTheaterLight,
+	faRocketLaunch as faRocketLaunchLight,
+	faSailboat as faSailboatLight,
+	faSquareRootVariable as faSquareRootVariableLight,
+	faThoughtBubble as faThoughtBubbleLight,
+	faUnicorn as faUnicornLight,
+	faUserSecret as faUserSecretLight
+} from "@fortawesome/pro-light-svg-icons"
+import {
+	CategoryCard,
 	StoreBookStatus,
 	StoreBookReleaseStatus,
 	PublisherResource,
@@ -237,6 +256,81 @@ export function GenerateInstagramLink(instagramUsername: string): string {
 export function GenerateTwitterLink(twitterUsername: string): string {
 	if (twitterUsername == null) return ""
 	return `https://twitter.com/${twitterUsername}`
+}
+
+export function CategoryResourceToCategoryCard(
+	category: CategoryResource
+): CategoryCard {
+	let card: CategoryCard = {
+		text: category.name.value,
+		icon: null
+	}
+
+	switch (category.key) {
+		case "biography":
+			card.icon = faHeadSideLight
+			break
+		case "fiction":
+			card.icon = faUnicornLight
+			break
+		case "adventure":
+			card.icon = faGlobeStandLight
+			break
+		case "science-fiction":
+			card.icon = faRocketLaunchLight
+			break
+		case "poetry":
+			card.icon = faCommentsLight
+			break
+		case "horror":
+			card.icon = faGhostLight
+			break
+		case "memoir":
+			card.icon = faHeadSideLight
+			break
+		case "autobiography":
+			card.icon = faHeadSideLight
+			break
+		case "mystery":
+			card.icon = faUserSecretLight
+			break
+		case "nonfiction":
+			card.icon = faSquareRootVariableLight
+			break
+		case "fantasy":
+			card.icon = faDragonLight
+			break
+		case "travel":
+			card.icon = faSailboatLight
+			break
+		case "shorts":
+			card.icon = faBooksLight
+			break
+		case "comedy":
+			card.icon = faFaceAwesomeLight
+			break
+		case "drama":
+			card.icon = faMasksTheaterLight
+			break
+		case "childrens":
+			card.icon = faChildrenLight
+			break
+		case "satire":
+			card.icon = faFaceAwesomeLight
+			break
+		case "spirituality":
+			card.icon = faHandsPrayingLight
+			break
+		case "philosophy":
+			card.icon = faThoughtBubbleLight
+			break
+	}
+
+	if (card.icon) {
+		return card
+	}
+
+	return null
 }
 
 export function ResponseDataToPublisherResource(
