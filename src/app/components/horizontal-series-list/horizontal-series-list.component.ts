@@ -18,7 +18,8 @@ const maxVisibleSeries = 5
 
 @Component({
 	selector: "pocketlib-horizontal-series-list",
-	templateUrl: "./horizontal-series-list.component.html"
+	templateUrl: "./horizontal-series-list.component.html",
+	styleUrls: ["./horizontal-series-list.component.scss"]
 })
 export class HorizontalSeriesListComponent {
 	locale = enUS.horizontalSeriesList
@@ -71,9 +72,9 @@ export class HorizontalSeriesListComponent {
 			}
 
 			for (let book of storeBookResponseData.items) {
-				let height = 150
+				let height = 165
 				let width = AdaptCoverWidthHeightToAspectRatio(
-					96,
+					106,
 					height,
 					book.cover.aspectRatio
 				)

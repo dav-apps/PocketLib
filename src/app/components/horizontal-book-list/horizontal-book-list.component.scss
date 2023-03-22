@@ -1,6 +1,6 @@
 .content-container {
 	display: flex;
-	min-height: 136px;
+	min-height: 263px;
 }
 
 .progress-ring-container {
@@ -8,10 +8,9 @@
 	align-items: center;
 }
 
-.category-cards-container {
+.book-list-container {
 	display: flex;
-	gap: 24px;
+	gap: 16px;
 	overflow-x: scroll;
 	overflow-y: hidden;
-	white-space: nowrap;
 }

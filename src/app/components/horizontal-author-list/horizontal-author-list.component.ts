@@ -11,11 +11,12 @@ import {
 } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
-const maxVisibleAuthors = 10
+const maxVisibleAuthors = 8
 
 @Component({
 	selector: "pocketlib-horizontal-author-list",
-	templateUrl: "./horizontal-author-list.component.html"
+	templateUrl: "./horizontal-author-list.component.html",
+	styleUrls: ["./horizontal-author-list.component.scss"]
 })
 export class HorizontalAuthorListComponent {
 	locale = enUS.horizontalAuthorList

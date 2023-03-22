@@ -1,7 +1,7 @@
 <a
-	class="card cursor m-2 theme-background-color-secondary"
+	class="card cursor"
 	[ngClass]="hovered && !highlighted ? 'shadow' : 'shadow-sm'"
-	style="transition: 0.16s"
+	style="display: inline-block; transition: 160ms"
 	[style.width.px]="book.coverWidth"
 	[style.opacity]="highlighted ? 0.6 : 1"
 	[style.transform]="

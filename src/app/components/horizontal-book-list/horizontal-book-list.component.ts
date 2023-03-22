@@ -13,12 +13,13 @@ import {
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
-const maxVisibleStoreBooks = 8
+const maxVisibleStoreBooks = 7
 type HorizontalBookListType = "latest" | "categories" | "series"
 
 @Component({
 	selector: "pocketlib-horizontal-book-list",
-	templateUrl: "./horizontal-book-list.component.html"
+	templateUrl: "./horizontal-book-list.component.html",
+	styleUrls: ["./horizontal-book-list.component.scss"]
 })
 export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"
@@ -161,9 +162,9 @@ export class HorizontalBookListComponent {
 		for (let storeBook of books) {
 			if (storeBook.cover == null) continue
 
-			let height = 190
+			let height = 209
 			let width = AdaptCoverWidthHeightToAspectRatio(
-				123,
+				135,
 				height,
 				storeBook.cover.aspectRatio
 			)
