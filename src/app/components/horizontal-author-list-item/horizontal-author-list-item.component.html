@@ -1,12 +1,5 @@
-<a
-	[routerLink]="'/store/author/' + author.uuid"
-	(mouseover)="ShowImageShadow()"
-	(mouseout)="HideImageShadow()"
-	(focusin)="ShowImageShadow()"
-	(focusout)="HideImageShadow()"
->
-	<pocketlib-blurhash-image
-		#blurhashImage
+<a [routerLink]="'/store/author/' + author.uuid">
+	<dav-blurhash-image
 		[src]="author.profileImageContent"
 		[fallback]="dataService.defaultProfileImageUrl"
 		[blurhash]="author.profileImageBlurhash"
@@ -14,7 +7,5 @@
 		[alt]="author.profileImageAlt"
 		width="110"
 		height="110"
-		[transform]="hovered ? 'translateY(-8px)' : 'translateY(0px)'"
-		rounded="true"
-	></pocketlib-blurhash-image>
+	></dav-blurhash-image>
 </a>
