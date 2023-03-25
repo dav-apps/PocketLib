@@ -8,20 +8,18 @@
 		<div
 			class="col-10 offset-1 col-md-4 offset-md-0 col-xl-3 text-center pt-5"
 		>
-			<pocketlib-blurhash-image
-				[src]="profileImageContent"
-				[fallback]="dataService.defaultProfileImageUrl"
-				[blurhash]="author.profileImage?.blurhash"
-				[title]="author.firstName + ' ' + author.lastName"
-				[alt]="profileImageAlt"
-				[width]="profileImageWidth"
-				[height]="profileImageWidth"
-				margin="0 0 1rem 0"
-				shadow="true"
-				rounded="true"
-				[loading]="profileImageLoading"
-			></pocketlib-blurhash-image>
-			<br />
+			<div class="profile-image-container">
+				<dav-blurhash-image
+					[src]="profileImageContent"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
+					[blurhash]="author.profileImage?.blurhash"
+					[title]="author.firstName + ' ' + author.lastName"
+					[alt]="profileImageAlt"
+					[width]="profileImageWidth"
+					[height]="profileImageWidth"
+					[loading]="profileImageLoading"
+				></dav-blurhash-image>
+			</div>
 
 			<dav-button
 				size="small"
@@ -266,20 +264,18 @@
 	>
 		<div class="text-center">
 			<div class="mx-auto pt-5">
-				<pocketlib-blurhash-image
-					[src]="profileImageContent"
-					[fallback]="dataService.defaultProfileImageUrl"
-					[blurhash]="author.profileImage?.blurhash"
-					[title]="author.firstName + ' ' + author.lastName"
-					[alt]="profileImageAlt"
-					[width]="profileImageWidth"
-					[height]="profileImageWidth"
-					margin="0 0 1rem 0"
-					shadow="true"
-					rounded="true"
-					[loading]="profileImageLoading"
-				></pocketlib-blurhash-image>
-				<br />
+				<div class="profile-image-container">
+					<dav-blurhash-image
+						[src]="profileImageContent"
+						[fallbackSrc]="dataService.defaultProfileImageUrl"
+						[blurhash]="author.profileImage?.blurhash"
+						[title]="author.firstName + ' ' + author.lastName"
+						[alt]="profileImageAlt"
+						[width]="profileImageWidth"
+						[height]="profileImageWidth"
+						[loading]="profileImageLoading"
+					></dav-blurhash-image>
+				</div>
 
 				<dav-button
 					size="small"

@@ -74,7 +74,8 @@ const maxProfileImageFileSize = 2000000
 
 @Component({
 	selector: "pocketlib-author-profile",
-	templateUrl: "./author-profile.component.html"
+	templateUrl: "./author-profile.component.html",
+	styleUrls: ["./author-profile.component.scss"]
 })
 export class AuthorProfileComponent {
 	locale = enUS.authorProfile
