@@ -59,20 +59,20 @@
 
 				<div
 					class="card cursor shadow-sm theme-background-color-secondary"
-					style="display: inline-block"
+					style="display: inline-block; border-radius: 8px;"
 					[style.marginTop.rem]="
 						selectableBooks.length == 0 && i == 0 ? 2 : 0
 					"
 					(contextmenu)="ShowBookContextMenu($event, book)"
 				>
-					<pocketlib-blurhash-image
+					<dav-blurhash-image
+						style="border-radius: inherit"
 						[src]="book.coverContent"
-						[fallback]="dataService.defaultStoreBookCover"
+						[fallbackSrc]="dataService.defaultStoreBookCover"
 						[blurhash]="book.coverBlurhash"
 						[title]="book.title"
 						height="180"
-					>
-					</pocketlib-blurhash-image>
+					></dav-blurhash-image>
 				</div>
 			</div>
 		</div>
@@ -142,19 +142,20 @@
 
 					<div
 						class="card cursor shadow-sm theme-background-color-secondary"
-						style="display: inline-block"
+						style="display: inline-block; border-radius: 8px;"
 						[style.marginTop.rem]="
 							selectableBooks.length == 0 && i == 0 ? 2 : 0
 						"
 						(contextmenu)="ShowBookContextMenu($event, book)"
 					>
-						<pocketlib-blurhash-image
+						<dav-blurhash-image
+							style="border-radius: inherit"
 							[src]="book.coverContent"
-							[fallback]="dataService.defaultStoreBookCover"
+							[fallbackSrc]="dataService.defaultStoreBookCover"
 							[blurhash]="book.coverBlurhash"
 							[title]="book.title"
 							height="180"
-						></pocketlib-blurhash-image>
+						></dav-blurhash-image>
 					</div>
 				</div>
 			</div>
@@ -216,16 +217,18 @@
 	<div class="d-flex flex-wrap mb-4" style="max-width: 500px">
 		<div
 			class="card cursor theme-background-color-secondary shadow-sm m-2"
+			style="border-radius: 8px;"
 			*ngFor="let book of selectableBooks"
 		>
-			<pocketlib-blurhash-image
+			<dav-blurhash-image
+				style="border-radius: inherit"
 				[src]="book.coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
 				[title]="book.title"
 				height="150"
 				(click)="AddBook(book)"
-			></pocketlib-blurhash-image>
+			></dav-blurhash-image>
 		</div>
 	</div>
 </dav-dialog>

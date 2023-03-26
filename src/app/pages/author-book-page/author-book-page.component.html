@@ -62,14 +62,15 @@
 					{{ locale.noCover }}
 				</p>
 				<div class="mb-3" *ngIf="coverContent">
-					<pocketlib-blurhash-image
+					<dav-blurhash-image
+						style="border-radius: 8px"
 						[src]="coverContent"
-						[fallback]="dataService.defaultStoreBookCover"
+						[fallbackSrc]="dataService.defaultStoreBookCover"
 						[blurhash]="book.coverBlurhash"
 						height="200"
 						width="140"
 						[loading]="coverLoading"
-					></pocketlib-blurhash-image>
+					></dav-blurhash-image>
 				</div>
 
 				<dav-button
@@ -411,14 +412,14 @@
 						{{ locale.noCover }}
 					</p>
 					<div class="mb-3" *ngIf="coverContent">
-						<pocketlib-blurhash-image
+						<dav-blurhash-image
 							[src]="coverContent"
-							[fallback]="dataService.defaultStoreBookCover"
+							[fallbackSrc]="dataService.defaultStoreBookCover"
 							[blurhash]="book.coverBlurhash"
 							height="200"
 							width="140"
 							[loading]="coverLoading"
-						></pocketlib-blurhash-image>
+						></dav-blurhash-image>
 					</div>
 
 					<dav-button

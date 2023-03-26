@@ -14,8 +14,8 @@
 			class="d-flex align-items-center"
 			style="width: 150px; height: 160px"
 		>
-			<pocketlib-blurhash-image
-				style="margin-left: 15px; position: absolute"
+			<dav-blurhash-image
+				style="margin-left: 15px; position: absolute; border-radius: 8px;"
 				[style.transform]="
 					'translate(' +
 					(50 / books.length) * i +
@@ -25,13 +25,13 @@
 				"
 				[style.zIndex]="books.length - i"
 				[src]="book.coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
 				[title]="book.title"
 				width="66"
 				height="100"
 				*ngFor="let book of books; let i = index"
-			></pocketlib-blurhash-image>
+			></dav-blurhash-image>
 		</div>
 
 		<div class="card-body my-auto">
