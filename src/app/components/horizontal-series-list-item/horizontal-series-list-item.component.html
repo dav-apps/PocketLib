@@ -1,6 +1,4 @@
 <a
-	class="d-flex"
-	style="width: 220px"
 	[style.height.px]="120 + series.books.length * 10"
 	[routerLink]="link"
 	(mouseover)="hover = true"
@@ -8,8 +6,7 @@
 	(focusin)="hover = true"
 	(focusout)="hover = false"
 >
-	<pocketlib-blurhash-image
-		style="margin-left: 15px; position: absolute; transition: 0.16s"
+	<dav-blurhash-image
 		[style.transform]="
 			hover
 				? 'translate(' +
@@ -31,11 +28,11 @@
 		"
 		[style.zIndex]="series.books.length - i"
 		[src]="book.coverContent"
-		[fallback]="dataService.defaultStoreBookCover"
+		[fallbackSrc]="dataService.defaultStoreBookCover"
 		[blurhash]="book.coverBlurhash"
 		[title]="book.title"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
 		*ngFor="let book of series.books; let i = index"
-	></pocketlib-blurhash-image>
+	></dav-blurhash-image>
 </a>

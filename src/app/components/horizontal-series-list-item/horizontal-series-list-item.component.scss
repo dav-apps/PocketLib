@@ -1,0 +1,13 @@
+a {
+	display: flex;
+	width: 220px;
+	border-radius: 8px;
+}
+
+dav-blurhash-image {
+	position: absolute;
+	margin-left: 15px;
+	transition: 160ms;
+	border-radius: inherit;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}

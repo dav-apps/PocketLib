@@ -4,14 +4,15 @@ import { SeriesListItem } from "src/app/misc/types"
 
 @Component({
 	selector: "pocketlib-horizontal-series-list-item",
-	templateUrl: "./horizontal-series-list-item.component.html"
+	templateUrl: "./horizontal-series-list-item.component.html",
+	styleUrls: ["./horizontal-series-list-item.component.scss"]
 })
 export class HorizontalSeriesListItemComponent {
 	@Input() series: SeriesListItem
 	hover: boolean = false
 	link: string = ""
-	advancedHoverAnimationIndexTransform: number = 1
 	advancedHoverAnimation: boolean = false
+	advancedHoverAnimationIndexTransform: number = 1
 
 	constructor(public dataService: DataService) {}
 
