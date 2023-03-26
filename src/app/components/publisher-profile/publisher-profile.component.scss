@@ -1,0 +1,10 @@
+.logo-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+}
+
+.logo-container > dav-blurhash-image {
+	border-radius: 50%;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
