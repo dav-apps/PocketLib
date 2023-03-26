@@ -4,12 +4,12 @@ import { BookListItem } from "src/app/misc/types"
 
 @Component({
 	selector: "pocketlib-store-book-card",
-	templateUrl: "./store-book-card.component.html"
+	templateUrl: "./store-book-card.component.html",
+	styleUrls: ["./store-book-card.component.scss"]
 })
 export class StoreBookCardComponent {
 	@Input() book: BookListItem
 	@Input() highlighted: boolean = false
-	hovered: boolean = false
 	alt: string = ""
 	link: string = ""
 

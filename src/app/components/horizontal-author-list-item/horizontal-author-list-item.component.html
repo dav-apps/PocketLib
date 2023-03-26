@@ -1,7 +1,7 @@
 <a [routerLink]="'/store/author/' + author.uuid">
 	<dav-blurhash-image
 		[src]="author.profileImageContent"
-		[fallback]="dataService.defaultProfileImageUrl"
+		[fallbackSrc]="dataService.defaultProfileImageUrl"
 		[blurhash]="author.profileImageBlurhash"
 		[title]="author.firstName + ' ' + author.lastName"
 		[alt]="author.profileImageAlt"

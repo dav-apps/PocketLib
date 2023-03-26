@@ -1,26 +1,11 @@
-<a
-	class="card cursor"
-	[ngClass]="hovered && !highlighted ? 'shadow' : 'shadow-sm'"
-	style="display: inline-block; transition: 160ms"
-	[style.width.px]="book.coverWidth"
-	[style.opacity]="highlighted ? 0.6 : 1"
-	[style.transform]="
-		hovered && !highlighted ? 'translateY(-8px)' : 'translateY(0px)'
-	"
-	[routerLink]="link"
-	(mouseover)="hovered = true"
-	(mouseout)="hovered = false"
-	(focusin)="hovered = true"
-	(focusout)="hovered = false"
->
-	<pocketlib-blurhash-image
+<a [style.opacity]="highlighted ? 0.6 : 1" [routerLink]="link">
+	<dav-blurhash-image
 		[src]="book.coverContent"
-		[fallback]="dataService.defaultStoreBookCover"
+		[fallbackSrc]="dataService.defaultStoreBookCover"
 		[blurhash]="book.coverBlurhash"
 		[title]="book.title"
 		[alt]="alt"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
-		fillWidth="true"
-	></pocketlib-blurhash-image>
+	></dav-blurhash-image>
 </a>
