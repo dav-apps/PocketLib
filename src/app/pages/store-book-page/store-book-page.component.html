@@ -6,16 +6,16 @@
 	<div class="col-4 col-lg-3 offset-lg-1 mt-2 d-flex">
 		<div class="mx-auto">
 			<!-- Cover -->
-			<pocketlib-blurhash-image
+			<dav-blurhash-image
+				class="cover-image"
 				[src]="coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
 				[title]="book.title"
 				[alt]="coverAlt"
 				width="160"
 				height="270"
-				shadow="true"
-			></pocketlib-blurhash-image>
+			></dav-blurhash-image>
 
 			<!-- Author profile image and name -->
 			<a
@@ -23,18 +23,16 @@
 				style="text-decoration: none"
 				[routerLink]="'/store/author/' + author.uuid"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="authorProfileImageContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
@@ -51,18 +49,16 @@
 				[routerLink]="'/store/publisher/' + publisher.uuid"
 				*ngIf="publisher != null"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="publisher.logoContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="publisher.logoBlurhash"
 					[title]="publisher.name"
 					[alt]="publisher.logoAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
@@ -192,16 +188,16 @@
 	>
 		<div class="mt-4">
 			<!-- Cover -->
-			<pocketlib-blurhash-image
+			<dav-blurhash-image
+				class="cover-image"
 				[src]="coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
 				[title]="book.title"
 				[alt]="coverAlt"
 				width="160"
 				height="270"
-				shadow="true"
-			></pocketlib-blurhash-image>
+			></dav-blurhash-image>
 
 			<!-- Author profile image and name -->
 			<a
@@ -209,18 +205,16 @@
 				style="text-decoration: none"
 				[routerLink]="'/store/author/' + author.uuid"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="authorProfileImageContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
@@ -237,18 +231,16 @@
 				[routerLink]="'/store/publisher/' + publisher.uuid"
 				*ngIf="publisher != null"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="publisher.logoContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="publisher.logoBlurhash"
 					[title]="publisher.name"
 					[alt]="publisher.logoAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
@@ -376,16 +368,16 @@
 	<div class="d-flex">
 		<div class="mx-auto">
 			<!-- Cover -->
-			<pocketlib-blurhash-image
+			<dav-blurhash-image
+				class="cover-image"
 				[src]="coverContent"
-				[fallback]="dataService.defaultStoreBookCover"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
 				[title]="book.title"
 				[alt]="coverAlt"
 				width="160"
 				height="270"
-				shadow="true"
-			></pocketlib-blurhash-image>
+			></dav-blurhash-image>
 
 			<!-- Author profile image and name -->
 			<a
@@ -393,18 +385,16 @@
 				style="text-decoration: none"
 				[routerLink]="'/store/author/' + author.uuid"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="authorProfileImageContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="author.profileImage?.blurhash"
 					[title]="author.firstName + ' ' + author.lastName"
 					[alt]="authorProfileImageAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
@@ -421,18 +411,16 @@
 				[routerLink]="'/store/publisher/' + publisher.uuid"
 				*ngIf="publisher != null"
 			>
-				<pocketlib-blurhash-image
+				<dav-blurhash-image
+					style="border-radius: 50%"
 					[src]="publisher.logoContent"
-					[fallback]="dataService.defaultProfileImageUrl"
+					[fallbackSrc]="dataService.defaultProfileImageUrl"
 					[blurhash]="publisher.logoBlurhash"
 					[title]="publisher.name"
 					[alt]="publisher.logoAlt"
 					width="30"
 					height="30"
-					shadowSm="true"
-					rounded="true"
-					cursor="true"
-				></pocketlib-blurhash-image>
+				></dav-blurhash-image>
 
 				<p
 					class="fw-light my-auto cursor text-color"
