@@ -64,7 +64,6 @@ export class LibraryPageComponent {
 	loadingScreenVisible: boolean = false
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
-	allBooksHoveredIndex: number = -1
 
 	constructor(
 		public dataService: DataService,
