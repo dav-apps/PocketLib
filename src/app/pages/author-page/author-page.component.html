@@ -19,15 +19,15 @@
 		</dav-header>
 	</div>
 
-	<div class="list-group" style="display: inline-block">
-		<p
-			class="list-group-item cursor theme-background-color-secondary text-color"
-			style="font-size: 18px"
-			(click)="ShowPublisher(publisher.uuid)"
-			*ngFor="let publisher of dataService.adminPublishers"
-		>
-			{{ publisher.name }}
-		</p>
+	<div class="list-container">
+		<dav-list>
+			<dav-list-item
+				[headline]="publisher.name"
+				size="small"
+				(click)="ShowPublisher(publisher.uuid)"
+				*ngFor="let publisher of dataService.adminPublishers"
+			></dav-list-item>
+		</dav-list>
 	</div>
 
 	<!-- List of authors -->
@@ -41,15 +41,15 @@
 		</dav-header>
 	</div>
 
-	<div class="list-group" style="display: inline-block">
-		<p
-			class="list-group-item cursor theme-background-color-secondary text-color"
-			style="font-size: 18px"
-			(click)="ShowAuthor(author.uuid)"
-			*ngFor="let author of dataService.adminAuthors"
-		>
-			{{ author.firstName }} {{ author.lastName }}
-		</p>
+	<div class="list-container">
+		<dav-list>
+			<dav-list-item
+				[headline]="author.firstName + ' ' + author.lastName"
+				size="small"
+				(click)="ShowAuthor(author.uuid)"
+				*ngFor="let author of dataService.adminAuthors"
+			></dav-list-item>
+		</dav-list>
 	</div>
 
 	<!-- List of books in review -->
@@ -59,15 +59,15 @@
 		</dav-header>
 	</div>
 
-	<div class="list-group" style="display: inline-block">
-		<p
-			class="list-group-item cursor theme-background-color-secondary text-color"
-			style="font-size: 18px"
-			(click)="ShowBook(book.uuid)"
-			*ngFor="let book of booksInReview"
-		>
-			{{ book.title }}
-		</p>
+	<div class="list-container">
+		<dav-list>
+			<dav-list-item
+				[headline]="book.title"
+				size="small"
+				(click)="ShowBook(book.uuid)"
+				*ngFor="let book of booksInReview"
+			></dav-list-item>
+		</dav-list>
 	</div>
 </div>
 
@@ -89,15 +89,15 @@
 			</dav-header>
 		</div>
 
-		<div class="list-group" style="display: inline-block">
-			<p
-				class="list-group-item cursor theme-background-color-secondary text-color"
-				style="font-size: 18px"
-				(click)="ShowPublisher(publisher.uuid)"
-				*ngFor="let publisher of dataService.adminPublishers"
-			>
-				{{ publisher.name }}
-			</p>
+		<div class="list-container">
+			<dav-list>
+				<dav-list-item
+					[headline]="publisher.name"
+					size="small"
+					(click)="ShowPublisher(publisher.uuid)"
+					*ngFor="let publisher of dataService.adminPublishers"
+				></dav-list-item>
+			</dav-list>
 		</div>
 
 		<!-- List of authors -->
@@ -111,15 +111,15 @@
 			</dav-header>
 		</div>
 
-		<div class="list-group" style="display: inline-block">
-			<p
-				class="list-group-item cursor theme-background-color-secondary text-color"
-				style="font-size: 18px"
-				(click)="ShowAuthor(author.uuid)"
-				*ngFor="let author of dataService.adminAuthors"
-			>
-				{{ author.firstName }} {{ author.lastName }}
-			</p>
+		<div class="list-container">
+			<dav-list>
+				<dav-list-item
+					[headline]="author.firstName + ' ' + author.lastName"
+					size="small"
+					(click)="ShowAuthor(author.uuid)"
+					*ngFor="let author of dataService.adminAuthors"
+				></dav-list-item>
+			</dav-list>
 		</div>
 	</div>
 
@@ -132,15 +132,15 @@
 			</dav-header>
 		</div>
 
-		<div class="list-group" style="display: inline-block">
-			<p
-				class="list-group-item cursor theme-background-color-secondary text-color"
-				style="font-size: 18px"
-				(click)="ShowBook(book.uuid)"
-				*ngFor="let book of booksInReview"
-			>
-				{{ book.title }}
-			</p>
+		<div class="list-container">
+			<dav-list>
+				<dav-list-item
+					[headline]="book.title"
+					size="small"
+					(click)="ShowBook(book.uuid)"
+					*ngFor="let book of booksInReview"
+				></dav-list-item>
+			</dav-list>
 		</div>
 	</div>
 </div>

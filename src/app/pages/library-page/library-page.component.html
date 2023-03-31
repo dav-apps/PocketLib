@@ -146,6 +146,7 @@
 							[imageSrc]="book.cover"
 							[imageFallbackSrc]="dataService.defaultStoreBookCover"
 							[headline]="book.title"
+							[subhead]="book.author"
 							(click)="ShowBook(book)"
 							(contextmenu)="BookContextMenu($event, book)"
 							*ngFor="let book of allBooks"

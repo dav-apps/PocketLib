@@ -22,7 +22,8 @@ import { Author } from "src/app/models/Author"
 
 @Component({
 	selector: "pocketlib-author-page",
-	templateUrl: "./author-page.component.html"
+	templateUrl: "./author-page.component.html",
+	styleUrls: ["./author-page.component.scss"]
 })
 export class AuthorPageComponent {
 	locale = enUS.authorPage
