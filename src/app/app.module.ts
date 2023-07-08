@@ -20,10 +20,11 @@ import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
 
 // Services
+import { RoutingService } from "./services/routing-service"
 import { DataService } from "./services/data-service"
 import { ApiService } from "./services/api-service"
 import { CachingService } from "./services/caching-service"
-import { RoutingService } from "./services/routing-service"
+import { GraphQLService } from "./services/graphql-service"
 
 // Components
 import { AppComponent } from "./app.component"
@@ -163,10 +164,11 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		})
 	],
 	providers: [
+		RoutingService,
 		DataService,
 		ApiService,
 		CachingService,
-		RoutingService,
+		GraphQLService,
 		{
 			provide: APOLLO_OPTIONS,
 			useFactory(httpLink: HttpLink) {
