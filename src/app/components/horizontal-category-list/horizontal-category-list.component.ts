@@ -1,14 +1,7 @@
 import { Component } from "@angular/core"
-import { ApiResponse, isSuccessStatusCode } from "dav-js"
-import {
-	CategoryCard,
-	CategoryListField,
-	CategoryResource,
-	Language,
-	ListResponseData
-} from "src/app/misc/types"
+import { CategoryCard } from "src/app/misc/types"
 import { CategoryResourceToCategoryCard } from "src/app/misc/utils"
-import { ApiService } from "src/app/services/api-service"
+import { DataService } from "src/app/services/data-service"
 
 @Component({
 	selector: "pocketlib-horizontal-category-list",
@@ -19,25 +12,14 @@ export class HorizontalCategoryListComponent {
 	loading: boolean = true
 	cards: CategoryCard[] = []
 
-	constructor(private apiService: ApiService) {}
+	constructor(private dataService: DataService) {}
 
 	async ngOnInit() {
-		let categoriesResponse = await this.apiService.ListCategories({
-			fields: [CategoryListField.items_key, CategoryListField.items_name],
-			languages: [Language.de]
-		})
-
-		if (!isSuccessStatusCode(categoriesResponse.status)) {
-			return
-		}
-
-		let categories = (
-			categoriesResponse as ApiResponse<ListResponseData<CategoryResource>>
-		).data.items
+		await this.dataService.categoriesPromiseHolder.AwaitResult()
 
 		let categoryCards: CategoryCard[] = []
 
-		for (let category of categories) {
+		for (let category of this.dataService.categories) {
 			let categoryCard = CategoryResourceToCategoryCard(category)
 
 			if (categoryCard != null) {
