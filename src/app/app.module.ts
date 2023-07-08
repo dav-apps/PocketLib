@@ -13,6 +13,12 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { DragulaModule } from "ng2-dragula"
 import { ServiceWorkerModule } from "@angular/service-worker"
 
+// Apollo
+import { HttpClientModule } from "@angular/common/http"
+import { APOLLO_OPTIONS, ApolloModule } from "apollo-angular"
+import { HttpLink } from "apollo-angular/http"
+import { InMemoryCache } from "@apollo/client/core"
+
 // Services
 import { DataService } from "./services/data-service"
 import { ApiService } from "./services/api-service"
@@ -143,6 +149,8 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
+		ApolloModule,
+		HttpClientModule,
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
 		MatTreeModule,
@@ -154,7 +162,24 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 			enabled: environment.production
 		})
 	],
-	providers: [DataService, ApiService, CachingService, RoutingService],
+	providers: [
+		DataService,
+		ApiService,
+		CachingService,
+		RoutingService,
+		{
+			provide: APOLLO_OPTIONS,
+			useFactory(httpLink: HttpLink) {
+				return {
+					cache: new InMemoryCache(),
+					link: httpLink.create({
+						uri: environment.newPocketlibApiUrl
+					})
+				}
+			},
+			deps: [HttpLink]
+		}
+	],
 	bootstrap: [AppComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -4,15 +4,17 @@
 
 export const environment = {
 	production: false,
-	apiKey: "eUzs3PQZYweXvumcWvagRHjdUroGe5Mo7kN1inHm",
-	pocketlibApiBaseUrl: "http://localhost:3111/v1/api/1/master/call",
-	websiteBaseUrl: "http://localhost:3000",
-	appId: 4,
-	bookTableId: 10,
-	bookFileTableId: 11,
-	epubBookmarkTableId: 12,
-	settingsTableId: 13,
-	bookOrderTableId: 28,
+	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
+	pocketlibApiBaseUrl:
+		"https://dav-backend-tfpik.ondigitalocean.app/staging/v1/api/1/master/call",
+	newPocketlibApiUrl: "http://localhost:4000",
+	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",
+	appId: 6,
+	bookTableId: 14,
+	bookFileTableId: 15,
+	epubBookmarkTableId: 17,
+	settingsTableId: 18,
+	bookOrderTableId: 30,
 	admins: [1]
 }
 
