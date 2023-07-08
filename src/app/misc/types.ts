@@ -472,34 +472,6 @@ export enum StoreBookReleaseListField {
 }
 //#endregion
 
-//#region Category
-export interface CategoryResource {
-	uuid: string
-	key: string
-	name: {
-		value: string
-		language: string
-	}
-}
-
-export enum CategoryField {
-	uuid = "uuid",
-	key = "key",
-	name = "name",
-	name_value = "name.value",
-	name_language = "name.language"
-}
-
-export enum CategoryListField {
-	type = "type",
-	items_uuid = "items.uuid",
-	items_key = "items.key",
-	items_name = "items.name",
-	items_name_value = "items.name.value",
-	items_name_language = "items.name.language"
-}
-//#endregion
-
 //#region Book
 export interface BookResource {
 	uuid: string

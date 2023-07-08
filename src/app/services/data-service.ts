@@ -10,6 +10,7 @@ import {
 } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { ApiService } from "./api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "./caching-service"
 import { Book } from "../models/Book"
 import { EpubBook } from "../models/EpubBook"
@@ -35,8 +36,6 @@ import {
 	AuthorField,
 	AuthorListField,
 	Category,
-	CategoryListField,
-	CategoryResource,
 	Language,
 	ListResponseData
 } from "src/app/misc/types"
@@ -83,6 +82,7 @@ export class DataService {
 
 	constructor(
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService,
 		private swUpdate: SwUpdate
 	) {
@@ -262,23 +262,17 @@ export class DataService {
 		// Get the categories
 		this.categories = []
 
-		let response = await this.apiService.ListCategories({
-			fields: [CategoryListField.items_key, CategoryListField.items_name],
-			languages: await this.GetStoreLanguages()
-		})
+		let languages = await this.GetStoreLanguages()
+		let listCategoriesResponse = await this.graphqlService.listCategories(
+			languages[0]
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (
-				response as ApiResponse<ListResponseData<CategoryResource>>
-			).data
-
-			for (let category of responseData.items) {
-				this.categories.push({
-					key: category.key,
-					name: category.name?.value,
-					language: category.name?.language
-				})
-			}
+		for (let category of listCategoriesResponse.data.listCategories) {
+			this.categories.push({
+				key: category.key,
+				name: category.name.name,
+				language: category.name.language
+			})
 		}
 
 		// Sort the categories by name

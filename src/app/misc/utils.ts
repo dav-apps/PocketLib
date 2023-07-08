@@ -17,6 +17,7 @@ import {
 	faUserSecret as faUserSecretLight
 } from "@fortawesome/pro-light-svg-icons"
 import {
+	Category,
 	CategoryCard,
 	StoreBookStatus,
 	StoreBookReleaseStatus,
@@ -32,7 +33,6 @@ import {
 	StoreBookCoverResource,
 	StoreBookFileResource,
 	StoreBookReleaseResource,
-	CategoryResource,
 	BookResource,
 	Language
 } from "./types"
@@ -259,10 +259,10 @@ export function GenerateTwitterLink(twitterUsername: string): string {
 }
 
 export function CategoryResourceToCategoryCard(
-	category: CategoryResource
+	category: Category
 ): CategoryCard {
 	let card: CategoryCard = {
-		text: category.name.value,
+		text: category.name,
 		icon: null
 	}
 
@@ -550,25 +550,6 @@ export function ResponseDataToStoreBookReleaseResource(
 	}
 
 	return storeBookReleaseResource
-}
-
-export function ResponseDataToCategoryResource(
-	responseData: any
-): CategoryResource {
-	let categoryResource: CategoryResource = {
-		uuid: responseData.uuid,
-		key: responseData.key,
-		name: null
-	}
-
-	if (responseData.name != null) {
-		categoryResource.name = {
-			value: responseData.name.value,
-			language: responseData.name.language
-		}
-	}
-
-	return categoryResource
 }
 
 export function ResponseDataToBookResource(responseData: any): BookResource {

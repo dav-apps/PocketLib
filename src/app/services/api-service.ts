@@ -46,8 +46,6 @@ import {
 	StoreBookReleaseResource,
 	StoreBookReleaseField,
 	StoreBookReleaseListField,
-	CategoryResource,
-	CategoryListField,
 	BookResource,
 	BookField
 } from "src/app/misc/types"
@@ -64,7 +62,6 @@ import {
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource,
 	ResponseDataToStoreBookReleaseResource,
-	ResponseDataToCategoryResource,
 	ResponseDataToBookResource
 } from "src/app/misc/utils"
 
@@ -1974,73 +1971,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.PublishStoreBookRelease(params)
-		}
-	}
-	//#endregion
-
-	//#region Category
-	async ListCategories(params: {
-		fields?: CategoryListField[]
-		languages?: Language[]
-	}): Promise<
-		ApiResponse<ListResponseData<CategoryResource>> | ApiErrorResponse
-	> {
-		// Check if the response is cached
-		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
-			this.ListCategories.name,
-			PrepareRequestParams(
-				{
-					fields: params.fields,
-					languages: params.languages
-				},
-				true
-			)
-		)
-
-		// Check if the request is currently running
-		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
-		if (promiseHolder != null) await promiseHolder.AwaitResult()
-
-		let cachedResponse =
-			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
-		if (cachedResponse) return cachedResponse
-
-		this.cachingService.SetupApiRequest(cacheResponseKey)
-
-		try {
-			let response = await axios({
-				method: "get",
-				url: `${environment.pocketlibApiBaseUrl}/categories`,
-				params: PrepareRequestParams(
-					{
-						fields: params.fields,
-						languages: params.languages
-					},
-					true
-				)
-			})
-
-			let result = {
-				status: response.status,
-				data: {
-					type: response.data.type,
-					pages: response.data.pages,
-					items: []
-				}
-			}
-
-			for (let item of response.data.items) {
-				result.data.items.push(ResponseDataToCategoryResource(item))
-			}
-
-			// Add the response to the cache
-			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
-			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
-
-			return result
-		} catch (error) {
-			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
-			return ConvertErrorToApiErrorResponse(error)
 		}
 	}
 	//#endregion
