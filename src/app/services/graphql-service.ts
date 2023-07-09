@@ -5,7 +5,38 @@ import { Apollo, gql } from "apollo-angular"
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
-	listCategories(language?: string) {
+	listAuthors(params: { limit?: number; latest?: boolean }) {
+		return this.apollo
+			.query<{
+				listAuthors: {
+					uuid: string
+					firstName: string
+					lastName: string
+					profileImage: { url: string; blurhash: string }
+				}[]
+			}>({
+				query: gql`
+					query ListAuthors($limit: Int, $latest: Boolean) {
+						listAuthors(limit: $limit, latest: $latest) {
+							uuid
+							firstName
+							lastName
+							profileImage {
+								url
+								blurhash
+							}
+						}
+					}
+				`,
+				variables: {
+					limit: params.limit,
+					latest: params.latest
+				}
+			})
+			.toPromise()
+	}
+
+	listCategories(params: { language?: string }) {
 		return this.apollo
 			.query<{
 				listCategories: {
@@ -30,7 +61,7 @@ export class GraphQLService {
 					}
 				`,
 				variables: {
-					language
+					language: params.language
 				}
 			})
 			.toPromise()
