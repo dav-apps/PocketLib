@@ -36,6 +36,59 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	retrieveStoreBook(uuid: string) {
+		return this.apollo
+			.query<{
+				retrieveStoreBook: {
+					uuid: string
+					collection: {
+						uuid: string
+					}
+					title: string
+					description: string
+					price: number
+					status: string
+					cover: {
+						url: string
+						blurhash: string
+					}
+					inLibrary: boolean
+					purchased: boolean
+					categories: {
+						key: string
+					}[]
+				}
+			}>({
+				query: gql`
+					query RetrieveStoreBook($uuid: String!) {
+						retrieveStoreBook(uuid: $uuid) {
+							uuid
+							collection {
+								uuid
+							}
+							title
+							description
+							price
+							status
+							cover {
+								url
+								blurhash
+							}
+							inLibrary
+							purchased
+							categories {
+								key
+							}
+						}
+					}
+				`,
+				variables: {
+					uuid
+				}
+			})
+			.toPromise()
+	}
+
 	listCategories(params: { language?: string }) {
 		return this.apollo
 			.query<{

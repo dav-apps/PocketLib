@@ -10,6 +10,7 @@ import {
 } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "src/app/services/caching-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -30,8 +31,6 @@ import {
 	StoreBookStatus,
 	StoreBookCollectionResource,
 	StoreBookCollectionField,
-	StoreBookResource,
-	StoreBookField,
 	ListResponseData,
 	StoreBookSeriesResource,
 	StoreBookSeriesListField
@@ -114,6 +113,7 @@ export class StoreBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService,
 		private routingService: RoutingService,
 		private router: Router,
@@ -180,115 +180,99 @@ export class StoreBookPageComponent {
 	}
 
 	async LoadStoreBook(): Promise<string> {
-		let response = await this.apiService.RetrieveStoreBook({
-			uuid: this.uuid,
-			fields: [
-				StoreBookField.collection,
-				StoreBookField.title,
-				StoreBookField.description,
-				StoreBookField.price,
-				StoreBookField.status,
-				StoreBookField.cover,
-				StoreBookField.inLibrary,
-				StoreBookField.purchased,
-				StoreBookField.categories
-			]
-		})
+		let response = await this.graphqlService.retrieveStoreBook(this.uuid)
+		let responseData = response.data.retrieveStoreBook
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<StoreBookResource>).data
+		this.book.collection = responseData.collection?.uuid
+		this.book.title = responseData.title
+		this.book.description = responseData.description
+		this.book.price = responseData.price
+		this.book.status = GetStoreBookStatusByString(responseData.status)
+		this.book.coverBlurhash = responseData.cover?.blurhash
+		this.book.inLibrary = responseData.inLibrary
+		this.book.purchased = responseData.purchased
 
-			this.book.collection = responseData.collection
-			this.book.title = responseData.title
-			this.book.description = responseData.description
-			this.book.price = responseData.price
-			this.book.status = GetStoreBookStatusByString(responseData.status)
-			this.book.coverBlurhash = responseData.cover?.blurhash
-			this.book.inLibrary = responseData.inLibrary
-			this.book.purchased = responseData.purchased
-			this.categoryKeys = responseData.categories
-			this.coverAlt = this.dataService
-				.GetLocale()
-				.misc.bookCoverAlt.replace("{0}", this.book.title)
-
-			// Load the cover
-			if (responseData.cover?.url != null) {
-				this.coverUrl = responseData.cover?.url
-
-				this.apiService
-					.GetFile({ url: responseData.cover.url })
-					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-						if (isSuccessStatusCode(fileResponse.status)) {
-							this.coverContent = (
-								fileResponse as ApiResponse<string>
-							).data
-						}
-					})
-			}
-
-			// Load the price
-			if (this.book.price == 0) {
-				this.price = this.locale.free
-			} else {
-				this.price = (this.book.price / 100).toFixed(2) + " €"
-
-				if (this.dataService.supportedLocale == "de") {
-					this.price = this.price.replace(".", ",")
-				}
-			}
-
-			// Load the status
-			switch (this.book.status) {
-				case StoreBookStatus.Unpublished:
-					this.bookStatus = this.locale.unpublished
-					break
-				case StoreBookStatus.Review:
-					this.bookStatus = this.locale.review
-					break
-				case StoreBookStatus.Hidden:
-					this.bookStatus = this.locale.hidden
-					break
-			}
-
-			// Load the categories
-			this.book.categories = []
-			await this.dataService.categoriesPromiseHolder.AwaitResult()
-
-			for (let key of this.categoryKeys) {
-				// Find the category with the key
-				let category = this.dataService.categories.find(c => c.key == key)
-
-				if (category) {
-					this.book.categories.push({
-						key: category.key,
-						name: category.name
-					})
-				}
-			}
-
-			// Get the series of the book
-			let listSeriesResponse = await this.apiService.ListStoreBookSeries({
-				fields: [StoreBookSeriesListField.items_uuid],
-				languages: await this.dataService.GetStoreLanguages(),
-				storeBook: this.uuid
-			})
-
-			if (isSuccessStatusCode(listSeriesResponse.status)) {
-				let listSeriesResponseData = (
-					listSeriesResponse as ApiResponse<
-						ListResponseData<StoreBookSeriesResource>
-					>
-				).data
-
-				if (listSeriesResponseData.items.length > 0) {
-					this.book.series.push(listSeriesResponseData.items[0].uuid)
-				}
-			}
-
-			return responseData.collection
+		for (let category of responseData.categories) {
+			this.categoryKeys.push(category.key)
 		}
 
-		return null
+		this.coverAlt = this.dataService
+			.GetLocale()
+			.misc.bookCoverAlt.replace("{0}", this.book.title)
+
+		// Load the cover
+		if (responseData.cover?.url != null) {
+			this.coverUrl = responseData.cover?.url
+
+			this.apiService
+				.GetFile({ url: responseData.cover.url })
+				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.coverContent = (fileResponse as ApiResponse<string>).data
+					}
+				})
+		}
+
+		// Load the price
+		if (this.book.price == 0) {
+			this.price = this.locale.free
+		} else {
+			this.price = (this.book.price / 100).toFixed(2) + " €"
+
+			if (this.dataService.supportedLocale == "de") {
+				this.price = this.price.replace(".", ",")
+			}
+		}
+
+		// Load the status
+		switch (this.book.status) {
+			case StoreBookStatus.Unpublished:
+				this.bookStatus = this.locale.unpublished
+				break
+			case StoreBookStatus.Review:
+				this.bookStatus = this.locale.review
+				break
+			case StoreBookStatus.Hidden:
+				this.bookStatus = this.locale.hidden
+				break
+		}
+
+		// Load the categories
+		this.book.categories = []
+		await this.dataService.categoriesPromiseHolder.AwaitResult()
+
+		for (let key of this.categoryKeys) {
+			// Find the category with the key
+			let category = this.dataService.categories.find(c => c.key == key)
+
+			if (category) {
+				this.book.categories.push({
+					key: category.key,
+					name: category.name
+				})
+			}
+		}
+
+		// Get the series of the book
+		let listSeriesResponse = await this.apiService.ListStoreBookSeries({
+			fields: [StoreBookSeriesListField.items_uuid],
+			languages: await this.dataService.GetStoreLanguages(),
+			storeBook: this.uuid
+		})
+
+		if (isSuccessStatusCode(listSeriesResponse.status)) {
+			let listSeriesResponseData = (
+				listSeriesResponse as ApiResponse<
+					ListResponseData<StoreBookSeriesResource>
+				>
+			).data
+
+			if (listSeriesResponseData.items.length > 0) {
+				this.book.series.push(listSeriesResponseData.items[0].uuid)
+			}
+		}
+
+		return responseData.collection?.uuid
 	}
 
 	async LoadStoreBookCollection(uuid: string): Promise<string> {
