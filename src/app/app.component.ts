@@ -1,5 +1,9 @@
 import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
+import { Apollo } from "apollo-angular"
+import { HttpLink } from "apollo-angular/http"
+import { InMemoryCache } from "@apollo/client/core"
+import { HttpHeaders } from "@angular/common/http"
 import {
 	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
@@ -46,7 +50,9 @@ export class AppComponent {
 		public dataService: DataService,
 		private routingService: RoutingService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		private apollo: Apollo,
+		private httpLink: HttpLink
 	) {
 		let locale = this.dataService.GetLocale().misc
 		this.libraryLabel = locale.library
@@ -204,6 +210,23 @@ export class AppComponent {
 		this.dataService.userIsAdmin = environment.admins.includes(
 			this.dataService.dav.user.Id
 		)
+
+		if (this.dataService.dav.isLoggedIn) {
+			// Setup the apollo client with the access token
+			this.apollo.removeClient()
+
+			this.apollo.create({
+				cache: new InMemoryCache(),
+				link: this.httpLink.create({
+					uri: environment.newPocketlibApiUrl,
+					headers: new HttpHeaders().set(
+						"Authorization",
+						this.dataService.dav.accessToken
+					)
+				})
+			})
+		}
+
 		this.dataService.userPromiseHolder.Resolve()
 	}
 
