@@ -21,17 +21,7 @@ import {
 	GetDualScreenSettings,
 	GetStoreBookStatusByString
 } from "src/app/misc/utils"
-import {
-	PublisherResource,
-	PublisherField,
-	AuthorResource,
-	AuthorField,
-	BookResource,
-	BookField,
-	StoreBookStatus,
-	StoreBookCollectionResource,
-	StoreBookCollectionField
-} from "src/app/misc/types"
+import { BookResource, BookField, StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
 @Component({
@@ -75,17 +65,16 @@ export class StoreBookPageComponent {
 	categoryKeys: string[] = []
 	price: string = ""
 	bookStatus: string = ""
-	author: AuthorResource = {
+	author: {
+		uuid: string
+		firstName: string
+		lastName: string
+		profileImageUrl: string
+	} = {
 		uuid: "",
-		publisher: "",
 		firstName: "",
 		lastName: "",
-		bio: null,
-		websiteUrl: null,
-		facebookUsername: null,
-		instagramUsername: null,
-		twitterUsername: null,
-		profileImage: null
+		profileImageUrl: ""
 	}
 	coverContent: string
 	coverUrl: string = ""
@@ -98,7 +87,13 @@ export class StoreBookPageComponent {
 		logoBlurhash: string
 		logoContent: string
 		logoAlt: string
-	} = null
+	} = {
+		uuid: "",
+		name: "",
+		logoBlurhash: "",
+		logoContent: "",
+		logoAlt: ""
+	}
 	loginRequiredDialogVisible: boolean = false
 	noAccessDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
@@ -151,32 +146,14 @@ export class StoreBookPageComponent {
 
 	async Init() {
 		// Get StoreBook, StoreBookCollection and Author
-		await this.GetData()
+		await this.LoadStoreBookData()
 	}
 
 	BackButtonClick() {
 		this.routingService.NavigateBack("/store")
 	}
 
-	async GetData() {
-		// Get the StoreBook
-		let collectionUuid = await this.LoadStoreBook()
-		setTimeout(() => this.setSize(), 1)
-		if (!collectionUuid) return
-
-		// Get the StoreBookCollection
-		let authorUuid = await this.LoadStoreBookCollection(collectionUuid)
-		if (!authorUuid) return
-
-		// Get the Author
-		await this.LoadAuthor(authorUuid)
-
-		if (this.author.publisher != null) {
-			await this.LoadPublisher()
-		}
-	}
-
-	async LoadStoreBook(): Promise<string> {
+	async LoadStoreBookData() {
 		let response = await this.graphqlService.retrieveStoreBook(this.uuid)
 		let responseData = response.data.retrieveStoreBook
 
@@ -255,90 +232,52 @@ export class StoreBookPageComponent {
 			this.book.series.push(responseData.series[0].uuid)
 		}
 
-		return responseData.collection?.uuid
-	}
+		this.author.uuid = responseData.collection?.author?.uuid
+		this.author.firstName = responseData.collection?.author?.firstName
+		this.author.lastName = responseData.collection?.author?.lastName
+		this.author.profileImageUrl =
+			responseData.collection?.author?.profileImage?.url
 
-	async LoadStoreBookCollection(uuid: string): Promise<string> {
-		let response = await this.apiService.RetrieveStoreBookCollection({
-			uuid,
-			fields: [StoreBookCollectionField.author]
-		})
+		this.authorProfileImageAlt = this.dataService
+			.GetLocale()
+			.misc.authorProfileImageAlt.replace(
+				"{0}",
+				`${this.author.firstName} ${this.author.lastName}`
+			)
 
-		if (isSuccessStatusCode(response.status)) {
-			return (response as ApiResponse<StoreBookCollectionResource>).data
-				.author
+		if (this.author.profileImageUrl != null) {
+			this.apiService
+				.GetFile({ url: this.author.profileImageUrl })
+				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(fileResponse.status)) {
+						this.authorProfileImageContent = (
+							fileResponse as ApiResponse<string>
+						).data
+					}
+				})
 		}
 
-		return null
-	}
+		this.publisher.uuid = responseData.collection?.author?.publisher?.uuid
+		this.publisher.name = responseData.collection?.author?.publisher?.name
+		this.publisher.logoBlurhash =
+			responseData.collection?.author?.publisher?.logo?.blurhash
+		this.publisher.logoContent = this.dataService.defaultProfileImageUrl
+		this.publisher.logoAlt = this.dataService
+			.GetLocale()
+			.misc.publisherLogoAlt.replace("{0}", this.publisher.name)
 
-	async LoadAuthor(uuid: string) {
-		let response = await this.apiService.RetrieveAuthor({
-			uuid,
-			fields: [
-				AuthorField.uuid,
-				AuthorField.publisher,
-				AuthorField.firstName,
-				AuthorField.lastName,
-				AuthorField.profileImage
-			]
-		})
+		let publisherLogoUrl =
+			responseData.collection?.author?.publisher?.logo?.url
 
-		if (isSuccessStatusCode(response.status)) {
-			this.author = (response as ApiResponse<AuthorResource>).data
-			this.authorProfileImageAlt = this.dataService
-				.GetLocale()
-				.misc.authorProfileImageAlt.replace(
-					"{0}",
-					`${this.author.firstName} ${this.author.lastName}`
-				)
-
-			if (this.author.profileImage?.url != null) {
-				this.apiService
-					.GetFile({ url: this.author.profileImage.url })
-					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
-						if (isSuccessStatusCode(fileResponse.status)) {
-							this.authorProfileImageContent = (
-								fileResponse as ApiResponse<string>
-							).data
-						}
-					})
-			}
-		}
-	}
-
-	async LoadPublisher() {
-		// Get the publisher
-		let publisherResponse = await this.apiService.RetrievePublisher({
-			uuid: this.author.publisher,
-			fields: [PublisherField.name, PublisherField.logo]
-		})
-
-		if (isSuccessStatusCode(publisherResponse.status)) {
-			let responseData = (
-				publisherResponse as ApiResponse<PublisherResource>
-			).data
-
-			this.publisher = {
-				uuid: this.author.publisher,
-				name: responseData.name,
-				logoBlurhash: responseData.logo?.blurhash,
-				logoContent: this.dataService.defaultProfileImageUrl,
-				logoAlt: this.dataService
-					.GetLocale()
-					.misc.publisherLogoAlt.replace("{0}", responseData.name)
-			}
-
-			if (responseData.logo?.url != null) {
-				this.apiService
-					.GetFile({ url: responseData.logo.url })
-					.then((response: ApiResponse<string> | ApiErrorResponse) => {
-						if (isSuccessStatusCode(response.status))
-							this.publisher.logoContent = (
-								response as ApiResponse<string>
-							).data
-					})
-			}
+		if (publisherLogoUrl != null) {
+			this.apiService
+				.GetFile({ url: publisherLogoUrl })
+				.then((response: ApiResponse<string> | ApiErrorResponse) => {
+					if (isSuccessStatusCode(response.status))
+						this.publisher.logoContent = (
+							response as ApiResponse<string>
+						).data
+				})
 		}
 	}
 

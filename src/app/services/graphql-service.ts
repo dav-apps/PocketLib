@@ -43,6 +43,22 @@ export class GraphQLService {
 					uuid: string
 					collection: {
 						uuid: string
+						author: {
+							uuid: string
+							publisher: {
+								uuid: string
+								name: string
+								logo: {
+									url: string
+									blurhash: string
+								}
+							}
+							firstName: string
+							lastName: string
+							profileImage: {
+								url: string
+							}
+						}
 					}
 					title: string
 					description: string
@@ -66,6 +82,22 @@ export class GraphQLService {
 							uuid
 							collection {
 								uuid
+								author {
+									uuid
+									publisher {
+										uuid
+										name
+										logo {
+											url
+											blurhash
+										}
+									}
+									firstName
+									lastName
+									profileImage {
+										url
+									}
+								}
 							}
 							title
 							description
