@@ -30,10 +30,7 @@ import {
 	BookField,
 	StoreBookStatus,
 	StoreBookCollectionResource,
-	StoreBookCollectionField,
-	ListResponseData,
-	StoreBookSeriesResource,
-	StoreBookSeriesListField
+	StoreBookCollectionField
 } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
@@ -254,22 +251,8 @@ export class StoreBookPageComponent {
 		}
 
 		// Get the series of the book
-		let listSeriesResponse = await this.apiService.ListStoreBookSeries({
-			fields: [StoreBookSeriesListField.items_uuid],
-			languages: await this.dataService.GetStoreLanguages(),
-			storeBook: this.uuid
-		})
-
-		if (isSuccessStatusCode(listSeriesResponse.status)) {
-			let listSeriesResponseData = (
-				listSeriesResponse as ApiResponse<
-					ListResponseData<StoreBookSeriesResource>
-				>
-			).data
-
-			if (listSeriesResponseData.items.length > 0) {
-				this.book.series.push(listSeriesResponseData.items[0].uuid)
-			}
+		if (responseData.series.length > 0) {
+			this.book.series.push(responseData.series[0].uuid)
 		}
 
 		return responseData.collection?.uuid

@@ -57,6 +57,7 @@ export class GraphQLService {
 					categories: {
 						key: string
 					}[]
+					series: { uuid: string }[]
 				}
 			}>({
 				query: gql`
@@ -78,6 +79,9 @@ export class GraphQLService {
 							purchased
 							categories {
 								key
+							}
+							series {
+								uuid
 							}
 						}
 					}
