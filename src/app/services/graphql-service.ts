@@ -5,6 +5,37 @@ import { Apollo, gql } from "apollo-angular"
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
+	retrieveAuthor(uuid: string) {
+		return this.apollo
+			.query<{
+				retrieveAuthor: {
+					uuid: string
+					series: {
+						uuid: string
+						name: string
+						language: string
+					}[]
+				}
+			}>({
+				query: gql`
+					query RetrieveAuthor($uuid: String!) {
+						retrieveAuthor(uuid: $uuid) {
+							uuid
+							series {
+								uuid
+								name
+								language
+							}
+						}
+					}
+				`,
+				variables: {
+					uuid
+				}
+			})
+			.toPromise()
+	}
+
 	listAuthors(params: { limit?: number; latest?: boolean }) {
 		return this.apollo
 			.query<{

@@ -139,6 +139,7 @@ export class DataService {
 								item,
 								await this.GetStoreLanguages(),
 								this.apiService,
+								this.graphqlService,
 								this.cachingService
 							)
 						)
@@ -184,6 +185,7 @@ export class DataService {
 									item,
 									await this.GetStoreLanguages(),
 									this.apiService,
+									this.graphqlService,
 									this.cachingService
 								)
 							)
@@ -218,6 +220,7 @@ export class DataService {
 						authorResponseData,
 						await this.GetStoreLanguages(),
 						this.apiService,
+						this.graphqlService,
 						this.cachingService
 					)
 				} else {
@@ -245,6 +248,7 @@ export class DataService {
 							publisherResponseData,
 							await this.GetStoreLanguages(),
 							this.apiService,
+							this.graphqlService,
 							this.cachingService
 						)
 					}

@@ -4,6 +4,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "src/app/services/caching-service"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
@@ -31,6 +32,7 @@ export class AuthorSetupPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService,
 		private router: Router,
 		private domSanitizer: DomSanitizer
@@ -80,6 +82,7 @@ export class AuthorSetupPageComponent {
 				responseData,
 				await this.dataService.GetStoreLanguages(),
 				this.apiService,
+				this.graphqlService,
 				this.cachingService
 			)
 			this.dataService.userAuthorPromiseHolder.Resolve(

@@ -23,6 +23,7 @@ import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "src/app/services/caching-service"
 import { Author } from "src/app/models/Author"
 import {
@@ -93,7 +94,13 @@ export class AuthorProfileComponent {
 	dualScreenFoldMargin: number = 0
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(null, [], this.apiService, this.cachingService)
+	author: Author = new Author(
+		null,
+		[],
+		this.apiService,
+		this.graphqlService,
+		this.cachingService
+	)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -142,6 +149,7 @@ export class AuthorProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService,
 		private router: Router
 	) {
@@ -748,6 +756,7 @@ export class AuthorProfileComponent {
 				responseData,
 				await this.dataService.GetStoreLanguages(),
 				this.apiService,
+				this.graphqlService,
 				this.cachingService
 			)
 

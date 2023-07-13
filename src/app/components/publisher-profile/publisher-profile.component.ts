@@ -21,6 +21,7 @@ import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "src/app/services/caching-service"
 import {
 	GenerateFacebookLink,
@@ -60,6 +61,7 @@ export class PublisherProfileComponent {
 		null,
 		[],
 		this.apiService,
+		this.graphqlService,
 		this.cachingService
 	)
 	facebookLink: string = ""
@@ -114,6 +116,7 @@ export class PublisherProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -218,6 +221,7 @@ export class PublisherProfileComponent {
 				responseData,
 				await this.dataService.GetStoreLanguages(),
 				this.apiService,
+				this.graphqlService,
 				this.cachingService
 			)
 		}

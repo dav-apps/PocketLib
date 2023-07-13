@@ -8,11 +8,10 @@ import {
 	AuthorProfileImageResource,
 	AuthorProfileImageField,
 	StoreBookCollectionResource,
-	StoreBookCollectionListField,
-	StoreBookSeriesResource,
-	StoreBookSeriesListField
+	StoreBookCollectionListField
 } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
@@ -51,6 +50,7 @@ export class Author {
 		authorResource: AuthorResource,
 		private languages: Language[],
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = authorResource?.uuid ?? ""
@@ -242,32 +242,25 @@ export class Author {
 		this.series.itemsPromiseHolder.Setup()
 
 		// Get the series of the author
-		let response = await this.apiService.ListStoreBookSeries({
-			author: this.uuid,
-			fields: [
-				StoreBookSeriesListField.items_uuid,
-				StoreBookSeriesListField.items_author,
-				StoreBookSeriesListField.items_name,
-				StoreBookSeriesListField.items_language
-			]
-		})
-
-		if (!isSuccessStatusCode(response.status)) {
-			this.series.isLoading = false
-			this.series.itemsPromiseHolder.Resolve([])
-			return []
-		}
+		let response = await this.graphqlService.retrieveAuthor(this.uuid)
+		let responseData = response.data.retrieveAuthor
 
 		this.series.loaded = true
 		this.series.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookSeriesResource>>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
+		for (let item of responseData.series) {
 			items.push(
-				new StoreBookSeries(item, this.apiService, this.cachingService)
+				new StoreBookSeries(
+					{
+						uuid: item.uuid,
+						author: this.uuid,
+						name: item.name,
+						language: item.language
+					},
+					this.apiService,
+					this.cachingService
+				)
 			)
 		}
 

@@ -9,6 +9,7 @@ import {
 	AuthorListField
 } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
 import { Author } from "./Author"
 
@@ -37,6 +38,7 @@ export class Publisher {
 		publisherResource: PublisherResource,
 		private languages: Language[],
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = publisherResource?.uuid ?? ""
@@ -138,6 +140,7 @@ export class Publisher {
 								item,
 								this.languages,
 								this.apiService,
+								this.graphqlService,
 								this.cachingService
 							)
 						)
@@ -181,6 +184,7 @@ export class Publisher {
 							item,
 							this.languages,
 							this.apiService,
+							this.graphqlService,
 							this.cachingService
 						)
 					)
