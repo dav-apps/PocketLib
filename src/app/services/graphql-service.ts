@@ -5,22 +5,15 @@ import { Apollo, gql } from "apollo-angular"
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
-	retrievePublisher(uuid: string) {
+	retrievePublisher(queryData: string, uuid: string) {
 		return this.apollo
 			.query<{
-				retrievePublisher: {
-					logo: {
-						url: string
-						blurhash: string
-					}
-				}
+				retrievePublisher: any
 			}>({
 				query: gql`
 					query RetrievePublisher($uuid: String) {
 						retrievePublisher(uuid: $uuid) {
-							logo {
-								url
-							}
+							${queryData}
 						}
 					}
 				`,
@@ -31,27 +24,15 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	retrieveAuthor(uuid: string) {
+	retrieveAuthor(queryData: string, uuid: string) {
 		return this.apollo
 			.query<{
-				retrieveAuthor: {
-					uuid: string
-					series: {
-						uuid: string
-						name: string
-						language: string
-					}[]
-				}
+				retrieveAuthor: any
 			}>({
 				query: gql`
 					query RetrieveAuthor($uuid: String!) {
 						retrieveAuthor(uuid: $uuid) {
-							uuid
-							series {
-								uuid
-								name
-								language
-							}
+							${queryData}
 						}
 					}
 				`,
@@ -62,116 +43,35 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	listAuthors(params: { limit?: number; latest?: boolean }) {
+	listAuthors(
+		queryData: string,
+		variables: { limit?: number; latest?: boolean }
+	) {
 		return this.apollo
 			.query<{
-				listAuthors: {
-					uuid: string
-					firstName: string
-					lastName: string
-					profileImage: { url: string; blurhash: string }
-				}[]
+				listAuthors: any
 			}>({
 				query: gql`
 					query ListAuthors($limit: Int, $latest: Boolean) {
 						listAuthors(limit: $limit, latest: $latest) {
-							uuid
-							firstName
-							lastName
-							profileImage {
-								url
-								blurhash
-							}
+							${queryData}
 						}
 					}
 				`,
-				variables: {
-					limit: params.limit,
-					latest: params.latest
-				}
+				variables
 			})
 			.toPromise()
 	}
 
-	retrieveStoreBook(uuid: string) {
+	retrieveStoreBook(queryData: string, uuid: string) {
 		return this.apollo
 			.query<{
-				retrieveStoreBook: {
-					uuid: string
-					collection: {
-						uuid: string
-						author: {
-							uuid: string
-							publisher: {
-								uuid: string
-								name: string
-								logo: {
-									url: string
-									blurhash: string
-								}
-							}
-							firstName: string
-							lastName: string
-							profileImage: {
-								url: string
-							}
-						}
-					}
-					title: string
-					description: string
-					price: number
-					status: string
-					cover: {
-						url: string
-						blurhash: string
-					}
-					inLibrary: boolean
-					purchased: boolean
-					categories: {
-						key: string
-					}[]
-					series: { uuid: string }[]
-				}
+				retrieveStoreBook: any
 			}>({
 				query: gql`
 					query RetrieveStoreBook($uuid: String!) {
 						retrieveStoreBook(uuid: $uuid) {
-							uuid
-							collection {
-								uuid
-								author {
-									uuid
-									publisher {
-										uuid
-										name
-										logo {
-											url
-											blurhash
-										}
-									}
-									firstName
-									lastName
-									profileImage {
-										url
-									}
-								}
-							}
-							title
-							description
-							price
-							status
-							cover {
-								url
-								blurhash
-							}
-							inLibrary
-							purchased
-							categories {
-								key
-							}
-							series {
-								uuid
-							}
+							${queryData}
 						}
 					}
 				`,
@@ -182,33 +82,19 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	listCategories(params: { language?: string }) {
+	listCategories(queryData: string, variables: { language?: string }) {
 		return this.apollo
 			.query<{
-				listCategories: {
-					uuid: string
-					key: string
-					name: {
-						name: string
-						language: string
-					}
-				}[]
+				listCategories: any[]
 			}>({
 				query: gql`
 					query ListCategories($language: String) {
 						listCategories(language: $language) {
-							uuid
-							key
-							name {
-								name
-								language
-							}
+							${queryData}
 						}
 					}
 				`,
-				variables: {
-					language: params.language
-				}
+				variables
 			})
 			.toPromise()
 	}
