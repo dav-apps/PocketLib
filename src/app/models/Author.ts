@@ -4,7 +4,6 @@ import {
 	ListResponseData,
 	AuthorResource,
 	AuthorBioResource,
-	AuthorBioListField,
 	StoreBookCollectionResource,
 	StoreBookCollectionListField
 } from "../misc/types"
@@ -135,16 +134,19 @@ export class Author {
 		this.bios.itemsPromiseHolder.Setup()
 
 		// Get the bios of the author
-		let response = await this.apiService.ListAuthorBios({
-			uuid: this.uuid,
-			fields: [
-				AuthorBioListField.items_uuid,
-				AuthorBioListField.items_bio,
-				AuthorBioListField.items_language
-			]
-		})
+		let response = await this.graphqlService.retrieveAuthor(
+			`
+				bios {
+					uuid
+					bio
+					language
+				}
+			`,
+			this.uuid
+		)
+		let responseData = response.data.retrieveAuthor
 
-		if (!isSuccessStatusCode(response.status)) {
+		if (responseData != null) {
 			this.bios.isLoading = false
 			this.bios.itemsPromiseHolder.Resolve([])
 			return []
@@ -152,12 +154,9 @@ export class Author {
 
 		this.bios.loaded = true
 		this.bios.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<AuthorBioResource>>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
+		for (let item of responseData.bios) {
 			items.push(item)
 		}
 
