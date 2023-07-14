@@ -3,8 +3,6 @@ import {
 	Language,
 	ListResponseData,
 	PublisherResource,
-	PublisherLogoResource,
-	PublisherLogoField,
 	AuthorResource,
 	AuthorListField
 } from "../misc/types"
@@ -60,7 +58,14 @@ export class Publisher {
 			this.apiService.RetrievePublisherLogo.name
 		)
 
-		let response = await this.graphqlService.retrievePublisher(this.uuid)
+		let response = await this.graphqlService.retrievePublisher(
+			`
+				logo {
+					url
+				}
+			`,
+			this.uuid
+		)
 		let responseData = response.data.retrievePublisher
 		this.logo.url = responseData.logo?.url
 		this.logo.blurhash = responseData.logo?.blurhash

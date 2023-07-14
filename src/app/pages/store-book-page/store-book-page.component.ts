@@ -154,7 +154,47 @@ export class StoreBookPageComponent {
 	}
 
 	async LoadStoreBookData() {
-		let response = await this.graphqlService.retrieveStoreBook(this.uuid)
+		let response = await this.graphqlService.retrieveStoreBook(
+			`
+				uuid
+				collection {
+					uuid
+					author {
+						uuid
+						publisher {
+							uuid
+							name
+							logo {
+								url
+								blurhash
+							}
+						}
+						firstName
+						lastName
+						profileImage {
+							url
+						}
+					}
+				}
+				title
+				description
+				price
+				status
+				cover {
+					url
+					blurhash
+				}
+				inLibrary
+				purchased
+				categories {
+					key
+				}
+				series {
+					uuid
+				}
+			`,
+			this.uuid
+		)
 		let responseData = response.data.retrieveStoreBook
 
 		this.book.collection = responseData.collection?.uuid

@@ -32,10 +32,21 @@ export class HorizontalAuthorListComponent {
 		// Get the latest authors
 		this.authors = []
 
-		let response = await this.graphqlService.listAuthors({
-			limit: maxVisibleAuthors,
-			latest: true
-		})
+		let response = await this.graphqlService.listAuthors(
+			`
+				uuid
+				firstName
+				lastName
+				profileImage {
+					url
+					blurhash
+				}
+			`,
+			{
+				limit: maxVisibleAuthors,
+				latest: true
+			}
+		)
 
 		let profileImageAltTemplate =
 			this.dataService.GetLocale().misc.authorProfileImageAlt

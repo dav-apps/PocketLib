@@ -242,7 +242,16 @@ export class Author {
 		this.series.itemsPromiseHolder.Setup()
 
 		// Get the series of the author
-		let response = await this.graphqlService.retrieveAuthor(this.uuid)
+		let response = await this.graphqlService.retrieveAuthor(
+			`
+				series {
+					uuid
+					name
+					language
+				}
+			`,
+			this.uuid
+		)
 		let responseData = response.data.retrieveAuthor
 
 		this.series.loaded = true
