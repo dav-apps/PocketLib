@@ -5,8 +5,6 @@ import {
 	AuthorResource,
 	AuthorBioResource,
 	AuthorBioListField,
-	AuthorProfileImageResource,
-	AuthorProfileImageField,
 	StoreBookCollectionResource,
 	StoreBookCollectionListField
 } from "../misc/types"
@@ -104,16 +102,18 @@ export class Author {
 			this.apiService.RetrieveAuthorProfileImage.name
 		)
 
-		let response = await this.apiService.RetrieveAuthorProfileImage({
-			uuid: this.uuid,
-			fields: [AuthorProfileImageField.url, AuthorProfileImageField.blurhash]
-		})
+		let response = await this.graphqlService.retrieveAuthor(
+			`
+				profileImage {
+					url
+					blurhash
+				}
+			`,
+			this.uuid
+		)
+		let responseData = response.data.retrieveAuthor
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (
-				response as ApiResponse<AuthorProfileImageResource>
-			).data
-
+		if (responseData != null) {
 			this.profileImage.url = responseData.url
 			this.profileImage.blurhash = responseData.blurhash
 			this.profileImageContent = null
@@ -258,22 +258,25 @@ export class Author {
 		this.series.isLoading = false
 		let items = []
 
-		for (let item of responseData.series) {
-			items.push(
-				new StoreBookSeries(
-					{
-						uuid: item.uuid,
-						author: this.uuid,
-						name: item.name,
-						language: item.language
-					},
-					this.apiService,
-					this.cachingService
+		if (responseData != null) {
+			for (let item of responseData.series) {
+				items.push(
+					new StoreBookSeries(
+						{
+							uuid: item.uuid,
+							author: this.uuid,
+							name: item.name,
+							language: item.language
+						},
+						this.apiService,
+						this.cachingService
+					)
 				)
-			)
+			}
+
+			this.series.itemsPromiseHolder.Resolve(items)
 		}
 
-		this.series.itemsPromiseHolder.Resolve(items)
 		return items
 	}
 
