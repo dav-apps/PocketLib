@@ -60,18 +60,10 @@ export class Publisher {
 			this.apiService.RetrievePublisherLogo.name
 		)
 
-		let response = await this.apiService.RetrievePublisherLogo({
-			uuid: this.uuid,
-			fields: [PublisherLogoField.url, PublisherLogoField.blurhash]
-		})
-
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<PublisherLogoResource>)
-				.data
-
-			this.logo.url = responseData.url
-			this.logo.blurhash = responseData.blurhash
-		}
+		let response = await this.graphqlService.retrievePublisher(this.uuid)
+		let responseData = response.data.retrievePublisher
+		this.logo.url = responseData.logo?.url
+		this.logo.blurhash = responseData.logo?.blurhash
 	}
 
 	async GetAuthors(page: number = -1, limit: number = 50): Promise<Author[]> {

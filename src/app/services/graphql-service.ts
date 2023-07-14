@@ -5,6 +5,32 @@ import { Apollo, gql } from "apollo-angular"
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
+	retrievePublisher(uuid: string) {
+		return this.apollo
+			.query<{
+				retrievePublisher: {
+					logo: {
+						url: string
+						blurhash: string
+					}
+				}
+			}>({
+				query: gql`
+					query RetrievePublisher($uuid: String) {
+						retrievePublisher(uuid: $uuid) {
+							logo {
+								url
+							}
+						}
+					}
+				`,
+				variables: {
+					uuid
+				}
+			})
+			.toPromise()
+	}
+
 	retrieveAuthor(uuid: string) {
 		return this.apollo
 			.query<{
