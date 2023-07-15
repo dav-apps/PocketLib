@@ -1,12 +1,5 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import {
-	Language,
-	ListResponseData,
-	AuthorResource,
-	AuthorBioResource,
-	StoreBookCollectionResource,
-	StoreBookCollectionListField
-} from "../misc/types"
+import { Language, AuthorResource, AuthorBioResource } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
@@ -190,17 +183,27 @@ export class Author {
 		this.collections.itemsPromiseHolder.Setup()
 
 		// Get the collections of the author
-		let response = await this.apiService.ListStoreBookCollections({
-			author: this.uuid,
-			fields: [
-				StoreBookCollectionListField.items_uuid,
-				StoreBookCollectionListField.items_author,
-				StoreBookCollectionListField.items_name
-			],
-			languages: this.languages
-		})
+		let response = await this.graphqlService.retrieveAuthor(
+			`
+				collections {
+					uuid
+					author {
+						uuid
+					}
+					name {
+						name
+						language
+					}
+				}
+			`,
+			{
+				uuid: this.uuid,
+				languages: this.languages
+			}
+		)
+		let responseData = response.data.retrieveAuthor
 
-		if (!isSuccessStatusCode(response.status)) {
+		if (responseData == null) {
 			this.collections.isLoading = false
 			this.collections.itemsPromiseHolder.Resolve([])
 			return []
@@ -208,9 +211,6 @@ export class Author {
 
 		this.collections.loaded = true
 		this.collections.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookCollectionResource>>
-		).data
 		let items = []
 
 		for (let item of responseData.items) {

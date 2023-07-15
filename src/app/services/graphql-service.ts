@@ -22,7 +22,10 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	retrieveAuthor(queryData: string, variables: { uuid: string }) {
+	retrieveAuthor(
+		queryData: string,
+		variables: { uuid: string; languages?: string[] }
+	) {
 		return this.apollo
 			.query<{
 				retrieveAuthor: any
