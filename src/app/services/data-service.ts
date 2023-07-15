@@ -276,7 +276,7 @@ export class DataService {
 					language
 				}
 			`,
-			{ language: languages[0] }
+			{ languages: languages }
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories) {

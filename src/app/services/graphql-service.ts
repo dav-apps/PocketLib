@@ -76,14 +76,14 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	listCategories(queryData: string, variables: { language?: string }) {
+	listCategories(queryData: string, variables: { languages?: string[] }) {
 		return this.apollo
 			.query<{
 				listCategories: any[]
 			}>({
 				query: gql`
-					query ListCategories($language: String) {
-						listCategories(language: $language) {
+					query ListCategories($languages: [String!]) {
+						listCategories(languages: $languages) {
 							${queryData}
 						}
 					}
