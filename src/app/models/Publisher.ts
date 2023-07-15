@@ -64,7 +64,9 @@ export class Publisher {
 					url
 				}
 			`,
-			this.uuid
+			{
+				uuid: this.uuid
+			}
 		)
 		let responseData = response.data.retrievePublisher
 		this.logo.url = responseData.logo?.url

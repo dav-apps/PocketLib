@@ -5,7 +5,7 @@ import { Apollo, gql } from "apollo-angular"
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
-	retrievePublisher(queryData: string, uuid: string) {
+	retrievePublisher(queryData: string, variables: { uuid: string }) {
 		return this.apollo
 			.query<{
 				retrievePublisher: any
@@ -17,14 +17,12 @@ export class GraphQLService {
 						}
 					}
 				`,
-				variables: {
-					uuid
-				}
+				variables
 			})
 			.toPromise()
 	}
 
-	retrieveAuthor(queryData: string, uuid: string) {
+	retrieveAuthor(queryData: string, variables: { uuid: string }) {
 		return this.apollo
 			.query<{
 				retrieveAuthor: any
@@ -36,9 +34,7 @@ export class GraphQLService {
 						}
 					}
 				`,
-				variables: {
-					uuid
-				}
+				variables
 			})
 			.toPromise()
 	}
@@ -63,7 +59,7 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	retrieveStoreBook(queryData: string, uuid: string) {
+	retrieveStoreBook(queryData: string, variables: { uuid: string }) {
 		return this.apollo
 			.query<{
 				retrieveStoreBook: any
@@ -75,9 +71,7 @@ export class GraphQLService {
 						}
 					}
 				`,
-				variables: {
-					uuid
-				}
+				variables
 			})
 			.toPromise()
 	}

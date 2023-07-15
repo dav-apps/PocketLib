@@ -193,7 +193,9 @@ export class StoreBookPageComponent {
 					uuid
 				}
 			`,
-			this.uuid
+			{
+				uuid: this.uuid
+			}
 		)
 		let responseData = response.data.retrieveStoreBook
 

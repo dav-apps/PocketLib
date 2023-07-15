@@ -108,7 +108,9 @@ export class Author {
 					blurhash
 				}
 			`,
-			this.uuid
+			{
+				uuid: this.uuid
+			}
 		)
 		let responseData = response.data.retrieveAuthor
 
@@ -142,11 +144,13 @@ export class Author {
 					language
 				}
 			`,
-			this.uuid
+			{
+				uuid: this.uuid
+			}
 		)
 		let responseData = response.data.retrieveAuthor
 
-		if (responseData != null) {
+		if (responseData == null) {
 			this.bios.isLoading = false
 			this.bios.itemsPromiseHolder.Resolve([])
 			return []
@@ -249,7 +253,9 @@ export class Author {
 					language
 				}
 			`,
-			this.uuid
+			{
+				uuid: this.uuid
+			}
 		)
 		let responseData = response.data.retrieveAuthor
 
