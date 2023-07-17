@@ -90,6 +90,137 @@ export interface ListResponseData<T> {
 	items: T[]
 }
 
+export interface List<T> {
+	total: number
+	items: T[]
+}
+
+//#region New API interfaces
+export interface PublisherResource2 {
+	uuid: string
+	name: string
+	description: string
+	websiteUrl: string
+	facebookUsername: string
+	instagramUsername: string
+	twitterUsername: string
+	logo: PublisherLogoResource2
+	authors: List<AuthorResource2>
+}
+
+export interface PublisherLogoResource2 {
+	uuid: string
+	url: string
+	blurhash: string
+}
+
+export interface AuthorResource2 {
+	uuid: string
+	publisher: PublisherResource2
+	firstName: string
+	lastName: string
+	websiteUrl: string
+	facebookUsername: string
+	instagramUsername: string
+	twitterUsername: string
+	profileImage: AuthorProfileImageResource2
+	bios: List<AuthorBioResource2>
+	collections: List<StoreBookCollectionResource2>
+	series: List<StoreBookSeriesResource2>
+}
+
+export interface AuthorBioResource2 {
+	uuid: string
+	bio: string
+	language: string
+}
+
+export interface AuthorProfileImageResource2 {
+	uuid: string
+	url: string
+	blurhash: string
+}
+
+export interface StoreBookCollectionResource2 {
+	uuid: string
+	author: AuthorResource2
+	name: StoreBookCollectionNameResource2
+	names: List<StoreBookCollectionNameResource2>
+}
+
+export interface StoreBookCollectionNameResource2 {
+	uuid: string
+	name: string
+	language: string
+}
+
+export interface StoreBookSeriesResource2 {
+	uuid: string
+	author: AuthorResource2
+	name: string
+	language: string
+	storeBooks: List<StoreBookResource2>
+}
+
+export interface StoreBookResource2 {
+	uuid: string
+	collection: StoreBookCollectionResource2
+	title: string
+	description: string
+	language: string
+	price: number
+	isbn: string
+	status: string
+	cover: StoreBookCoverResource2
+	file: StoreBookFileResource2
+	categories: List<CategoryResource2>
+	series: List<StoreBookSeriesResource2>
+	inLibrary: boolean
+	purchased: boolean
+}
+
+export interface StoreBookReleaseResource2 {
+	uuid: string
+	storeBook: StoreBookResource2
+	releaseName: string
+	releaseNotes: string
+	publishedAt: string
+	title: string
+	description: string
+	price: number
+	isbn: string
+	status: string
+	cover: StoreBookCoverResource2
+	file: StoreBookFileResource2
+	categories: List<CategoryResource2>
+}
+
+export interface StoreBookCoverResource2 {
+	uuid: string
+	url: string
+	aspectRatio: string
+	blurhash: string
+}
+
+export interface StoreBookFileResource2 {
+	uuid: string
+	fileName: string
+}
+
+export interface CategoryResource2 {
+	uuid: string
+	key: string
+	name: CategoryNameResource2
+	names: List<CategoryNameResource2>
+}
+
+export interface CategoryNameResource2 {
+	uuid: string
+	name: string
+	language: string
+}
+//#endregion
+
 //#region API types
 //#region Publisher
 export interface PublisherResource {
