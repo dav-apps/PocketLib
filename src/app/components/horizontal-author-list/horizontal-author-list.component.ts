@@ -34,12 +34,15 @@ export class HorizontalAuthorListComponent {
 
 		let response = await this.graphqlService.listAuthors(
 			`
-				uuid
-				firstName
-				lastName
-				profileImage {
-					url
-					blurhash
+				total
+				items {
+					uuid
+					firstName
+					lastName
+					profileImage {
+						url
+						blurhash
+					}
 				}
 			`,
 			{
@@ -51,7 +54,7 @@ export class HorizontalAuthorListComponent {
 		let profileImageAltTemplate =
 			this.dataService.GetLocale().misc.authorProfileImageAlt
 
-		for (let author of response.data.listAuthors) {
+		for (let author of response.data.listAuthors.items) {
 			let authorItem = {
 				uuid: author.uuid,
 				firstName: author.firstName,

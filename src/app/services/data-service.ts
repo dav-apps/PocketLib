@@ -269,17 +269,20 @@ export class DataService {
 		let languages = await this.GetStoreLanguages()
 		let listCategoriesResponse = await this.graphqlService.listCategories(
 			`
-				uuid
-				key
-				name {
-					name
-					language
+				total
+				items {
+					uuid
+					key
+					name {
+						name
+						language
+					}
 				}
 			`,
 			{ languages: languages }
 		)
 
-		for (let category of listCategoriesResponse.data.listCategories) {
+		for (let category of listCategoriesResponse.data.listCategories.items) {
 			this.categories.push({
 				key: category.key,
 				name: category.name.name,

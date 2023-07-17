@@ -107,32 +107,39 @@ export class Publisher {
 			while (authorItem.pages > authorPage) {
 				authorPage++
 
-				let response = await this.apiService.ListAuthors({
-					publisher: this.uuid,
-					fields: [
-						AuthorListField.pages,
-						AuthorListField.items_uuid,
-						AuthorListField.items_publisher,
-						AuthorListField.items_firstName,
-						AuthorListField.items_lastName,
-						AuthorListField.items_bio,
-						AuthorListField.items_websiteUrl,
-						AuthorListField.items_facebookUsername,
-						AuthorListField.items_instagramUsername,
-						AuthorListField.items_twitterUsername,
-						AuthorListField.items_profileImage
-					],
-					languages: this.languages,
-					limit,
-					page: authorPage
-				})
+				let response = await this.graphqlService.listAuthors(
+					`
+						total
+						items {
+							uuid
+							publisher {
+								uuid
+							}
+							firstName
+							lastName
+							bio {
+								bio
+								language
+							}
+							websiteUrl
+							facebookUsername
+							instagramUsername
+							twitterUsername
+							profileImage {
+								url
+								blurhash
+							}
+						}
+					`,
+					{
+						languages: this.languages,
+						limit,
+						offset: (authorPage + 1) * limit
+					}
+				)
+				let responseData = response.data.listAuthors
 
-				if (isSuccessStatusCode(response.status)) {
-					let responseData = (
-						response as ApiResponse<ListResponseData<AuthorResource>>
-					).data
-					authorItem.pages = responseData.pages
-
+				if (responseData != null) {
 					for (let item of responseData.items) {
 						items.push(
 							new Author(

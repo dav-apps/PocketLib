@@ -187,10 +187,14 @@ export class StoreBookPageComponent {
 				inLibrary
 				purchased
 				categories {
-					key
+					items {
+						key
+					}
 				}
 				series {
-					uuid
+					items {
+						uuid
+					}
 				}
 			`,
 			{
@@ -208,7 +212,7 @@ export class StoreBookPageComponent {
 		this.book.inLibrary = responseData.inLibrary
 		this.book.purchased = responseData.purchased
 
-		for (let category of responseData.categories) {
+		for (let category of responseData.categories.items) {
 			this.categoryKeys.push(category.key)
 		}
 
@@ -270,8 +274,8 @@ export class StoreBookPageComponent {
 		}
 
 		// Get the series of the book
-		if (responseData.series.length > 0) {
-			this.book.series.push(responseData.series[0].uuid)
+		if (responseData.series.items.length > 0) {
+			this.book.series.push(responseData.series.items[0].uuid)
 		}
 
 		this.author.uuid = responseData.collection?.author?.uuid

@@ -1,14 +1,25 @@
 import { Injectable } from "@angular/core"
 import { Apollo, gql } from "apollo-angular"
+import { ApolloQueryResult } from "@apollo/client/core"
+import {
+	List,
+	PublisherResource2,
+	AuthorResource2,
+	StoreBookResource2,
+	CategoryResource2
+} from "../misc/types"
 
 @Injectable()
 export class GraphQLService {
 	constructor(private apollo: Apollo) {}
 
-	retrievePublisher(queryData: string, variables: { uuid: string }) {
+	retrievePublisher(
+		queryData: string,
+		variables: { uuid: string }
+	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource2 }>> {
 		return this.apollo
 			.query<{
-				retrievePublisher: any
+				retrievePublisher: PublisherResource2
 			}>({
 				query: gql`
 					query RetrievePublisher($uuid: String) {
@@ -25,10 +36,10 @@ export class GraphQLService {
 	retrieveAuthor(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
-	) {
+	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource2 }>> {
 		return this.apollo
 			.query<{
-				retrieveAuthor: any
+				retrieveAuthor: AuthorResource2
 			}>({
 				query: gql`
 					query RetrieveAuthor($uuid: String!) {
@@ -44,11 +55,16 @@ export class GraphQLService {
 
 	listAuthors(
 		queryData: string,
-		variables: { limit?: number; latest?: boolean }
-	) {
+		variables: {
+			latest?: boolean
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
+	): Promise<ApolloQueryResult<{ listAuthors: List<AuthorResource2> }>> {
 		return this.apollo
 			.query<{
-				listAuthors: any
+				listAuthors: List<AuthorResource2>
 			}>({
 				query: gql`
 					query ListAuthors($limit: Int, $latest: Boolean) {
@@ -62,10 +78,13 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	retrieveStoreBook(queryData: string, variables: { uuid: string }) {
+	retrieveStoreBook(
+		queryData: string,
+		variables: { uuid: string }
+	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource2 }>> {
 		return this.apollo
 			.query<{
-				retrieveStoreBook: any
+				retrieveStoreBook: StoreBookResource2
 			}>({
 				query: gql`
 					query RetrieveStoreBook($uuid: String!) {
@@ -79,10 +98,13 @@ export class GraphQLService {
 			.toPromise()
 	}
 
-	listCategories(queryData: string, variables: { languages?: string[] }) {
+	listCategories(
+		queryData: string,
+		variables: { languages?: string[] }
+	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource2> }>> {
 		return this.apollo
 			.query<{
-				listCategories: any[]
+				listCategories: List<CategoryResource2>
 			}>({
 				query: gql`
 					query ListCategories($languages: [String!]) {

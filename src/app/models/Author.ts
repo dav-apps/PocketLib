@@ -108,8 +108,8 @@ export class Author {
 		let responseData = response.data.retrieveAuthor
 
 		if (responseData != null) {
-			this.profileImage.url = responseData.url
-			this.profileImage.blurhash = responseData.blurhash
+			this.profileImage.url = responseData.profileImage.url
+			this.profileImage.blurhash = responseData.profileImage.blurhash
 			this.profileImageContent = null
 		}
 	}
@@ -153,7 +153,7 @@ export class Author {
 		this.bios.isLoading = false
 		let items = []
 
-		for (let item of responseData.bios) {
+		for (let item of responseData.bios.items) {
 			items.push(item)
 		}
 
@@ -213,7 +213,7 @@ export class Author {
 		this.collections.isLoading = false
 		let items = []
 
-		for (let item of responseData.items) {
+		for (let item of responseData.collections.items) {
 			items.push(
 				new StoreBookCollection(item, this.apiService, this.cachingService)
 			)
@@ -264,7 +264,7 @@ export class Author {
 		let items = []
 
 		if (responseData != null) {
-			for (let item of responseData.series) {
+			for (let item of responseData.series.items) {
 				items.push(
 					new StoreBookSeries(
 						{
