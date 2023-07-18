@@ -1,7 +1,7 @@
 import { ApiResponse, isSuccessStatusCode } from "dav-js"
 import {
 	StoreBookReleaseStatus,
-	StoreBookReleaseResource
+	StoreBookReleaseResource2
 } from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
@@ -28,11 +28,11 @@ export class StoreBookRelease {
 	private coverContent: string
 
 	constructor(
-		storeBookRelease: StoreBookReleaseResource,
+		storeBookRelease: StoreBookReleaseResource2,
 		private apiService: ApiService
 	) {
 		this.uuid = storeBookRelease.uuid
-		this.storeBook = storeBookRelease.storeBook
+		this.storeBook = storeBookRelease.storeBook?.uuid
 		this.releaseName = storeBookRelease.releaseName
 		this.releaseNotes = storeBookRelease.releaseNotes
 		this.title = storeBookRelease.title
@@ -48,7 +48,12 @@ export class StoreBookRelease {
 		this.file = {
 			fileName: storeBookRelease.file?.fileName
 		}
-		this.categories = storeBookRelease.categories
+
+		this.categories = []
+
+		for (let category of storeBookRelease.categories.items) {
+			this.categories.push(category.key)
+		}
 	}
 
 	async GetCoverContent(): Promise<string> {

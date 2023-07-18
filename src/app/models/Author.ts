@@ -1,5 +1,5 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import { Language, AuthorResource, AuthorBioResource } from "../misc/types"
+import { Language, AuthorResource2, AuthorBioResource2 } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
@@ -23,7 +23,7 @@ export class Author {
 	private bios: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<AuthorBioResource[]>
+		itemsPromiseHolder: PromiseHolder<AuthorBioResource2[]>
 	}
 	private collections: {
 		loaded: boolean
@@ -37,14 +37,14 @@ export class Author {
 	}
 
 	constructor(
-		authorResource: AuthorResource,
+		authorResource: AuthorResource2,
 		private languages: Language[],
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = authorResource?.uuid ?? ""
-		this.publisher = authorResource?.publisher ?? ""
+		this.publisher = authorResource?.publisher?.uuid ?? ""
 		this.firstName = authorResource?.firstName ?? ""
 		this.lastName = authorResource?.lastName ?? ""
 		this.websiteUrl = authorResource?.websiteUrl ?? ""
@@ -114,7 +114,7 @@ export class Author {
 		}
 	}
 
-	async GetBios(): Promise<AuthorBioResource[]> {
+	async GetBios(): Promise<AuthorBioResource2[]> {
 		if (this.bios.isLoading || this.bios.loaded) {
 			let items = []
 
@@ -215,7 +215,12 @@ export class Author {
 
 		for (let item of responseData.collections.items) {
 			items.push(
-				new StoreBookCollection(item, this.apiService, this.cachingService)
+				new StoreBookCollection(
+					item,
+					this.apiService,
+					this.graphqlService,
+					this.cachingService
+				)
 			)
 		}
 

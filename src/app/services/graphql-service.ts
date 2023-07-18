@@ -5,9 +5,10 @@ import {
 	List,
 	PublisherResource2,
 	AuthorResource2,
+	CategoryResource2,
 	StoreBookSeriesResource2,
 	StoreBookResource2,
-	CategoryResource2
+	StoreBookCollectionResource2
 } from "../misc/types"
 
 @Injectable()
@@ -70,6 +71,30 @@ export class GraphQLService {
 				query: gql`
 					query ListAuthors($limit: Int, $latest: Boolean) {
 						listAuthors(limit: $limit, latest: $latest) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	retrieveStoreBookCollection(
+		queryData: string,
+		variables: { uuid: string; languages?: string[] }
+	): Promise<
+		ApolloQueryResult<{
+			retrieveStoreBookCollection: StoreBookCollectionResource2
+		}>
+	> {
+		return this.apollo
+			.query<{
+				retrieveStoreBookCollection: StoreBookCollectionResource2
+			}>({
+				query: gql`
+					query RetrieveStoreBookCollection($uuid: String!, languages: [String!]) {
+						retrieveStoreBookCollection(uuid: $uuid, languages: $languages) {
 							${queryData}
 						}
 					}

@@ -1,15 +1,12 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { PromiseHolder } from "dav-js"
 import {
 	Language,
-	ListResponseData,
-	StoreBookCollectionResource,
-	StoreBookCollectionNameResource,
-	StoreBookCollectionNameListField,
-	StoreBookResource,
-	StoreBookListField
+	StoreBookCollectionResource2,
+	StoreBookCollectionNameResource2
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
 import { StoreBook } from "src/app/models/StoreBook"
 
@@ -23,7 +20,7 @@ export class StoreBookCollection {
 	private names: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookCollectionNameResource[]>
+		itemsPromiseHolder: PromiseHolder<StoreBookCollectionNameResource2[]>
 	}
 	private storeBooks: {
 		loaded: boolean
@@ -32,14 +29,15 @@ export class StoreBookCollection {
 	}
 
 	constructor(
-		collectionResource: StoreBookCollectionResource,
+		collectionResource: StoreBookCollectionResource2,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = collectionResource?.uuid ?? ""
-		this.author = collectionResource?.author ?? ""
+		this.author = collectionResource?.author?.uuid ?? ""
 		this.name = {
-			value: collectionResource?.name?.value ?? "",
+			value: collectionResource?.name?.name ?? "",
 			language: GetLanguageByString(collectionResource?.name?.language)
 		}
 		this.names = {
@@ -54,7 +52,7 @@ export class StoreBookCollection {
 		}
 	}
 
-	async GetNames(): Promise<StoreBookCollectionNameResource[]> {
+	async GetNames(): Promise<StoreBookCollectionNameResource2[]> {
 		if (this.names.isLoading || this.names.loaded) {
 			let items = []
 
@@ -69,16 +67,24 @@ export class StoreBookCollection {
 		this.names.itemsPromiseHolder.Setup()
 
 		// Get the names of the collection
-		let response = await this.apiService.ListStoreBookCollectionNames({
-			uuid: this.uuid,
-			fields: [
-				StoreBookCollectionNameListField.items_uuid,
-				StoreBookCollectionNameListField.items_name,
-				StoreBookCollectionNameListField.items_language
-			]
-		})
+		let response = await this.graphqlService.retrieveStoreBookCollection(
+			`
+				names {
+					items {
+						uuid
+						name
+						language
+					}
+				}
+			`,
+			{
+				uuid: this.uuid
+			}
+		)
 
-		if (!isSuccessStatusCode(response.status)) {
+		let responseData = response.data.retrieveStoreBookCollection
+
+		if (responseData == null) {
 			this.names.isLoading = false
 			this.names.itemsPromiseHolder.Resolve([])
 			return []
@@ -86,14 +92,9 @@ export class StoreBookCollection {
 
 		this.names.loaded = true
 		this.names.isLoading = false
-		let responseData = (
-			response as ApiResponse<
-				ListResponseData<StoreBookCollectionNameResource>
-			>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
+		for (let item of responseData.names.items) {
 			items.push(item)
 		}
 
@@ -123,26 +124,44 @@ export class StoreBookCollection {
 		this.storeBooks.itemsPromiseHolder.Setup()
 
 		// Get the store books of the collection
-		let response = await this.apiService.ListStoreBooks({
-			collection: this.uuid,
-			fields: [
-				StoreBookListField.items_uuid,
-				StoreBookListField.items_collection,
-				StoreBookListField.items_title,
-				StoreBookListField.items_description,
-				StoreBookListField.items_language,
-				StoreBookListField.items_price,
-				StoreBookListField.items_isbn,
-				StoreBookListField.items_status,
-				StoreBookListField.items_cover,
-				StoreBookListField.items_file,
-				StoreBookListField.items_inLibrary,
-				StoreBookListField.items_purchased,
-				StoreBookListField.items_categories
-			]
-		})
+		let response = await this.graphqlService.retrieveStoreBookCollection(
+			`
+				storeBooks {
+					items {
+						uuid
+						collection {
+							uuid
+						}
+						title
+						description
+						language
+						price
+						isbn
+						status
+						cover {
+							uuid
+						}
+						file {
+							uuid
+						}
+						inLibrary
+						purchased
+						categories {
+							items {
+								key
+							}
+						}
+					}
+				}
+			`,
+			{
+				uuid: this.uuid
+			}
+		)
 
-		if (!isSuccessStatusCode(response.status)) {
+		let responseData = response.data.retrieveStoreBookCollection
+
+		if (responseData == null) {
 			this.storeBooks.isLoading = false
 			this.storeBooks.itemsPromiseHolder.Resolve([])
 			return []
@@ -150,13 +169,17 @@ export class StoreBookCollection {
 
 		this.storeBooks.loaded = true
 		this.storeBooks.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookResource>>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
-			items.push(new StoreBook(item, this.apiService, this.cachingService))
+		for (let item of responseData.storeBooks.items) {
+			items.push(
+				new StoreBook(
+					item,
+					this.apiService,
+					this.graphqlService,
+					this.cachingService
+				)
+			)
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)

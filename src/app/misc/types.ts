@@ -119,6 +119,7 @@ export interface AuthorResource2 {
 	publisher: PublisherResource2
 	firstName: string
 	lastName: string
+	bio: AuthorBioResource2
 	websiteUrl: string
 	facebookUsername: string
 	instagramUsername: string
@@ -146,6 +147,7 @@ export interface StoreBookCollectionResource2 {
 	author: AuthorResource2
 	name: StoreBookCollectionNameResource2
 	names: List<StoreBookCollectionNameResource2>
+	storeBooks: List<StoreBookResource2>
 }
 
 export interface StoreBookCollectionNameResource2 {
@@ -175,6 +177,7 @@ export interface StoreBookResource2 {
 	file: StoreBookFileResource2
 	categories: List<CategoryResource2>
 	series: List<StoreBookSeriesResource2>
+	releases: List<StoreBookReleaseResource2>
 	inLibrary: boolean
 	purchased: boolean
 }

@@ -6,7 +6,7 @@ import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
 	Language,
-	StoreBookResource,
+	StoreBookResource2,
 	StoreBookReleaseResource
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
@@ -37,13 +37,13 @@ export class StoreBook {
 	}
 
 	constructor(
-		storeBookResource: StoreBookResource,
+		storeBookResource: StoreBookResource2,
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = storeBookResource.uuid
-		this.collection = storeBookResource.collection
+		this.collection = storeBookResource.collection?.uuid
 		this.title = storeBookResource.title
 		this.description = storeBookResource.description
 		this.language = GetLanguageByString(storeBookResource.language)
@@ -58,7 +58,13 @@ export class StoreBook {
 		this.file = {
 			fileName: storeBookResource.file?.fileName
 		}
-		this.categories = storeBookResource.categories
+
+		this.categories = []
+
+		for (let category of storeBookResource.categories.items) {
+			this.categories.push(category.key)
+		}
+
 		this.releases = {
 			loaded: false,
 			isLoading: false,
