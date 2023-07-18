@@ -5,6 +5,7 @@ import {
 	List,
 	PublisherResource2,
 	AuthorResource2,
+	StoreBookSeriesResource2,
 	StoreBookResource2,
 	CategoryResource2
 } from "../misc/types"
@@ -78,6 +79,26 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	retrieveStoreBookSeries(
+		queryData: string,
+		variables: { uuid: string; languages?: string[] }
+	): Promise<
+		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource2 }>
+	> {
+		return this.apollo
+			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource2 }>({
+				query: gql`
+					query RetrieveStoreBookSeries($uuid: String!, languages: [String!]) {
+						retrieveStoreBookSeries(uuid: $uuid, languages: $languages) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string }
@@ -89,6 +110,42 @@ export class GraphQLService {
 				query: gql`
 					query RetrieveStoreBook($uuid: String!) {
 						retrieveStoreBook(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	listStoreBooks(
+		queryData: string,
+		variables: {
+			latest?: boolean
+			categories?: string[]
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
+	): Promise<ApolloQueryResult<{ listStoreBooks: List<StoreBookResource2> }>> {
+		return this.apollo
+			.query<{
+				listStoreBooks: List<StoreBookResource2>
+			}>({
+				query: gql`
+					query ListStoreBooks(
+						$latest: Boolean
+						$categories: [String!]
+						$limit: Int
+						$latest: Boolean
+					) {
+						listStoreBooks(
+							latest: $latest
+							categories: $categories
+							limit: $limit
+							offset: $offset
+						) {
 							${queryData}
 						}
 					}

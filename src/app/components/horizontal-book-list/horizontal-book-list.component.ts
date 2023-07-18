@@ -2,14 +2,8 @@ import { Component, Input, SimpleChanges } from "@angular/core"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import {
-	BookListItem,
-	ListResponseData,
-	StoreBookListField,
-	StoreBookResource,
-	StoreBookSeriesField,
-	StoreBookSeriesResource
-} from "src/app/misc/types"
+import { GraphQLService } from "src/app/services/graphql-service"
+import { BookListItem, StoreBookResource2 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
@@ -33,7 +27,8 @@ export class HorizontalBookListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private graphqlService: GraphQLService
 	) {
 		this.locale = this.dataService.GetLocale().horizontalBookList
 	}
@@ -75,40 +70,52 @@ export class HorizontalBookListComponent {
 
 	async LoadLatestStoreBooks() {
 		// Get the latest store books
-		let response = await this.apiService.ListStoreBooks({
-			fields: [
-				StoreBookListField.items_uuid,
-				StoreBookListField.items_title,
-				StoreBookListField.items_cover
-			],
-			languages: await this.dataService.GetStoreLanguages(),
-			limit: maxVisibleStoreBooks,
-			latest: true
-		})
-
-		if (!isSuccessStatusCode(response.status)) return
-		this.ShowBooks(
-			(response as ApiResponse<ListResponseData<StoreBookResource>>).data
-				.items
+		let response = await this.graphqlService.listStoreBooks(
+			`
+				items {
+					uuid
+					title
+					cover {
+						url
+						blurhash
+					}
+				}
+			`,
+			{
+				latest: true,
+				languages: await this.dataService.GetStoreLanguages(),
+				limit: maxVisibleStoreBooks
+			}
 		)
+		let responseData = response.data.listStoreBooks
+		if (responseData == null) return
+
+		this.ShowBooks(responseData.items)
 	}
 
 	async LoadStoreBooksByCategories() {
 		// Get the store books with the given categories
-		let response = await this.apiService.ListStoreBooks({
-			fields: [
-				StoreBookListField.items_uuid,
-				StoreBookListField.items_title,
-				StoreBookListField.items_cover
-			],
-			languages: await this.dataService.GetStoreLanguages(),
-			categories: this.categories
-		})
+		let response = await this.graphqlService.listStoreBooks(
+			`
+				items {
+					uuid
+					title
+					cover {
+						url
+						blurhash
+					}
+				}
+			`,
+			{
+				categories: this.categories,
+				languages: await this.dataService.GetStoreLanguages()
+			}
+		)
 
-		if (!isSuccessStatusCode(response.status)) return
+		let responseData = response.data.listStoreBooks
+		if (responseData == null) return
 
-		let books = (response as ApiResponse<ListResponseData<StoreBookResource>>)
-			.data.items
+		let books = responseData.items
 
 		// Remove the current book
 		let i = books.findIndex(book => book.uuid == this.currentBookUuid)
@@ -121,42 +128,34 @@ export class HorizontalBookListComponent {
 		if (this.series.length == 0) return
 
 		// Get the series
-		let seriesResponse = await this.apiService.RetrieveStoreBookSeries({
-			uuid: this.series,
-			fields: [StoreBookSeriesField.name]
-		})
-
-		if (!isSuccessStatusCode(seriesResponse.status)) return
-		let seriesResponseData = (
-			seriesResponse as ApiResponse<StoreBookSeriesResource>
-		).data
-
-		this.header = this.locale.moreOfSeries.replace(
-			"{0}",
-			seriesResponseData.name
+		let response = await this.graphqlService.retrieveStoreBookSeries(
+			`
+				name
+				storeBooks {
+					items {
+						uuid
+						title
+						cover {
+							url
+							blurhash
+						}
+					}
+				}
+			`,
+			{
+				uuid: this.series,
+				languages: await this.dataService.GetStoreLanguages()
+			}
 		)
+		let responseData = response.data.retrieveStoreBookSeries
+		if (responseData == null) return
 
-		// Get the store books of the series
-		let response = await this.apiService.ListStoreBooks({
-			fields: [
-				StoreBookListField.items_uuid,
-				StoreBookListField.items_title,
-				StoreBookListField.items_cover
-			],
-			languages: await this.dataService.GetStoreLanguages(),
-			series: this.series
-		})
+		this.header = this.locale.moreOfSeries.replace("{0}", responseData.name)
 
-		if (!isSuccessStatusCode(response.status)) return
-
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookResource>>
-		).data
-
-		this.ShowBooks(responseData.items)
+		this.ShowBooks(responseData.storeBooks.items)
 	}
 
-	ShowBooks(books: StoreBookResource[]) {
+	ShowBooks(books: StoreBookResource2[]) {
 		this.books = []
 
 		for (let storeBook of books) {
