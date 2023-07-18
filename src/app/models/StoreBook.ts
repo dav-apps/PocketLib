@@ -1,14 +1,13 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
 import { ApiService } from "../services/api-service"
+import { GraphQLService } from "../services/graphql-service"
 import { CachingService } from "../services/caching-service"
 import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
 	Language,
 	StoreBookResource,
-	StoreBookReleaseResource,
-	StoreBookReleaseListField,
-	ListResponseData
+	StoreBookReleaseResource
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
 
@@ -40,6 +39,7 @@ export class StoreBook {
 	constructor(
 		storeBookResource: StoreBookResource,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = storeBookResource.uuid
@@ -96,25 +96,42 @@ export class StoreBook {
 		this.releases.itemsPromiseHolder.Setup()
 
 		// Get the releases of the store book
-		let response = await this.apiService.ListStoreBookReleases({
-			storeBook: this.uuid,
-			fields: [
-				StoreBookReleaseListField.items_uuid,
-				StoreBookReleaseListField.items_storeBook,
-				StoreBookReleaseListField.items_releaseName,
-				StoreBookReleaseListField.items_releaseNotes,
-				StoreBookReleaseListField.items_title,
-				StoreBookReleaseListField.items_description,
-				StoreBookReleaseListField.items_price,
-				StoreBookReleaseListField.items_isbn,
-				StoreBookReleaseListField.items_status,
-				StoreBookReleaseListField.items_cover,
-				StoreBookReleaseListField.items_file,
-				StoreBookReleaseListField.items_categories
-			]
-		})
+		let response = await this.graphqlService.retrieveStoreBook(
+			`
+				releases {
+					items {
+						uuid
+						storeBook {
+							uuid
+						}
+						releaseName
+						releaseNotes
+						title
+						description
+						price
+						isbn
+						status
+						cover {
+							uuid
+						}
+						file {
+							uuid
+						}
+						categories {
+							items {
+								uuid
+							}
+						}
+					}
+				}
+			`,
+			{
+				uuid: this.uuid
+			}
+		)
+		let responseData = response.data.retrieveStoreBook
 
-		if (!isSuccessStatusCode(response.status)) {
+		if (responseData != null) {
 			this.releases.isLoading = false
 			this.releases.itemsPromiseHolder.Resolve([])
 			return []
@@ -122,12 +139,9 @@ export class StoreBook {
 
 		this.releases.loaded = true
 		this.releases.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookReleaseResource>>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
+		for (let item of responseData.releases.items) {
 			items.push(new StoreBookRelease(item, this.apiService))
 		}
 
