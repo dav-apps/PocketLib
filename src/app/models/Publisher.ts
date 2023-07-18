@@ -1,11 +1,5 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import {
-	Language,
-	ListResponseData,
-	PublisherResource,
-	AuthorResource,
-	AuthorListField
-} from "../misc/types"
+import { PromiseHolder } from "dav-js"
+import { Language, PublisherResource2 } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { CachingService } from "../services/caching-service"
@@ -33,7 +27,7 @@ export class Publisher {
 	}[]
 
 	constructor(
-		publisherResource: PublisherResource,
+		publisherResource: PublisherResource2,
 		private languages: Language[],
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
@@ -74,7 +68,7 @@ export class Publisher {
 	}
 
 	async GetAuthors(page: number = -1, limit: number = 50): Promise<Author[]> {
-		if (limit <= 0) limit = 1
+		if (limit <= 0) limit = 50
 		let authorItem = this.authors.find(
 			item => item.page == page && item.limit == limit
 		)
@@ -134,7 +128,7 @@ export class Publisher {
 					{
 						languages: this.languages,
 						limit,
-						offset: (authorPage + 1) * limit
+						offset: authorPage * limit
 					}
 				)
 				let responseData = response.data.listAuthors
@@ -158,31 +152,41 @@ export class Publisher {
 				}
 			}
 		} else {
-			let response = await this.apiService.ListAuthors({
-				publisher: this.uuid,
-				fields: [
-					AuthorListField.pages,
-					AuthorListField.items_uuid,
-					AuthorListField.items_publisher,
-					AuthorListField.items_firstName,
-					AuthorListField.items_lastName,
-					AuthorListField.items_bio,
-					AuthorListField.items_websiteUrl,
-					AuthorListField.items_facebookUsername,
-					AuthorListField.items_instagramUsername,
-					AuthorListField.items_twitterUsername,
-					AuthorListField.items_profileImage
-				],
-				languages: this.languages,
-				limit,
-				page
-			})
+			let response = await this.graphqlService.listAuthors(
+				`
+					total
+					items {
+						uuid
+						publisher {
+							uuid
+						}
+						firstName
+						lastName
+						bio {
+							uuid
+							bio
+							language
+						}
+						websiteUrl
+						facebookUsername
+						instagramUsername
+						twitterUsername
+						profileImage {
+							url
+							blurhash
+						}
+					}
+				`,
+				{
+					languages: this.languages,
+					limit,
+					offset: page * limit
+				}
+			)
+			let responseData = response.data.listAuthors
 
-			if (isSuccessStatusCode(response.status)) {
-				let responseData = (
-					response as ApiResponse<ListResponseData<AuthorResource>>
-				).data
-				authorItem.pages = responseData.pages
+			if (responseData != null) {
+				authorItem.pages = responseData.total / limit
 
 				for (let item of responseData.items) {
 					items.push(
