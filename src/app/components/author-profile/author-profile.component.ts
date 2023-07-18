@@ -40,9 +40,6 @@ import {
 	AuthorField,
 	AuthorBioField,
 	AuthorBioResource,
-	ListResponseData,
-	StoreBookResource,
-	StoreBookListField,
 	StoreBookItem,
 	StoreBookStatus,
 	AuthorProfileImageResource
@@ -733,25 +730,46 @@ export class AuthorProfileComponent {
 	}
 
 	async LoadAuthor() {
-		let response = await this.apiService.RetrieveAuthor({
-			uuid: this.uuid,
-			fields: [
-				AuthorField.uuid,
-				AuthorField.firstName,
-				AuthorField.lastName,
-				AuthorField.bio_value,
-				AuthorField.websiteUrl,
-				AuthorField.facebookUsername,
-				AuthorField.instagramUsername,
-				AuthorField.twitterUsername,
-				AuthorField.profileImage
-			],
-			languages: await this.dataService.GetStoreLanguages()
-		})
+		let response = await this.graphqlService.retrieveAuthor(
+			`
+				uuid
+				collections {
+					items {
+						uuid
+						storeBooks {
+							items {
+								uuid
+								title
+								cover {
+									url
+									blurhash
+								}
+							}
+						}
+					}
+				}
+				firstName
+				lastName
+				bio {
+					bio
+				}
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
+				profileImage {
+					url
+					blurhash
+				}
+			`,
+			{
+				uuid: this.uuid,
+				languages: await this.dataService.GetStoreLanguages()
+			}
+		)
+		let responseData = response.data.retrieveAuthor
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
-
+		if (responseData != null) {
 			this.author = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
@@ -760,33 +778,19 @@ export class AuthorProfileComponent {
 				this.cachingService
 			)
 
-			if (responseData.bio?.value == null) {
+			if (responseData.bio?.bio == null) {
 				this.currentBio = ""
 				this.bioMode = BioMode.None
 			} else {
-				this.currentBio = responseData.bio.value
+				this.currentBio = responseData.bio.bio
 				this.bioMode = BioMode.Normal
 			}
 
 			// Get the store books of the author
-			let storeBooksResponse = await this.apiService.ListStoreBooks({
-				fields: [
-					StoreBookListField.items_uuid,
-					StoreBookListField.items_title,
-					StoreBookListField.items_cover
-				],
-				languages: await this.dataService.GetStoreLanguages(),
-				author: responseData.uuid
-			})
+			let collections = responseData.collections.items
 
-			if (isSuccessStatusCode(storeBooksResponse.status)) {
-				let storeBooksResponseData = (
-					storeBooksResponse as ApiResponse<
-						ListResponseData<StoreBookResource>
-					>
-				).data
-
-				for (let storeBook of storeBooksResponseData.items) {
+			for (let collection of collections) {
+				for (let storeBook of collection.storeBooks.items) {
 					let bookItem: BookListItem = {
 						uuid: storeBook.uuid,
 						title: storeBook.title,
