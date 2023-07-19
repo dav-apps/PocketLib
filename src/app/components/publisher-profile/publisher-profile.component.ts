@@ -201,22 +201,28 @@ export class PublisherProfileComponent {
 	}
 
 	async LoadPublisher() {
-		let response = await this.apiService.RetrievePublisher({
-			uuid: this.uuid,
-			fields: [
-				PublisherField.uuid,
-				PublisherField.name,
-				PublisherField.description,
-				PublisherField.websiteUrl,
-				PublisherField.facebookUsername,
-				PublisherField.instagramUsername,
-				PublisherField.twitterUsername,
-				PublisherField.logo
-			]
-		})
+		let response = await this.graphqlService.retrievePublisher(
+			`
+				uuid
+				name
+				description
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
+				logo {
+					url
+					blurhash
+				}
+			`,
+			{
+				uuid: this.uuid
+			}
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<PublisherResource>).data
+		let responseData = response.data.retrievePublisher
+
+		if (responseData != null) {
 			this.publisher = new Publisher(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
