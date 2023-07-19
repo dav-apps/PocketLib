@@ -2,15 +2,8 @@ import { Component } from "@angular/core"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import {
-	BookListItem,
-	ListResponseData,
-	SeriesListItem,
-	StoreBookListField,
-	StoreBookResource,
-	StoreBookSeriesListField,
-	StoreBookSeriesResource
-} from "src/app/misc/types"
+import { GraphQLService } from "src/app/services/graphql-service"
+import { BookListItem, SeriesListItem } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
@@ -28,50 +21,46 @@ export class HorizontalSeriesListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private graphqlService: GraphQLService
 	) {
 		this.locale = this.dataService.GetLocale().horizontalSeriesList
 	}
 
 	async ngOnInit() {
-		let seriesResponse = await this.apiService.ListStoreBookSeries({
-			fields: [StoreBookSeriesListField.items_uuid],
-			languages: await this.dataService.GetStoreLanguages(),
-			latest: true,
-			limit: maxVisibleSeries
-		})
-
-		if (!isSuccessStatusCode(seriesResponse.status)) return
-		let seriesResponseData = (
-			seriesResponse as ApiResponse<
-				ListResponseData<StoreBookSeriesResource>
-			>
-		).data
-
-		for (let series of seriesResponseData.items) {
-			let storeBookResponse = await this.apiService.ListStoreBooks({
-				fields: [
-					StoreBookListField.items_uuid,
-					StoreBookListField.items_title,
-					StoreBookListField.items_cover
-				],
+		let response = await this.graphqlService.listStoreBookSeries(
+			`
+				items {
+					uuid
+					storeBooks {
+						items {
+							uuid
+							title
+							cover {
+								url
+								blurhash
+							}
+						}
+					}
+				}
+			`,
+			{
+				latest: true,
 				languages: await this.dataService.GetStoreLanguages(),
-				series: series.uuid
-			})
+				limit: maxVisibleSeries
+			}
+		)
 
-			if (!isSuccessStatusCode(storeBookResponse.status)) continue
-			let storeBookResponseData = (
-				storeBookResponse as ApiResponse<
-					ListResponseData<StoreBookResource>
-				>
-			).data
+		let responseData = response.data.listStoreBookSeries
+		if (responseData == null) return
 
+		for (let series of responseData.items) {
 			let seriesItem: SeriesListItem = {
 				uuid: series.uuid,
 				books: []
 			}
 
-			for (let book of storeBookResponseData.items) {
+			for (let book of series.storeBooks.items) {
 				let height = 165
 				let width = AdaptCoverWidthHeightToAspectRatio(
 					106,

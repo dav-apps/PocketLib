@@ -124,6 +124,33 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	listStoreBookSeries(
+		queryData: string,
+		variables: {
+			latest?: boolean
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
+	): Promise<
+		ApolloQueryResult<{ listStoreBookSeries: List<StoreBookSeriesResource2> }>
+	> {
+		return this.apollo
+			.query<{
+				listStoreBookSeries: List<StoreBookSeriesResource2>
+			}>({
+				query: gql`
+					query ListStoreBookSeries($latest: Boolean, $languages, [String!], limit: Int, offset: Int) {
+						listStoreBookSeries(latest: $latest, languages: $languages, limit: $limit, offset: $offset) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string }
