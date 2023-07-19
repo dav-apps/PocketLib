@@ -1,13 +1,12 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { PromiseHolder } from "dav-js"
 import {
-	ListResponseData,
 	Language,
 	StoreBookSeriesResource,
-	StoreBookResource,
-	StoreBookListField
+	StoreBookResource
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
+import { GraphQLService } from "../services/graphql-service"
 import { CachingService } from "../services/caching-service"
 import { StoreBook } from "./StoreBook"
 
@@ -25,6 +24,7 @@ export class StoreBookSeries {
 	constructor(
 		seriesResource: StoreBookSeriesResource,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private cachingService: CachingService
 	) {
 		this.uuid = seriesResource?.uuid ?? ""
@@ -53,27 +53,41 @@ export class StoreBookSeries {
 		this.storeBooks.itemsPromiseHolder.Setup()
 
 		// Get the store books of the series
-		let response = await this.apiService.ListStoreBooks({
-			series: this.uuid,
-			fields: [
-				StoreBookListField.items_uuid,
-				StoreBookListField.items_collection,
-				StoreBookListField.items_title,
-				StoreBookListField.items_description,
-				StoreBookListField.items_language,
-				StoreBookListField.items_price,
-				StoreBookListField.items_isbn,
-				StoreBookListField.items_status,
-				StoreBookListField.items_cover,
-				StoreBookListField.items_file,
-				StoreBookListField.items_inLibrary,
-				StoreBookListField.items_purchased,
-				StoreBookListField.items_categories
-			],
-			languages: GetAllLanguages()
-		})
+		let response = await this.graphqlService.retrieveStoreBookSeries(
+			`
+				storeBooks {
+					items {
+						uuid
+						collection {
+							uuid
+						}
+						title
+						description
+						language
+						price
+						isbn
+						status
+						cover {
+							uuid
+						}
+						file {
+							uuid
+						}
+						inLibrary
+						purchased
+						categories
+					}
+				}
+			`,
+			{
+				uuid: this.uuid,
+				languages: GetAllLanguages()
+			}
+		)
 
-		if (!isSuccessStatusCode(response.status)) {
+		let responseData = response.data.retrieveStoreBookSeries
+
+		if (responseData == null) {
 			this.storeBooks.isLoading = false
 			this.storeBooks.itemsPromiseHolder.Resolve([])
 			return []
@@ -81,13 +95,17 @@ export class StoreBookSeries {
 
 		this.storeBooks.loaded = true
 		this.storeBooks.isLoading = false
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookResource>>
-		).data
 		let items = []
 
-		for (let item of responseData.items) {
-			items.push(new StoreBook(item, this.apiService, this.cachingService))
+		for (let item of responseData.storeBooks.items) {
+			items.push(
+				new StoreBook(
+					item,
+					this.apiService,
+					this.graphqlService,
+					this.cachingService
+				)
+			)
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)
