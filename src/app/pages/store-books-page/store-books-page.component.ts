@@ -3,12 +3,12 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import {
 	BookListItem,
-	ListResponseData,
-	StoreBookResource,
-	StoreBookListField,
+	List,
+	StoreBookResource2,
 	StoreBooksPageContext
 } from "src/app/misc/types"
 import {
@@ -16,6 +16,7 @@ import {
 	AdaptCoverWidthHeightToAspectRatio
 } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
+import { ApolloQueryResult } from "@apollo/client"
 
 @Component({
 	templateUrl: "./store-books-page.component.html"
@@ -44,6 +45,7 @@ export class StoreBooksPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -114,54 +116,68 @@ export class StoreBooksPageComponent {
 		this.rightScreenBooks = []
 		this.dataService.simpleLoadingScreenVisible = true
 
-		let response:
-			| ApiResponse<ListResponseData<StoreBookResource>>
-			| ApiErrorResponse
+		let response: ApolloQueryResult<{
+			listStoreBooks: List<StoreBookResource2>
+		}> = null
 
 		switch (this.context) {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
-				response = await this.apiService.ListStoreBooks({
-					fields: [
-						StoreBookListField.pages,
-						StoreBookListField.items_uuid,
-						StoreBookListField.items_title,
-						StoreBookListField.items_cover
-					],
-					languages: await this.dataService.GetStoreLanguages(),
-					categories: [this.key],
-					limit: this.maxVisibleBooks,
-					page: this.page
-				})
+				response = await this.graphqlService.listStoreBooks(
+					`
+						total
+						items {
+							uuid
+							title
+							cover {
+								url
+								blurhash
+								aspectRatio
+							}
+						}
+					`,
+					{
+						categories: [this.key],
+						languages: await this.dataService.GetStoreLanguages(),
+						limit: this.maxVisibleBooks,
+						offset: this.page * this.maxVisibleBooks
+					}
+				)
 				break
 			default:
 				// Show all books
-				response = await this.apiService.ListStoreBooks({
-					fields: [
-						StoreBookListField.pages,
-						StoreBookListField.items_uuid,
-						StoreBookListField.items_title,
-						StoreBookListField.items_cover
-					],
-					languages: await this.dataService.GetStoreLanguages(),
-					limit: this.maxVisibleBooks,
-					page: this.page,
-					latest: true
-				})
+				response = await this.graphqlService.listStoreBooks(
+					`
+						total
+						items {
+							uuid
+							title
+							cover {
+								url
+								blurhash
+								aspectRatio
+							}
+						}
+					`,
+					{
+						latest: true,
+						languages: await this.dataService.GetStoreLanguages(),
+						limit: this.maxVisibleBooks,
+						offset: this.page * this.maxVisibleBooks
+					}
+				)
 				break
 		}
 
 		this.dataService.simpleLoadingScreenVisible = false
 
-		if (!isSuccessStatusCode(response.status)) return
-		let responseData = (
-			response as ApiResponse<ListResponseData<StoreBookResource>>
-		).data
+		let responseData = response.data.listStoreBooks
+		if (responseData == null) return
 
 		let responseBooks = responseData.items
-		this.pages = responseData.pages
-
+		this.pages = Math.floor(responseData.total / this.maxVisibleBooks)
 		let i = 0
+
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
 			let height = 230
