@@ -13,10 +13,7 @@ import {
 	PublisherResource,
 	PublisherField,
 	AuthorField,
-	AuthorResource,
-	ListResponseData,
-	StoreBookListField,
-	StoreBookResource
+	AuthorResource
 } from "src/app/misc/types"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
@@ -71,24 +68,25 @@ export class AuthorPageComponent {
 
 		if (this.dataService.userIsAdmin && !this.uuid) {
 			// Get the books in review
-			let listStoreBooksResponse = await this.apiService.ListStoreBooks({
-				review: true,
-				fields: [
-					StoreBookListField.items_uuid,
-					StoreBookListField.items_title
-				],
-				languages: await this.dataService.GetStoreLanguages()
-			})
+			let response = await this.graphqlService.listStoreBooks(
+				`
+					items {
+						uuid
+						title
+					}
+				`,
+				{
+					inReview: true,
+					languages: await this.dataService.GetStoreLanguages()
+				}
+			)
 
-			if (isSuccessStatusCode(listStoreBooksResponse.status)) {
-				let listStoreBooksResponseData = (
-					listStoreBooksResponse as ApiResponse<
-						ListResponseData<StoreBookResource>
-					>
-				).data
+			let responseData = response.data.listStoreBooks
+
+			if (responseData != null) {
 				this.booksInReview = []
 
-				for (let book of listStoreBooksResponseData.items) {
+				for (let book of responseData.items) {
 					this.booksInReview.push({
 						uuid: book.uuid,
 						title: book.title

@@ -176,6 +176,7 @@ export class GraphQLService {
 		variables: {
 			latest?: boolean
 			categories?: string[]
+			inReview?: boolean
 			languages?: string[]
 			limit?: number
 			offset?: number
