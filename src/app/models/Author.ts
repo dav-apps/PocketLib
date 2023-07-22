@@ -279,6 +279,7 @@ export class Author {
 							language: item.language
 						},
 						this.apiService,
+						this.graphqlService,
 						this.cachingService
 					)
 				)

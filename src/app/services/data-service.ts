@@ -1,13 +1,7 @@
 import { Injectable } from "@angular/core"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import * as localforage from "localforage"
-import {
-	Dav,
-	ApiResponse,
-	GetAllTableObjects,
-	PromiseHolder,
-	isSuccessStatusCode
-} from "dav-js"
+import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { ApiService } from "./api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
@@ -28,17 +22,7 @@ import {
 } from "src/constants/constants"
 import { keys } from "src/constants/keys"
 import { environment } from "src/environments/environment"
-import {
-	PublisherResource,
-	PublisherField,
-	PublisherListField,
-	AuthorResource,
-	AuthorField,
-	AuthorListField,
-	Category,
-	Language,
-	ListResponseData
-} from "src/app/misc/types"
+import { Category, Language } from "src/app/misc/types"
 
 @Injectable()
 export class DataService {
@@ -113,26 +97,29 @@ export class DataService {
 				// Load the publishers of the admin
 				this.adminPublishers = []
 
-				let listPublishersResponse = await this.apiService.ListPublishers({
-					fields: [
-						PublisherListField.items_uuid,
-						PublisherListField.items_name,
-						PublisherListField.items_description,
-						PublisherListField.items_websiteUrl,
-						PublisherListField.items_facebookUsername,
-						PublisherListField.items_instagramUsername,
-						PublisherListField.items_twitterUsername,
-						PublisherListField.items_logo
-					]
-				})
+				let listPublishersResponse =
+					await this.graphqlService.listPublishers(
+						`
+							items {
+								uuid
+								name
+								description
+								websiteUrl
+								facebookUsername
+								instagramUsername
+								twitterUsername
+								logo {
+									url
+									blurhash
+								}
+							}
+						`
+					)
 
-				if (isSuccessStatusCode(listPublishersResponse.status)) {
-					let listPublishersResponseData = (
-						listPublishersResponse as ApiResponse<
-							ListResponseData<PublisherResource>
-						>
-					).data
+				let listPublishersResponseData =
+					listPublishersResponse.data.listPublishers
 
+				if (listPublishersResponseData != null) {
 					for (let item of listPublishersResponseData.items) {
 						this.adminPublishers.push(
 							new Publisher(
@@ -148,36 +135,42 @@ export class DataService {
 
 				// Load the authors of the admin
 				this.adminAuthors = []
-				let authorPage = 0
-				let authorPages = 1
+				let totalItems = 0
+				let limit = 20
+				let offset = 0
 
-				while (authorPages > authorPage) {
-					authorPage++
+				while (offset > totalItems) {
+					let listAuthorsResponse = await this.graphqlService.listAuthors(
+						`
+							total
+							items {
+								uuid
+								firstName
+								lastName
+								websiteUrl
+								facebookUsername
+								instagramUsername
+								twitterUsername
+								profileImage {
+									url
+									blurhash
+								}
+							}
+						`,
+						{
+							mine: true,
+							languages: await this.GetStoreLanguages(),
+							limit,
+							offset
+						}
+					)
 
-					let listAuthorsResponse = await this.apiService.ListAuthors({
-						mine: true,
-						fields: [
-							AuthorListField.pages,
-							AuthorListField.items_uuid,
-							AuthorListField.items_firstName,
-							AuthorListField.items_lastName,
-							AuthorListField.items_websiteUrl,
-							AuthorListField.items_facebookUsername,
-							AuthorListField.items_instagramUsername,
-							AuthorListField.items_twitterUsername,
-							AuthorListField.items_profileImage
-						],
-						languages: await this.GetStoreLanguages(),
-						page: authorPage
-					})
+					let listAuthorsResponseData =
+						listAuthorsResponse.data.listAuthors
 
-					if (isSuccessStatusCode(listAuthorsResponse.status)) {
-						let listAuthorsResponseData = (
-							listAuthorsResponse as ApiResponse<
-								ListResponseData<AuthorResource>
-							>
-						).data
-						authorPages = listAuthorsResponseData.pages
+					if (listAuthorsResponseData != null) {
+						totalItems = listAuthorsResponseData.total
+						offset += limit
 
 						for (let item of listAuthorsResponseData.items) {
 							this.adminAuthors.push(
@@ -196,26 +189,29 @@ export class DataService {
 				}
 			} else {
 				// Try to get the author of the user
-				let authorResponse = await this.apiService.RetrieveAuthor({
-					uuid: "mine",
-					fields: [
-						AuthorField.uuid,
-						AuthorField.firstName,
-						AuthorField.lastName,
-						AuthorField.websiteUrl,
-						AuthorField.facebookUsername,
-						AuthorField.instagramUsername,
-						AuthorField.twitterUsername,
-						AuthorField.profileImage
-					],
-					languages: await this.GetStoreLanguages()
-				})
+				let authorResponse = await this.graphqlService.retrieveAuthor(
+					`
+						uuid,
+						firstName
+						lastName
+						websiteUrl
+						facebookUsername
+						instagramUsername
+						twitterUsername
+						profileImage {
+							url
+							blurhash
+						}
+					`,
+					{
+						uuid: "mine",
+						languages: await this.GetStoreLanguages()
+					}
+				)
 
-				if (isSuccessStatusCode(authorResponse.status)) {
-					let authorResponseData = (
-						authorResponse as ApiResponse<AuthorResource>
-					).data
+				let authorResponseData = authorResponse.data.retrieveAuthor
 
+				if (authorResponseData) {
 					this.userAuthor = new Author(
 						authorResponseData,
 						await this.GetStoreLanguages(),
@@ -225,25 +221,30 @@ export class DataService {
 					)
 				} else {
 					// Try to get the publisher of the user
-					let publisherResponse = await this.apiService.RetrievePublisher({
-						uuid: "mine",
-						fields: [
-							PublisherField.uuid,
-							PublisherField.name,
-							PublisherField.description,
-							PublisherField.websiteUrl,
-							PublisherField.facebookUsername,
-							PublisherField.instagramUsername,
-							PublisherField.twitterUsername,
-							PublisherField.logo
-						]
-					})
+					let publisherResponse =
+						await this.graphqlService.retrievePublisher(
+							`
+								uuid
+								name
+								description
+								websiteUrl
+								facebookUsername
+								instagramUsername
+								twitterUsername
+								logo {
+									url
+									blurhash
+								}
+							`,
+							{
+								uuid: "mine"
+							}
+						)
 
-					if (isSuccessStatusCode(publisherResponse.status)) {
-						let publisherResponseData = (
-							publisherResponse as ApiResponse<PublisherResource>
-						).data
+					let publisherResponseData =
+						publisherResponse.data.retrievePublisher
 
+					if (publisherResponseData != null) {
 						this.userPublisher = new Publisher(
 							publisherResponseData,
 							await this.GetStoreLanguages(),

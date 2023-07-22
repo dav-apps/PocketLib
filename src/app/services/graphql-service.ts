@@ -35,6 +35,26 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	listPublishers(
+		queryData: string,
+		variables?: { limit?: number; offset?: number }
+	): Promise<ApolloQueryResult<{ listPublishers: List<PublisherResource2> }>> {
+		return this.apollo
+			.query<{
+				listPublishers: List<PublisherResource2>
+			}>({
+				query: gql`
+					query ListPublishers($limit: Int, $offset, Int) {
+						listPublishers(limit: $limit, offset: $offset) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	retrieveAuthor(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
@@ -57,8 +77,9 @@ export class GraphQLService {
 
 	listAuthors(
 		queryData: string,
-		variables: {
+		variables?: {
 			latest?: boolean
+			mine?: boolean
 			languages?: string[]
 			limit?: number
 			offset?: number
@@ -126,7 +147,7 @@ export class GraphQLService {
 
 	listStoreBookSeries(
 		queryData: string,
-		variables: {
+		variables?: {
 			latest?: boolean
 			languages?: string[]
 			limit?: number
@@ -173,7 +194,7 @@ export class GraphQLService {
 
 	listStoreBooks(
 		queryData: string,
-		variables: {
+		variables?: {
 			latest?: boolean
 			categories?: string[]
 			inReview?: boolean
@@ -210,7 +231,7 @@ export class GraphQLService {
 
 	listCategories(
 		queryData: string,
-		variables: { languages?: string[] }
+		variables?: { languages?: string[] }
 	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource2> }>> {
 		return this.apollo
 			.query<{
