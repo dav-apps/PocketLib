@@ -470,8 +470,7 @@ const enDefaults = {
 			profileImageFileTooLarge: "The image file is too large",
 			profileImageUploadFailed:
 				"There was an error in uploading the profile image",
-			bioTooShort: "Your biography is too short",
-			bioTooLong: "Your biography is too long",
+			bioTooLong: "Your bio is too long",
 			unexpectedError: "An unexpected error occured"
 		},
 		messages: {
@@ -1027,7 +1026,6 @@ const deDefaults = {
 			profileImageFileTooLarge: "Die Bilddatei ist zu groß",
 			profileImageUploadFailed:
 				"Beim Hochladen des Profilbilds ist ein Fehler aufgetreten",
-			bioTooShort: "Deine Biographie ist zu kurz",
 			bioTooLong: "Deine Biographie ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},

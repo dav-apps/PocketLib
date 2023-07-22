@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core"
-import { Apollo, gql } from "apollo-angular"
+import { Apollo, gql, MutationResult } from "apollo-angular"
 import { ApolloQueryResult } from "@apollo/client/core"
 import {
 	List,
+	UpdateResponse,
 	PublisherResource2,
 	AuthorResource2,
+	AuthorBioResource2,
 	CategoryResource2,
 	StoreBookSeriesResource2,
 	StoreBookResource2,
@@ -92,6 +94,26 @@ export class GraphQLService {
 				query: gql`
 					query ListAuthors($limit: Int, $latest: Boolean) {
 						listAuthors(limit: $limit, latest: $latest) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	setAuthorBio(
+		queryData: string,
+		variables: { uuid: string; bio: string; language: string }
+	): Promise<
+		MutationResult<{ setAuthorBio: UpdateResponse<AuthorBioResource2> }>
+	> {
+		return this.apollo
+			.mutate<{ setAuthorBio: UpdateResponse<AuthorBioResource2> }>({
+				mutation: gql`
+					mutation SetAuthorBio($uuid: String!, $bio: String!, $language: String!) {
+						setAuthorBio(uuid: $uuid, bio: $bio, language: $language) {
 							${queryData}
 						}
 					}

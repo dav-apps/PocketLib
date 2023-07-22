@@ -34,12 +34,12 @@ import {
 	GenerateTwitterLink
 } from "src/app/misc/utils"
 import {
+	UpdateResponse,
 	BookListItem,
 	AuthorMode,
 	AuthorResource,
 	AuthorField,
-	AuthorBioField,
-	AuthorBioResource,
+	AuthorBioResource2,
 	StoreBookItem,
 	StoreBookStatus,
 	AuthorProfileImageResource
@@ -467,23 +467,33 @@ export class AuthorProfileComponent {
 
 			// Save the new bio on the server
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
-				await this.ProcessSetBioResponse(
-					await this.apiService.SetAuthorBio({
-						fields: [AuthorBioField.bio, AuthorBioField.language],
+				let response = await this.graphqlService.setAuthorBio(
+					`
+						success
+						errors
+					`,
+					{
 						uuid: "mine",
 						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
-					})
+					}
 				)
+
+				await this.ProcessSetBioResponse(response.data.setAuthorBio)
 			} else {
-				await this.ProcessSetBioResponse(
-					await this.apiService.SetAuthorBio({
-						fields: [AuthorBioField.bio, AuthorBioField.language],
+				let response = await this.graphqlService.setAuthorBio(
+					`
+						success
+						errors
+					`,
+					{
 						uuid: this.uuid,
 						language: this.bioLanguageDropdownSelectedKey,
 						bio: this.newBio
-					})
+					}
 				)
+
+				await this.ProcessSetBioResponse(response.data.setAuthorBio)
 			}
 		} else {
 			this.newBio = this.currentBio
@@ -697,10 +707,8 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	async ProcessSetBioResponse(
-		response: ApiResponse<AuthorBioResource> | ApiErrorResponse
-	) {
-		if (isSuccessStatusCode(response.status)) {
+	async ProcessSetBioResponse(response: UpdateResponse<AuthorBioResource2>) {
+		if (response.success) {
 			this.author.ClearBios()
 			await this.LoadBios()
 
@@ -710,14 +718,9 @@ export class AuthorProfileComponent {
 
 			this.SetupBioLanguageDropdown()
 			this.UpdateCurrentBio()
-		} else {
-			let errorCode = (response as ApiErrorResponse).errors[0].code
-
-			switch (errorCode) {
-				case ErrorCodes.BioTooShort:
-					this.newBioError = this.locale.errors.bioTooShort
-					break
-				case ErrorCodes.BioTooLong:
+		} else if (response.errors.length > 0) {
+			switch (response.errors[0]) {
+				case "bio_too_long":
 					this.newBioError = this.locale.errors.bioTooLong
 					break
 				default:

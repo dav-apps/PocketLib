@@ -95,6 +95,12 @@ export interface List<T> {
 	items: T[]
 }
 
+export interface UpdateResponse<T> {
+	success: boolean
+	errors: string[]
+	item?: T
+}
+
 //#region New API interfaces
 export interface PublisherResource2 {
 	uuid: string
