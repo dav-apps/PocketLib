@@ -81,9 +81,7 @@ export class AuthorSetupPageComponent {
 			this.dataService.userAuthor = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.apiService,
-				this.graphqlService,
-				this.cachingService
+				this.graphqlService
 			)
 			this.dataService.userAuthorPromiseHolder.Resolve(
 				this.dataService.userAuthor

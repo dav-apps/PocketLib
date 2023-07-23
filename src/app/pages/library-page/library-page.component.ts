@@ -13,8 +13,6 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
-import { CachingService } from "src/app/services/caching-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
@@ -65,12 +63,7 @@ export class LibraryPageComponent {
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
 
-	constructor(
-		public dataService: DataService,
-		private apiService: ApiService,
-		private cachingService: CachingService,
-		private router: Router
-	) {
+	constructor(public dataService: DataService, private router: Router) {
 		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
 		this.dataService.bookPageVisible = false
@@ -331,11 +324,6 @@ export class LibraryPageComponent {
 
 		// Update the order of the books
 		await UpdateBookOrder(this.dataService.bookOrder, this.dataService.books)
-
-		// Clear the ApiCache for GetStoreBook
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.RetrieveStoreBook.name
-		)
 	}
 
 	SearchTextChange(value: string) {

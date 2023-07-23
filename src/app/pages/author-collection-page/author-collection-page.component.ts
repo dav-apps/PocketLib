@@ -4,8 +4,7 @@ import {
 	DataService,
 	FindAppropriateLanguage
 } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
-import { CachingService } from "src/app/services/caching-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { GetDualScreenSettings, GetLanguageByString } from "src/app/misc/utils"
@@ -28,8 +27,7 @@ export class AuthorCollectionPageComponent {
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
 		null,
-		this.apiService,
-		this.cachingService
+		this.graphqlService
 	)
 	books: ExtendedBookListItem[] = []
 	leftScreenBooks: ExtendedBookListItem[] = []
@@ -54,8 +52,7 @@ export class AuthorCollectionPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
-		private cachingService: CachingService,
+		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {

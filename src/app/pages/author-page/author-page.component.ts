@@ -148,9 +148,7 @@ export class AuthorPageComponent {
 				new Publisher(
 					responseData,
 					await this.dataService.GetStoreLanguages(),
-					this.apiService,
-					this.graphqlService,
-					this.cachingService
+					this.graphqlService
 				)
 			)
 
@@ -220,9 +218,7 @@ export class AuthorPageComponent {
 				new Author(
 					responseData,
 					await this.dataService.GetStoreLanguages(),
-					this.apiService,
-					this.graphqlService,
-					this.cachingService
+					this.graphqlService
 				)
 			)
 

@@ -3,9 +3,7 @@ import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import * as localforage from "localforage"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
-import { ApiService } from "./api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "./caching-service"
 import { Book } from "../models/Book"
 import { EpubBook } from "../models/EpubBook"
 import { PdfBook } from "../models/PdfBook"
@@ -65,9 +63,7 @@ export class DataService {
 	updateInstalled: boolean = false
 
 	constructor(
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private swUpdate: SwUpdate
 	) {
 		// Set the supported locale
@@ -125,9 +121,7 @@ export class DataService {
 							new Publisher(
 								item,
 								await this.GetStoreLanguages(),
-								this.apiService,
-								this.graphqlService,
-								this.cachingService
+								this.graphqlService
 							)
 						)
 					}
@@ -177,9 +171,7 @@ export class DataService {
 								new Author(
 									item,
 									await this.GetStoreLanguages(),
-									this.apiService,
-									this.graphqlService,
-									this.cachingService
+									this.graphqlService
 								)
 							)
 						}
@@ -215,9 +207,7 @@ export class DataService {
 					this.userAuthor = new Author(
 						authorResponseData,
 						await this.GetStoreLanguages(),
-						this.apiService,
-						this.graphqlService,
-						this.cachingService
+						this.graphqlService
 					)
 				} else {
 					// Try to get the publisher of the user
@@ -248,9 +238,7 @@ export class DataService {
 						this.userPublisher = new Publisher(
 							publisherResponseData,
 							await this.GetStoreLanguages(),
-							this.apiService,
-							this.graphqlService,
-							this.cachingService
+							this.graphqlService
 						)
 					}
 				}
