@@ -14,7 +14,6 @@ export const InvalidBody = 2000
 // Missing fields
 export const FirstNameMissing = 2100
 export const LastNameMissing = 2101
-export const NameMissing = 2102
 export const BioMissing = 2103
 export const LanguageMissing = 2104
 export const AuthorMissing = 2105
@@ -54,7 +53,7 @@ export const ReleaseNotesWrongType = 2224
 // Too short fields
 export const FirstNameTooShort = "first_name_too_short"
 export const LastNameTooShort = "last_name_too_short"
-export const NameTooShort = 2302
+export const NameTooShort = "name_too_short"
 export const TitleTooShort = 2304
 export const DescriptionTooShort = 2305
 export const KeyTooShort = 2306
@@ -64,7 +63,7 @@ export const ReleaseNotesTooShort = 2308
 // Too long fields
 export const FirstNameTooLong = "first_name_too_long"
 export const LastNameTooLong = "last_name_too_long"
-export const NameTooLong = 2402
+export const NameTooLong = "name_too_long"
 export const BioTooLong = "bio_too_long"
 export const TitleTooLong = 2404
 export const DescriptionTooLong = 2405

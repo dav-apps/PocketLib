@@ -14,10 +14,11 @@ import {
 	PublisherResource2,
 	AuthorResource2,
 	AuthorBioResource2,
-	CategoryResource2,
+	StoreBookCollectionResource2,
+	StoreBookCollectionNameResource2,
 	StoreBookSeriesResource2,
 	StoreBookResource2,
-	StoreBookCollectionResource2
+	CategoryResource2
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -195,6 +196,30 @@ export class GraphQLService {
 				query: gql`
 					query RetrieveStoreBookCollection($uuid: String!, languages: [String!]) {
 						retrieveStoreBookCollection(uuid: $uuid, languages: $languages) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	setStoreBookCollectionName(
+		queryData: string,
+		variables: { uuid: string; name: string; language: string }
+	): Promise<
+		MutationResult<{
+			setStoreBookCollectionName: UpdateResponse<StoreBookCollectionNameResource2>
+		}>
+	> {
+		return this.apollo
+			.mutate<{
+				setStoreBookCollectionName: UpdateResponse<StoreBookCollectionNameResource2>
+			}>({
+				mutation: gql`
+					mutation SetStoreBookCollectionName($uuid: String!, $name: String!, $language: String!) {
+						setStoreBookCollectionName(uuid: $uuid, name: $name, language: $language) {
 							${queryData}
 						}
 					}

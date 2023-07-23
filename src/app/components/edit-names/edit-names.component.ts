@@ -3,9 +3,8 @@ import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight
 } from "@fortawesome/pro-light-svg-icons"
-import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
@@ -31,35 +30,48 @@ export class EditNamesComponent {
 
 	constructor(
 		private dataService: DataService,
-		private apiService: ApiService
+		private graphqlService: GraphQLService
 	) {
 		this.locale = this.dataService.GetLocale().editNames
 	}
 
 	async UpdateName(name: Name) {
+		if (name.name.length == 0) {
+			name.errorMessage = this.locale.errors.nameMissing
+			return
+		}
+
 		name.errorMessage = ""
 
 		// Update the name on the server
-		let setNameResponse = await this.apiService.SetStoreBookCollectionName({
-			uuid: this.uuid,
-			language: name.language,
-			name: name.name
-		})
+		let setNameResponse =
+			await this.graphqlService.setStoreBookCollectionName(
+				`
+					success
+					errors
+					item {
+						name
+						language
+					}
+				`,
+				{
+					uuid: this.uuid,
+					name: name.name,
+					language: name.language
+				}
+			)
 
-		if (isSuccessStatusCode(setNameResponse.status)) {
+		let setNameResponseData = setNameResponse.data.setStoreBookCollectionName
+
+		if (setNameResponseData.success) {
 			name.edit = false
 
 			this.update.emit({
-				name: name.name,
-				language: name.language
+				name: setNameResponseData.item.name,
+				language: setNameResponseData.item.language
 			})
-		} else {
-			let errorCode = (setNameResponse as ApiErrorResponse).errors[0].code
-
-			switch (errorCode) {
-				case ErrorCodes.NameMissing:
-					name.errorMessage = this.locale.errors.nameMissing
-					break
+		} else if (setNameResponseData.errors.length > 0) {
+			switch (setNameResponseData.errors[0]) {
 				case ErrorCodes.NameTooShort:
 					name.errorMessage = this.locale.errors.nameTooShort
 					break
