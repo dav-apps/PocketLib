@@ -103,6 +103,52 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	updateAuthor(
+		queryData: string,
+		variables?: {
+			uuid: string
+			firstName?: string
+			lastName?: string
+			websiteUrl?: string
+			facebookUsername?: string
+			instagramUsername?: string
+			twitterUsername?: string
+		}
+	): Promise<
+		MutationResult<{ updateAuthor: UpdateResponse<AuthorResource2> }>
+	> {
+		return this.apollo
+			.mutate<{
+				updateAuthor: UpdateResponse<AuthorResource2>
+			}>({
+				mutation: gql`
+					mutation UpdateAuthor(
+						$uuid: String!
+						$firstName: String
+						$lastName: String
+						$websiteUrl: String
+						$facebookUsername: String
+						$instagramUsername: String
+						$twitterUsername: String
+					) {
+						updateAuthor(
+							uuid: $uuid
+							firstName: $firstName
+							lastName: $lastName
+							websiteUrl: $websiteUrl
+							facebookUsername: $facebookUsername
+							instagramUsername: $instagramUsername
+							twitterUsername: $twitterUsername
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }

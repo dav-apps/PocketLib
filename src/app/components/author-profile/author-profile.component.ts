@@ -625,41 +625,48 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response = await this.apiService.UpdateAuthor({
-			fields: [
-				AuthorField.firstName,
-				AuthorField.lastName,
-				AuthorField.websiteUrl,
-				AuthorField.facebookUsername,
-				AuthorField.instagramUsername,
-				AuthorField.twitterUsername
-			],
-			uuid: this.dataService.userIsAdmin ? this.author.uuid : "mine",
-			firstName: this.editProfileDialogFirstName,
-			lastName: this.editProfileDialogLastName,
-			websiteUrl: this.editProfileDialogWebsiteUrl,
-			facebookUsername: this.editProfileDialogFacebookUsername,
-			instagramUsername: this.editProfileDialogInstagramUsername,
-			twitterUsername: this.editProfileDialogTwitterUsername
-		})
+		let response = await this.graphqlService.updateAuthor(
+			`
+				success
+				errors
+				item {
+					firstName
+					lastName
+					websiteUrl
+					facebookUsername
+					instagramUsername
+					twitterUsername
+				}
+			`,
+			{
+				uuid: this.dataService.userIsAdmin ? this.author.uuid : "mine",
+				firstName: this.editProfileDialogFirstName,
+				lastName: this.editProfileDialogLastName,
+				websiteUrl: this.editProfileDialogWebsiteUrl,
+				facebookUsername: this.editProfileDialogFacebookUsername,
+				instagramUsername: this.editProfileDialogInstagramUsername,
+				twitterUsername: this.editProfileDialogTwitterUsername
+			}
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
+		let responseData = response.data.updateAuthor
+
+		if (responseData.success) {
 			this.editProfileDialogVisible = false
 
-			this.author.firstName = responseData.firstName
-			this.author.lastName = responseData.lastName
-			this.author.websiteUrl = responseData.websiteUrl
-			this.author.facebookUsername = responseData.facebookUsername
-			this.author.instagramUsername = responseData.instagramUsername
-			this.author.twitterUsername = responseData.twitterUsername
+			this.author.firstName = responseData.item.firstName
+			this.author.lastName = responseData.item.lastName
+			this.author.websiteUrl = responseData.item.websiteUrl
+			this.author.facebookUsername = responseData.item.facebookUsername
+			this.author.instagramUsername = responseData.item.instagramUsername
+			this.author.twitterUsername = responseData.item.twitterUsername
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			let responseErrors = (response as ApiErrorResponse).errors
+			let responseErrors = responseData.errors
 
 			for (let error of responseErrors) {
-				switch (error.code) {
+				switch (error) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
 							this.editProfileDialogFirstNameError =
@@ -720,7 +727,7 @@ export class AuthorProfileComponent {
 			this.UpdateCurrentBio()
 		} else if (response.errors.length > 0) {
 			switch (response.errors[0]) {
-				case "bio_too_long":
+				case ErrorCodes.BioTooLong:
 					this.newBioError = this.locale.errors.bioTooLong
 					break
 				default:
