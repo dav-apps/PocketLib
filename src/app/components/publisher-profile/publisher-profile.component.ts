@@ -22,7 +22,6 @@ import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "src/app/services/caching-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
@@ -57,13 +56,7 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(
-		null,
-		[],
-		this.apiService,
-		this.graphqlService,
-		this.cachingService
-	)
+	publisher: Publisher = new Publisher(null, [], this.graphqlService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -117,7 +110,6 @@ export class PublisherProfileComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -171,7 +163,7 @@ export class PublisherProfileComponent {
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: this.publisher.logo.url })
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -226,9 +218,7 @@ export class PublisherProfileComponent {
 			this.publisher = new Publisher(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.apiService,
-				this.graphqlService,
-				this.cachingService
+				this.graphqlService
 			)
 		}
 	}

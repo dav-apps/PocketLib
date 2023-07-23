@@ -2,7 +2,6 @@ import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import {
@@ -44,7 +43,6 @@ export class StoreBooksPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,
@@ -197,7 +195,7 @@ export class StoreBooksPageComponent {
 			}
 
 			if (storeBook.cover?.url != null) {
-				this.apiService
+				this.graphqlService
 					.GetFile({ url: storeBook.cover.url })
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {

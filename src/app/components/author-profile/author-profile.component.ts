@@ -24,7 +24,6 @@ import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "src/app/services/caching-service"
 import { Author } from "src/app/models/Author"
 import {
 	GetDualScreenSettings,
@@ -37,8 +36,6 @@ import {
 	UpdateResponse,
 	BookListItem,
 	AuthorMode,
-	AuthorResource,
-	AuthorField,
 	AuthorBioResource2,
 	StoreBookItem,
 	StoreBookStatus,
@@ -91,13 +88,7 @@ export class AuthorProfileComponent {
 	dualScreenFoldMargin: number = 0
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(
-		null,
-		[],
-		this.apiService,
-		this.graphqlService,
-		this.cachingService
-	)
+	author: Author = new Author(null, [], this.graphqlService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -147,7 +138,6 @@ export class AuthorProfileComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
@@ -218,7 +208,7 @@ export class AuthorProfileComponent {
 
 		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: this.author.profileImage.url })
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -783,9 +773,7 @@ export class AuthorProfileComponent {
 			this.author = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.apiService,
-				this.graphqlService,
-				this.cachingService
+				this.graphqlService
 			)
 
 			if (responseData.bio?.bio == null) {
@@ -809,7 +797,7 @@ export class AuthorProfileComponent {
 					}
 
 					if (storeBook.cover?.url != null) {
-						this.apiService
+						this.graphqlService
 							.GetFile({ url: storeBook.cover.url })
 							.then(
 								(

@@ -224,7 +224,7 @@ export class StoreBookPageComponent {
 		if (responseData.cover?.url != null) {
 			this.coverUrl = responseData.cover?.url
 
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: responseData.cover.url })
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -292,7 +292,7 @@ export class StoreBookPageComponent {
 			)
 
 		if (this.author.profileImageUrl != null) {
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: this.author.profileImageUrl })
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -316,7 +316,7 @@ export class StoreBookPageComponent {
 			responseData.collection?.author?.publisher?.logo?.url
 
 		if (publisherLogoUrl != null) {
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: publisherLogoUrl })
 				.then((response: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(response.status))

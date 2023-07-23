@@ -2,7 +2,6 @@ import { Component } from "@angular/core"
 import { Router } from "@angular/router"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { AuthorListItem } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
@@ -21,7 +20,6 @@ export class HorizontalAuthorListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private router: Router
 	) {
@@ -68,7 +66,7 @@ export class HorizontalAuthorListComponent {
 			}
 
 			if (author.profileImage?.url != null) {
-				this.apiService
+				this.graphqlService
 					.GetFile({ url: author.profileImage.url })
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {

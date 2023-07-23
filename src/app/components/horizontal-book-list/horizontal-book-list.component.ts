@@ -1,7 +1,6 @@
 import { Component, Input, SimpleChanges } from "@angular/core"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { BookListItem, StoreBookResource2 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
@@ -27,7 +26,6 @@ export class HorizontalBookListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService
 	) {
 		this.locale = this.dataService.GetLocale().horizontalBookList
@@ -177,7 +175,7 @@ export class HorizontalBookListComponent {
 				coverHeight: height
 			}
 
-			this.apiService
+			this.graphqlService
 				.GetFile({ url: storeBook.cover.url })
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
