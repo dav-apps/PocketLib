@@ -428,26 +428,32 @@ export class PublisherProfileComponent {
 			this.newDescriptionError = ""
 			this.descriptionLoading = true
 
-			let response = await this.apiService.UpdatePublisher({
-				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
-				description: this.newDescription
-			})
+			let response = await this.graphqlService.updatePublisher(
+				`
+					success
+					errors
+					item {
+						description
+					}
+				`,
+				{
+					uuid: this.dataService.userIsAdmin
+						? this.publisher.uuid
+						: "mine",
+					description: this.newDescription
+				}
+			)
 
+			let responseData = response.data.updatePublisher
 			this.descriptionLoading = false
 
-			if (isSuccessStatusCode(response.status)) {
-				this.publisher.description = this.newDescription
+			if (responseData.success) {
+				this.publisher.description = responseData.item.description
 				this.newDescription = ""
 				this.newDescriptionError = ""
 				this.editDescription = false
-			} else {
-				let errorCode = (response as ApiErrorResponse).errors[0].code
-
-				switch (errorCode) {
-					case ErrorCodes.DescriptionTooShort:
-						this.newDescriptionError =
-							this.locale.errors.descriptionTooShort
-						break
+			} else if (responseData.errors.length > 0) {
+				switch (responseData.errors[0]) {
 					case ErrorCodes.DescriptionTooLong:
 						this.newDescriptionError =
 							this.locale.errors.descriptionTooLong

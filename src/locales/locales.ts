@@ -422,7 +422,6 @@ const enDefaults = {
 		errors: {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo",
-			descriptionTooShort: "The description is too short",
 			descriptionTooLong: "The description is too long",
 			unexpectedError: "An unexpected error occured"
 		},
@@ -978,7 +977,6 @@ const deDefaults = {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
 			logoUploadFailed:
 				"Beim Hochladen des Logos ist ein Fehler aufgetreten",
-			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
