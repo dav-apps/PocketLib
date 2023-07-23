@@ -30,8 +30,6 @@ import {
 import {
 	AuthorListItem,
 	PublisherMode,
-	PublisherResource,
-	PublisherField,
 	PublisherLogoResource,
 	AuthorResource,
 	AuthorField
@@ -354,38 +352,43 @@ export class PublisherProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response = await this.apiService.UpdatePublisher({
-			fields: [
-				PublisherField.name,
-				PublisherField.websiteUrl,
-				PublisherField.facebookUsername,
-				PublisherField.instagramUsername,
-				PublisherField.twitterUsername
-			],
-			uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
-			name: this.editProfileDialogName,
-			websiteUrl: this.editProfileDialogWebsiteUrl,
-			facebookUsername: this.editProfileDialogFacebookUsername,
-			instagramUsername: this.editProfileDialogInstagramUsername,
-			twitterUsername: this.editProfileDialogTwitterUsername
-		})
+		let response = await this.graphqlService.updatePublisher(
+			`
+				success
+				errors
+				item {
+					name
+					websiteUrl
+					facebookUsername
+					instagramUsername
+					twitterUsername
+				}
+			`,
+			{
+				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
+				name: this.editProfileDialogName,
+				websiteUrl: this.editProfileDialogWebsiteUrl,
+				facebookUsername: this.editProfileDialogFacebookUsername,
+				instagramUsername: this.editProfileDialogInstagramUsername,
+				twitterUsername: this.editProfileDialogTwitterUsername
+			}
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<PublisherResource>).data
+		let responseData = response.data.updatePublisher
+
+		if (responseData.success) {
 			this.editProfileDialogVisible = false
 
-			this.publisher.name = responseData.name
-			this.publisher.websiteUrl = responseData.websiteUrl
-			this.publisher.facebookUsername = responseData.facebookUsername
-			this.publisher.instagramUsername = responseData.instagramUsername
-			this.publisher.twitterUsername = responseData.twitterUsername
+			this.publisher.name = responseData.item.name
+			this.publisher.websiteUrl = responseData.item.websiteUrl
+			this.publisher.facebookUsername = responseData.item.facebookUsername
+			this.publisher.instagramUsername = responseData.item.instagramUsername
+			this.publisher.twitterUsername = responseData.item.twitterUsername
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			let responseErrors = (response as ApiErrorResponse).errors
-
-			for (let error of responseErrors) {
-				switch (error.code) {
+			for (let error of responseData.errors) {
+				switch (error) {
 					case ErrorCodes.NameTooShort:
 						if (this.editProfileDialogName.length == 0) {
 							this.editProfileDialogNameError =

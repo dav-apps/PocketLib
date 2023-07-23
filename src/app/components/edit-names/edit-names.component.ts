@@ -36,11 +36,6 @@ export class EditNamesComponent {
 	}
 
 	async UpdateName(name: Name) {
-		if (name.name.length == 0) {
-			name.errorMessage = this.locale.errors.nameMissing
-			return
-		}
-
 		name.errorMessage = ""
 
 		// Update the name on the server
@@ -73,7 +68,11 @@ export class EditNamesComponent {
 		} else if (setNameResponseData.errors.length > 0) {
 			switch (setNameResponseData.errors[0]) {
 				case ErrorCodes.NameTooShort:
-					name.errorMessage = this.locale.errors.nameTooShort
+					if (name.name.length == 0) {
+						name.errorMessage = this.locale.errors.nameMissing
+					} else {
+						name.errorMessage = this.locale.errors.nameTooShort
+					}
 					break
 				case ErrorCodes.NameTooLong:
 					name.errorMessage = this.locale.errors.nameTooLong
