@@ -1,6 +1,13 @@
 import { Injectable } from "@angular/core"
 import { Apollo, gql, MutationResult } from "apollo-angular"
 import { ApolloQueryResult } from "@apollo/client/core"
+import axios from "axios"
+import {
+	ApiResponse,
+	ApiErrorResponse,
+	BlobToBase64,
+	ConvertErrorToApiErrorResponse
+} from "dav-js"
 import {
 	List,
 	UpdateResponse,
@@ -12,10 +19,14 @@ import {
 	StoreBookResource2,
 	StoreBookCollectionResource2
 } from "../misc/types"
+import { CachingService } from "./caching-service"
 
 @Injectable()
 export class GraphQLService {
-	constructor(private apollo: Apollo) {}
+	constructor(
+		private cachingService: CachingService,
+		private apollo: Apollo
+	) {}
 
 	retrievePublisher(
 		queryData: string,
@@ -316,4 +327,54 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+
+	//#region Other functions
+	async GetFile(params: {
+		url: string
+	}): Promise<ApiResponse<string> | ApiErrorResponse> {
+		// Check if the response is cached
+		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
+			this.GetFile.name,
+			{
+				url: params.url
+			}
+		)
+
+		// Check if the request is currently running
+		let promiseHolder = this.cachingService.GetApiRequest(cacheResponseKey)
+		if (promiseHolder != null) await promiseHolder.AwaitResult()
+
+		let cachedResponse =
+			this.cachingService.GetApiRequestCacheItem(cacheResponseKey)
+		if (cachedResponse) return cachedResponse
+
+		this.cachingService.SetupApiRequest(cacheResponseKey)
+
+		try {
+			let response = await axios({
+				method: "get",
+				url: params.url,
+				responseType: "blob"
+			})
+
+			let result = {
+				status: response.status,
+				data: null
+			}
+
+			if (response.data.size > 0) {
+				result.data = await BlobToBase64(response.data)
+			}
+
+			// Add the response to the cache
+			this.cachingService.SetApiRequestCacheItem(cacheResponseKey, result)
+			this.cachingService.ResolveApiRequest(cacheResponseKey, true)
+
+			return result
+		} catch (error) {
+			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
+			return ConvertErrorToApiErrorResponse(error)
+		}
+	}
+	//#endregion
 }
