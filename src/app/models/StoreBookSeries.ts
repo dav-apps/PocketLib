@@ -5,9 +5,7 @@ import {
 	StoreBookResource
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
-import { ApiService } from "../services/api-service"
 import { GraphQLService } from "../services/graphql-service"
-import { CachingService } from "../services/caching-service"
 import { StoreBook } from "./StoreBook"
 
 export class StoreBookSeries {
@@ -23,9 +21,7 @@ export class StoreBookSeries {
 
 	constructor(
 		seriesResource: StoreBookSeriesResource,
-		private apiService: ApiService,
-		private graphqlService: GraphQLService,
-		private cachingService: CachingService
+		private graphqlService: GraphQLService
 	) {
 		this.uuid = seriesResource?.uuid ?? ""
 		this.author = seriesResource?.author ?? ""
@@ -98,14 +94,7 @@ export class StoreBookSeries {
 		let items = []
 
 		for (let item of responseData.storeBooks.items) {
-			items.push(
-				new StoreBook(
-					item,
-					this.apiService,
-					this.graphqlService,
-					this.cachingService
-				)
-			)
+			items.push(new StoreBook(item, this.graphqlService))
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)
@@ -114,8 +103,5 @@ export class StoreBookSeries {
 
 	ClearStoreBooks() {
 		this.storeBooks.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBooks.name
-		)
 	}
 }

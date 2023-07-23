@@ -1,8 +1,6 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
 import { Language, AuthorResource2, AuthorBioResource2 } from "../misc/types"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "../services/caching-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 
@@ -39,9 +37,7 @@ export class Author {
 	constructor(
 		authorResource: AuthorResource2,
 		private languages: Language[],
-		private apiService: ApiService,
-		private graphqlService: GraphQLService,
-		private cachingService: CachingService
+		private graphqlService: GraphQLService
 	) {
 		this.uuid = authorResource?.uuid ?? ""
 		this.publisher = authorResource?.publisher?.uuid ?? ""
@@ -79,7 +75,7 @@ export class Author {
 
 		if (this.profileImage.url == null) return null
 
-		let response = await this.apiService.GetFile({
+		let response = await this.graphqlService.GetFile({
 			url: this.profileImage.url
 		})
 		if (!isSuccessStatusCode(response.status)) return null
@@ -90,10 +86,6 @@ export class Author {
 	}
 
 	async ReloadProfileImage() {
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.RetrieveAuthorProfileImage.name
-		)
-
 		let response = await this.graphqlService.retrieveAuthor(
 			`
 				profileImage {
@@ -163,9 +155,6 @@ export class Author {
 
 	ClearBios() {
 		this.bios.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListAuthorBios.name
-		)
 	}
 
 	async GetCollections(): Promise<StoreBookCollection[]> {
@@ -214,14 +203,7 @@ export class Author {
 		let items = []
 
 		for (let item of responseData.collections.items) {
-			items.push(
-				new StoreBookCollection(
-					item,
-					this.apiService,
-					this.graphqlService,
-					this.cachingService
-				)
-			)
+			items.push(new StoreBookCollection(item, this.graphqlService))
 		}
 
 		this.collections.itemsPromiseHolder.Resolve(items)
@@ -230,9 +212,6 @@ export class Author {
 
 	ClearCollections() {
 		this.collections.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBookCollections.name
-		)
 	}
 
 	async GetSeries(): Promise<StoreBookSeries[]> {
@@ -278,9 +257,7 @@ export class Author {
 							name: item.name,
 							language: item.language
 						},
-						this.apiService,
-						this.graphqlService,
-						this.cachingService
+						this.graphqlService
 					)
 				)
 			}
@@ -293,8 +270,5 @@ export class Author {
 
 	ClearSeries() {
 		this.series.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBookSeries.name
-		)
 	}
 }

@@ -5,9 +5,7 @@ import {
 	StoreBookCollectionNameResource2
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "../services/caching-service"
 import { StoreBook } from "src/app/models/StoreBook"
 
 export class StoreBookCollection {
@@ -30,9 +28,7 @@ export class StoreBookCollection {
 
 	constructor(
 		collectionResource: StoreBookCollectionResource2,
-		private apiService: ApiService,
-		private graphqlService: GraphQLService,
-		private cachingService: CachingService
+		private graphqlService: GraphQLService
 	) {
 		this.uuid = collectionResource?.uuid ?? ""
 		this.author = collectionResource?.author?.uuid ?? ""
@@ -104,9 +100,6 @@ export class StoreBookCollection {
 
 	ClearNames() {
 		this.names.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBookCollectionNames.name
-		)
 	}
 
 	async GetStoreBooks(): Promise<StoreBook[]> {
@@ -172,14 +165,7 @@ export class StoreBookCollection {
 		let items = []
 
 		for (let item of responseData.storeBooks.items) {
-			items.push(
-				new StoreBook(
-					item,
-					this.apiService,
-					this.graphqlService,
-					this.cachingService
-				)
-			)
+			items.push(new StoreBook(item, this.graphqlService))
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)
@@ -188,8 +174,5 @@ export class StoreBookCollection {
 
 	ClearStoreBooks() {
 		this.storeBooks.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBooks.name
-		)
 	}
 }

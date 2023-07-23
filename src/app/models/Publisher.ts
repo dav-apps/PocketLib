@@ -1,8 +1,6 @@
 import { PromiseHolder } from "dav-js"
 import { Language, PublisherResource2 } from "../misc/types"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "../services/caching-service"
 import { Author } from "./Author"
 
 export class Publisher {
@@ -29,9 +27,7 @@ export class Publisher {
 	constructor(
 		publisherResource: PublisherResource2,
 		private languages: Language[],
-		private apiService: ApiService,
-		private graphqlService: GraphQLService,
-		private cachingService: CachingService
+		private graphqlService: GraphQLService
 	) {
 		this.uuid = publisherResource?.uuid ?? ""
 		this.name = publisherResource?.name ?? ""
@@ -48,10 +44,6 @@ export class Publisher {
 	}
 
 	async ReloadLogo() {
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.RetrievePublisherLogo.name
-		)
-
 		let response = await this.graphqlService.retrievePublisher(
 			`
 				logo {
@@ -136,13 +128,7 @@ export class Publisher {
 				if (responseData != null) {
 					for (let item of responseData.items) {
 						items.push(
-							new Author(
-								item,
-								this.languages,
-								this.apiService,
-								this.graphqlService,
-								this.cachingService
-							)
+							new Author(item, this.languages, this.graphqlService)
 						)
 					}
 				} else {
@@ -189,15 +175,7 @@ export class Publisher {
 				authorItem.pages = responseData.total / limit
 
 				for (let item of responseData.items) {
-					items.push(
-						new Author(
-							item,
-							this.languages,
-							this.apiService,
-							this.graphqlService,
-							this.cachingService
-						)
-					)
+					items.push(new Author(item, this.languages, this.graphqlService))
 				}
 			} else {
 				authorItem.isLoading = false
@@ -226,6 +204,5 @@ export class Publisher {
 
 	ClearAuthors() {
 		this.authors = []
-		this.cachingService.ClearApiRequestCache(this.apiService.ListAuthors.name)
 	}
 }

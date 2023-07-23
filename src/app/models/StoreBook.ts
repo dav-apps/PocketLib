@@ -1,7 +1,5 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import { ApiService } from "../services/api-service"
 import { GraphQLService } from "../services/graphql-service"
-import { CachingService } from "../services/caching-service"
 import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
@@ -38,9 +36,7 @@ export class StoreBook {
 
 	constructor(
 		storeBookResource: StoreBookResource2,
-		private apiService: ApiService,
-		private graphqlService: GraphQLService,
-		private cachingService: CachingService
+		private graphqlService: GraphQLService
 	) {
 		this.uuid = storeBookResource.uuid
 		this.collection = storeBookResource.collection?.uuid
@@ -79,7 +75,7 @@ export class StoreBook {
 
 		if (this.cover.url == null) return null
 
-		let response = await this.apiService.GetFile({ url: this.cover.url })
+		let response = await this.graphqlService.GetFile({ url: this.cover.url })
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data
@@ -148,7 +144,7 @@ export class StoreBook {
 		let items = []
 
 		for (let item of responseData.releases.items) {
-			items.push(new StoreBookRelease(item, this.apiService))
+			items.push(new StoreBookRelease(item, this.graphqlService))
 		}
 
 		this.releases.itemsPromiseHolder.Resolve(items)
@@ -157,8 +153,5 @@ export class StoreBook {
 
 	ClearReleases() {
 		this.releases.loaded = false
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBookReleases.name
-		)
 	}
 }
