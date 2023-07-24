@@ -426,9 +426,7 @@ export class PublisherProfileComponent {
 			this.descriptionLoading = true
 
 			let response = await this.graphqlService.updatePublisher(
-				`
-					description
-				`,
+				`description`,
 				{
 					uuid: this.dataService.userIsAdmin
 						? this.publisher.uuid

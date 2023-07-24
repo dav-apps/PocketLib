@@ -8,6 +8,7 @@ import {
 	ElementRef
 } from "@angular/core"
 import { Router } from "@angular/router"
+import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import {
 	faPen as faPenLight,
@@ -457,33 +458,21 @@ export class AuthorProfileComponent {
 
 			// Save the new bio on the server
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
-				let response = await this.graphqlService.setAuthorBio(
-					`
-						success
-						errors
-					`,
-					{
-						uuid: "mine",
-						language: this.bioLanguageDropdownSelectedKey,
-						bio: this.newBio
-					}
-				)
+				let response = await this.graphqlService.setAuthorBio(`uuid`, {
+					uuid: "mine",
+					language: this.bioLanguageDropdownSelectedKey,
+					bio: this.newBio
+				})
 
-				await this.ProcessSetBioResponse(response.data.setAuthorBio)
+				await this.ProcessSetBioResponse(response)
 			} else {
-				let response = await this.graphqlService.setAuthorBio(
-					`
-						success
-						errors
-					`,
-					{
-						uuid: this.uuid,
-						language: this.bioLanguageDropdownSelectedKey,
-						bio: this.newBio
-					}
-				)
+				let response = await this.graphqlService.setAuthorBio(`uuid`, {
+					uuid: this.uuid,
+					language: this.bioLanguageDropdownSelectedKey,
+					bio: this.newBio
+				})
 
-				await this.ProcessSetBioResponse(response.data.setAuthorBio)
+				await this.ProcessSetBioResponse(response)
 			}
 		} else {
 			this.newBio = this.currentBio
@@ -699,8 +688,10 @@ export class AuthorProfileComponent {
 		}
 	}
 
-	async ProcessSetBioResponse(response: UpdateResponse<AuthorBioResource2>) {
-		if (response.success) {
+	async ProcessSetBioResponse(
+		response: MutationResult<{ setAuthorBio: AuthorBioResource2 }>
+	) {
+		if (response.errors == null) {
 			this.author.ClearBios()
 			await this.LoadBios()
 
@@ -710,8 +701,10 @@ export class AuthorProfileComponent {
 
 			this.SetupBioLanguageDropdown()
 			this.UpdateCurrentBio()
-		} else if (response.errors.length > 0) {
-			switch (response.errors[0]) {
+		} else {
+			let errors = response.errors[0].extensions.errors as string[]
+
+			switch (errors[0]) {
 				case ErrorCodes.BioTooLong:
 					this.newBioError = this.locale.errors.bioTooLong
 					break

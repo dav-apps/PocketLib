@@ -170,9 +170,7 @@ export class GraphQLService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<
-		MutationResult<{ updateAuthor: AuthorResource2 }>
-	> {
+	): Promise<MutationResult<{ updateAuthor: AuthorResource2 }>> {
 		return this.apollo
 			.mutate<{
 				updateAuthor: AuthorResource2
@@ -208,11 +206,9 @@ export class GraphQLService {
 	setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }
-	): Promise<
-		MutationResult<{ setAuthorBio: UpdateResponse<AuthorBioResource2> }>
-	> {
+	): Promise<MutationResult<{ setAuthorBio: AuthorBioResource2 }>> {
 		return this.apollo
-			.mutate<{ setAuthorBio: UpdateResponse<AuthorBioResource2> }>({
+			.mutate<{ setAuthorBio: AuthorBioResource2 }>({
 				mutation: gql`
 					mutation SetAuthorBio($uuid: String!, $bio: String!, $language: String!) {
 						setAuthorBio(uuid: $uuid, bio: $bio, language: $language) {
