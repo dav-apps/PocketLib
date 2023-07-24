@@ -617,16 +617,12 @@ export class AuthorProfileComponent {
 
 		let response = await this.graphqlService.updateAuthor(
 			`
-				success
-				errors
-				item {
-					firstName
-					lastName
-					websiteUrl
-					facebookUsername
-					instagramUsername
-					twitterUsername
-				}
+				firstName
+				lastName
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
 			`,
 			{
 				uuid: this.dataService.userIsAdmin ? this.author.uuid : "mine",
@@ -639,24 +635,23 @@ export class AuthorProfileComponent {
 			}
 		)
 
-		let responseData = response.data.updateAuthor
-
-		if (responseData.success) {
+		if (response.errors == null) {
+			let responseData = response.data.updateAuthor
 			this.editProfileDialogVisible = false
 
-			this.author.firstName = responseData.item.firstName
-			this.author.lastName = responseData.item.lastName
-			this.author.websiteUrl = responseData.item.websiteUrl
-			this.author.facebookUsername = responseData.item.facebookUsername
-			this.author.instagramUsername = responseData.item.instagramUsername
-			this.author.twitterUsername = responseData.item.twitterUsername
+			this.author.firstName = responseData.firstName
+			this.author.lastName = responseData.lastName
+			this.author.websiteUrl = responseData.websiteUrl
+			this.author.facebookUsername = responseData.facebookUsername
+			this.author.instagramUsername = responseData.instagramUsername
+			this.author.twitterUsername = responseData.twitterUsername
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			let responseErrors = responseData.errors
+			let errors = response.errors[0].extensions.errors as string[]
 
-			for (let error of responseErrors) {
-				switch (error) {
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
 							this.editProfileDialogFirstNameError =

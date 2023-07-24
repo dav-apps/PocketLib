@@ -171,11 +171,11 @@ export class GraphQLService {
 			twitterUsername?: string
 		}
 	): Promise<
-		MutationResult<{ updateAuthor: UpdateResponse<AuthorResource2> }>
+		MutationResult<{ updateAuthor: AuthorResource2 }>
 	> {
 		return this.apollo
 			.mutate<{
-				updateAuthor: UpdateResponse<AuthorResource2>
+				updateAuthor: AuthorResource2
 			}>({
 				mutation: gql`
 					mutation UpdateAuthor(
