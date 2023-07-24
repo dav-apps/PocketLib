@@ -51,30 +51,30 @@ export const ReleaseNameWrongType = 2223
 export const ReleaseNotesWrongType = 2224
 
 // Too short fields
-export const FirstNameTooShort = "first_name_too_short"
-export const LastNameTooShort = "last_name_too_short"
-export const NameTooShort = "name_too_short"
+export const FirstNameTooShort = "FIRST_NAME_TOO_SHORT"
+export const LastNameTooShort = "LAST_NAME_TOO_SHORT"
+export const NameTooShort = "NAME_TOO_SHORT"
 export const TitleTooShort = 2304
 export const KeyTooShort = 2306
 export const ReleaseNameTooShort = 2307
 export const ReleaseNotesTooShort = 2308
 
 // Too long fields
-export const FirstNameTooLong = "first_name_too_long"
-export const LastNameTooLong = "last_name_too_long"
-export const NameTooLong = "name_too_long"
-export const BioTooLong = "bio_too_long"
+export const FirstNameTooLong = "FIRST_NAME_TOO_LONG"
+export const LastNameTooLong = "LAST_NAME_TOO_LONG"
+export const NameTooLong = "NAME_TOO_LONG"
+export const BioTooLong = "BIO_TOO_LONG"
 export const TitleTooLong = 2404
-export const DescriptionTooLong = "description_too_long"
+export const DescriptionTooLong = "DESCRIPTION_TOO_LONG"
 export const KeyTooLong = 2406
 export const ReleaseNameTooLong = 2407
 export const ReleaseNotesTooLong = 2408
 
 // Invalid fields
-export const WebsiteUrlInvalid = "website_url_invalid"
-export const FacebookUsernameInvalid = "facebook_username_invalid"
-export const InstagramUsernameInvalid = "instagram_username_invalid"
-export const TwitterUsernameInvalid = "twitter_username_invalid"
+export const WebsiteUrlInvalid = "WEBSITE_URL_INVALID"
+export const FacebookUsernameInvalid = "FACEBOOK_USERNAME_INVALID"
+export const InstagramUsernameInvalid = "INSTAGRAM_USERNAME_INVALID"
+export const TwitterUsernameInvalid = "TWITTER_USERNAME_INVALID"
 export const PriceInvalid = 2504
 export const IsbnInvalid = 2505
 export const KeyInvalid = 2506

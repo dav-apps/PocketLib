@@ -354,15 +354,11 @@ export class PublisherProfileComponent {
 
 		let response = await this.graphqlService.updatePublisher(
 			`
-				success
-				errors
-				item {
-					name
-					websiteUrl
-					facebookUsername
-					instagramUsername
-					twitterUsername
-				}
+				name
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
 			`,
 			{
 				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
@@ -374,21 +370,22 @@ export class PublisherProfileComponent {
 			}
 		)
 
-		let responseData = response.data.updatePublisher
-
-		if (responseData.success) {
+		if (response.errors == null) {
+			let responseData = response.data.updatePublisher
 			this.editProfileDialogVisible = false
 
-			this.publisher.name = responseData.item.name
-			this.publisher.websiteUrl = responseData.item.websiteUrl
-			this.publisher.facebookUsername = responseData.item.facebookUsername
-			this.publisher.instagramUsername = responseData.item.instagramUsername
-			this.publisher.twitterUsername = responseData.item.twitterUsername
+			this.publisher.name = responseData.name
+			this.publisher.websiteUrl = responseData.websiteUrl
+			this.publisher.facebookUsername = responseData.facebookUsername
+			this.publisher.instagramUsername = responseData.instagramUsername
+			this.publisher.twitterUsername = responseData.twitterUsername
 
 			this.UpdateSocialMediaLinks()
 		} else {
-			for (let error of responseData.errors) {
-				switch (error) {
+			let errors = response.errors[0].extensions.errors as string[]
+
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.NameTooShort:
 						if (this.editProfileDialogName.length == 0) {
 							this.editProfileDialogNameError =
@@ -430,11 +427,7 @@ export class PublisherProfileComponent {
 
 			let response = await this.graphqlService.updatePublisher(
 				`
-					success
-					errors
-					item {
-						description
-					}
+					description
 				`,
 				{
 					uuid: this.dataService.userIsAdmin
@@ -444,16 +437,19 @@ export class PublisherProfileComponent {
 				}
 			)
 
-			let responseData = response.data.updatePublisher
 			this.descriptionLoading = false
 
-			if (responseData.success) {
-				this.publisher.description = responseData.item.description
+			if (response.errors == null) {
+				let responseData = response.data.updatePublisher
+
+				this.publisher.description = responseData.description
 				this.newDescription = ""
 				this.newDescriptionError = ""
 				this.editDescription = false
-			} else if (responseData.errors.length > 0) {
-				switch (responseData.errors[0]) {
+			} else {
+				let errors = response.errors[0].extensions.errors as string[]
+
+				switch (errors[0]) {
 					case ErrorCodes.DescriptionTooLong:
 						this.newDescriptionError =
 							this.locale.errors.descriptionTooLong

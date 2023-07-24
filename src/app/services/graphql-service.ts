@@ -80,12 +80,10 @@ export class GraphQLService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<
-		MutationResult<{ updatePublisher: UpdateResponse<PublisherResource2> }>
-	> {
+	): Promise<MutationResult<{ updatePublisher: PublisherResource2 }>> {
 		return this.apollo
 			.mutate<{
-				updatePublisher: UpdateResponse<PublisherResource2>
+				updatePublisher: PublisherResource2
 			}>({
 				mutation: gql`
 					mutation UpdatePublisher(
