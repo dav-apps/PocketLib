@@ -34,7 +34,6 @@ import {
 	GenerateTwitterLink
 } from "src/app/misc/utils"
 import {
-	UpdateResponse,
 	BookListItem,
 	AuthorMode,
 	AuthorBioResource2,

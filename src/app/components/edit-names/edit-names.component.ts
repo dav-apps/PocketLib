@@ -42,12 +42,8 @@ export class EditNamesComponent {
 		let setNameResponse =
 			await this.graphqlService.setStoreBookCollectionName(
 				`
-					success
-					errors
-					item {
-						name
-						language
-					}
+					name
+					language
 				`,
 				{
 					uuid: this.uuid,
@@ -56,17 +52,19 @@ export class EditNamesComponent {
 				}
 			)
 
-		let setNameResponseData = setNameResponse.data.setStoreBookCollectionName
-
-		if (setNameResponseData.success) {
+		if (setNameResponse.errors != null) {
+			let setNameResponseData =
+				setNameResponse.data.setStoreBookCollectionName
 			name.edit = false
 
 			this.update.emit({
-				name: setNameResponseData.item.name,
-				language: setNameResponseData.item.language
+				name: setNameResponseData.name,
+				language: setNameResponseData.language
 			})
-		} else if (setNameResponseData.errors.length > 0) {
-			switch (setNameResponseData.errors[0]) {
+		} else {
+			let errors = setNameResponse.errors[0].extensions.errors as string[]
+
+			switch (errors[0]) {
 				case ErrorCodes.NameTooShort:
 					if (name.name.length == 0) {
 						name.errorMessage = this.locale.errors.nameMissing

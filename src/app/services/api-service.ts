@@ -27,7 +27,6 @@ import {
 	StoreBookCollectionField,
 	StoreBookCollectionListField,
 	StoreBookCollectionNameResource,
-	StoreBookCollectionNameField,
 	StoreBookCollectionNameListField,
 	StoreBookSeriesResource,
 	StoreBookSeriesField,
@@ -719,45 +718,6 @@ export class ApiService {
 		} catch (error) {
 			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
 			return await HandleApiError(error)
-		}
-	}
-
-	async SetStoreBookCollectionName(params: {
-		uuid: string
-		name: string
-		language: string
-		fields?: StoreBookCollectionNameField[]
-	}): Promise<
-		ApiResponse<StoreBookCollectionNameResource> | ApiErrorResponse
-	> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/store_book_collections/${params.uuid}/names/${params.language}`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					name: params.name
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookCollectionNameResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.SetStoreBookCollectionName(params)
 		}
 	}
 	//#endregion

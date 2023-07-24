@@ -10,7 +10,6 @@ import {
 } from "dav-js"
 import {
 	List,
-	UpdateResponse,
 	PublisherResource2,
 	AuthorResource2,
 	AuthorBioResource2,
@@ -250,12 +249,12 @@ export class GraphQLService {
 		variables: { uuid: string; name: string; language: string }
 	): Promise<
 		MutationResult<{
-			setStoreBookCollectionName: UpdateResponse<StoreBookCollectionNameResource2>
+			setStoreBookCollectionName: StoreBookCollectionNameResource2
 		}>
 	> {
 		return this.apollo
 			.mutate<{
-				setStoreBookCollectionName: UpdateResponse<StoreBookCollectionNameResource2>
+				setStoreBookCollectionName: StoreBookCollectionNameResource2
 			}>({
 				mutation: gql`
 					mutation SetStoreBookCollectionName($uuid: String!, $name: String!, $language: String!) {
