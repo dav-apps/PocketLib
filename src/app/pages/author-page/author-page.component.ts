@@ -1,14 +1,11 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
-import { PublisherResource, PublisherField } from "src/app/misc/types"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
 
@@ -40,7 +37,6 @@ export class AuthorPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -117,24 +113,20 @@ export class AuthorPageComponent {
 		this.createPublisherDialogNameError = ""
 		this.createPublisherDialogLoading = true
 
-		let response = await this.apiService.CreatePublisher({
-			name: this.createPublisherDialogName,
-			fields: [
-				PublisherField.uuid,
-				PublisherField.name,
-				PublisherField.description,
-				PublisherField.websiteUrl,
-				PublisherField.facebookUsername,
-				PublisherField.instagramUsername,
-				PublisherField.twitterUsername,
-				PublisherField.logo
-			]
-		})
+		let response = await this.graphqlService.createPublisher(
+			`
+				uuid
+				name
+			`,
+			{
+				name: this.createPublisherDialogName
+			}
+		)
 
 		this.createPublisherDialogLoading = false
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<PublisherResource>).data
+		if (response.errors == null) {
+			let responseData = response.data.createPublisher
 
 			// Add the publisher to the publishers of the admin in DataService
 			this.dataService.adminPublishers.push(
@@ -148,8 +140,10 @@ export class AuthorPageComponent {
 			// Redirect to the publisher page of the new publisher
 			this.router.navigate(["publisher", responseData.uuid])
 		} else {
-			for (let error of (response as ApiErrorResponse).errors) {
-				switch (error.code) {
+			let errors = response.errors[0].extensions.errors as string[]
+
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.NameTooShort:
 						if (this.createPublisherDialogName.length == 0) {
 							this.createPublisherDialogNameError =

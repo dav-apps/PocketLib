@@ -68,6 +68,26 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	createPublisher(
+		queryData: string,
+		variables: {
+			name: string
+		}
+	): Promise<MutationResult<{ createPublisher: PublisherResource2 }>> {
+		return this.apollo
+			.mutate<{ createPublisher: PublisherResource2 }>({
+				mutation: gql`
+					mutation CreatePublisher($name: String!) {
+						createPublisher(name: $name) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	updatePublisher(
 		queryData: string,
 		variables: {

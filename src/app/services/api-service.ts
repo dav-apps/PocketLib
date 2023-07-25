@@ -12,8 +12,6 @@ import { environment } from "src/environments/environment"
 import {
 	ListResponseData,
 	Language,
-	PublisherResource,
-	PublisherField,
 	PublisherLogoResource,
 	PublisherLogoField,
 	AuthorResource,
@@ -43,7 +41,6 @@ import {
 	BookField
 } from "src/app/misc/types"
 import {
-	ResponseDataToPublisherResource,
 	ResponseDataToPublisherLogoResource,
 	ResponseDataToAuthorResource,
 	ResponseDataToAuthorBioResource,
@@ -61,89 +58,6 @@ import {
 @Injectable()
 export class ApiService {
 	constructor(private cachingService: CachingService) {}
-
-	//#region Publisher functions
-	async CreatePublisher(params: {
-		name: string
-		fields?: PublisherField[]
-	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "post",
-				url: `${environment.pocketlibApiBaseUrl}/publishers`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					name: params.name
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToPublisherResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.CreatePublisher(params)
-		}
-	}
-
-	async UpdatePublisher(params: {
-		uuid: string
-		name?: string
-		description?: string
-		websiteUrl?: string
-		facebookUsername?: string
-		instagramUsername?: string
-		twitterUsername?: string
-		fields?: PublisherField[]
-	}): Promise<ApiResponse<PublisherResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					name: params.name,
-					description: params.description,
-					website_url: params.websiteUrl,
-					facebook_username: params.facebookUsername,
-					instagram_username: params.instagramUsername,
-					twitter_username: params.twitterUsername
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToPublisherResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.UpdatePublisher(params)
-		}
-	}
-	//#endregion
 
 	//#region PublisherLogo
 	async RetrievePublisherLogo(params: {
