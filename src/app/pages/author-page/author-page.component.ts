@@ -5,16 +5,10 @@ import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "src/app/services/caching-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
-import {
-	PublisherResource,
-	PublisherField,
-	AuthorField,
-	AuthorResource
-} from "src/app/misc/types"
+import { PublisherResource, PublisherField } from "src/app/misc/types"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
 
@@ -48,7 +42,6 @@ export class AuthorPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -193,25 +186,22 @@ export class AuthorPageComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
 
-		let response = await this.apiService.CreateAuthor({
-			firstName: this.createAuthorDialogFirstName,
-			lastName: this.createAuthorDialogLastName,
-			fields: [
-				AuthorField.uuid,
-				AuthorField.firstName,
-				AuthorField.lastName,
-				AuthorField.websiteUrl,
-				AuthorField.facebookUsername,
-				AuthorField.instagramUsername,
-				AuthorField.twitterUsername,
-				AuthorField.profileImage
-			]
-		})
+		let response = await this.graphqlService.createAuthor(
+			`
+				uuid
+				firstName
+				lastName
+			`,
+			{
+				firstName: this.createAuthorDialogFirstName,
+				lastName: this.createAuthorDialogLastName
+			}
+		)
 
 		this.createAuthorDialogLoading = false
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
+		if (response.errors == null) {
+			let responseData = response.data.createAuthor
 
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push(
@@ -225,8 +215,10 @@ export class AuthorPageComponent {
 			// Redirect to the author page of the new author
 			this.router.navigate(["author", responseData.uuid])
 		} else {
-			for (let error of (response as ApiErrorResponse).errors) {
-				switch (error.code) {
+			let errors = response.errors[0].extensions.errors as string[]
+
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.createAuthorDialogFirstName.length == 0) {
 							this.createAuthorDialogFirstNameError =

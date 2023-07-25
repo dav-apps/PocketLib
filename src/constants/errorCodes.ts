@@ -12,8 +12,6 @@ export const ContentTypeHeaderMissing = 1101
 export const InvalidBody = 2000
 
 // Missing fields
-export const FirstNameMissing = 2100
-export const LastNameMissing = 2101
 export const BioMissing = 2103
 export const LanguageMissing = 2104
 export const AuthorMissing = 2105

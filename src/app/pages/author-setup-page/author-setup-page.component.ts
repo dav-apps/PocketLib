@@ -1,16 +1,12 @@
 import { Component } from "@angular/core"
 import { Router } from "@angular/router"
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser"
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "src/app/services/caching-service"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
-import { AuthorField, AuthorResource } from "src/app/misc/types"
 import { Author } from "src/app/models/Author"
 
 @Component({
@@ -31,9 +27,7 @@ export class AuthorSetupPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private router: Router,
 		private domSanitizer: DomSanitizer
 	) {
@@ -68,14 +62,20 @@ export class AuthorSetupPageComponent {
 		this.lastNameError = ""
 		this.loading = true
 
-		let response = await this.apiService.CreateAuthor({
-			firstName: this.firstName,
-			lastName: this.lastName,
-			fields: [AuthorField.uuid, AuthorField.firstName, AuthorField.lastName]
-		})
+		let response = await this.graphqlService.createAuthor(
+			`
+				uuid
+				firstName
+				lastName
+			`,
+			{
+				firstName: this.firstName,
+				lastName: this.lastName
+			}
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
+		if (response.errors == null) {
+			let responseData = response.data.createAuthor
 
 			// Set the author in DataService
 			this.dataService.userAuthor = new Author(
@@ -91,15 +91,10 @@ export class AuthorSetupPageComponent {
 			this.router.navigate(["/author"])
 		} else {
 			this.loading = false
+			let errors = response.errors[0].extensions.errors as string[]
 
-			for (let error of (response as ApiErrorResponse).errors) {
-				switch (error.code) {
-					case ErrorCodes.FirstNameMissing:
-						this.firstNameError = this.locale.errors.firstNameMissing
-						break
-					case ErrorCodes.LastNameMissing:
-						this.lastNameError = this.locale.errors.lastNameMissing
-						break
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.firstName.length == 0) {
 							this.firstNameError = this.locale.errors.firstNameMissing

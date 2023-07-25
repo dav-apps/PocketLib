@@ -30,9 +30,7 @@ import {
 import {
 	AuthorListItem,
 	PublisherMode,
-	PublisherLogoResource,
-	AuthorResource,
-	AuthorField
+	PublisherLogoResource
 } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
@@ -484,17 +482,23 @@ export class PublisherProfileComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
 
-		let response = await this.apiService.CreateAuthor({
-			publisher: this.publisher.uuid,
-			firstName: this.createAuthorDialogFirstName,
-			lastName: this.createAuthorDialogLastName,
-			fields: [AuthorField.uuid, AuthorField.firstName, AuthorField.lastName]
-		})
+		let response = await this.graphqlService.createAuthor(
+			`
+				uuid
+				firstName
+				lastName
+			`,
+			{
+				publisher: this.publisher.uuid,
+				firstName: this.createAuthorDialogFirstName,
+				lastName: this.createAuthorDialogLastName
+			}
+		)
 
 		this.createAuthorDialogLoading = false
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<AuthorResource>).data
+		if (response.errors == null) {
+			let responseData = response.data.createAuthor
 
 			// Clear the authors of the publisher
 			this.publisher.ClearAuthors()
@@ -502,8 +506,10 @@ export class PublisherProfileComponent {
 			// Redirect to the author page of the new author
 			this.router.navigate(["author", responseData.uuid])
 		} else {
-			for (let error of (response as ApiErrorResponse).errors) {
-				switch (error.code) {
+			let errors = response.errors[0].extensions.errors as string[]
+
+			for (let errorCode of errors) {
+				switch (errorCode) {
 					case ErrorCodes.FirstNameTooShort:
 						if (this.createAuthorDialogFirstName.length == 0) {
 							this.createAuthorDialogFirstNameError =

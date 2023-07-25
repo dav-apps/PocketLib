@@ -158,6 +158,38 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	createAuthor(
+		queryData: string,
+		variables: {
+			publisher?: string
+			firstName: string
+			lastName: string
+		}
+	): Promise<MutationResult<{ createAuthor: AuthorResource2 }>> {
+		return this.apollo
+			.mutate<{
+				createAuthor: AuthorResource2
+			}>({
+				mutation: gql`
+					mutation CreateAuthor(
+						$publisher: String
+						$firstName: String!
+						$lastName: String!
+					) {
+						createAuthor(
+							publisher: $publisher
+							firstName: $firstName
+							lastName: $lastName
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
 	updateAuthor(
 		queryData: string,
 		variables?: {

@@ -17,7 +17,6 @@ import {
 	PublisherLogoResource,
 	PublisherLogoField,
 	AuthorResource,
-	AuthorField,
 	AuthorListField,
 	AuthorBioResource,
 	AuthorBioListField,
@@ -239,45 +238,6 @@ export class ApiService {
 	//#endregion
 
 	//#region Author functions
-	async CreateAuthor(params: {
-		publisher?: string
-		firstName: string
-		lastName: string
-		fields?: AuthorField[]
-	}): Promise<ApiResponse<AuthorResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "post",
-				url: `${environment.pocketlibApiBaseUrl}/authors`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					publisher: params.publisher,
-					first_name: params.firstName,
-					last_name: params.lastName
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToAuthorResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.CreateAuthor(params)
-		}
-	}
-
 	async ListAuthors(params: {
 		fields?: AuthorListField[]
 		languages?: Language[]
