@@ -764,55 +764,6 @@ export class ApiService {
 	//#endregion
 
 	//#region StoreBook
-	async CreateStoreBook(params: {
-		author?: string
-		collection?: string
-		title: string
-		description?: string
-		language: string
-		price?: number
-		isbn?: string
-		categories?: string[]
-		fields?: StoreBookField[]
-	}): Promise<ApiResponse<any> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "post",
-				url: `${environment.pocketlibApiBaseUrl}/store_books`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					author: params.author,
-					collection: params.collection,
-					title: params.title,
-					description: params.description,
-					language: params.language,
-					price: params.price,
-					isbn: params.isbn,
-					categories: params.categories
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.CreateStoreBook(params)
-		}
-	}
-
 	async RetrieveStoreBook(params: {
 		uuid: string
 		fields?: StoreBookField[]

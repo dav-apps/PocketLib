@@ -1,8 +1,9 @@
 import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { PromiseHolder, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { PromiseHolder } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
 import { GetDualScreenSettings } from "src/app/misc/utils"
@@ -85,6 +86,7 @@ export class NewBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -370,26 +372,28 @@ export class NewBookPageComponent {
 		}
 
 		// Create the store book with collection, title and language
-		let createStoreBookResponse = await this.apiService.CreateStoreBook({
-			author: authorUuid,
-			collection: collectionUuid,
-			description: this.description.length > 0 ? this.description : null,
-			title: this.title,
-			language: this.language,
-			price: this.price,
-			isbn: this.isbn,
-			categories: this.selectedCategories
-		})
+		let createStoreBookResponse = await this.graphqlService.createStoreBook(
+			`uuid`,
+			{
+				author: authorUuid,
+				collection: collectionUuid,
+				description: this.description.length > 0 ? this.description : null,
+				title: this.title,
+				language: this.language,
+				price: this.price,
+				isbn: this.isbn,
+				categories: this.selectedCategories
+			}
+		)
 
-		if (!isSuccessStatusCode(createStoreBookResponse.status)) {
+		if (createStoreBookResponse.errors != null) {
 			this.errorMessage = this.locale.errorMessage
 			this.HideLoadingScreen()
 			return
 		}
 
-		let createStoreBookResponseData = (
-			createStoreBookResponse as ApiResponse<any>
-		).data
+		let createStoreBookResponseData =
+			createStoreBookResponse.data.createStoreBook
 
 		if (this.coverContent) {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
