@@ -19,8 +19,6 @@ import {
 	StoreBookSeriesField,
 	StoreBookCoverField,
 	StoreBookFileField,
-	StoreBookReleaseResource,
-	StoreBookReleaseField,
 	BookResource,
 	BookField
 } from "src/app/misc/types"
@@ -30,7 +28,6 @@ import {
 	ResponseDataToStoreBookSeriesResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource,
-	ResponseDataToStoreBookReleaseResource,
 	ResponseDataToBookResource
 } from "src/app/misc/utils"
 
@@ -269,46 +266,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.UploadStoreBookFile(params)
-		}
-	}
-	//#endregion
-
-	//#region StoreBookRelease
-	async PublishStoreBookRelease(params: {
-		uuid: string
-		releaseName: string
-		releaseNotes?: string
-		fields?: StoreBookReleaseField[]
-	}): Promise<ApiResponse<StoreBookReleaseResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/store_book_releases/${params.uuid}/publish`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					release_name: params.releaseName,
-					release_notes: params.releaseNotes
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookReleaseResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.PublishStoreBookRelease(params)
 		}
 	}
 	//#endregion

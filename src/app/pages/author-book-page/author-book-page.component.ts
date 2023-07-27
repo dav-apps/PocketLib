@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
-import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
@@ -527,7 +527,7 @@ export class AuthorBookPageComponent {
 		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
 		this.publishChangesDialogLoading = true
 
-		let response = await this.apiService.PublishStoreBookRelease({
+		let response = await this.graphqlService.publishStoreBookRelease(`uuid`, {
 			uuid: lastRelease.uuid,
 			releaseName: this.publishChangesDialogReleaseName,
 			releaseNotes: this.publishChangesDialogReleaseNotes
@@ -535,7 +535,7 @@ export class AuthorBookPageComponent {
 
 		this.publishChangesDialogLoading = false
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.publishChangesDialogVisible = false
 			this.publishChangesDialogLoading = false
 			this.publishChangesDialogReleaseName = ""
@@ -546,26 +546,23 @@ export class AuthorBookPageComponent {
 			this.storeBook.ClearReleases()
 			this.collection.ClearStoreBooks()
 		} else {
-			// Show error message
-			let errorCode = (response as ApiErrorResponse).errors[0].code
+			let errors = response.errors[0].extensions.errors as string[]
 
-			switch (errorCode) {
-				case ErrorCodes.ReleaseNameTooShort:
-					this.publishChangesDialogReleaseNameError =
-						this.locale.errors.releaseNameTooShort
-					break
-				case ErrorCodes.ReleaseNameTooLong:
-					this.publishChangesDialogReleaseNameError =
-						this.locale.errors.releaseNameTooLong
-					break
-				case ErrorCodes.ReleaseNotesTooShort:
-					this.publishChangesDialogReleaseNotesError =
-						this.locale.errors.releaseNotesTooShort
-					break
-				case ErrorCodes.ReleaseNotesTooLong:
-					this.publishChangesDialogReleaseNotesError =
-						this.locale.errors.releaseNotesTooLong
-					break
+			for (let errorCode of errors) {
+				switch (errorCode) {
+					case ErrorCodes.ReleaseNameTooShort:
+						this.publishChangesDialogReleaseNameError =
+							this.locale.errors.releaseNameTooShort
+						break
+					case ErrorCodes.ReleaseNameTooLong:
+						this.publishChangesDialogReleaseNameError =
+							this.locale.errors.releaseNameTooLong
+						break
+					case ErrorCodes.ReleaseNotesTooLong:
+						this.publishChangesDialogReleaseNotesError =
+							this.locale.errors.releaseNotesTooLong
+						break
+				}
 			}
 		}
 	}

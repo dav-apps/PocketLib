@@ -54,8 +54,7 @@ export const LastNameTooShort = "LAST_NAME_TOO_SHORT"
 export const NameTooShort = "NAME_TOO_SHORT"
 export const TitleTooShort = "TITLE_TOO_SHORT"
 export const KeyTooShort = 2306
-export const ReleaseNameTooShort = 2307
-export const ReleaseNotesTooShort = 2308
+export const ReleaseNameTooShort = "RELEASE_NAME_TOO_SHORT"
 
 // Too long fields
 export const FirstNameTooLong = "FIRST_NAME_TOO_LONG"
@@ -65,8 +64,8 @@ export const BioTooLong = "BIO_TOO_LONG"
 export const TitleTooLong = "TITLE_TOO_LONG"
 export const DescriptionTooLong = "DESCRIPTION_TOO_LONG"
 export const KeyTooLong = 2406
-export const ReleaseNameTooLong = 2407
-export const ReleaseNotesTooLong = 2408
+export const ReleaseNameTooLong = "RELEASE_NAME_TOO_LONG"
+export const ReleaseNotesTooLong = "RELEASE_NOTES_TOO_LONG"
 
 // Invalid fields
 export const WebsiteUrlInvalid = "WEBSITE_URL_INVALID"

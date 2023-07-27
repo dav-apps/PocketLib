@@ -17,6 +17,7 @@ import {
 	StoreBookCollectionNameResource2,
 	StoreBookSeriesResource2,
 	StoreBookResource2,
+	StoreBookReleaseResource2,
 	CategoryResource2
 } from "../misc/types"
 import { CachingService } from "./caching-service"
@@ -513,6 +514,40 @@ export class GraphQLService {
 						}
 					}
 				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	publishStoreBookRelease(
+		queryData: string,
+		variables: {
+			uuid: string
+			releaseName: string
+			releaseNotes?: string
+		}
+	): Promise<
+		MutationResult<{ publishStoreBookRelease: StoreBookReleaseResource2 }>
+	> {
+		return this.apollo
+			.mutate<{
+				publishStoreBookRelease: StoreBookReleaseResource2
+			}>({
+				mutation: gql`
+				mutation PublishStoreBookRelease(
+					$uuid: String!
+					$releaseName: String!
+					$releaseNotes: String
+				) {
+					publishStoreBookRelease(
+						uuid: $uuid
+						releaseName: $releaseName
+						releaseNote: $releaseNotes
+					) {
+						${queryData}
+					}
+				}
+			`,
 				variables
 			})
 			.toPromise()
