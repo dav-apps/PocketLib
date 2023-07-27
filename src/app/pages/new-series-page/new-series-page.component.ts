@@ -1,8 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
 import { GetDualScreenSettings } from "src/app/misc/utils"
@@ -34,7 +33,7 @@ export class NewSeriesPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -158,14 +157,14 @@ export class NewSeriesPageComponent {
 
 		// Create the StoreBookSeries
 		let createStoreBookSeriesResponse =
-			await this.apiService.CreateStoreBookSeries({
+			await this.graphqlService.createStoreBookSeries(`uuid`, {
 				author: authorUuid,
 				name: this.name,
 				language: this.language,
 				storeBooks: storeBookUuids
 			})
 
-		if (!isSuccessStatusCode(createStoreBookSeriesResponse.status)) {
+		if (createStoreBookSeriesResponse.errors != null) {
 			this.errorMessage = this.locale.errorMessage
 			this.loading = false
 			return

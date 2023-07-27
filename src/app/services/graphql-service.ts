@@ -29,6 +29,7 @@ export class GraphQLService {
 		private apollo: Apollo
 	) {}
 
+	//#region Publisher
 	retrievePublisher(
 		queryData: string,
 		variables: { uuid: string }
@@ -132,7 +133,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region Author
 	retrieveAuthor(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
@@ -254,7 +257,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region AuthorBio
 	setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }
@@ -272,7 +277,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region StoreBookCollection
 	retrieveStoreBookCollection(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
@@ -296,7 +303,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region StoreBookCollectionName
 	setStoreBookCollectionName(
 		queryData: string,
 		variables: { uuid: string; name: string; language: string }
@@ -320,7 +329,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region StoreBookSeries
 	retrieveStoreBookSeries(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
@@ -368,6 +379,43 @@ export class GraphQLService {
 			.toPromise()
 	}
 
+	createStoreBookSeries(
+		queryData: string,
+		variables: {
+			author?: string
+			name: string
+			language: string
+			storeBooks?: string[]
+		}
+	): Promise<
+		MutationResult<{ createStoreBookSeries: StoreBookSeriesResource2 }>
+	> {
+		return this.apollo
+			.mutate<{ createStoreBookSeries: StoreBookSeriesResource2 }>({
+				mutation: gql`
+					mutation CreateStoreBookSeries(
+						$author: String
+						$name: String!
+						$language: String!
+						$storeBooks: [String!]
+					) {
+						createStoreBookSeries(
+							author: $author
+							name: $name
+							language: $language
+							storeBooks: $storeBooks
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+	//#endregion
+
+	//#region StoreBook
 	retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string }
@@ -518,7 +566,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region StoreBookRelease
 	publishStoreBookRelease(
 		queryData: string,
 		variables: {
@@ -552,7 +602,9 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
+	//#region Category
 	listCategories(
 		queryData: string,
 		variables?: { languages?: string[] }
@@ -572,6 +624,7 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+	//#endregion
 
 	//#region Other functions
 	async GetFile(params: {
