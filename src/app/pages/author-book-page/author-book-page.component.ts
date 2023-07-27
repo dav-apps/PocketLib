@@ -1,11 +1,12 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
+import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import { CachingService } from "src/app/services/caching-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
@@ -17,8 +18,7 @@ import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	StoreBookStatus,
 	StoreBookReleaseStatus,
-	StoreBookField,
-	StoreBookResource
+	StoreBookResource2
 } from "src/app/misc/types"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
@@ -100,7 +100,7 @@ export class AuthorBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private cachingService: CachingService,
+		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -301,10 +301,9 @@ export class AuthorBookPageComponent {
 	async UpdateTitle() {
 		this.editTitleDialogLoading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`title`, {
 			uuid: this.uuid,
-			title: this.editTitleDialogTitle,
-			fields: [StoreBookField.title]
+			title: this.editTitleDialogTitle
 		})
 
 		this.editTitleDialogLoading = false
@@ -318,10 +317,9 @@ export class AuthorBookPageComponent {
 
 			//	Save the new description on the server
 			this.UpdateStoreBookResponse(
-				await this.apiService.UpdateStoreBook({
+				await this.graphqlService.updateStoreBook(`description`, {
 					uuid: this.uuid,
-					description: this.newDescription,
-					fields: [StoreBookField.description]
+					description: this.newDescription
 				})
 			)
 		} else {
@@ -337,10 +335,9 @@ export class AuthorBookPageComponent {
 		this.updateLanguage = true
 
 		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
+			await this.graphqlService.updateStoreBook(`language`, {
 				uuid: this.uuid,
-				language,
-				fields: [StoreBookField.language]
+				language
 			})
 		)
 	}
@@ -362,7 +359,7 @@ export class AuthorBookPageComponent {
 		this.categoriesSelectionDialogLoading = true
 
 		// Update the categories on the server
-		await this.apiService.UpdateStoreBook({
+		await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			categories
 		})
@@ -377,10 +374,9 @@ export class AuthorBookPageComponent {
 		this.priceUpdating = true
 
 		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
+			await this.graphqlService.updateStoreBook(`price`, {
 				uuid: this.uuid,
-				price,
-				fields: [StoreBookField.price]
+				price
 			})
 		)
 	}
@@ -389,10 +385,9 @@ export class AuthorBookPageComponent {
 		this.isbnUpdating = true
 
 		this.UpdateStoreBookResponse(
-			await this.apiService.UpdateStoreBook({
+			await this.graphqlService.updateStoreBook(`isbn`, {
 				uuid: this.uuid,
-				isbn,
-				fields: [StoreBookField.isbn]
+				isbn
 			})
 		)
 	}
@@ -486,12 +481,12 @@ export class AuthorBookPageComponent {
 		if (this.book.status != StoreBookStatus.Unpublished) return
 		this.statusLoading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			status: "review"
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.collection.ClearStoreBooks()
 
 			// Navigate to the dashboard
@@ -550,11 +545,6 @@ export class AuthorBookPageComponent {
 			this.author.ClearSeries()
 			this.storeBook.ClearReleases()
 			this.collection.ClearStoreBooks()
-
-			this.cachingService.ClearApiRequestCache(
-				this.apiService.RetrieveStoreBook.name,
-				this.apiService.RetrieveStoreBookCover.name
-			)
 		} else {
 			// Show error message
 			let errorCode = (response as ApiErrorResponse).errors[0].code
@@ -580,22 +570,18 @@ export class AuthorBookPageComponent {
 		}
 	}
 
-	UpdateStoreBookResponse(response: ApiResponse<any> | ApiErrorResponse) {
+	UpdateStoreBookResponse(
+		response: MutationResult<{ updateStoreBook: StoreBookResource2 }>
+	) {
 		if (this.editDescription) {
 			// The description was updated
-			if (isSuccessStatusCode(response.status)) {
-				this.book.description = (
-					response as ApiResponse<any>
-				).data.description
+			if (response.errors == null) {
+				this.book.description = response.data.updateStoreBook.description
 				this.editDescription = false
 			} else {
-				let errorCode = (response as ApiErrorResponse).errors[0].code
+				let errors = response.errors[0].extensions.errors as string[]
 
-				switch (errorCode) {
-					case ErrorCodes.DescriptionTooShort:
-						this.newDescriptionError =
-							this.locale.errors.descriptionTooShort
-						break
+				switch (errors[0]) {
 					case ErrorCodes.DescriptionTooLong:
 						this.newDescriptionError =
 							this.locale.errors.descriptionTooLong
@@ -610,20 +596,20 @@ export class AuthorBookPageComponent {
 		} else if (this.updateLanguage) {
 			this.updateLanguage = false
 
-			if (isSuccessStatusCode(response.status)) {
-				this.book.language = (response as ApiResponse<any>).data.language
+			if (response.errors == null) {
+				this.book.language = response.data.updateStoreBook.language
 			}
 		} else if (this.priceUpdating) {
 			this.priceUpdating = false
 
 			// The price was updated
-			if (isSuccessStatusCode(response.status)) {
-				this.book.price = (response as ApiResponse<any>).data.price
+			if (response.errors == null) {
+				this.book.price = response.data.updateStoreBook.price
 				this.priceInput.SetPrice(this.book.price)
 			} else {
-				let errorCode = (response as ApiErrorResponse).errors[0].code
+				let errors = response.errors[0].extensions.errors as string[]
 
-				switch (errorCode) {
+				switch (errors[0]) {
 					case ErrorCodes.PriceInvalid:
 						this.priceInput.SetError(this.locale.errors.priceInvalid)
 						break
@@ -636,14 +622,14 @@ export class AuthorBookPageComponent {
 			this.isbnUpdating = false
 
 			// The ISBN was updated
-			if (isSuccessStatusCode(response.status)) {
-				let responseData = (response as ApiResponse<any>).data
+			if (response.errors == null) {
+				let responseData = response.data.updateStoreBook
 				this.book.isbn = responseData.isbn ? responseData.isbn : ""
 				this.isbnInput.SetIsbn(this.book.isbn)
 			} else {
-				let errorCode = (response as ApiErrorResponse).errors[0].code
+				let errors = response.errors[0].extensions.errors as string[]
 
-				switch (errorCode) {
+				switch (errors[0]) {
 					case ErrorCodes.IsbnInvalid:
 						this.isbnInput.SetError(this.locale.errors.isbnInvalid)
 						break
@@ -654,15 +640,13 @@ export class AuthorBookPageComponent {
 			}
 		} else {
 			// The title was updated
-			if (isSuccessStatusCode(response.status)) {
-				this.book.title = (
-					response as ApiResponse<StoreBookResource>
-				).data.title
+			if (response.errors == null) {
+				this.book.title = response.data.updateStoreBook.title
 				this.editTitleDialogVisible = false
 			} else {
-				let errorCode = (response as ApiErrorResponse).errors[0].code
+				let errors = response.errors[0].extensions.errors as string[]
 
-				switch (errorCode) {
+				switch (errors[0]) {
 					case ErrorCodes.TitleTooShort:
 						this.editTitleDialogTitleError =
 							this.locale.errors.titleTooShort
@@ -679,7 +663,7 @@ export class AuthorBookPageComponent {
 			}
 		}
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.ShowChanges()
 		}
 	}
@@ -689,10 +673,5 @@ export class AuthorBookPageComponent {
 		this.author.ClearSeries()
 		this.storeBook.ClearReleases()
 		this.collection.ClearStoreBooks()
-
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.RetrieveStoreBook.name,
-			this.apiService.RetrieveStoreBookCover.name
-		)
 	}
 }

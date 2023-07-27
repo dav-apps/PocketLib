@@ -11,7 +11,6 @@ import {
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
-import { CachingService } from "src/app/services/caching-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
@@ -106,7 +105,6 @@ export class StoreBookPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private graphqlService: GraphQLService,
-		private cachingService: CachingService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -441,12 +439,6 @@ export class StoreBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.purchased = true
-
-			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(
-				this.apiService.RetrieveStoreBook.name
-			)
-
 			return true
 		}
 
@@ -479,11 +471,6 @@ export class StoreBookPageComponent {
 					this.dataService.books
 				)
 			}
-
-			// Clear the ApiCache for GetStoreBook
-			this.cachingService.ClearApiRequestCache(
-				this.apiService.RetrieveStoreBook.name
-			)
 
 			return true
 		} else {
@@ -575,12 +562,12 @@ export class StoreBookPageComponent {
 	async PublishStoreBook() {
 		this.publishLoading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			status: "published"
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.book.status = StoreBookStatus.Published
 
 			// Find the author and clear the collections
@@ -596,14 +583,6 @@ export class StoreBookPageComponent {
 				this.dataService.userAuthor.ClearCollections()
 			}
 		}
-
-		// Clear the ApiCache for GetStoreBook and GetStoreBooksInReview
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.RetrieveStoreBook.name
-		)
-		this.cachingService.ClearApiRequestCache(
-			this.apiService.ListStoreBooks.name
-		)
 
 		this.publishLoading = false
 	}

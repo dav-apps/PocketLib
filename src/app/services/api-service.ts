@@ -939,54 +939,6 @@ export class ApiService {
 			return await this.ListStoreBooks(params)
 		}
 	}
-
-	async UpdateStoreBook(params: {
-		uuid: string
-		title?: string
-		description?: string
-		language?: string
-		price?: number
-		isbn?: string
-		status?: string
-		categories?: string[]
-		fields?: StoreBookField[]
-	}): Promise<ApiResponse<any> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/store_books/${params.uuid}`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					title: params.title,
-					description: params.description,
-					language: params.language,
-					price: params.price,
-					isbn: params.isbn,
-					status: params.status,
-					categories: params.categories
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.UpdateStoreBook(params)
-		}
-	}
 	//#endregion
 
 	//#region StoreBookCover

@@ -183,7 +183,6 @@ const enDefaults = {
 		errors: {
 			titleTooShort: "The title is too short",
 			titleTooLong: "The title is too long",
-			descriptionTooShort: "The description is too short",
 			descriptionTooLong: "The description is too long",
 			releaseNameTooShort: "The name is too short",
 			releaseNameTooLong: "The name is too long",
@@ -733,7 +732,6 @@ const deDefaults = {
 		errors: {
 			titleTooShort: "Der Titel ist zu kurz",
 			titleTooLong: "Der Titel ist zu lang",
-			descriptionTooShort: "Die Beschreibung ist zu kurz",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
 			releaseNameTooShort: "Der Name ist zu kurz",
 			releaseNameTooLong: "Der Name ist zu lang",

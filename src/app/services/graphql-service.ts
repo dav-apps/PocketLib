@@ -442,30 +442,77 @@ export class GraphQLService {
 				createStoreBook: StoreBookResource2
 			}>({
 				mutation: gql`
-				mutation CreateStoreBook(
-					$author: String
-					$collection: String
-					$title: String!
-					$description: String
-					$language: String!
-					$price: Int
-					$isbn: String
-					$categories: [String!]
-				) {
-					createStoreBook(
-						author: $author
-						collection: $collection
-						title: $title
-						description: $description
-						language: $language
-						price: $price
-						isbn: $isbn
-						categories: $categories
+					mutation CreateStoreBook(
+						$author: String
+						$collection: String
+						$title: String!
+						$description: String
+						$language: String!
+						$price: Int
+						$isbn: String
+						$categories: [String!]
 					) {
-						${queryData}
+						createStoreBook(
+							author: $author
+							collection: $collection
+							title: $title
+							description: $description
+							language: $language
+							price: $price
+							isbn: $isbn
+							categories: $categories
+						) {
+							${queryData}
+						}
 					}
-				}
-			`,
+				`,
+				variables
+			})
+			.toPromise()
+	}
+
+	updateStoreBook(
+		queryData: string,
+		variables: {
+			uuid: string
+			title?: string
+			description?: string
+			language?: string
+			price?: number
+			isbn?: string
+			status?: string
+			categories?: string[]
+		}
+	): Promise<MutationResult<{ updateStoreBook: StoreBookResource2 }>> {
+		return this.apollo
+			.mutate<{
+				updateStoreBook: StoreBookResource2
+			}>({
+				mutation: gql`
+					mutation UpdateStoreBook(
+						$uuid: String!
+						$title: String
+						$description: String
+						$language: String
+						$price: Int
+						$isbn: String
+						$status: String
+						$categories: [String!]
+					) {
+						updateStoreBook(
+							uuid: $uuid
+							title: $title
+							description: $description
+							language: $language
+							price: $price
+							isbn: $isbn
+							status: $status
+							categories: $categories
+						) {
+							${queryData}
+						}
+					}
+				`,
 				variables
 			})
 			.toPromise()

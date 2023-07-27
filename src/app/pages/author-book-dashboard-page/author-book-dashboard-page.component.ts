@@ -1,8 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
@@ -24,7 +23,7 @@ export class AuthorBookDashboardPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
+		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -136,12 +135,12 @@ export class AuthorBookDashboardPageComponent {
 	async CancelPublishingButtonClick() {
 		this.loading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "unpublished"
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.collection.ClearStoreBooks()
 
 			if (this.dataService.userIsAdmin) {
@@ -163,12 +162,12 @@ export class AuthorBookDashboardPageComponent {
 	async PublishButtonClick() {
 		this.loading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "published"
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.status = StoreBookStatus.Published
 			this.collection.ClearStoreBooks()
 		}
@@ -179,12 +178,12 @@ export class AuthorBookDashboardPageComponent {
 	async UnpublishButtonClick() {
 		this.loading = true
 
-		let response = await this.apiService.UpdateStoreBook({
+		let response = await this.graphqlService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "hidden"
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.status = StoreBookStatus.Hidden
 			this.collection.ClearStoreBooks()
 		}
