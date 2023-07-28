@@ -413,6 +413,40 @@ export class GraphQLService {
 			})
 			.toPromise()
 	}
+
+	updateStoreBookSeries(
+		queryData: string,
+		variables: {
+			uuid: string
+			name?: string
+			storeBooks?: string[]
+		}
+	): Promise<
+		MutationResult<{ updateStoreBookSeries: StoreBookSeriesResource2 }>
+	> {
+		return this.apollo
+			.mutate<{
+				updateStoreBookSeries: StoreBookSeriesResource2
+			}>({
+				mutation: gql`
+					mutation UpdateStoreBookSeries(
+						$uuid: String!
+						$name: String
+						$storeBooks: [String!]
+					) {
+						updateStoreBookSeries(
+							uuid: $uuid
+							name: $name
+							storeBooks: $storeBooks
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
 	//#endregion
 
 	//#region StoreBook

@@ -5,10 +5,8 @@ import {
 	faPlus as faPlusLight,
 	faTrashCan as faTrashCanLight
 } from "@fortawesome/pro-light-svg-icons"
-import { ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
-import { CachingService } from "src/app/services/caching-service"
+import { GraphQLService } from "src/app/services/graphql-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 import { StoreBook } from "src/app/models/StoreBook"
@@ -28,11 +26,7 @@ export class AuthorSeriesPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	author: Author
-	series: StoreBookSeries = new StoreBookSeries(
-		null,
-		this.apiService,
-		this.cachingService
-	)
+	series: StoreBookSeries = new StoreBookSeries(null, this.graphqlService)
 	books: StoreBook[] = []
 	selectableBooks: StoreBook[] = []
 	editNameDialogVisible: boolean = false
@@ -49,8 +43,7 @@ export class AuthorSeriesPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
-		private cachingService: CachingService,
+		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService
@@ -157,20 +150,22 @@ export class AuthorSeriesPageComponent {
 	async UpdateName() {
 		this.editNameDialogLoading = true
 
-		let updateNameResponse = await this.apiService.UpdateStoreBookSeries({
-			uuid: this.uuid,
-			name: this.editNameDialogName
-		})
+		let updateSeriesResponse =
+			await this.graphqlService.updateStoreBookSeries(`uuid`, {
+				uuid: this.uuid,
+				name: this.editNameDialogName
+			})
 
 		this.editNameDialogLoading = false
 
-		if (isSuccessStatusCode(updateNameResponse.status)) {
+		if (updateSeriesResponse.errors == null) {
 			this.editNameDialogVisible = false
 			this.series.name = this.editNameDialogName
 		} else {
-			let errorCode = (updateNameResponse as ApiErrorResponse).errors[0].code
+			let errors = updateSeriesResponse.errors[0].extensions
+				.errors as string[]
 
-			switch (errorCode) {
+			switch (errors[0]) {
 				case ErrorCodes.NameTooShort:
 					this.editNameDialogNameError = this.locale.errors.nameTooShort
 					break
@@ -196,12 +191,12 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new collection order
-		let response = await this.apiService.UpdateStoreBookSeries({
+		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.addBookDialogVisible = false
 
 			this.author.ClearSeries()
@@ -219,12 +214,12 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new store book order
-		let response = await this.apiService.UpdateStoreBookSeries({
+		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.author.ClearSeries()
 			this.series.ClearStoreBooks()
 		}
@@ -249,12 +244,12 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new store book order
-		let response = await this.apiService.UpdateStoreBookSeries({
+		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})
 
-		if (isSuccessStatusCode(response.status)) {
+		if (response.errors == null) {
 			this.author.ClearSeries()
 			this.series.ClearStoreBooks()
 			this.LoadSelectableBooks()

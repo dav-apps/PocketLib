@@ -7,16 +7,12 @@ import {
 	HandleApiError,
 	PrepareRequestParams
 } from "dav-js"
-import { CachingService } from "./caching-service"
 import { environment } from "src/environments/environment"
 import {
-	Language,
 	PublisherLogoResource,
 	PublisherLogoField,
 	AuthorProfileImageResource,
 	AuthorProfileImageField,
-	StoreBookSeriesResource,
-	StoreBookSeriesField,
 	StoreBookCoverField,
 	StoreBookFileField,
 	BookResource,
@@ -25,7 +21,6 @@ import {
 import {
 	ResponseDataToPublisherLogoResource,
 	ResponseDataToAuthorProfileImageResource,
-	ResponseDataToStoreBookSeriesResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource,
 	ResponseDataToBookResource
@@ -33,8 +28,6 @@ import {
 
 @Injectable()
 export class ApiService {
-	constructor(private cachingService: CachingService) {}
-
 	//#region PublisherLogo
 	async UploadPublisherLogo(params: {
 		uuid: string
@@ -105,48 +98,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.UploadAuthorProfileImage(params)
-		}
-	}
-	//#endregion
-
-	//#region StoreBookSeries
-	async UpdateStoreBookSeries(params: {
-		uuid: string
-		name?: string
-		storeBooks?: string[]
-		fields?: StoreBookSeriesField[]
-		languages?: Language[]
-	}): Promise<ApiResponse<StoreBookSeriesResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/store_book_series/${params.uuid}`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields,
-						languages: params.languages
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					name: params.name,
-					store_books: params.storeBooks
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToStoreBookSeriesResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.UpdateStoreBookSeries(params)
 		}
 	}
 	//#endregion
