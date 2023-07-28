@@ -14,16 +14,13 @@ import {
 	AuthorProfileImageResource,
 	AuthorProfileImageField,
 	StoreBookCoverField,
-	StoreBookFileField,
-	BookResource,
-	BookField
+	StoreBookFileField
 } from "src/app/misc/types"
 import {
 	ResponseDataToPublisherLogoResource,
 	ResponseDataToAuthorProfileImageResource,
 	ResponseDataToStoreBookCoverResource,
-	ResponseDataToStoreBookFileResource,
-	ResponseDataToBookResource
+	ResponseDataToStoreBookFileResource
 } from "src/app/misc/utils"
 
 @Injectable()
@@ -176,43 +173,6 @@ export class ApiService {
 			if (renewSessionError != null) return renewSessionError
 
 			return await this.UploadStoreBookFile(params)
-		}
-	}
-	//#endregion
-
-	//#region Book
-	async CreateBook(params: {
-		storeBook: string
-		fields?: BookField[]
-	}): Promise<ApiResponse<BookResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "post",
-				url: `${environment.pocketlibApiBaseUrl}/books`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": "application/json"
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: PrepareRequestParams({
-					store_book: params.storeBook
-				})
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToBookResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.CreateBook(params)
 		}
 	}
 	//#endregion

@@ -9,7 +9,6 @@ import {
 	isSuccessStatusCode
 } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -103,7 +102,6 @@ export class StoreBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,
@@ -447,13 +445,18 @@ export class StoreBookPageComponent {
 
 	private async AddBookToLibrary(): Promise<boolean> {
 		// Add the StoreBook to the library of the user
-		let response = await this.apiService.CreateBook({
-			storeBook: this.uuid,
-			fields: [BookField.uuid, BookField.file]
-		})
+		let response = await this.graphqlService.createBook(
+			`
+				uuid
+				file
+			`,
+			{
+				storeBook: this.uuid
+			}
+		)
 
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = (response as ApiResponse<BookResource>).data
+		if (response.errors == null) {
+			let responseData = response.data.createBook
 
 			// Download the table objects
 			await DownloadTableObject(responseData.uuid)
@@ -474,10 +477,9 @@ export class StoreBookPageComponent {
 
 			return true
 		} else {
-			let error = (response as ApiErrorResponse).errors[0]
+			let error = response.errors[0].extensions.code as string
 
-			if (error.code == 3005) {
-				// StoreBook is already in library
+			if (error == "STORE_BOOK_ALREADY_IN_LIBRARY") {
 				return true
 			}
 		}

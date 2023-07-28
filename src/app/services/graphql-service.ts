@@ -18,7 +18,8 @@ import {
 	StoreBookSeriesResource2,
 	StoreBookResource2,
 	StoreBookReleaseResource2,
-	CategoryResource2
+	CategoryResource2,
+	BookResource2
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -618,20 +619,20 @@ export class GraphQLService {
 				publishStoreBookRelease: StoreBookReleaseResource2
 			}>({
 				mutation: gql`
-				mutation PublishStoreBookRelease(
-					$uuid: String!
-					$releaseName: String!
-					$releaseNotes: String
-				) {
-					publishStoreBookRelease(
-						uuid: $uuid
-						releaseName: $releaseName
-						releaseNote: $releaseNotes
+					mutation PublishStoreBookRelease(
+						$uuid: String!
+						$releaseName: String!
+						$releaseNotes: String
 					) {
-						${queryData}
+						publishStoreBookRelease(
+							uuid: $uuid
+							releaseName: $releaseName
+							releaseNote: $releaseNotes
+						) {
+							${queryData}
+						}
 					}
-				}
-			`,
+				`,
 				variables
 			})
 			.toPromise()
@@ -650,6 +651,28 @@ export class GraphQLService {
 				query: gql`
 					query ListCategories($languages: [String!]) {
 						listCategories(languages: $languages) {
+							${queryData}
+						}
+					}
+				`,
+				variables
+			})
+			.toPromise()
+	}
+	//#endregion
+
+	//#region Book
+	createBook(
+		queryData: string,
+		variables: {
+			storeBook: string
+		}
+	): Promise<MutationResult<{ createBook: BookResource2 }>> {
+		return this.apollo
+			.mutate<{ createBook: BookResource2 }>({
+				mutation: gql`
+					mutation CreateBook($storeBook: String!) {
+						createBook(storeBook: $storeBook) {
 							${queryData}
 						}
 					}

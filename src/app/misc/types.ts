@@ -222,6 +222,12 @@ export interface CategoryNameResource2 {
 	name: string
 	language: string
 }
+
+export interface BookResource2 {
+	uuid: string
+	storeBook: string
+	file: string
+}
 //#endregion
 
 //#region API types
