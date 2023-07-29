@@ -40,7 +40,7 @@ export class GraphQLService {
 				retrievePublisher: PublisherResource2
 			}>({
 				query: gql`
-					query RetrievePublisher($uuid: String) {
+					query RetrievePublisher($uuid: String!) {
 						retrievePublisher(uuid: $uuid) {
 							${queryData}
 						}
@@ -60,7 +60,7 @@ export class GraphQLService {
 				listPublishers: List<PublisherResource2>
 			}>({
 				query: gql`
-					query ListPublishers($limit: Int, $offset, Int) {
+					query ListPublishers($limit: Int, $offset: Int) {
 						listPublishers(limit: $limit, offset: $offset) {
 							${queryData}
 						}
@@ -294,7 +294,7 @@ export class GraphQLService {
 				retrieveStoreBookCollection: StoreBookCollectionResource2
 			}>({
 				query: gql`
-					query RetrieveStoreBookCollection($uuid: String!, languages: [String!]) {
+					query RetrieveStoreBookCollection($uuid: String!, $languages: [String!]) {
 						retrieveStoreBookCollection(uuid: $uuid, languages: $languages) {
 							${queryData}
 						}
@@ -342,7 +342,7 @@ export class GraphQLService {
 		return this.apollo
 			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource2 }>({
 				query: gql`
-					query RetrieveStoreBookSeries($uuid: String!, languages: [String!]) {
+					query RetrieveStoreBookSeries($uuid: String!, $languages: [String!]) {
 						retrieveStoreBookSeries(uuid: $uuid, languages: $languages) {
 							${queryData}
 						}
@@ -369,8 +369,18 @@ export class GraphQLService {
 				listStoreBookSeries: List<StoreBookSeriesResource2>
 			}>({
 				query: gql`
-					query ListStoreBookSeries($latest: Boolean, $languages, [String!], limit: Int, offset: Int) {
-						listStoreBookSeries(latest: $latest, languages: $languages, limit: $limit, offset: $offset) {
+					query ListStoreBookSeries(
+						$latest: Boolean
+						$languages: [String!]
+						$limit: Int
+						$offset: Int
+					) {
+						listStoreBookSeries(
+							latest: $latest
+							languages: $languages
+							limit: $limit
+							offset: $offset
+						) {
 							${queryData}
 						}
 					}
@@ -491,7 +501,7 @@ export class GraphQLService {
 						$latest: Boolean
 						$categories: [String!]
 						$limit: Int
-						$latest: Boolean
+						$offset: Int
 					) {
 						listStoreBooks(
 							latest: $latest
