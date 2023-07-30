@@ -75,7 +75,7 @@ export class StoreBook {
 
 		if (this.cover.url == null) return null
 
-		let response = await this.graphqlService.GetFile({ url: this.cover.url })
+		let response = await this.graphqlService.downloadFile(this.cover.url)
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data

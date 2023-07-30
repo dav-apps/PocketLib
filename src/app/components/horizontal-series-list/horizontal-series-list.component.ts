@@ -76,7 +76,7 @@ export class HorizontalSeriesListComponent {
 				}
 
 				this.graphqlService
-					.GetFile({ url: book.cover.url })
+					.downloadFile(book.cover.url)
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							bookItem.coverContent = (

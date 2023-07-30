@@ -196,7 +196,7 @@ export class StoreBooksPageComponent {
 
 			if (storeBook.cover?.url != null) {
 				this.graphqlService
-					.GetFile({ url: storeBook.cover.url })
+					.downloadFile(storeBook.cover.url)
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							bookItem.coverContent = (

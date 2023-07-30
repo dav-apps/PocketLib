@@ -67,7 +67,7 @@ export class HorizontalAuthorListComponent {
 
 			if (author.profileImage?.url != null) {
 				this.graphqlService
-					.GetFile({ url: author.profileImage.url })
+					.downloadFile(author.profileImage.url)
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							authorItem.profileImageContent = (

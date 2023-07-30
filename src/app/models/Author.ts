@@ -75,9 +75,9 @@ export class Author {
 
 		if (this.profileImage.url == null) return null
 
-		let response = await this.graphqlService.GetFile({
-			url: this.profileImage.url
-		})
+		let response = await this.graphqlService.downloadFile(
+			this.profileImage.url
+		)
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data
