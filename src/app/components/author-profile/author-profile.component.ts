@@ -20,7 +20,7 @@ import {
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
 import Cropper from "cropperjs"
-import { Dav, ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { Dav, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -34,12 +34,12 @@ import {
 	GenerateTwitterLink
 } from "src/app/misc/utils"
 import {
+	ApiResponse,
 	BookListItem,
 	AuthorMode,
 	AuthorBioResource2,
 	StoreBookItem,
-	StoreBookStatus,
-	AuthorProfileImageResource
+	StoreBookStatus
 } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
@@ -209,8 +209,8 @@ export class AuthorProfileComponent {
 		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
 			this.graphqlService
-				.GetFile({ url: this.author.profileImage.url })
-				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+				.downloadFile(this.author.profileImage.url)
+				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.profileImageContent = (
 							fileResponse as ApiResponse<string>
@@ -552,21 +552,11 @@ export class AuthorProfileComponent {
 		this.profileImageContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response: ApiResponse<AuthorProfileImageResource> | ApiErrorResponse
-
-		if (this.authorMode == AuthorMode.AuthorOfUser) {
-			response = await this.apiService.UploadAuthorProfileImage({
-				uuid: "mine",
-				type: blob.type,
-				file: blob
-			})
-		} else {
-			response = await this.apiService.UploadAuthorProfileImage({
-				uuid: this.uuid,
-				type: blob.type,
-				file: blob
-			})
-		}
+		let response = await this.graphqlService.uploadAuthorProfileImage({
+			uuid: this.authorMode == AuthorMode.AuthorOfUser ? "mine" : this.uuid,
+			contentType: blob.type,
+			data: blob
+		})
 
 		if (isSuccessStatusCode(response.status)) {
 			await this.author.ReloadProfileImage()
@@ -785,18 +775,14 @@ export class AuthorProfileComponent {
 
 					if (storeBook.cover?.url != null) {
 						this.graphqlService
-							.GetFile({ url: storeBook.cover.url })
-							.then(
-								(
-									fileResponse: ApiResponse<string> | ApiErrorResponse
-								) => {
-									if (isSuccessStatusCode(fileResponse.status)) {
-										bookItem.coverContent = (
-											fileResponse as ApiResponse<string>
-										).data
-									}
+							.downloadFile(storeBook.cover.url)
+							.then((fileResponse: ApiResponse<string>) => {
+								if (isSuccessStatusCode(fileResponse.status)) {
+									bookItem.coverContent = (
+										fileResponse as ApiResponse<string>
+									).data
 								}
-							)
+							})
 					}
 
 					this.books.push(bookItem)

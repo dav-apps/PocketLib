@@ -301,9 +301,7 @@ export class PublisherProfileComponent {
 		this.logoContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response: ApiResponse<PublisherLogoResource>
-
-		response = await this.graphqlService.uploadPublisherLogo({
+		let response = await this.graphqlService.uploadPublisherLogo({
 			uuid:
 				this.publisherMode == PublisherMode.PublisherOfUser
 					? "mine"

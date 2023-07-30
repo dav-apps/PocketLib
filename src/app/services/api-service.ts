@@ -8,57 +8,14 @@ import {
 	PrepareRequestParams
 } from "dav-js"
 import { environment } from "src/environments/environment"
+import { StoreBookCoverField, StoreBookFileField } from "src/app/misc/types"
 import {
-	AuthorProfileImageResource,
-	AuthorProfileImageField,
-	StoreBookCoverField,
-	StoreBookFileField
-} from "src/app/misc/types"
-import {
-	ResponseDataToAuthorProfileImageResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource
 } from "src/app/misc/utils"
 
 @Injectable()
 export class ApiService {
-	//#region AuthorProfileImage
-	async UploadAuthorProfileImage(params: {
-		uuid: string
-		type: string
-		file: any
-		fields?: AuthorProfileImageField[]
-	}): Promise<ApiResponse<AuthorProfileImageResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/authors/${params.uuid}/profile_image`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": params.type
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: params.file
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToAuthorProfileImageResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.UploadAuthorProfileImage(params)
-		}
-	}
-	//#endregion
-
 	//#region StoreBookCover
 	async UploadStoreBookCover(params: {
 		uuid: string

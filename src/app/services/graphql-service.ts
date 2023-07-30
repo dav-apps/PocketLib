@@ -11,6 +11,7 @@ import {
 	PublisherLogoResource2,
 	AuthorResource2,
 	AuthorBioResource2,
+	AuthorProfileImageResource2,
 	StoreBookCollectionResource2,
 	StoreBookCollectionNameResource2,
 	StoreBookSeriesResource2,
@@ -312,6 +313,43 @@ export class GraphQLService {
 				variables
 			})
 			.toPromise()
+	}
+	//#endregion
+
+	//#region AuthorProfileImage
+	async uploadAuthorProfileImage(params: {
+		uuid: string
+		contentType: string
+		data: any
+	}): Promise<ApiResponse<AuthorProfileImageResource2>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.newPocketlibApiUrl}/authors/${params.uuid}/profileImage`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": params.contentType
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					url: response.data.url,
+					blurhash: response.data.blurhash
+				}
+			}
+		} catch (error) {
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
 	}
 	//#endregion
 
