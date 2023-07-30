@@ -1,6 +1,6 @@
 import { Component } from "@angular/core"
 import { CategoryCard } from "src/app/misc/types"
-import { CategoryResourceToCategoryCard } from "src/app/misc/utils"
+import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
 
 @Component({
@@ -20,7 +20,7 @@ export class HorizontalCategoryListComponent {
 		let categoryCards: CategoryCard[] = []
 
 		for (let category of this.dataService.categories) {
-			let categoryCard = CategoryResourceToCategoryCard(category)
+			let categoryCard = CategoryToCategoryCard(category)
 
 			if (categoryCard != null) {
 				categoryCards.push(categoryCard)

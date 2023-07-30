@@ -26,12 +26,7 @@ import {
 	GenerateInstagramLink,
 	GenerateTwitterLink
 } from "src/app/misc/utils"
-import {
-	ApiResponse,
-	AuthorListItem,
-	PublisherMode,
-	PublisherLogoResource
-} from "src/app/misc/types"
+import { ApiResponse, AuthorListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 

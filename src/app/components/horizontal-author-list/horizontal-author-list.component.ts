@@ -1,9 +1,9 @@
 import { Component } from "@angular/core"
 import { Router } from "@angular/router"
-import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import { AuthorListItem } from "src/app/misc/types"
+import { AuthorListItem, ApiResponse } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
 const maxVisibleAuthors = 8
@@ -68,7 +68,7 @@ export class HorizontalAuthorListComponent {
 			if (author.profileImage?.url != null) {
 				this.apiService
 					.downloadFile(author.profileImage.url)
-					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					.then((fileResponse: ApiResponse<string>) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							authorItem.profileImageContent = (
 								fileResponse as ApiResponse<string>

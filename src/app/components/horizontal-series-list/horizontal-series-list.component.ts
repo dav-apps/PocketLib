@@ -1,8 +1,8 @@
 import { Component } from "@angular/core"
-import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import { BookListItem, SeriesListItem } from "src/app/misc/types"
+import { BookListItem, SeriesListItem, ApiResponse } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
@@ -77,7 +77,7 @@ export class HorizontalSeriesListComponent {
 
 				this.apiService
 					.downloadFile(book.cover.url)
-					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					.then((fileResponse: ApiResponse<string>) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							bookItem.coverContent = (
 								fileResponse as ApiResponse<string>

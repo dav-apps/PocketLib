@@ -1,5 +1,10 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import { Language, AuthorResource2, AuthorBioResource2 } from "../misc/types"
+import { isSuccessStatusCode, PromiseHolder } from "dav-js"
+import {
+	Language,
+	ApiResponse,
+	AuthorResource2,
+	AuthorBioResource2
+} from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
@@ -241,17 +246,7 @@ export class Author {
 
 		if (responseData != null) {
 			for (let item of responseData.series.items) {
-				items.push(
-					new StoreBookSeries(
-						{
-							uuid: item.uuid,
-							author: this.uuid,
-							name: item.name,
-							language: item.language
-						},
-						this.apiService
-					)
-				)
+				items.push(new StoreBookSeries(item, this.apiService))
 			}
 
 			this.series.itemsPromiseHolder.Resolve(items)

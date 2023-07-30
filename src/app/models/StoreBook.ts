@@ -1,11 +1,12 @@
-import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { isSuccessStatusCode, PromiseHolder } from "dav-js"
 import { ApiService } from "../services/api-service"
 import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
 	Language,
+	ApiResponse,
 	StoreBookResource2,
-	StoreBookReleaseResource
+	StoreBookReleaseResource2
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
 
@@ -31,7 +32,7 @@ export class StoreBook {
 	private releases: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource[]>
+		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource2[]>
 	}
 
 	constructor(

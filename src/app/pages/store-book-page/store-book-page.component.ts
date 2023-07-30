@@ -1,8 +1,6 @@
 import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
-	ApiResponse,
-	ApiErrorResponse,
 	CheckoutSessionsController,
 	CreateCheckoutSessionResponseData,
 	DownloadTableObject,
@@ -19,7 +17,7 @@ import {
 	GetDualScreenSettings,
 	GetStoreBookStatusByString
 } from "src/app/misc/utils"
-import { BookResource, BookField, StoreBookStatus } from "src/app/misc/types"
+import { ApiResponse, StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
 @Component({
@@ -220,7 +218,7 @@ export class StoreBookPageComponent {
 
 			this.apiService
 				.downloadFile(responseData.cover.url)
-				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.coverContent = (fileResponse as ApiResponse<string>).data
 					}
@@ -288,7 +286,7 @@ export class StoreBookPageComponent {
 		if (this.author.profileImageUrl != null) {
 			this.apiService
 				.downloadFile(this.author.profileImageUrl)
-				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.authorProfileImageContent = (
 							fileResponse as ApiResponse<string>
@@ -312,7 +310,7 @@ export class StoreBookPageComponent {
 		if (publisherLogoUrl != null) {
 			this.apiService
 				.downloadFile(publisherLogoUrl)
-				.then((response: ApiResponse<string> | ApiErrorResponse) => {
+				.then((response: ApiResponse<string>) => {
 					if (isSuccessStatusCode(response.status))
 						this.publisher.logoContent = (
 							response as ApiResponse<string>

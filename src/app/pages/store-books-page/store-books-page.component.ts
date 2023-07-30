@@ -1,12 +1,13 @@
 import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import {
 	BookListItem,
 	List,
+	ApiResponse,
 	StoreBookResource2,
 	StoreBooksPageContext
 } from "src/app/misc/types"
@@ -197,7 +198,7 @@ export class StoreBooksPageComponent {
 			if (storeBook.cover?.url != null) {
 				this.apiService
 					.downloadFile(storeBook.cover.url)
-					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+					.then((fileResponse: ApiResponse<string>) => {
 						if (isSuccessStatusCode(fileResponse.status)) {
 							bookItem.coverContent = (
 								fileResponse as ApiResponse<string>
