@@ -8,7 +8,7 @@ import {
 	BookListItem,
 	List,
 	ApiResponse,
-	StoreBookResource2,
+	StoreBookResource,
 	StoreBooksPageContext
 } from "src/app/misc/types"
 import {
@@ -116,7 +116,7 @@ export class StoreBooksPageComponent {
 		this.dataService.simpleLoadingScreenVisible = true
 
 		let response: ApolloQueryResult<{
-			listStoreBooks: List<StoreBookResource2>
+			listStoreBooks: List<StoreBookResource>
 		}> = null
 
 		switch (this.context) {

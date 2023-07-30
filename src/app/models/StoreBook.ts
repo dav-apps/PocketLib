@@ -5,8 +5,8 @@ import {
 	StoreBookStatus,
 	Language,
 	ApiResponse,
-	StoreBookResource2,
-	StoreBookReleaseResource2
+	StoreBookResource,
+	StoreBookReleaseResource
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
 
@@ -32,11 +32,11 @@ export class StoreBook {
 	private releases: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource2[]>
+		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource[]>
 	}
 
 	constructor(
-		storeBookResource: StoreBookResource2,
+		storeBookResource: StoreBookResource,
 		private apiService: ApiService
 	) {
 		this.uuid = storeBookResource.uuid

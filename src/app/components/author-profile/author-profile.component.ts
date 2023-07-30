@@ -36,7 +36,7 @@ import {
 	ApiResponse,
 	BookListItem,
 	AuthorMode,
-	AuthorBioResource2,
+	AuthorBioResource,
 	StoreBookItem,
 	StoreBookStatus
 } from "src/app/misc/types"
@@ -676,7 +676,7 @@ export class AuthorProfileComponent {
 	}
 
 	async ProcessSetBioResponse(
-		response: MutationResult<{ setAuthorBio: AuthorBioResource2 }>
+		response: MutationResult<{ setAuthorBio: AuthorBioResource }>
 	) {
 		if (response.errors == null) {
 			this.author.ClearBios()

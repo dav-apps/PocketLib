@@ -5,7 +5,7 @@ import { ApiService } from "src/app/services/api-service"
 import {
 	BookListItem,
 	ApiResponse,
-	StoreBookResource2
+	StoreBookResource
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
@@ -157,7 +157,7 @@ export class HorizontalBookListComponent {
 		this.ShowBooks(responseData.storeBooks.items)
 	}
 
-	ShowBooks(books: StoreBookResource2[]) {
+	ShowBooks(books: StoreBookResource[]) {
 		this.books = []
 
 		for (let storeBook of books) {

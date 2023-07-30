@@ -2,8 +2,8 @@ import { isSuccessStatusCode, PromiseHolder } from "dav-js"
 import {
 	Language,
 	ApiResponse,
-	AuthorResource2,
-	AuthorBioResource2
+	AuthorResource,
+	AuthorBioResource
 } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
@@ -26,7 +26,7 @@ export class Author {
 	private bios: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<AuthorBioResource2[]>
+		itemsPromiseHolder: PromiseHolder<AuthorBioResource[]>
 	}
 	private collections: {
 		loaded: boolean
@@ -40,7 +40,7 @@ export class Author {
 	}
 
 	constructor(
-		authorResource: AuthorResource2,
+		authorResource: AuthorResource,
 		private languages: Language[],
 		private apiService: ApiService
 	) {
@@ -107,7 +107,7 @@ export class Author {
 		}
 	}
 
-	async GetBios(): Promise<AuthorBioResource2[]> {
+	async GetBios(): Promise<AuthorBioResource[]> {
 		if (this.bios.isLoading || this.bios.loaded) {
 			let items = []
 

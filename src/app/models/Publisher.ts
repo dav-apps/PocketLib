@@ -1,5 +1,5 @@
 import { PromiseHolder } from "dav-js"
-import { Language, PublisherResource2 } from "../misc/types"
+import { Language, PublisherResource } from "../misc/types"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "./Author"
 
@@ -25,7 +25,7 @@ export class Publisher {
 	}[]
 
 	constructor(
-		publisherResource: PublisherResource2,
+		publisherResource: PublisherResource,
 		private languages: Language[],
 		private apiService: ApiService
 	) {

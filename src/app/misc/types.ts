@@ -99,7 +99,7 @@ export interface ApiResponse<T> {
 }
 
 //#region API interfaces
-export interface PublisherResource2 {
+export interface PublisherResource {
 	uuid: string
 	name: string
 	description: string
@@ -107,87 +107,87 @@ export interface PublisherResource2 {
 	facebookUsername: string
 	instagramUsername: string
 	twitterUsername: string
-	logo: PublisherLogoResource2
-	authors: List<AuthorResource2>
+	logo: PublisherLogoResource
+	authors: List<AuthorResource>
 }
 
-export interface PublisherLogoResource2 {
+export interface PublisherLogoResource {
 	uuid: string
 	url: string
 	blurhash: string
 }
 
-export interface AuthorResource2 {
+export interface AuthorResource {
 	uuid: string
-	publisher: PublisherResource2
+	publisher: PublisherResource
 	firstName: string
 	lastName: string
-	bio: AuthorBioResource2
+	bio: AuthorBioResource
 	websiteUrl: string
 	facebookUsername: string
 	instagramUsername: string
 	twitterUsername: string
-	profileImage: AuthorProfileImageResource2
-	bios: List<AuthorBioResource2>
-	collections: List<StoreBookCollectionResource2>
-	series: List<StoreBookSeriesResource2>
+	profileImage: AuthorProfileImageResource
+	bios: List<AuthorBioResource>
+	collections: List<StoreBookCollectionResource>
+	series: List<StoreBookSeriesResource>
 }
 
-export interface AuthorBioResource2 {
+export interface AuthorBioResource {
 	uuid: string
 	bio: string
 	language: string
 }
 
-export interface AuthorProfileImageResource2 {
+export interface AuthorProfileImageResource {
 	uuid: string
 	url: string
 	blurhash: string
 }
 
-export interface StoreBookCollectionResource2 {
+export interface StoreBookCollectionResource {
 	uuid: string
-	author: AuthorResource2
-	name: StoreBookCollectionNameResource2
-	names: List<StoreBookCollectionNameResource2>
-	storeBooks: List<StoreBookResource2>
+	author: AuthorResource
+	name: StoreBookCollectionNameResource
+	names: List<StoreBookCollectionNameResource>
+	storeBooks: List<StoreBookResource>
 }
 
-export interface StoreBookCollectionNameResource2 {
+export interface StoreBookCollectionNameResource {
 	uuid: string
 	name: string
 	language: string
 }
 
-export interface StoreBookSeriesResource2 {
+export interface StoreBookSeriesResource {
 	uuid: string
-	author: AuthorResource2
+	author: AuthorResource
 	name: string
 	language: string
-	storeBooks: List<StoreBookResource2>
+	storeBooks: List<StoreBookResource>
 }
 
-export interface StoreBookResource2 {
+export interface StoreBookResource {
 	uuid: string
-	collection: StoreBookCollectionResource2
+	collection: StoreBookCollectionResource
 	title: string
 	description: string
 	language: string
 	price: number
 	isbn: string
 	status: string
-	cover: StoreBookCoverResource2
-	file: StoreBookFileResource2
-	categories: List<CategoryResource2>
-	series: List<StoreBookSeriesResource2>
-	releases: List<StoreBookReleaseResource2>
+	cover: StoreBookCoverResource
+	file: StoreBookFileResource
+	categories: List<CategoryResource>
+	series: List<StoreBookSeriesResource>
+	releases: List<StoreBookReleaseResource>
 	inLibrary: boolean
 	purchased: boolean
 }
 
-export interface StoreBookReleaseResource2 {
+export interface StoreBookReleaseResource {
 	uuid: string
-	storeBook: StoreBookResource2
+	storeBook: StoreBookResource
 	releaseName: string
 	releaseNotes: string
 	publishedAt: string
@@ -196,37 +196,37 @@ export interface StoreBookReleaseResource2 {
 	price: number
 	isbn: string
 	status: string
-	cover: StoreBookCoverResource2
-	file: StoreBookFileResource2
-	categories: List<CategoryResource2>
+	cover: StoreBookCoverResource
+	file: StoreBookFileResource
+	categories: List<CategoryResource>
 }
 
-export interface StoreBookCoverResource2 {
+export interface StoreBookCoverResource {
 	uuid: string
 	url: string
 	aspectRatio: string
 	blurhash: string
 }
 
-export interface StoreBookFileResource2 {
+export interface StoreBookFileResource {
 	uuid: string
 	fileName: string
 }
 
-export interface CategoryResource2 {
+export interface CategoryResource {
 	uuid: string
 	key: string
-	name: CategoryNameResource2
-	names: List<CategoryNameResource2>
+	name: CategoryNameResource
+	names: List<CategoryNameResource>
 }
 
-export interface CategoryNameResource2 {
+export interface CategoryNameResource {
 	uuid: string
 	name: string
 	language: string
 }
 
-export interface BookResource2 {
+export interface BookResource {
 	uuid: string
 	storeBook: string
 	file: string

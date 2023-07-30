@@ -2,7 +2,7 @@ import { isSuccessStatusCode } from "dav-js"
 import {
 	StoreBookReleaseStatus,
 	ApiResponse,
-	StoreBookReleaseResource2
+	StoreBookReleaseResource
 } from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
@@ -29,7 +29,7 @@ export class StoreBookRelease {
 	private coverContent: string
 
 	constructor(
-		storeBookRelease: StoreBookReleaseResource2,
+		storeBookRelease: StoreBookReleaseResource,
 		private apiService: ApiService
 	) {
 		this.uuid = storeBookRelease.uuid

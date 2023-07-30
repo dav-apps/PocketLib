@@ -17,7 +17,7 @@ import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	StoreBookStatus,
 	StoreBookReleaseStatus,
-	StoreBookResource2
+	StoreBookResource
 } from "src/app/misc/types"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
@@ -566,7 +566,7 @@ export class AuthorBookPageComponent {
 	}
 
 	UpdateStoreBookResponse(
-		response: MutationResult<{ updateStoreBook: StoreBookResource2 }>
+		response: MutationResult<{ updateStoreBook: StoreBookResource }>
 	) {
 		if (this.editDescription) {
 			// The description was updated

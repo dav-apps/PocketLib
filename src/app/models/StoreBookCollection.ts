@@ -1,8 +1,8 @@
 import { PromiseHolder } from "dav-js"
 import {
 	Language,
-	StoreBookCollectionResource2,
-	StoreBookCollectionNameResource2
+	StoreBookCollectionResource,
+	StoreBookCollectionNameResource
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
 import { ApiService } from "src/app/services/api-service"
@@ -18,7 +18,7 @@ export class StoreBookCollection {
 	private names: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookCollectionNameResource2[]>
+		itemsPromiseHolder: PromiseHolder<StoreBookCollectionNameResource[]>
 	}
 	private storeBooks: {
 		loaded: boolean
@@ -27,7 +27,7 @@ export class StoreBookCollection {
 	}
 
 	constructor(
-		collectionResource: StoreBookCollectionResource2,
+		collectionResource: StoreBookCollectionResource,
 		private apiService: ApiService
 	) {
 		this.uuid = collectionResource?.uuid ?? ""
@@ -48,7 +48,7 @@ export class StoreBookCollection {
 		}
 	}
 
-	async GetNames(): Promise<StoreBookCollectionNameResource2[]> {
+	async GetNames(): Promise<StoreBookCollectionNameResource[]> {
 		if (this.names.isLoading || this.names.loaded) {
 			let items = []
 

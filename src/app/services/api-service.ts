@@ -7,20 +7,20 @@ import { environment } from "src/environments/environment"
 import {
 	List,
 	ApiResponse,
-	PublisherResource2,
-	PublisherLogoResource2,
-	AuthorResource2,
-	AuthorBioResource2,
-	AuthorProfileImageResource2,
-	StoreBookCollectionResource2,
-	StoreBookCollectionNameResource2,
-	StoreBookSeriesResource2,
-	StoreBookResource2,
-	StoreBookCoverResource2,
-	StoreBookFileResource2,
-	StoreBookReleaseResource2,
-	CategoryResource2,
-	BookResource2
+	PublisherResource,
+	PublisherLogoResource,
+	AuthorResource,
+	AuthorBioResource,
+	AuthorProfileImageResource,
+	StoreBookCollectionResource,
+	StoreBookCollectionNameResource,
+	StoreBookSeriesResource,
+	StoreBookResource,
+	StoreBookCoverResource,
+	StoreBookFileResource,
+	StoreBookReleaseResource,
+	CategoryResource,
+	BookResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -35,10 +35,10 @@ export class ApiService {
 	retrievePublisher(
 		queryData: string,
 		variables: { uuid: string }
-	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource2 }>> {
+	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource }>> {
 		return this.apollo
 			.query<{
-				retrievePublisher: PublisherResource2
+				retrievePublisher: PublisherResource
 			}>({
 				query: gql`
 					query RetrievePublisher($uuid: String!) {
@@ -55,10 +55,10 @@ export class ApiService {
 	listPublishers(
 		queryData: string,
 		variables?: { limit?: number; offset?: number }
-	): Promise<ApolloQueryResult<{ listPublishers: List<PublisherResource2> }>> {
+	): Promise<ApolloQueryResult<{ listPublishers: List<PublisherResource> }>> {
 		return this.apollo
 			.query<{
-				listPublishers: List<PublisherResource2>
+				listPublishers: List<PublisherResource>
 			}>({
 				query: gql`
 					query ListPublishers($limit: Int, $offset: Int) {
@@ -77,9 +77,9 @@ export class ApiService {
 		variables: {
 			name: string
 		}
-	): Promise<MutationResult<{ createPublisher: PublisherResource2 }>> {
+	): Promise<MutationResult<{ createPublisher: PublisherResource }>> {
 		return this.apollo
-			.mutate<{ createPublisher: PublisherResource2 }>({
+			.mutate<{ createPublisher: PublisherResource }>({
 				mutation: gql`
 					mutation CreatePublisher($name: String!) {
 						createPublisher(name: $name) {
@@ -103,10 +103,10 @@ export class ApiService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<MutationResult<{ updatePublisher: PublisherResource2 }>> {
+	): Promise<MutationResult<{ updatePublisher: PublisherResource }>> {
 		return this.apollo
 			.mutate<{
-				updatePublisher: PublisherResource2
+				updatePublisher: PublisherResource
 			}>({
 				mutation: gql`
 					mutation UpdatePublisher(
@@ -142,7 +142,7 @@ export class ApiService {
 		uuid: string
 		contentType: string
 		data: any
-	}): Promise<ApiResponse<PublisherLogoResource2>> {
+	}): Promise<ApiResponse<PublisherLogoResource>> {
 		try {
 			let response = await axios({
 				method: "put",
@@ -178,10 +178,10 @@ export class ApiService {
 	retrieveAuthor(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
-	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource2 }>> {
+	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource }>> {
 		return this.apollo
 			.query<{
-				retrieveAuthor: AuthorResource2
+				retrieveAuthor: AuthorResource
 			}>({
 				query: gql`
 					query RetrieveAuthor($uuid: String!) {
@@ -204,10 +204,10 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ listAuthors: List<AuthorResource2> }>> {
+	): Promise<ApolloQueryResult<{ listAuthors: List<AuthorResource> }>> {
 		return this.apollo
 			.query<{
-				listAuthors: List<AuthorResource2>
+				listAuthors: List<AuthorResource>
 			}>({
 				query: gql`
 					query ListAuthors($limit: Int, $latest: Boolean) {
@@ -228,10 +228,10 @@ export class ApiService {
 			firstName: string
 			lastName: string
 		}
-	): Promise<MutationResult<{ createAuthor: AuthorResource2 }>> {
+	): Promise<MutationResult<{ createAuthor: AuthorResource }>> {
 		return this.apollo
 			.mutate<{
-				createAuthor: AuthorResource2
+				createAuthor: AuthorResource
 			}>({
 				mutation: gql`
 					mutation CreateAuthor(
@@ -264,10 +264,10 @@ export class ApiService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<MutationResult<{ updateAuthor: AuthorResource2 }>> {
+	): Promise<MutationResult<{ updateAuthor: AuthorResource }>> {
 		return this.apollo
 			.mutate<{
-				updateAuthor: AuthorResource2
+				updateAuthor: AuthorResource
 			}>({
 				mutation: gql`
 					mutation UpdateAuthor(
@@ -302,9 +302,9 @@ export class ApiService {
 	setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }
-	): Promise<MutationResult<{ setAuthorBio: AuthorBioResource2 }>> {
+	): Promise<MutationResult<{ setAuthorBio: AuthorBioResource }>> {
 		return this.apollo
-			.mutate<{ setAuthorBio: AuthorBioResource2 }>({
+			.mutate<{ setAuthorBio: AuthorBioResource }>({
 				mutation: gql`
 					mutation SetAuthorBio($uuid: String!, $bio: String!, $language: String!) {
 						setAuthorBio(uuid: $uuid, bio: $bio, language: $language) {
@@ -323,7 +323,7 @@ export class ApiService {
 		uuid: string
 		contentType: string
 		data: any
-	}): Promise<ApiResponse<AuthorProfileImageResource2>> {
+	}): Promise<ApiResponse<AuthorProfileImageResource>> {
 		try {
 			let response = await axios({
 				method: "put",
@@ -361,12 +361,12 @@ export class ApiService {
 		variables: { uuid: string; languages?: string[] }
 	): Promise<
 		ApolloQueryResult<{
-			retrieveStoreBookCollection: StoreBookCollectionResource2
+			retrieveStoreBookCollection: StoreBookCollectionResource
 		}>
 	> {
 		return this.apollo
 			.query<{
-				retrieveStoreBookCollection: StoreBookCollectionResource2
+				retrieveStoreBookCollection: StoreBookCollectionResource
 			}>({
 				query: gql`
 					query RetrieveStoreBookCollection($uuid: String!, $languages: [String!]) {
@@ -387,12 +387,12 @@ export class ApiService {
 		variables: { uuid: string; name: string; language: string }
 	): Promise<
 		MutationResult<{
-			setStoreBookCollectionName: StoreBookCollectionNameResource2
+			setStoreBookCollectionName: StoreBookCollectionNameResource
 		}>
 	> {
 		return this.apollo
 			.mutate<{
-				setStoreBookCollectionName: StoreBookCollectionNameResource2
+				setStoreBookCollectionName: StoreBookCollectionNameResource
 			}>({
 				mutation: gql`
 					mutation SetStoreBookCollectionName($uuid: String!, $name: String!, $language: String!) {
@@ -412,10 +412,10 @@ export class ApiService {
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
 	): Promise<
-		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource2 }>
+		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		return this.apollo
-			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource2 }>({
+			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource }>({
 				query: gql`
 					query RetrieveStoreBookSeries($uuid: String!, $languages: [String!]) {
 						retrieveStoreBookSeries(uuid: $uuid, languages: $languages) {
@@ -437,11 +437,11 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<
-		ApolloQueryResult<{ listStoreBookSeries: List<StoreBookSeriesResource2> }>
+		ApolloQueryResult<{ listStoreBookSeries: List<StoreBookSeriesResource> }>
 	> {
 		return this.apollo
 			.query<{
-				listStoreBookSeries: List<StoreBookSeriesResource2>
+				listStoreBookSeries: List<StoreBookSeriesResource>
 			}>({
 				query: gql`
 					query ListStoreBookSeries(
@@ -474,10 +474,10 @@ export class ApiService {
 			storeBooks?: string[]
 		}
 	): Promise<
-		MutationResult<{ createStoreBookSeries: StoreBookSeriesResource2 }>
+		MutationResult<{ createStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		return this.apollo
-			.mutate<{ createStoreBookSeries: StoreBookSeriesResource2 }>({
+			.mutate<{ createStoreBookSeries: StoreBookSeriesResource }>({
 				mutation: gql`
 					mutation CreateStoreBookSeries(
 						$author: String
@@ -508,11 +508,11 @@ export class ApiService {
 			storeBooks?: string[]
 		}
 	): Promise<
-		MutationResult<{ updateStoreBookSeries: StoreBookSeriesResource2 }>
+		MutationResult<{ updateStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		return this.apollo
 			.mutate<{
-				updateStoreBookSeries: StoreBookSeriesResource2
+				updateStoreBookSeries: StoreBookSeriesResource
 			}>({
 				mutation: gql`
 					mutation UpdateStoreBookSeries(
@@ -539,10 +539,10 @@ export class ApiService {
 	retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string }
-	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource2 }>> {
+	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource }>> {
 		return this.apollo
 			.query<{
-				retrieveStoreBook: StoreBookResource2
+				retrieveStoreBook: StoreBookResource
 			}>({
 				query: gql`
 					query RetrieveStoreBook($uuid: String!) {
@@ -566,10 +566,10 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ listStoreBooks: List<StoreBookResource2> }>> {
+	): Promise<ApolloQueryResult<{ listStoreBooks: List<StoreBookResource> }>> {
 		return this.apollo
 			.query<{
-				listStoreBooks: List<StoreBookResource2>
+				listStoreBooks: List<StoreBookResource>
 			}>({
 				query: gql`
 					query ListStoreBooks(
@@ -605,10 +605,10 @@ export class ApiService {
 			isbn?: string
 			categories?: string[]
 		}
-	): Promise<MutationResult<{ createStoreBook: StoreBookResource2 }>> {
+	): Promise<MutationResult<{ createStoreBook: StoreBookResource }>> {
 		return this.apollo
 			.mutate<{
-				createStoreBook: StoreBookResource2
+				createStoreBook: StoreBookResource
 			}>({
 				mutation: gql`
 					mutation CreateStoreBook(
@@ -652,10 +652,10 @@ export class ApiService {
 			status?: string
 			categories?: string[]
 		}
-	): Promise<MutationResult<{ updateStoreBook: StoreBookResource2 }>> {
+	): Promise<MutationResult<{ updateStoreBook: StoreBookResource }>> {
 		return this.apollo
 			.mutate<{
-				updateStoreBook: StoreBookResource2
+				updateStoreBook: StoreBookResource
 			}>({
 				mutation: gql`
 					mutation UpdateStoreBook(
@@ -693,7 +693,7 @@ export class ApiService {
 		uuid: string
 		contentType: string
 		data: any
-	}): Promise<ApiResponse<StoreBookCoverResource2>> {
+	}): Promise<ApiResponse<StoreBookCoverResource>> {
 		try {
 			let response = await axios({
 				method: "put",
@@ -732,7 +732,7 @@ export class ApiService {
 		contentType: string
 		data: any
 		fileName: string
-	}): Promise<ApiResponse<StoreBookFileResource2>> {
+	}): Promise<ApiResponse<StoreBookFileResource>> {
 		try {
 			let response = await axios({
 				method: "put",
@@ -775,11 +775,11 @@ export class ApiService {
 			releaseNotes?: string
 		}
 	): Promise<
-		MutationResult<{ publishStoreBookRelease: StoreBookReleaseResource2 }>
+		MutationResult<{ publishStoreBookRelease: StoreBookReleaseResource }>
 	> {
 		return this.apollo
 			.mutate<{
-				publishStoreBookRelease: StoreBookReleaseResource2
+				publishStoreBookRelease: StoreBookReleaseResource
 			}>({
 				mutation: gql`
 					mutation PublishStoreBookRelease(
@@ -806,10 +806,10 @@ export class ApiService {
 	listCategories(
 		queryData: string,
 		variables?: { languages?: string[] }
-	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource2> }>> {
+	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
 		return this.apollo
 			.query<{
-				listCategories: List<CategoryResource2>
+				listCategories: List<CategoryResource>
 			}>({
 				query: gql`
 					query ListCategories($languages: [String!]) {
@@ -830,9 +830,9 @@ export class ApiService {
 		variables: {
 			storeBook: string
 		}
-	): Promise<MutationResult<{ createBook: BookResource2 }>> {
+	): Promise<MutationResult<{ createBook: BookResource }>> {
 		return this.apollo
-			.mutate<{ createBook: BookResource2 }>({
+			.mutate<{ createBook: BookResource }>({
 				mutation: gql`
 					mutation CreateBook($storeBook: String!) {
 						createBook(storeBook: $storeBook) {

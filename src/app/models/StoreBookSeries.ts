@@ -1,8 +1,8 @@
 import { PromiseHolder } from "dav-js"
 import {
 	Language,
-	StoreBookSeriesResource2,
-	StoreBookResource2
+	StoreBookSeriesResource,
+	StoreBookResource
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
@@ -16,11 +16,11 @@ export class StoreBookSeries {
 	private storeBooks: {
 		loaded: boolean
 		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookResource2[]>
+		itemsPromiseHolder: PromiseHolder<StoreBookResource[]>
 	}
 
 	constructor(
-		seriesResource: StoreBookSeriesResource2,
+		seriesResource: StoreBookSeriesResource,
 		private apiService: ApiService
 	) {
 		this.uuid = seriesResource?.uuid ?? ""
