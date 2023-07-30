@@ -9,15 +9,12 @@ import {
 } from "dav-js"
 import { environment } from "src/environments/environment"
 import {
-	PublisherLogoResource,
-	PublisherLogoField,
 	AuthorProfileImageResource,
 	AuthorProfileImageField,
 	StoreBookCoverField,
 	StoreBookFileField
 } from "src/app/misc/types"
 import {
-	ResponseDataToPublisherLogoResource,
 	ResponseDataToAuthorProfileImageResource,
 	ResponseDataToStoreBookCoverResource,
 	ResponseDataToStoreBookFileResource
@@ -25,43 +22,6 @@ import {
 
 @Injectable()
 export class ApiService {
-	//#region PublisherLogo
-	async UploadPublisherLogo(params: {
-		uuid: string
-		type: string
-		file: any
-		fields?: PublisherLogoField[]
-	}): Promise<ApiResponse<PublisherLogoResource> | ApiErrorResponse> {
-		try {
-			let response = await axios({
-				method: "put",
-				url: `${environment.pocketlibApiBaseUrl}/publishers/${params.uuid}/logo`,
-				headers: PrepareRequestParams({
-					Authorization: Dav.accessToken,
-					"Content-Type": params.type
-				}),
-				params: PrepareRequestParams(
-					{
-						fields: params.fields
-					},
-					true
-				),
-				data: params.file
-			})
-
-			return {
-				status: response.status,
-				data: ResponseDataToPublisherLogoResource(response.data)
-			}
-		} catch (error) {
-			let renewSessionError = await HandleApiError(error)
-			if (renewSessionError != null) return renewSessionError
-
-			return await this.UploadPublisherLogo(params)
-		}
-	}
-	//#endregion
-
 	//#region AuthorProfileImage
 	async UploadAuthorProfileImage(params: {
 		uuid: string

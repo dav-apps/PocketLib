@@ -17,10 +17,9 @@ import {
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
 import Cropper from "cropperjs"
-import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import {
 	GenerateFacebookLink,
@@ -28,6 +27,7 @@ import {
 	GenerateTwitterLink
 } from "src/app/misc/utils"
 import {
+	ApiResponse,
 	AuthorListItem,
 	PublisherMode,
 	PublisherLogoResource
@@ -104,7 +104,6 @@ export class PublisherProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -160,8 +159,8 @@ export class PublisherProfileComponent {
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
 			this.graphqlService
-				.GetFile({ url: this.publisher.logo.url })
-				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
+				.downloadFile(this.publisher.logo.url)
+				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.logoContent = (fileResponse as ApiResponse<string>).data
 					}
@@ -302,21 +301,16 @@ export class PublisherProfileComponent {
 		this.logoContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response: ApiResponse<PublisherLogoResource> | ApiErrorResponse
+		let response: ApiResponse<PublisherLogoResource>
 
-		if (this.publisherMode == PublisherMode.PublisherOfUser) {
-			response = await this.apiService.UploadPublisherLogo({
-				uuid: "mine",
-				type: blob.type,
-				file: blob
-			})
-		} else {
-			response = await this.apiService.UploadPublisherLogo({
-				uuid: this.uuid,
-				type: blob.type,
-				file: blob
-			})
-		}
+		response = await this.graphqlService.uploadPublisherLogo({
+			uuid:
+				this.publisherMode == PublisherMode.PublisherOfUser
+					? "mine"
+					: this.uuid,
+			contentType: blob.type,
+			data: blob
+		})
 
 		if (isSuccessStatusCode(response.status)) {
 			await this.publisher.ReloadLogo()

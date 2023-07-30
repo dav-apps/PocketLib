@@ -2,15 +2,13 @@ import { Injectable } from "@angular/core"
 import { Apollo, gql, MutationResult } from "apollo-angular"
 import { ApolloQueryResult } from "@apollo/client/core"
 import axios from "axios"
-import {
-	ApiResponse,
-	ApiErrorResponse,
-	BlobToBase64,
-	ConvertErrorToApiErrorResponse
-} from "dav-js"
+import { Dav, BlobToBase64 } from "dav-js"
+import { environment } from "src/environments/environment"
 import {
 	List,
+	ApiResponse,
 	PublisherResource2,
+	PublisherLogoResource2,
 	AuthorResource2,
 	AuthorBioResource2,
 	StoreBookCollectionResource2,
@@ -133,6 +131,43 @@ export class GraphQLService {
 				variables
 			})
 			.toPromise()
+	}
+	//#endregion
+
+	//#region PublisherLogo
+	async uploadPublisherLogo(params: {
+		uuid: string
+		contentType: string
+		data: any
+	}): Promise<ApiResponse<PublisherLogoResource2>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.newPocketlibApiUrl}/publishers/${params.uuid}/logo`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": params.contentType
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					url: response.data.url,
+					blurhash: response.data.blurhash
+				}
+			}
+		} catch (error) {
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
 	}
 	//#endregion
 
@@ -694,15 +729,11 @@ export class GraphQLService {
 	//#endregion
 
 	//#region Other functions
-	async GetFile(params: {
-		url: string
-	}): Promise<ApiResponse<string> | ApiErrorResponse> {
+	async downloadFile(url: string): Promise<ApiResponse<string>> {
 		// Check if the response is cached
 		let cacheResponseKey = this.cachingService.GetApiRequestCacheKey(
-			this.GetFile.name,
-			{
-				url: params.url
-			}
+			this.downloadFile.name,
+			{ url }
 		)
 
 		// Check if the request is currently running
@@ -718,11 +749,11 @@ export class GraphQLService {
 		try {
 			let response = await axios({
 				method: "get",
-				url: params.url,
+				url,
 				responseType: "blob"
 			})
 
-			let result = {
+			let result: ApiResponse<string> = {
 				status: response.status,
 				data: null
 			}
@@ -738,7 +769,11 @@ export class GraphQLService {
 			return result
 		} catch (error) {
 			this.cachingService.ResolveApiRequest(cacheResponseKey, false)
-			return ConvertErrorToApiErrorResponse(error)
+
+			return {
+				status: error.response.status,
+				error: error.response.data
+			}
 		}
 	}
 	//#endregion

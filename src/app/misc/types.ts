@@ -95,6 +95,15 @@ export interface List<T> {
 	items: T[]
 }
 
+export interface ApiResponse<T> {
+	status: number
+	data?: T
+	error?: {
+		code: string
+		message: string
+	}
+}
+
 //#region New API interfaces
 export interface PublisherResource2 {
 	uuid: string

@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core"
-import { ApiResponse, PromiseHolder } from "dav-js"
+import { PromiseHolder } from "dav-js"
+import { ApiResponse } from "../misc/types"
 
 @Injectable()
 export class CachingService {
