@@ -3,7 +3,7 @@ import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import * as localforage from "localforage"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { Book } from "../models/Book"
 import { EpubBook } from "../models/EpubBook"
 import { PdfBook } from "../models/PdfBook"
@@ -62,10 +62,7 @@ export class DataService {
 	} = {}
 	updateInstalled: boolean = false
 
-	constructor(
-		private graphqlService: GraphQLService,
-		private swUpdate: SwUpdate
-	) {
+	constructor(private apiService: ApiService, private swUpdate: SwUpdate) {
 		// Set the supported locale
 		if (this.locale.startsWith("de")) {
 			this.supportedLocale = "de"
@@ -93,24 +90,23 @@ export class DataService {
 				// Load the publishers of the admin
 				this.adminPublishers = []
 
-				let listPublishersResponse =
-					await this.graphqlService.listPublishers(
-						`
-							items {
-								uuid
-								name
-								description
-								websiteUrl
-								facebookUsername
-								instagramUsername
-								twitterUsername
-								logo {
-									url
-									blurhash
-								}
+				let listPublishersResponse = await this.apiService.listPublishers(
+					`
+						items {
+							uuid
+							name
+							description
+							websiteUrl
+							facebookUsername
+							instagramUsername
+							twitterUsername
+							logo {
+								url
+								blurhash
 							}
-						`
-					)
+						}
+					`
+				)
 
 				let listPublishersResponseData =
 					listPublishersResponse.data.listPublishers
@@ -121,7 +117,7 @@ export class DataService {
 							new Publisher(
 								item,
 								await this.GetStoreLanguages(),
-								this.graphqlService
+								this.apiService
 							)
 						)
 					}
@@ -134,7 +130,7 @@ export class DataService {
 				let offset = 0
 
 				while (offset > totalItems) {
-					let listAuthorsResponse = await this.graphqlService.listAuthors(
+					let listAuthorsResponse = await this.apiService.listAuthors(
 						`
 							total
 							items {
@@ -171,7 +167,7 @@ export class DataService {
 								new Author(
 									item,
 									await this.GetStoreLanguages(),
-									this.graphqlService
+									this.apiService
 								)
 							)
 						}
@@ -181,7 +177,7 @@ export class DataService {
 				}
 			} else {
 				// Try to get the author of the user
-				let authorResponse = await this.graphqlService.retrieveAuthor(
+				let authorResponse = await this.apiService.retrieveAuthor(
 					`
 						uuid,
 						firstName
@@ -207,29 +203,26 @@ export class DataService {
 					this.userAuthor = new Author(
 						authorResponseData,
 						await this.GetStoreLanguages(),
-						this.graphqlService
+						this.apiService
 					)
 				} else {
 					// Try to get the publisher of the user
-					let publisherResponse =
-						await this.graphqlService.retrievePublisher(
-							`
-								uuid
-								name
-								description
-								websiteUrl
-								facebookUsername
-								instagramUsername
-								twitterUsername
-								logo {
-									url
-									blurhash
-								}
-							`,
-							{
-								uuid: "mine"
+					let publisherResponse = await this.apiService.retrievePublisher(
+						`
+							uuid
+							name
+							description
+							websiteUrl
+							facebookUsername
+							instagramUsername
+							twitterUsername
+							logo {
+								url
+								blurhash
 							}
-						)
+						`,
+						{ uuid: "mine" }
+					)
 
 					let publisherResponseData =
 						publisherResponse.data.retrievePublisher
@@ -238,7 +231,7 @@ export class DataService {
 						this.userPublisher = new Publisher(
 							publisherResponseData,
 							await this.GetStoreLanguages(),
-							this.graphqlService
+							this.apiService
 						)
 					}
 				}
@@ -256,7 +249,7 @@ export class DataService {
 		this.categories = []
 
 		let languages = await this.GetStoreLanguages()
-		let listCategoriesResponse = await this.graphqlService.listCategories(
+		let listCategoriesResponse = await this.apiService.listCategories(
 			`
 				total
 				items {

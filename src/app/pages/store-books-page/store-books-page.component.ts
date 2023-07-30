@@ -2,7 +2,7 @@ import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import {
 	BookListItem,
@@ -43,7 +43,7 @@ export class StoreBooksPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -121,7 +121,7 @@ export class StoreBooksPageComponent {
 		switch (this.context) {
 			case StoreBooksPageContext.Category:
 				// Show the selected category
-				response = await this.graphqlService.listStoreBooks(
+				response = await this.apiService.listStoreBooks(
 					`
 						total
 						items {
@@ -144,7 +144,7 @@ export class StoreBooksPageComponent {
 				break
 			default:
 				// Show all books
-				response = await this.graphqlService.listStoreBooks(
+				response = await this.apiService.listStoreBooks(
 					`
 						total
 						items {
@@ -195,7 +195,7 @@ export class StoreBooksPageComponent {
 			}
 
 			if (storeBook.cover?.url != null) {
-				this.graphqlService
+				this.apiService
 					.downloadFile(storeBook.cover.url)
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {

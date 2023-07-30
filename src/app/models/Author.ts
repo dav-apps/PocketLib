@@ -1,6 +1,6 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
 import { Language, AuthorResource2, AuthorBioResource2 } from "../misc/types"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 
@@ -37,7 +37,7 @@ export class Author {
 	constructor(
 		authorResource: AuthorResource2,
 		private languages: Language[],
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = authorResource?.uuid ?? ""
 		this.publisher = authorResource?.publisher?.uuid ?? ""
@@ -75,9 +75,7 @@ export class Author {
 
 		if (this.profileImage.url == null) return null
 
-		let response = await this.graphqlService.downloadFile(
-			this.profileImage.url
-		)
+		let response = await this.apiService.downloadFile(this.profileImage.url)
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data
@@ -86,16 +84,14 @@ export class Author {
 	}
 
 	async ReloadProfileImage() {
-		let response = await this.graphqlService.retrieveAuthor(
+		let response = await this.apiService.retrieveAuthor(
 			`
 				profileImage {
 					url
 					blurhash
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrieveAuthor
 
@@ -121,7 +117,7 @@ export class Author {
 		this.bios.itemsPromiseHolder.Setup()
 
 		// Get the bios of the author
-		let response = await this.graphqlService.retrieveAuthor(
+		let response = await this.apiService.retrieveAuthor(
 			`
 				bios {
 					uuid
@@ -129,9 +125,7 @@ export class Author {
 					language
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrieveAuthor
 
@@ -172,7 +166,7 @@ export class Author {
 		this.collections.itemsPromiseHolder.Setup()
 
 		// Get the collections of the author
-		let response = await this.graphqlService.retrieveAuthor(
+		let response = await this.apiService.retrieveAuthor(
 			`
 				collections {
 					uuid
@@ -203,7 +197,7 @@ export class Author {
 		let items = []
 
 		for (let item of responseData.collections.items) {
-			items.push(new StoreBookCollection(item, this.graphqlService))
+			items.push(new StoreBookCollection(item, this.apiService))
 		}
 
 		this.collections.itemsPromiseHolder.Resolve(items)
@@ -229,7 +223,7 @@ export class Author {
 		this.series.itemsPromiseHolder.Setup()
 
 		// Get the series of the author
-		let response = await this.graphqlService.retrieveAuthor(
+		let response = await this.apiService.retrieveAuthor(
 			`
 				series {
 					uuid
@@ -237,9 +231,7 @@ export class Author {
 					language
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrieveAuthor
 
@@ -257,7 +249,7 @@ export class Author {
 							name: item.name,
 							language: item.language
 						},
-						this.graphqlService
+						this.apiService
 					)
 				)
 			}

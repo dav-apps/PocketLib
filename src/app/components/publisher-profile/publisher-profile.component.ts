@@ -20,7 +20,7 @@ import Cropper from "cropperjs"
 import { isSuccessStatusCode } from "dav-js"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
@@ -52,7 +52,7 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, [], this.graphqlService)
+	publisher: Publisher = new Publisher(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -104,7 +104,7 @@ export class PublisherProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -158,7 +158,7 @@ export class PublisherProfileComponent {
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
-			this.graphqlService
+			this.apiService
 				.downloadFile(this.publisher.logo.url)
 				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -188,7 +188,7 @@ export class PublisherProfileComponent {
 	}
 
 	async LoadPublisher() {
-		let response = await this.graphqlService.retrievePublisher(
+		let response = await this.apiService.retrievePublisher(
 			`
 				uuid
 				name
@@ -202,9 +202,7 @@ export class PublisherProfileComponent {
 					blurhash
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 
 		let responseData = response.data.retrievePublisher
@@ -213,7 +211,7 @@ export class PublisherProfileComponent {
 			this.publisher = new Publisher(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.graphqlService
+				this.apiService
 			)
 		}
 	}
@@ -301,7 +299,7 @@ export class PublisherProfileComponent {
 		this.logoContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response = await this.graphqlService.uploadPublisherLogo({
+		let response = await this.apiService.uploadPublisherLogo({
 			uuid:
 				this.publisherMode == PublisherMode.PublisherOfUser
 					? "mine"
@@ -342,7 +340,7 @@ export class PublisherProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response = await this.graphqlService.updatePublisher(
+		let response = await this.apiService.updatePublisher(
 			`
 				name
 				websiteUrl
@@ -415,7 +413,7 @@ export class PublisherProfileComponent {
 			this.newDescriptionError = ""
 			this.descriptionLoading = true
 
-			let response = await this.graphqlService.updatePublisher(
+			let response = await this.apiService.updatePublisher(
 				`description`,
 				{
 					uuid: this.dataService.userIsAdmin
@@ -474,7 +472,7 @@ export class PublisherProfileComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
 
-		let response = await this.graphqlService.createAuthor(
+		let response = await this.apiService.createAuthor(
 			`
 				uuid
 				firstName

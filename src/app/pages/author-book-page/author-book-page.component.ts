@@ -5,7 +5,7 @@ import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
@@ -98,7 +98,7 @@ export class AuthorBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -299,7 +299,7 @@ export class AuthorBookPageComponent {
 	async UpdateTitle() {
 		this.editTitleDialogLoading = true
 
-		let response = await this.graphqlService.updateStoreBook(`title`, {
+		let response = await this.apiService.updateStoreBook(`title`, {
 			uuid: this.uuid,
 			title: this.editTitleDialogTitle
 		})
@@ -315,7 +315,7 @@ export class AuthorBookPageComponent {
 
 			//	Save the new description on the server
 			this.UpdateStoreBookResponse(
-				await this.graphqlService.updateStoreBook(`description`, {
+				await this.apiService.updateStoreBook(`description`, {
 					uuid: this.uuid,
 					description: this.newDescription
 				})
@@ -333,7 +333,7 @@ export class AuthorBookPageComponent {
 		this.updateLanguage = true
 
 		this.UpdateStoreBookResponse(
-			await this.graphqlService.updateStoreBook(`language`, {
+			await this.apiService.updateStoreBook(`language`, {
 				uuid: this.uuid,
 				language
 			})
@@ -357,7 +357,7 @@ export class AuthorBookPageComponent {
 		this.categoriesSelectionDialogLoading = true
 
 		// Update the categories on the server
-		await this.graphqlService.updateStoreBook(`uuid`, {
+		await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			categories
 		})
@@ -372,7 +372,7 @@ export class AuthorBookPageComponent {
 		this.priceUpdating = true
 
 		this.UpdateStoreBookResponse(
-			await this.graphqlService.updateStoreBook(`price`, {
+			await this.apiService.updateStoreBook(`price`, {
 				uuid: this.uuid,
 				price
 			})
@@ -383,7 +383,7 @@ export class AuthorBookPageComponent {
 		this.isbnUpdating = true
 
 		this.UpdateStoreBookResponse(
-			await this.graphqlService.updateStoreBook(`isbn`, {
+			await this.apiService.updateStoreBook(`isbn`, {
 				uuid: this.uuid,
 				isbn
 			})
@@ -424,7 +424,7 @@ export class AuthorBookPageComponent {
 		this.coverLoading = true
 
 		// Upload the image
-		let coverUploadResponse = await this.graphqlService.uploadStoreBookCover({
+		let coverUploadResponse = await this.apiService.uploadStoreBookCover({
 			uuid: this.uuid,
 			contentType: file.type,
 			data: imageContent
@@ -456,7 +456,7 @@ export class AuthorBookPageComponent {
 		this.bookFileLoading = true
 
 		// Upload the file
-		let response = await this.graphqlService.uploadStoreBookFile({
+		let response = await this.apiService.uploadStoreBookFile({
 			uuid: this.uuid,
 			contentType: file.type,
 			data: fileContent,
@@ -479,7 +479,7 @@ export class AuthorBookPageComponent {
 		if (this.book.status != StoreBookStatus.Unpublished) return
 		this.statusLoading = true
 
-		let response = await this.graphqlService.updateStoreBook(`uuid`, {
+		let response = await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			status: "review"
 		})
@@ -525,7 +525,7 @@ export class AuthorBookPageComponent {
 		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
 		this.publishChangesDialogLoading = true
 
-		let response = await this.graphqlService.publishStoreBookRelease(`uuid`, {
+		let response = await this.apiService.publishStoreBookRelease(`uuid`, {
 			uuid: lastRelease.uuid,
 			releaseName: this.publishChangesDialogReleaseName,
 			releaseNotes: this.publishChangesDialogReleaseNotes

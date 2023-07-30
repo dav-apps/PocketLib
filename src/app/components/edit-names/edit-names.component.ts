@@ -4,7 +4,7 @@ import {
 	faPen as faPenLight
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
@@ -30,7 +30,7 @@ export class EditNamesComponent {
 
 	constructor(
 		private dataService: DataService,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.locale = this.dataService.GetLocale().editNames
 	}
@@ -39,18 +39,17 @@ export class EditNamesComponent {
 		name.errorMessage = ""
 
 		// Update the name on the server
-		let setNameResponse =
-			await this.graphqlService.setStoreBookCollectionName(
-				`
-					name
-					language
-				`,
-				{
-					uuid: this.uuid,
-					name: name.name,
-					language: name.language
-				}
-			)
+		let setNameResponse = await this.apiService.setStoreBookCollectionName(
+			`
+				name
+				language
+			`,
+			{
+				uuid: this.uuid,
+				name: name.name,
+				language: name.language
+			}
+		)
 
 		if (setNameResponse.errors != null) {
 			let setNameResponseData =

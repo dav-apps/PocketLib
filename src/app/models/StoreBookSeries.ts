@@ -5,7 +5,7 @@ import {
 	StoreBookResource
 } from "../misc/types"
 import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
-import { GraphQLService } from "../services/graphql-service"
+import { ApiService } from "../services/api-service"
 import { StoreBook } from "./StoreBook"
 
 export class StoreBookSeries {
@@ -21,7 +21,7 @@ export class StoreBookSeries {
 
 	constructor(
 		seriesResource: StoreBookSeriesResource,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = seriesResource?.uuid ?? ""
 		this.author = seriesResource?.author ?? ""
@@ -49,7 +49,7 @@ export class StoreBookSeries {
 		this.storeBooks.itemsPromiseHolder.Setup()
 
 		// Get the store books of the series
-		let response = await this.graphqlService.retrieveStoreBookSeries(
+		let response = await this.apiService.retrieveStoreBookSeries(
 			`
 				storeBooks {
 					items {
@@ -94,7 +94,7 @@ export class StoreBookSeries {
 		let items = []
 
 		for (let item of responseData.storeBooks.items) {
-			items.push(new StoreBook(item, this.graphqlService))
+			items.push(new StoreBook(item, this.apiService))
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)

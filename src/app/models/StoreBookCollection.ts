@@ -5,7 +5,7 @@ import {
 	StoreBookCollectionNameResource2
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { StoreBook } from "src/app/models/StoreBook"
 
 export class StoreBookCollection {
@@ -28,7 +28,7 @@ export class StoreBookCollection {
 
 	constructor(
 		collectionResource: StoreBookCollectionResource2,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = collectionResource?.uuid ?? ""
 		this.author = collectionResource?.author?.uuid ?? ""
@@ -63,7 +63,7 @@ export class StoreBookCollection {
 		this.names.itemsPromiseHolder.Setup()
 
 		// Get the names of the collection
-		let response = await this.graphqlService.retrieveStoreBookCollection(
+		let response = await this.apiService.retrieveStoreBookCollection(
 			`
 				names {
 					items {
@@ -73,9 +73,7 @@ export class StoreBookCollection {
 					}
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 
 		let responseData = response.data.retrieveStoreBookCollection
@@ -117,7 +115,7 @@ export class StoreBookCollection {
 		this.storeBooks.itemsPromiseHolder.Setup()
 
 		// Get the store books of the collection
-		let response = await this.graphqlService.retrieveStoreBookCollection(
+		let response = await this.apiService.retrieveStoreBookCollection(
 			`
 				storeBooks {
 					items {
@@ -147,9 +145,7 @@ export class StoreBookCollection {
 					}
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 
 		let responseData = response.data.retrieveStoreBookCollection
@@ -165,7 +161,7 @@ export class StoreBookCollection {
 		let items = []
 
 		for (let item of responseData.storeBooks.items) {
-			items.push(new StoreBook(item, this.graphqlService))
+			items.push(new StoreBook(item, this.apiService))
 		}
 
 		this.storeBooks.itemsPromiseHolder.Resolve(items)

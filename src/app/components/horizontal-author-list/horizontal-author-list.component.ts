@@ -2,7 +2,7 @@ import { Component } from "@angular/core"
 import { Router } from "@angular/router"
 import { ApiResponse, ApiErrorResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { AuthorListItem } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
@@ -20,7 +20,7 @@ export class HorizontalAuthorListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().horizontalAuthorList
@@ -30,7 +30,7 @@ export class HorizontalAuthorListComponent {
 		// Get the latest authors
 		this.authors = []
 
-		let response = await this.graphqlService.listAuthors(
+		let response = await this.apiService.listAuthors(
 			`
 				total
 				items {
@@ -66,7 +66,7 @@ export class HorizontalAuthorListComponent {
 			}
 
 			if (author.profileImage?.url != null) {
-				this.graphqlService
+				this.apiService
 					.downloadFile(author.profileImage.url)
 					.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 						if (isSuccessStatusCode(fileResponse.status)) {

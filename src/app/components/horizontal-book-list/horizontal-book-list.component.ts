@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from "@angular/core"
 import { ApiErrorResponse, ApiResponse, isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { BookListItem, StoreBookResource2 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
@@ -26,7 +26,7 @@ export class HorizontalBookListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.locale = this.dataService.GetLocale().horizontalBookList
 	}
@@ -68,7 +68,7 @@ export class HorizontalBookListComponent {
 
 	async LoadLatestStoreBooks() {
 		// Get the latest store books
-		let response = await this.graphqlService.listStoreBooks(
+		let response = await this.apiService.listStoreBooks(
 			`
 				items {
 					uuid
@@ -93,7 +93,7 @@ export class HorizontalBookListComponent {
 
 	async LoadStoreBooksByCategories() {
 		// Get the store books with the given categories
-		let response = await this.graphqlService.listStoreBooks(
+		let response = await this.apiService.listStoreBooks(
 			`
 				items {
 					uuid
@@ -126,7 +126,7 @@ export class HorizontalBookListComponent {
 		if (this.series.length == 0) return
 
 		// Get the series
-		let response = await this.graphqlService.retrieveStoreBookSeries(
+		let response = await this.apiService.retrieveStoreBookSeries(
 			`
 				name
 				storeBooks {
@@ -175,7 +175,7 @@ export class HorizontalBookListComponent {
 				coverHeight: height
 			}
 
-			this.graphqlService
+			this.apiService
 				.downloadFile(storeBook.cover.url)
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {

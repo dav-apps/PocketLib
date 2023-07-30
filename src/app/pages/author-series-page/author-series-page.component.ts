@@ -6,7 +6,7 @@ import {
 	faTrashCan as faTrashCanLight
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 import { StoreBook } from "src/app/models/StoreBook"
@@ -26,7 +26,7 @@ export class AuthorSeriesPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	author: Author
-	series: StoreBookSeries = new StoreBookSeries(null, this.graphqlService)
+	series: StoreBookSeries = new StoreBookSeries(null, this.apiService)
 	books: StoreBook[] = []
 	selectableBooks: StoreBook[] = []
 	editNameDialogVisible: boolean = false
@@ -43,7 +43,7 @@ export class AuthorSeriesPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService
@@ -150,11 +150,13 @@ export class AuthorSeriesPageComponent {
 	async UpdateName() {
 		this.editNameDialogLoading = true
 
-		let updateSeriesResponse =
-			await this.graphqlService.updateStoreBookSeries(`uuid`, {
+		let updateSeriesResponse = await this.apiService.updateStoreBookSeries(
+			`uuid`,
+			{
 				uuid: this.uuid,
 				name: this.editNameDialogName
-			})
+			}
+		)
 
 		this.editNameDialogLoading = false
 
@@ -191,7 +193,7 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new collection order
-		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
+		let response = await this.apiService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})
@@ -214,7 +216,7 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new store book order
-		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
+		let response = await this.apiService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})
@@ -244,7 +246,7 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Save the new store book order
-		let response = await this.graphqlService.updateStoreBookSeries(`uuid`, {
+		let response = await this.apiService.updateStoreBookSeries(`uuid`, {
 			uuid: this.uuid,
 			storeBooks: storeBookUuids
 		})

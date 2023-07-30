@@ -25,7 +25,7 @@ import {
 import { CachingService } from "./caching-service"
 
 @Injectable()
-export class GraphQLService {
+export class ApiService {
 	constructor(
 		private cachingService: CachingService,
 		private apollo: Apollo

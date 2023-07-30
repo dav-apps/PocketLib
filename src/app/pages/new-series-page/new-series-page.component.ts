@@ -1,7 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
 import { GetDualScreenSettings } from "src/app/misc/utils"
@@ -33,7 +33,7 @@ export class NewSeriesPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -157,7 +157,7 @@ export class NewSeriesPageComponent {
 
 		// Create the StoreBookSeries
 		let createStoreBookSeriesResponse =
-			await this.graphqlService.createStoreBookSeries(`uuid`, {
+			await this.apiService.createStoreBookSeries(`uuid`, {
 				author: authorUuid,
 				name: this.name,
 				language: this.language,

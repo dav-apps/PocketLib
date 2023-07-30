@@ -23,7 +23,7 @@ import Cropper from "cropperjs"
 import { Dav, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import {
 	GetDualScreenSettings,
@@ -87,7 +87,7 @@ export class AuthorProfileComponent {
 	dualScreenFoldMargin: number = 0
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(null, [], this.graphqlService)
+	author: Author = new Author(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -135,7 +135,7 @@ export class AuthorProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
@@ -206,7 +206,7 @@ export class AuthorProfileComponent {
 
 		if (this.author.profileImage?.url != null) {
 			// Load the author profile image
-			this.graphqlService
+			this.apiService
 				.downloadFile(this.author.profileImage.url)
 				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -455,7 +455,7 @@ export class AuthorProfileComponent {
 
 			// Save the new bio on the server
 			if (this.authorMode == AuthorMode.AuthorOfUser) {
-				let response = await this.graphqlService.setAuthorBio(`uuid`, {
+				let response = await this.apiService.setAuthorBio(`uuid`, {
 					uuid: "mine",
 					language: this.bioLanguageDropdownSelectedKey,
 					bio: this.newBio
@@ -463,7 +463,7 @@ export class AuthorProfileComponent {
 
 				await this.ProcessSetBioResponse(response)
 			} else {
-				let response = await this.graphqlService.setAuthorBio(`uuid`, {
+				let response = await this.apiService.setAuthorBio(`uuid`, {
 					uuid: this.uuid,
 					language: this.bioLanguageDropdownSelectedKey,
 					bio: this.newBio
@@ -550,7 +550,7 @@ export class AuthorProfileComponent {
 		this.profileImageContent = canvas.toDataURL("image/png")
 
 		// Send the file content to the server
-		let response = await this.graphqlService.uploadAuthorProfileImage({
+		let response = await this.apiService.uploadAuthorProfileImage({
 			uuid: this.authorMode == AuthorMode.AuthorOfUser ? "mine" : this.uuid,
 			contentType: blob.type,
 			data: blob
@@ -591,7 +591,7 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsernameError = ""
 
-		let response = await this.graphqlService.updateAuthor(
+		let response = await this.apiService.updateAuthor(
 			`
 				firstName
 				lastName
@@ -705,7 +705,7 @@ export class AuthorProfileComponent {
 	}
 
 	async LoadAuthor() {
-		let response = await this.graphqlService.retrieveAuthor(
+		let response = await this.apiService.retrieveAuthor(
 			`
 				uuid
 				collections {
@@ -748,7 +748,7 @@ export class AuthorProfileComponent {
 			this.author = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.graphqlService
+				this.apiService
 			)
 
 			if (responseData.bio?.bio == null) {
@@ -772,7 +772,7 @@ export class AuthorProfileComponent {
 					}
 
 					if (storeBook.cover?.url != null) {
-						this.graphqlService
+						this.apiService
 							.downloadFile(storeBook.cover.url)
 							.then((fileResponse: ApiResponse<string>) => {
 								if (isSuccessStatusCode(fileResponse.status)) {

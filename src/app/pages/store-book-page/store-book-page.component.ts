@@ -9,7 +9,7 @@ import {
 	isSuccessStatusCode
 } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
@@ -102,7 +102,7 @@ export class StoreBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -150,7 +150,7 @@ export class StoreBookPageComponent {
 	}
 
 	async LoadStoreBookData() {
-		let response = await this.graphqlService.retrieveStoreBook(
+		let response = await this.apiService.retrieveStoreBook(
 			`
 				uuid
 				collection {
@@ -193,9 +193,7 @@ export class StoreBookPageComponent {
 					}
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrieveStoreBook
 
@@ -220,7 +218,7 @@ export class StoreBookPageComponent {
 		if (responseData.cover?.url != null) {
 			this.coverUrl = responseData.cover?.url
 
-			this.graphqlService
+			this.apiService
 				.downloadFile(responseData.cover.url)
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -288,7 +286,7 @@ export class StoreBookPageComponent {
 			)
 
 		if (this.author.profileImageUrl != null) {
-			this.graphqlService
+			this.apiService
 				.downloadFile(this.author.profileImageUrl)
 				.then((fileResponse: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
@@ -312,7 +310,7 @@ export class StoreBookPageComponent {
 			responseData.collection?.author?.publisher?.logo?.url
 
 		if (publisherLogoUrl != null) {
-			this.graphqlService
+			this.apiService
 				.downloadFile(publisherLogoUrl)
 				.then((response: ApiResponse<string> | ApiErrorResponse) => {
 					if (isSuccessStatusCode(response.status))
@@ -445,14 +443,12 @@ export class StoreBookPageComponent {
 
 	private async AddBookToLibrary(): Promise<boolean> {
 		// Add the StoreBook to the library of the user
-		let response = await this.graphqlService.createBook(
+		let response = await this.apiService.createBook(
 			`
 				uuid
 				file
 			`,
-			{
-				storeBook: this.uuid
-			}
+			{ storeBook: this.uuid }
 		)
 
 		if (response.errors == null) {
@@ -564,7 +560,7 @@ export class StoreBookPageComponent {
 	async PublishStoreBook() {
 		this.publishLoading = true
 
-		let response = await this.graphqlService.updateStoreBook(`uuid`, {
+		let response = await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
 			status: "published"
 		})

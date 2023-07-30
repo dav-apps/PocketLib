@@ -4,7 +4,7 @@ import {
 	StoreBookReleaseResource2
 } from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
-import { GraphQLService } from "../services/graphql-service"
+import { ApiService } from "../services/api-service"
 
 export class StoreBookRelease {
 	public uuid: string
@@ -29,7 +29,7 @@ export class StoreBookRelease {
 
 	constructor(
 		storeBookRelease: StoreBookReleaseResource2,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = storeBookRelease.uuid
 		this.storeBook = storeBookRelease.storeBook?.uuid
@@ -63,7 +63,7 @@ export class StoreBookRelease {
 
 		if (this.cover.url == null) return null
 
-		let response = await this.graphqlService.downloadFile(this.cover.url)
+		let response = await this.apiService.downloadFile(this.cover.url)
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data

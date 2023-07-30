@@ -1,7 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
@@ -23,7 +23,7 @@ export class AuthorBookDashboardPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -135,7 +135,7 @@ export class AuthorBookDashboardPageComponent {
 	async CancelPublishingButtonClick() {
 		this.loading = true
 
-		let response = await this.graphqlService.updateStoreBook(`uuid`, {
+		let response = await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "unpublished"
 		})
@@ -162,7 +162,7 @@ export class AuthorBookDashboardPageComponent {
 	async PublishButtonClick() {
 		this.loading = true
 
-		let response = await this.graphqlService.updateStoreBook(`uuid`, {
+		let response = await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "published"
 		})
@@ -178,7 +178,7 @@ export class AuthorBookDashboardPageComponent {
 	async UnpublishButtonClick() {
 		this.loading = true
 
-		let response = await this.graphqlService.updateStoreBook(`uuid`, {
+		let response = await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.book.uuid,
 			status: "hidden"
 		})

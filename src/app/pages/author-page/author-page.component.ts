@@ -2,7 +2,7 @@ import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
@@ -37,7 +37,7 @@ export class AuthorPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -57,7 +57,7 @@ export class AuthorPageComponent {
 
 		if (this.dataService.userIsAdmin && !this.uuid) {
 			// Get the books in review
-			let response = await this.graphqlService.listStoreBooks(
+			let response = await this.apiService.listStoreBooks(
 				`
 					items {
 						uuid
@@ -113,7 +113,7 @@ export class AuthorPageComponent {
 		this.createPublisherDialogNameError = ""
 		this.createPublisherDialogLoading = true
 
-		let response = await this.graphqlService.createPublisher(
+		let response = await this.apiService.createPublisher(
 			`
 				uuid
 				name
@@ -133,7 +133,7 @@ export class AuthorPageComponent {
 				new Publisher(
 					responseData,
 					await this.dataService.GetStoreLanguages(),
-					this.graphqlService
+					this.apiService
 				)
 			)
 
@@ -180,7 +180,7 @@ export class AuthorPageComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
 
-		let response = await this.graphqlService.createAuthor(
+		let response = await this.apiService.createAuthor(
 			`
 				uuid
 				firstName
@@ -202,7 +202,7 @@ export class AuthorPageComponent {
 				new Author(
 					responseData,
 					await this.dataService.GetStoreLanguages(),
-					this.graphqlService
+					this.apiService
 				)
 			)
 

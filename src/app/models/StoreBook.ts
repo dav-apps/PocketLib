@@ -1,5 +1,5 @@
 import { ApiResponse, isSuccessStatusCode, PromiseHolder } from "dav-js"
-import { GraphQLService } from "../services/graphql-service"
+import { ApiService } from "../services/api-service"
 import { StoreBookRelease } from "./StoreBookRelease"
 import {
 	StoreBookStatus,
@@ -36,7 +36,7 @@ export class StoreBook {
 
 	constructor(
 		storeBookResource: StoreBookResource2,
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = storeBookResource.uuid
 		this.collection = storeBookResource.collection?.uuid
@@ -75,7 +75,7 @@ export class StoreBook {
 
 		if (this.cover.url == null) return null
 
-		let response = await this.graphqlService.downloadFile(this.cover.url)
+		let response = await this.apiService.downloadFile(this.cover.url)
 		if (!isSuccessStatusCode(response.status)) return null
 
 		let responseData = (response as ApiResponse<string>).data
@@ -98,7 +98,7 @@ export class StoreBook {
 		this.releases.itemsPromiseHolder.Setup()
 
 		// Get the releases of the store book
-		let response = await this.graphqlService.retrieveStoreBook(
+		let response = await this.apiService.retrieveStoreBook(
 			`
 				releases {
 					items {
@@ -127,9 +127,7 @@ export class StoreBook {
 					}
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrieveStoreBook
 
@@ -144,7 +142,7 @@ export class StoreBook {
 		let items = []
 
 		for (let item of responseData.releases.items) {
-			items.push(new StoreBookRelease(item, this.graphqlService))
+			items.push(new StoreBookRelease(item, this.apiService))
 		}
 
 		this.releases.itemsPromiseHolder.Resolve(items)

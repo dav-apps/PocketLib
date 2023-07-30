@@ -2,7 +2,7 @@ import { Component } from "@angular/core"
 import { Router } from "@angular/router"
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -27,7 +27,7 @@ export class AuthorSetupPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private router: Router,
 		private domSanitizer: DomSanitizer
 	) {
@@ -62,7 +62,7 @@ export class AuthorSetupPageComponent {
 		this.lastNameError = ""
 		this.loading = true
 
-		let response = await this.graphqlService.createAuthor(
+		let response = await this.apiService.createAuthor(
 			`
 				uuid
 				firstName
@@ -81,7 +81,7 @@ export class AuthorSetupPageComponent {
 			this.dataService.userAuthor = new Author(
 				responseData,
 				await this.dataService.GetStoreLanguages(),
-				this.graphqlService
+				this.apiService
 			)
 			this.dataService.userAuthorPromiseHolder.Resolve(
 				this.dataService.userAuthor

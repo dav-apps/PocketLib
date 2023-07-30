@@ -2,7 +2,7 @@ import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { PromiseHolder } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
 import { GetDualScreenSettings } from "src/app/misc/utils"
@@ -84,7 +84,7 @@ export class NewBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private graphqlService: GraphQLService,
+		private apiService: ApiService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
@@ -370,7 +370,7 @@ export class NewBookPageComponent {
 		}
 
 		// Create the store book with collection, title and language
-		let createStoreBookResponse = await this.graphqlService.createStoreBook(
+		let createStoreBookResponse = await this.apiService.createStoreBook(
 			`uuid`,
 			{
 				author: authorUuid,
@@ -397,7 +397,7 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
 
 			// Upload the cover
-			await this.graphqlService.uploadStoreBookCover({
+			await this.apiService.uploadStoreBookCover({
 				uuid: createStoreBookResponseData.uuid,
 				contentType: this.coverType,
 				data: this.coverContent
@@ -408,7 +408,7 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingBookFile
 
 			// Upload the book file
-			await this.graphqlService.uploadStoreBookFile({
+			await this.apiService.uploadStoreBookFile({
 				uuid: createStoreBookResponseData.uuid,
 				contentType: this.bookFileType,
 				data: this.bookFileContent,

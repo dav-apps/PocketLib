@@ -1,6 +1,6 @@
 import { PromiseHolder } from "dav-js"
 import { Language, PublisherResource2 } from "../misc/types"
-import { GraphQLService } from "src/app/services/graphql-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "./Author"
 
 export class Publisher {
@@ -27,7 +27,7 @@ export class Publisher {
 	constructor(
 		publisherResource: PublisherResource2,
 		private languages: Language[],
-		private graphqlService: GraphQLService
+		private apiService: ApiService
 	) {
 		this.uuid = publisherResource?.uuid ?? ""
 		this.name = publisherResource?.name ?? ""
@@ -44,15 +44,13 @@ export class Publisher {
 	}
 
 	async ReloadLogo() {
-		let response = await this.graphqlService.retrievePublisher(
+		let response = await this.apiService.retrievePublisher(
 			`
 				logo {
 					url
 				}
 			`,
-			{
-				uuid: this.uuid
-			}
+			{ uuid: this.uuid }
 		)
 		let responseData = response.data.retrievePublisher
 		this.logo.url = responseData.logo?.url
@@ -93,7 +91,7 @@ export class Publisher {
 			while (authorItem.pages > authorPage) {
 				authorPage++
 
-				let response = await this.graphqlService.listAuthors(
+				let response = await this.apiService.listAuthors(
 					`
 						total
 						items {
@@ -127,9 +125,7 @@ export class Publisher {
 
 				if (responseData != null) {
 					for (let item of responseData.items) {
-						items.push(
-							new Author(item, this.languages, this.graphqlService)
-						)
+						items.push(new Author(item, this.languages, this.apiService))
 					}
 				} else {
 					authorItem.isLoading = false
@@ -138,7 +134,7 @@ export class Publisher {
 				}
 			}
 		} else {
-			let response = await this.graphqlService.listAuthors(
+			let response = await this.apiService.listAuthors(
 				`
 					total
 					items {
@@ -175,7 +171,7 @@ export class Publisher {
 				authorItem.pages = responseData.total / limit
 
 				for (let item of responseData.items) {
-					items.push(new Author(item, this.languages, this.graphqlService))
+					items.push(new Author(item, this.languages, this.apiService))
 				}
 			} else {
 				authorItem.isLoading = false
