@@ -2,7 +2,6 @@ import { Component, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { PromiseHolder } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
@@ -85,7 +84,6 @@ export class NewBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private routingService: RoutingService,
 		private router: Router,

@@ -23,7 +23,6 @@ import Cropper from "cropperjs"
 import { Dav, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { Author } from "src/app/models/Author"
 import {
@@ -136,7 +135,6 @@ export class AuthorProfileComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private router: Router
 	) {

@@ -5,7 +5,6 @@ import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
-import { ApiService } from "src/app/services/api-service"
 import { GraphQLService } from "src/app/services/graphql-service"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
@@ -99,7 +98,6 @@ export class AuthorBookPageComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService,
 		private graphqlService: GraphQLService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
