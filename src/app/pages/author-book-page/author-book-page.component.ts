@@ -458,11 +458,11 @@ export class AuthorBookPageComponent {
 		this.bookFileLoading = true
 
 		// Upload the file
-		let response = await this.apiService.UploadStoreBookFile({
+		let response = await this.graphqlService.uploadStoreBookFile({
 			uuid: this.uuid,
-			type: file.type,
-			name: file.name,
-			file: fileContent
+			contentType: file.type,
+			data: fileContent,
+			fileName: file.name
 		})
 
 		this.bookFileUploaded = isSuccessStatusCode(response.status)

@@ -17,6 +17,7 @@ import {
 	StoreBookSeriesResource2,
 	StoreBookResource2,
 	StoreBookCoverResource2,
+	StoreBookFileResource2,
 	StoreBookReleaseResource2,
 	CategoryResource2,
 	BookResource2
@@ -711,6 +712,46 @@ export class GraphQLService {
 					url: response.data.url,
 					aspectRatio: response.data.aspectRatio,
 					blurhash: response.data.blurhash
+				}
+			}
+		} catch (error) {
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
+	}
+	//#endregion
+
+	//#region StoreBookFile
+	async uploadStoreBookFile(params: {
+		uuid: string
+		contentType: string
+		data: any
+		fileName: string
+	}): Promise<ApiResponse<StoreBookFileResource2>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.newPocketlibApiUrl}/storeBooks/${params.uuid}/file`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": params.contentType,
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.fileName
+					)}"`
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					fileName: response.data.fileName
 				}
 			}
 		} catch (error) {

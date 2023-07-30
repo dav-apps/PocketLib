@@ -410,11 +410,11 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingBookFile
 
 			// Upload the book file
-			await this.apiService.UploadStoreBookFile({
+			await this.graphqlService.uploadStoreBookFile({
 				uuid: createStoreBookResponseData.uuid,
-				type: this.bookFileType,
-				name: this.bookFileName,
-				file: this.bookFileContent
+				contentType: this.bookFileType,
+				data: this.bookFileContent,
+				fileName: this.bookFileName
 			})
 		}
 
