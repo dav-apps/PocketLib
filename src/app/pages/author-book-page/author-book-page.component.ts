@@ -426,10 +426,10 @@ export class AuthorBookPageComponent {
 		this.coverLoading = true
 
 		// Upload the image
-		let coverUploadResponse = await this.apiService.UploadStoreBookCover({
+		let coverUploadResponse = await this.graphqlService.uploadStoreBookCover({
 			uuid: this.uuid,
-			type: file.type,
-			file: imageContent
+			contentType: file.type,
+			data: imageContent
 		})
 
 		this.coverLoading = false

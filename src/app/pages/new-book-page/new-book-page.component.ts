@@ -399,10 +399,10 @@ export class NewBookPageComponent {
 			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
 
 			// Upload the cover
-			await this.apiService.UploadStoreBookCover({
+			await this.graphqlService.uploadStoreBookCover({
 				uuid: createStoreBookResponseData.uuid,
-				type: this.coverType,
-				file: this.coverContent
+				contentType: this.coverType,
+				data: this.coverContent
 			})
 		}
 
