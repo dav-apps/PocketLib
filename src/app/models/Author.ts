@@ -125,9 +125,11 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				bios {
-					uuid
-					bio
-					language
+					items {
+						uuid
+						bio
+						language
+					}
 				}
 			`,
 			{ uuid: this.uuid }
@@ -174,13 +176,15 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				collections {
-					uuid
-					author {
+					items {
 						uuid
-					}
-					name {
-						name
-						language
+						author {
+							uuid
+						}
+						name {
+							name
+							language
+						}
 					}
 				}
 			`,
@@ -231,9 +235,11 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				series {
-					uuid
-					name
-					language
+					items {
+						uuid
+						name
+						language
+					}
 				}
 			`,
 			{ uuid: this.uuid }

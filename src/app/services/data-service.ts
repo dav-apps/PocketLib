@@ -179,7 +179,7 @@ export class DataService {
 				// Try to get the author of the user
 				let authorResponse = await this.apiService.retrieveAuthor(
 					`
-						uuid,
+						uuid
 						firstName
 						lastName
 						websiteUrl

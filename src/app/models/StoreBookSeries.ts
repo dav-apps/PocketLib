@@ -71,7 +71,11 @@ export class StoreBookSeries {
 						}
 						inLibrary
 						purchased
-						categories
+						categories {
+							items {
+								key
+							}
+						}
 					}
 				}
 			`,
