@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core"
 import { Apollo, gql, MutationResult } from "apollo-angular"
-import { ApolloQueryResult } from "@apollo/client/core"
+import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
 import axios from "axios"
-import { Dav, BlobToBase64 } from "dav-js"
+import { Dav, BlobToBase64, renewSession } from "dav-js"
 import { environment } from "src/environments/environment"
+import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	List,
 	ApiResponse,
@@ -24,6 +25,8 @@ import {
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
+const errorPolicy: ErrorPolicy = "all"
+
 @Injectable()
 export class ApiService {
 	constructor(
@@ -32,11 +35,11 @@ export class ApiService {
 	) {}
 
 	//#region Publisher
-	retrievePublisher(
+	async retrievePublisher(
 		queryData: string,
 		variables: { uuid: string }
 	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				retrievePublisher: PublisherResource
 			}>({
@@ -47,16 +50,30 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrievePublisher(queryData, variables)
+		}
+
+		return result
 	}
 
-	listPublishers(
+	async listPublishers(
 		queryData: string,
 		variables?: { limit?: number; offset?: number }
 	): Promise<ApolloQueryResult<{ listPublishers: List<PublisherResource> }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				listPublishers: List<PublisherResource>
 			}>({
@@ -67,18 +84,30 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listPublishers(queryData, variables)
+		}
+
+		return result
 	}
 
-	createPublisher(
+	async createPublisher(
 		queryData: string,
-		variables: {
-			name: string
-		}
+		variables: { name: string }
 	): Promise<MutationResult<{ createPublisher: PublisherResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{ createPublisher: PublisherResource }>({
 				mutation: gql`
 					mutation CreatePublisher($name: String!) {
@@ -87,12 +116,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createPublisher(queryData, variables)
+		}
+
+		return result
 	}
 
-	updatePublisher(
+	async updatePublisher(
 		queryData: string,
 		variables: {
 			uuid: string
@@ -104,7 +147,7 @@ export class ApiService {
 			twitterUsername?: string
 		}
 	): Promise<MutationResult<{ updatePublisher: PublisherResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				updatePublisher: PublisherResource
 			}>({
@@ -131,9 +174,23 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.updatePublisher(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
@@ -163,6 +220,17 @@ export class ApiService {
 				}
 			}
 		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadPublisherLogo(params)
+			}
+
 			return {
 				status: error.response.status,
 				error: {
@@ -175,11 +243,11 @@ export class ApiService {
 	//#endregion
 
 	//#region Author
-	retrieveAuthor(
+	async retrieveAuthor(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
 	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				retrieveAuthor: AuthorResource
 			}>({
@@ -190,12 +258,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveAuthor(queryData, variables)
+		}
+
+		return result
 	}
 
-	listAuthors(
+	async listAuthors(
 		queryData: string,
 		variables?: {
 			latest?: boolean
@@ -205,7 +287,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<ApolloQueryResult<{ listAuthors: List<AuthorResource> }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				listAuthors: List<AuthorResource>
 			}>({
@@ -216,12 +298,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listAuthors(queryData, variables)
+		}
+
+		return result
 	}
 
-	createAuthor(
+	async createAuthor(
 		queryData: string,
 		variables: {
 			publisher?: string
@@ -229,7 +325,7 @@ export class ApiService {
 			lastName: string
 		}
 	): Promise<MutationResult<{ createAuthor: AuthorResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				createAuthor: AuthorResource
 			}>({
@@ -248,12 +344,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createAuthor(queryData, variables)
+		}
+
+		return result
 	}
 
-	updateAuthor(
+	async updateAuthor(
 		queryData: string,
 		variables?: {
 			uuid: string
@@ -265,7 +375,7 @@ export class ApiService {
 			twitterUsername?: string
 		}
 	): Promise<MutationResult<{ updateAuthor: AuthorResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				updateAuthor: AuthorResource
 			}>({
@@ -292,18 +402,32 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.updateAuthor(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region AuthorBio
-	setAuthorBio(
+	async setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }
 	): Promise<MutationResult<{ setAuthorBio: AuthorBioResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{ setAuthorBio: AuthorBioResource }>({
 				mutation: gql`
 					mutation SetAuthorBio($uuid: String!, $bio: String!, $language: String!) {
@@ -312,9 +436,23 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.setAuthorBio(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
@@ -344,6 +482,17 @@ export class ApiService {
 				}
 			}
 		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadAuthorProfileImage(params)
+			}
+
 			return {
 				status: error.response.status,
 				error: {
@@ -356,7 +505,7 @@ export class ApiService {
 	//#endregion
 
 	//#region StoreBookCollection
-	retrieveStoreBookCollection(
+	async retrieveStoreBookCollection(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
 	): Promise<
@@ -364,7 +513,7 @@ export class ApiService {
 			retrieveStoreBookCollection: StoreBookCollectionResource
 		}>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				retrieveStoreBookCollection: StoreBookCollectionResource
 			}>({
@@ -375,14 +524,28 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveStoreBookCollection(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region StoreBookCollectionName
-	setStoreBookCollectionName(
+	async setStoreBookCollectionName(
 		queryData: string,
 		variables: { uuid: string; name: string; language: string }
 	): Promise<
@@ -390,7 +553,7 @@ export class ApiService {
 			setStoreBookCollectionName: StoreBookCollectionNameResource
 		}>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				setStoreBookCollectionName: StoreBookCollectionNameResource
 			}>({
@@ -401,20 +564,34 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.setStoreBookCollectionName(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region StoreBookSeries
-	retrieveStoreBookSeries(
+	async retrieveStoreBookSeries(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
 	): Promise<
 		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource }>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource }>({
 				query: gql`
 					query RetrieveStoreBookSeries($uuid: String!, $languages: [String!]) {
@@ -423,12 +600,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveStoreBookSeries(queryData, variables)
+		}
+
+		return result
 	}
 
-	listStoreBookSeries(
+	async listStoreBookSeries(
 		queryData: string,
 		variables?: {
 			latest?: boolean
@@ -439,7 +630,7 @@ export class ApiService {
 	): Promise<
 		ApolloQueryResult<{ listStoreBookSeries: List<StoreBookSeriesResource> }>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				listStoreBookSeries: List<StoreBookSeriesResource>
 			}>({
@@ -460,12 +651,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listStoreBookSeries(queryData, variables)
+		}
+
+		return result
 	}
 
-	createStoreBookSeries(
+	async createStoreBookSeries(
 		queryData: string,
 		variables: {
 			author?: string
@@ -476,7 +681,7 @@ export class ApiService {
 	): Promise<
 		MutationResult<{ createStoreBookSeries: StoreBookSeriesResource }>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{ createStoreBookSeries: StoreBookSeriesResource }>({
 				mutation: gql`
 					mutation CreateStoreBookSeries(
@@ -495,12 +700,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createStoreBookSeries(queryData, variables)
+		}
+
+		return result
 	}
 
-	updateStoreBookSeries(
+	async updateStoreBookSeries(
 		queryData: string,
 		variables: {
 			uuid: string
@@ -510,7 +729,7 @@ export class ApiService {
 	): Promise<
 		MutationResult<{ updateStoreBookSeries: StoreBookSeriesResource }>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				updateStoreBookSeries: StoreBookSeriesResource
 			}>({
@@ -529,18 +748,32 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.updateStoreBookSeries(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region StoreBook
-	retrieveStoreBook(
+	async retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string }
 	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				retrieveStoreBook: StoreBookResource
 			}>({
@@ -551,12 +784,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveStoreBook(queryData, variables)
+		}
+
+		return result
 	}
 
-	listStoreBooks(
+	async listStoreBooks(
 		queryData: string,
 		variables?: {
 			latest?: boolean
@@ -567,7 +814,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<ApolloQueryResult<{ listStoreBooks: List<StoreBookResource> }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				listStoreBooks: List<StoreBookResource>
 			}>({
@@ -588,12 +835,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listStoreBooks(queryData, variables)
+		}
+
+		return result
 	}
 
-	createStoreBook(
+	async createStoreBook(
 		queryData: string,
 		variables: {
 			author?: string
@@ -606,7 +867,7 @@ export class ApiService {
 			categories?: string[]
 		}
 	): Promise<MutationResult<{ createStoreBook: StoreBookResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				createStoreBook: StoreBookResource
 			}>({
@@ -635,12 +896,26 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createStoreBook(queryData, variables)
+		}
+
+		return result
 	}
 
-	updateStoreBook(
+	async updateStoreBook(
 		queryData: string,
 		variables: {
 			uuid: string
@@ -653,7 +928,7 @@ export class ApiService {
 			categories?: string[]
 		}
 	): Promise<MutationResult<{ updateStoreBook: StoreBookResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				updateStoreBook: StoreBookResource
 			}>({
@@ -682,9 +957,23 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.updateStoreBook(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
@@ -715,6 +1004,17 @@ export class ApiService {
 				}
 			}
 		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookCover(params)
+			}
+
 			return {
 				status: error.response.status,
 				error: {
@@ -755,6 +1055,17 @@ export class ApiService {
 				}
 			}
 		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookFile(params)
+			}
+
 			return {
 				status: error.response.status,
 				error: {
@@ -767,7 +1078,7 @@ export class ApiService {
 	//#endregion
 
 	//#region StoreBookRelease
-	publishStoreBookRelease(
+	async publishStoreBookRelease(
 		queryData: string,
 		variables: {
 			uuid: string
@@ -777,7 +1088,7 @@ export class ApiService {
 	): Promise<
 		MutationResult<{ publishStoreBookRelease: StoreBookReleaseResource }>
 	> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{
 				publishStoreBookRelease: StoreBookReleaseResource
 			}>({
@@ -796,18 +1107,32 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.publishStoreBookRelease(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region Category
-	listCategories(
+	async listCategories(
 		queryData: string,
 		variables?: { languages?: string[] }
 	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
-		return this.apollo
+		let result = await this.apollo
 			.query<{
 				listCategories: List<CategoryResource>
 			}>({
@@ -818,20 +1143,34 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listCategories(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 
 	//#region Book
-	createBook(
+	async createBook(
 		queryData: string,
 		variables: {
 			storeBook: string
 		}
 	): Promise<MutationResult<{ createBook: BookResource }>> {
-		return this.apollo
+		let result = await this.apollo
 			.mutate<{ createBook: BookResource }>({
 				mutation: gql`
 					mutation CreateBook($storeBook: String!) {
@@ -840,9 +1179,23 @@ export class ApiService {
 						}
 					}
 				`,
-				variables
+				variables,
+				errorPolicy
 			})
 			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createBook(queryData, variables)
+		}
+
+		return result
 	}
 	//#endregion
 

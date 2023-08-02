@@ -3,6 +3,7 @@ export const UnexpectedError = 1000
 export const AuthenticationFailed = 1001
 export const ActionNotAllowed = 1002
 export const ContentTypeNotSupported = 1003
+export const sessionEnded = "SESSION_ENDED"
 
 // Errors for missing headers
 export const AuthorizationHeaderMissing = 1100
