@@ -51,7 +51,7 @@
 		"bootstrap": "^5.1.3",
 		"core-js": "^3.16.0",
 		"cropperjs": "^1.5.12",
-		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v2.6.3",
+		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v2.6.4",
 		"dav-ui-components": "file:../../web/dav-ui-components",
 		"express": "^4.18.1",
 		"graphql": "^16.7.1",
