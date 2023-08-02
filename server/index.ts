@@ -1,16 +1,27 @@
-import * as path from 'path'
-import * as fs from 'fs'
-import { JSDOM } from 'jsdom'
-import axios from 'axios'
-import { isSuccessStatusCode } from 'dav-js'
+import * as path from "path"
+import * as fs from "fs"
+import { JSDOM } from "jsdom"
+import axios from "axios"
+import { isSuccessStatusCode } from "dav-js"
 
-const backendUrl = process.env.ENV == "production" ? `https://dav-backend-tfpik.ondigitalocean.app/v1` : `http://localhost:3111/v1`
-const websiteUrl = process.env.ENV == "production" ? `https://pocketlib.app/` : `http://localhost:3001`
+let backendUrl = "http://localhost:3111/v1"
+let websiteUrl = "http://localhost:3001"
+
+switch (process.env.ENV) {
+	case "production":
+		backendUrl = "https://dav-backend-tfpik.ondigitalocean.app/v1"
+		websiteUrl = "https://pocketlib.app/"
+		break
+	case "staging":
+		backendUrl = "https://dav-backend-tfpik.ondigitalocean.app/staging/v1"
+		websiteUrl = "https://pocketlib-staging-d9rk6.ondigitalocean.app/"
+		break
+}
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
 		let response = await axios({
-			method: 'get',
+			method: "get",
 			url: `${backendUrl}/api/1/call/store_books/${uuid}`,
 			params: {
 				fields: "title,description,cover.url"
@@ -28,7 +39,7 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 				url: `${websiteUrl}/store/book/${uuid}`
 			})
 		}
-	} catch (error) { }
+	} catch (error) {}
 
 	return getHtml()
 }
@@ -36,7 +47,7 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 export async function PrepareStoreAuthorPage(uuid: string) {
 	try {
 		let response = await axios({
-			method: 'get',
+			method: "get",
 			url: `${backendUrl}/api/1/call/authors/${uuid}`,
 			params: {
 				fields: "first_name,last_name,bio.value,profile_image.url"
@@ -53,7 +64,7 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 				url: `${websiteUrl}/store/author/${uuid}`
 			})
 		}
-	} catch (error) { }
+	} catch (error) {}
 
 	return getHtml()
 }
@@ -61,7 +72,7 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 export async function PrepareStorePublisherPage(uuid: string) {
 	try {
 		let response = await axios({
-			method: 'get',
+			method: "get",
 			url: `${backendUrl}/api/1/call/publishers/${uuid}`,
 			params: {
 				fields: "name,description,logo.url"
@@ -78,32 +89,34 @@ export async function PrepareStorePublisherPage(uuid: string) {
 				url: `${websiteUrl}/store/publisher/${uuid}`
 			})
 		}
-	} catch (error) { }
+	} catch (error) {}
 
 	return getHtml()
 }
 
 function getHtml(params?: {
-	title: string,
-	description: string,
-	imageUrl: string,
-	url: string,
+	title: string
+	description: string
+	imageUrl: string
+	url: string
 	book?: {
 		author: {
-			firstName: string,
+			firstName: string
 			lastName: string
 		}
 	}
 }): string {
 	// Read the html file
-	let index = fs.readFileSync(path.resolve('./PocketLib/index.html'), { encoding: 'utf8' })
+	let index = fs.readFileSync(path.resolve("./PocketLib/index.html"), {
+		encoding: "utf8"
+	})
 
 	if (params) {
 		const dom = new JSDOM(index)
-		let html = dom.window.document.querySelector('html')
-		let head = html.querySelector('head')
+		let html = dom.window.document.querySelector("html")
+		let head = html.querySelector("head")
 
-		let metas: { name?: string, property?: string, content: string }[] = [
+		let metas: { name?: string; property?: string; content: string }[] = [
 			// Twitter tags
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@dav_apps" },
@@ -120,13 +133,17 @@ function getHtml(params?: {
 			// Open Graph book tags
 			metas.push(
 				{ property: "og:type", content: "book" },
-				{ property: "og:book:author:first_name", content: params.book.author.firstName },
-				{ property: "og:book:author:last_name", content: params.book.author.lastName }
+				{
+					property: "og:book:author:first_name",
+					content: params.book.author.firstName
+				},
+				{
+					property: "og:book:author:last_name",
+					content: params.book.author.lastName
+				}
 			)
 		} else {
-			metas.push(
-				{ property: "og:type", content: "website" }
-			)
+			metas.push({ property: "og:type", content: "website" })
 		}
 
 		for (let metaObj of metas) {
@@ -136,24 +153,28 @@ function getHtml(params?: {
 			let meta: any
 
 			if (metaObj.name != null) {
-				meta = dom.window.document.querySelector(`meta[name='${metaObj.name}']`)
+				meta = dom.window.document.querySelector(
+					`meta[name='${metaObj.name}']`
+				)
 			} else if (metaObj.property != null) {
-				meta = dom.window.document.querySelector(`meta[property='${metaObj.property}']`)
+				meta = dom.window.document.querySelector(
+					`meta[property='${metaObj.property}']`
+				)
 			}
 
 			if (meta == null) {
-				meta = dom.window.document.createElement('meta')
+				meta = dom.window.document.createElement("meta")
 
 				if (metaObj.name != null) {
-					meta.setAttribute('name', metaObj.name)
+					meta.setAttribute("name", metaObj.name)
 				} else if (metaObj.property != null) {
-					meta.setAttribute('property', metaObj.property)
+					meta.setAttribute("property", metaObj.property)
 				}
 
-				meta.setAttribute('content', metaObj.content)
+				meta.setAttribute("content", metaObj.content)
 				head.appendChild(meta)
 			} else {
-				meta.setAttribute('content', metaObj.content)
+				meta.setAttribute("content", metaObj.content)
 			}
 		}
 
