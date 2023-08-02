@@ -22,6 +22,7 @@ import { DataService } from "src/app/services/data-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { GetSettings } from "src/app/models/Settings"
 import { GetBookOrder } from "./models/BookOrder"
+import { dataIdFromObject } from "./misc/utils"
 import { smallWindowMaxSize } from "src/constants/constants"
 import { environment } from "src/environments/environment"
 
@@ -216,7 +217,7 @@ export class AppComponent {
 			this.apollo.removeClient()
 
 			this.apollo.create({
-				cache: new InMemoryCache(),
+				cache: new InMemoryCache({ dataIdFromObject }),
 				link: this.httpLink.create({
 					uri: environment.newPocketlibApiUrl,
 					headers: new HttpHeaders().set(

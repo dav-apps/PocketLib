@@ -1,3 +1,4 @@
+import { defaultDataIdFromObject } from "@apollo/client/core"
 import {
 	faBooks as faBooksLight,
 	faChildren as faChildrenLight,
@@ -316,4 +317,12 @@ export function CategoryToCategoryCard(category: Category): CategoryCard {
 	}
 
 	return null
+}
+
+export function dataIdFromObject(responseObject: any) {
+	if (responseObject.uuid != null) {
+		return `${responseObject.__typename}:${responseObject.uuid}`
+	}
+
+	return defaultDataIdFromObject(responseObject)
 }

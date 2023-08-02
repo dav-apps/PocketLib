@@ -1,5 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
+import { dataIdFromObject } from "./misc/utils"
 import { environment } from "../environments/environment"
 
 // Modules
@@ -171,7 +172,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 			provide: APOLLO_OPTIONS,
 			useFactory(httpLink: HttpLink) {
 				return {
-					cache: new InMemoryCache(),
+					cache: new InMemoryCache({ dataIdFromObject }),
 					link: httpLink.create({
 						uri: environment.newPocketlibApiUrl
 					})
