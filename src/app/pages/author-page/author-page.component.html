@@ -63,6 +63,7 @@
 		<dav-list>
 			<dav-list-item
 				[headline]="book.title"
+				[subhead]="book.author"
 				size="small"
 				(click)="ShowBook(book.uuid)"
 				*ngFor="let book of booksInReview"
