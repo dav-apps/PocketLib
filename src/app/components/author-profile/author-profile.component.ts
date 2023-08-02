@@ -628,7 +628,7 @@ export class AuthorProfileComponent {
 
 			for (let errorCode of errors) {
 				switch (errorCode) {
-					case ErrorCodes.FirstNameTooShort:
+					case ErrorCodes.firstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
 							this.editProfileDialogFirstNameError =
 								this.locale.editProfileDialog.errors.firstNameMissing
@@ -637,7 +637,7 @@ export class AuthorProfileComponent {
 								this.locale.editProfileDialog.errors.firstNameTooShort
 						}
 						break
-					case ErrorCodes.LastNameTooShort:
+					case ErrorCodes.lastNameTooShort:
 						if (this.editProfileDialogLastName.length == 0) {
 							this.editProfileDialogLastNameError =
 								this.locale.editProfileDialog.errors.lastNameMissing
@@ -646,27 +646,27 @@ export class AuthorProfileComponent {
 								this.locale.editProfileDialog.errors.lastNameTooShort
 						}
 						break
-					case ErrorCodes.FirstNameTooLong:
+					case ErrorCodes.firstNameTooLong:
 						this.editProfileDialogFirstNameError =
 							this.locale.editProfileDialog.errors.firstNameTooLong
 						break
-					case ErrorCodes.LastNameTooLong:
+					case ErrorCodes.lastNameTooLong:
 						this.editProfileDialogLastNameError =
 							this.locale.editProfileDialog.errors.lastNameTooLong
 						break
-					case ErrorCodes.WebsiteUrlInvalid:
+					case ErrorCodes.websiteUrlInvalid:
 						this.editProfileDialogWebsiteUrlError =
 							this.locale.editProfileDialog.errors.websiteUrlInvalid
 						break
-					case ErrorCodes.FacebookUsernameInvalid:
+					case ErrorCodes.facebookUsernameInvalid:
 						this.editProfileDialogFacebookUsernameError =
 							this.locale.editProfileDialog.errors.usernameInvalid
 						break
-					case ErrorCodes.InstagramUsernameInvalid:
+					case ErrorCodes.instagramUsernameInvalid:
 						this.editProfileDialogInstagramUsernameError =
 							this.locale.editProfileDialog.errors.usernameInvalid
 						break
-					case ErrorCodes.TwitterUsernameInvalid:
+					case ErrorCodes.twitterUsernameInvalid:
 						this.editProfileDialogTwitterUsernameError =
 							this.locale.editProfileDialog.errors.usernameInvalid
 						break
@@ -692,7 +692,7 @@ export class AuthorProfileComponent {
 			let errors = response.errors[0].extensions.errors as string[]
 
 			switch (errors[0]) {
-				case ErrorCodes.BioTooLong:
+				case ErrorCodes.bioTooLong:
 					this.newBioError = this.locale.errors.bioTooLong
 					break
 				default:

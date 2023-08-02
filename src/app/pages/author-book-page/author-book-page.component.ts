@@ -548,15 +548,15 @@ export class AuthorBookPageComponent {
 
 			for (let errorCode of errors) {
 				switch (errorCode) {
-					case ErrorCodes.ReleaseNameTooShort:
+					case ErrorCodes.releaseNameTooShort:
 						this.publishChangesDialogReleaseNameError =
 							this.locale.errors.releaseNameTooShort
 						break
-					case ErrorCodes.ReleaseNameTooLong:
+					case ErrorCodes.releaseNameTooLong:
 						this.publishChangesDialogReleaseNameError =
 							this.locale.errors.releaseNameTooLong
 						break
-					case ErrorCodes.ReleaseNotesTooLong:
+					case ErrorCodes.releaseNotesTooLong:
 						this.publishChangesDialogReleaseNotesError =
 							this.locale.errors.releaseNotesTooLong
 						break
@@ -577,7 +577,7 @@ export class AuthorBookPageComponent {
 				let errors = response.errors[0].extensions.errors as string[]
 
 				switch (errors[0]) {
-					case ErrorCodes.DescriptionTooLong:
+					case ErrorCodes.descriptionTooLong:
 						this.newDescriptionError =
 							this.locale.errors.descriptionTooLong
 						break
@@ -605,7 +605,7 @@ export class AuthorBookPageComponent {
 				let errors = response.errors[0].extensions.errors as string[]
 
 				switch (errors[0]) {
-					case ErrorCodes.PriceInvalid:
+					case ErrorCodes.priceInvalid:
 						this.priceInput.SetError(this.locale.errors.priceInvalid)
 						break
 					default:
@@ -625,7 +625,7 @@ export class AuthorBookPageComponent {
 				let errors = response.errors[0].extensions.errors as string[]
 
 				switch (errors[0]) {
-					case ErrorCodes.IsbnInvalid:
+					case ErrorCodes.isbnInvalid:
 						this.isbnInput.SetError(this.locale.errors.isbnInvalid)
 						break
 					default:
@@ -642,11 +642,11 @@ export class AuthorBookPageComponent {
 				let errors = response.errors[0].extensions.errors as string[]
 
 				switch (errors[0]) {
-					case ErrorCodes.TitleTooShort:
+					case ErrorCodes.titleTooShort:
 						this.editTitleDialogTitleError =
 							this.locale.errors.titleTooShort
 						break
-					case ErrorCodes.TitleTooLong:
+					case ErrorCodes.titleTooLong:
 						this.editTitleDialogTitleError =
 							this.locale.errors.titleTooLong
 						break

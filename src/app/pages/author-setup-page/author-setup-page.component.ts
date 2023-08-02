@@ -95,24 +95,24 @@ export class AuthorSetupPageComponent {
 
 			for (let errorCode of errors) {
 				switch (errorCode) {
-					case ErrorCodes.FirstNameTooShort:
+					case ErrorCodes.firstNameTooShort:
 						if (this.firstName.length == 0) {
 							this.firstNameError = this.locale.errors.firstNameMissing
 						} else {
 							this.firstNameError = this.locale.errors.firstNameTooShort
 						}
 						break
-					case ErrorCodes.LastNameTooShort:
+					case ErrorCodes.lastNameTooShort:
 						if (this.lastName.length == 0) {
 							this.lastNameError = this.locale.errors.lastNameMissing
 						} else {
 							this.lastNameError = this.locale.errors.lastNameTooShort
 						}
 						break
-					case ErrorCodes.FirstNameTooLong:
+					case ErrorCodes.firstNameTooLong:
 						this.firstNameError = this.locale.errors.firstNameTooLong
 						break
-					case ErrorCodes.LastNameTooLong:
+					case ErrorCodes.lastNameTooLong:
 						this.lastNameError = this.locale.errors.lastNameTooLong
 						break
 					default:

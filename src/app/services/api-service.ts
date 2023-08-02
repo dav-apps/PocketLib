@@ -224,7 +224,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -486,7 +486,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1008,7 +1008,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1059,7 +1059,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.AccessTokenMustBeRenewed) {
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
 				// Renew the access token and run the query again
 				await renewSession()
 

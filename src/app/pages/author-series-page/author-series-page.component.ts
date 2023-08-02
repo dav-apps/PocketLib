@@ -168,10 +168,10 @@ export class AuthorSeriesPageComponent {
 				.errors as string[]
 
 			switch (errors[0]) {
-				case ErrorCodes.NameTooShort:
+				case ErrorCodes.nameTooShort:
 					this.editNameDialogNameError = this.locale.errors.nameTooShort
 					break
-				case ErrorCodes.NameTooLong:
+				case ErrorCodes.nameTooLong:
 					this.editNameDialogNameError = this.locale.errors.nameTooLong
 					break
 				default:

@@ -144,7 +144,7 @@ export class AuthorPageComponent {
 
 			for (let errorCode of errors) {
 				switch (errorCode) {
-					case ErrorCodes.NameTooShort:
+					case ErrorCodes.nameTooShort:
 						if (this.createPublisherDialogName.length == 0) {
 							this.createPublisherDialogNameError =
 								this.locale.createPublisherDialog.errors.nameMissing
@@ -153,7 +153,7 @@ export class AuthorPageComponent {
 								this.locale.createPublisherDialog.errors.nameTooShort
 						}
 						break
-					case ErrorCodes.NameTooLong:
+					case ErrorCodes.nameTooLong:
 						this.createPublisherDialogNameError =
 							this.locale.createPublisherDialog.errors.nameTooLong
 						break
@@ -213,7 +213,7 @@ export class AuthorPageComponent {
 
 			for (let errorCode of errors) {
 				switch (errorCode) {
-					case ErrorCodes.FirstNameTooShort:
+					case ErrorCodes.firstNameTooShort:
 						if (this.createAuthorDialogFirstName.length == 0) {
 							this.createAuthorDialogFirstNameError =
 								this.locale.createAuthorDialog.errors.firstNameMissing
@@ -222,7 +222,7 @@ export class AuthorPageComponent {
 								this.locale.createAuthorDialog.errors.firstNameTooShort
 						}
 						break
-					case ErrorCodes.LastNameTooShort:
+					case ErrorCodes.lastNameTooShort:
 						if (this.createAuthorDialogLastName.length == 0) {
 							this.createAuthorDialogLastNameError =
 								this.locale.createAuthorDialog.errors.lastNameMissing
@@ -231,11 +231,11 @@ export class AuthorPageComponent {
 								this.locale.createAuthorDialog.errors.lastNameTooShort
 						}
 						break
-					case ErrorCodes.FirstNameTooLong:
+					case ErrorCodes.firstNameTooLong:
 						this.createAuthorDialogFirstNameError =
 							this.locale.createAuthorDialog.errors.firstNameTooLong
 						break
-					case ErrorCodes.LastNameTooLong:
+					case ErrorCodes.lastNameTooLong:
 						this.createAuthorDialogLastNameError =
 							this.locale.createAuthorDialog.errors.lastNameTooLong
 						break

@@ -64,14 +64,14 @@ export class EditNamesComponent {
 			let errors = setNameResponse.errors[0].extensions.errors as string[]
 
 			switch (errors[0]) {
-				case ErrorCodes.NameTooShort:
+				case ErrorCodes.nameTooShort:
 					if (name.name.length == 0) {
 						name.errorMessage = this.locale.errors.nameMissing
 					} else {
 						name.errorMessage = this.locale.errors.nameTooShort
 					}
 					break
-				case ErrorCodes.NameTooLong:
+				case ErrorCodes.nameTooLong:
 					name.errorMessage = this.locale.errors.nameTooLong
 					break
 				default:
