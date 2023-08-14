@@ -214,6 +214,7 @@ export class StoreBookPageComponent {
 					}
 				})
 
+			// Set width & height of the cover using the aspect ratio
 			let aspectRatio = cover.aspectRatio
 
 			if (aspectRatio != null) {
@@ -223,11 +224,13 @@ export class StoreBookPageComponent {
 					let xValue = +aspectRatioParts[0]
 					let yValue = +aspectRatioParts[1]
 
-					if (yValue > xValue) {
-						this.coverHeight = this.coverWidth * yValue
-					} else if (xValue == yValue) {
-						this.coverHeight = this.coverWidth
-					}
+					setTimeout(() => {
+						if (yValue > xValue) {
+							this.coverHeight = this.coverWidth * yValue
+						} else if (xValue == yValue) {
+							this.coverHeight = this.coverWidth
+						}
+					}, 1)
 				}
 			}
 		}
