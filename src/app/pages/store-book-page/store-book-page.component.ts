@@ -56,6 +56,8 @@ export class StoreBookPageComponent {
 	coverUrl: string = ""
 	coverBlurhash: string = ""
 	coverAlt: string = ""
+	coverHeight = 270
+	coverWidth = 160
 	//#endregion
 
 	//#region Author variables
@@ -163,6 +165,7 @@ export class StoreBookPageComponent {
 				cover {
 					url
 					blurhash
+					aspectRatio
 				}
 				inLibrary
 				purchased
@@ -186,7 +189,6 @@ export class StoreBookPageComponent {
 		this.description = responseData.description
 		this.price = responseData.price
 		this.status = GetStoreBookStatusByString(responseData.status)
-		this.coverBlurhash = responseData.cover?.blurhash
 		this.inLibrary = responseData.inLibrary
 		this.purchased = responseData.purchased
 
@@ -194,13 +196,15 @@ export class StoreBookPageComponent {
 			this.categoryKeys.push(category.key)
 		}
 
-		this.coverAlt = this.dataService
-			.GetLocale()
-			.misc.bookCoverAlt.replace("{0}", this.title)
+		let cover = responseData.cover
 
-		// Load the cover
-		if (responseData.cover != null) {
-			this.coverUrl = responseData.cover.url
+		if (cover != null) {
+			this.coverUrl = cover.url
+			this.coverBlurhash = cover.blurhash
+
+			this.coverAlt = this.dataService
+				.GetLocale()
+				.misc.bookCoverAlt.replace("{0}", this.title)
 
 			this.apiService
 				.downloadFile(this.coverUrl)
@@ -209,6 +213,23 @@ export class StoreBookPageComponent {
 						this.coverContent = (fileResponse as ApiResponse<string>).data
 					}
 				})
+
+			let aspectRatio = cover.aspectRatio
+
+			if (aspectRatio != null) {
+				let aspectRatioParts = aspectRatio.split(":")
+
+				if (aspectRatioParts.length == 2) {
+					let xValue = +aspectRatioParts[0]
+					let yValue = +aspectRatioParts[1]
+
+					if (yValue > xValue) {
+						this.coverHeight = this.coverWidth * yValue
+					} else if (xValue == yValue) {
+						this.coverHeight = this.coverWidth
+					}
+				}
+			}
 		}
 
 		// Load the price
