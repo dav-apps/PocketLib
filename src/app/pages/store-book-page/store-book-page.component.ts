@@ -107,12 +107,18 @@ export class StoreBookPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		// Get the uuid from the params
-		this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+		this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
 			let uuid = paramMap.get("uuid")
 
 			if (this.uuid != uuid) {
 				this.uuid = uuid
-				this.Init()
+
+				// Show the loading screen & scroll to the top
+				this.simpleLoadingScreenVisible = true
+				window.scrollTo(0, 0)
+
+				// Load the data of the new StoreBook
+				await this.Init()
 			}
 		})
 	}
