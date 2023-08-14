@@ -82,6 +82,7 @@ export class StoreBookPageComponent {
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
+	simpleLoadingScreenVisible: boolean = true
 	loadingScreenVisible: boolean = false
 	publishLoading: boolean = false
 	//#endregion
@@ -184,6 +185,7 @@ export class StoreBookPageComponent {
 		)
 
 		let responseData = response.data.retrieveStoreBook
+		this.simpleLoadingScreenVisible = false
 
 		this.title = responseData.title
 		this.description = responseData.description
