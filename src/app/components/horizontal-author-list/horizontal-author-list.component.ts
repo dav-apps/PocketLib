@@ -43,10 +43,7 @@ export class HorizontalAuthorListComponent {
 					}
 				}
 			`,
-			{
-				limit: maxVisibleAuthors,
-				latest: true
-			}
+			{ limit: maxVisibleAuthors }
 		)
 
 		let profileImageAltTemplate =

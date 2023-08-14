@@ -149,7 +149,6 @@ export class DataService {
 						`,
 						{
 							mine: true,
-							languages: await this.GetStoreLanguages(),
 							limit,
 							offset
 						}
@@ -255,13 +254,13 @@ export class DataService {
 				items {
 					uuid
 					key
-					name {
+					name(languages: $languages) {
 						name
 						language
 					}
 				}
 			`,
-			{ languages: languages }
+			{ limit: 100, languages: languages }
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories.items) {

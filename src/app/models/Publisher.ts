@@ -116,7 +116,6 @@ export class Publisher {
 						}
 					`,
 					{
-						languages: this.languages,
 						limit,
 						offset: authorPage * limit
 					}
@@ -160,7 +159,6 @@ export class Publisher {
 					}
 				`,
 				{
-					languages: this.languages,
 					limit,
 					offset: page * limit
 				}

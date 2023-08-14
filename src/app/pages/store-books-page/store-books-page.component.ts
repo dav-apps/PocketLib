@@ -159,7 +159,6 @@ export class StoreBooksPageComponent {
 						}
 					`,
 					{
-						latest: true,
 						languages: await this.dataService.GetStoreLanguages(),
 						limit: this.maxVisibleBooks,
 						offset: this.page * this.maxVisibleBooks

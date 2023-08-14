@@ -43,7 +43,6 @@ export class HorizontalSeriesListComponent {
 				}
 			`,
 			{
-				latest: true,
 				languages: await this.dataService.GetStoreLanguages(),
 				limit: maxVisibleSeries
 			}

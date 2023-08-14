@@ -84,7 +84,6 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				latest: true,
 				languages: await this.dataService.GetStoreLanguages(),
 				limit: maxVisibleStoreBooks
 			}

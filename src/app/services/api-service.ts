@@ -252,7 +252,7 @@ export class ApiService {
 				retrieveAuthor: AuthorResource
 			}>({
 				query: gql`
-					query RetrieveAuthor($uuid: String!) {
+					query RetrieveAuthor($uuid: String!, $languages: [String!]) {
 						retrieveAuthor(uuid: $uuid) {
 							${queryData}
 						}
@@ -280,9 +280,7 @@ export class ApiService {
 	async listAuthors(
 		queryData: string,
 		variables?: {
-			latest?: boolean
 			mine?: boolean
-			languages?: string[]
 			limit?: number
 			offset?: number
 		}
@@ -292,8 +290,16 @@ export class ApiService {
 				listAuthors: List<AuthorResource>
 			}>({
 				query: gql`
-					query ListAuthors($limit: Int, $latest: Boolean) {
-						listAuthors(limit: $limit, latest: $latest) {
+					query ListAuthors(
+						$mine: Boolean
+						$limit: Int
+						$offset: Int
+					) {
+						listAuthors(
+							mine: $mine
+							limit: $limit
+							offset: $offset
+						) {
 							${queryData}
 						}
 					}
@@ -430,8 +436,16 @@ export class ApiService {
 		let result = await this.apollo
 			.mutate<{ setAuthorBio: AuthorBioResource }>({
 				mutation: gql`
-					mutation SetAuthorBio($uuid: String!, $bio: String!, $language: String!) {
-						setAuthorBio(uuid: $uuid, bio: $bio, language: $language) {
+					mutation SetAuthorBio(
+						$uuid: String!
+						$bio: String!
+						$language: String!
+					) {
+						setAuthorBio(
+							uuid: $uuid
+							bio: $bio
+							language: $language
+						) {
 							${queryData}
 						}
 					}
@@ -518,8 +532,14 @@ export class ApiService {
 				retrieveStoreBookCollection: StoreBookCollectionResource
 			}>({
 				query: gql`
-					query RetrieveStoreBookCollection($uuid: String!, $languages: [String!]) {
-						retrieveStoreBookCollection(uuid: $uuid, languages: $languages) {
+					query RetrieveStoreBookCollection(
+						$uuid: String!
+						$languages: [String!]
+					) {
+						retrieveStoreBookCollection(
+							uuid: $uuid
+							languages: $languages
+						) {
 							${queryData}
 						}
 					}
@@ -558,8 +578,16 @@ export class ApiService {
 				setStoreBookCollectionName: StoreBookCollectionNameResource
 			}>({
 				mutation: gql`
-					mutation SetStoreBookCollectionName($uuid: String!, $name: String!, $language: String!) {
-						setStoreBookCollectionName(uuid: $uuid, name: $name, language: $language) {
+					mutation SetStoreBookCollectionName(
+						$uuid: String!
+						$name: String!
+						$language: String!
+					) {
+						setStoreBookCollectionName(
+							uuid: $uuid
+							name: $name
+							language: $language
+						) {
 							${queryData}
 						}
 					}
@@ -594,8 +622,14 @@ export class ApiService {
 		let result = await this.apollo
 			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource }>({
 				query: gql`
-					query RetrieveStoreBookSeries($uuid: String!, $languages: [String!]) {
-						retrieveStoreBookSeries(uuid: $uuid, languages: $languages) {
+					query RetrieveStoreBookSeries(
+						$uuid: String!
+						$languages: [String!]
+					) {
+						retrieveStoreBookSeries(
+							uuid: $uuid
+							languages: $languages
+						) {
 							${queryData}
 						}
 					}
@@ -636,13 +670,11 @@ export class ApiService {
 			}>({
 				query: gql`
 					query ListStoreBookSeries(
-						$latest: Boolean
 						$languages: [String!]
 						$limit: Int
 						$offset: Int
 					) {
 						listStoreBookSeries(
-							latest: $latest
 							languages: $languages
 							limit: $limit
 							offset: $offset
@@ -806,7 +838,6 @@ export class ApiService {
 	async listStoreBooks(
 		queryData: string,
 		variables?: {
-			latest?: boolean
 			categories?: string[]
 			inReview?: boolean
 			languages?: string[]
@@ -820,14 +851,16 @@ export class ApiService {
 			}>({
 				query: gql`
 					query ListStoreBooks(
-						$latest: Boolean
 						$categories: [String!]
+						$inReview: Boolean
+						$languages: [String!]
 						$limit: Int
 						$offset: Int
 					) {
 						listStoreBooks(
-							latest: $latest
 							categories: $categories
+							inReview: $inReview
+							languages: $languages
 							limit: $limit
 							offset: $offset
 						) {
@@ -1130,15 +1163,23 @@ export class ApiService {
 	//#region Category
 	async listCategories(
 		queryData: string,
-		variables?: { languages?: string[] }
+		variables?: { limit?: number; offset?: number; languages?: string[] }
 	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listCategories: List<CategoryResource>
 			}>({
 				query: gql`
-					query ListCategories($languages: [String!]) {
-						listCategories(languages: $languages) {
+					query ListCategories(
+						$languages: [String!]
+						$limit: Int,
+						$offset: Int
+					) {
+						listCategories(
+							languages: $languages
+							limit: $limit
+							offset: $offset
+						) {
 							${queryData}
 						}
 					}
