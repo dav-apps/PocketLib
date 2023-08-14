@@ -31,65 +31,50 @@ export class StoreBookPageComponent {
 	showMobileLayout: boolean = false
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	uuid: string
-	book: {
-		collection: string
-		title: string
-		description: string
-		price: number
-		status: StoreBookStatus
-		coverBlurhash: string
-		categories: {
-			key: string
-			name: string
-		}[]
-		inLibrary: boolean
-		purchased: boolean
-		series: string[]
-	} = {
-		collection: "",
-		title: "",
-		description: "",
-		price: 0,
-		status: StoreBookStatus.Unpublished,
-		coverBlurhash: null,
-		categories: [],
-		inLibrary: false,
-		purchased: false,
-		series: []
-	}
+
+	//#region StoreBook variables
+	uuid: string = ""
+	title: string = ""
+	description: string = ""
+	price: number = 0
+	priceLabel: string = ""
+	status: StoreBookStatus = StoreBookStatus.Unpublished
+	statusLabel: string = ""
 	categoryKeys: string[] = []
-	price: string = ""
-	bookStatus: string = ""
-	author: {
-		uuid: string
-		firstName: string
-		lastName: string
-		profileImageUrl: string
-	} = {
-		uuid: "",
-		firstName: "",
-		lastName: "",
-		profileImageUrl: ""
-	}
-	coverContent: string
-	coverUrl: string = ""
-	coverAlt: string = ""
-	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
-	authorProfileImageAlt: string = ""
-	publisher: {
-		uuid: string
+	categories: {
+		key: string
 		name: string
-		logoBlurhash: string
-		logoContent: string
-		logoAlt: string
-	} = {
-		uuid: "",
-		name: "",
-		logoBlurhash: "",
-		logoContent: "",
-		logoAlt: ""
-	}
+	}[] = []
+	inLibrary: boolean = false
+	purchased: boolean = false
+	collectionUuid: string = null
+	seriesUuid: string = null
+	//#endregion
+
+	//#region Cover variables
+	coverContent: string = this.dataService.defaultStoreBookCover
+	coverUrl: string = ""
+	coverBlurhash: string = ""
+	coverAlt: string = ""
+	//#endregion
+
+	//#region Author variables
+	authorUuid: string = ""
+	authorName: string = ""
+	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
+	authorProfileImageBlurhash: string = ""
+	authorProfileImageAlt: string = ""
+	//#endregion
+
+	//#region Publisher variables
+	publisherUuid: string = ""
+	publisherName: string = ""
+	publisherLogoContent: string = this.dataService.defaultProfileImageUrl
+	publisherLogoBlurhash: string = ""
+	publisherLogoAlt: string = ""
+	//#endregion
+
+	//#region Dialog variables
 	loginRequiredDialogVisible: boolean = false
 	noAccessDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
@@ -97,6 +82,7 @@ export class StoreBookPageComponent {
 	errorDialogVisible: boolean = false
 	loadingScreenVisible: boolean = false
 	publishLoading: boolean = false
+	//#endregion
 
 	constructor(
 		public dataService: DataService,
@@ -150,7 +136,6 @@ export class StoreBookPageComponent {
 	async LoadStoreBookData() {
 		let response = await this.apiService.retrieveStoreBook(
 			`
-				uuid
 				collection {
 					uuid
 					author {
@@ -167,6 +152,7 @@ export class StoreBookPageComponent {
 						lastName
 						profileImage {
 							url
+							blurhash
 						}
 					}
 				}
@@ -193,16 +179,16 @@ export class StoreBookPageComponent {
 			`,
 			{ uuid: this.uuid }
 		)
+
 		let responseData = response.data.retrieveStoreBook
 
-		this.book.collection = responseData.collection?.uuid
-		this.book.title = responseData.title
-		this.book.description = responseData.description
-		this.book.price = responseData.price
-		this.book.status = GetStoreBookStatusByString(responseData.status)
-		this.book.coverBlurhash = responseData.cover?.blurhash
-		this.book.inLibrary = responseData.inLibrary
-		this.book.purchased = responseData.purchased
+		this.title = responseData.title
+		this.description = responseData.description
+		this.price = responseData.price
+		this.status = GetStoreBookStatusByString(responseData.status)
+		this.coverBlurhash = responseData.cover?.blurhash
+		this.inLibrary = responseData.inLibrary
+		this.purchased = responseData.purchased
 
 		for (let category of responseData.categories.items) {
 			this.categoryKeys.push(category.key)
@@ -210,14 +196,14 @@ export class StoreBookPageComponent {
 
 		this.coverAlt = this.dataService
 			.GetLocale()
-			.misc.bookCoverAlt.replace("{0}", this.book.title)
+			.misc.bookCoverAlt.replace("{0}", this.title)
 
 		// Load the cover
-		if (responseData.cover?.url != null) {
-			this.coverUrl = responseData.cover?.url
+		if (responseData.cover != null) {
+			this.coverUrl = responseData.cover.url
 
 			this.apiService
-				.downloadFile(responseData.cover.url)
+				.downloadFile(this.coverUrl)
 				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.coverContent = (fileResponse as ApiResponse<string>).data
@@ -226,31 +212,31 @@ export class StoreBookPageComponent {
 		}
 
 		// Load the price
-		if (this.book.price == 0) {
-			this.price = this.locale.free
+		if (this.price == 0) {
+			this.priceLabel = this.locale.free
 		} else {
-			this.price = (this.book.price / 100).toFixed(2) + " €"
+			this.priceLabel = (this.price / 100).toFixed(2) + " €"
 
 			if (this.dataService.supportedLocale == "de") {
-				this.price = this.price.replace(".", ",")
+				this.priceLabel = this.priceLabel.replace(".", ",")
 			}
 		}
 
 		// Load the status
-		switch (this.book.status) {
+		switch (this.status) {
 			case StoreBookStatus.Unpublished:
-				this.bookStatus = this.locale.unpublished
+				this.statusLabel = this.locale.unpublished
 				break
 			case StoreBookStatus.Review:
-				this.bookStatus = this.locale.review
+				this.statusLabel = this.locale.review
 				break
 			case StoreBookStatus.Hidden:
-				this.bookStatus = this.locale.hidden
+				this.statusLabel = this.locale.hidden
 				break
 		}
 
 		// Load the categories
-		this.book.categories = []
+		this.categories = []
 		await this.dataService.categoriesPromiseHolder.AwaitResult()
 
 		for (let key of this.categoryKeys) {
@@ -258,7 +244,7 @@ export class StoreBookPageComponent {
 			let category = this.dataService.categories.find(c => c.key == key)
 
 			if (category) {
-				this.book.categories.push({
+				this.categories.push({
 					key: category.key,
 					name: category.name
 				})
@@ -267,25 +253,23 @@ export class StoreBookPageComponent {
 
 		// Get the series of the book
 		if (responseData.series.items.length > 0) {
-			this.book.series.push(responseData.series.items[0].uuid)
+			this.seriesUuid = responseData.series.items[0].uuid
 		}
 
-		this.author.uuid = responseData.collection?.author?.uuid
-		this.author.firstName = responseData.collection?.author?.firstName
-		this.author.lastName = responseData.collection?.author?.lastName
-		this.author.profileImageUrl =
-			responseData.collection?.author?.profileImage?.url
+		let author = responseData.collection.author
+		this.authorUuid = author.uuid
+		this.authorName = `${author.firstName} ${author.lastName}`
+		this.authorProfileImageBlurhash = author.profileImage?.blurhash
 
 		this.authorProfileImageAlt = this.dataService
 			.GetLocale()
-			.misc.authorProfileImageAlt.replace(
-				"{0}",
-				`${this.author.firstName} ${this.author.lastName}`
-			)
+			.misc.authorProfileImageAlt.replace("{0}", this.authorName)
 
-		if (this.author.profileImageUrl != null) {
+		let authorProfileImageUrl = author.profileImage?.url
+
+		if (authorProfileImageUrl != null) {
 			this.apiService
-				.downloadFile(this.author.profileImageUrl)
+				.downloadFile(authorProfileImageUrl)
 				.then((fileResponse: ApiResponse<string>) => {
 					if (isSuccessStatusCode(fileResponse.status)) {
 						this.authorProfileImageContent = (
@@ -295,27 +279,28 @@ export class StoreBookPageComponent {
 				})
 		}
 
-		this.publisher.uuid = responseData.collection?.author?.publisher?.uuid
-		this.publisher.name = responseData.collection?.author?.publisher?.name
-		this.publisher.logoBlurhash =
-			responseData.collection?.author?.publisher?.logo?.blurhash
-		this.publisher.logoContent = this.dataService.defaultProfileImageUrl
-		this.publisher.logoAlt = this.dataService
-			.GetLocale()
-			.misc.publisherLogoAlt.replace("{0}", this.publisher.name)
+		let publisher = responseData.collection.author.publisher
 
-		let publisherLogoUrl =
-			responseData.collection?.author?.publisher?.logo?.url
+		if (publisher != null) {
+			this.publisherUuid = publisher.uuid
+			this.publisherName = publisher.name
+			this.publisherLogoBlurhash = publisher.logo?.blurhash
+			this.publisherLogoAlt = this.dataService
+				.GetLocale()
+				.misc.publisherLogoAlt.replace("{0}", this.publisherName)
 
-		if (publisherLogoUrl != null) {
-			this.apiService
-				.downloadFile(publisherLogoUrl)
-				.then((response: ApiResponse<string>) => {
-					if (isSuccessStatusCode(response.status))
-						this.publisher.logoContent = (
-							response as ApiResponse<string>
-						).data
-				})
+			let publisherLogoUrl = publisher.logo?.url
+
+			if (publisherLogoUrl != null) {
+				this.apiService
+					.downloadFile(publisherLogoUrl)
+					.then((response: ApiResponse<string>) => {
+						if (isSuccessStatusCode(response.status))
+							this.publisherLogoContent = (
+								response as ApiResponse<string>
+							).data
+					})
+			}
 		}
 	}
 
@@ -351,14 +336,14 @@ export class StoreBookPageComponent {
 		}
 
 		// Check if the book is in the library of the user
-		if (this.book.inLibrary) {
+		if (this.inLibrary) {
 			// TODO: Check if the book is already downloaded, and if not, wait for download
 			await this.OpenBook()
 		} else {
 			this.loadingScreenVisible = true
 
 			// Check if the user has purchased the book
-			if (this.book.purchased) {
+			if (this.purchased) {
 				if (!(await this.AddBookToLibrary())) {
 					// Show error
 					this.loadingScreenVisible = false
@@ -369,7 +354,7 @@ export class StoreBookPageComponent {
 				await this.OpenBook()
 			} else {
 				// Check if the book is free
-				if (this.book.price == 0) {
+				if (this.price == 0) {
 					if (!(await this.CreatePurchaseForBook())) {
 						// Show error
 						this.loadingScreenVisible = false
@@ -394,14 +379,14 @@ export class StoreBookPageComponent {
 							(
 								await this.dataService.userAuthor.GetCollections()
 							).findIndex(
-								collection => collection.uuid == this.book.collection
+								collection => collection.uuid == this.collectionUuid
 							) != -1
 					}
 
 					if (
 						!this.dataService.userIsAdmin &&
 						!isAuthorOfBook &&
-						this.book.price > 0 &&
+						this.price > 0 &&
 						this.dataService.dav.user.Plan != 2
 					) {
 						// Show dav Pro dialog
@@ -424,7 +409,7 @@ export class StoreBookPageComponent {
 		let response = await CheckoutSessionsController.CreateCheckoutSession({
 			mode: "payment",
 			currency: "eur",
-			productName: this.book.title,
+			productName: this.title,
 			productImage: this.coverUrl,
 			tableObjects: [this.uuid],
 			successUrl: currentUrl,
@@ -432,7 +417,7 @@ export class StoreBookPageComponent {
 		})
 
 		if (isSuccessStatusCode(response.status)) {
-			this.book.purchased = true
+			this.purchased = true
 			return true
 		}
 
@@ -535,7 +520,7 @@ export class StoreBookPageComponent {
 		let response = await CheckoutSessionsController.CreateCheckoutSession({
 			mode: "payment",
 			currency: "eur",
-			productName: this.book.title,
+			productName: this.title,
 			productImage: this.coverUrl,
 			tableObjects: [this.uuid],
 			successUrl: currentUrl,
@@ -564,18 +549,18 @@ export class StoreBookPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.book.status = StoreBookStatus.Published
+			this.status = StoreBookStatus.Published
 
 			// Find the author and clear the collections
 			if (this.dataService.userIsAdmin) {
 				let author = this.dataService.adminAuthors.find(
-					a => a.uuid == this.author.uuid
+					a => a.uuid == this.authorUuid
 				)
 
 				if (author != null) {
 					author.ClearCollections()
 				}
-			} else if (this.dataService.userAuthor?.uuid == this.author.uuid) {
+			} else if (this.dataService.userAuthor?.uuid == this.authorUuid) {
 				this.dataService.userAuthor.ClearCollections()
 			}
 		}
