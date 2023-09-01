@@ -407,7 +407,12 @@ export class DataService {
 		this.defaultStoreBookCover = this.darkTheme
 			? defaultDarkStoreBookCoverUrl
 			: defaultLightStoreBookCoverUrl
-		DavUIComponents.setTheme(this.darkTheme)
+
+		DavUIComponents.setTheme(
+			this.darkTheme
+				? DavUIComponents.Theme.dark
+				: DavUIComponents.Theme.light
+		)
 	}
 
 	//#region Settings
