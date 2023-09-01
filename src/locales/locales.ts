@@ -9,7 +9,7 @@ const enDefaults = {
 		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
 		renameBookDialog: {
-			header: "Rename book",
+			headline: "Rename book",
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The Littlest Elf",
 			errors: {
@@ -19,17 +19,17 @@ const enDefaults = {
 			}
 		},
 		removeBookDialog: {
-			header: "Remove book",
+			headline: "Remove book",
 			description:
 				"Are you sure you want to remove this book from your library?"
 		},
 		loginToAccessBookDialog: {
-			header: "Login required",
+			headline: "Login required",
 			description: "Please log in to access this book.",
 			login: "Login"
 		},
 		addBookErrorDialog: {
-			header: "Invalid file",
+			headline: "Invalid file",
 			description: "The selected file could not be read."
 		},
 		back: "Back",
@@ -49,7 +49,7 @@ const enDefaults = {
 		signup: "Sign up",
 		upgradeTitle: "Change your plan to make PocketLib even better",
 		logoutDialog: {
-			header: "Log out",
+			headline: "Log out",
 			description: "Are you sure you want to log out?"
 		},
 		cancel: "Cancel"
@@ -81,7 +81,7 @@ const enDefaults = {
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
 		createPublisherDialog: {
-			header: "Create publisher",
+			headline: "Create publisher",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name of the publisher",
 			errors: {
@@ -93,7 +93,7 @@ const enDefaults = {
 			}
 		},
 		createAuthorDialog: {
-			header: "Create author",
+			headline: "Create author",
 			firstNameTextfieldLabel: "First name",
 			firstNameTextfieldPlaceholder: "First name of the author",
 			lastNameTextfieldLabel: "Last name",
@@ -142,15 +142,15 @@ const enDefaults = {
 	},
 	authorBookPage: {
 		editTitleDialog: {
-			header: "Edit title",
+			headline: "Edit title",
 			titleTextfieldLabel: "Title",
 			titleTextfieldPlaceholder: "The Littlest Elf"
 		},
 		categoriesSelectionDialog: {
-			header: "Select categories"
+			headline: "Select categories"
 		},
 		publishChangesDialog: {
-			header: "Publish changes",
+			headline: "Publish changes",
 			releaseNameTextfieldLabel: "Release name",
 			releaseNameTextfieldPlaceholder: "What was changed?",
 			releaseNotesTextfieldLabel: "Release details",
@@ -196,19 +196,19 @@ const enDefaults = {
 	},
 	authorCollectionPage: {
 		namesDialog: {
-			header: "Collection name"
+			headline: "Collection name"
 		},
 		noBooks: "This collection contains no books",
 		close: "Close"
 	},
 	authorSeriesPage: {
 		editNameDialog: {
-			header: "Edit name",
+			headline: "Edit name",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name of the book series"
 		},
 		addBookDialog: {
-			header: "Choose a book to add"
+			headline: "Choose a book to add"
 		},
 		errors: {
 			nameTooShort: "The name is too short",
@@ -260,7 +260,7 @@ const enDefaults = {
 			updatingLocalData: "Updating local data..."
 		},
 		leavePageDialog: {
-			header: "Leave page",
+			headline: "Leave page",
 			description:
 				"Are you sure? The data you have entered will not be saved.",
 			cancel: "Cancel",
@@ -307,17 +307,17 @@ const enDefaults = {
 		publish: "Publish",
 		free: "Free",
 		loginRequiredDialog: {
-			header: "Login required",
+			headline: "Login required",
 			description:
 				"Log in to get access to this book and to automatically save your books and your progress."
 		},
 		noAccessDialog: {
-			header: "No access",
+			headline: "No access",
 			description:
 				"Purchase this book or upgrade to dav Pro to read this book."
 		},
 		buyBookDialog: {
-			header: "Buy book",
+			headline: "Buy book",
 			description:
 				"When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
 			descriptionNotLoggedIn:
@@ -325,7 +325,7 @@ const enDefaults = {
 			continue: "Continue"
 		},
 		errorDialog: {
-			header: "Error",
+			headline: "Error",
 			description:
 				"An error occured. Please check your internet connection or try it again later."
 		},
@@ -376,10 +376,10 @@ const enDefaults = {
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
 		logoDialog: {
-			header: "Crop your logo"
+			headline: "Crop your logo"
 		},
 		editProfileDialog: {
-			header: "Edit your profile",
+			headline: "Edit your profile",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "The name of your publisher",
 			websiteUrlTextfieldLabel: "Website",
@@ -401,7 +401,7 @@ const enDefaults = {
 			}
 		},
 		createAuthorDialog: {
-			header: "Create author",
+			headline: "Create author",
 			firstNameTextfieldLabel: "First name",
 			firstNameTextfieldPlaceholder: "First name of the author",
 			lastNameTextfieldLabel: "Last name",
@@ -436,10 +436,10 @@ const enDefaults = {
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
 		profileImageDialog: {
-			header: "Crop your profile image"
+			headline: "Crop your profile image"
 		},
 		editProfileDialog: {
-			header: "Edit your profile",
+			headline: "Edit your profile",
 			firstNameTextfieldLabel: "First name",
 			lastNameTextfieldLabel: "Last name",
 			websiteUrlTextfieldLabel: "Website",
@@ -554,7 +554,7 @@ const deDefaults = {
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
 		renameBookDialog: {
-			header: "Buch umbenennen",
+			headline: "Buch umbenennen",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Das winzigste Elflein",
 			errors: {
@@ -564,17 +564,17 @@ const deDefaults = {
 			}
 		},
 		removeBookDialog: {
-			header: "Buch entfernen",
+			headline: "Buch entfernen",
 			description:
 				"Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
 		},
 		loginToAccessBookDialog: {
-			header: "Anmeldung erforderlich",
+			headline: "Anmeldung erforderlich",
 			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
 			login: "Anmelden"
 		},
 		addBookErrorDialog: {
-			header: "Ungültige Datei",
+			headline: "Ungültige Datei",
 			description: "Die ausgewählte Datei konnte nicht gelesen werden."
 		},
 		back: "Zurück",
@@ -594,7 +594,7 @@ const deDefaults = {
 		signup: "Registrieren",
 		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
 		logoutDialog: {
-			header: "Abmelden",
+			headline: "Abmelden",
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
 		},
 		cancel: "Abbrechen"
@@ -628,7 +628,7 @@ const deDefaults = {
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
 		createPublisherDialog: {
-			header: "Verlag erstellen",
+			headline: "Verlag erstellen",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name des Verlags",
 			errors: {
@@ -640,7 +640,7 @@ const deDefaults = {
 			}
 		},
 		createAuthorDialog: {
-			header: "Autor erstellen",
+			headline: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
 			firstNameTextfieldPlaceholder: "Vorname des Autors",
 			lastNameTextfieldLabel: "Nachname",
@@ -690,15 +690,15 @@ const deDefaults = {
 	},
 	authorBookPage: {
 		editTitleDialog: {
-			header: "Titel bearbeiten",
+			headline: "Titel bearbeiten",
 			titleTextfieldLabel: "Titel",
 			titleTextfieldPlaceholder: "Das winzigste Elflein"
 		},
 		categoriesSelectionDialog: {
-			header: "Kategorien auswählen"
+			headline: "Kategorien auswählen"
 		},
 		publishChangesDialog: {
-			header: "Änderungen veröffentlichen",
+			headline: "Änderungen veröffentlichen",
 			releaseNameTextfieldLabel: "Name der Veröffentlichung",
 			releaseNameTextfieldPlaceholder: "Was wurde geändert?",
 			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
@@ -744,19 +744,19 @@ const deDefaults = {
 	},
 	authorCollectionPage: {
 		namesDialog: {
-			header: "Name der Sammlung"
+			headline: "Name der Sammlung"
 		},
 		noBooks: "Diese Sammlung enthält keine Bücher",
 		close: "Schließen"
 	},
 	authorSeriesPage: {
 		editNameDialog: {
-			header: "Name der Buch-Reihe",
+			headline: "Name der Buch-Reihe",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name der Buch-Reihe"
 		},
 		addBookDialog: {
-			header: "Wähle ein Buch zum Hinzufügen"
+			headline: "Wähle ein Buch zum Hinzufügen"
 		},
 		errors: {
 			nameTooShort: "Der Name ist zu kurz",
@@ -809,7 +809,7 @@ const deDefaults = {
 			updatingLocalData: "Lokale Daten werden aktualisiert..."
 		},
 		leavePageDialog: {
-			header: "Seite verlassen",
+			headline: "Seite verlassen",
 			description:
 				"Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
 			cancel: "Abbrechen",
@@ -859,17 +859,17 @@ const deDefaults = {
 		publish: "Veröffentlichen",
 		free: "Kostenlos",
 		loginRequiredDialog: {
-			header: "Anmeldung erforderlich",
+			headline: "Anmeldung erforderlich",
 			description:
 				"Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
 		},
 		noAccessDialog: {
-			header: "Kein Zugriff",
+			headline: "Kein Zugriff",
 			description:
 				"Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen."
 		},
 		buyBookDialog: {
-			header: "Buch kaufen",
+			headline: "Buch kaufen",
 			description:
 				"Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
 			descriptionNotLoggedIn:
@@ -877,7 +877,7 @@ const deDefaults = {
 			continue: "Weiter"
 		},
 		errorDialog: {
-			header: "Fehler",
+			headline: "Fehler",
 			description:
 				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
@@ -928,10 +928,10 @@ const deDefaults = {
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
 		logoDialog: {
-			header: "Logo zuschneiden"
+			headline: "Logo zuschneiden"
 		},
 		editProfileDialog: {
-			header: "Profil bearbeiten",
+			headline: "Profil bearbeiten",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name deines Verlags",
 			websiteUrlTextfieldLabel: "Webseite",
@@ -953,7 +953,7 @@ const deDefaults = {
 			}
 		},
 		createAuthorDialog: {
-			header: "Autor erstellen",
+			headline: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
 			firstNameTextfieldPlaceholder: "Vorname des Autors",
 			lastNameTextfieldLabel: "Nachname",
@@ -989,10 +989,10 @@ const deDefaults = {
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
 		profileImageDialog: {
-			header: "Profilbild zuschneiden"
+			headline: "Profilbild zuschneiden"
 		},
 		editProfileDialog: {
-			header: "Profil bearbeiten",
+			headline: "Profil bearbeiten",
 			firstNameTextfieldLabel: "Vorname",
 			lastNameTextfieldLabel: "Nachname",
 			websiteUrlTextfieldLabel: "Webseite",
