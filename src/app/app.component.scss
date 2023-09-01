@@ -1,4 +1,4 @@
-#navbar {
+.navbar {
 	display: flex;
 	position: fixed;
 	width: 100%;
@@ -7,44 +7,43 @@
 	background-color: transparent;
 }
 
-#navbar-header {
+.navbar-header {
 	display: inline-flex;
-	color: #4b4c4e;
+	color: var(--dav-color-on-surface);
 	background-color: transparent;
 	font-size: 26px;
-	margin-right: 18px;
 	padding: 8px 16px;
 	border: none;
 	cursor: pointer;
 	text-decoration: none;
 }
 
-#navbar-header > span {
+.navbar-header > span {
 	display: flex;
 	align-self: center;
 	margin-left: 10px;
 }
 
-#navbar-tab-bar-container {
+.navbar-tab-bar-container {
 	display: flex;
 	align-items: center;
 }
 
-#navbar-spacer {
+.navbar-spacer {
 	width: 100%;
 }
 
-#navbar-icon-buttons-container {
+.navbar-icon-buttons-container {
 	display: flex;
 	padding: 8px 16px;
 }
 
-#account-icon-button {
+.account-icon-button {
 	align-self: center;
 	margin-right: 6px;
 }
 
-#settings-icon-button {
+.settings-icon-button {
 	align-self: center;
 }
 
@@ -56,7 +55,7 @@
 	padding-bottom: 80px;
 }
 
-#bottom-navbar {
+.bottom-navbar {
 	position: fixed;
 	bottom: 0;
 	left: 0;

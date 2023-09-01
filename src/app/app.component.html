@@ -1,15 +1,14 @@
 <div
-	id="navbar"
-	class="acrylic"
+	class="navbar acrylic"
 	*ngIf="dataService.navbarVisible && !dataService.bookPageVisible"
 >
 	<!-- Logo + name -->
-	<a id="navbar-header" routerLink="/">
+	<a class="navbar-header" routerLink="/">
 		<img src="/assets/icons/icon-72x72.png" width="60" height="60" />
 		<span>PocketLib</span>
 	</a>
 
-	<div id="navbar-tab-bar-container" *ngIf="!dataService.isMobile">
+	<div class="navbar-tab-bar-container" *ngIf="!dataService.isMobile">
 		<dav-tab-bar>
 			<dav-tab-bar-item
 				[active]="libraryTabActive"
@@ -27,11 +26,11 @@
 		</dav-tab-bar>
 	</div>
 
-	<div id="navbar-spacer"></div>
+	<div class="navbar-spacer"></div>
 
-	<div id="navbar-icon-buttons-container">
+	<div class="navbar-icon-buttons-container">
 		<dav-icon-button
-			id="account-icon-button"
+			class="account-icon-button"
 			[selected]="accountButtonSelected"
 			(click)="navigateToAccountPage()"
 		>
@@ -55,7 +54,7 @@
 		</dav-icon-button>
 
 		<dav-icon-button
-			id="settings-icon-button"
+			class="settings-icon-button"
 			[selected]="settingsButtonSelected"
 			(click)="navigateToSettingsPage()"
 		>
@@ -78,8 +77,7 @@
 </div>
 
 <div
-	id="bottom-navbar"
-	class="acrylic"
+	class="bottom-navbar acrylic"
 	*ngIf="dataService.isMobile && !dataService.bookPageVisible"
 >
 	<dav-navigation-bar>
