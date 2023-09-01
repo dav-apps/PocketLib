@@ -129,14 +129,15 @@
 			</p>
 
 			<!-- Categories -->
-			<a
-				class="badge rounded-pill me-2 cursor"
-				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-				[routerLink]="'/store/category/' + category.key"
-				*ngFor="let category of categories; let i = index"
-			>
-				{{ category.name }}
-			</a>
+			<div class="category-badge-container">
+				<dav-badge
+					[color]="i == 0 ? 'primary' : 'secondary'"
+					tonal
+					*ngFor="let category of categories; let i = index"
+				>
+					{{ category.name }}
+				</dav-badge>
+			</div>
 		</div>
 	</div>
 
@@ -317,14 +318,15 @@
 			</p>
 
 			<!-- Categories -->
-			<a
-				class="badge rounded-pill me-2 cursor"
-				[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-				[routerLink]="'/store/category/' + category.key"
-				*ngFor="let category of categories; let i = index"
-			>
-				{{ category.name }}
-			</a>
+			<div class="category-badge-container">
+				<dav-badge
+					[color]="i == 0 ? 'primary' : 'secondary'"
+					tonal
+					*ngFor="let category of categories; let i = index"
+				>
+					{{ category.name }}
+				</dav-badge>
+			</div>
 		</div>
 
 		<div
@@ -480,14 +482,15 @@
 	</p>
 
 	<!-- Categories -->
-	<a
-		class="badge rounded-pill me-2 cursor"
-		[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-		[routerLink]="'/store/category/' + category.key"
-		*ngFor="let category of categories; let i = index"
-	>
-		{{ category.name }}
-	</a>
+	<div class="category-badge-container">
+		<dav-badge
+			[color]="i == 0 ? 'primary' : 'secondary'"
+			tonal
+			*ngFor="let category of categories; let i = index"
+		>
+			{{ category.name }}
+		</dav-badge>
+	</div>
 
 	<div
 		class="mx-3"
@@ -521,7 +524,7 @@
 </pocketlib-simple-loading-screen>
 
 <dav-dialog
-	[header]="locale.loginRequiredDialog.header"
+	[headline]="locale.loginRequiredDialog.headline"
 	[primaryButtonText]="locale.learnMore"
 	[defaultButtonText]="locale.close"
 	[visible]="loginRequiredDialogVisible"
@@ -534,7 +537,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="locale.noAccessDialog.header"
+	[headline]="locale.noAccessDialog.headline"
 	[primaryButtonText]="locale.learnMore"
 	[defaultButtonText]="locale.close"
 	[visible]="noAccessDialogVisible"
@@ -547,7 +550,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="locale.buyBookDialog.header"
+	[headline]="locale.buyBookDialog.headline"
 	[primaryButtonText]="locale.buyBookDialog.continue"
 	[defaultButtonText]="locale.cancel"
 	[visible]="buyBookDialogVisible"
@@ -571,7 +574,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="locale.errorDialog.header"
+	[headline]="locale.errorDialog.headline"
 	[defaultButtonText]="locale.close"
 	[visible]="errorDialogVisible"
 	maxWidth="340"
