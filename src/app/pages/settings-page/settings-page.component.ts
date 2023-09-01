@@ -92,8 +92,8 @@ export class SettingsPageComponent {
 	}
 
 	onOpenLastReadBookToggleChange(checked: boolean) {
-		this.openLastReadBook = !checked
-		this.dataService.SetOpenLastReadBook(!checked)
+		this.openLastReadBook = checked
+		this.dataService.SetOpenLastReadBook(checked)
 	}
 
 	themeDropdownChange(event: CustomEvent) {
