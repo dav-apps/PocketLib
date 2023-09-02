@@ -24,10 +24,6 @@ export class AccountPageComponent {
 	faLockKeyholeLight = faLockKeyholeLight
 	locale = enUS.accountPage
 	width: number = window.innerWidth
-	textMaxWidth: number = 240
-	textFontSize: number = 21
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	logoutDialogVisible: boolean = false
 	redirect: string
 
@@ -36,11 +32,6 @@ export class AccountPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().accountPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		// Get the redirect url param
 		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect")
@@ -53,8 +44,6 @@ export class AccountPageComponent {
 	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
-		this.textMaxWidth = this.width > 767 ? 240 : null
-		this.textFontSize = this.width > 550 ? 21 : 19
 	}
 
 	ShowLoginPage() {

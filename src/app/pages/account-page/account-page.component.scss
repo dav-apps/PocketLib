@@ -25,7 +25,7 @@
 	display: flex;
 	justify-content: center;
 	margin-top: 45px;
-	gap: 0.5rem;
+	gap: 1rem;
 }
 
 .benefits-container {
@@ -45,15 +45,8 @@
 }
 
 .benefit > p {
+	font-size: 20px;
 	margin-top: 2rem;
-}
-
-fa-icon {
-	font-size: 60px;
-}
-
-.header-logged-in-container {
-	margin-bottom: 40px;
 }
 
 @media screen and (min-width: 400px) {
@@ -74,4 +67,12 @@ fa-icon {
 	.benefit-3 {
 		grid-column: 3;
 	}
+}
+
+fa-icon {
+	font-size: 60px;
+}
+
+.header-logged-in-container {
+	margin-bottom: 40px;
 }

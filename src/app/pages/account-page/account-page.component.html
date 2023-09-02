@@ -1,7 +1,7 @@
-<!-- Normal layout for not logged in -->
+<!-- Layout for not logged in -->
 <div
 	class="container slide-up-in"
-	*ngIf="!dataService.dav.isLoggedIn && !dualScreenLayout"
+	*ngIf="!dataService.dav.isLoggedIn"
 >
 	<dav-header size="large">
 		{{ locale.title }}
@@ -14,26 +14,17 @@
 	<div class="benefits-container">
 		<div class="benefit benefit-1">
 			<fa-icon [icon]="faRotateLight"></fa-icon>
-
-			<p [style.fontSize.px]="textFontSize">
-				{{ locale.text2 }}
-			</p>
+			<p>{{ locale.text2 }}</p>
 		</div>
 
 		<div class="benefit benefit-2">
 			<fa-icon [icon]="faBagShoppingLight"></fa-icon>
-
-			<p [style.fontSize.px]="textFontSize">
-				{{ locale.text3 }}
-			</p>
+			<p>{{ locale.text3 }}</p>
 		</div>
 
 		<div class="benefit benefit-3">
 			<fa-icon [icon]="faLockKeyholeLight"></fa-icon>
-
-			<p [style.fontSize.px]="textFontSize">
-				{{ locale.text4 }}
-			</p>
+			<p>{{ locale.text4 }}</p>
 		</div>
 	</div>
 
@@ -62,99 +53,11 @@
 	</div>
 </div>
 
-<!-- Dual-Screen layout for not logged in -->
-<div
-	class="d-flex flex-row slide-up-in"
-	*ngIf="!dataService.dav.isLoggedIn && dualScreenLayout"
->
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<dav-header size="large">
-			{{ locale.title }}
-		</dav-header>
-
-		<h5 class="text-center mt-4 text-color">
-			{{ locale.text1 }}
-		</h5>
-
-		<div class="row" style="margin-top: 50px">
-			<div class="col-6 text-center text-color">
-				<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
-					<fa-icon
-						[icon]="faRotateLight"
-						style="font-size: 60px"
-					></fa-icon>
-					<p class="mt-4" [style.fontSize.px]="textFontSize">
-						{{ locale.text2 }}
-					</p>
-				</div>
-			</div>
-
-			<div class="col-6 text-center text-color">
-				<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
-					<fa-icon
-						[icon]="faBagShoppingLight"
-						style="font-size: 60px"
-					></fa-icon>
-					<p class="mt-4" [style.fontSize.px]="textFontSize">
-						{{ locale.text3 }}
-					</p>
-				</div>
-			</div>
-
-			<div class="col-12 text-center text-color">
-				<div class="mx-auto" [style.maxWidth.px]="textMaxWidth">
-					<fa-icon
-						[icon]="faLockKeyholeLight"
-						style="font-size: 60px"
-					></fa-icon>
-					<p class="mt-4" [style.fontSize.px]="textFontSize">
-						{{ locale.text4 }}
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Right screen -->
-	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
-		<div class="d-flex justify-content-center" style="margin-top: 230px">
-			<a href="https://dav-apps.tech" target="blank">
-				<img
-					class="align-self-center"
-					style="width: 140px"
-					[src]="
-						dataService.darkTheme
-							? '/assets/images/dav-logo-text-white.png'
-							: '/assets/images/dav-logo-text.png'
-					"
-					alt="dav Logo"
-				/>
-			</a>
-		</div>
-
-		<div class="d-flex justify-content-center" style="margin-top: 45px">
-			<dav-button class="me-2" tonal (click)="ShowLoginPage()">
-				{{ locale.login }}
-			</dav-button>
-
-			<dav-button
-				class="ms-2"
-				color="secondary"
-				tonal
-				(click)="ShowSignupPage()"
-			>
-				{{ locale.signup }}
-			</dav-button>
-		</div>
-	</div>
-</div>
-
-<!-- Normal layout for logged in -->
+<!-- Layout for logged in -->
 <div
 	class="container mb-4 slide-up-in"
 	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
-	*ngIf="dataService.dav.isLoggedIn && !dualScreenLayout"
+	*ngIf="dataService.dav.isLoggedIn"
 >
 	<div class="header-logged-in-container">
 		<dav-header size="large">
@@ -174,37 +77,6 @@
 		<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
 	</div>
 	-->
-</div>
-
-<!-- Dual-Screen layout for logged in -->
-<div
-	class="d-flex flex-row slide-up-in"
-	*ngIf="dataService.dav.isLoggedIn && dualScreenLayout"
->
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="header-logged-in-container">
-			<dav-header size="large">
-				{{ locale.title }}
-			</dav-header>
-		</div>
-
-		<pocketlib-user-profile
-			[compact]="width < 410"
-			(logoutClick)="logoutDialogVisible = true"
-		></pocketlib-user-profile>
-	</div>
-
-	<!-- Right screen -->
-	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
-		<!--
-		<div class="text-color mt-4" *ngIf="dataService.dav.user.Plan < 2">
-			<h4 class="text-center fw-light">{{ locale.upgradeTitle }}</h4>
-	
-			<pocketlib-dav-pro-card></pocketlib-dav-pro-card>
-		</div>
-		-->
-	</div>
 </div>
 
 <dav-dialog
