@@ -1,3 +1,77 @@
+.container {
+	margin-bottom: 2rem;
+	padding: 12px;
+}
+
+.headline {
+	text-align: center;
+	margin-top: 2rem;
+	color: var(--dav-color-on-surface);
+	font-size: 20px;
+	font-weight: 400;
+}
+
+.dav-logo-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 3rem;
+}
+
+.dav-logo {
+	width: 140px;
+}
+
+.dav-buttons-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 45px;
+	gap: 0.5rem;
+}
+
+.benefits-container {
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto;
+	gap: 24px;
+	justify-items: center;
+	max-width: 1024px;
+	margin: 4rem auto 0;
+}
+
+.benefit {
+	text-align: center;
+	color: var(--dav-color-on-surface);
+	max-width: 240px;
+}
+
+.benefit > p {
+	margin-top: 2rem;
+}
+
+fa-icon {
+	font-size: 60px;
+}
+
 .header-logged-in-container {
 	margin-bottom: 40px;
+}
+
+@media screen and (min-width: 400px) {
+	.benefits-container {
+		grid-template-columns: auto auto;
+	}
+
+	.benefit-3 {
+		grid-column: 1 / 3;
+	}
+}
+
+@media screen and (min-width: 900px) {
+	.benefits-container {
+		grid-template-columns: auto auto auto;
+	}
+
+	.benefit-3 {
+		grid-column: 3;
+	}
 }

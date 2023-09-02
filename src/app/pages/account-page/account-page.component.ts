@@ -51,10 +51,6 @@ export class AccountPageComponent {
 	}
 
 	@HostListener("window:resize")
-	onResize() {
-		this.setSize()
-	}
-
 	setSize() {
 		this.width = window.innerWidth
 		this.textMaxWidth = this.width > 767 ? 240 : null
