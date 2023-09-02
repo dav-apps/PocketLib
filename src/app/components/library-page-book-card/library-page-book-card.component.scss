@@ -1,11 +1,42 @@
 .book-card {
-	cursor: pointer;
-	transition: 200ms;
+	display: flex;
+	margin: 0.5rem;
+	padding: 0;
+	background-color: var(--dav-color-surface);
+	border: none;
+	border-radius: 12px;
 	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	overflow: hidden;
+	transition: 200ms;
+	cursor: pointer;
 }
 
 .book-card:hover,
 .book-card:focus {
 	transform: translateY(-8px);
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+img {
+	object-fit: cover;
+	border-radius: 0.25rem;
+	transition: 200ms;
+}
+
+.default-cover-text-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 80px;
+	position: absolute;
+	bottom: 5px;
+}
+
+.default-cover-text-container > p {
+	margin: 0.5rem 0;
+	color: var(--dav-color-on-surface);
+	max-height: 100%;
+	word-break: break-word;
+	overflow-y: hidden;
 }
