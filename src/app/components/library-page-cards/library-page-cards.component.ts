@@ -19,9 +19,6 @@ export class LibraryPageCardsComponent {
 	faAddressCardLight = faAddressCardLight
 	faPlusLight = faPlusLight
 	faShoppingBagLight = faShoppingBagLight
-	addBookHover: boolean = false // Indicator for if the mouse is hovering the add book card
-	discoverBooksHover: boolean = false // Indicator for if the mouse is hovering the discover books card
-	goToAuthorPageHover: boolean = false // Indicator for if the mouse is hovering the card for going to the author page
 
 	constructor(public dataService: DataService) {
 		this.locale = this.dataService.GetLocale().libraryPageCards
