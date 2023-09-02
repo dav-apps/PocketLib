@@ -1,5 +1,86 @@
+.container > div {
+	display: flex;
+	justify-content: center;
+	margin: 1rem 0;
+}
+
+.library-empty-text {
+	font-weight: 300;
+	font-size: 19px;
+	text-align: center;
+	color: var(--dav-color-on-surface);
+	margin-top: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.left-content-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	transition: 300ms all;
+}
+
+.empty-library-container {
+	display: flex;
+	width: 100%;
+}
+
+.empty-library-inner-container {
+	margin: 0 auto;
+	width: 100%;
+	height: 100%;
+	max-width: 600px;
+}
+
+.quick-action-buttons-container {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+}
+
+.large-book-list-container {
+	display: flex;
+	justify-content: center;
+}
+
+.small-book-list-container {
+	display: flex;
+}
+
+.right-content-container {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	position: absolute;
+	transition: 300ms all;
+	transform: translateX(3000px);
+}
+
+.search-textfield {
+	width: 100%;
+	margin-left: 1rem;
+}
+
+.no-books-text {
+	color: var(--dav-color-on-surface);
+	text-align: center;
+	font-weight: 300;
+	margin-top: 3rem;
+	font-size: 1.25rem;
+}
+
+.all-books-list {
+	margin-top: 1rem;
+}
+
 dav-icon-card.quick-action-button {
 	margin: 10px 18px;
+}
+
+.all-books-button-container {
+	display: flex;
+	margin-top: 1rem;
 }
 
 .all-books-button-content {
@@ -8,6 +89,45 @@ dav-icon-card.quick-action-button {
 	align-items: center;
 }
 
+.all-books-button-content > div {
+	margin-right: 0.5rem;
+}
+
 .all-books-button-content > p {
 	margin: 0;
+}
+
+.right-content-inner-container {
+	margin: 0 auto;
+	max-width: 700px;
+}
+
+.search-container {
+	display: flex;
+}
+
+.dual-screen-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.dual-screen-container-left {
+	width: 50%;
+}
+
+.dual-screen-container-left > div {
+	margin: 0 auto;
+	padding: 0 3rem;
+}
+
+.dual-screen-container-right {
+	width: 50%;
+}
+
+.dual-screen-container-right > div {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding-top: 1rem;
+	overflow: scroll;
 }

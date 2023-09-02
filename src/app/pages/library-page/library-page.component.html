@@ -1,15 +1,12 @@
 <!-- Normal layout -->
 <div class="container slide-up-in" *ngIf="!dualScreenLayout">
-	<div class="d-flex justify-content-center my-3">
-		<div class="d-flex w-100" *ngIf="dataService.books.length == 0">
-			<div
-				class="mx-auto"
-				style="width: 100%; height: 100%; max-width: 600px"
-			>
-				<p
-					class="fw-light text-center text-color mt-2 mb-3"
-					style="font-size: 19px"
-				>
+	<div>
+		<div
+			class="empty-library-container"
+			*ngIf="dataService.books.length == 0"
+		>
+			<div class="empty-library-inner-container">
+				<p class="library-empty-text">
 					{{ locale.libraryEmpty }}
 				</p>
 
@@ -21,11 +18,10 @@
 
 		<div
 			#leftContentContainer
-			class="d-flex flex-column align-items-center w-100"
-			style="transition: 0.3s all"
+			class="left-content-container"
 			*ngIf="dataService.books.length > 0"
 		>
-			<div class="d-flex justify-content-center mb-3">
+			<div class="quick-action-buttons-container">
 				<!-- Card for discovering books in the Store -->
 				<dav-icon-card
 					class="quick-action-button"
@@ -55,7 +51,7 @@
 				</dav-icon-card>
 			</div>
 
-			<div [ngClass]="smallBookList ? '' : 'd-flex justify-content-center'">
+			<div [ngClass]="smallBookList ? '' : 'large-book-list-container'">
 				<!-- Big book card for last read book -->
 				<pocketlib-library-page-book-card
 					[book]="dataService.books[0]"
@@ -65,7 +61,7 @@
 				></pocketlib-library-page-book-card>
 
 				<div
-					class="d-flex"
+					class="small-book-list-container"
 					[style.flexFlow]="smallBookList ? 'row wrap' : 'column wrap'"
 					[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
 					[style.width.px]="smallBookListWidth"
@@ -83,10 +79,8 @@
 			</div>
 
 			<div
-				class="d-flex mt-3"
-				[ngClass]="
-					smallBookList ? 'justify-content-center' : 'justify-content-end'
-				"
+				class="all-books-button-container"
+				[style.justifyContent]="smallBookList ? 'center' : 'end'"
 				[style.width.px]="largeBookCoverWidth + smallBookListWidth"
 				*ngIf="dataService.books.length > 5"
 			>
@@ -94,7 +88,7 @@
 					<div class="all-books-button-content">
 						<p>{{ locale.allBooks }}</p>
 
-						<div class="ms-2">
+						<div>
 							<fa-icon [icon]="faArrowRightLight" size="lg"></fa-icon>
 						</div>
 					</div>
@@ -102,21 +96,13 @@
 			</div>
 		</div>
 
-		<div
-			#rightContentContainer
-			class="d-flex justify-content-center w-100"
-			style="
-				position: absolute;
-				transition: 0.3s all;
-				transform: translateX(3000px);
-			"
-		>
-			<div class="container">
-				<div class="mx-auto" style="max-width: 700px">
-					<div class="d-flex">
+		<div #rightContentContainer class="right-content-container">
+			<div>
+				<div class="right-content-inner-container">
+					<div class="search-container">
 						<dav-button color="secondary" tonal (click)="HideAllBooks()">
 							<div class="all-books-button-content">
-								<div class="me-2">
+								<div>
 									<fa-icon
 										[icon]="faArrowLeftLight"
 										size="lg"
@@ -128,20 +114,17 @@
 						</dav-button>
 
 						<dav-textfield
-							class="ms-3 w-100"
+							class="search-textfield"
 							[placeholder]="locale.search"
 							(change)="SearchTextChange($event.detail.value)"
 						></dav-textfield>
 					</div>
 
-					<p
-						class="text-color text-center fw-light mt-5 fs-5"
-						*ngIf="allBooks.length == 0"
-					>
+					<p class="no-books-text" *ngIf="allBooks.length == 0">
 						{{ locale.noBooks }}
 					</p>
 
-					<dav-list class="mt-3">
+					<dav-list class="all-books-list">
 						<dav-list-item
 							[imageSrc]="book.cover"
 							[imageFallbackSrc]="dataService.defaultStoreBookCover"
@@ -159,10 +142,13 @@
 </div>
 
 <!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
+<div class="dual-screen-container slide-up-in" *ngIf="dualScreenLayout">
 	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="mx-auto px-5">
+	<div
+		class="dual-screen-container-left"
+		[style.marginRight.px]="dualScreenFoldMargin"
+	>
+		<div>
 			<pocketlib-library-page-cards
 				(addBookFilePick)="AddBookFilePick($event)"
 			></pocketlib-library-page-cards>
@@ -170,11 +156,11 @@
 	</div>
 
 	<!-- Right screen -->
-	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
-		<div
-			class="d-flex flex-wrap justify-content-center pt-3"
-			style="overflow: scroll"
-		>
+	<div
+		class="dual-screen-container-right"
+		[style.marginLeft.px]="dualScreenFoldMargin"
+	>
+		<div>
 			<pocketlib-library-page-book-card
 				*ngFor="let book of dataService.books"
 				[book]="book"
