@@ -1,96 +1,12 @@
 <!-- Normal layout -->
-<div class="container d-flex flex-column slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container slide-up-in">
 	<dav-header size="large">
 		{{ locale.title }}
 	</dav-header>
 
-	<div class="setting-container mx-auto mt-4">
-		<!-- Open last read book -->
-		<dav-setting [header]="locale.openLastReadBook">
-			<dav-toggle
-				[checked]="openLastReadBook"
-				(change)="onOpenLastReadBookToggleChange($event.detail.checked)"
-			></dav-toggle>
-		</dav-setting>
-	</div>
-
-	<div class="setting-container mx-auto mt-3">
-		<!-- Theme -->
-		<dav-setting [header]="locale.theme">
-			<dav-dropdown
-				[options]="themeDropdownOptions"
-				[selectedKey]="selectedTheme"
-				(change)="themeDropdownChange($event)"
-			></dav-dropdown>
-		</dav-setting>
-	</div>
-
-	<div class="mx-auto">
-		<!-- App information -->
-		<div class="mt-5 text-color">
-			<div id="link-container">
-				<dav-link-button url="https://blog.dav-apps.tech/tag/pocketlib">
-					{{ locale.news }}
-				</dav-link-button>
-				<dav-link-button url="https://github.com/dav-apps/PocketLib">
-					{{ locale.github }}
-				</dav-link-button>
-				<dav-link-button url="https://dav-apps.tech/privacy">
-					{{ locale.privacy }}
-				</dav-link-button>
-			</div>
-
-			<p class="mt-2">
-				Version {{ version }}<br />
-				Copyright &copy; {{ year }} by dav
-			</p>
-
-			<div class="d-flex" *ngIf="searchForUpdates">
-				<dav-progress-ring size="16"></dav-progress-ring>
-
-				<p class="mb-0" style="line-height: 20px; margin-left: 0.75rem">
-					{{ updateMessage }}
-				</p>
-			</div>
-
-			<div
-				class="d-flex align-items-center"
-				[ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''"
-				*ngIf="noUpdateAvailable"
-			>
-				<fa-icon [icon]="faCheck"></fa-icon>
-				<p class="mb-0" style="margin-left: 0.75rem">
-					{{ locale.noUpdateAvailable }}
-				</p>
-			</div>
-
-			<div *ngIf="updateError">
-				<p class="mb-0">{{ locale.updateError }}</p>
-			</div>
-
-			<dav-button
-				type="accent"
-				(click)="ActivateUpdate()"
-				*ngIf="dataService.updateInstalled"
-			>
-				{{ locale.activateUpdate }}
-			</dav-button>
-		</div>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
-	<!-- Left screen -->
-	<div
-		class="w-50 d-flex flex-column"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
-		<dav-header size="large">
-			{{ locale.title }}
-		</dav-header>
-
-		<div class="setting-container mx-auto mt-4">
+	<div class="settings-container">
+		<div class="setting">
+			<!-- Open last read book -->
 			<dav-setting [header]="locale.openLastReadBook">
 				<dav-toggle
 					[checked]="openLastReadBook"
@@ -98,8 +14,8 @@
 				></dav-toggle>
 			</dav-setting>
 		</div>
-
-		<div class="setting-container mx-auto mt-3">
+	
+		<div class="setting">
 			<!-- Theme -->
 			<dav-setting [header]="locale.theme">
 				<dav-dropdown
@@ -109,58 +25,57 @@
 				></dav-dropdown>
 			</dav-setting>
 		</div>
+	</div>
 
-		<div class="mx-auto">
-			<!-- App information -->
-			<div class="mt-5 text-color">
-				<div id="link-container">
-					<dav-link-button url="https://blog.dav-apps.tech/tag/pocketlib">
-						{{ locale.news }}
-					</dav-link-button>
-					<dav-link-button url="https://github.com/dav-apps/PocketLib">
-						{{ locale.github }}
-					</dav-link-button>
-					<dav-link-button url="https://dav-apps.tech/privacy">
-						{{ locale.privacy }}
-					</dav-link-button>
-				</div>
+	<div class="app-info-container">
+		<!-- App information -->
+		<div>
+			<div class="link-container">
+				<dav-link-button url="https://blog.dav-apps.tech/tag/pocketlib">
+					{{ locale.news }}
+				</dav-link-button>
 
-				<p class="mt-2">
-					Version {{ version }}<br />
-					Copyright &copy; {{ year }} by dav
-				</p>
+				<dav-link-button url="https://github.com/dav-apps/PocketLib">
+					{{ locale.github }}
+				</dav-link-button>
 
-				<div class="d-flex" *ngIf="searchForUpdates">
-					<dav-progress-ring size="16"></dav-progress-ring>
-
-					<p class="mb-0" style="line-height: 20px; margin-left: 0.75rem">
-						{{ updateMessage }}
-					</p>
-				</div>
-
-				<div
-					class="d-flex align-items-center"
-					[ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''"
-					*ngIf="noUpdateAvailable"
-				>
-					<fa-icon [icon]="faCheck"></fa-icon>
-					<p class="mb-0" style="margin-left: 0.75rem">
-						{{ locale.noUpdateAvailable }}
-					</p>
-				</div>
-
-				<div *ngIf="updateError">
-					<p class="mb-0">{{ locale.updateError }}</p>
-				</div>
-
-				<dav-button
-					type="accent"
-					(click)="ActivateUpdate()"
-					*ngIf="dataService.updateInstalled"
-				>
-					{{ locale.activateUpdate }}
-				</dav-button>
+				<dav-link-button url="https://dav-apps.tech/privacy">
+					{{ locale.privacy }}
+				</dav-link-button>
 			</div>
+
+			<p class="version-text">
+				Version {{ version }}<br />
+				Copyright &copy; {{ year }} by dav
+			</p>
+
+			<div class="search-update-container" *ngIf="searchForUpdates">
+				<dav-progress-ring size="16"></dav-progress-ring>
+				<p>{{ updateMessage }}</p>
+			</div>
+
+			<div
+				class="no-update-container"
+				[ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''"
+				*ngIf="noUpdateAvailable"
+			>
+				<fa-icon [icon]="faCheck"></fa-icon>
+				<p>{{ locale.noUpdateAvailable }}</p>
+			</div>
+
+			<div class="update-error-container" *ngIf="updateError">
+				<p>{{ locale.updateError }}</p>
+			</div>
+
+			<dav-button
+				class="activate-update-button"
+				size="small"
+				outline
+				(click)="ActivateUpdate()"
+				*ngIf="dataService.updateInstalled"
+			>
+				{{ locale.activateUpdate }}
+			</dav-button>
 		</div>
 	</div>
 </div>
