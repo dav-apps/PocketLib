@@ -48,6 +48,10 @@ const enDefaults = {
 		logout: "Log out",
 		signup: "Sign up",
 		upgradeTitle: "Change your plan to make PocketLib even better",
+		planFree: "Free",
+		planPlus: "Plus",
+		planPro: "Pro",
+		storageUsed: "{0} GB of {1} GB used",
 		logoutDialog: {
 			headline: "Log out",
 			description: "Are you sure you want to log out?"
@@ -505,13 +509,6 @@ const enDefaults = {
 			isbnInvalid: "The ISBN is invalid"
 		}
 	},
-	userProfile: {
-		planFree: "Free",
-		planPlus: "Plus",
-		planPro: "Pro",
-		storageUsed: "{0} GB of {1} GB used",
-		logout: "Log out"
-	},
 	davProCard: {
 		plan: "dav Pro",
 		price: "10 € per month",
@@ -593,6 +590,10 @@ const deDefaults = {
 		logout: "Abmelden",
 		signup: "Registrieren",
 		upgradeTitle: "Wähle ein Abo, um PocketLib noch besser zu machen",
+		planFree: "Free",
+		planPlus: "Plus",
+		planPro: "Pro",
+		storageUsed: "{0} GB von {1} GB verwendet",
 		logoutDialog: {
 			headline: "Abmelden",
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
@@ -1057,13 +1058,6 @@ const deDefaults = {
 		errors: {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}
-	},
-	userProfile: {
-		planFree: "Free",
-		planPlus: "Plus",
-		planPro: "Pro",
-		storageUsed: "{0} GB von {1} GB verwendet",
-		logout: "Abmelden"
 	},
 	davProCard: {
 		plan: "dav Pro",

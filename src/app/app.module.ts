@@ -48,7 +48,6 @@ import { PriceInputComponent } from "./components/price-input/price-input.compon
 import { IsbnInputComponent } from "./components/isbn-input/isbn-input.component"
 import { LinkIconButtonComponent } from "./components/link-icon-button/link-icon-button.component"
 import { LanguagesSelectionComponent } from "./components/languages-selection/languages-selection.component"
-import { UserProfileComponent } from "./components/user-profile/user-profile.component"
 import { DavProCardComponent } from "./components/dav-pro-card/dav-pro-card.component"
 import { HorizontalBookCardComponent } from "./components/horizontal-book-card/horizontal-book-card.component"
 import { HorizontalBooksCardComponent } from "./components/horizontal-books-card/horizontal-books-card.component"
@@ -110,7 +109,6 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		IsbnInputComponent,
 		LinkIconButtonComponent,
 		LanguagesSelectionComponent,
-		UserProfileComponent,
 		DavProCardComponent,
 		HorizontalBookCardComponent,
 		HorizontalBooksCardComponent,
