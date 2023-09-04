@@ -483,6 +483,9 @@ const enDefaults = {
 		save: "Save",
 		create: "Create"
 	},
+	horizontalCategoryList: {
+		headline: "Categories"
+	},
 	horizontalBookList: {
 		recentlyPublished: "Recently published books",
 		moreBooksInCategory: "More books in this category",
@@ -1032,6 +1035,9 @@ const deDefaults = {
 		cancel: "Abbrechen",
 		save: "Speichern",
 		create: "Erstellen"
+	},
+	horizontalCategoryList: {
+		headline: "Kategorien"
 	},
 	horizontalBookList: {
 		recentlyPublished: "Kürzlich veröffentlichte Bücher",

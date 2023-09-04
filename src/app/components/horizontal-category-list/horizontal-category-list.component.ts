@@ -2,6 +2,7 @@ import { Component } from "@angular/core"
 import { CategoryCard } from "src/app/misc/types"
 import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
+import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-horizontal-category-list",
@@ -9,10 +10,13 @@ import { DataService } from "src/app/services/data-service"
 	styleUrls: ["./horizontal-category-list.component.scss"]
 })
 export class HorizontalCategoryListComponent {
+	locale = enUS.horizontalCategoryList
 	loading: boolean = true
 	cards: CategoryCard[] = []
 
-	constructor(private dataService: DataService) {}
+	constructor(private dataService: DataService) {
+		this.locale = this.dataService.GetLocale().horizontalCategoryList
+	}
 
 	async ngOnInit() {
 		await this.dataService.categoriesPromiseHolder.AwaitResult()
