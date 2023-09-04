@@ -1,11 +1,17 @@
+.container {
+	margin-top: 16px;
+}
+
 .content-container {
 	display: flex;
-	min-height: 136px;
+	min-height: 152px;
 }
 
 .progress-ring-container {
 	display: flex;
 	align-items: center;
+	margin-left: 48px;
+	padding: 32px;
 }
 
 .category-cards-container {
@@ -14,4 +20,5 @@
 	overflow-x: scroll;
 	overflow-y: hidden;
 	white-space: nowrap;
+	padding: 2rem;
 }

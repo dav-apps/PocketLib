@@ -1,11 +1,17 @@
+.container {
+	margin-top: 16px;
+}
+
 .content-container {
 	display: flex;
-	min-height: 263px;
+	min-height: 280px;
 }
 
 .progress-ring-container {
 	display: flex;
 	align-items: center;
+	margin-left: 48px;
+	padding: 32px;
 }
 
 .book-list-container {
@@ -13,4 +19,5 @@
 	gap: 16px;
 	overflow-x: scroll;
 	overflow-y: hidden;
+	padding: 2rem;
 }

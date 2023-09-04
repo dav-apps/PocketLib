@@ -414,17 +414,21 @@ body {
 }
 
 .store-list-header {
+	font-size: 24px;
 	font-weight: 400;
+	color: var(--dav-color-on-surface);
+	margin-left: 16px;
+	margin-bottom: 0;
 }
 
 .horizontal-store-list::-webkit-scrollbar {
-	background-color: var(--dav-color-primary);
-	height: 5px;
+	background-color: var(--dav-color-surface);
+	height: 3px;
 }
 
 .horizontal-store-list::-webkit-scrollbar-thumb {
-	background-color: var(--dav-color-on-surface);
-	border-radius: 10px;
+	background-color: var(--dav-color-inverse-on-surface);
+	border-radius: 2px;
 }
 
 a {

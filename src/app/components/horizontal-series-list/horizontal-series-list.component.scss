@@ -1,3 +1,7 @@
+.container {
+	margin-top: 16px;
+}
+
 .content-container {
 	display: flex;
 	min-height: 253px;
@@ -6,10 +10,13 @@
 .progress-ring-container {
 	display: flex;
 	align-items: center;
+	margin-left: 48px;
+	padding: 32px;
 }
 
 .series-list-container {
 	display: flex;
 	overflow-x: scroll;
 	overflow-y: hidden;
+	padding: 2rem;
 }
