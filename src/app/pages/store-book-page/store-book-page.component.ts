@@ -13,10 +13,7 @@ import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
-import {
-	GetDualScreenSettings,
-	GetStoreBookStatusByString
-} from "src/app/misc/utils"
+import { GetStoreBookStatusByString } from "src/app/misc/utils"
 import { ApiResponse, StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
@@ -29,8 +26,6 @@ export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
 	width: number = 500
 	showMobileLayout: boolean = false
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 
 	//#region StoreBook variables
 	uuid: string = ""
@@ -95,11 +90,6 @@ export class StoreBookPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().storeBookPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
@@ -130,7 +120,7 @@ export class StoreBookPageComponent {
 	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
-		this.showMobileLayout = window.innerWidth < 768 && !this.dualScreenLayout
+		this.showMobileLayout = window.innerWidth < 768
 	}
 
 	async Init() {
