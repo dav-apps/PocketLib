@@ -55,6 +55,11 @@
 	.description-container {
 		max-width: 400px;
 	}
+
+	.recommendations-container {
+		max-width: 80%;
+		margin: 0 auto;
+	}
 }
 
 @media screen and (min-width: 1050px) {
@@ -106,4 +111,11 @@
 .publish-button-container {
 	display: flex;
 	margin-top: 16px;
+}
+
+.divider {
+	width: 80%;
+	height: 2px;
+	background-color: rgb(var(--dav-color-outline-rgb), 0.2);
+	margin: 48px auto;
 }

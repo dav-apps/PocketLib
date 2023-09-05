@@ -43,11 +43,13 @@
 			</div>
 
 			<!-- Status and Publish button (only for admins) -->
-			<div class="publish-button-container">
+			<div
+				class="publish-button-container"
+				*ngIf="dataService.userIsAdmin && status == 1"
+			>
 				<dav-button
 					[disabled]="publishLoading"
 					(click)="PublishStoreBook()"
-					*ngIf="dataService.userIsAdmin && status == 1"
 				>
 					{{ locale.publish }}
 				</dav-button>
@@ -82,6 +84,19 @@
 				</dav-badge>
 			</div>
 		</div>
+	</div>
+</div>
+
+<div class="divider" *ngIf="seriesUuid != null"></div>
+
+<div class="recommendations-container">
+	<!-- List of books of the series -->
+	<div *ngIf="seriesUuid != null">
+		<pocketlib-horizontal-book-list
+			type="series"
+			[series]="seriesUuid"
+			[currentBookUuid]="uuid"
+		></pocketlib-horizontal-book-list>
 	</div>
 </div>
 
