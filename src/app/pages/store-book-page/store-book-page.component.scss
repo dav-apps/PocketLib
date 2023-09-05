@@ -3,7 +3,7 @@
 	grid-template-rows: auto auto;
 	grid-template-columns: auto;
 	max-width: 1200px;
-	margin: 0 auto;
+	margin: 12px auto 0;
 }
 
 .cover-panel {
@@ -96,5 +96,14 @@
 .category-badge-container {
 	display: flex;
 	gap: 8px;
-	margin-top: 8px;
+	margin-top: 12px;
+}
+
+.read-button-container {
+	margin-top: 16px;
+}
+
+.publish-button-container {
+	display: flex;
+	margin-top: 16px;
 }

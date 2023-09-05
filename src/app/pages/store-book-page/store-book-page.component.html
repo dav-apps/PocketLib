@@ -1,4 +1,7 @@
-<div class="container">
+<div
+	class="container"
+	[class]="simpleLoadingScreenVisible ? '' : 'slide-up-in'"
+>
 	<div class="cover-panel">
 		<div class="cover-panel-content">
 			<!-- Cover -->
@@ -31,6 +34,24 @@
 				[name]="publisherName"
 				*ngIf="publisherName"
 			></dav-profile-card>
+
+			<!-- Read now / continue reading button -->
+			<div class="read-button-container">
+				<dav-button (click)="Read()">
+					{{ inLibrary ? locale.continueReading : locale.readNow }}
+				</dav-button>
+			</div>
+
+			<!-- Status and Publish button (only for admins) -->
+			<div class="publish-button-container">
+				<dav-button
+					[disabled]="publishLoading"
+					(click)="PublishStoreBook()"
+					*ngIf="dataService.userIsAdmin && status == 1"
+				>
+					{{ locale.publish }}
+				</dav-button>
+			</div>
 		</div>
 	</div>
 
