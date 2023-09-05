@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core"
+import { Component } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
 	CheckoutSessionsController,
@@ -24,8 +24,6 @@ import { enUS } from "src/locales/locales"
 })
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
-	width: number = 500
-	showMobileLayout: boolean = false
 
 	//#region StoreBook variables
 	uuid: string = ""
@@ -93,7 +91,6 @@ export class StoreBookPageComponent {
 	}
 
 	async ngOnInit() {
-		this.setSize()
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		// Get the uuid from the params
@@ -111,16 +108,6 @@ export class StoreBookPageComponent {
 				await this.Init()
 			}
 		})
-	}
-
-	ngAfterViewInit() {
-		this.setSize()
-	}
-
-	@HostListener("window:resize")
-	setSize() {
-		this.width = window.innerWidth
-		this.showMobileLayout = window.innerWidth < 768
 	}
 
 	async Init() {
@@ -189,6 +176,7 @@ export class StoreBookPageComponent {
 		this.status = GetStoreBookStatusByString(responseData.status)
 		this.inLibrary = responseData.inLibrary
 		this.purchased = responseData.purchased
+		this.categoryKeys = []
 
 		for (let category of responseData.categories.items) {
 			this.categoryKeys.push(category.key)

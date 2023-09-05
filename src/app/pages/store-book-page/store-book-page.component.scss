@@ -48,6 +48,10 @@
 	font-size: 17px;
 }
 
+.recommendations-container {
+	margin-bottom: 24px;
+}
+
 @media screen and (min-width: 768px) {
 	.container {
 		grid-template-rows: auto;
@@ -76,7 +80,7 @@
 
 	.recommendations-container {
 		max-width: 80%;
-		margin: 0 auto;
+		margin: 0 auto 24px;
 	}
 
 	.desktop-header {
