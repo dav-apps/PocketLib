@@ -3,6 +3,16 @@
 	[class]="simpleLoadingScreenVisible ? '' : 'slide-up-in'"
 >
 	<div class="cover-panel">
+		<dav-header
+			class="mobile-header"
+			size="small"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()"
+			*ngIf="title.length > 0"
+		>
+			{{ title }}
+		</dav-header>
+
 		<div class="cover-panel-content">
 			<!-- Cover -->
 			<div class="cover-content">
@@ -59,6 +69,7 @@
 
 	<div class="description-panel">
 		<dav-header
+			class="desktop-header"
 			size="small"
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
