@@ -1,3 +1,69 @@
+<div class="container">
+	<div class="cover-panel">
+		<div class="cover-panel-content">
+			<!-- Cover -->
+			<div class="cover-content">
+				<dav-blurhash-image
+					class="cover-image"
+					[src]="coverContent"
+					[fallbackSrc]="dataService.defaultStoreBookCover"
+					[blurhash]="coverBlurhash"
+					[title]="title"
+					[alt]="coverAlt"
+					[width]="coverWidth"
+					[height]="coverHeight"
+				></dav-blurhash-image>
+			</div>
+
+			<dav-profile-card
+				class="author-profile-card"
+				[imageSrc]="authorProfileImageContent"
+				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+				[imageBlurhash]="authorProfileImageBlurhash"
+				[name]="authorName"
+			></dav-profile-card>
+
+			<dav-profile-card
+				class="publisher-profile-card"
+				[imageSrc]="publisherLogoContent"
+				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+				[imageBlurhash]="publisherLogoBlurhash"
+				[name]="publisherName"
+				*ngIf="publisherName"
+			></dav-profile-card>
+		</div>
+	</div>
+
+	<div class="description-panel">
+		<dav-header
+			size="small"
+			backButtonVisible
+			(backButtonClick)="BackButtonClick()"
+			*ngIf="title.length > 0"
+		>
+			{{ title }}
+		</dav-header>
+
+		<div class="description-container">
+			<!-- Description -->
+			<p class="book-description">
+				{{ description }}
+			</p>
+
+			<!-- Categories -->
+			<div class="category-badge-container">
+				<dav-badge
+					[color]="i == 0 ? 'primary' : 'secondary'"
+					tonal
+					*ngFor="let category of categories; let i = index"
+				>
+					{{ category.name }}
+				</dav-badge>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Normal layout -->
 <div
 	class="row mx-2 my-3"

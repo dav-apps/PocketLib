@@ -52,7 +52,7 @@ export class StoreBookPageComponent {
 	coverBlurhash: string = ""
 	coverAlt: string = ""
 	coverHeight = 270
-	coverWidth = 160
+	coverWidth = 180
 	//#endregion
 
 	//#region Author variables
