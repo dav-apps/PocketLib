@@ -1,4 +1,5 @@
 import { Component } from "@angular/core"
+import { Router } from "@angular/router"
 import { CategoryCard } from "src/app/misc/types"
 import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
@@ -14,7 +15,7 @@ export class HorizontalCategoryListComponent {
 	loading: boolean = true
 	cards: CategoryCard[] = []
 
-	constructor(private dataService: DataService) {
+	constructor(private dataService: DataService, private router: Router) {
 		this.locale = this.dataService.GetLocale().horizontalCategoryList
 	}
 
@@ -45,5 +46,10 @@ export class HorizontalCategoryListComponent {
 		}
 
 		this.loading = false
+	}
+
+	categoryIconCardClick(event: Event, categoryKey: string) {
+		event.preventDefault()
+		this.router.navigate(["store", "category", categoryKey])
 	}
 }

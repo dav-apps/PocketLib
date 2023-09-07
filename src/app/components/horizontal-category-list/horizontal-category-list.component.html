@@ -12,7 +12,12 @@
 			class="category-cards-container horizontal-store-list slide-up-in"
 			*ngIf="!loading"
 		>
-			<dav-icon-card [text]="card.text" *ngFor="let card of cards">
+			<dav-icon-card
+				[text]="card.text"
+				[href]="'/store/category/' + card.key"
+				(click)="categoryIconCardClick($event, card.key)"
+				*ngFor="let card of cards"
+			>
 				<fa-icon [icon]="card.icon"></fa-icon>
 			</dav-icon-card>
 		</div>

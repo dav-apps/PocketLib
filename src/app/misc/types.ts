@@ -40,6 +40,7 @@ export interface Category {
 }
 
 export interface CategoryCard {
+	key: string
 	icon: IconDefinition
 	text: string
 }

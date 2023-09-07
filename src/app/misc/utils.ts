@@ -248,6 +248,7 @@ export function GenerateTwitterLink(twitterUsername: string): string {
 
 export function CategoryToCategoryCard(category: Category): CategoryCard {
 	let card: CategoryCard = {
+		key: category.key,
 		text: category.name,
 		icon: null
 	}
