@@ -577,4 +577,19 @@ export class StoreBookPageComponent {
 
 		this.publishLoading = false
 	}
+
+	authorProfileCardClick(event: Event) {
+		event.preventDefault()
+		this.router.navigate(["store", "author", this.authorUuid])
+	}
+
+	publisherProfileCardClick(event: Event) {
+		event.preventDefault()
+		this.router.navigate(["store", "publisher", this.publisherUuid])
+	}
+
+	categoryBadgeClick(event: Event, categoryKey: string) {
+		event.preventDefault()
+		this.router.navigate(["store", "category", categoryKey])
+	}
 }

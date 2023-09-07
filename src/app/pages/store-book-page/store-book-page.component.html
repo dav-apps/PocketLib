@@ -34,6 +34,8 @@
 				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
 				[imageBlurhash]="authorProfileImageBlurhash"
 				[name]="authorName"
+				[href]="'/store/author/' + authorUuid"
+				(click)="authorProfileCardClick($event)"
 			></dav-profile-card>
 
 			<dav-profile-card
@@ -42,6 +44,8 @@
 				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
 				[imageBlurhash]="publisherLogoBlurhash"
 				[name]="publisherName"
+				[href]="'/store/publisher' + publisherUuid"
+				(click)="publisherProfileCardClick($event)"
 				*ngIf="publisherName"
 			></dav-profile-card>
 
@@ -89,6 +93,8 @@
 				<dav-badge
 					[color]="i == 0 ? 'primary' : 'secondary'"
 					tonal
+					[href]="'/store/category/' + category.key"
+					(click)="categoryBadgeClick($event, category.key)"
 					*ngFor="let category of categories; let i = index"
 				>
 					{{ category.name }}
