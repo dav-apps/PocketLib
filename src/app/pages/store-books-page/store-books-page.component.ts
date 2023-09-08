@@ -5,27 +5,33 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import {
-	BookListItem,
 	List,
 	ApiResponse,
 	StoreBookResource,
 	StoreBooksPageContext
 } from "src/app/misc/types"
-import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 import { ApolloQueryResult } from "@apollo/client"
 
+interface BookItem {
+	uuid: string
+	coverContent: string
+	title: string
+	author: string
+}
+
 @Component({
-	templateUrl: "./store-books-page.component.html"
+	templateUrl: "./store-books-page.component.html",
+	styleUrls: ["./store-books-page.component.scss"]
 })
 export class StoreBooksPageComponent {
 	locale = enUS.storeBooksPage
 	header: string = ""
-	books: BookListItem[] = []
+	books: BookItem[] = []
 
 	//#region Variables for pagination
 	pages: number = 1
-	maxVisibleBooks: number = 20
+	maxVisibleBooks: number = 10
 	//#endregion
 
 	//#region Variables for UpdateView
@@ -104,6 +110,12 @@ export class StoreBooksPageComponent {
 								blurhash
 								aspectRatio
 							}
+							collection {
+								author {
+									firstName
+									lastName
+								}
+							}
 						}
 					`,
 					{
@@ -127,6 +139,12 @@ export class StoreBooksPageComponent {
 								blurhash
 								aspectRatio
 							}
+							collection {
+								author {
+									firstName
+									lastName
+								}
+							}
 						}
 					`,
 					{
@@ -144,24 +162,19 @@ export class StoreBooksPageComponent {
 		if (responseData == null) return
 
 		let responseBooks = responseData.items
-		this.pages = Math.floor(responseData.total / this.maxVisibleBooks)
+		this.pages = Math.ceil(responseData.total / this.maxVisibleBooks)
 
 		for (let storeBook of responseBooks) {
-			// Calculate the width and height
-			let height = 230
-			let width = AdaptCoverWidthHeightToAspectRatio(
-				153,
-				height,
-				storeBook.cover?.aspectRatio
-			)
-
-			let bookItem: BookListItem = {
+			let bookItem: BookItem = {
 				uuid: storeBook.uuid,
+				coverContent: this.dataService.defaultStoreBookCover,
 				title: storeBook.title,
-				coverContent: null,
-				coverBlurhash: storeBook.cover?.blurhash,
-				coverWidth: width,
-				coverHeight: height
+				author: ""
+			}
+
+			if (storeBook.collection?.author) {
+				let author = storeBook.collection.author
+				bookItem.author = `${author.firstName} ${author.lastName}`
 			}
 
 			if (storeBook.cover?.url != null) {
@@ -184,5 +197,10 @@ export class StoreBooksPageComponent {
 		this.page = page
 		this.router.navigate([], { queryParams: { page } })
 		this.UpdateView()
+	}
+
+	bookItemClick(event: Event, bookItem: BookItem) {
+		event.preventDefault()
+		this.router.navigate(["store", "book", bookItem.uuid])
 	}
 }
