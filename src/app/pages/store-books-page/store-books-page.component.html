@@ -1,5 +1,5 @@
 <!-- Normal layout -->
-<div class="container mb-3 px-0 slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container mb-3 px-0 slide-up-in">
 	<div class="mb-2" *ngIf="header.length > 0">
 		<dav-header
 			backButtonVisible
@@ -26,65 +26,5 @@
 			[currentPage]="page"
 			(pageChange)="PageChange($event.detail.page)"
 		></dav-pagination>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div
-	class="slide-up-in"
-	style="display: grid; grid-template-rows: auto"
-	[style.gridTemplateColumns]="'auto ' + width / 2 + 'px'"
-	*ngIf="dualScreenLayout"
->
-	<!-- Left screen -->
-	<div
-		style="grid-row: 1; grid-column: 1"
-		[style.marginRight.px]="dualScreenFoldMargin"
-	>
-		<div class="mb-2">
-			<dav-header
-				backButtonVisible
-				(backButtonClick)="BackButtonClick()"
-			>
-				{{ header }}
-			</dav-header>
-		</div>
-
-		<div
-			class="d-flex flex-wrap justify-content-center"
-			*ngIf="leftScreenBooks.length > 0"
-		>
-			<pocketlib-store-book-card
-				[book]="book"
-				*ngFor="let book of leftScreenBooks"
-			></pocketlib-store-book-card>
-		</div>
-	</div>
-
-	<!-- Right screen -->
-	<div
-		style="grid-row: 1; grid-column: 2"
-		[style.marginLeft.px]="dualScreenFoldMargin"
-	>
-		<div
-			class="d-flex flex-wrap justify-content-center"
-			style="margin-top: 72px"
-		>
-			<pocketlib-store-book-card
-				[book]="book"
-				*ngFor="let book of rightScreenBooks"
-			></pocketlib-store-book-card>
-		</div>
-
-		<div
-			class="mt-4 d-flex justify-content-center"
-			*ngIf="pages > 1 && !dataService.simpleLoadingScreenVisible"
-		>
-			<dav-pagination
-				[pages]="pages"
-				[currentPage]="page"
-				(pageChange)="PageChange($event.detail.page)"
-			></dav-pagination>
-		</div>
 	</div>
 </div>

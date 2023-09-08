@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core"
+import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
@@ -11,10 +11,7 @@ import {
 	StoreBookResource,
 	StoreBooksPageContext
 } from "src/app/misc/types"
-import {
-	GetDualScreenSettings,
-	AdaptCoverWidthHeightToAspectRatio
-} from "src/app/misc/utils"
+import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 import { ApolloQueryResult } from "@apollo/client"
 
@@ -25,11 +22,6 @@ export class StoreBooksPageComponent {
 	locale = enUS.storeBooksPage
 	header: string = ""
 	books: BookListItem[] = []
-	leftScreenBooks: BookListItem[] = []
-	rightScreenBooks: BookListItem[] = []
-	width: number = 500
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 
 	//#region Variables for pagination
 	pages: number = 1
@@ -51,12 +43,6 @@ export class StoreBooksPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().storeBooksPage
 		this.dataService.simpleLoadingScreenVisible = true
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
 		this.key = this.activatedRoute.snapshot.paramMap.get("key")
 
 		if (this.key == "all") {
@@ -74,20 +60,7 @@ export class StoreBooksPageComponent {
 			} else {
 				this.page = 1
 			}
-
-			setTimeout(() => {
-				this.setSize()
-			}, 1)
 		})
-	}
-
-	ngAfterViewInit() {
-		this.setSize()
-	}
-
-	@HostListener("window:resize")
-	setSize() {
-		this.width = window.innerWidth
 	}
 
 	BackButtonClick() {
@@ -111,8 +84,6 @@ export class StoreBooksPageComponent {
 
 		// Get the books of the appropriate context
 		this.books = []
-		this.leftScreenBooks = []
-		this.rightScreenBooks = []
 		this.dataService.simpleLoadingScreenVisible = true
 
 		let response: ApolloQueryResult<{
@@ -174,7 +145,6 @@ export class StoreBooksPageComponent {
 
 		let responseBooks = responseData.items
 		this.pages = Math.floor(responseData.total / this.maxVisibleBooks)
-		let i = 0
 
 		for (let storeBook of responseBooks) {
 			// Calculate the width and height
@@ -206,18 +176,7 @@ export class StoreBooksPageComponent {
 					})
 			}
 
-			if (this.dualScreenLayout) {
-				// Evenly distribute the books on the left and right screens
-				if (i % 2 == 0) {
-					this.leftScreenBooks.push(bookItem)
-				} else {
-					this.rightScreenBooks.push(bookItem)
-				}
-
-				i++
-			} else {
-				this.books.push(bookItem)
-			}
+			this.books.push(bookItem)
 		}
 	}
 
