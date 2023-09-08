@@ -139,7 +139,7 @@ export class StoreBooksPageComponent {
 						categories: [this.key],
 						languages: await this.dataService.GetStoreLanguages(),
 						limit: this.maxVisibleBooks,
-						offset: this.page * this.maxVisibleBooks
+						offset: (this.page - 1) * this.maxVisibleBooks
 					}
 				)
 				break
@@ -161,7 +161,7 @@ export class StoreBooksPageComponent {
 					{
 						languages: await this.dataService.GetStoreLanguages(),
 						limit: this.maxVisibleBooks,
-						offset: this.page * this.maxVisibleBooks
+						offset: (this.page - 1) * this.maxVisibleBooks
 					}
 				)
 				break
