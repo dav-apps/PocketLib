@@ -137,6 +137,7 @@
 			<dav-list>
 				<dav-list-item
 					[headline]="book.title"
+					[subhead]="book.author"
 					size="small"
 					(click)="ShowBook(book.uuid)"
 					*ngFor="let book of booksInReview"
@@ -147,7 +148,7 @@
 </div>
 
 <dav-dialog
-	[header]="locale.createPublisherDialog.header"
+	[headline]="locale.createPublisherDialog.headline"
 	[primaryButtonText]="locale.create"
 	[defaultButtonText]="locale.cancel"
 	[visible]="createPublisherDialogVisible"
@@ -179,7 +180,7 @@
 </dav-dialog>
 
 <dav-dialog
-	[header]="locale.createAuthorDialog.header"
+	[headline]="locale.createAuthorDialog.headline"
 	[primaryButtonText]="locale.create"
 	[defaultButtonText]="locale.cancel"
 	[visible]="createAuthorDialogVisible"

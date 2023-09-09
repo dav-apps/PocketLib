@@ -33,6 +33,7 @@ export class AuthorPageComponent {
 	booksInReview: {
 		uuid: string
 		title: string
+		author: string
 	}[] = []
 
 	constructor(
@@ -62,6 +63,12 @@ export class AuthorPageComponent {
 					items {
 						uuid
 						title
+						collection {
+							author {
+								firstName
+								lastName
+							}
+						}
 					}
 				`,
 				{
@@ -78,7 +85,8 @@ export class AuthorPageComponent {
 				for (let book of responseData.items) {
 					this.booksInReview.push({
 						uuid: book.uuid,
-						title: book.title
+						title: book.title,
+						author: `${book.collection.author.firstName} ${book.collection.author.lastName}`
 					})
 				}
 			}
