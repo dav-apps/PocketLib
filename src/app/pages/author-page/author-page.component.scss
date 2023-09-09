@@ -1,8 +1,22 @@
+.container {
+	margin-bottom: 16px;
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 16px;
+}
+
 .list-container {
 	display: flex;
 	justify-content: center;
+	margin-bottom: 16px;
 }
 
 .list-container > dav-list {
 	max-width: 300px;
+}
+
+.dialog-formfield-container {
+	margin-bottom: 12px;
 }
