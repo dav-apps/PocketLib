@@ -116,11 +116,13 @@ export class HorizontalBookListComponent {
 		let responseData = response.data.listStoreBooks
 		if (responseData == null) return
 
-		let books = responseData.items
+		let books = []
 
-		// Remove the current book
-		let i = books.findIndex(book => book.uuid == this.currentBookUuid)
-		if (i != -1) books.splice(i, 1)
+		for (let book of responseData.items) {
+			if (book.uuid != this.currentBookUuid) {
+				books.push(book)
+			}
+		}
 
 		this.ShowBooks(books)
 	}
