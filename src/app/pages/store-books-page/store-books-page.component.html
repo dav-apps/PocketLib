@@ -1,24 +1,26 @@
 <!-- Normal layout -->
 <div class="container slide-up-in">
 	<div class="header-container" *ngIf="header.length > 0">
-		<dav-header
-			backButtonVisible
-			(backButtonClick)="BackButtonClick()"
-		>
+		<dav-header backButtonVisible (backButtonClick)="BackButtonClick()">
 			{{ header }}
 		</dav-header>
 	</div>
 
-	<dav-list>
-		<dav-list-item
-			[imageSrc]="book.coverContent"
-			[headline]="book.title"
-			[subhead]="book.author"
-			[href]="'/store/book/' + book.uuid"
-			(click)="bookItemClick($event, book)"
+	<div class="list-container">
+		<a
+			class="book-card"
+			[routerLink]="'/store/book/' + book.uuid"
 			*ngFor="let book of books"
-		></dav-list-item>
-	</dav-list>
+		>
+			<dav-blurhash-image
+				[src]="book.coverContent"
+				[blurhash]="book.blurhash"
+				[title]="book.title"
+				width="170"
+				height="255"
+			></dav-blurhash-image>
+		</a>
+	</div>
 
 	<div
 		class="pagination-container"

@@ -7,9 +7,33 @@
 	margin-bottom: 32px;
 }
 
-dav-list {
-	max-width: 800px;
+.list-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 16px;
+	max-width: 730px;
 	margin: 0 auto;
+}
+
+.book-card {
+	display: inline-flex;
+	border-radius: 12px;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	cursor: pointer;
+	transition: 200ms;
+}
+
+.book-card > dav-blurhash-image {
+	border-radius: 12px;
+	height: 100%;
+}
+
+.book-card:hover,
+.book-card:focus,
+.book-card:active {
+	transform: translateY(-8px);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 .pagination-container {

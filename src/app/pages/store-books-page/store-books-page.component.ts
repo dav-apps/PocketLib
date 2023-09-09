@@ -16,8 +16,8 @@ import { ApolloQueryResult } from "@apollo/client"
 interface BookItem {
 	uuid: string
 	coverContent: string
+	blurhash: string
 	title: string
-	author: string
 }
 
 @Component({
@@ -31,7 +31,7 @@ export class StoreBooksPageComponent {
 
 	//#region Variables for pagination
 	pages: number = 1
-	maxVisibleBooks: number = 10
+	maxVisibleBooks: number = 12
 	//#endregion
 
 	//#region Variables for UpdateView
@@ -108,13 +108,6 @@ export class StoreBooksPageComponent {
 							cover {
 								url
 								blurhash
-								aspectRatio
-							}
-							collection {
-								author {
-									firstName
-									lastName
-								}
 							}
 						}
 					`,
@@ -137,13 +130,6 @@ export class StoreBooksPageComponent {
 							cover {
 								url
 								blurhash
-								aspectRatio
-							}
-							collection {
-								author {
-									firstName
-									lastName
-								}
 							}
 						}
 					`,
@@ -168,13 +154,8 @@ export class StoreBooksPageComponent {
 			let bookItem: BookItem = {
 				uuid: storeBook.uuid,
 				coverContent: this.dataService.defaultStoreBookCover,
-				title: storeBook.title,
-				author: ""
-			}
-
-			if (storeBook.collection?.author) {
-				let author = storeBook.collection.author
-				bookItem.author = `${author.firstName} ${author.lastName}`
+				blurhash: storeBook.cover?.blurhash || "",
+				title: storeBook.title
 			}
 
 			if (storeBook.cover?.url != null) {
