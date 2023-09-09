@@ -151,49 +151,27 @@
 			<dav-progress-ring size="28"></dav-progress-ring>
 		</div>
 
-		<div *ngIf="!authorsLoading">
-			<a
-				class="card cursor my-4 theme-background-color-secondary"
-				style="text-decoration: none; transition: 0.12s"
-				[ngClass]="hoveredAuthorItem == i ? 'shadow' : 'shadow-sm'"
-				[routerLink]="
-					publisherMode == 0
-						? '/store/author/' + author.uuid
-						: '/author/' + author.uuid
-				"
-				(mouseover)="hoveredAuthorItem = i"
-				(mouseout)="hoveredAuthorItem = -1"
-				(focusin)="hoveredAuthorItem = i"
-				(focusout)="hoveredAuthorItem = -1"
-				*ngFor="let author of authorItems; let i = index"
-			>
-				<div class="card-body d-flex">
-					<dav-blurhash-image
-						style="border-radius: 50%"
-						[src]="author.profileImageContent"
-						[fallbackSrc]="dataService.defaultProfileImageUrl"
-						[blurhash]="author.profileImageBlurhash"
-						[title]="author.firstName + ' ' + author.lastName"
-						[alt]="author.profileImageAlt"
-						width="80"
-						height="80"
-					></dav-blurhash-image>
-
-					<h4 class="card-title ms-4 my-auto text-color fw-light">
-						{{ author.firstName }} {{ author.lastName }}
-					</h4>
-				</div>
-			</a>
-
-			<div class="mb-3">
-				<dav-pagination
-					[pages]="pages"
-					[currentPage]="page"
-					(pageChange)="PageChange($event.detail.page)"
-					*ngIf="pages > 1"
-				></dav-pagination>
-			</div>
+		<div class="author-list-container" *ngIf="!authorsLoading">
+			<dav-list>
+				<dav-list-item
+					[imageSrc]="author.profileImageContent"
+					imageRounded
+					[headline]="author.name"
+					[href]="'/author/' + author.uuid"
+					[imageTitle]="author.name"
+					[imageAlt]="author.alt"
+					(click)="authorItemClick($event, author)"
+					*ngFor="let author of authorItems"
+				></dav-list-item>
+			</dav-list>
 		</div>
+
+		<dav-pagination
+			[pages]="pages"
+			[currentPage]="page"
+			(pageChange)="PageChange($event.detail.page)"
+			*ngIf="pages > 1"
+		></dav-pagination>
 	</div>
 </div>
 

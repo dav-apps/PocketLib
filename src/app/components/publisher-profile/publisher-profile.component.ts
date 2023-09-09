@@ -26,12 +26,20 @@ import {
 	GenerateInstagramLink,
 	GenerateTwitterLink
 } from "src/app/misc/utils"
-import { ApiResponse, AuthorListItem, PublisherMode } from "src/app/misc/types"
+import { ApiResponse, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
 const maxAuthorsPerPage = 5
+
+interface AuthorItem {
+	uuid: string
+	name: string
+	profileImageContent: string
+	profileImageBlurhash: string
+	alt: string
+}
 
 @Component({
 	selector: "pocketlib-publisher-profile",
@@ -61,9 +69,8 @@ export class PublisherProfileComponent {
 	descriptionLoading: boolean = false
 	errorMessage: string = ""
 	storeContext: boolean = true // Whether the component is shown in the Store
-	authorItems: AuthorListItem[] = []
+	authorItems: AuthorItem[] = []
 	authorsLoading: boolean = true
-	hoveredAuthorItem: number = -1
 	pages: number = 1
 	page: number = 1
 
@@ -219,13 +226,12 @@ export class PublisherProfileComponent {
 			this.page,
 			maxAuthorsPerPage
 		)) {
-			let authorItem: AuthorListItem = {
+			let authorItem: AuthorItem = {
 				uuid: author.uuid,
-				firstName: author.firstName,
-				lastName: author.lastName,
+				name: `${author.firstName} ${author.lastName}`,
 				profileImageContent: this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profileImage.blurhash,
-				profileImageAlt: this.dataService
+				alt: this.dataService
 					.GetLocale()
 					.misc.authorProfileImageAlt.replace(
 						"{0}",
@@ -408,15 +414,10 @@ export class PublisherProfileComponent {
 			this.newDescriptionError = ""
 			this.descriptionLoading = true
 
-			let response = await this.apiService.updatePublisher(
-				`description`,
-				{
-					uuid: this.dataService.userIsAdmin
-						? this.publisher.uuid
-						: "mine",
-					description: this.newDescription
-				}
-			)
+			let response = await this.apiService.updatePublisher(`description`, {
+				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
+				description: this.newDescription
+			})
 
 			this.descriptionLoading = false
 
@@ -460,6 +461,11 @@ export class PublisherProfileComponent {
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogVisible = true
 		this.createAuthorDialogLoading = false
+	}
+
+	authorItemClick(event: Event, author: AuthorItem) {
+		event.preventDefault()
+		this.router.navigate(["author", author.uuid])
 	}
 
 	async CreateAuthor() {
