@@ -1,8 +1,5 @@
 <!-- Layout for not logged in -->
-<div
-	class="container slide-up-in"
-	*ngIf="!dataService.dav.isLoggedIn"
->
+<div class="container slide-up-in" *ngIf="!dataService.dav.isLoggedIn">
 	<dav-header size="large">
 		{{ locale.title }}
 	</dav-header>
@@ -54,11 +51,7 @@
 </div>
 
 <!-- Layout for logged in -->
-<div
-	class="container mb-4 slide-up-in"
-	[style.paddingBottom.px]="dataService.isMobile ? 56 : 0"
-	*ngIf="dataService.dav.isLoggedIn"
->
+<div class="container slide-up-in" *ngIf="dataService.dav.isLoggedIn">
 	<div class="header-logged-in-container">
 		<dav-header size="large">
 			{{ locale.title }}
@@ -72,7 +65,7 @@
 			[height]="width < 410 ? 130 : 150"
 			[width]="width < 410 ? 130 : 150"
 		/>
-	
+
 		<div
 			class="user-details-container"
 			[style.marginLeft.px]="width < 410 ? 20 : 40"
@@ -86,7 +79,7 @@
 					{{ dataService.dav.user.FirstName }}
 				</a>
 			</h4>
-	
+
 			<p class="plan-label">
 				{{
 					dataService.dav.user.Plan == 0
@@ -96,15 +89,15 @@
 						: locale.planPro
 				}}
 			</p>
-	
+
 			<div class="progress-bar-container">
 				<dav-progress-bar [value]="usedStoragePercent"></dav-progress-bar>
 			</div>
-	
+
 			<p class="used-storage-label">
 				{{ usedStorageText }}
 			</p>
-	
+
 			<dav-button
 				color="error"
 				outline
