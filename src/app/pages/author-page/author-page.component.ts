@@ -4,7 +4,6 @@ import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
@@ -17,8 +16,6 @@ import { Author } from "src/app/models/Author"
 export class AuthorPageComponent {
 	locale = enUS.authorPage
 	faPlusLight = faPlusLight
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	uuid: string
 	createPublisherDialogVisible: boolean = false
 	createPublisherDialogLoading: boolean = false
@@ -43,11 +40,6 @@ export class AuthorPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		// Get the uuid from the url
 		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
