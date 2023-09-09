@@ -26,7 +26,6 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import {
-	GetDualScreenSettings,
 	GetLanguageByString,
 	GenerateFacebookLink,
 	GenerateInstagramLink,
@@ -82,9 +81,6 @@ export class AuthorProfileComponent {
 	@Output() loaded = new EventEmitter()
 	collectionsLoaded: boolean = false
 	seriesLoaded: boolean = false
-	width: number = 500
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
 	author: Author = new Author(null, [], this.apiService)
@@ -139,12 +135,6 @@ export class AuthorProfileComponent {
 		private router: Router
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
-
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 	}
 
@@ -232,8 +222,6 @@ export class AuthorProfileComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		this.width = window.innerWidth
-
 		if (window.innerWidth < 768) {
 			this.profileImageWidth = 110
 		} else if (window.innerWidth < 1200) {
