@@ -87,7 +87,7 @@
 			{{ locale.noDescription }}
 		</p>
 
-		<div class="mx-auto my-3" style="width: 80%" *ngIf="editDescription">
+		<div class="edit-description-container" *ngIf="editDescription">
 			<dav-textarea
 				[value]="newDescription"
 				[placeholder]="locale.descriptionTextareaPlaceholder"
@@ -110,34 +110,32 @@
 			>
 				{{ editDescription ? locale.save : locale.edit }}
 			</dav-button>
-		</div>
 
-		<dav-button
-			style="margin-left: 10px"
-			color="secondary"
-			size="small"
-			[disabled]="descriptionLoading"
-			(click)="CancelEditDescription()"
-			*ngIf="editDescription"
-		>
-			{{ locale.cancel }}
-		</dav-button>
+			<dav-button
+				color="secondary"
+				size="small"
+				[disabled]="descriptionLoading"
+				(click)="CancelEditDescription()"
+				*ngIf="editDescription"
+			>
+				{{ locale.cancel }}
+			</dav-button>
+		</div>
 	</div>
 
 	<div class="authors-panel">
 		<!-- Error message -->
 		<div
-			class="mt-3 mx-auto"
-			style="min-width: 200px; max-width: 300px"
+			class="error-message-container"
 			*ngIf="errorMessage.length > 0 && publisherMode != 0"
 		>
-			<dav-message-bar type="danger">
+			<dav-message-bar color="error" type="error">
 				{{ errorMessage }}
 			</dav-message-bar>
 		</div>
 
 		<!-- List of authors -->
-		<div class="mb-3 mt-4" *ngIf="publisherMode != 0">
+		<div *ngIf="publisherMode != 0">
 			<dav-header
 				size="small"
 				addButtonVisible
@@ -184,8 +182,8 @@
 	(primaryButtonClick)="UploadLogo()"
 	(defaultButtonClick)="logoDialogVisible = false"
 >
-	<div class="mb-3" style="max-height: 400px">
-		<img #logoDialogImage style="max-width: 100%" />
+	<div class="logo-dialog-content">
+		<img #logoDialogImage />
 	</div>
 </dav-dialog>
 
@@ -200,7 +198,7 @@
 >
 	<form>
 		<!-- Name -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editProfileDialogName"
 				[label]="locale.editProfileDialog.nameTextfieldLabel"
@@ -215,7 +213,7 @@
 		</div>
 
 		<!-- Website url -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editProfileDialogWebsiteUrl"
 				[label]="locale.editProfileDialog.websiteUrlTextfieldLabel"
@@ -234,7 +232,7 @@
 		</div>
 
 		<!-- Facebook username -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editProfileDialogFacebookUsername"
 				[label]="locale.editProfileDialog.facebookUsernameTextfieldLabel"
@@ -252,7 +250,7 @@
 		</div>
 
 		<!-- Instagram username -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editProfileDialogInstagramUsername"
 				[label]="locale.editProfileDialog.instagramUsernameTextfieldLabel"
@@ -270,7 +268,7 @@
 		</div>
 
 		<!-- Twitter username -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editProfileDialogTwitterUsername"
 				[label]="locale.editProfileDialog.twitterUsernameTextfieldLabel"
@@ -302,7 +300,7 @@
 >
 	<form>
 		<!-- First name -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="createAuthorDialogFirstName"
 				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
@@ -320,7 +318,7 @@
 		</div>
 
 		<!-- Last name -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="createAuthorDialogLastName"
 				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"

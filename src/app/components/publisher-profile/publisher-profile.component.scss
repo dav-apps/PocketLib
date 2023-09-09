@@ -2,6 +2,7 @@
 	display: grid;
 	grid-template-rows: auto auto;
 	grid-template-columns: auto;
+	gap: 32px;
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 12px;
@@ -23,6 +24,7 @@
 		grid-template-rows: auto;
 		grid-template-columns: 35% 65%;
 		max-width: 80%;
+		gap: 0;
 	}
 
 	.publisher-panel {
@@ -59,7 +61,8 @@
 }
 
 .description-text {
-	margin-top: 24px;
+	margin: 16px auto 0;
+	max-width: 400px;
 	color: var(--dav-color-on-surface);
 	white-space: pre-line;
 	text-align: justify;
@@ -73,9 +76,16 @@
 	color: var(--dav-color-on-surface);
 }
 
+.edit-description-container {
+	width: 80%;
+	margin: 16px auto;
+}
+
 .edit-description-button-container {
 	display: flex;
 	justify-content: center;
+	gap: 12px;
+	margin-top: 12px;
 }
 
 .progress-ring-container {
@@ -87,4 +97,22 @@
 .author-list-container {
 	max-width: 600px;
 	margin: 32px auto;
+}
+
+.error-message-container {
+	min-width: 200px;
+	max-width: 300px;
+	margin: 0 auto 16px;
+}
+
+.logo-dialog-content {
+	max-height: 400px;
+}
+
+.logo-dialog-content > img {
+	max-width: 100%;
+}
+
+.dialog-formfield-container {
+	margin-bottom: 12px;
 }
