@@ -200,13 +200,17 @@
 
 	<div class="books-panel" *ngIf="authorMode == 0">
 		<!-- List of books -->
-		<pocketlib-horizontal-book-card
-			[title]="book.title"
-			[coverContent]="book.coverContent"
-			[coverBlurhash]="book.coverBlurhash"
-			[link]="'/store/book/' + book.uuid"
-			*ngFor="let book of books"
-		></pocketlib-horizontal-book-card>
+		<dav-list>
+			<dav-list-item
+				[imageSrc]="book.coverContent"
+				[imageBlurhash]="book.coverBlurhash"
+				imageAspectRatio="1:1.5"
+				[headline]="book.title"
+				size="large"
+				[href]="'/store/book/' + book.uuid"
+				*ngFor="let book of books"
+			></dav-list-item>
+		</dav-list>
 	</div>
 </div>
 
