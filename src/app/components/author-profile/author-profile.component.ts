@@ -50,7 +50,8 @@ interface SeriesItem {
 	uuid: string
 	name: string
 	link: string
-	books: StoreBookItem[]
+	coverContent: string
+	coverBlurhash: string
 }
 
 enum BioMode {
@@ -286,34 +287,22 @@ export class AuthorProfileComponent {
 		if (this.authorMode == AuthorMode.Normal) return
 
 		for (let series of await this.author.GetSeries()) {
-			let seriesItem: SeriesItem = {
-				uuid: series.uuid,
-				name: series.name,
-				link: "",
-				books: []
-			}
+			let storeBooks = await series.GetStoreBooks({ limit: 1 })
+			if (storeBooks.length == 0) continue
 
-			for (let book of await series.GetStoreBooks()) {
-				let bookItem: StoreBookItem = {
-					uuid: book.uuid,
-					title: book.title,
-					description: book.description,
-					language: book.language,
-					status: book.status,
-					coverContent: await book.GetCoverContent(),
-					coverBlurhash: book.cover?.blurhash
-				}
-
-				seriesItem.books.push(bookItem)
-			}
+			let link = `/author/series/${series.uuid}`
 
 			if (this.authorMode == AuthorMode.AuthorOfAdmin) {
-				seriesItem.link = `/author/${this.author.uuid}/series/${seriesItem.uuid}`
-			} else {
-				seriesItem.link = `/author/series/${seriesItem.uuid}`
+				link = `/author/${this.author.uuid}/series/${series.uuid}`
 			}
 
-			this.series.push(seriesItem)
+			this.series.push({
+				uuid: series.uuid,
+				name: series.name,
+				link,
+				coverContent: await storeBooks[0].GetCoverContent(),
+				coverBlurhash: storeBooks[0].cover?.blurhash
+			})
 		}
 
 		this.seriesLoaded = true
@@ -487,6 +476,21 @@ export class AuthorProfileComponent {
 		}
 
 		this.UpdateCurrentBio()
+	}
+
+	bookItemClick(event: Event, book: BookListItem) {
+		event.preventDefault()
+		this.router.navigate(["store", "book", book.uuid])
+	}
+
+	collectionItemClick(event: Event, collection: CollectionItem) {
+		event.preventDefault()
+		this.router.navigate([collection.link])
+	}
+
+	seriesItemClick(event: Event, series: SeriesItem) {
+		event.preventDefault()
+		this.router.navigate([series.link])
 	}
 
 	NavigateToNewBookPage() {
