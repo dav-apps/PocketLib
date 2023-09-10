@@ -10,10 +10,7 @@ import {
 import { Router } from "@angular/router"
 import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
-import {
-	faPen as faPenLight,
-	faGlobe as faGlobeLight
-} from "@fortawesome/pro-light-svg-icons"
+import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
 import {
 	faFacebook,
 	faInstagram,
@@ -72,7 +69,6 @@ const maxProfileImageFileSize = 2000000
 })
 export class AuthorProfileComponent {
 	locale = enUS.authorProfile
-	faPenLight = faPenLight
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram

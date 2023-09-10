@@ -7,10 +7,7 @@ import {
 } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
-import {
-	faGlobe as faGlobeLight,
-	faPen as faPenLight
-} from "@fortawesome/pro-light-svg-icons"
+import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
 import {
 	faFacebook,
 	faInstagram,
@@ -48,7 +45,6 @@ interface AuthorItem {
 })
 export class PublisherProfileComponent {
 	locale = enUS.publisherProfile
-	faPenLight = faPenLight
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
