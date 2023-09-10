@@ -155,22 +155,28 @@
 			<dav-progress-ring size="28"></dav-progress-ring>
 		</div>
 
-		<div *ngIf="collectionsLoaded">
-			<pocketlib-horizontal-book-card
-				[title]="collection.name"
-				[coverContent]="
-					collection.books.length > 0 && collection.books[0].coverContent
-						? collection.books[0].coverContent
-						: dataService.defaultStoreBookCover
-				"
-				[coverBlurhash]="
-					collection.books.length > 0 && collection.books[0].coverContent
-						? collection.books[0].coverBlurhash
-						: null
-				"
-				[link]="collection.link"
-				*ngFor="let collection of collections"
-			></pocketlib-horizontal-book-card>
+		<div class="collection-list-container" *ngIf="collectionsLoaded">
+			<dav-list>
+				<dav-list-item
+					[imageSrc]="
+						collection.books.length > 0 &&
+						collection.books[0].coverContent
+							? collection.books[0].coverContent
+							: dataService.defaultStoreBookCover
+					"
+					[imageBlurhash]="
+						collection.books.length > 0 &&
+						collection.books[0].coverContent
+							? collection.books[0].coverBlurhash
+							: null
+					"
+					imageAspectRatio="1:1.5"
+					[headline]="collection.name"
+					[href]="collection.link"
+					(click)="collectionItemClick($event, collection)"
+					*ngFor="let collection of collections"
+				></dav-list-item>
+			</dav-list>
 		</div>
 
 		<!-- List of series -->
@@ -208,6 +214,7 @@
 				[headline]="book.title"
 				size="large"
 				[href]="'/store/book/' + book.uuid"
+				(click)="bookItemClick($event, book)"
 				*ngFor="let book of books"
 			></dav-list-item>
 		</dav-list>
