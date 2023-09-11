@@ -9,6 +9,7 @@ import { enUS } from "src/locales/locales"
 })
 export class LanguageDropdownComponent {
 	@Input() language: string = "en"
+	@Input() label: string = ""
 	@Input() disabled: boolean = false
 	@Output() updated = new EventEmitter()
 	languages = enUS.misc.languages

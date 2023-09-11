@@ -1,25 +1,21 @@
 <div
-	class="mx-auto mb-4"
+	class="container"
 	[ngClass]="
 		section != 2
 			? forwardNavigation
 				? 'slide-left-out'
 				: 'slide-right-out'
 			: forwardNavigation
-				? 'slide-left-in'
-				: 'slide-right-in'
+			? 'slide-left-in'
+			: 'slide-right-in'
 	"
-	style="max-width: 300px"
 	[style.display]="visibleSection != 2 ? 'none' : null"
 >
-	<div class="form-group mb-3">
-		<label class="col-form-label text-color mb-1" style="font-size: 15px">
-			{{ locale.descriptionSection.description }}
-		</label>
-
-		<div class="d-flex mb-3">
+	<div>
+		<div class="language-dropdown-container">
 			<pocketlib-language-dropdown
 				[language]="language"
+				[label]="locale.descriptionSection.languageDropdownLabel"
 				(updated)="SetLanguage($event)"
 			></pocketlib-language-dropdown>
 		</div>
@@ -29,15 +25,19 @@
 			[placeholder]="
 				locale.descriptionSection.descriptionTextfieldPlaceholder
 			"
+			[label]="locale.descriptionSection.description"
+			resize="vertical"
 			(change)="description = $event.detail.value"
 		></dav-textarea>
 	</div>
 
-	<dav-button (click)="Previous()">
-		{{ locale.previous }}
-	</dav-button>
+	<div class="button-container">
+		<dav-button size="small" outline (click)="Previous()">
+			{{ locale.previous }}
+		</dav-button>
 
-	<dav-button style="float: right" type="accent" (click)="Submit()">
-		{{ locale.next }}
-	</dav-button>
+		<dav-button size="small" (click)="Submit()">
+			{{ locale.next }}
+		</dav-button>
+	</div>
 </div>

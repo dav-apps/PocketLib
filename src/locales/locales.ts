@@ -235,7 +235,8 @@ const enDefaults = {
 			newPublication: "New publication"
 		},
 		descriptionSection: {
-			description: "Enter a description.",
+			languageDropdownLabel: "Choose the language of your book",
+			description: "Enter a description",
 			descriptionTextfieldPlaceholder:
 				"This book tells the story of a teensy-weensy little man who scurries around Fairyland having all sorts of adorable adventures."
 		},
@@ -783,7 +784,8 @@ const deDefaults = {
 			newPublication: "Neue Veröffentlichung"
 		},
 		descriptionSection: {
-			description: "Gib eine Beschreibung an.",
+			languageDropdownLabel: "Wähle die Sprache deines Buches",
+			description: "Gib eine Beschreibung an",
 			descriptionTextfieldPlaceholder:
 				"Dieses Buch beschreibt die Geschichte von einem klitzekleinen Männchen, das im Märchenwald herumläuft und allerlei entzückende Abenteuer erlebt."
 		},
