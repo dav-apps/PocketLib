@@ -1,5 +1,5 @@
-import { PromiseHolder } from "dav-js"
-import { Language, PublisherResource } from "../misc/types"
+import { PublisherResource, List } from "../misc/types"
+import { DataService } from "../services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "./Author"
 
@@ -15,32 +15,58 @@ export class Publisher {
 		url: string
 		blurhash: string
 	}
-	private authors: {
-		page: number
-		pages: number
-		limit: number
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<Author[]>
-	}[]
 
 	constructor(
 		publisherResource: PublisherResource,
-		private languages: Language[],
+		private dataService: DataService,
 		private apiService: ApiService
 	) {
-		this.uuid = publisherResource?.uuid ?? ""
-		this.name = publisherResource?.name ?? ""
-		this.description = publisherResource?.description ?? ""
-		this.websiteUrl = publisherResource?.websiteUrl ?? ""
-		this.facebookUsername = publisherResource?.facebookUsername ?? ""
-		this.instagramUsername = publisherResource?.instagramUsername ?? ""
-		this.twitterUsername = publisherResource?.twitterUsername ?? ""
-		this.logo = {
-			url: publisherResource?.logo?.url,
-			blurhash: publisherResource?.logo?.blurhash
+		if (publisherResource != null) {
+			if (publisherResource.uuid != null) this.uuid = publisherResource.uuid
+			if (publisherResource.name != null) this.name = publisherResource.name
+			if (publisherResource.description != null)
+				this.description = publisherResource.description
+			if (publisherResource.websiteUrl != null)
+				this.websiteUrl = publisherResource.websiteUrl
+			if (publisherResource.facebookUsername != null)
+				this.facebookUsername = publisherResource.facebookUsername
+			if (publisherResource.instagramUsername != null)
+				this.instagramUsername = publisherResource.instagramUsername
+			if (publisherResource != null)
+				this.twitterUsername = publisherResource.twitterUsername
+			this.logo = {
+				url: publisherResource.logo?.url,
+				blurhash: publisherResource.logo?.blurhash
+			}
 		}
-		this.authors = []
+	}
+
+	static async Retrieve(
+		uuid: string,
+		dataService: DataService,
+		apiService: ApiService
+	): Promise<Publisher> {
+		let response = await apiService.retrievePublisher(
+			`
+				uuid
+				name
+				description
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
+				logo {
+					url
+					blurhash
+				}
+			`,
+			{ uuid }
+		)
+
+		let responseData = response.data.retrievePublisher
+		if (responseData == null) return null
+
+		return new Publisher(responseData, dataService, apiService)
 	}
 
 	async ReloadLogo() {
@@ -57,146 +83,40 @@ export class Publisher {
 		this.logo.blurhash = responseData.logo?.blurhash
 	}
 
-	async GetAuthors(page: number = -1, limit: number = 50): Promise<Author[]> {
-		if (limit <= 0) limit = 50
-		let authorItem = this.authors.find(
-			item => item.page == page && item.limit == limit
-		)
-
-		if (authorItem != null && (authorItem.isLoading || authorItem.loaded)) {
-			let items = []
-
-			for (let item of await authorItem.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
-
-			return items
-		}
-
-		authorItem = {
-			page,
-			pages: 1,
-			limit,
-			loaded: false,
-			isLoading: true,
-			itemsPromiseHolder: new PromiseHolder<Author[]>()
-		}
-		this.authors.push(authorItem)
-		let items = []
-
-		if (page == -1) {
-			// Get all authors of the publisher
-			let authorPage = 0
-
-			while (authorItem.pages > authorPage) {
-				authorPage++
-
-				let response = await this.apiService.listAuthors(
-					`
-						total
-						items {
-							uuid
-							publisher {
-								uuid
-							}
-							firstName
-							lastName
-							bio {
-								bio
-								language
-							}
-							websiteUrl
-							facebookUsername
-							instagramUsername
-							twitterUsername
-							profileImage {
-								url
-								blurhash
-							}
-						}
-					`,
-					{
-						limit,
-						offset: authorPage * limit
-					}
-				)
-				let responseData = response.data.listAuthors
-
-				if (responseData != null) {
-					for (let item of responseData.items) {
-						items.push(new Author(item, this.languages, this.apiService))
-					}
-				} else {
-					authorItem.isLoading = false
-					authorItem.itemsPromiseHolder.Resolve([])
-					return null
-				}
-			}
-		} else {
-			let response = await this.apiService.listAuthors(
-				`
+	async GetAuthors(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<Author>> {
+		let response = await this.apiService.retrievePublisher(
+			`
+				authors(limit: $limit, offset: $offset) {
 					total
 					items {
 						uuid
-						publisher {
-							uuid
-						}
-						firstName
-						lastName
-						bio {
-							uuid
-							bio
-							language
-						}
-						websiteUrl
-						facebookUsername
-						instagramUsername
-						twitterUsername
-						profileImage {
-							url
-							blurhash
-						}
 					}
-				`,
-				{
-					limit,
-					offset: page * limit
 				}
-			)
-			let responseData = response.data.listAuthors
-
-			if (responseData != null) {
-				authorItem.pages = responseData.total / limit
-
-				for (let item of responseData.items) {
-					items.push(new Author(item, this.languages, this.apiService))
-				}
-			} else {
-				authorItem.isLoading = false
-				authorItem.itemsPromiseHolder.Resolve([])
-				return null
+			`,
+			{
+				uuid: this.uuid,
+				limit: params.limit,
+				offset: params.offset
 			}
-		}
-
-		authorItem.loaded = true
-		authorItem.isLoading = false
-		authorItem.itemsPromiseHolder.Resolve(items)
-		return items
-	}
-
-	GetAuthorPages(page: number = -1, limit: number = 50) {
-		let authorItem = this.authors.find(
-			item => item.page == page && item.limit == limit
 		)
 
-		if (authorItem != null) {
-			return authorItem.pages
-		} else {
-			return 1
-		}
-	}
+		let responseData = response.data.retrievePublisher
+		if (responseData == null) return { total: 0, items: [] }
 
-	ClearAuthors() {
-		this.authors = []
+		let items = []
+
+		for (let item of responseData.authors.items) {
+			items.push(
+				await Author.Retrieve(item.uuid, this.dataService, this.apiService)
+			)
+		}
+
+		return {
+			total: responseData.authors.total,
+			items
+		}
 	}
 }
