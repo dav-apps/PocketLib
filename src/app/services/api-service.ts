@@ -37,14 +37,21 @@ export class ApiService {
 	//#region Publisher
 	async retrievePublisher(
 		queryData: string,
-		variables: { uuid: string }
+		variables: { uuid: string; limit?: number; offset?: number }
 	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource }>> {
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{
 				retrievePublisher: PublisherResource
 			}>({
 				query: gql`
-					query RetrievePublisher($uuid: String!) {
+					query RetrievePublisher(
+						$uuid: String!
+						${limitParam}
+						${offsetParam}
+					) {
 						retrievePublisher(uuid: $uuid) {
 							${queryData}
 						}
@@ -245,14 +252,30 @@ export class ApiService {
 	//#region Author
 	async retrieveAuthor(
 		queryData: string,
-		variables: { uuid: string; languages?: string[] }
+		variables: {
+			uuid: string
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
 	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource }>> {
+		let languagesParam = queryData.includes("languages")
+			? `$languages: [String!]`
+			: ""
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{
 				retrieveAuthor: AuthorResource
 			}>({
 				query: gql`
-					query RetrieveAuthor($uuid: String!, $languages: [String!]) {
+					query RetrieveAuthor(
+						$uuid: String!
+						${languagesParam}
+						${limitParam}
+						${offsetParam}
+					) {
 						retrieveAuthor(uuid: $uuid) {
 							${queryData}
 						}
@@ -521,12 +544,23 @@ export class ApiService {
 	//#region StoreBookCollection
 	async retrieveStoreBookCollection(
 		queryData: string,
-		variables: { uuid: string; languages?: string[] }
+		variables: {
+			uuid: string
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
 	): Promise<
 		ApolloQueryResult<{
 			retrieveStoreBookCollection: StoreBookCollectionResource
 		}>
 	> {
+		let languagesParam = queryData.includes("languages")
+			? `$languages: [String!]`
+			: ""
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{
 				retrieveStoreBookCollection: StoreBookCollectionResource
@@ -534,12 +568,11 @@ export class ApiService {
 				query: gql`
 					query RetrieveStoreBookCollection(
 						$uuid: String!
-						$languages: [String!]
+						${languagesParam}
+						${limitParam}
+						${offsetParam}
 					) {
-						retrieveStoreBookCollection(
-							uuid: $uuid
-							languages: $languages
-						) {
+						retrieveStoreBookCollection(uuid: $uuid) {
 							${queryData}
 						}
 					}
@@ -565,6 +598,44 @@ export class ApiService {
 	//#endregion
 
 	//#region StoreBookCollectionName
+	async retrieveStoreBookCollectionName(
+		queryData: string,
+		variables: { uuid: string }
+	): Promise<
+		ApolloQueryResult<{
+			retrieveStoreBookCollectionName: StoreBookCollectionNameResource
+		}>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveStoreBookCollectionName: StoreBookCollectionNameResource
+			}>({
+				query: gql`
+					query RetrieveStoreBookCollectionName($uuid: String!) {
+						retrieveStoreBookCollectionName(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveStoreBookCollectionName(queryData, variables)
+		}
+
+		return result
+	}
+
 	async setStoreBookCollectionName(
 		queryData: string,
 		variables: { uuid: string; name: string; language: string }
@@ -615,21 +686,31 @@ export class ApiService {
 	//#region StoreBookSeries
 	async retrieveStoreBookSeries(
 		queryData: string,
-		variables: { uuid: string; languages?: string[] }
+		variables: {
+			uuid: string
+			languages?: string[]
+			limit?: number
+			offset?: number
+		}
 	): Promise<
 		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource }>
 	> {
+		let languagesParam = queryData.includes("languages")
+			? `$languages: [String!]`
+			: ""
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{ retrieveStoreBookSeries: StoreBookSeriesResource }>({
 				query: gql`
 					query RetrieveStoreBookSeries(
 						$uuid: String!
-						$languages: [String!]
+						${languagesParam}
+						${limitParam}
+						${offsetParam}
 					) {
-						retrieveStoreBookSeries(
-							uuid: $uuid
-							languages: $languages
-						) {
+						retrieveStoreBookSeries(uuid: $uuid) {
 							${queryData}
 						}
 					}
@@ -803,14 +884,21 @@ export class ApiService {
 	//#region StoreBook
 	async retrieveStoreBook(
 		queryData: string,
-		variables: { uuid: string }
+		variables: { uuid: string; limit?: number; offset?: number }
 	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource }>> {
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{
 				retrieveStoreBook: StoreBookResource
 			}>({
 				query: gql`
-					query RetrieveStoreBook($uuid: String!) {
+					query RetrieveStoreBook(
+						$uuid: String!
+						${limitParam}
+						${offsetParam}
+					) {
 						retrieveStoreBook(uuid: $uuid) {
 							${queryData}
 						}
@@ -1111,6 +1199,42 @@ export class ApiService {
 	//#endregion
 
 	//#region StoreBookRelease
+	async retrieveStoreBookRelease(
+		queryData: string,
+		variables: { uuid: string }
+	): Promise<
+		ApolloQueryResult<{ retrieveStoreBookRelease: StoreBookReleaseResource }>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveStoreBookRelease: StoreBookReleaseResource
+			}>({
+				query: gql`
+					query RetrieveStoreBookRelease($uuid: String!) {
+						retrieveStoreBookRelease(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveStoreBookRelease(queryData, variables)
+		}
+
+		return result
+	}
+
 	async publishStoreBookRelease(
 		queryData: string,
 		variables: {
@@ -1161,6 +1285,45 @@ export class ApiService {
 	//#endregion
 
 	//#region Category
+	async retrieveCategory(
+		queryData: string,
+		variables: { uuid: string; languages?: string[] }
+	): Promise<ApolloQueryResult<{ retrieveCategory: CategoryResource }>> {
+		let languagesParam = queryData.includes("languages")
+			? `$languages: [String!]`
+			: ""
+
+		let result = await this.apollo
+			.query<{ retrieveCategory: CategoryResource }>({
+				query: gql`
+				query RetrieveCategory(
+					$uuid: String!
+					${languagesParam}
+				) {
+					retrieveCategory(uuid: $uuid) {
+						${queryData}
+					}
+				}
+			`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveCategory(queryData, variables)
+		}
+
+		return result
+	}
+
 	async listCategories(
 		queryData: string,
 		variables?: { limit?: number; offset?: number; languages?: string[] }
