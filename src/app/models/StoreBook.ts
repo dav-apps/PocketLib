@@ -1,18 +1,19 @@
-import { isSuccessStatusCode, PromiseHolder } from "dav-js"
-import { ApiService } from "../services/api-service"
-import { StoreBookRelease } from "./StoreBookRelease"
+import { isSuccessStatusCode } from "dav-js"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
 import {
 	StoreBookStatus,
 	Language,
+	List,
 	ApiResponse,
-	StoreBookResource,
-	StoreBookReleaseResource
+	StoreBookResource
 } from "../misc/types"
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
+import { StoreBookCollection } from "./StoreBookCollection"
+import { StoreBookRelease } from "./StoreBookRelease"
 
 export class StoreBook {
 	public uuid: string
-	public collection: string
 	public title: string
 	public description: string
 	public language: Language
@@ -27,46 +28,67 @@ export class StoreBook {
 	public file: {
 		fileName: string
 	}
-	public categories: string[]
 	private coverContent: string
-	private releases: {
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookReleaseResource[]>
-	}
 
 	constructor(
 		storeBookResource: StoreBookResource,
+		private dataService: DataService,
 		private apiService: ApiService
 	) {
-		this.uuid = storeBookResource.uuid
-		this.collection = storeBookResource.collection?.uuid
-		this.title = storeBookResource.title
-		this.description = storeBookResource.description
-		this.language = GetLanguageByString(storeBookResource.language)
-		this.price = storeBookResource.price
-		this.isbn = storeBookResource.isbn
-		this.status = GetStoreBookStatusByString(storeBookResource.status)
-		this.cover = {
-			url: storeBookResource.cover?.url,
-			aspectRatio: storeBookResource.cover?.aspectRatio,
-			blurhash: storeBookResource.cover?.blurhash
+		if (storeBookResource != null) {
+			if (storeBookResource.uuid != null) this.uuid = storeBookResource.uuid
+			if (storeBookResource.title != null)
+				this.title = storeBookResource.title
+			if (storeBookResource.description != null)
+				this.description = storeBookResource.description
+			if (storeBookResource.language != null)
+				this.language = GetLanguageByString(storeBookResource.language)
+			if (storeBookResource.price != null)
+				this.price = storeBookResource.price
+			if (storeBookResource.isbn != null) this.isbn = storeBookResource.isbn
+			if (storeBookResource.status != null)
+				this.status = GetStoreBookStatusByString(storeBookResource.status)
+			this.cover = {
+				url: storeBookResource.cover?.url,
+				aspectRatio: storeBookResource.cover?.aspectRatio,
+				blurhash: storeBookResource.cover?.blurhash
+			}
+			this.file = {
+				fileName: storeBookResource.file?.fileName
+			}
 		}
-		this.file = {
-			fileName: storeBookResource.file?.fileName
-		}
+	}
 
-		this.categories = []
+	static async Retrieve(
+		uuid: string,
+		dataService: DataService,
+		apiService: ApiService
+	): Promise<StoreBook> {
+		let response = await apiService.retrieveStoreBook(
+			`
+				uuid
+				title
+				description
+				language
+				price
+				isbn
+				status
+				cover {
+					url
+					aspectRatio
+					blurhash
+				}
+				file {
+					fileName
+				}
+			`,
+			{ uuid }
+		)
 
-		for (let category of storeBookResource.categories.items) {
-			this.categories.push(category.key)
-		}
+		let responseData = response.data.retrieveStoreBook
+		if (responseData == null) return null
 
-		this.releases = {
-			loaded: false,
-			isLoading: false,
-			itemsPromiseHolder: new PromiseHolder()
-		}
+		return new StoreBook(responseData, dataService, apiService)
 	}
 
 	async GetCoverContent(): Promise<string> {
@@ -84,73 +106,63 @@ export class StoreBook {
 		return responseData
 	}
 
-	async GetReleases(): Promise<StoreBookRelease[]> {
-		if (this.releases.isLoading || this.releases.loaded) {
-			let items = []
+	async GetCollection(): Promise<StoreBookCollection> {
+		let response = await this.apiService.retrieveStoreBook(
+			`
+				collection {
+					uuid
+				}
+			`,
+			{ uuid: this.uuid }
+		)
 
-			for (let item of await this.releases.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
+		let responseData = response.data.retrieveStoreBook
+		if (responseData == null) return null
 
-			return items
-		}
+		return await StoreBookCollection.Retrieve(
+			responseData.collection.uuid,
+			this.dataService,
+			this.apiService
+		)
+	}
 
-		this.releases.isLoading = true
-		this.releases.itemsPromiseHolder.Setup()
-
-		// Get the releases of the store book
+	async GetReleases(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<StoreBookRelease>> {
 		let response = await this.apiService.retrieveStoreBook(
 			`
 				releases {
 					items {
 						uuid
-						storeBook {
-							uuid
-						}
-						releaseName
-						releaseNotes
-						title
-						description
-						price
-						isbn
-						status
-						cover {
-							uuid
-						}
-						file {
-							uuid
-						}
-						categories {
-							items {
-								uuid
-							}
-						}
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{
+				uuid: this.uuid,
+				limit: params?.limit,
+				offset: params?.offset
+			}
 		)
+
 		let responseData = response.data.retrieveStoreBook
+		if (responseData == null) return { total: 0, items: [] }
 
-		if (responseData != null) {
-			this.releases.isLoading = false
-			this.releases.itemsPromiseHolder.Resolve([])
-			return []
-		}
-
-		this.releases.loaded = true
-		this.releases.isLoading = false
 		let items = []
 
 		for (let item of responseData.releases.items) {
-			items.push(new StoreBookRelease(item, this.apiService))
+			items.push(
+				StoreBookRelease.Retrieve(
+					item.uuid,
+					this.dataService,
+					this.apiService
+				)
+			)
 		}
 
-		this.releases.itemsPromiseHolder.Resolve(items)
-		return items
-	}
-
-	ClearReleases() {
-		this.releases.loaded = false
+		return {
+			total: responseData.releases.total,
+			items
+		}
 	}
 }
