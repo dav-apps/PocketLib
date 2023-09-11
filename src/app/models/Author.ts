@@ -1,19 +1,25 @@
-import { isSuccessStatusCode, PromiseHolder } from "dav-js"
+import { isSuccessStatusCode } from "dav-js"
 import {
-	Language,
 	ApiResponse,
 	AuthorResource,
-	AuthorBioResource
+	AuthorBioResource,
+	Language,
+	List
 } from "../misc/types"
+import { GetLanguageByString } from "../misc/utils"
+import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 
 export class Author {
 	public uuid: string
-	public publisher: string
 	public firstName: string
 	public lastName: string
+	public bio: {
+		bio: string
+		language: Language
+	}
 	public websiteUrl: string
 	public facebookUsername: string
 	public instagramUsername: string
@@ -23,54 +29,70 @@ export class Author {
 		blurhash: string
 	}
 	private profileImageContent: string
-	private bios: {
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<AuthorBioResource[]>
-	}
-	private collections: {
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookCollection[]>
-	}
-	private series: {
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookSeries[]>
-	}
 
 	constructor(
 		authorResource: AuthorResource,
-		private languages: Language[],
+		private dataService: DataService,
 		private apiService: ApiService
 	) {
-		this.uuid = authorResource?.uuid ?? ""
-		this.publisher = authorResource?.publisher?.uuid ?? ""
-		this.firstName = authorResource?.firstName ?? ""
-		this.lastName = authorResource?.lastName ?? ""
-		this.websiteUrl = authorResource?.websiteUrl ?? ""
-		this.facebookUsername = authorResource?.facebookUsername ?? ""
-		this.instagramUsername = authorResource?.instagramUsername ?? ""
-		this.twitterUsername = authorResource?.twitterUsername ?? ""
-		this.profileImage = {
-			url: authorResource?.profileImage?.url,
-			blurhash: authorResource?.profileImage?.blurhash
+		if (authorResource != null) {
+			if (authorResource.uuid != null) this.uuid = authorResource.uuid
+			if (authorResource.firstName != null)
+				this.firstName = authorResource.firstName
+			if (authorResource.lastName != null)
+				this.lastName = authorResource.lastName
+			this.bio = {
+				bio: authorResource.bio?.bio,
+				language: GetLanguageByString(authorResource.bio?.language)
+			}
+			if (authorResource.websiteUrl != null)
+				this.websiteUrl = authorResource.websiteUrl
+			if (authorResource.facebookUsername != null)
+				this.facebookUsername = authorResource.facebookUsername
+			if (authorResource.instagramUsername != null)
+				this.instagramUsername = authorResource.instagramUsername
+			if (authorResource.twitterUsername != null)
+				this.twitterUsername = authorResource.twitterUsername
+			this.profileImage = {
+				url: authorResource.profileImage?.url,
+				blurhash: authorResource.profileImage?.blurhash
+			}
 		}
-		this.bios = {
-			loaded: false,
-			isLoading: false,
-			itemsPromiseHolder: new PromiseHolder()
-		}
-		this.collections = {
-			loaded: false,
-			isLoading: false,
-			itemsPromiseHolder: new PromiseHolder()
-		}
-		this.series = {
-			loaded: false,
-			isLoading: false,
-			itemsPromiseHolder: new PromiseHolder()
-		}
+	}
+
+	static async Retrieve(
+		uuid: string,
+		dataService: DataService,
+		apiService: ApiService
+	): Promise<Author> {
+		let response = await apiService.retrieveAuthor(
+			`
+				uuid
+				firstName
+				lastName
+				bio(languages: $languages) {
+					bio
+					language
+				}
+				websiteUrl
+				facebookUsername
+				instagramUsername
+				twitterUsername
+				profileImage {
+					url
+					blurhash
+				}
+			`,
+			{
+				uuid,
+				languages: await dataService.GetStoreLanguages()
+			}
+		)
+
+		let responseData = response.data.retrieveAuthor
+		if (responseData == null) return null
+
+		return new Author(responseData, dataService, apiService)
 	}
 
 	async GetProfileImageContent(): Promise<string> {
@@ -107,24 +129,14 @@ export class Author {
 		}
 	}
 
-	async GetBios(): Promise<AuthorBioResource[]> {
-		if (this.bios.isLoading || this.bios.loaded) {
-			let items = []
-
-			for (let item of await this.bios.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
-
-			return items
-		}
-
-		this.bios.isLoading = true
-		this.bios.itemsPromiseHolder.Setup()
-
+	async GetBios(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<AuthorBioResource>> {
 		// Get the bios of the author
 		let response = await this.apiService.retrieveAuthor(
 			`
-				bios {
+				bios(limit: $limit, offset: $offset) {
 					items {
 						uuid
 						bio
@@ -132,136 +144,105 @@ export class Author {
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{
+				uuid: this.uuid,
+				limit: params?.limit,
+				offset: params?.offset
+			}
 		)
 		let responseData = response.data.retrieveAuthor
+		if (responseData == null) return { total: 0, items: [] }
 
-		if (responseData == null) {
-			this.bios.isLoading = false
-			this.bios.itemsPromiseHolder.Resolve([])
-			return []
-		}
-
-		this.bios.loaded = true
-		this.bios.isLoading = false
 		let items = []
 
 		for (let item of responseData.bios.items) {
 			items.push(item)
 		}
 
-		this.bios.itemsPromiseHolder.Resolve(items)
-		return items
-	}
-
-	ClearBios() {
-		this.bios.loaded = false
-	}
-
-	async GetCollections(): Promise<StoreBookCollection[]> {
-		if (this.collections.isLoading || this.collections.loaded) {
-			let items = []
-
-			for (let item of await this.collections.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
-
-			return items
+		return {
+			total: responseData.bios.total,
+			items
 		}
+	}
 
-		this.collections.isLoading = true
-		this.collections.itemsPromiseHolder.Setup()
-
-		// Get the collections of the author
+	async GetCollections(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<StoreBookCollection>> {
 		let response = await this.apiService.retrieveAuthor(
 			`
-				collections {
+				collections(limit: $limit, offset: $offset) {
 					items {
 						uuid
-						author {
-							uuid
-						}
-						name {
-							name
-							language
-						}
 					}
 				}
 			`,
 			{
 				uuid: this.uuid,
-				languages: this.languages
+				limit: params?.limit,
+				offset: params?.offset
 			}
 		)
+
 		let responseData = response.data.retrieveAuthor
+		if (responseData == null) return { total: 0, items: [] }
 
-		if (responseData == null) {
-			this.collections.isLoading = false
-			this.collections.itemsPromiseHolder.Resolve([])
-			return []
-		}
-
-		this.collections.loaded = true
-		this.collections.isLoading = false
 		let items = []
 
 		for (let item of responseData.collections.items) {
-			items.push(new StoreBookCollection(item, this.apiService))
+			items.push(
+				await StoreBookCollection.Retrieve(
+					item.uuid,
+					this.dataService,
+					this.apiService
+				)
+			)
 		}
 
-		this.collections.itemsPromiseHolder.Resolve(items)
-		return items
-	}
-
-	ClearCollections() {
-		this.collections.loaded = false
-	}
-
-	async GetSeries(): Promise<StoreBookSeries[]> {
-		if (this.series.isLoading || this.series.loaded) {
-			let items = []
-
-			for (let item of await this.series.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
-
-			return items
+		return {
+			total: responseData.collections.total,
+			items
 		}
+	}
 
-		this.series.isLoading = true
-		this.series.itemsPromiseHolder.Setup()
-
+	async GetSeries(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<StoreBookSeries>> {
 		// Get the series of the author
 		let response = await this.apiService.retrieveAuthor(
 			`
-				series {
+				series(limit: $limit, offset: $offset) {
 					items {
 						uuid
-						name
-						language
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{
+				uuid: this.uuid,
+				limit: params?.limit,
+				offset: params?.offset
+			}
 		)
-		let responseData = response.data.retrieveAuthor
 
-		this.series.loaded = true
-		this.series.isLoading = false
+		let responseData = response.data.retrieveAuthor
+		if (responseData == null) return { total: 0, items: [] }
+
 		let items = []
 
-		if (responseData != null) {
-			for (let item of responseData.series.items) {
-				items.push(new StoreBookSeries(item, this.apiService))
-			}
-
-			this.series.itemsPromiseHolder.Resolve(items)
+		for (let item of responseData.series.items) {
+			items.push(
+				await StoreBookSeries.Retrieve(
+					item.uuid,
+					this.dataService,
+					this.apiService
+				)
+			)
 		}
 
-		return items
-	}
-
-	ClearSeries() {
-		this.series.loaded = false
+		return {
+			total: responseData.series.total,
+			items
+		}
 	}
 }
