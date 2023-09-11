@@ -461,7 +461,7 @@ export class PublisherProfileComponent {
 
 	authorItemClick(event: Event, author: AuthorItem) {
 		event.preventDefault()
-		this.router.navigate(["author", author.uuid])
+		this.router.navigate(["store", "author", author.uuid])
 	}
 
 	async CreateAuthor() {
