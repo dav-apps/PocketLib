@@ -1,111 +1,87 @@
-import { PromiseHolder } from "dav-js"
-import {
-	Language,
-	StoreBookSeriesResource,
-	StoreBookResource
-} from "../misc/types"
-import { GetAllLanguages, GetLanguageByString } from "../misc/utils"
-import { ApiService } from "../services/api-service"
+import { List, Language, StoreBookSeriesResource } from "../misc/types"
+import { GetLanguageByString } from "../misc/utils"
+import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
 import { StoreBook } from "./StoreBook"
 
 export class StoreBookSeries {
 	public uuid: string
-	public author: string
 	public name: string
 	public language: Language
-	private storeBooks: {
-		loaded: boolean
-		isLoading: boolean
-		itemsPromiseHolder: PromiseHolder<StoreBookResource[]>
-	}
 
 	constructor(
 		seriesResource: StoreBookSeriesResource,
+		private dataService: DataService,
 		private apiService: ApiService
 	) {
-		this.uuid = seriesResource?.uuid ?? ""
-		this.author = seriesResource?.author?.uuid ?? ""
-		this.name = seriesResource?.name ?? ""
-		this.language = GetLanguageByString(seriesResource?.language)
-		this.storeBooks = {
-			loaded: false,
-			isLoading: false,
-			itemsPromiseHolder: new PromiseHolder()
+		if (seriesResource != null) {
+			if (seriesResource.uuid != null) this.uuid = seriesResource.uuid
+			if (seriesResource.name != null) this.name = seriesResource.name
+			if (seriesResource.language != null)
+				this.language = GetLanguageByString(seriesResource.language)
 		}
 	}
 
-	async GetStoreBooks(): Promise<StoreBook[]> {
-		if (this.storeBooks.isLoading || this.storeBooks.loaded) {
-			let items = []
+	static async Retrieve(
+		uuid: string,
+		dataService: DataService,
+		apiService: ApiService
+	): Promise<StoreBookSeries> {
+		let response = await apiService.retrieveStoreBookSeries(
+			`
+				name
+				language
+			`,
+			{ uuid }
+		)
 
-			for (let item of await this.storeBooks.itemsPromiseHolder.AwaitResult()) {
-				items.push(item)
-			}
+		let responseData = response.data.retrieveStoreBookSeries
+		if (responseData == null) return null
 
-			return items
-		}
+		return new StoreBookSeries(
+			{ uuid, ...responseData },
+			dataService,
+			apiService
+		)
+	}
 
-		this.storeBooks.isLoading = true
-		this.storeBooks.itemsPromiseHolder.Setup()
-
-		// Get the store books of the series
+	async GetStoreBooks(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<StoreBook>> {
 		let response = await this.apiService.retrieveStoreBookSeries(
 			`
-				storeBooks {
+				storeBooks(limit: $limit, offset: $offset) {
 					items {
 						uuid
-						collection {
-							uuid
-						}
-						title
-						description
-						language
-						price
-						isbn
-						status
-						cover {
-							uuid
-						}
-						file {
-							uuid
-						}
-						inLibrary
-						purchased
-						categories {
-							items {
-								key
-							}
-						}
 					}
 				}
 			`,
 			{
 				uuid: this.uuid,
-				languages: GetAllLanguages()
+				limit: params?.limit,
+				offset: params?.offset
 			}
 		)
 
 		let responseData = response.data.retrieveStoreBookSeries
+		if (responseData == null) return { total: 0, items: [] }
 
-		if (responseData == null) {
-			this.storeBooks.isLoading = false
-			this.storeBooks.itemsPromiseHolder.Resolve([])
-			return []
-		}
-
-		this.storeBooks.loaded = true
-		this.storeBooks.isLoading = false
 		let items = []
 
 		for (let item of responseData.storeBooks.items) {
-			items.push(new StoreBook(item, this.apiService))
+			items.push(
+				await StoreBook.Retrieve(
+					item.uuid,
+					this.dataService,
+					this.apiService
+				)
+			)
 		}
 
-		this.storeBooks.itemsPromiseHolder.Resolve(items)
-		return items
-	}
-
-	ClearStoreBooks() {
-		this.storeBooks.loaded = false
+		return {
+			total: responseData.storeBooks.total,
+			items
+		}
 	}
 }
