@@ -132,7 +132,7 @@ export class AuthorPageComponent {
 			this.dataService.adminPublishers.push(
 				new Publisher(
 					responseData,
-					await this.dataService.GetStoreLanguages(),
+					this.dataService,
 					this.apiService
 				)
 			)
@@ -199,11 +199,7 @@ export class AuthorPageComponent {
 
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push(
-				new Author(
-					responseData,
-					await this.dataService.GetStoreLanguages(),
-					this.apiService
-				)
+				new Author(responseData, this.dataService, this.apiService)
 			)
 
 			// Redirect to the author page of the new author

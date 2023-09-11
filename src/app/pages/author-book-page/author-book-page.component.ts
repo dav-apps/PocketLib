@@ -125,12 +125,11 @@ export class AuthorBookPageComponent {
 			)
 
 			if (this.author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (this.author != null) break
-				}
+				this.author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
@@ -145,26 +144,19 @@ export class AuthorBookPageComponent {
 		this.uuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
 		// Get the store book
-		let book: StoreBook = null
+		this.storeBook = await StoreBook.Retrieve(
+			this.uuid,
+			this.dataService,
+			this.apiService
+		)
 
-		for (let collection of await this.author.GetCollections()) {
-			book = (await collection.GetStoreBooks()).find(
-				b => b.uuid == this.uuid
-			)
-
-			if (book != null) {
-				this.storeBook = book
-				this.collection = collection
-				break
-			}
-		}
-
-		if (book == null) {
+		if (this.storeBook == null) {
 			this.router.navigate(["author"])
 			return
 		}
 
-		this.releases = await book.GetReleases()
+		let releasesResult = await this.storeBook.GetReleases()
+		this.releases = releasesResult.items
 		let releaseUuid =
 			this.activatedRoute.snapshot.paramMap.get("release_uuid")
 
@@ -177,35 +169,37 @@ export class AuthorBookPageComponent {
 		await this.dataService.categoriesPromiseHolder.AwaitResult()
 
 		if (this.release != null) {
-			this.book.collection = book.collection
 			this.book.title = this.release.title
 			this.book.description = this.release.description ?? ""
-			this.book.language = book.language
+			this.book.language = this.storeBook.language
 			this.book.price = this.release.price
 			this.book.isbn = this.release.isbn ?? ""
-			this.book.status = book.status
+			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.release.cover?.blurhash
 			this.book.fileName = this.release.file?.fileName
 			this.bookFileUploaded = this.release.file != null
-			this.LoadCategories(this.release.categories)
+
+			let categories = (await this.release.GetCategories()).items
+			this.LoadCategories(categories.map(c => c.key))
 
 			await this.release.GetCoverContent().then(result => {
 				if (result != null) this.coverContent = result
 			})
 		} else {
-			this.book.collection = book.collection
-			this.book.title = book.title
-			this.book.description = book.description ?? ""
-			this.book.language = book.language
-			this.book.price = book.price
-			this.book.isbn = book.isbn ?? ""
-			this.book.status = book.status
-			this.book.coverBlurhash = book.cover?.blurhash
-			this.book.fileName = book.file.fileName
-			this.bookFileUploaded = book.file.fileName != null
-			this.LoadCategories(book.categories)
+			this.book.title = this.storeBook.title
+			this.book.description = this.storeBook.description ?? ""
+			this.book.language = this.storeBook.language
+			this.book.price = this.storeBook.price
+			this.book.isbn = this.storeBook.isbn ?? ""
+			this.book.status = this.storeBook.status
+			this.book.coverBlurhash = this.storeBook.cover?.blurhash
+			this.book.fileName = this.storeBook.file.fileName
+			this.bookFileUploaded = this.storeBook.file.fileName != null
 
-			await book.GetCoverContent().then(result => {
+			let categories = (await this.storeBook.GetCategories()).items
+			this.LoadCategories(categories.map(c => c.key))
+
+			await this.storeBook.GetCoverContent().then(result => {
 				if (result != null) this.coverContent = result
 			})
 
@@ -224,8 +218,8 @@ export class AuthorBookPageComponent {
 
 	async BackButtonClick() {
 		if (this.book.status == StoreBookStatus.Unpublished) {
-			let singleBookInCollection =
-				(await this.collection.GetStoreBooks()).length == 1
+			let storeBooksResult = await this.collection.GetStoreBooks()
+			let singleBookInCollection = storeBooksResult.total == 1
 
 			if (singleBookInCollection) {
 				if (this.dataService.userIsAdmin) {
@@ -485,7 +479,7 @@ export class AuthorBookPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.collection.ClearStoreBooks()
+			//this.collection.ClearStoreBooks()
 
 			// Navigate to the dashboard
 			if (this.dataService.userIsAdmin) {
@@ -511,8 +505,8 @@ export class AuthorBookPageComponent {
 		this.publishChangesDialogVisible = true
 
 		// Reload the releases
-		this.storeBook.ClearReleases()
-		this.releases = await this.storeBook.GetReleases()
+		//this.storeBook.ClearReleases()
+		this.releases = (await this.storeBook.GetReleases()).items
 	}
 
 	ClearPublishChangesErrors() {
@@ -540,9 +534,9 @@ export class AuthorBookPageComponent {
 			this.publishChangesDialogReleaseNotes = ""
 
 			this.changes = false
-			this.author.ClearSeries()
-			this.storeBook.ClearReleases()
-			this.collection.ClearStoreBooks()
+			//this.author.ClearSeries()
+			//this.storeBook.ClearReleases()
+			//this.collection.ClearStoreBooks()
 		} else {
 			let errors = response.errors[0].extensions.errors as string[]
 
@@ -665,8 +659,8 @@ export class AuthorBookPageComponent {
 
 	ShowChanges() {
 		this.changes = true
-		this.author.ClearSeries()
-		this.storeBook.ClearReleases()
-		this.collection.ClearStoreBooks()
+		//this.author.ClearSeries()
+		//this.storeBook.ClearReleases()
+		//this.collection.ClearStoreBooks()
 	}
 }

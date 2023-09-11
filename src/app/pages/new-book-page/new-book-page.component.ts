@@ -113,12 +113,11 @@ export class NewBookPageComponent {
 			)
 
 			if (author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (author != null) break
-				}
+				author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 
 			this.author = author
@@ -133,14 +132,18 @@ export class NewBookPageComponent {
 		}
 
 		// Get the collections
-		for (let collection of await this.author.GetCollections()) {
+		let collectionsResult = await this.author.GetCollections()
+
+		for (let collection of collectionsResult.items) {
 			let collectionItem = {
 				uuid: collection.uuid,
-				name: collection.name.value,
+				name: collection.name.name,
 				coverContent: this.dataService.defaultStoreBookCover
 			}
 
-			for (let book of await collection.GetStoreBooks()) {
+			let storeBooksResult = await collection.GetStoreBooks()
+
+			for (let book of storeBooksResult.items) {
 				if (book.cover.url != null) {
 					book.GetCoverContent().then(result => {
 						if (result != null) collectionItem.coverContent = result
@@ -417,7 +420,7 @@ export class NewBookPageComponent {
 		}
 
 		// Remove RetrieveStoreBookCollection responses from ApiService cache
-		this.author.ClearCollections()
+		//this.author.ClearCollections()
 
 		// Reload the author of the user
 		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData

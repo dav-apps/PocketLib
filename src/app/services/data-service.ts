@@ -94,16 +94,6 @@ export class DataService {
 					`
 						items {
 							uuid
-							name
-							description
-							websiteUrl
-							facebookUsername
-							instagramUsername
-							twitterUsername
-							logo {
-								url
-								blurhash
-							}
 						}
 					`
 				)
@@ -114,11 +104,7 @@ export class DataService {
 				if (listPublishersResponseData != null) {
 					for (let item of listPublishersResponseData.items) {
 						this.adminPublishers.push(
-							new Publisher(
-								item,
-								await this.GetStoreLanguages(),
-								this.apiService
-							)
+							await Publisher.Retrieve(item.uuid, this, this.apiService)
 						)
 					}
 				}
@@ -129,22 +115,12 @@ export class DataService {
 				let limit = 20
 				let offset = 0
 
-				while (offset > totalItems) {
+				do {
 					let listAuthorsResponse = await this.apiService.listAuthors(
 						`
 							total
 							items {
 								uuid
-								firstName
-								lastName
-								websiteUrl
-								facebookUsername
-								instagramUsername
-								twitterUsername
-								profileImage {
-									url
-									blurhash
-								}
 							}
 						`,
 						{
@@ -163,76 +139,28 @@ export class DataService {
 
 						for (let item of listAuthorsResponseData.items) {
 							this.adminAuthors.push(
-								new Author(
-									item,
-									await this.GetStoreLanguages(),
-									this.apiService
-								)
+								await Author.Retrieve(item.uuid, this, this.apiService)
 							)
 						}
 					} else {
 						break
 					}
-				}
+				} while (totalItems > offset)
 			} else {
 				// Try to get the author of the user
-				let authorResponse = await this.apiService.retrieveAuthor(
-					`
-						uuid
-						firstName
-						lastName
-						websiteUrl
-						facebookUsername
-						instagramUsername
-						twitterUsername
-						profileImage {
-							url
-							blurhash
-						}
-					`,
-					{
-						uuid: "mine",
-						languages: await this.GetStoreLanguages()
-					}
+				this.userAuthor = await Author.Retrieve(
+					"mine",
+					this,
+					this.apiService
 				)
 
-				let authorResponseData = authorResponse.data.retrieveAuthor
-
-				if (authorResponseData) {
-					this.userAuthor = new Author(
-						authorResponseData,
-						await this.GetStoreLanguages(),
+				if (this.userAuthor == null) {
+					// Try to get the publisher of the user
+					this.userPublisher = await Publisher.Retrieve(
+						"mine",
+						this,
 						this.apiService
 					)
-				} else {
-					// Try to get the publisher of the user
-					let publisherResponse = await this.apiService.retrievePublisher(
-						`
-							uuid
-							name
-							description
-							websiteUrl
-							facebookUsername
-							instagramUsername
-							twitterUsername
-							logo {
-								url
-								blurhash
-							}
-						`,
-						{ uuid: "mine" }
-					)
-
-					let publisherResponseData =
-						publisherResponse.data.retrievePublisher
-
-					if (publisherResponseData != null) {
-						this.userPublisher = new Publisher(
-							publisherResponseData,
-							await this.GetStoreLanguages(),
-							this.apiService
-						)
-					}
 				}
 			}
 		}

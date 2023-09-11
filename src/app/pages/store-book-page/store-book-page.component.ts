@@ -383,14 +383,13 @@ export class StoreBookPageComponent {
 				} else {
 					// Check if the user can access the book
 					let isAuthorOfBook = false
+
 					if (this.dataService.userAuthor) {
 						// Try to find the book in the books of the author
 						isAuthorOfBook =
 							(
 								await this.dataService.userAuthor.GetCollections()
-							).findIndex(
-								collection => collection.uuid == this.collectionUuid
-							) != -1
+							).items.findIndex(c => c.uuid == this.collectionUuid) != -1
 					}
 
 					if (
@@ -568,10 +567,10 @@ export class StoreBookPageComponent {
 				)
 
 				if (author != null) {
-					author.ClearCollections()
+					//author.ClearCollections()
 				}
 			} else if (this.dataService.userAuthor?.uuid == this.authorUuid) {
-				this.dataService.userAuthor.ClearCollections()
+				//this.dataService.userAuthor.ClearCollections()
 			}
 		}
 

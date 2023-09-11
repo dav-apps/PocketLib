@@ -80,7 +80,7 @@ export class AuthorProfileComponent {
 	seriesLoaded: boolean = false
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(null, [], this.apiService)
+	author: Author = new Author(null, this.dataService, this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -150,12 +150,11 @@ export class AuthorProfileComponent {
 			)
 
 			if (author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(
-						a => a.uuid == this.uuid
-					)
-					if (author != null) break
-				}
+				author = await Author.Retrieve(
+					this.uuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 
 			if (author != null) {
@@ -231,15 +230,19 @@ export class AuthorProfileComponent {
 	async LoadCollections() {
 		if (this.authorMode == AuthorMode.Normal) return
 
-		for (let collection of await this.author.GetCollections()) {
+		let collectionsResult = await this.author.GetCollections()
+
+		for (let collection of collectionsResult.items) {
 			let collectionItem: CollectionItem = {
 				uuid: collection.uuid,
-				name: collection.name.value,
+				name: collection.name.name,
 				link: "",
 				books: []
 			}
 
-			for (let book of await collection.GetStoreBooks()) {
+			let storeBooksResult = await collection.GetStoreBooks()
+
+			for (let book of storeBooksResult.items) {
 				let bookItem: StoreBookItem = {
 					uuid: book.uuid,
 					title: book.title,
@@ -286,9 +289,11 @@ export class AuthorProfileComponent {
 	async LoadSeries() {
 		if (this.authorMode == AuthorMode.Normal) return
 
-		for (let series of await this.author.GetSeries()) {
-			let storeBooks = await series.GetStoreBooks({ limit: 1 })
-			if (storeBooks.length == 0) continue
+		let seriesResult = await this.author.GetSeries()
+
+		for (let series of seriesResult.items) {
+			let storeBooksResult = await series.GetStoreBooks({ limit: 1 })
+			if (storeBooksResult.total == 0) continue
 
 			let link = `/author/series/${series.uuid}`
 
@@ -300,8 +305,8 @@ export class AuthorProfileComponent {
 				uuid: series.uuid,
 				name: series.name,
 				link,
-				coverContent: await storeBooks[0].GetCoverContent(),
-				coverBlurhash: storeBooks[0].cover?.blurhash
+				coverContent: await storeBooksResult.items[0].GetCoverContent(),
+				coverBlurhash: storeBooksResult.items[0].cover?.blurhash
 			})
 		}
 
@@ -310,8 +315,9 @@ export class AuthorProfileComponent {
 
 	async LoadBios() {
 		this.bios = []
+		let biosResult = await this.author.GetBios()
 
-		for (let bio of await this.author.GetBios()) {
+		for (let bio of biosResult.items) {
 			this.bios.push({
 				language: bio.language,
 				value: bio.bio
@@ -667,7 +673,7 @@ export class AuthorProfileComponent {
 		response: MutationResult<{ setAuthorBio: AuthorBioResource }>
 	) {
 		if (response.errors == null) {
-			this.author.ClearBios()
+			//this.author.ClearBios()
 			await this.LoadBios()
 
 			this.newBio = ""
@@ -693,89 +699,48 @@ export class AuthorProfileComponent {
 	}
 
 	async LoadAuthor() {
-		let response = await this.apiService.retrieveAuthor(
-			`
-				uuid
-				collections {
-					items {
-						uuid
-						storeBooks {
-							items {
-								uuid
-								title
-								cover {
-									url
-									blurhash
-								}
-							}
-						}
-					}
-				}
-				firstName
-				lastName
-				bio {
-					bio
-				}
-				websiteUrl
-				facebookUsername
-				instagramUsername
-				twitterUsername
-				profileImage {
-					url
-					blurhash
-				}
-			`,
-			{
-				uuid: this.uuid,
-				languages: await this.dataService.GetStoreLanguages()
-			}
+		this.author = await Author.Retrieve(
+			this.uuid,
+			this.dataService,
+			this.apiService
 		)
-		let responseData = response.data.retrieveAuthor
+		if (this.author == null) return null
 
-		if (responseData != null) {
-			this.author = new Author(
-				responseData,
-				await this.dataService.GetStoreLanguages(),
-				this.apiService
-			)
+		if (this.author.bio.bio == null) {
+			this.currentBio = ""
+			this.bioMode = BioMode.None
+		} else {
+			this.currentBio = this.author.bio.bio
+			this.bioMode = BioMode.Normal
+		}
 
-			if (responseData.bio?.bio == null) {
-				this.currentBio = ""
-				this.bioMode = BioMode.None
-			} else {
-				this.currentBio = responseData.bio.bio
-				this.bioMode = BioMode.Normal
-			}
+		let collectionsResult = await this.author.GetCollections()
 
-			// Get the store books of the author
-			let collections = responseData.collections.items
+		for (let collection of collectionsResult.items) {
+			let storeBooksResult = await collection.GetStoreBooks()
 
-			for (let collection of collections) {
-				for (let storeBook of collection.storeBooks.items) {
-					let bookItem: BookListItem = {
-						uuid: storeBook.uuid,
-						title: storeBook.title,
-						coverContent: null,
-						coverBlurhash: storeBook.cover?.blurhash
-					}
-
-					if (storeBook.cover?.url != null) {
-						this.apiService
-							.downloadFile(storeBook.cover.url)
-							.then((fileResponse: ApiResponse<string>) => {
-								if (isSuccessStatusCode(fileResponse.status)) {
-									bookItem.coverContent = (
-										fileResponse as ApiResponse<string>
-									).data
-								}
-							})
-					}
-
-					this.books.push(bookItem)
+			for (let storeBook of storeBooksResult.items) {
+				let bookItem: BookListItem = {
+					uuid: storeBook.uuid,
+					title: storeBook.title,
+					coverContent: null,
+					coverBlurhash: storeBook.cover?.blurhash
 				}
-			}
 
-			this.UpdateSocialMediaLinks()
+				if (storeBook.cover?.url != null) {
+					this.apiService
+						.downloadFile(storeBook.cover.url)
+						.then((fileResponse: ApiResponse<string>) => {
+							if (isSuccessStatusCode(fileResponse.status)) {
+								bookItem.coverContent = (
+									fileResponse as ApiResponse<string>
+								).data
+							}
+						})
+				}
+
+				this.books.push(bookItem)
+			}
 		}
 	}
 

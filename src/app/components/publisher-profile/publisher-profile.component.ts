@@ -51,7 +51,7 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() uuid: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, [], this.apiService)
+	publisher: Publisher = new Publisher(null, this.dataService, this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -144,7 +144,11 @@ export class PublisherProfileComponent {
 			this.publisherMode = PublisherMode.Normal
 
 			// Get the publisher from the server
-			await this.LoadPublisher()
+			this.publisher = await Publisher.Retrieve(
+				this.uuid,
+				this.dataService,
+				this.apiService
+			)
 		} else if (publisher == null) {
 			return
 		} else {
@@ -185,43 +189,15 @@ export class PublisherProfileComponent {
 		}
 	}
 
-	async LoadPublisher() {
-		let response = await this.apiService.retrievePublisher(
-			`
-				uuid
-				name
-				description
-				websiteUrl
-				facebookUsername
-				instagramUsername
-				twitterUsername
-				logo {
-					url
-					blurhash
-				}
-			`,
-			{ uuid: this.uuid }
-		)
-
-		let responseData = response.data.retrievePublisher
-
-		if (responseData != null) {
-			this.publisher = new Publisher(
-				responseData,
-				await this.dataService.GetStoreLanguages(),
-				this.apiService
-			)
-		}
-	}
-
 	async LoadAuthors() {
 		this.authorItems = []
 		this.authorsLoading = true
+		let authorsResponse = await this.publisher.GetAuthors({
+			limit: maxAuthorsPerPage,
+			offset: (this.page - 1) * maxAuthorsPerPage
+		})
 
-		for (let author of await this.publisher.GetAuthors(
-			this.page,
-			maxAuthorsPerPage
-		)) {
+		for (let author of authorsResponse.items) {
 			let authorItem: AuthorItem = {
 				uuid: author.uuid,
 				name: `${author.firstName} ${author.lastName}`,
@@ -244,7 +220,7 @@ export class PublisherProfileComponent {
 			this.authorItems.push(authorItem)
 		}
 
-		this.pages = this.publisher.GetAuthorPages(this.page, maxAuthorsPerPage)
+		this.pages = Math.floor(authorsResponse.total / maxAuthorsPerPage)
 		this.authorsLoading = false
 	}
 
@@ -488,7 +464,7 @@ export class PublisherProfileComponent {
 			let responseData = response.data.createAuthor
 
 			// Clear the authors of the publisher
-			this.publisher.ClearAuthors()
+			//this.publisher.ClearAuthors()
 
 			// Redirect to the author page of the new author
 			this.router.navigate(["author", responseData.uuid])

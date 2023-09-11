@@ -61,12 +61,11 @@ export class NewSeriesPageComponent {
 			)
 
 			if (author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (author != null) break
-				}
+				author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 
 			if (author == null) {
@@ -92,8 +91,12 @@ export class NewSeriesPageComponent {
 		this.bookItems = []
 
 		// Get the books that can be selected (status = review, published or hidden; language = current language)
-		for (let collection of await this.author.GetCollections()) {
-			for (let book of await collection.GetStoreBooks()) {
+		let collectionsResult = await this.author.GetCollections()
+
+		for (let collection of collectionsResult.items) {
+			let storeBooksResult = await collection.GetStoreBooks()
+
+			for (let book of storeBooksResult.items) {
 				if (
 					book.status > 0 &&
 					book.cover.url != null &&
@@ -171,7 +174,7 @@ export class NewSeriesPageComponent {
 		}
 
 		// Reload the author
-		this.author.ClearSeries()
+		//this.author.ClearSeries()
 
 		// Redirect to the author profile
 		this.dataService.navbarVisible = true

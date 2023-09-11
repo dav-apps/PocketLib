@@ -80,7 +80,7 @@ export class AuthorSetupPageComponent {
 			// Set the author in DataService
 			this.dataService.userAuthor = new Author(
 				responseData,
-				await this.dataService.GetStoreLanguages(),
+				this.dataService,
 				this.apiService
 			)
 			this.dataService.userAuthorPromiseHolder.Resolve(

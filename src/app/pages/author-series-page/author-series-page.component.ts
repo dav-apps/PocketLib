@@ -26,7 +26,11 @@ export class AuthorSeriesPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	author: Author
-	series: StoreBookSeries = new StoreBookSeries(null, this.apiService)
+	series: StoreBookSeries = new StoreBookSeries(
+		null,
+		this.dataService,
+		this.apiService
+	)
 	books: StoreBook[] = []
 	selectableBooks: StoreBook[] = []
 	editNameDialogVisible: boolean = false
@@ -76,12 +80,11 @@ export class AuthorSeriesPageComponent {
 			)
 
 			if (this.author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (this.author != null) break
-				}
+				this.author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
@@ -96,9 +99,8 @@ export class AuthorSeriesPageComponent {
 		this.uuid = this.activatedRoute.snapshot.paramMap.get("series_uuid")
 
 		// Get the series
-		this.series = (await this.author.GetSeries()).find(
-			s => s.uuid == this.uuid
-		)
+		let seriesResult = await this.author.GetSeries()
+		this.series = seriesResult.items.find(s => s.uuid == this.uuid)
 
 		if (this.series == null) {
 			this.router.navigate(["author"])
@@ -106,7 +108,9 @@ export class AuthorSeriesPageComponent {
 		}
 
 		// Get the books of the series
-		for (let storeBook of await this.series.GetStoreBooks()) {
+		let storeBooksResult = await this.series.GetStoreBooks()
+
+		for (let storeBook of storeBooksResult.items) {
 			this.books.push(storeBook)
 		}
 
@@ -126,8 +130,12 @@ export class AuthorSeriesPageComponent {
 		this.selectableBooks = []
 
 		// Get the available books
-		for (let collection of await this.author.GetCollections()) {
-			for (let book of await collection.GetStoreBooks()) {
+		let collectionsResult = await this.author.GetCollections()
+
+		for (let collection of collectionsResult.items) {
+			let storeBooksResult = await collection.GetStoreBooks()
+
+			for (let book of storeBooksResult.items) {
 				if (
 					this.books.findIndex(b => b.uuid == book.uuid) == -1 &&
 					book.status > 0 &&
@@ -201,8 +209,8 @@ export class AuthorSeriesPageComponent {
 		if (response.errors == null) {
 			this.addBookDialogVisible = false
 
-			this.author.ClearSeries()
-			this.series.ClearStoreBooks()
+			//this.author.ClearSeries()
+			//this.series.ClearStoreBooks()
 			this.LoadSelectableBooks()
 		}
 	}
@@ -222,8 +230,8 @@ export class AuthorSeriesPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.author.ClearSeries()
-			this.series.ClearStoreBooks()
+			//this.author.ClearSeries()
+			//this.series.ClearStoreBooks()
 		}
 	}
 
@@ -252,8 +260,8 @@ export class AuthorSeriesPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.author.ClearSeries()
-			this.series.ClearStoreBooks()
+			//this.author.ClearSeries()
+			//this.series.ClearStoreBooks()
 			this.LoadSelectableBooks()
 		}
 	}

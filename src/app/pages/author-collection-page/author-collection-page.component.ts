@@ -27,6 +27,7 @@ export class AuthorCollectionPageComponent {
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
 		null,
+		this.dataService,
 		this.apiService
 	)
 	books: ExtendedBookListItem[] = []
@@ -79,12 +80,11 @@ export class AuthorCollectionPageComponent {
 			)
 
 			if (this.author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (this.author != null) break
-				}
+				this.author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 
 			this.newBookPageLink.path = `/author/${authorUuid}/book/new`
@@ -102,8 +102,10 @@ export class AuthorCollectionPageComponent {
 		this.newBookPageLink.params["collection"] = this.uuid
 
 		// Get the collection
-		this.collection = (await this.author.GetCollections()).find(
-			c => c.uuid == this.uuid
+		this.collection = await StoreBookCollection.Retrieve(
+			this.uuid,
+			this.dataService,
+			this.apiService
 		)
 
 		if (this.collection == null) {
@@ -111,12 +113,13 @@ export class AuthorCollectionPageComponent {
 			return
 		}
 
-		this.collectionName.name = this.collection.name.value
+		this.collectionName.name = this.collection.name.name
 		this.collectionName.language = this.collection.name.language
 
 		let i = 0
+		let storeBooksResult = await this.collection.GetStoreBooks()
 
-		for (let storeBook of await this.collection.GetStoreBooks()) {
+		for (let storeBook of storeBooksResult.items) {
 			let bookItem: ExtendedBookListItem = {
 				uuid: storeBook.uuid,
 				title: storeBook.title,
@@ -180,8 +183,9 @@ export class AuthorCollectionPageComponent {
 	async LoadCollectionNames() {
 		// Update the collection names for the EditNames component
 		this.collectionNames = []
+		let namesResult = await this.collection.GetNames()
 
-		for (let collectionName of await this.collection.GetNames()) {
+		for (let collectionName of namesResult.items) {
 			this.collectionNames.push({
 				name: collectionName.name,
 				language: collectionName.language,
@@ -218,7 +222,7 @@ export class AuthorCollectionPageComponent {
 			}
 		}
 
-		this.collection.ClearNames()
+		//this.collection.ClearNames()
 		this.LoadCollectionNames()
 	}
 }

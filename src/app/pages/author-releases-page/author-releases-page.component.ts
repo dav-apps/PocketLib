@@ -2,6 +2,7 @@ import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
@@ -25,6 +26,7 @@ export class AuthorReleasesPageComponent {
 
 	constructor(
 		public dataService: DataService,
+		public apiService: ApiService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {}
@@ -44,12 +46,11 @@ export class AuthorReleasesPageComponent {
 			)
 
 			if (this.author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (this.author != null) break
-				}
+				this.author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
@@ -63,27 +64,24 @@ export class AuthorReleasesPageComponent {
 		// Get the store book
 		let storeBookUuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
-		for (let collection of await this.author.GetCollections()) {
-			this.book = (await collection.GetStoreBooks()).find(
-				b => b.uuid == storeBookUuid
-			)
-
-			if (this.book != null) {
-				this.collection = collection
-				break
-			}
-		}
+		this.book = await StoreBook.Retrieve(
+			storeBookUuid,
+			this.dataService,
+			this.apiService
+		)
 
 		if (this.book == null) {
 			this.router.navigate(["author"])
 			return
 		}
 
-		// Get the store book releases
-		let releases = await this.book.GetReleases()
 		this.title = this.book.title
+		this.collection = await this.book.GetCollection()
 
-		for (let release of releases) {
+		// Get the store book releases
+		let releasesResult = await this.book.GetReleases()
+
+		for (let release of releasesResult.items) {
 			if (release.status == StoreBookReleaseStatus.Unpublished) continue
 
 			let releaseItem: ReleaseItem = {

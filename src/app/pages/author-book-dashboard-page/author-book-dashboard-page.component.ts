@@ -45,12 +45,11 @@ export class AuthorBookDashboardPageComponent {
 			)
 
 			if (this.author == null) {
-				for (let publisher of this.dataService.adminPublishers) {
-					this.author = (await publisher.GetAuthors()).find(
-						a => a.uuid == authorUuid
-					)
-					if (this.author != null) break
-				}
+				this.author = await Author.Retrieve(
+					authorUuid,
+					this.dataService,
+					this.apiService
+				)
 			}
 		} else if (this.dataService.userAuthor) {
 			this.author = this.dataService.userAuthor
@@ -64,16 +63,11 @@ export class AuthorBookDashboardPageComponent {
 		// Get the store book
 		let storeBookUuid = this.activatedRoute.snapshot.paramMap.get("book_uuid")
 
-		for (let collection of await this.author.GetCollections()) {
-			this.book = (await collection.GetStoreBooks()).find(
-				b => b.uuid == storeBookUuid
-			)
-
-			if (this.book != null) {
-				this.collection = collection
-				break
-			}
-		}
+		this.book = await StoreBook.Retrieve(
+			storeBookUuid,
+			this.dataService,
+			this.apiService
+		)
 
 		if (this.book == null) {
 			this.router.navigate(["author"])
@@ -82,21 +76,23 @@ export class AuthorBookDashboardPageComponent {
 
 		this.title = this.book.title
 		this.status = this.book.status
+		this.collection = await this.book.GetCollection()
+
 		await this.LoadBackButtonLink()
 	}
 
 	async LoadBackButtonLink() {
-		let singleBookInCollection =
-			(await this.collection.GetStoreBooks()).length == 1
+		let storeBooksResult = await this.collection.GetStoreBooks()
+		let singleBookInCollection = storeBooksResult.total == 1
 
 		if (singleBookInCollection && this.dataService.userIsAdmin) {
 			this.backButtonLink = `/author/${this.author.uuid}`
 		} else if (singleBookInCollection) {
 			this.backButtonLink = "/author"
 		} else if (this.dataService.userIsAdmin) {
-			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.book.collection}`
+			this.backButtonLink = `/author/${this.author.uuid}/collection/${this.collection.uuid}`
 		} else {
-			this.backButtonLink = `/author/collection/${this.book.collection}`
+			this.backButtonLink = `/author/collection/${this.collection.uuid}`
 		}
 	}
 
@@ -141,7 +137,7 @@ export class AuthorBookDashboardPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.collection.ClearStoreBooks()
+			//this.collection.ClearStoreBooks()
 
 			if (this.dataService.userIsAdmin) {
 				this.router.navigate([
@@ -169,7 +165,7 @@ export class AuthorBookDashboardPageComponent {
 
 		if (response.errors == null) {
 			this.status = StoreBookStatus.Published
-			this.collection.ClearStoreBooks()
+			//this.collection.ClearStoreBooks()
 		}
 
 		this.loading = false
@@ -185,7 +181,7 @@ export class AuthorBookDashboardPageComponent {
 
 		if (response.errors == null) {
 			this.status = StoreBookStatus.Hidden
-			this.collection.ClearStoreBooks()
+			//this.collection.ClearStoreBooks()
 		}
 
 		this.loading = false
