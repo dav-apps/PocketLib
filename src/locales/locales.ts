@@ -226,7 +226,7 @@ const enDefaults = {
 	newBookPage: {
 		title: "Create book",
 		titleSection: {
-			description: "Enter the title of your book.",
+			description: "Enter the title of your book",
 			titleTextfieldPlaceholder: "The Littlest Elf"
 		},
 		collectionSection: {
@@ -774,7 +774,7 @@ const deDefaults = {
 	newBookPage: {
 		title: "Buch erstellen",
 		titleSection: {
-			description: "Gib den Titel deines Buches ein.",
+			description: "Gib den Titel deines Buches ein",
 			titleTextfieldPlaceholder: "Das winzigste Elflein"
 		},
 		collectionSection: {
