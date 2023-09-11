@@ -11,6 +11,7 @@ import {
 import { GetStoreBookStatusByString, GetLanguageByString } from "../misc/utils"
 import { StoreBookCollection } from "./StoreBookCollection"
 import { StoreBookRelease } from "./StoreBookRelease"
+import { Category } from "./Category"
 
 export class StoreBook {
 	public uuid: string
@@ -162,6 +163,46 @@ export class StoreBook {
 
 		return {
 			total: responseData.releases.total,
+			items
+		}
+	}
+
+	async GetCategories(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<Category>> {
+		let response = await this.apiService.retrieveStoreBook(
+			`
+				categories(limit: $limit, offset: $offset) {
+					items {
+						uuid
+					}
+				}
+			`,
+			{
+				uuid: this.uuid,
+				limit: params.limit,
+				offset: params.offset
+			}
+		)
+
+		let responseData = response.data.retrieveStoreBook
+		if (responseData == null) return { total: 0, items: [] }
+
+		let items = []
+
+		for (let item of responseData.categories.items) {
+			items.push(
+				await Category.Retrieve(
+					item.uuid,
+					this.dataService,
+					this.apiService
+				)
+			)
+		}
+
+		return {
+			total: responseData.categories.total,
 			items
 		}
 	}

@@ -1201,16 +1201,23 @@ export class ApiService {
 	//#region StoreBookRelease
 	async retrieveStoreBookRelease(
 		queryData: string,
-		variables: { uuid: string }
+		variables: { uuid: string; limit?: number; offset?: number }
 	): Promise<
 		ApolloQueryResult<{ retrieveStoreBookRelease: StoreBookReleaseResource }>
 	> {
+		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
+		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+
 		let result = await this.apollo
 			.query<{
 				retrieveStoreBookRelease: StoreBookReleaseResource
 			}>({
 				query: gql`
-					query RetrieveStoreBookRelease($uuid: String!) {
+					query RetrieveStoreBookRelease(
+						$uuid: String!
+						${limitParam}
+						${offsetParam}
+					) {
 						retrieveStoreBookRelease(uuid: $uuid) {
 							${queryData}
 						}

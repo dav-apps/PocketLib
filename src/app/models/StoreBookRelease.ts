@@ -108,7 +108,10 @@ export class StoreBookRelease {
 		return responseData
 	}
 
-	async GetCategories(): Promise<List<Category>> {
+	async GetCategories(params?: {
+		limit?: number
+		offset?: number
+	}): Promise<List<Category>> {
 		let response = await this.apiService.retrieveStoreBookRelease(
 			`
 				categories(limit: $limit, offset: $offset) {
@@ -117,7 +120,11 @@ export class StoreBookRelease {
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{
+				uuid: this.uuid,
+				limit: params.limit,
+				offset: params.offset
+			}
 		)
 
 		let responseData = response.data.retrieveStoreBookRelease
