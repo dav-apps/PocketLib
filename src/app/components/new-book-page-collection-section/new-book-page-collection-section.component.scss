@@ -1,0 +1,17 @@
+.container {
+	margin: 0 auto;
+	max-width: 500px;
+	overflow: hidden;
+}
+
+.description-text {
+	margin-top: 0;
+	margin-bottom: 24px;
+	color: var(--dav-color-on-surface);
+}
+
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 16px;
+}

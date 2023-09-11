@@ -4,7 +4,8 @@ import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-new-book-page-collection-section",
-	templateUrl: "./new-book-page-collection-section.component.html"
+	templateUrl: "./new-book-page-collection-section.component.html",
+	styleUrls: ["./new-book-page-collection-section.component.scss"]
 })
 export class NewBookPageCollectionSectionComponent {
 	locale = enUS.newBookPage
@@ -17,7 +18,6 @@ export class NewBookPageCollectionSectionComponent {
 		cover: boolean
 		coverContent: string
 	}[] = []
-	@Input() selectedCollection: number = -2
 	@Output() select = new EventEmitter()
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
@@ -32,9 +32,5 @@ export class NewBookPageCollectionSectionComponent {
 
 	Previous() {
 		this.previous.emit()
-	}
-
-	Submit() {
-		this.submit.emit(this.selectedCollection)
 	}
 }

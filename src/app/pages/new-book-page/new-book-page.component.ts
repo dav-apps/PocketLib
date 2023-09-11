@@ -41,7 +41,6 @@ export class NewBookPageComponent {
 		coverContent: string
 	}[] = []
 	selectedCollection: number = -2
-	collectionSelected: boolean = false
 	loadCollectionsPromiseHolder = new PromiseHolder()
 	noCollections: boolean = false
 	//#endregion
@@ -248,11 +247,7 @@ export class NewBookPageComponent {
 	//#region Collection functions
 	SelectCollection(index: number) {
 		this.selectedCollection = index
-
-		if (!this.collectionSelected) {
-			this.collectionSelected = true
-			this.Next()
-		}
+		this.Next()
 	}
 
 	SubmitCollection(selectedCollection: number) {
