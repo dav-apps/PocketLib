@@ -1,6 +1,5 @@
-<!-- Normal layout -->
-<div class="container slide-up-in" *ngIf="!dualScreenLayout">
-	<div class="mt-3 mb-4">
+<div class="container slide-up-in">
+	<div class="header-container">
 		<dav-header
 			backButtonVisible
 			[editButtonVisible]="titleSubmitted"
@@ -12,12 +11,8 @@
 	</div>
 
 	<!-- Error message bar -->
-	<div
-		class="mb-3 mx-auto"
-		style="max-width: 300px"
-		*ngIf="errorMessage.length > 0"
-	>
-		<dav-message-bar type="danger">
+	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
@@ -103,114 +98,6 @@
 	></pocketlib-new-book-page-book-file-section>
 </div>
 
-<!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="mt-3 mb-4 mx-3">
-			<dav-header
-				backButtonVisible
-				[editButtonVisible]="titleSubmitted"
-				(backButtonClick)="GoBack()"
-				(editButtonClick)="NavigateToSection(0)"
-			>
-				{{ titleSubmitted ? submittedTitle : locale.title }}
-			</dav-header>
-		</div>
-
-		<!-- Error message bar -->
-		<div
-			class="mb-3 mx-auto"
-			style="max-width: 300px"
-			*ngIf="errorMessage.length > 0"
-		>
-			<dav-message-bar type="danger">
-				{{ errorMessage }}
-			</dav-message-bar>
-		</div>
-
-		<!-- Title -->
-		<pocketlib-new-book-page-title-section
-			[loading]="loading"
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(submit)="SubmitTitle($event)"
-		></pocketlib-new-book-page-title-section>
-
-		<!-- Collection -->
-		<pocketlib-new-book-page-collection-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			[collections]="collections"
-			[selectedCollection]="selectedCollection"
-			(select)="SelectCollection($event)"
-			(previous)="Previous()"
-			(submit)="SubmitCollection($event)"
-		></pocketlib-new-book-page-collection-section>
-
-		<!-- Description + Language -->
-		<pocketlib-new-book-page-description-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(setLanguage)="SetLanguage($event)"
-			(previous)="Previous()"
-			(submit)="SubmitDescription($event)"
-		></pocketlib-new-book-page-description-section>
-
-		<!-- Categories -->
-		<pocketlib-new-book-page-categories-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(previous)="Previous()"
-			(submit)="SubmitCategories($event)"
-		></pocketlib-new-book-page-categories-section>
-
-		<!-- Price -->
-		<pocketlib-new-book-page-price-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(setPrice)="SetPrice($event)"
-			(previous)="Previous()"
-			(submit)="SubmitPrice()"
-		></pocketlib-new-book-page-price-section>
-
-		<!-- ISBN -->
-		<pocketlib-new-book-page-isbn-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(setIsbn)="SetIsbn($event)"
-			(previous)="Previous()"
-			(submit)="SubmitIsbn()"
-		></pocketlib-new-book-page-isbn-section>
-
-		<!-- Cover -->
-		<pocketlib-new-book-page-cover-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(setCover)="SetCover($event)"
-			(previous)="Previous()"
-			(submit)="SubmitCover()"
-		></pocketlib-new-book-page-cover-section>
-
-		<!-- Book file -->
-		<pocketlib-new-book-page-book-file-section
-			[section]="section"
-			[visibleSection]="visibleSection"
-			[forwardNavigation]="forwardNavigation"
-			(setBookFile)="SetBookFile($event)"
-			(previous)="Previous()"
-			(finish)="Finish()"
-		></pocketlib-new-book-page-book-file-section>
-	</div>
-</div>
-
 <pocketlib-loading-screen
 	*ngIf="loadingScreenVisible"
 	[message]="loadingScreenMessage"
@@ -226,5 +113,7 @@
 	(primaryButtonClick)="LeavePageDialogLeave()"
 	(defaultButtonClick)="LeavePageDialogCancel()"
 >
-	<p class="text-color">{{ locale.leavePageDialog.description }}</p>
+	<p class="leave-dialog-description">
+		{{ locale.leavePageDialog.description }}
+	</p>
 </dav-dialog>

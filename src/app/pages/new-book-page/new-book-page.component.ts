@@ -5,12 +5,12 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
-import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-new-book-page",
-	templateUrl: "./new-book-page.component.html"
+	templateUrl: "./new-book-page.component.html",
+	styleUrls: ["./new-book-page.component.scss"]
 })
 export class NewBookPageComponent {
 	//#region Navigation variables
@@ -22,8 +22,6 @@ export class NewBookPageComponent {
 
 	//#region General variables
 	locale = enUS.newBookPage
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	author: Author
 	leavePageDialogVisible: boolean = false
 	errorMessage: string = ""
@@ -92,11 +90,6 @@ export class NewBookPageComponent {
 		this.locale = this.dataService.GetLocale().newBookPage
 		this.routingService.toolbarNavigationEvent = async () =>
 			await this.HandleToolbarNavigationEvent()
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
