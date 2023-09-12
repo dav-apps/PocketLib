@@ -1,5 +1,5 @@
 <div
-	class="mx-auto mb-4"
+	class="container"
 	[ngClass]="
 		section != 3
 			? forwardNavigation
@@ -9,22 +9,23 @@
 				? 'slide-left-in'
 				: 'slide-right-in'
 	"
-	style="max-width: 300px"
 	[style.display]="visibleSection != 3 ? 'none' : null"
 >
-	<div class="mb-3">
-		<p class="text-color">{{ locale.categoriesSection.description }}</p>
+	<div>
+		<p class="description-text">{{ locale.categoriesSection.description }}</p>
 
 		<pocketlib-categories-selection
 			#categoriesSelection
 		></pocketlib-categories-selection>
 	</div>
 
-	<dav-button (click)="Previous()">
-		{{ locale.previous }}
-	</dav-button>
-
-	<dav-button style="float: right" type="accent" (click)="Submit()">
-		{{ locale.next }}
-	</dav-button>
+	<div class="button-container">
+		<dav-button size="small" outline (click)="Previous()">
+			{{ locale.previous }}
+		</dav-button>
+	
+		<dav-button size="small" (click)="Submit()">
+			{{ locale.next }}
+		</dav-button>
+	</div>
 </div>
