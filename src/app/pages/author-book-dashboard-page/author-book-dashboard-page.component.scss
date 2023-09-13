@@ -1,0 +1,26 @@
+.container {
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 32px;
+}
+
+.status-text {
+	text-align: center;
+	color: var(--dav-color-on-surface);
+	font-size: 22px;
+}
+
+.status-description-text {
+	text-align: center;
+	color: var(--dav-color-on-surface);
+	font-size: 18px;
+}
+
+.button-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}

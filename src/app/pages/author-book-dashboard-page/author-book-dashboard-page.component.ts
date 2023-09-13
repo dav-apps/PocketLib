@@ -9,7 +9,8 @@ import { StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	templateUrl: "./author-book-dashboard-page.component.html"
+	templateUrl: "./author-book-dashboard-page.component.html",
+	styleUrls: ["./author-book-dashboard-page.component.scss"]
 })
 export class AuthorBookDashboardPageComponent {
 	locale = enUS.authorBookDashboardPage

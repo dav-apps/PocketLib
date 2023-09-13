@@ -1,107 +1,89 @@
 <div class="container slide-up-in">
-	<div class="mt-3 mb-4">
-		<dav-header
-			backButtonVisible
-			(backButtonClick)="BackButtonClick()"
-		>
+	<div class="header-container">
+		<dav-header backButtonVisible (backButtonClick)="BackButtonClick()">
 			{{ title }}
 		</dav-header>
 	</div>
 
 	<!-- Published -->
 	<div *ngIf="status == 2">
-		<p class="text-color text-center" style="font-size: 22px">
+		<p class="status-text">
 			{{ locale.published }}
 		</p>
 
-		<div class="d-flex flex-wrap justify-content-center">
-			<div class="m-1">
-				<dav-button
-					type="danger"
-					[disabled]="loading"
-					(click)="UnpublishButtonClick()"
-				>
-					{{ locale.unpublish }}
-				</dav-button>
-			</div>
+		<div class="button-container">
+			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+				{{ locale.showDetails }}
+			</dav-button>
 
-			<div class="m-1">
-				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
-					{{ locale.showDetails }}
-				</dav-button>
-			</div>
+			<dav-button
+				outline
+				[disabled]="loading"
+				(click)="ShowReleasesButtonClick()"
+			>
+				{{ locale.showReleases }}
+			</dav-button>
 
-			<div class="m-1">
-				<dav-button
-					[disabled]="loading"
-					(click)="ShowReleasesButtonClick()"
-				>
-					{{ locale.showReleases }}
-				</dav-button>
-			</div>
+			<dav-button
+				color="error"
+				[disabled]="loading"
+				(click)="UnpublishButtonClick()"
+			>
+				{{ locale.unpublish }}
+			</dav-button>
 		</div>
 	</div>
 
 	<!-- Hidden -->
 	<div *ngIf="status == 3">
-		<p class="text-color text-center" style="font-size: 22px">
+		<p class="status-text">
 			{{ locale.hidden }}
 		</p>
 
-		<div class="d-flex flex-wrap justify-content-center">
-			<div class="m-1">
-				<dav-button
-					type="accent"
-					[disabled]="loading"
-					(click)="PublishButtonClick()"
-				>
-					{{ locale.publish }}
-				</dav-button>
-			</div>
+		<div class="button-container">
+			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+				{{ locale.showDetails }}
+			</dav-button>
 
-			<div class="m-1">
-				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
-					{{ locale.showDetails }}
-				</dav-button>
-			</div>
+			<dav-button
+				outline
+				[disabled]="loading"
+				(click)="ShowReleasesButtonClick()"
+			>
+				{{ locale.showReleases }}
+			</dav-button>
 
-			<div class="m-1">
-				<dav-button
-					[disabled]="loading"
-					(click)="ShowReleasesButtonClick()"
-				>
-					{{ locale.showReleases }}
-				</dav-button>
-			</div>
+			<dav-button
+				[disabled]="loading"
+				(click)="PublishButtonClick()"
+			>
+				{{ locale.publish }}
+			</dav-button>
 		</div>
 	</div>
 
 	<!-- In Review -->
 	<div *ngIf="status == 1">
-		<p class="text-color text-center" style="font-size: 22px">
+		<p class="status-text">
 			{{ locale.inReview }}
 		</p>
 
-		<p class="text-color text-center" style="font-size: 18px">
+		<p class="status-description-text">
 			{{ locale.inReviewDescription }}
 		</p>
 
-		<div class="d-flex flex-wrap justify-content-center">
-			<div class="m-1">
-				<dav-button
-					type="danger"
-					[disabled]="loading"
-					(click)="CancelPublishingButtonClick()"
-				>
-					{{ locale.cancelPublishing }}
-				</dav-button>
-			</div>
+		<div class="button-container">
+			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+				{{ locale.showDetails }}
+			</dav-button>
 
-			<div class="m-1">
-				<dav-button [disabled]="loading" (click)="ShowDetailsButtonClick()">
-					{{ locale.showDetails }}
-				</dav-button>
-			</div>
+			<dav-button
+				color="error"
+				[disabled]="loading"
+				(click)="CancelPublishingButtonClick()"
+			>
+				{{ locale.cancelPublishing }}
+			</dav-button>
 		</div>
 	</div>
 </div>
