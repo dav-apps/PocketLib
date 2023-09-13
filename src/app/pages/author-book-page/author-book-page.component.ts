@@ -19,7 +19,6 @@ import {
 	StoreBookReleaseStatus,
 	StoreBookResource
 } from "src/app/misc/types"
-import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
 @Component({
@@ -33,9 +32,6 @@ export class AuthorBookPageComponent {
 	categoriesSelectionComponent: CategoriesSelectionComponent
 	@ViewChild("priceInput") priceInput: PriceInputComponent
 	@ViewChild("isbnInput") isbnInput: IsbnInputComponent
-	showMobileLayout: boolean = false
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	uuid: string
 	author: Author
 	storeBook: StoreBook
@@ -103,11 +99,6 @@ export class AuthorBookPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorBookPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
