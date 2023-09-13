@@ -1,39 +1,41 @@
 <div
-	class="mx-auto mb-4"
+	class="container"
 	[ngClass]="
 		section != 6
 			? forwardNavigation
 				? 'slide-left-out'
 				: 'slide-right-out'
 			: forwardNavigation
-				? 'slide-left-in'
-				: 'slide-right-in'
+			? 'slide-left-in'
+			: 'slide-right-in'
 	"
-	style="max-width: 300px"
 	[style.display]="visibleSection != 6 ? 'none' : null"
 >
-	<div class="mb-4">
-		<p class="text-color">{{ locale.coverSection.description }}</p>
+	<div>
+		<p class="description-text">{{ locale.coverSection.description }}</p>
 
-		<div class="my-3" *ngIf="coverContent">
+		<div class="cover-container" *ngIf="coverContent">
 			<img [src]="coverContentBase64" height="200" />
 		</div>
 
-		<dav-button
-			type="accent"
-			ngxFilePicker
-			accept="image/png,image/jpeg"
-			(filePick)="CoverUpload($event)"
-		>
-			{{ locale.coverSection.uploadButtonText }}
-		</dav-button>
+		<div class="upload-button-container">
+			<dav-button
+				ngxFilePicker
+				accept="image/png,image/jpeg"
+				(filePick)="CoverUpload($event)"
+			>
+				{{ locale.coverSection.uploadButtonText }}
+			</dav-button>
+		</div>
 	</div>
 
-	<dav-button (click)="Previous()">
-		{{ locale.previous }}
-	</dav-button>
+	<div class="button-container">
+		<dav-button size="small" outline (click)="Previous()">
+			{{ locale.previous }}
+		</dav-button>
 
-	<dav-button style="float: right" type="accent" (click)="Submit()">
-		{{ locale.next }}
-	</dav-button>
+		<dav-button size="small" (click)="Submit()">
+			{{ locale.next }}
+		</dav-button>
+	</div>
 </div>

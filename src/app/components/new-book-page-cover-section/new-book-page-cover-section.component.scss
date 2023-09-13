@@ -1,0 +1,32 @@
+.container {
+	margin: 0 auto;
+	max-width: 300px;
+	overflow: hidden;
+}
+
+.description-text {
+	margin-top: 0;
+	margin-bottom: 24px;
+	color: var(--dav-color-on-surface);
+}
+
+.cover-container {
+	display: flex;
+	justify-content: center;
+}
+
+.cover-container > img {
+	border-radius: 8px;
+}
+
+.upload-button-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 16px;
+}
+
+.button-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 16px;
+}
