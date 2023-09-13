@@ -15,9 +15,11 @@
 			(enter)="UpdatePrice()"
 		></dav-textfield>
 
-		<dav-icon-button class="save-button" size="small" (click)="UpdatePrice()">
-			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
-		</dav-icon-button>
+		<div>
+			<dav-icon-button size="small" (click)="UpdatePrice()">
+				<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
+			</dav-icon-button>
+		</div>
 	</div>
 
 	<dav-icon-button

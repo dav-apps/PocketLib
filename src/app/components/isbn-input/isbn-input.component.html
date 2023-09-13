@@ -1,17 +1,13 @@
-<div class="d-flex">
-	<p class="mb-0 text-color" style="margin-top: 6px" *ngIf="!edit">
+<div class="container">
+	<p class="isbn-text" *ngIf="isbn.length > 0 && !edit">
 		{{ isbn }}
 	</p>
 
-	<p
-		class="fw-light fst-italic text-color"
-		style="margin-top: 3px; margin-bottom: 3px"
-		*ngIf="!edit && isbn.length == 0"
-	>
+	<p class="no-isbn-text" *ngIf="isbn.length == 0 && !edit">
 		{{ locale.noIsbn }}
 	</p>
 
-	<div class="d-flex" *ngIf="edit">
+	<div class="edit-container" *ngIf="edit">
 		<dav-textfield
 			[value]="isbn"
 			label="ISBN"
@@ -21,42 +17,24 @@
 			(enter)="UpdateValue()"
 		></dav-textfield>
 
-		<button
-			type="button"
-			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="
-				height: 32px;
-				font-size: 16px;
-				padding: 3px 6px;
-				margin-top: 25px;
-			"
-			(click)="UpdateValue()"
-		>
-			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
-		</button>
+		<div>
+			<dav-icon-button size="small" (click)="UpdateValue()">
+				<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
+			</dav-icon-button>
+		</div>
 
-		<button
-			type="button"
-			class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-			style="
-				height: 32px;
-				font-size: 16px;
-				padding: 3px 6px;
-				margin-top: 25px;
-			"
-			(click)="Cancel()"
-		>
-			<fa-icon [icon]="faXmarkLight"></fa-icon>
-		</button>
+		<div>
+			<dav-icon-button size="small" (click)="Cancel()">
+				<fa-icon [icon]="faXmarkLight"></fa-icon>
+			</dav-icon-button>
+		</div>
 	</div>
 
-	<button
-		type="button"
-		class="btn ms-3 text-color theme-background-color-primary theme-border-color-primary icon-button"
-		style="height: 32px; padding: 3px 6px; font-size: 16px"
+	<dav-icon-button
+		size="small"
 		*ngIf="!edit && canEdit"
 		(click)="EnableEditing()"
 	>
 		<fa-icon [icon]="faPenLight"></fa-icon>
-	</button>
+	</dav-icon-button>
 </div>

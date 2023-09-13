@@ -12,7 +12,8 @@ const isbnValidityRegex =
 
 @Component({
 	selector: "pocketlib-isbn-input",
-	templateUrl: "./isbn-input.component.html"
+	templateUrl: "./isbn-input.component.html",
+	styleUrls: ["./isbn-input.component.scss"]
 })
 export class IsbnInputComponent {
 	locale = enUS.isbnInput
