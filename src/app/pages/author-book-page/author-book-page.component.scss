@@ -1,200 +1,57 @@
-#book-details-container {
+.container {
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 32px;
+}
+
+.error-message-container {
+	min-width: 200px;
+	max-width: 300px;
+	margin: 0 auto 16px;
+}
+
+.content-container {
+	display: flex;
+	justify-content: center;
+}
+
+p {
+	color: var(--dav-color-on-surface);
+}
+
+.book-details-container {
 	display: inline-grid;
-	grid-template-columns: auto auto;
-	grid-gap: 28px 8px;
+	grid-template-columns: auto;
+	grid-gap: 12px;
 }
 
-#book-details-release-notes-label {
+.book-details-container:nth-child(2n) {
+	background-color: green;
+}
+
+.book-details-label {
 	grid-column: 1;
-	grid-row: 1;
 }
 
-#book-details-release-notes-data {
-	grid-column: 2;
-	grid-row: 1;
+.book-details-label > p {
+	margin: 0;
 }
 
-#book-details-cover-label {
+.book-details-data {
 	grid-column: 1;
-	grid-row: 2;
+	margin-bottom: 12px;
 }
 
-#book-details-cover-data {
-	grid-column: 2;
-	grid-row: 2;
-}
-
-#book-details-description-label {
-	grid-column: 1;
-	grid-row: 3;
-}
-
-#book-details-description-data {
-	grid-column: 2;
-	grid-row: 3;
-	min-width: 300px;
-}
-
-#book-details-language-label {
-	grid-column: 1;
-	grid-row: 4;
-}
-
-#book-details-language-data {
-	grid-column: 2;
-	grid-row: 4;
-}
-
-#book-details-categories-label {
-	grid-column: 1;
-	grid-row: 5;
-}
-
-#book-details-categories-data {
-	grid-column: 2;
-	grid-row: 5;
-}
-
-#book-details-price-label {
-	grid-column: 1;
-	grid-row: 6;
-}
-
-#book-details-price-data {
-	grid-column: 2;
-	grid-row: 6;
-}
-
-#book-details-isbn-label {
-	grid-column: 1;
-	grid-row: 7;
-}
-
-#book-details-isbn-data {
-	grid-column: 2;
-	grid-row: 7;
-}
-
-#book-details-book-file-label {
-	grid-column: 1;
-	grid-row: 8;
-}
-
-#book-details-book-file-data {
-	grid-column: 2;
-	grid-row: 8;
-}
-
-#book-details-status-label {
-	grid-column: 1;
-	grid-row: 9;
-}
-
-#book-details-status-data {
-	grid-column: 2;
-	grid-row: 9;
-}
-
-// Small window
-@media screen and (max-width: 500px) {
-	#book-details-container {
-		display: inline-grid;
-		grid-template-columns: auto;
-		grid-gap: 0px;
-	}
-
-	#book-details-release-notes-label {
-		grid-column: 1;
-		grid-row: 1;
-	}
-
-	#book-details-release-notes-data {
-		grid-column: 1;
-		grid-row: 2;
-	}
-
-	#book-details-cover-label {
-		grid-column: 1;
-		grid-row: 3;
-	}
-
-	#book-details-cover-data {
-		grid-column: 1;
-		grid-row: 4;
-	}
-
-	#book-details-description-label {
-		grid-column: 1;
-		grid-row: 5;
-	}
-
-	#book-details-description-data {
-		grid-column: 1;
-		grid-row: 6;
-		min-width: 300px;
-	}
-
-	#book-details-language-label {
-		grid-column: 1;
-		grid-row: 7;
-	}
-
-	#book-details-language-data {
-		grid-column: 1;
-		grid-row: 8;
-	}
-
-	#book-details-categories-label {
-		grid-column: 1;
-		grid-row: 9;
-	}
-
-	#book-details-categories-data {
-		grid-column: 1;
-		grid-row: 10;
-	}
-
-	#book-details-price-label {
-		grid-column: 1;
-		grid-row: 11;
-	}
-
-	#book-details-price-data {
-		grid-column: 1;
-		grid-row: 12;
-	}
-
-	#book-details-isbn-label {
-		grid-column: 1;
-		grid-row: 13;
-	}
-
-	#book-details-isbn-data {
-		grid-column: 1;
-		grid-row: 14;
-	}
-
-	#book-details-book-file-label {
-		grid-column: 1;
-		grid-row: 15;
-	}
-
-	#book-details-book-file-data {
-		grid-column: 1;
-		grid-row: 16;
-	}
-
-	#book-details-status-label {
-		grid-column: 1;
-		grid-row: 17;
-	}
-
-	#book-details-status-data {
-		grid-column: 1;
-		grid-row: 18;
+@media screen and (min-width: 700px) {
+	.book-details-container {
+		grid-template-columns: auto auto;
+		grid-gap: 28px 12px;
 	}
 
 	.book-details-data {
-		margin-bottom: 36px;
+		grid-column: 2;
+		margin-bottom: 0;
 	}
 }

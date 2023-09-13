@@ -153,7 +153,7 @@ export class StoreBook {
 
 		for (let item of responseData.releases.items) {
 			items.push(
-				StoreBookRelease.Retrieve(
+				await StoreBookRelease.Retrieve(
 					item.uuid,
 					this.dataService,
 					this.apiService
