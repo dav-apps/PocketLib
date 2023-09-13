@@ -1,0 +1,20 @@
+.container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.formatted-price-text {
+	margin: 0;
+	color: var(--dav-color-on-surface);
+}
+
+.edit-container {
+	display: flex;
+	align-items: end;
+	gap: 12px;
+}
+
+.save-button {
+	margin-bottom: 2px;
+}

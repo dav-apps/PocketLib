@@ -8,7 +8,8 @@ import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-price-input",
-	templateUrl: "./price-input.component.html"
+	templateUrl: "./price-input.component.html",
+	styleUrls: ["./price-input.component.scss"]
 })
 export class PriceInputComponent {
 	locale = enUS.priceInput
