@@ -24,41 +24,33 @@
 				class="book-details-label"
 				*ngIf="release != null && release.releaseNotes"
 			>
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.releaseNotes }}:
-				</p>
+				<p>{{ locale.releaseNotes }}:</p>
 			</div>
 
 			<div
 				class="book-details-data"
 				*ngIf="release != null && release.releaseNotes"
 			>
-				<p
-					class="text-color"
-					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
-				>
+				<p class="release-notes-text">
 					{{ release.releaseNotes }}
 				</p>
 			</div>
 
 			<!-- Cover -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.cover }}:
-				</p>
+				<p>{{ locale.cover }}:</p>
 			</div>
 
 			<div class="book-details-data">
 				<p
-					class="fw-light fst-italic text-color"
-					style="margin-top: 3px"
+					class="no-cover-text"
 					*ngIf="!coverContent"
 				>
 					{{ locale.noCover }}
 				</p>
-				<div class="mb-3" *ngIf="coverContent">
+
+				<div class="cover-container" *ngIf="coverContent">
 					<dav-blurhash-image
-						style="border-radius: 8px"
 						[src]="coverContent"
 						[fallbackSrc]="dataService.defaultStoreBookCover"
 						[blurhash]="book.coverBlurhash"
@@ -69,7 +61,7 @@
 				</div>
 
 				<dav-button
-					type="accent"
+					size="small"
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
@@ -82,29 +74,26 @@
 
 			<!-- Description -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.description }}:
-				</p>
+				<p>{{ locale.description }}:</p>
 			</div>
 
 			<div class="book-details-data">
 				<p
-					class="text-color"
-					style="margin-top: 3px; max-width: 400px; white-space: pre-line"
+					class="description-text"
 					*ngIf="book.description && !editDescription"
 				>
 					{{ book.description }}
 				</p>
+
 				<p
-					class="fw-light fst-italic text-color"
-					style="margin-top: 3px"
+					class="no-description-text"
 					*ngIf="!book.description && !editDescription"
 				>
 					{{ locale.noDescription }}
 				</p>
 
 				<div
-					style="margin-top: 3px; margin-bottom: 16px; min-width: 300px"
+					class="edit-description-container"
 					*ngIf="editDescription"
 				>
 					<dav-textarea
@@ -119,30 +108,31 @@
 					></dav-textarea>
 				</div>
 
-				<dav-button
-					type="accent"
-					[disabled]="descriptionLoading"
-					(click)="EditDescription()"
-					*ngIf="release == null"
-				>
-					{{ editDescription ? locale.save : locale.edit }}
-				</dav-button>
+				<div class="edit-description-button-container">
+					<dav-button
+						size="small"
+						[disabled]="descriptionLoading"
+						(click)="EditDescription()"
+						*ngIf="release == null"
+					>
+						{{ editDescription ? locale.save : locale.edit }}
+					</dav-button>
 
-				<dav-button
-					style="margin-left: 10px"
-					[disabled]="descriptionLoading"
-					(click)="editDescription = false"
-					*ngIf="editDescription"
-				>
-					{{ locale.cancel }}
-				</dav-button>
+					<dav-button
+						color="secondary"
+						size="small"
+						[disabled]="descriptionLoading"
+						(click)="editDescription = false"
+						*ngIf="editDescription"
+					>
+						{{ locale.cancel }}
+					</dav-button>
+				</div>
 			</div>
 
 			<!-- Language -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.language }}:
-				</p>
+				<p>{{ locale.language }}:</p>
 			</div>
 
 			<div class="d-flex book-details-data">
@@ -157,9 +147,7 @@
 
 			<!-- Categories -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.categories }}:
-				</p>
+				<p>{{ locale.categories }}:</p>
 			</div>
 
 			<div class="book-details-data">
@@ -188,9 +176,7 @@
 
 			<!-- Price -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.price }}:
-				</p>
+				<p>{{ locale.price }}:</p>
 			</div>
 
 			<div class="book-details-data">
@@ -203,14 +189,10 @@
 
 			<!-- ISBN -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					ISBN:
-				</p>
+				<p>ISBN:</p>
 			</div>
 
-			<div
-				class="d-flex text-color book-details-data"
-			>
+			<div class="d-flex text-color book-details-data">
 				<pocketlib-isbn-input
 					#isbnInput
 					[canEdit]="release == null"
@@ -220,9 +202,7 @@
 
 			<!-- Book file -->
 			<div class="book-details-label">
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.bookFile }}:
-				</p>
+				<p>{{ locale.bookFile }}:</p>
 			</div>
 
 			<div class="book-details-data">
@@ -278,9 +258,7 @@
 				class="book-details-label"
 				*ngIf="book.status == 0 && release == null"
 			>
-				<p class="me-3 fw-light text-color" style="font-size: 19px">
-					{{ locale.status }}:
-				</p>
+				<p>{{ locale.status }}:</p>
 			</div>
 
 			<div class="book-details-data">
