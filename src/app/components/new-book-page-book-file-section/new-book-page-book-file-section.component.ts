@@ -5,7 +5,8 @@ import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-new-book-page-book-file-section",
-	templateUrl: "./new-book-page-book-file-section.component.html"
+	templateUrl: "./new-book-page-book-file-section.component.html",
+	styleUrls: ["./new-book-page-book-file-section.component.scss"]
 })
 export class NewBookPageBookFileSectionComponent {
 	locale = enUS.newBookPage

@@ -1,26 +1,24 @@
 <div
-	class="mx-auto mb-4"
+	class="container"
 	[ngClass]="
 		section != 7
 			? forwardNavigation
 				? 'slide-left-out'
 				: 'slide-right-out'
 			: forwardNavigation
-				? 'slide-left-in'
-				: 'slide-right-in'
+			? 'slide-left-in'
+			: 'slide-right-in'
 	"
-	style="max-width: 300px"
 	[style.display]="visibleSection != 7 ? 'none' : null"
 >
-	<div class="mb-4">
-		<p class="text-color">{{ locale.bookFileSection.description }}</p>
+	<div>
+		<p class="description-text">{{ locale.bookFileSection.description }}</p>
 
-		<p class="text-color fst-italic" *ngIf="bookFileName.length > 0">
+		<p class="file-name-text" *ngIf="bookFileName.length > 0">
 			{{ bookFileName }}
 		</p>
 
 		<dav-button
-			type="accent"
 			ngxFilePicker
 			accept="application/epub+zip"
 			(filePick)="BookFileUpload($event)"
@@ -29,11 +27,13 @@
 		</dav-button>
 	</div>
 
-	<dav-button (click)="Previous()">
-		{{ locale.previous }}
-	</dav-button>
-
-	<dav-button style="float: right" type="accent" (click)="Finish()">
-		{{ locale.finish }}
-	</dav-button>
+	<div class="button-container">
+		<dav-button size="small" outline (click)="Previous()">
+			{{ locale.previous }}
+		</dav-button>
+	
+		<dav-button size="small" (click)="Finish()">
+			{{ locale.finish }}
+		</dav-button>
+	</div>
 </div>
