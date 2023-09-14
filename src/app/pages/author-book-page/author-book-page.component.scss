@@ -75,6 +75,7 @@ p {
 	margin-top: 0;
 	max-width: 400px;
 	white-space: pre-line;
+	text-align: justify;
 }
 
 .edit-description-container {
@@ -89,6 +90,51 @@ p {
 	margin-top: 12px;
 }
 
+.categories-container {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	gap: 8px;
+}
+
+.no-book-file-text {
+	font-weight: 300;
+	font-style: italic;
+	margin-top: 0;
+}
+
+.book-file-uploaded-text {
+	font-weight: 300;
+	margin-top: 0;
+}
+
+.file-name-text {
+	font-weight: 300;
+	margin-top: 0;
+}
+
+.book-file-uploading {
+	font-weight: 300;
+	margin-top: 0;
+}
+
+.book-file-upload-container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.unpublished-text {
+	font-weight: 300;
+	margin-top: 0;
+}
+
+.publish-button-container {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
 @media screen and (min-width: 700px) {
 	.book-details-container {
 		grid-template-columns: auto auto;
@@ -100,19 +146,15 @@ p {
 		margin-bottom: 0;
 	}
 
-	.release-notes-text {
-		margin-top: 4px;
-	}
-
-	.no-cover-text {
-		margin-top: 4px;
-	}
-
-	.no-description-text {
-		margin-top: 0;
-	}
-
-	.description-text {
+	.release-notes-text,
+	.no-cover-text,
+	.no-description-text,
+	.description-text,
+	.no-book-file-text,
+	.book-file-uploaded-text,
+	.file-name-text,
+	.book-file-uploading,
+	.unpublished-text {
 		margin-top: 4px;
 	}
 }

@@ -42,10 +42,7 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="no-cover-text"
-					*ngIf="!coverContent"
-				>
+				<p class="no-cover-text" *ngIf="!coverContent">
 					{{ locale.noCover }}
 				</p>
 
@@ -92,10 +89,7 @@
 					{{ locale.noDescription }}
 				</p>
 
-				<div
-					class="edit-description-container"
-					*ngIf="editDescription"
-				>
+				<div class="edit-description-container" *ngIf="editDescription">
 					<dav-textarea
 						[value]="newDescription"
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
@@ -135,7 +129,7 @@
 				<p>{{ locale.language }}:</p>
 			</div>
 
-			<div class="d-flex book-details-data">
+			<div class="book-details-data">
 				<pocketlib-language-dropdown
 					[language]="book.language"
 					[disabled]="
@@ -151,26 +145,21 @@
 			</div>
 
 			<div class="book-details-data">
-				<div class="d-flex">
-					<div class="my-auto">
-						<span
-							class="badge rounded-pill me-2"
-							[ngClass]="i == 0 ? 'bg-primary' : 'bg-secondary'"
-							*ngFor="let category of book.categories; let i = index"
-						>
-							{{ category.name }}
-						</span>
-					</div>
+				<div class="categories-container">
+					<dav-badge
+						[color]="i == 0 ? 'primary' : 'secondary'"
+						*ngFor="let category of book.categories; let i = index"
+					>
+						{{ category.name }}
+					</dav-badge>
 
-					<button
-						type="button"
-						class="btn ms-2 text-color theme-background-color-primary theme-border-color-primary icon-button"
-						style="height: 35px; padding: 3px 6px; font-size: 16px"
+					<dav-icon-button
+						size="small"
 						(click)="ShowCategoriesDialog()"
 						*ngIf="release == null"
 					>
 						<fa-icon [icon]="faPenLight"></fa-icon>
-					</button>
+					</dav-icon-button>
 				</div>
 			</div>
 
@@ -192,7 +181,7 @@
 				<p>ISBN:</p>
 			</div>
 
-			<div class="d-flex text-color book-details-data">
+			<div class="book-details-data">
 				<pocketlib-isbn-input
 					#isbnInput
 					[canEdit]="release == null"
@@ -207,35 +196,37 @@
 
 			<div class="book-details-data">
 				<p
-					class="fw-light fst-italic text-color"
-					style="margin-top: 3px"
+					class="no-book-file-text"
 					*ngIf="!bookFileUploaded && !bookFileLoading"
 				>
 					{{ locale.noBookFile }}
 				</p>
+
 				<p
-					class="fw-light text-color"
+					class="book-file-uploaded-text"
 					*ngIf="
 						bookFileUploaded && book.fileName == null && !bookFileLoading
 					"
 				>
 					{{ locale.bookFileUploaded }}
 				</p>
+
 				<p
-					class="fw-light text-color"
+					class="file-name-text"
 					*ngIf="
 						bookFileUploaded && book.fileName != null && !bookFileLoading
 					"
 				>
 					{{ book.fileName }}
 				</p>
-				<p class="fw-light text-color" *ngIf="bookFileLoading">
+
+				<p class="book-file-uploading" *ngIf="bookFileLoading">
 					{{ locale.bookFileUploading }}
 				</p>
 
-				<div class="d-flex">
+				<div class="book-file-upload-container">
 					<dav-button
-						type="accent"
+						size="small"
 						ngxFilePicker
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
@@ -246,7 +237,6 @@
 					</dav-button>
 
 					<dav-progress-ring
-						style="margin: 8px 0px 0px 14px"
 						size="16"
 						*ngIf="bookFileLoading"
 					></dav-progress-ring>
@@ -263,11 +253,10 @@
 
 			<div class="book-details-data">
 				<div *ngIf="book.status == 0">
-					<p class="text-color">{{ locale.unpublished }}</p>
+					<p class="unpublished-text">{{ locale.unpublished }}</p>
 
-					<div class="d-flex">
+					<div class="publish-button-container">
 						<dav-button
-							type="accent"
 							[disabled]="
 								!coverContent ||
 								!bookFileUploaded ||
@@ -280,15 +269,14 @@
 						</dav-button>
 
 						<dav-progress-ring
-							style="margin: 8px 0px 0px 14px"
-							size="16"
+							size="24"
 							*ngIf="statusLoading"
 						></dav-progress-ring>
 					</div>
 				</div>
 
 				<div
-					class="d-flex"
+					class="publish-changes-button-container"
 					*ngIf="
 						(book.status == 2 || book.status == 3) &&
 						release == null &&
@@ -296,7 +284,6 @@
 					"
 				>
 					<dav-button
-						type="accent"
 						[disabled]="publishChangesLoading"
 						(click)="ShowPublishChangesDialog()"
 					>
@@ -320,7 +307,7 @@
 >
 	<form>
 		<!-- Title -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editTitleDialogTitle"
 				[label]="locale.editTitleDialog.titleTextfieldLabel"
@@ -347,7 +334,7 @@
 	(primaryButtonClick)="UpdateCategories()"
 	(defaultButtonClick)="categoriesSelectionDialogVisible = false"
 >
-	<div class="mb-3">
+	<div class="dialog-formfield-container">
 		<pocketlib-categories-selection #categoriesSelection>
 		</pocketlib-categories-selection>
 	</div>
@@ -364,7 +351,7 @@
 >
 	<form>
 		<!-- Release name -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="publishChangesDialogReleaseName"
 				[label]="locale.publishChangesDialog.releaseNameTextfieldLabel"
@@ -382,7 +369,7 @@
 		</div>
 
 		<!-- Release notes -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textarea
 				[value]="publishChangesDialogReleaseNotes"
 				[label]="locale.publishChangesDialog.releaseNotesTextfieldLabel"
