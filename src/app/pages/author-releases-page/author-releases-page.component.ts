@@ -14,7 +14,8 @@ interface ReleaseItem {
 }
 
 @Component({
-	templateUrl: "./author-releases-page.component.html"
+	templateUrl: "./author-releases-page.component.html",
+	styleUrls: ["./author-releases-page.component.scss"]
 })
 export class AuthorReleasesPageComponent {
 	faAngleRight = faAngleRight
@@ -110,5 +111,10 @@ export class AuthorReleasesPageComponent {
 		} else {
 			this.router.navigate(["author", "book", this.book.uuid])
 		}
+	}
+
+	releaseItemClick(event: Event, releaseItem: ReleaseItem) {
+		event.preventDefault()
+		this.router.navigate([releaseItem.link])
 	}
 }

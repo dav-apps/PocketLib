@@ -1,5 +1,5 @@
 <div class="container slide-up-in">
-	<div class="mt-3 mb-4">
+	<div class="header-container">
 		<dav-header
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
@@ -8,30 +8,14 @@
 		</dav-header>
 	</div>
 
-	<div>
-		<a
-			class="card my-2 mx-auto cursor theme-background-color-secondary"
-			style="text-decoration: none; transition: 0.12s; max-width: 400px"
-			[routerLink]="release.link"
-			*ngFor="let release of releaseItems"
-		>
-			<div class="row">
-				<div class="col-10 my-auto">
-					<div class="card-body">
-						<h5 class="card-title my-auto text-color">
-							{{ release.name }}
-						</h5>
-					</div>
-				</div>
-
-				<div class="col-2 my-auto d-flex justify-content-center">
-					<fa-icon
-						[icon]="faAngleRight"
-						class="text-color"
-						style="font-size: 24px"
-					></fa-icon>
-				</div>
-			</div>
-		</a>
+	<div class="list-container">
+		<dav-list>
+			<dav-list-item
+				[headline]="release.name"
+				[href]="release.link"
+				(click)="releaseItemClick($event, release)"
+				*ngFor="let release of releaseItems"
+			></dav-list-item>
+		</dav-list>
 	</div>
 </div>
