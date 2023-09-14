@@ -1,5 +1,5 @@
 <!-- Normal layout -->
-<div class="container slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container slide-up-in">
 	<div class="mb-4">
 		<dav-header
 			backButtonVisible
@@ -73,90 +73,6 @@
 						[title]="book.title"
 						height="180"
 					></dav-blurhash-image>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="mt-3 mb-4 mx-3">
-			<dav-header
-				backButtonVisible
-				editButtonVisible
-				(backButtonClick)="BackButtonClick()"
-				(editButtonClick)="ShowEditNameDialog()"
-			>
-				{{ series.name }}
-			</dav-header>
-		</div>
-
-		<div class="d-flex flex-column">
-			<!-- Add button -->
-			<div
-				class="d-flex justify-content-center"
-				*ngIf="selectableBooks.length > 0"
-			>
-				<button
-					class="d-flex align-items-center card cursor theme-background-color-secondary"
-					[ngClass]="addButtonHover ? 'shadow' : 'shadow-sm'"
-					style="transition: 0.12s; width: 120px"
-					(mouseover)="addButtonHover = true"
-					(mouseout)="addButtonHover = false"
-					(focusin)="addButtonHover = true"
-					(focusout)="addButtonHover = false"
-					(click)="addBookDialogVisible = true"
-				>
-					<div
-						class="card-body d-flex justify-content-center align-items-center"
-						style="padding: 12px 14px"
-					>
-						<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-					</div>
-				</button>
-			</div>
-
-			<div
-				class="d-flex flex-column"
-				dragula="books"
-				[dragulaModel]="books"
-				(dragulaModelChange)="BooksReordered($event)"
-			>
-				<div
-					class="mx-auto"
-					[ngClass]="dragging ? '' : 'slide-up-in'"
-					style="display: inline-block"
-					*ngFor="let book of books; let i = index"
-				>
-					<hr
-						class="mx-2"
-						[style.backgroundColor]="
-							dataService.darkTheme ? '#707070' : '#ededed'
-						"
-						[style.visibility]="dragging ? 'hidden' : 'visible'"
-						*ngIf="selectableBooks.length > 0 || i > 0"
-					/>
-
-					<div
-						class="card cursor shadow-sm theme-background-color-secondary"
-						style="display: inline-block; border-radius: 8px;"
-						[style.marginTop.rem]="
-							selectableBooks.length == 0 && i == 0 ? 2 : 0
-						"
-						(contextmenu)="ShowBookContextMenu($event, book)"
-					>
-						<dav-blurhash-image
-							style="border-radius: inherit"
-							[src]="book.coverContent"
-							[fallbackSrc]="dataService.defaultStoreBookCover"
-							[blurhash]="book.coverBlurhash"
-							[title]="book.title"
-							height="180"
-						></dav-blurhash-image>
-					</div>
 				</div>
 			</div>
 		</div>

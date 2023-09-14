@@ -10,7 +10,6 @@ import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 import { StoreBook } from "src/app/models/StoreBook"
-import { GetDualScreenSettings } from "src/app/misc/utils"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
@@ -23,8 +22,6 @@ export class AuthorSeriesPageComponent {
 	faPlusLight = faPlusLight
 	faTrashCanLight = faTrashCanLight
 	uuid: string = ""
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	author: Author
 	series: StoreBookSeries = new StoreBookSeries(
 		null,
@@ -53,11 +50,6 @@ export class AuthorSeriesPageComponent {
 		private dragulaService: DragulaService
 	) {
 		this.locale = this.dataService.GetLocale().authorSeriesPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 
 		this.dragulaService.drag("books").subscribe(() => (this.dragging = true))
 		this.dragulaService
