@@ -4,7 +4,6 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
-import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
 interface BookItem {
@@ -20,8 +19,6 @@ interface BookItem {
 })
 export class NewSeriesPageComponent {
 	locale = enUS.newSeriesPage
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	author: Author
 	booksLoading: boolean = true
 	loading: boolean = false
@@ -39,11 +36,6 @@ export class NewSeriesPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().newSeriesPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
