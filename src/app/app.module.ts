@@ -50,7 +50,6 @@ import { LinkIconButtonComponent } from "./components/link-icon-button/link-icon
 import { LanguagesSelectionComponent } from "./components/languages-selection/languages-selection.component"
 import { DavProCardComponent } from "./components/dav-pro-card/dav-pro-card.component"
 import { HorizontalBookCardComponent } from "./components/horizontal-book-card/horizontal-book-card.component"
-import { HorizontalBooksCardComponent } from "./components/horizontal-books-card/horizontal-books-card.component"
 import { LibraryPageCardsComponent } from "./components/library-page-cards/library-page-cards.component"
 import { LibraryPageBookCardComponent } from "./components/library-page-book-card/library-page-book-card.component"
 import { NewBookPageTitleSectionComponent } from "./components/new-book-page-title-section/new-book-page-title-section.component"
@@ -111,7 +110,6 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		LanguagesSelectionComponent,
 		DavProCardComponent,
 		HorizontalBookCardComponent,
-		HorizontalBooksCardComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
 		NewBookPageTitleSectionComponent,
