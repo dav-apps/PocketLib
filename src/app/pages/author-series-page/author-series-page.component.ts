@@ -1,10 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DragulaService } from "ng2-dragula"
-import {
-	faPlus as faPlusLight,
-	faTrashCan as faTrashCanLight
-} from "@fortawesome/pro-light-svg-icons"
+import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
@@ -13,13 +10,20 @@ import { StoreBook } from "src/app/models/StoreBook"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
+interface StoreBookItem {
+	uuid: string
+	title: string
+	blurhash: string
+	coverContent: string
+}
+
 @Component({
 	selector: "pocketlib-author-series-page",
-	templateUrl: "./author-series-page.component.html"
+	templateUrl: "./author-series-page.component.html",
+	styleUrls: ["./author-series-page.component.scss"]
 })
 export class AuthorSeriesPageComponent {
 	locale = enUS.authorSeriesPage
-	faPlusLight = faPlusLight
 	faTrashCanLight = faTrashCanLight
 	uuid: string = ""
 	author: Author
@@ -28,19 +32,18 @@ export class AuthorSeriesPageComponent {
 		this.dataService,
 		this.apiService
 	)
-	books: StoreBook[] = []
-	selectableBooks: StoreBook[] = []
+	books: StoreBookItem[] = []
+	selectableBooks: StoreBookItem[] = []
 	editNameDialogVisible: boolean = false
 	editNameDialogLoading: boolean = false
 	editNameDialogName: string = ""
 	editNameDialogNameError: string = ""
 	addBookDialogVisible: boolean = false
-	addButtonHover: boolean = false
 	dragging: boolean = false
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
-	contextMenuBook: StoreBook
+	contextMenuBook: StoreBookItem
 
 	constructor(
 		public dataService: DataService,
@@ -103,7 +106,12 @@ export class AuthorSeriesPageComponent {
 		let storeBooksResult = await this.series.GetStoreBooks()
 
 		for (let storeBook of storeBooksResult.items) {
-			this.books.push(storeBook)
+			this.books.push({
+				uuid: storeBook.uuid,
+				title: storeBook.title,
+				blurhash: storeBook.cover?.blurhash,
+				coverContent: storeBook.cover?.url
+			})
 		}
 
 		// Load the books for the add book dialog
@@ -134,7 +142,12 @@ export class AuthorSeriesPageComponent {
 					book.cover.url != null &&
 					book.language == this.series.language
 				) {
-					this.selectableBooks.push(book)
+					this.selectableBooks.push({
+						uuid: book.uuid,
+						title: book.title,
+						blurhash: book.cover?.blurhash,
+						coverContent: book.cover?.url
+					})
 				}
 			}
 		}
@@ -183,7 +196,12 @@ export class AuthorSeriesPageComponent {
 
 	async AddBook(book: StoreBook) {
 		// Add the selected book
-		this.books.push(book)
+		this.books.push({
+			uuid: book.uuid,
+			title: book.title,
+			blurhash: book.cover?.blurhash,
+			coverContent: book.cover?.url
+		})
 
 		// Get the uuids of the store books
 		let storeBookUuids = []
@@ -207,7 +225,7 @@ export class AuthorSeriesPageComponent {
 		}
 	}
 
-	async BooksReordered(books: StoreBook[]) {
+	async BooksReordered(books: StoreBookItem[]) {
 		this.books = books
 		let storeBookUuids = []
 
@@ -258,7 +276,7 @@ export class AuthorSeriesPageComponent {
 		}
 	}
 
-	async ShowBookContextMenu(event: PointerEvent, book: StoreBook) {
+	async ShowBookContextMenu(event: PointerEvent, book: StoreBookItem) {
 		event.preventDefault()
 		this.contextMenuBook = book
 

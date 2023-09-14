@@ -1,80 +1,36 @@
-<!-- Normal layout -->
 <div class="container slide-up-in">
-	<div class="mb-4">
+	<div class="header-container">
 		<dav-header
 			backButtonVisible
+			[addButtonVisible]="selectableBooks.length > 0"
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
+			(addButtonClick)="addBookDialogVisible = true"
 			(editButtonClick)="ShowEditNameDialog()"
 		>
 			{{ series.name }}
 		</dav-header>
 	</div>
 
-	<div class="d-flex flex-column">
-		<!-- Add button -->
+	<div
+		class="books-container"
+		dragula="books"
+		[dragulaModel]="books"
+		(dragulaModelChange)="BooksReordered($event)"
+	>
 		<div
-			class="d-flex justify-content-center"
-			*ngIf="selectableBooks.length > 0"
+			class="book-card"
+			(contextmenu)="ShowBookContextMenu($event, book)"
+			*ngFor="let book of books"
 		>
-			<button
-				class="d-flex align-items-center card cursor theme-background-color-secondary"
-				[ngClass]="addButtonHover ? 'shadow' : 'shadow-sm'"
-				style="transition: 0.12s; width: 120px"
-				(mouseover)="addButtonHover = true"
-				(mouseout)="addButtonHover = false"
-				(focusin)="addButtonHover = true"
-				(focusout)="addButtonHover = false"
-				(click)="addBookDialogVisible = true"
-			>
-				<div
-					class="card-body d-flex justify-content-center align-items-center"
-					style="padding: 12px 14px"
-				>
-					<fa-icon [icon]="faPlusLight" size="lg"></fa-icon>
-				</div>
-			</button>
-		</div>
-
-		<div
-			class="d-flex flex-column"
-			dragula="books"
-			[dragulaModel]="books"
-			(dragulaModelChange)="BooksReordered($event)"
-		>
-			<div
-				class="mx-auto"
-				[ngClass]="dragging ? '' : 'slide-up-in'"
-				style="display: inline-block"
-				*ngFor="let book of books; let i = index"
-			>
-				<hr
-					class="mx-2"
-					[style.backgroundColor]="
-						dataService.darkTheme ? '#707070' : '#ededed'
-					"
-					[style.visibility]="dragging ? 'hidden' : 'visible'"
-					*ngIf="selectableBooks.length > 0 || i > 0"
-				/>
-
-				<div
-					class="card cursor shadow-sm theme-background-color-secondary"
-					style="display: inline-block; border-radius: 8px;"
-					[style.marginTop.rem]="
-						selectableBooks.length == 0 && i == 0 ? 2 : 0
-					"
-					(contextmenu)="ShowBookContextMenu($event, book)"
-				>
-					<dav-blurhash-image
-						style="border-radius: inherit"
-						[src]="book.coverContent"
-						[fallbackSrc]="dataService.defaultStoreBookCover"
-						[blurhash]="book.coverBlurhash"
-						[title]="book.title"
-						height="180"
-					></dav-blurhash-image>
-				</div>
-			</div>
+			<dav-blurhash-image
+				[src]="book.coverContent"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
+				[blurhash]="book.blurhash"
+				[title]="book.title"
+				width="170"
+				height="255"
+			></dav-blurhash-image>
 		</div>
 	</div>
 </div>
@@ -82,8 +38,8 @@
 <dav-context-menu
 	#contextMenu
 	[visible]="contextMenuVisible"
-	[posX]="contextMenuPositionY"
-	[posY]="contextMenuPositionX"
+	[posX]="contextMenuPositionX"
+	[posY]="contextMenuPositionY"
 >
 	<!-- Remove -->
 	<dav-context-menu-item
@@ -106,7 +62,7 @@
 >
 	<form>
 		<!-- Name -->
-		<div class="mb-3">
+		<div class="dialog-formfield-container">
 			<dav-textfield
 				[value]="editNameDialogName"
 				[label]="locale.editNameDialog.nameTextfieldLabel"
@@ -130,14 +86,9 @@
 	(dismiss)="addBookDialogVisible = false"
 	(defaultButtonClick)="addBookDialogVisible = false"
 >
-	<div class="d-flex flex-wrap mb-4" style="max-width: 500px">
-		<div
-			class="card cursor theme-background-color-secondary shadow-sm m-2"
-			style="border-radius: 8px;"
-			*ngFor="let book of selectableBooks"
-		>
+	<div class="add-book-dialog-container">
+		<button *ngFor="let book of selectableBooks">
 			<dav-blurhash-image
-				style="border-radius: inherit"
 				[src]="book.coverContent"
 				[fallbackSrc]="dataService.defaultStoreBookCover"
 				[blurhash]="book.coverBlurhash"
@@ -145,6 +96,6 @@
 				height="150"
 				(click)="AddBook(book)"
 			></dav-blurhash-image>
-		</div>
+		</button>
 	</div>
 </dav-dialog>

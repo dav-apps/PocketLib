@@ -1,0 +1,47 @@
+.container {
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 32px;
+}
+
+.books-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 16px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.book-card {
+	display: inline-flex;
+	border-radius: 12px;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	cursor: pointer;
+}
+
+.book-card > dav-blurhash-image {
+	border-radius: 12px;
+}
+
+.add-book-dialog-container {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+	max-width: 500px;
+}
+
+.add-book-dialog-container > button {
+	display: inline-flex;
+	padding: 0;
+	border: none;
+	border-radius: 8px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.add-book-dialog-container > button > dav-blurhash-image {
+	border-radius: 8px;
+}
