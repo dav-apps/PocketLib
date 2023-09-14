@@ -52,6 +52,7 @@ export class StoreBookSeries {
 		let response = await this.apiService.retrieveStoreBookSeries(
 			`
 				storeBooks(limit: $limit, offset: $offset) {
+					total
 					items {
 						uuid
 					}

@@ -137,6 +137,7 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				bios(limit: $limit, offset: $offset) {
+					total
 					items {
 						uuid
 						bio
@@ -172,6 +173,7 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				collections(limit: $limit, offset: $offset) {
+					total
 					items {
 						uuid
 					}
@@ -213,6 +215,7 @@ export class Author {
 		let response = await this.apiService.retrieveAuthor(
 			`
 				series(limit: $limit, offset: $offset) {
+					total
 					items {
 						uuid
 					}
