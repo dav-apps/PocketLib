@@ -1,5 +1,5 @@
 <!-- Normal layout -->
-<div class="container slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container slide-up-in">
 	<div class="mt-3 mb-4">
 		<dav-header
 			backButtonVisible
@@ -29,56 +29,6 @@
 			[link]="book.link"
 			*ngFor="let book of books"
 		></pocketlib-horizontal-book-card>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<div class="mt-3 mb-4 mx-3">
-			<dav-header
-				backButtonVisible
-				[addButtonVisible]="leftScreenBooks.length > 0 || rightScreenBooks.length > 0"
-				editButtonVisible
-				(backButtonClick)="BackButtonClick()"
-				(addButtonClick)="NavigateToNewBookPage()"
-				(editButtonClick)="ShowNamesDialog()"
-			>
-				{{ collectionName.name }}
-			</dav-header>
-		</div>
-
-		<p
-			class="fw-light text-center mt-3 text-color"
-			style="font-size: 18px"
-			*ngIf="leftScreenBooks.length == 0 && rightScreenBooks.length == 0"
-		>
-			{{ locale.noBooks }}
-		</p>
-
-		<div class="mx-auto px-5">
-			<pocketlib-horizontal-book-card
-				[title]="book.title"
-				[coverContent]="book.coverContent"
-				[coverBlurhash]="book.coverBlurhash"
-				[link]="book.link"
-				*ngFor="let book of leftScreenBooks"
-			></pocketlib-horizontal-book-card>
-		</div>
-	</div>
-
-	<!-- Right screen -->
-	<div class="w-50" [style.marginLeft.px]="dualScreenFoldMargin">
-		<div class="mx-auto px-5" style="margin-top: 78px">
-			<pocketlib-horizontal-book-card
-				[title]="book.title"
-				[coverContent]="book.coverContent"
-				[coverBlurhash]="book.coverBlurhash"
-				[link]="book.link"
-				*ngFor="let book of rightScreenBooks"
-			></pocketlib-horizontal-book-card>
-		</div>
 	</div>
 </div>
 

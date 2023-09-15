@@ -7,7 +7,7 @@ import {
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
-import { GetDualScreenSettings, GetLanguageByString } from "src/app/misc/utils"
+import { GetLanguageByString } from "src/app/misc/utils"
 import { BookListItem, StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
@@ -22,8 +22,6 @@ interface ExtendedBookListItem extends BookListItem {
 export class AuthorCollectionPageComponent {
 	locale = enUS.authorCollectionPage
 	uuid: string
-	dualScreenLayout: boolean = false
-	dualScreenFoldMargin: number = 0
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
 		null,
@@ -58,11 +56,6 @@ export class AuthorCollectionPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorCollectionPage
-
-		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
-		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
-		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
 
 	async ngOnInit() {
@@ -146,18 +139,7 @@ export class AuthorCollectionPageComponent {
 				}
 			}
 
-			if (this.dualScreenLayout) {
-				// Evenly distribute the books on the left and right screens
-				if (i % 2 == 0) {
-					this.leftScreenBooks.push(bookItem)
-				} else {
-					this.rightScreenBooks.push(bookItem)
-				}
-
-				i++
-			} else {
-				this.books.push(bookItem)
-			}
+			this.books.push(bookItem)
 		}
 	}
 
