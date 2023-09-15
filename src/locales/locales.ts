@@ -116,22 +116,6 @@ const enDefaults = {
 		cancel: "Cancel",
 		create: "Create"
 	},
-	authorSetupPage: {
-		title: "Create your author profile",
-		create: "Create",
-		firstNameTextfieldLabel: "First name",
-		lastNameTextfieldLabel: "Last name",
-		terms: `With the creation you accept our <a href="{0}/pocketlib/terms" target="blank" {1}>Terms of Service</a>.`,
-		errors: {
-			firstNameMissing: "Please enter your first name",
-			lastNameMissing: "Please enter your last name",
-			firstNameTooShort: "The first name is too short",
-			lastNameTooShort: "The last name is too short",
-			firstNameTooLong: "The first name is too long",
-			lastNameTooLong: "The last name is too long",
-			unexpectedError: "An unexpected error occured. Please try again later."
-		}
-	},
 	authorBookDashboardPage: {
 		published: "Your book is published!",
 		inReview: "You book is being reviewed...",
@@ -663,23 +647,6 @@ const deDefaults = {
 		},
 		cancel: "Abbrechen",
 		create: "Erstellen"
-	},
-	authorSetupPage: {
-		title: "Erstelle dein Autoren-Profil",
-		create: "Erstellen",
-		firstNameTextfieldLabel: "Vorname",
-		lastNameTextfieldLabel: "Nachname",
-		terms: `Mit dem Erstellen akzeptierst du unsere <a href="{0}/pocketlib/terms" target="blank" {1}>Allgemeinen Geschäftsbedingungen</a>.`,
-		errors: {
-			firstNameMissing: "Bitte gib deinen Vornamen ein",
-			lastNameMissing: "Bitte gib deinen Nachnamen ein",
-			firstNameTooShort: "Der Vorname ist zu kurz",
-			lastNameTooShort: "Der Nachname ist zu kurz",
-			firstNameTooLong: "Der Vorname ist zu lang",
-			lastNameTooLong: "Der Nachname ist zu lang",
-			unexpectedError:
-				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
-		}
 	},
 	authorBookDashboardPage: {
 		published: "Dein Buch ist veröffentlicht!",

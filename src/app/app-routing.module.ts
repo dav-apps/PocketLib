@@ -6,7 +6,6 @@ import { SettingsPageComponent } from "./pages/settings-page/settings-page.compo
 import { AccountPageComponent } from "./pages/account-page/account-page.component"
 import { PublisherPageComponent } from "./pages/publisher-page/publisher-page.component"
 import { AuthorPageComponent } from "./pages/author-page/author-page.component"
-import { AuthorSetupPageComponent } from "./pages/author-setup-page/author-setup-page.component"
 import { AuthorCollectionPageComponent } from "./pages/author-collection-page/author-collection-page.component"
 import { AuthorSeriesPageComponent } from "./pages/author-series-page/author-series-page.component"
 import { NewSeriesPageComponent } from "./pages/new-series-page/new-series-page.component"
@@ -28,7 +27,6 @@ const routes: Routes = [
 	{ path: "settings", component: SettingsPageComponent },
 	{ path: "publisher/:uuid", component: PublisherPageComponent },
 	{ path: "author", component: AuthorPageComponent },
-	{ path: "author/setup", component: AuthorSetupPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },
 	{
 		path: "author/collection/:collection_uuid",
