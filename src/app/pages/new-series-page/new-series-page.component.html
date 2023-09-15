@@ -1,119 +1,76 @@
 <!-- Normal layout -->
 <div class="container slide-up-in">
-	<div class="mb-4">
-		<dav-header
-			backButtonVisible
-			(backButtonClick)="GoBack()"
-		>
+	<div class="header-container">
+		<dav-header backButtonVisible (backButtonClick)="GoBack()">
 			{{ locale.title }}
 		</dav-header>
 	</div>
 
 	<!-- Error message bar -->
-	<div
-		class="mb-3 mx-auto"
-		style="max-width: 300px"
-		*ngIf="errorMessage.length > 0"
-	>
-		<dav-message-bar type="danger">
+	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
 
-	<div class="mx-auto mb-4" style="max-width: 300px">
-		<p
-			class="text-color mb-3"
-			style="font-size: 15px"
-			[innerHTML]="locale.description"
-		></p>
+	<div class="selection-container">
+		<div class="selection-content-container">
+			<p class="description-text" [innerHTML]="locale.description"></p>
 
-		<!-- Language -->
-		<div class="d-flex mb-3">
-			<pocketlib-language-dropdown
-				[language]="language"
+			<!-- Language -->
+			<div class="language-dropdown-container">
+				<pocketlib-language-dropdown
+					[language]="language"
+					[disabled]="loading"
+					(updated)="SetLanguage($event)"
+				></pocketlib-language-dropdown>
+			</div>
+
+			<!-- Name -->
+			<dav-textfield
+				[label]="locale.nameTextfieldLabel"
+				[value]="name"
+				[placeholder]="locale.nameTextfieldPlaceholder"
 				[disabled]="loading"
-				(updated)="SetLanguage($event)"
-			></pocketlib-language-dropdown>
+				(change)="name = $event.detail.value"
+			></dav-textfield>
 		</div>
-
-		<!-- Name -->
-		<dav-textfield
-			[label]="locale.nameTextfieldLabel"
-			[value]="name"
-			[placeholder]="locale.nameTextfieldPlaceholder"
-			[disabled]="loading"
-			(change)="name = $event.detail.value"
-		></dav-textfield>
 	</div>
 
-	<dav-progress-ring
-		style="margin: 50px auto 0"
-		size="28"
-		*ngIf="booksLoading"
-	></dav-progress-ring>
+	<div class="progress-ring-container" *ngIf="booksLoading">
+		<dav-progress-ring size="28"></dav-progress-ring>
+	</div>
 
-	<div
-		class="d-flex flex-wrap justify-content-center mb-4"
-		*ngIf="!booksLoading"
-	>
-		<div
-			class="card theme-background-color-secondary shadow-sm m-2"
-			style="padding: 0.8rem 0.8rem 0.5rem"
-			*ngFor="let book of bookItems"
-		>
-			<div class="d-flex flex-column">
-				<img
-					class="rounded cursor"
-					[src]="book.cover"
-					height="150"
-					[title]="book.title"
-					(click)="ToggleSelectedBook(book)"
-				/>
+	<div class="books-container" *ngIf="!booksLoading && bookItems.length > 0">
+		<div class="inner-books-container">
+			<div>
+				<dav-checkbox
+					[label]="book.title"
+					[checked]="book.checked"
+					(change)="ToggleSelectedBook(book)"
+					*ngFor="let book of bookItems"
+				></dav-checkbox>
+			</div>
 
-				<div
-					class="d-flex justify-content-center"
-					style="margin-top: 0.5rem"
+			<div class="submit-button-container">
+				<dav-button
+					[disabled]="
+						selectedBooks.length <= 1 || name.length < 3 || loading
+					"
+					(click)="Submit()"
 				>
-					<dav-checkbox
-						[label]="book.title"
-						[checked]="book.checked"
-						labelHidden
-						(change)="ToggleSelectedBook(book)"
-					></dav-checkbox>
-				</div>
+					{{ locale.create }}
+				</dav-button>
+
+				<dav-progress-ring size="16" *ngIf="loading"></dav-progress-ring>
 			</div>
 		</div>
 	</div>
 
 	<div
-		class="mx-auto mt-3 text-center"
-		style="max-width: 300px"
+		class="no-books-container"
 		*ngIf="bookItems.length == 0 && !booksLoading"
 	>
-		<p class="text-color fw-light">
-			{{ locale.noBooksMessage }}
-		</p>
-	</div>
-
-	<div
-		class="mx-auto"
-		style="width: 300px"
-		*ngIf="!booksLoading && bookItems.length > 0"
-	>
-		<div class="d-flex" style="float: right">
-			<dav-progress-ring
-				style="margin: 8px 14px 0px 0px"
-				size="16"
-				*ngIf="loading"
-			></dav-progress-ring>
-
-			<dav-button
-				type="accent"
-				[disabled]="selectedBooks.length <= 1 || name.length < 3 || loading"
-				(click)="Submit()"
-			>
-				{{ locale.create }}
-			</dav-button>
-		</div>
+		<p>{{ locale.noBooksMessage }}</p>
 	</div>
 </div>

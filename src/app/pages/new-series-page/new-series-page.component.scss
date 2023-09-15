@@ -1,0 +1,69 @@
+.container {
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 32px;
+}
+
+.error-message-container {
+	min-width: 200px;
+	max-width: 300px;
+	margin: 0 auto 16px;
+}
+
+.selection-container {
+	display: flex;
+	justify-content: center;
+}
+
+.selection-content-container {
+	display: inline-block;
+	max-width: 300px;
+}
+
+.description-text {
+	color: var(--dav-color-on-surface);
+	margin-bottom: 16px;
+	font-size: 15px;
+}
+
+.language-dropdown-container {
+	margin-bottom: 16px;
+}
+
+.progress-ring-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 32px;
+}
+
+.no-books-container {
+	margin: 32px auto 0;
+	max-width: 300px;
+}
+
+.no-books-container > p {
+	font-weight: 300;
+	font-style: italic;
+	color: var(--dav-color-on-surface);
+	text-align: center;
+}
+
+.books-container {
+	display: flex;
+	justify-content: center;
+	margin: 24px 0;
+}
+
+.inner-books-container {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 400px;
+}
+
+.submit-button-container {
+	display: flex;
+	gap: 12px;
+}

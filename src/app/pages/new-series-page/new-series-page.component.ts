@@ -15,7 +15,8 @@ interface BookItem {
 
 @Component({
 	selector: "pocketlib-new-series-page",
-	templateUrl: "./new-series-page.component.html"
+	templateUrl: "./new-series-page.component.html",
+	styleUrls: ["./new-series-page.component.scss"]
 })
 export class NewSeriesPageComponent {
 	locale = enUS.newSeriesPage
@@ -124,11 +125,6 @@ export class NewSeriesPageComponent {
 
 	ToggleSelectedBook(bookItem: BookItem) {
 		bookItem.checked = !bookItem.checked
-		let i = this.bookItems.findIndex(b => b.uuid == bookItem.uuid)
-
-		if (i != -1) {
-			this.bookItems[i].checked = bookItem.checked
-		}
 
 		// Get the selected books
 		this.selectedBooks = []
