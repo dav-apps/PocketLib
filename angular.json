@@ -29,12 +29,7 @@
 							"src/manifest.webmanifest",
 							"src/.well-known/assetlinks.json"
 						],
-						"styles": [
-							"src/styles.scss"
-						],
-						"scripts": [
-							"node_modules/bootstrap/dist/js/bootstrap.min.js"
-						],
+						"styles": ["src/styles.scss"],
 						"vendorChunk": true,
 						"extractLicenses": false,
 						"buildOptimizer": false,
