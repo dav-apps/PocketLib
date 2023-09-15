@@ -4,8 +4,8 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "cd dist && node server.js",
+		"dev": "concurrently 'npm:ng:build:watch' 'npm:server:compile' 'npm:server:copy:watch' 'npm:server:copy2:watch' 'npm:server:watch'",
 		"build": "npm run build:prod",
-		"build:watch": "concurrently 'npm:ng:build:watch' 'npm:server:compile' 'npm:server:copy:watch' 'npm:server:copy2:watch' 'npm:server:watch'",
 		"build:prod": "npm run clear && npm run npm:install && npm run ng:build:prod && npm run server:compile && npm run server:copy",
 		"build:staging": "npm run clear && npm run npm:install && npm run ng:build:staging && npm run server:compile && npm run server:copy",
 		"clear": "rm -rf dist && rm -rf server/dist",
