@@ -75,8 +75,8 @@ export class StoreBookCollection {
 			`,
 			{
 				uuid: this.uuid,
-				limit: params.limit,
-				offset: params.offset
+				limit: params?.limit,
+				offset: params?.offset
 			}
 		)
 

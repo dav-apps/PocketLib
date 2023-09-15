@@ -146,6 +146,8 @@ export class AuthorBookPageComponent {
 			return
 		}
 
+		this.collection = await this.storeBook.GetCollection()
+
 		let releasesResult = await this.storeBook.GetReleases()
 		this.releases = releasesResult.items
 		let releaseUuid =
