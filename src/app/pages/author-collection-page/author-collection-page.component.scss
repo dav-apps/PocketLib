@@ -1,0 +1,24 @@
+.container {
+	padding: 12px;
+}
+
+.header-container {
+	margin-bottom: 32px;
+}
+
+.no-books-text {
+	font-weight: 300;
+	font-style: italic;
+	text-align: center;
+	color: var(--dav-color-on-surface);
+	font-size: 18px;
+}
+
+.book-list-container {
+	display: flex;
+	justify-content: center;
+}
+
+.book-list-container > dav-list {
+	max-width: 600px;
+}

@@ -17,7 +17,8 @@ interface ExtendedBookListItem extends BookListItem {
 
 @Component({
 	selector: "pocketlib-author-collection-page",
-	templateUrl: "./author-collection-page.component.html"
+	templateUrl: "./author-collection-page.component.html",
+	styleUrls: ["./author-collection-page.component.scss"]
 })
 export class AuthorCollectionPageComponent {
 	locale = enUS.authorCollectionPage
@@ -206,5 +207,10 @@ export class AuthorCollectionPageComponent {
 
 		//this.collection.ClearNames()
 		this.LoadCollectionNames()
+	}
+
+	bookItemClick(event: Event, bookItem: ExtendedBookListItem) {
+		event.preventDefault()
+		this.router.navigate([bookItem.link])
 	}
 }

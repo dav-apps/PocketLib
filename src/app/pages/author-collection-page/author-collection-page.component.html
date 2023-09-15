@@ -1,5 +1,5 @@
 <div class="container slide-up-in">
-	<div class="mt-3 mb-4">
+	<div class="header-container">
 		<dav-header
 			backButtonVisible
 			[addButtonVisible]="books.length > 0"
@@ -12,22 +12,21 @@
 		</dav-header>
 	</div>
 
-	<p
-		class="fw-light text-center mt-3 text-color"
-		style="font-size: 18px"
-		*ngIf="books.length == 0"
-	>
+	<p class="no-books-text" *ngIf="books.length == 0">
 		{{ locale.noBooks }}
 	</p>
 
-	<div class="col-12 col-md-6 mx-auto">
-		<pocketlib-horizontal-book-card
-			[title]="book.title"
-			[coverContent]="book.coverContent"
-			[coverBlurhash]="book.coverBlurhash"
-			[link]="book.link"
-			*ngFor="let book of books"
-		></pocketlib-horizontal-book-card>
+	<div class="book-list-container">
+		<dav-list>
+			<dav-list-item
+				[imageSrc]="book.coverContent"
+				[imageBlurhash]="book.coverBlurhash"
+				[headline]="book.title"
+				[href]="book.link"
+				(click)="bookItemClick($event, book)"
+				*ngFor="let book of books"
+			></dav-list-item>
+		</dav-list>
 	</div>
 </div>
 

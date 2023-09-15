@@ -18,7 +18,8 @@ interface Name {
 
 @Component({
 	selector: "pocketlib-edit-names",
-	templateUrl: "./edit-names.component.html"
+	templateUrl: "./edit-names.component.html",
+	styleUrls: ["./edit-names.component.scss"]
 })
 export class EditNamesComponent {
 	locale = enUS.editNames
@@ -51,7 +52,7 @@ export class EditNamesComponent {
 			}
 		)
 
-		if (setNameResponse.errors != null) {
+		if (setNameResponse.errors == null) {
 			let setNameResponseData =
 				setNameResponse.data.setStoreBookCollectionName
 			name.edit = false
