@@ -1,5 +1,4 @@
-<!-- Normal layout -->
-<div class="container d-flex flex-column slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container d-flex flex-column slide-up-in">
 	<h2 class="text-center fw-light mt-3 text-color">{{ locale.title }}</h2>
 
 	<div
@@ -53,75 +52,5 @@
 				></dav-progress-ring>
 			</div>
 		</form>
-	</div>
-</div>
-
-<!-- Dual-Screen layout -->
-<div class="d-flex flex-row slide-up-in" *ngIf="dualScreenLayout">
-	<!-- Left screen -->
-	<div class="w-50" [style.marginRight.px]="dualScreenFoldMargin">
-		<h2 class="text-center fw-light mt-3 text-color">
-			{{ locale.title }}
-		</h2>
-
-		<div
-			class="mt-3 mx-auto"
-			*ngIf="generalError.length > 0"
-			style="width: 300px"
-		>
-			<dav-message-bar>
-				{{ generalError }}
-			</dav-message-bar>
-		</div>
-
-		<div class="mt-3 mx-auto" style="width: 300px">
-			<form>
-				<!-- First name -->
-				<div class="mb-3">
-					<dav-textfield
-						[value]="firstName"
-						[label]="locale.firstNameTextfieldLabel"
-						placeholder="Monty"
-						autocomplete="given-name"
-						[errorMessage]="firstNameError"
-						(change)="
-							firstName = $event.detail.value; firstNameError = ''
-						"
-					></dav-textfield>
-				</div>
-
-				<!-- Last name -->
-				<div class="mb-3">
-					<dav-textfield
-						[value]="lastName"
-						[label]="locale.lastNameTextfieldLabel"
-						placeholder="Kensicle"
-						autocomplete="family-name"
-						[errorMessage]="lastNameError"
-						(change)="lastName = $event.detail.value; lastNameError = ''"
-						(enter)="Submit()"
-					></dav-textfield>
-				</div>
-
-				<!-- Terms of Service -->
-				<p class="text-color my-0" [innerHtml]="terms"></p>
-
-				<div class="d-flex mt-3">
-					<dav-button
-						type="accent"
-						[disabled]="loading"
-						(click)="Submit()"
-					>
-						{{ locale.create }}
-					</dav-button>
-
-					<dav-progress-ring
-						style="margin: 8px 0px 0px 14px"
-						size="16"
-						*ngIf="loading"
-					></dav-progress-ring>
-				</div>
-			</form>
-		</div>
 	</div>
 </div>
