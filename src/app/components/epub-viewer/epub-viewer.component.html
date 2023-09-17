@@ -333,10 +333,5 @@
 	[visible]="showChaptersPanel && !isMobile"
 	(dismiss)="showChaptersPanel = false"
 >
-	<div class="chapters-panel-container">
-		<pocketlib-chapters-tree
-			#chaptersTree
-			(linkClick)="ChapterLinkClicked($event)"
-		></pocketlib-chapters-tree>
-	</div>
+	<dav-tree #chaptersTree></dav-tree>
 </dav-panel>

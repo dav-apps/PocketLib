@@ -22,7 +22,7 @@ import {
 	faListUl as faListUlLight
 } from "@fortawesome/pro-light-svg-icons"
 import { PromiseHolder } from "dav-js"
-import { BottomSheet } from "dav-ui-components"
+import { BottomSheet, Tree, TreeItem } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ChaptersTreeComponent } from "../chapters-tree/chapters-tree.component"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -196,7 +196,7 @@ export class EpubViewerComponent {
 	//#region Variables for the chapters panel
 	showChaptersPanel: boolean = false
 	@ViewChild("chaptersTree", { static: true })
-	chapterTree: ChaptersTreeComponent
+	chaptersTree: ElementRef<Tree>
 	//#endregion
 
 	//#region Variables for bookmarks
@@ -281,7 +281,10 @@ export class EpubViewerComponent {
 		await this.ShowPage(NavigationDirection.None, progress)
 		this.SetProgressRingColor()
 
-		this.chapterTree.Init(this.book.toc)
+		this.fillChapterTreeWithTocItems(
+			this.chaptersTree.nativeElement,
+			this.book.toc
+		)
 
 		await this.LoadChapterPercentages()
 		this.CalculateTotalProgress(this.currentBook.progress)
@@ -1285,6 +1288,29 @@ export class EpubViewerComponent {
 		}
 
 		return pageProgress
+	}
+
+	fillChapterTreeWithTocItems(chaptersTree: Tree, tocItems: EpubTocItem[]) {
+		for (let tocItem of tocItems) {
+			chaptersTree.appendChild(this.getTreeItemForTableOfContents(tocItem))
+		}
+	}
+
+	getTreeItemForTableOfContents(tocItem: EpubTocItem): TreeItem {
+		let treeItem = document.createElement("dav-tree-item")
+		treeItem.headline = tocItem.title
+		treeItem.onclick = () => this.ChapterLinkClicked(tocItem.href)
+
+		if (tocItem.items.length > 0) {
+			treeItem.node = true
+			treeItem.open = true
+		}
+
+		for (let tocSubItem of tocItem.items) {
+			treeItem.appendChild(this.getTreeItemForTableOfContents(tocSubItem))
+		}
+
+		return treeItem
 	}
 
 	ChapterLinkClicked(link: string) {
