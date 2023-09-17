@@ -7,7 +7,6 @@ import { environment } from "../environments/environment"
 import { AppRoutingModule } from "./app-routing.module"
 import { NgxFileHelpersModule } from "ngx-file-helpers"
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
-import { MatTreeModule } from "@angular/material/tree"
 import { PortalModule } from "@angular/cdk/portal"
 import { PdfViewerModule } from "ng2-pdf-viewer"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
@@ -28,7 +27,6 @@ import { CachingService } from "./services/caching-service"
 
 // Components
 import { AppComponent } from "./app.component"
-import { ChaptersTreeComponent } from "./components/chapters-tree/chapters-tree.component"
 import { EditNamesComponent } from "./components/edit-names/edit-names.component"
 import { EpubViewerComponent } from "./components/epub-viewer/epub-viewer.component"
 import { PdfViewerComponent } from "./components/pdf-viewer/pdf-viewer.component"
@@ -86,7 +84,6 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 	declarations: [
 		// Components
 		AppComponent,
-		ChaptersTreeComponent,
 		EditNamesComponent,
 		EpubViewerComponent,
 		PdfViewerComponent,
@@ -146,7 +143,6 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		HttpClientModule,
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
-		MatTreeModule,
 		PortalModule,
 		PdfViewerModule,
 		FontAwesomeModule,
