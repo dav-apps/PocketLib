@@ -1,6 +1,6 @@
 <div
 	#firstViewerContainer
-	class="viewer-container d-flex theme-background-color-primary"
+	class="viewer-container"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="firstViewer.zIndex"
@@ -30,7 +30,7 @@
 
 <div
 	#secondViewerContainer
-	class="viewer-container d-flex theme-background-color-primary"
+	class="viewer-container"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="secondViewer.zIndex"
@@ -60,7 +60,7 @@
 
 <div
 	#thirdViewerContainer
-	class="viewer-container d-flex theme-background-color-primary"
+	class="viewer-container"
 	[style.width.px]="width"
 	[style.height.px]="height"
 	[style.z-index]="thirdViewer.zIndex"
@@ -111,46 +111,40 @@
 
 <!-- Chapter title -->
 <div
-	style="position: absolute; bottom: 0; right: 0; height: 50px"
-	class="d-flex justify-content-center"
-	[ngClass]="dualScreenLayout ? 'w-50' : 'w-100'"
+	class="chapter-title-container"
+	[ngClass]="dualScreenLayout ? 'dual-screen' : ''"
 	*ngIf="!isMobile"
 >
-	<p
-		class="align-self-center fw-light text-color"
-		style="display: inline-block; margin: 0; font-size: 14px"
-	>
-		{{ currentChapterTitle }}
-	</p>
+	<p>{{ currentChapterTitle }}</p>
 </div>
 
 <!-- Top Toolbar -->
 <div
-	class="w-100"
-	style="z-index: 2; position: absolute"
+	class="top-toolbar"
 	*ngIf="!isMobile && initialized"
 >
-	<!-- Back button -->
-	<dav-icon-button
-		[disabled]="navigationHistory.length == 0"
-		(click)="GoBack()"
-	>
-		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
-	</dav-icon-button>
+	<div class="top-toolbar-left-container">
+		<!-- Back button -->
+		<dav-icon-button
+			[disabled]="navigationHistory.length == 0"
+			(click)="GoBack()"
+		>
+			<fa-icon [icon]="faArrowLeftLight"></fa-icon>
+		</dav-icon-button>
 
-	<!-- Home button -->
-	<dav-icon-button (click)="GoHome()">
-		<fa-icon [icon]="faHouseLight"></fa-icon>
-	</dav-icon-button>
+		<!-- Home button -->
+		<dav-icon-button (click)="GoHome()">
+			<fa-icon [icon]="faHouseLight"></fa-icon>
+		</dav-icon-button>
+	</div>
 
-	<div class="d-flex" style="float: right">
-		<div id="progress-ring-container">
+	<div class="top-toolbar-right-container">
+		<div class="progress-ring-container">
 			<dav-progress-ring
 				[style.display]="progressRingVisible ? '' : 'none'"
 				size="18"
 				color="black"
-			>
-			</dav-progress-ring>
+			></dav-progress-ring>
 		</div>
 
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
@@ -184,7 +178,7 @@
 	(touchmove)="HandleTouch($event)"
 	(touchend)="HandleTouch($event)"
 >
-	<div id="bottom-sheet-button-container">
+	<div class="bottom-sheet-button-container">
 		<dav-icon-text-button
 			(click)="GoHome()"
 			[label]="locale.bottomSheet.back"
@@ -226,7 +220,7 @@
 	</div>
 
 	<div
-		id="bottom-sheet-container"
+		class="bottom-sheet-content-container"
 		[style.height.px]="bottomSheetContainerHeight"
 	>
 		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
@@ -258,7 +252,7 @@
 			</ul>
 
 			<p
-				class="fw-light text-color"
+				class="no-bookmarks-text"
 				[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
 			>
 				{{ locale.noBookmarks }}
@@ -277,7 +271,7 @@
 
 <!-- Total progress -->
 <div
-	style="position: absolute; bottom: 0; width: 2px; transition-duration: 400ms"
+	class="progress-indicator"
 	[style.borderTop]="
 		dataService.darkTheme ? '2px solid #b9b9b9' : '4px solid #7b7b7b'
 	"
@@ -286,15 +280,14 @@
 
 <!-- Progress ring for small window -->
 <div
-	id="progress-ring-container-mobile"
+	class="progress-ring-container-mobile"
 	[style.visibility]="isMobile ? '' : 'hidden'"
 >
 	<dav-progress-ring
 		[style.display]="progressRingVisible ? '' : 'none'"
 		size="18"
 		color="black"
-	>
-	</dav-progress-ring>
+	></dav-progress-ring>
 </div>
 
 <!-- Panel for Bookmarks -->
@@ -329,7 +322,7 @@
 	</ul>
 
 	<p
-		class="fw-light text-color"
+		class="no-bookmarks-text"
 		[style.display]="currentBook.bookmarks.length == 0 ? '' : 'none'"
 	>
 		{{ locale.noBookmarks }}

@@ -30,7 +30,6 @@ export class BookPageComponent {
 
 		// Disable scrolling and min-height of root
 		document.body.setAttribute("style", "overflow: hidden")
-		document.getElementById("root").removeAttribute("style")
 
 		if (!this.dataService.currentBook && this.dataService.settings.book) {
 			// Get the current book from the settings
@@ -49,6 +48,5 @@ export class BookPageComponent {
 
 	ngOnDestroy() {
 		document.body.removeAttribute("style")
-		document.getElementById("root").setAttribute("style", "min-height: 100vh")
 	}
 }

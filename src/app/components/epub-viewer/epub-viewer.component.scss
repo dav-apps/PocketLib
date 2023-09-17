@@ -1,5 +1,7 @@
 .viewer-container {
 	position: absolute;
+	display: flex;
+	background-color: var(--dav-color-surface);
 	transition-property: transform;
 }
 
@@ -34,18 +36,18 @@ a.text-color:hover {
 	right: 0;
 }
 
-#bottom-sheet-button-container {
+.bottom-sheet-button-container {
 	display: flex;
 	gap: 12px;
 }
 
-#progress-ring-container {
+.progress-ring-container {
 	width: 18px;
 	height: 18px;
 	margin: 16px;
 }
 
-#progress-ring-container-mobile {
+.progress-ring-container-mobile {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -60,4 +62,59 @@ a.text-color:hover {
 
 .chapters-panel-container {
 	margin-left: 16px;
+}
+
+.chapter-title-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 50px;
+	z-index: 1;
+}
+
+.chapter-title-container.dual-screen {
+	width: 50%;
+}
+
+.chapter-title-container > p {
+	font-weight: 300;
+	color: var(--dav-color-on-surface);
+	display: inline-block;
+	margin: 0;
+	font-size: 14px;
+}
+
+.top-toolbar {
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	width: 100%;
+	z-index: 2;
+}
+
+.top-toolbar-left-container {
+	display: inline-flex;
+}
+
+.top-toolbar-right-container {
+	display: inline-flex;
+}
+
+.no-bookmarks-text {
+	font-style: italic;
+	font-weight: 300;
+	color: var(--dav-color-on-surface);
+	text-align: center;
+	margin: 16px 0;
+}
+
+.progress-indicator {
+	position: absolute;
+	bottom: 0;
+	width: 2px;
+	transition-duration: 400ms;
 }

@@ -401,6 +401,7 @@ body {
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
 	background-color: var(--dav-color-surface);
+	overflow-x: hidden;
 }
 
 .cursor {
