@@ -119,13 +119,11 @@
 </div>
 
 <!-- Top Toolbar -->
-<div
-	class="top-toolbar"
-	*ngIf="!isMobile && initialized"
->
+<div class="top-toolbar" *ngIf="!isMobile && initialized">
 	<div class="top-toolbar-left-container">
 		<!-- Back button -->
 		<dav-icon-button
+			size="small"
 			[disabled]="navigationHistory.length == 0"
 			(click)="GoBack()"
 		>
@@ -133,7 +131,7 @@
 		</dav-icon-button>
 
 		<!-- Home button -->
-		<dav-icon-button (click)="GoHome()">
+		<dav-icon-button size="small" (click)="GoHome()">
 			<fa-icon [icon]="faHouseLight"></fa-icon>
 		</dav-icon-button>
 	</div>
@@ -147,7 +145,7 @@
 			></dav-progress-ring>
 		</div>
 
-		<dav-icon-button (click)="AddOrRemoveBookmark()">
+		<dav-icon-button size="small" (click)="AddOrRemoveBookmark()">
 			<fa-icon
 				[icon]="faBookmarkSolid"
 				*ngIf="currentPageBookmark"
@@ -158,11 +156,11 @@
 			></fa-icon>
 		</dav-icon-button>
 
-		<dav-icon-button (click)="ShowBookmarksPanel()">
+		<dav-icon-button size="small" (click)="ShowBookmarksPanel()">
 			<fa-icon [icon]="faFolderBookmarkLight"></fa-icon>
 		</dav-icon-button>
 
-		<dav-icon-button (click)="ShowChaptersPanel()">
+		<dav-icon-button size="small" (click)="ShowChaptersPanel()">
 			<fa-icon [icon]="faListUlLight"></fa-icon>
 		</dav-icon-button>
 	</div>

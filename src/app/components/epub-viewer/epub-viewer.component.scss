@@ -94,14 +94,18 @@ a.text-color:hover {
 	position: absolute;
 	width: 100%;
 	z-index: 2;
+	padding: 12px;
+	box-sizing: border-box;
 }
 
 .top-toolbar-left-container {
 	display: inline-flex;
+	gap: 6px;
 }
 
 .top-toolbar-right-container {
 	display: inline-flex;
+	gap: 6px;
 }
 
 .no-bookmarks-text {
