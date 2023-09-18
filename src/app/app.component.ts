@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core"
+import { Component, HostListener, ChangeDetectorRef } from "@angular/core"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
 import { Apollo } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
@@ -53,7 +53,8 @@ export class AppComponent {
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
-		private httpLink: HttpLink
+		private httpLink: HttpLink,
+		private cd: ChangeDetectorRef
 	) {
 		let locale = this.dataService.GetLocale().misc
 		this.libraryLabel = locale.library
@@ -153,6 +154,7 @@ export class AppComponent {
 
 	ngAfterViewInit() {
 		this.setSize()
+		this.cd.detectChanges()
 	}
 
 	@HostListener("window:resize")

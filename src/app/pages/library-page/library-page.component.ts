@@ -1,4 +1,10 @@
-import { Component, HostListener, ViewChild, ElementRef } from "@angular/core"
+import {
+	Component,
+	HostListener,
+	ViewChild,
+	ElementRef,
+	ChangeDetectorRef
+} from "@angular/core"
 import { Router } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import {
@@ -59,11 +65,15 @@ export class LibraryPageComponent {
 	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
-	loadingScreenVisible: boolean = false
+	loadingScreenVisible: boolean = true
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
 
-	constructor(public dataService: DataService, private router: Router) {
+	constructor(
+		public dataService: DataService,
+		private router: Router,
+		private cd: ChangeDetectorRef
+	) {
 		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
 		this.dataService.bookPageVisible = false
@@ -75,15 +85,15 @@ export class LibraryPageComponent {
 	}
 
 	async ngOnInit() {
-		this.dataService.simpleLoadingScreenVisible = true
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
-		this.dataService.simpleLoadingScreenVisible = false
+		this.loadingScreenVisible = false
 
 		this.setSize()
 	}
 
 	ngAfterViewInit() {
 		this.setSize()
+		this.cd.detectChanges()
 	}
 
 	ngAfterViewChecked() {
