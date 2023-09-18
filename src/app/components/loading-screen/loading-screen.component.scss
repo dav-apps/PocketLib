@@ -1,6 +1,6 @@
 .loading-page-container {
-	color: white;
-	background-color: var(--primary);
+	background-color: var(--dav-color-surface);
+	color: var(--dav-color-on-surface);
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -26,7 +26,7 @@
 }
 
 .loading-screen-message {
-	color: white;
+	color: var(--dav-color-on-surface);
 	margin-top: 30px;
 	font-size: 18px;
 }
