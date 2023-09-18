@@ -24,7 +24,6 @@ import {
 import { PromiseHolder } from "dav-js"
 import { BottomSheet, Tree, TreeItem } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
-import { ChaptersTreeComponent } from "../chapters-tree/chapters-tree.component"
 import { EpubBook } from "src/app/models/EpubBook"
 import { EpubBookmark } from "src/app/models/EpubBookmark"
 import { EpubReader, EpubTocItem } from "src/app/models/EpubReader"
@@ -212,7 +211,7 @@ export class EpubViewerComponent {
 	@ViewChild("bottomSheetChaptersContainer", { static: false })
 	bottomSheetChaptersContainer: ElementRef<HTMLDivElement>
 	@ViewChild("bottomSheetChaptersTree", { static: false })
-	bottomSheetChapterTree: ChaptersTreeComponent
+	bottomSheetChapterTree: ElementRef<Tree>
 	bottomSheetVisible: boolean = false
 	bottomSheetPosition: number = 0
 	bottomSheetStartPosition: number = 0
@@ -1121,13 +1120,17 @@ export class EpubViewerComponent {
 		if (this.isMobile) {
 			// Show the toc on the BottomSheet
 			setTimeout(() => {
-				this.bottomSheetChapterTree.Init(this.book.toc)
-				this.bottomSheetContainerHeight =
-					this.bottomSheetChaptersContainer.nativeElement.clientHeight
+				this.fillChapterTreeWithTocItems(
+					this.bottomSheetChapterTree.nativeElement,
+					this.book.toc
+				)
 
 				setTimeout(() => {
+					this.bottomSheetContainerHeight =
+						this.bottomSheetChaptersContainer.nativeElement.clientHeight
+
 					this.bottomSheet.nativeElement.snap("top")
-				}, 100)
+				}, 10)
 			}, 1)
 		}
 	}

@@ -258,11 +258,7 @@
 		</div>
 
 		<div #bottomSheetChaptersContainer *ngIf="showChaptersPanel">
-			<pocketlib-chapters-tree
-				#bottomSheetChaptersTree
-				(linkClick)="ChapterLinkClicked($event)"
-			>
-			</pocketlib-chapters-tree>
+			<dav-tree #bottomSheetChaptersTree></dav-tree>
 		</div>
 	</div>
 </dav-bottom-sheet>
