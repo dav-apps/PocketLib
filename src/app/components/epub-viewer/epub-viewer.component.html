@@ -170,13 +170,12 @@
 	#bottomSheet
 	[visible]="bottomSheetVisible"
 	[dismissable]="false"
-	[position]="bottomSheetPosition"
 	(snapBottom)="BottomSheetSnapBottom()"
 	(touchstart)="HandleTouch($event)"
 	(touchmove)="HandleTouch($event)"
 	(touchend)="HandleTouch($event)"
 >
-	<div class="bottom-sheet-button-container">
+	<div slot="buttons">
 		<dav-icon-text-button
 			(click)="GoHome()"
 			[label]="locale.bottomSheet.back"
@@ -203,25 +202,22 @@
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
-			(click)="ShowBookmarksPanel()"
+			(click)="ShowBookmarksBottomSheet()"
 			[label]="locale.bottomSheet.bookmarks"
 		>
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
-			(click)="ShowChaptersPanel()"
+			(click)="ShowChaptersBottomSheet()"
 			[label]="locale.bottomSheet.toc"
 		>
 			<fa-icon [icon]="faListUlRegular"></fa-icon>
 		</dav-icon-text-button>
 	</div>
 
-	<div
-		class="bottom-sheet-content-container"
-		[style.height.px]="bottomSheetContainerHeight"
-	>
-		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
+	<div class="bottom-sheet-content-container">
+		<div [style.display]="bookmarksVisible ? 'block' : 'none'">
 			<ul class="list-group list-group-flush">
 				<li
 					class="list-group-item d-flex theme-background-color-secondary"
@@ -257,7 +253,7 @@
 			</p>
 		</div>
 
-		<div #bottomSheetChaptersContainer *ngIf="showChaptersPanel">
+		<div [style.display]="tocVisible ? 'block' : 'none'">
 			<dav-tree #bottomSheetChaptersTree></dav-tree>
 		</div>
 	</div>
@@ -287,8 +283,8 @@
 <!-- Panel for Bookmarks -->
 <dav-panel
 	[header]="locale.bookmarks"
-	[visible]="showBookmarksPanel && !isMobile"
-	(dismiss)="showBookmarksPanel = false"
+	[visible]="bookmarksVisible && !isMobile"
+	(dismiss)="bookmarksVisible = false"
 >
 	<ul class="list-group list-group-flush">
 		<li
@@ -326,8 +322,8 @@
 <!-- Panel for TOC -->
 <dav-panel
 	[header]="locale.toc"
-	[visible]="showChaptersPanel && !isMobile"
-	(dismiss)="showChaptersPanel = false"
+	[visible]="tocVisible && !isMobile"
+	(dismiss)="tocVisible = false"
 >
 	<dav-tree #chaptersTree></dav-tree>
 </dav-panel>

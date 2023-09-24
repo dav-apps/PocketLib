@@ -36,11 +36,6 @@ a.text-color:hover {
 	right: 0;
 }
 
-.bottom-sheet-button-container {
-	display: flex;
-	gap: 12px;
-}
-
 .progress-ring-container {
 	width: 18px;
 	height: 18px;
@@ -117,4 +112,8 @@ a.text-color:hover {
 	bottom: 0;
 	width: 2px;
 	transition-duration: 400ms;
+}
+
+.bottom-sheet-content-container > div {
+	padding: 8px;
 }

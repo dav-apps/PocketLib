@@ -193,29 +193,24 @@ export class EpubViewerComponent {
 	//#endregion
 
 	//#region Variables for the chapters panel
-	showChaptersPanel: boolean = false
+	tocVisible: boolean = false
+	bottomSheetTocItemsLoaded: boolean = false
 	@ViewChild("chaptersTree", { static: true })
 	chaptersTree: ElementRef<Tree>
 	//#endregion
 
 	//#region Variables for bookmarks
 	currentPageBookmark: string = null
-	showBookmarksPanel: boolean = false
+	bookmarksVisible: boolean = false
 	//#endregion
 
 	//#region Variables for the bottom sheet
 	@ViewChild("bottomSheet", { static: true })
 	bottomSheet: ElementRef<BottomSheet>
-	@ViewChild("bottomSheetBookmarksContainer", { static: false })
-	bottomSheetBookmarksContainer: ElementRef<HTMLDivElement>
-	@ViewChild("bottomSheetChaptersContainer", { static: false })
-	bottomSheetChaptersContainer: ElementRef<HTMLDivElement>
 	@ViewChild("bottomSheetChaptersTree", { static: false })
 	bottomSheetChapterTree: ElementRef<Tree>
 	bottomSheetVisible: boolean = false
-	bottomSheetPosition: number = 0
 	bottomSheetStartPosition: number = 0
-	bottomSheetContainerHeight: number = 0
 	//#endregion
 
 	constructor(
@@ -296,7 +291,7 @@ export class EpubViewerComponent {
 
 	@HostListener("window:keydown", ["$event"])
 	async onKeyDown(event: KeyboardEvent) {
-		if (this.showChaptersPanel) return
+		if (this.tocVisible || this.bookmarksVisible) return
 
 		switch (event.code) {
 			case "Backspace": // Back key
@@ -313,7 +308,7 @@ export class EpubViewerComponent {
 
 	@HostListener("window:wheel", ["$event"])
 	async onMouseWheel(event: WheelEvent) {
-		if (this.showChaptersPanel) return
+		if (this.tocVisible || this.bookmarksVisible) return
 
 		if (event.deltaY > 0) {
 			// Wheel down
@@ -993,9 +988,9 @@ export class EpubViewerComponent {
 				this.swipeDirection == SwipeDirection.Vertical &&
 				this.bottomSheetVisible
 			) {
-				// Set the new position of the bottom sheet
-				this.bottomSheetPosition =
+				this.bottomSheet.nativeElement.setPosition(
 					this.touchDiffY + this.bottomSheetStartPosition
+				)
 			}
 		} else if (event.type == touchEndEventName) {
 			// Reset the transition times
@@ -1090,49 +1085,56 @@ export class EpubViewerComponent {
 	}
 
 	BottomSheetSnapBottom() {
-		setTimeout(() => {
-			this.showChaptersPanel = false
-			this.showBookmarksPanel = false
-			this.bottomSheetContainerHeight = 0
-		}, 200)
+		if (!this.isMobile) return
+
+		this.tocVisible = false
+		this.bookmarksVisible = false
 	}
 
 	ShowBookmarksPanel() {
-		this.showBookmarksPanel = true
-		this.showChaptersPanel = false
+		this.bookmarksVisible = true
+		this.tocVisible = false
+	}
 
-		if (this.isMobile) {
-			setTimeout(() => {
-				this.bottomSheetContainerHeight =
-					this.bottomSheetBookmarksContainer.nativeElement.clientHeight
-
-				setTimeout(() => {
-					this.bottomSheet.nativeElement.snap("top")
-				}, 100)
-			}, 1)
+	async ShowBookmarksBottomSheet() {
+		if (this.tocVisible) {
+			// Hide the BottomSheet with bookmarks
+			await this.bottomSheet.nativeElement.snap("bottom")
+			this.tocVisible = false
 		}
+
+		this.bookmarksVisible = true
+		await new Promise(resolve => setTimeout(resolve, 0))
+
+		this.bottomSheet.nativeElement.snap("top")
 	}
 
 	ShowChaptersPanel() {
-		this.showBookmarksPanel = false
-		this.showChaptersPanel = true
+		this.bookmarksVisible = false
+		this.tocVisible = true
+	}
 
-		if (this.isMobile) {
-			// Show the toc on the BottomSheet
-			setTimeout(() => {
-				this.fillChapterTreeWithTocItems(
-					this.bottomSheetChapterTree.nativeElement,
-					this.book.toc
-				)
-
-				setTimeout(() => {
-					this.bottomSheetContainerHeight =
-						this.bottomSheetChaptersContainer.nativeElement.clientHeight
-
-					this.bottomSheet.nativeElement.snap("top")
-				}, 10)
-			}, 1)
+	async ShowChaptersBottomSheet() {
+		if (this.bookmarksVisible) {
+			// Hide the BottomSheet with bookmarks
+			await this.bottomSheet.nativeElement.snap("bottom")
+			this.bookmarksVisible = false
 		}
+
+		this.tocVisible = true
+		await new Promise(resolve => setTimeout(resolve, 0))
+
+		if (!this.bottomSheetTocItemsLoaded) {
+			this.fillChapterTreeWithTocItems(
+				this.bottomSheetChapterTree.nativeElement,
+				this.book.toc
+			)
+
+			this.bottomSheetTocItemsLoaded = true
+			await new Promise(resolve => setTimeout(resolve, 0))
+		}
+
+		this.bottomSheet.nativeElement.snap("top")
 	}
 
 	async AddOrRemoveBookmark() {
@@ -1323,10 +1325,10 @@ export class EpubViewerComponent {
 			this.bottomSheet.nativeElement.snap("bottom")
 
 			setTimeout(() => {
-				this.showChaptersPanel = false
+				this.tocVisible = false
 			}, 200)
 		} else {
-			this.showChaptersPanel = false
+			this.tocVisible = false
 		}
 	}
 
@@ -1844,10 +1846,10 @@ export class EpubViewerComponent {
 			this.bottomSheet.nativeElement.snap("bottom")
 
 			setTimeout(() => {
-				this.showBookmarksPanel = false
+				this.bookmarksVisible = false
 			}, 200)
 		} else {
-			this.showBookmarksPanel = false
+			this.bookmarksVisible = false
 		}
 
 		return false
