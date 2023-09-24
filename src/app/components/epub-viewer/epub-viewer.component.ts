@@ -209,7 +209,6 @@ export class EpubViewerComponent {
 	bottomSheet: ElementRef<BottomSheet>
 	@ViewChild("bottomSheetChaptersTree", { static: false })
 	bottomSheetChapterTree: ElementRef<Tree>
-	bottomSheetVisible: boolean = false
 	bottomSheetStartPosition: number = 0
 	//#endregion
 
@@ -285,7 +284,7 @@ export class EpubViewerComponent {
 
 		if (this.isMobile) {
 			// Show the BottomSheet
-			this.bottomSheetVisible = true
+			this.bottomSheet.nativeElement.snap()
 		}
 	}
 
@@ -341,7 +340,6 @@ export class EpubViewerComponent {
 
 		this.showSecondPage = this.width > secondPageMinWidth
 		this.isMobile = this.width < 600
-		this.bottomSheetVisible = this.initialized && this.isMobile
 
 		if (this.showSecondPage) {
 			// Show both pages
@@ -928,8 +926,9 @@ export class EpubViewerComponent {
 	}
 
 	HandleTouch(event: TouchEvent) {
-		if (event.touches.length > 1 || window["visualViewport"].scale > 1.001)
+		if (event.touches.length > 1 || window["visualViewport"].scale > 1.001) {
 			return
+		}
 
 		let bottomSheetTouch = this.bottomSheet.nativeElement.contains(
 			event.target as Node
@@ -986,7 +985,7 @@ export class EpubViewerComponent {
 				}
 			} else if (
 				this.swipeDirection == SwipeDirection.Vertical &&
-				this.bottomSheetVisible
+				this.isMobile
 			) {
 				this.bottomSheet.nativeElement.setPosition(
 					this.touchDiffY + this.bottomSheetStartPosition
