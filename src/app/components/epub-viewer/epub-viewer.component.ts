@@ -1104,7 +1104,7 @@ export class EpubViewerComponent {
 		}
 
 		this.bookmarksVisible = true
-		await new Promise(resolve => setTimeout(resolve, 0))
+		await new Promise(resolve => setTimeout(resolve, 100))
 
 		this.bottomSheet.nativeElement.snap("top")
 	}
