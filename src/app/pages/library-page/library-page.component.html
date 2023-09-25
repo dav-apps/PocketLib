@@ -85,13 +85,13 @@
 				*ngIf="dataService.books.length > 5"
 			>
 				<dav-button color="secondary" tonal (click)="ShowAllBooks()">
-					<div class="all-books-button-content">
-						<p>{{ locale.allBooks }}</p>
+					<p>{{ locale.allBooks }}</p>
 
-						<div>
-							<fa-icon [icon]="faArrowRightLight" size="lg"></fa-icon>
-						</div>
-					</div>
+					<fa-icon
+						slot="icon-right"
+						[icon]="faArrowRightLight"
+						size="lg"
+					></fa-icon>
 				</dav-button>
 			</div>
 		</div>
@@ -100,17 +100,14 @@
 			<div>
 				<div class="right-content-inner-container">
 					<div class="search-container">
-						<dav-button color="secondary" tonal (click)="HideAllBooks()">
-							<div class="all-books-button-content">
-								<div>
-									<fa-icon
-										[icon]="faArrowLeftLight"
-										size="lg"
-									></fa-icon>
-								</div>
+						<dav-button size="small" color="secondary" text (click)="HideAllBooks()">
+							<fa-icon
+								slot="icon-left"
+								[icon]="faArrowLeftLight"
+								size="lg"
+							></fa-icon>
 
-								<p>{{ locale.back }}</p>
-							</div>
+							<p>{{ locale.back }}</p>
 						</dav-button>
 
 						<dav-textfield
