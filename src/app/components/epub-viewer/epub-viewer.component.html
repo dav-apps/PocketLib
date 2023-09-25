@@ -175,6 +175,7 @@
 	(touchstart)="HandleTouch($event)"
 	(touchmove)="HandleTouch($event)"
 	(touchend)="HandleTouch($event)"
+	[style.display]="isMobile ? '' : 'none'"
 >
 	<div slot="buttons">
 		<dav-icon-text-button

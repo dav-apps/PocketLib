@@ -329,7 +329,13 @@ export class EpubViewerComponent {
 
 	@HostListener("window:mousemove")
 	onMouseMove() {
-		if (this.isMobile) return
+		if (
+			this.isMobile ||
+			this.arrowButtonLeft == null ||
+			this.arrowButtonRight == null
+		) {
+			return
+		}
 
 		this.arrowButtonsVisible = true
 		window.clearTimeout(this.mouseMoveTimeoutId)
@@ -338,6 +344,10 @@ export class EpubViewerComponent {
 		this.arrowButtonRightAnimation?.cancel()
 
 		this.mouseMoveTimeoutId = window.setTimeout(() => {
+			if (this.arrowButtonLeft == null || this.arrowButtonRight == null) {
+				return
+			}
+
 			const keyframes = [
 				{
 					opacity: 0
@@ -365,6 +375,10 @@ export class EpubViewerComponent {
 
 		this.showSecondPage = this.width > secondPageMinWidth
 		this.isMobile = this.width < 600
+
+		if (this.isMobile && this.bottomSheet != null) {
+			this.bottomSheet.nativeElement.snap()
+		}
 
 		if (this.showSecondPage) {
 			// Show both pages
