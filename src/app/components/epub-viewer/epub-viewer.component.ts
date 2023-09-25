@@ -173,7 +173,7 @@ export class EpubViewerComponent {
 	renderPrevPageAfterShowPage: boolean = false // If true, the viewer will navigate to the previous page after ShowPage
 	renderNextPageAfterShowPage: boolean = false // If true, the viewer will navigate to the next page after ShowPage
 	navigationHistory: { chapter: number; page: number }[] = [] // The history of visited pages; is used when clicking a link
-	showArrowButtons: boolean = false // If true, the arrow buttons for navigating through the pages are visible
+	arrowButtonsVisible: boolean = false // If true, the arrow buttons for navigating through the pages are visible
 	mouseMoveTimeoutId: number = -1 // The timeout number for the mouse move event, used for hiding the arrow buttons
 
 	//#region Variables for touch events
@@ -186,6 +186,15 @@ export class EpubViewerComponent {
 	touchDiffY: number = 0
 	touchMoveCount: number = 0
 	doubleTapTimerRunning: boolean = false
+	//#endregion
+
+	//#region Variables for the arrow buttons
+	@ViewChild("arrowButtonLeft", { static: false })
+	arrowButtonLeft: ElementRef<HTMLButtonElement>
+	@ViewChild("arrowButtonRight", { static: false })
+	arrowButtonRight: ElementRef<HTMLButtonElement>
+	arrowButtonLeftAnimation: Animation = null
+	arrowButtonRightAnimation: Animation = null
 	//#endregion
 
 	//#region Variables for the progress bar
@@ -322,11 +331,27 @@ export class EpubViewerComponent {
 	onMouseMove() {
 		if (this.isMobile) return
 
-		this.showArrowButtons = true
+		this.arrowButtonsVisible = true
 		window.clearTimeout(this.mouseMoveTimeoutId)
 
+		this.arrowButtonLeftAnimation?.cancel()
+		this.arrowButtonRightAnimation?.cancel()
+
 		this.mouseMoveTimeoutId = window.setTimeout(() => {
-			this.showArrowButtons = false
+			const keyframes = [
+				{
+					opacity: 0
+				}
+			]
+			const options: KeyframeAnimationOptions = {
+				duration: 4000,
+				fill: "forwards"
+			}
+
+			this.arrowButtonLeftAnimation =
+				this.arrowButtonLeft.nativeElement.animate(keyframes, options)
+			this.arrowButtonRightAnimation =
+				this.arrowButtonRight.nativeElement.animate(keyframes, options)
 		}, 4000)
 	}
 

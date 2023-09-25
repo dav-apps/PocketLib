@@ -89,25 +89,27 @@
 </div>
 
 <!-- Arrow buttons -->
-<div
-	class="arrow-button-container arrow-button-left"
+<button
+	#arrowButtonLeft
+	class="arrow-button arrow-button-left"
 	(click)="PrevPage()"
-	*ngIf="!isMobile && !firstPage && showArrowButtons"
+	*ngIf="!isMobile && !firstPage && arrowButtonsVisible"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</dav-icon-button>
-</div>
+</button>
 
-<div
-	class="arrow-button-container arrow-button-right"
+<button
+	#arrowButtonRight
+	class="arrow-button arrow-button-right"
 	(click)="NextPage()"
-	*ngIf="!isMobile && showArrowButtons"
+	*ngIf="!isMobile && arrowButtonsVisible"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
 	</dav-icon-button>
-</div>
+</button>
 
 <!-- Chapter title -->
 <div

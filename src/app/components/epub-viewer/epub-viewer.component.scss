@@ -19,13 +19,16 @@ a.text-color:hover {
 	color: var(--text-color);
 }
 
-.arrow-button-container {
+.arrow-button {
 	position: absolute;
 	display: flex;
 	align-items: center;
 	height: 100%;
 	margin: 0 12px;
 	z-index: 2;
+	background-color: transparent;
+	border: none;
+	transition: opacity 3s;
 }
 
 .arrow-button-left {
