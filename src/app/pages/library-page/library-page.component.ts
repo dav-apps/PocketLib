@@ -18,6 +18,7 @@ import {
 	faTrash as faTrashLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
+import { BottomSheet, Textfield } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -47,9 +48,14 @@ export class LibraryPageComponent {
 	leftContentContainer: ElementRef<HTMLDivElement>
 	@ViewChild("rightContentContainer")
 	rightContentContainer: ElementRef<HTMLDivElement>
+	@ViewChild("bottomSheet")
+	bottomSheet: ElementRef<BottomSheet>
+	@ViewChild("searchTextfield")
+	searchTextfield: ElementRef<Textfield>
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
+	height: number = 0
 	smallBookList: boolean = false
 	smallBookListWidth: number = 200
 	largeBookCoverWidth: number = 300
@@ -96,16 +102,9 @@ export class LibraryPageComponent {
 		this.cd.detectChanges()
 	}
 
-	ngAfterViewChecked() {
-		if (this.allBooksVisible && this.leftContentContainer != null) {
-			this.leftContentContainer.nativeElement.style.transform = `translateX(-${window.innerWidth}px)`
-		} else if (!this.allBooksVisible && this.rightContentContainer != null) {
-			this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
-		}
-	}
-
 	@HostListener("window:resize")
 	setSize() {
+		this.height = window.innerHeight
 		this.smallBookList = window.innerWidth < 650
 
 		if (this.smallBookList) {
@@ -192,42 +191,114 @@ export class LibraryPageComponent {
 
 	async ShowAllBooks() {
 		this.LoadAllBooksList()
+
 		this.allBooksVisible = true
+		let scrollTop = document.documentElement.scrollTop
 
-		this.rightContentContainer.nativeElement.classList.remove("d-none")
-		await new Promise((r: Function) => setTimeout(r, 1))
+		this.rightContentContainer.nativeElement.style.display = "block"
+		this.rightContentContainer.nativeElement.style.height = `${window.innerHeight}px`
+		document.body.style.overflow = "hidden"
 
-		this.leftContentContainer.nativeElement.style.transform = `translateX(${-window.innerWidth}px)`
-		this.rightContentContainer.nativeElement.style.transform = `translateX(0px)`
-		await new Promise((r: Function) => setTimeout(r, 300))
+		// Move the right content container to the Y position of the scroll position
+		await this.rightContentContainer.nativeElement.animate(
+			[
+				{
+					transform: `translate(${window.innerWidth}px, ${
+						scrollTop - 76
+					}px)`
+				}
+			],
+			{
+				fill: "forwards"
+			}
+		).finished
 
-		window.scrollTo(0, 0)
-		await new Promise((r: Function) => setTimeout(r, 200))
+		// Animate the transition to the right content container
+		let leftContentContainerTransitionAnimation =
+			this.leftContentContainer.nativeElement.animate(
+				[
+					{
+						transform: `translateX(${-window.innerWidth}px)`
+					}
+				],
+				{
+					duration: 300,
+					easing: "ease-in-out",
+					fill: "forwards"
+				}
+			)
 
-		this.leftContentContainer.nativeElement.style.position = "absolute"
-		this.rightContentContainer.nativeElement.style.position = "relative"
-		this.leftContentContainer.nativeElement.classList.add("d-none")
+		let rightContentContainerTransitionAnimation =
+			this.rightContentContainer.nativeElement.animate(
+				[
+					{
+						transform: `translate(0, ${scrollTop - 76}px)`
+					}
+				],
+				{
+					duration: 300,
+					easing: "ease-in-out",
+					fill: "forwards"
+				}
+			)
+
+		await Promise.all([
+			leftContentContainerTransitionAnimation.finished,
+			rightContentContainerTransitionAnimation.finished
+		])
+
+		this.leftContentContainer.nativeElement.style.display = "none"
 	}
 
 	async HideAllBooks() {
 		this.allBooksVisible = false
+		let scrollTop = document.documentElement.scrollTop
 
-		this.leftContentContainer.nativeElement.classList.remove("d-none")
-		await new Promise((r: Function) => setTimeout(r, 1))
+		this.leftContentContainer.nativeElement.style.display = "flex"
 
-		this.leftContentContainer.nativeElement.style.transform = `translateX(0px)`
-		this.rightContentContainer.nativeElement.style.transform = `translateX(${window.innerWidth}px)`
-		await new Promise((r: Function) => setTimeout(r, 300))
+		// Move the right content container back to the original position
+		let rightContentContainerTransitionAnimation =
+			this.rightContentContainer.nativeElement.animate(
+				[
+					{
+						transform: `translate(${window.innerWidth}px, ${
+							scrollTop - 76
+						}px)`
+					}
+				],
+				{
+					duration: 300,
+					easing: "ease-in-out",
+					fill: "forwards"
+				}
+			)
 
-		window.scrollTo(0, 0)
-		await new Promise((r: Function) => setTimeout(r, 200))
+		let leftContentContainerTransitionAnimation =
+			this.leftContentContainer.nativeElement.animate(
+				[
+					{
+						transform: `translateX(0)`
+					}
+				],
+				{
+					duration: 300,
+					easing: "ease-in-out",
+					fill: "forwards"
+				}
+			)
 
-		this.leftContentContainer.nativeElement.style.position = "relative"
-		this.rightContentContainer.nativeElement.style.position = "absolute"
-		this.rightContentContainer.nativeElement.classList.add("d-none")
+		await Promise.all([
+			rightContentContainerTransitionAnimation.finished,
+			leftContentContainerTransitionAnimation.finished
+		])
+
+		document.body.style.overflow = null
+		this.rightContentContainer.nativeElement.style.display = "none"
 	}
 
 	LoadAllBooksList() {
+		this.searchTextfield.nativeElement.value = ""
+
 		// Copy the books
 		this.allBooks = []
 

@@ -96,11 +96,20 @@
 			</div>
 		</div>
 
-		<div #rightContentContainer class="right-content-container">
+		<div
+			#rightContentContainer
+			class="right-content-container"
+			[style.height.px]="height"
+		>
 			<div>
 				<div class="right-content-inner-container">
 					<div class="search-container">
-						<dav-button size="small" color="secondary" text (click)="HideAllBooks()">
+						<dav-button
+							size="small"
+							color="secondary"
+							text
+							(click)="HideAllBooks()"
+						>
 							<fa-icon
 								slot="icon-left"
 								[icon]="faArrowLeftLight"
@@ -111,6 +120,7 @@
 						</dav-button>
 
 						<dav-textfield
+							#searchTextfield
 							class="search-textfield"
 							[placeholder]="locale.search"
 							(change)="SearchTextChange($event.detail.value)"

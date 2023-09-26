@@ -422,12 +422,13 @@ body {
 	margin-bottom: 0;
 }
 
-.horizontal-store-list::-webkit-scrollbar {
+::-webkit-scrollbar {
 	background-color: var(--dav-color-surface);
-	height: 3px;
+	height: 4px;
+	width: 4px;
 }
 
-.horizontal-store-list::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
 	background-color: var(--dav-color-inverse-on-surface);
 	border-radius: 2px;
 }

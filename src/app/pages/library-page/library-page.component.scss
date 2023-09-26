@@ -1,7 +1,6 @@
 .container > div {
 	display: flex;
 	justify-content: center;
-	margin: 1rem 0;
 }
 
 .library-empty-text {
@@ -18,6 +17,7 @@
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
+	padding: 1rem 0;
 	transition: 300ms all;
 }
 
@@ -49,12 +49,25 @@
 }
 
 .right-content-container {
-	display: flex;
-	justify-content: center;
-	width: 100%;
 	position: absolute;
+	width: 100%;
+	padding-top: 92px;
+	padding-bottom: 24px;
 	transition: 300ms all;
 	transform: translateX(3000px);
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+
+.right-content-container > div {
+	display: flex;
+	justify-content: center;
+}
+
+@media screen and (max-width: 576px) {
+	.right-content-container {
+		padding-bottom: 104px;
+	}
 }
 
 .search-textfield {
