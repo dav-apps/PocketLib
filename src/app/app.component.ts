@@ -5,6 +5,7 @@ import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
 import { HttpHeaders } from "@angular/common/http"
 import {
+	faAddressCard as faAddressCardSolid,
 	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
 	faHouse as faHouseSolid,
@@ -16,6 +17,7 @@ import {
 	faHouse as faHouseRegular,
 	faBagShopping as faBagShoppingRegular
 } from "@fortawesome/pro-regular-svg-icons"
+import { faAddressCard as faAddressCardLight } from "@fortawesome/pro-light-svg-icons"
 import { Dav, TableObject, Environment } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
@@ -40,10 +42,13 @@ export class AppComponent {
 	faHouseSolid = faHouseSolid
 	faBagShoppingRegular = faBagShoppingRegular
 	faBagShoppingSolid = faBagShoppingSolid
+	faAddressCardLight = faAddressCardLight
+	faAddressCardSolid = faAddressCardSolid
 	libraryLabel: string = ""
 	storeLabel: string = ""
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
+	authorButtonSelected: boolean = false
 	accountButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
 
@@ -70,6 +75,9 @@ export class AppComponent {
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive =
 					this.dataService.currentUrl.startsWith("/store")
+				this.authorButtonSelected =
+					this.dataService.currentUrl == "/author" ||
+					this.dataService.currentUrl == "/publisher"
 				this.accountButtonSelected =
 					this.dataService.currentUrl == "/account"
 				this.settingsButtonSelected =
@@ -168,6 +176,10 @@ export class AppComponent {
 
 	navigateToStorePage() {
 		this.router.navigate(["/store"])
+	}
+
+	navigateToAuthorPage() {
+		this.router.navigate(["/author"])
 	}
 
 	navigateToAccountPage() {

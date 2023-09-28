@@ -35,16 +35,9 @@
 
 .navbar-icon-buttons-container {
 	display: flex;
+	align-items: center;
+	gap: 6px;
 	padding: 8px 16px;
-}
-
-.account-icon-button {
-	align-self: center;
-	margin-right: 6px;
-}
-
-.settings-icon-button {
-	align-self: center;
 }
 
 .content-padding-top {

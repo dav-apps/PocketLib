@@ -30,7 +30,21 @@
 
 	<div class="navbar-icon-buttons-container">
 		<dav-icon-button
-			class="account-icon-button"
+			*ngIf="dataService.userAuthor || dataService.userIsAdmin"
+			(click)="navigateToAuthorPage()"
+		>
+			<fa-icon
+				[icon]="faAddressCardLight"
+				*ngIf="!authorButtonSelected"
+			></fa-icon>
+
+			<fa-icon
+				[icon]="faAddressCardSolid"
+				*ngIf="authorButtonSelected"
+			></fa-icon>
+		</dav-icon-button>
+
+		<dav-icon-button
 			[selected]="accountButtonSelected"
 			(click)="navigateToAccountPage()"
 		>
@@ -54,7 +68,6 @@
 		</dav-icon-button>
 
 		<dav-icon-button
-			class="settings-icon-button"
 			[selected]="settingsButtonSelected"
 			(click)="navigateToSettingsPage()"
 		>
@@ -62,6 +75,7 @@
 				[icon]="faGearRegular"
 				*ngIf="!settingsButtonSelected"
 			></fa-icon>
+
 			<fa-icon [icon]="faGearSolid" *ngIf="settingsButtonSelected"></fa-icon>
 		</dav-icon-button>
 	</div>
