@@ -6,15 +6,15 @@ import { InMemoryCache } from "@apollo/client/core"
 import { HttpHeaders } from "@angular/common/http"
 import {
 	faAddressCard as faAddressCardSolid,
+	faBook as faBookSolid,
 	faCircleUser as faCircleUserSolid,
 	faGear as faGearSolid,
-	faHouse as faHouseSolid,
 	faBagShopping as faBagShoppingSolid
 } from "@fortawesome/free-solid-svg-icons"
 import {
+	faBook as faBookRegular,
 	faCircleUser as faCircleUserRegular,
 	faGear as faGearRegular,
-	faHouse as faHouseRegular,
 	faBagShopping as faBagShoppingRegular
 } from "@fortawesome/pro-regular-svg-icons"
 import { faAddressCard as faAddressCardLight } from "@fortawesome/pro-light-svg-icons"
@@ -38,12 +38,12 @@ export class AppComponent {
 	faCircleUserSolid = faCircleUserSolid
 	faGearRegular = faGearRegular
 	faGearSolid = faGearSolid
-	faHouseRegular = faHouseRegular
-	faHouseSolid = faHouseSolid
 	faBagShoppingRegular = faBagShoppingRegular
 	faBagShoppingSolid = faBagShoppingSolid
 	faAddressCardLight = faAddressCardLight
 	faAddressCardSolid = faAddressCardSolid
+	faBookRegular = faBookRegular
+	faBookSolid = faBookSolid
 	libraryLabel: string = ""
 	storeLabel: string = ""
 	libraryTabActive: boolean = false

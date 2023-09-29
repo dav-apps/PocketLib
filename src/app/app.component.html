@@ -101,16 +101,19 @@
 		>
 			<fa-icon
 				slot="icon"
-				[icon]="faHouseRegular"
+				[icon]="faBookRegular"
 				*ngIf="!libraryTabActive"
 			></fa-icon>
+
 			<fa-icon
 				slot="icon"
-				[icon]="faHouseSolid"
+				[icon]="faBookSolid"
 				*ngIf="libraryTabActive"
 			></fa-icon>
+
 			<p slot="label">{{ libraryLabel }}</p>
 		</dav-navigation-bar-item>
+
 		<dav-navigation-bar-item
 			[active]="storeTabActive"
 			(click)="navigateToStorePage()"
@@ -120,11 +123,13 @@
 				[icon]="faBagShoppingRegular"
 				*ngIf="!storeTabActive"
 			></fa-icon>
+
 			<fa-icon
 				slot="icon"
 				[icon]="faBagShoppingSolid"
 				*ngIf="storeTabActive"
 			></fa-icon>
+
 			<p slot="label">{{ storeLabel }}</p>
 		</dav-navigation-bar-item>
 	</dav-navigation-bar>
