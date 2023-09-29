@@ -96,6 +96,9 @@ export class HorizontalBookListComponent {
 
 	async LoadStoreBooksByCategories() {
 		// Get the store books with the given categories
+		let categories = this.categories.filter(c => c != null)
+		if (categories.length == 0) return
+
 		let response = await this.apiService.listStoreBooks(
 			`
 				items {
@@ -108,7 +111,7 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				categories: this.categories,
+				categories,
 				languages: await this.dataService.GetStoreLanguages()
 			}
 		)

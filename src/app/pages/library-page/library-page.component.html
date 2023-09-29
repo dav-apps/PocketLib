@@ -5,14 +5,36 @@
 			class="empty-library-container"
 			*ngIf="dataService.books.length == 0"
 		>
-			<div class="empty-library-inner-container">
-				<p class="library-empty-text">
-					{{ locale.libraryEmpty }}
-				</p>
+			<h1 class="headline">Willkommen bei PocketLib!</h1>
 
-				<pocketlib-library-page-cards
-					(addBookFilePick)="AddBookFilePick($event)"
-				></pocketlib-library-page-cards>
+			<div class="empty-library-actions-container">
+				<dav-icon-card text="Öffne eine Buch-Datei">
+					<fa-icon [icon]="faFileLight"></fa-icon>
+				</dav-icon-card>
+
+				<dav-icon-card text="Melde dich an">
+					<fa-icon [icon]="faCircleUserLight"></fa-icon>
+				</dav-icon-card>
+			</div>
+
+			<div class="empty-library-recommendations-container">
+				<h2 class="recommentations-headline">Finde dein erstes Buch</h2>
+
+				<pocketlib-horizontal-book-list
+					type="categories"
+					[categories]="[key]"
+					*ngFor="let key of emptyLibraryCategoryKeys"
+				></pocketlib-horizontal-book-list>
+
+				<pocketlib-horizontal-author-list
+					*ngIf="emptyLibraryCategoryKeys.length == 2"
+				></pocketlib-horizontal-author-list>
+
+				<div class="discover-more-card-container">
+					<dav-icon-card text="Mehr entdecken">
+						<fa-icon [icon]="faBagShoppingLight"></fa-icon>
+					</dav-icon-card>
+				</div>
 			</div>
 		</div>
 
