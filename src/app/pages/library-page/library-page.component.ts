@@ -381,6 +381,11 @@ export class LibraryPageComponent {
 		Dav.ShowLoginPage(environment.apiKey, window.location.origin)
 	}
 
+	discoverMoreCardClick(event: Event) {
+		event.preventDefault()
+		this.router.navigate(["store"])
+	}
+
 	ShowRenameBookDialog() {
 		this.contextMenuVisible = false
 		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
