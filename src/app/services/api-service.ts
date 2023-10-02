@@ -304,6 +304,7 @@ export class ApiService {
 		queryData: string,
 		variables?: {
 			mine?: boolean
+			random?: boolean
 			limit?: number
 			offset?: number
 		}
@@ -315,11 +316,13 @@ export class ApiService {
 				query: gql`
 					query ListAuthors(
 						$mine: Boolean
+						$random: Boolean
 						$limit: Int
 						$offset: Int
 					) {
 						listAuthors(
 							mine: $mine
+							random: $random
 							limit: $limit
 							offset: $offset
 						) {

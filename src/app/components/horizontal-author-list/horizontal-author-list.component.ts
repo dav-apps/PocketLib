@@ -6,6 +6,7 @@ import { ApiService } from "src/app/services/api-service"
 import { AuthorListItem, ApiResponse } from "src/app/misc/types"
 
 const maxVisibleAuthors = 8
+type HorizontalAuthorListType = "latest" | "random"
 
 @Component({
 	selector: "pocketlib-horizontal-author-list",
@@ -13,7 +14,7 @@ const maxVisibleAuthors = 8
 	styleUrls: ["./horizontal-author-list.component.scss"]
 })
 export class HorizontalAuthorListComponent {
-	locale = enUS.horizontalAuthorList
+	@Input() type: HorizontalAuthorListType = "latest"
 	@Input() headline: string = ""
 	authors: AuthorListItem[] = []
 	loading: boolean = true
@@ -25,12 +26,13 @@ export class HorizontalAuthorListComponent {
 	) {}
 
 	async ngOnInit() {
-		// Get the latest authors
-		this.authors = []
+		await this.LoadAuthors(this.type == "random")
+	}
 
+	async LoadAuthors(random: boolean) {
+		// Get the latest authors
 		let response = await this.apiService.listAuthors(
 			`
-				total
 				items {
 					uuid
 					firstName
@@ -41,13 +43,21 @@ export class HorizontalAuthorListComponent {
 					}
 				}
 			`,
-			{ limit: maxVisibleAuthors }
+			{
+				random,
+				limit: maxVisibleAuthors
+			}
 		)
+
+		let responseData = response.data.listAuthors
+		if (responseData == null) return
+
+		this.authors = []
 
 		let profileImageAltTemplate =
 			this.dataService.GetLocale().misc.authorProfileImageAlt
 
-		for (let author of response.data.listAuthors.items) {
+		for (let author of responseData.items) {
 			let authorItem = {
 				uuid: author.uuid,
 				firstName: author.firstName,
