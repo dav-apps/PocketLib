@@ -6,6 +6,7 @@ const enDefaults = {
 		search: "Search for books",
 		emptyHeadline: "Welcome to PocketLib!",
 		recommendationsHeadline: "Find your first book",
+		recommendationsAuthorsHeadline: "Our authors",
 		openBookFile: "Open a book file",
 		login: "Log in",
 		discoverMore: "Discover more",
@@ -291,6 +292,9 @@ const enDefaults = {
 				"An unexpected error occured. Please try it again."
 		}
 	},
+	storeStartPage: {
+		newAuthors: "New authors"
+	},
 	storeBookPage: {
 		readNow: "Read now",
 		continueReading: "Continue reading",
@@ -481,9 +485,6 @@ const enDefaults = {
 		moreBooksInCategories: "More books in these categories",
 		moreOfSeries: 'More from the series "{0}"'
 	},
-	horizontalAuthorList: {
-		newAuthors: "New authors"
-	},
 	horizontalSeriesList: {
 		newSeries: "New book series"
 	},
@@ -540,6 +541,7 @@ const deDefaults = {
 		search: "Suche nach Büchern",
 		emptyHeadline: "Willkommen bei PocketLib!",
 		recommendationsHeadline: "Finde dein erstes Buch",
+		recommendationsAuthorsHeadline: "Unsere Autoren",
 		openBookFile: "Öffne eine Buch-Datei",
 		login: "Melde dich an",
 		discoverMore: "Mehr entdecken",
@@ -831,6 +833,9 @@ const deDefaults = {
 				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
 		}
 	},
+	storeStartPage: {
+		newAuthors: "Neue Autoren"
+	},
 	storeBookPage: {
 		readNow: "Jetzt lesen",
 		continueReading: "Weiterlesen",
@@ -1021,9 +1026,6 @@ const deDefaults = {
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
 		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
 		moreOfSeries: 'Mehr aus der Reihe "{0}"'
-	},
-	horizontalAuthorList: {
-		newAuthors: "Neue Autoren"
 	},
 	horizontalSeriesList: {
 		newSeries: "Neue Buch-Reihen"

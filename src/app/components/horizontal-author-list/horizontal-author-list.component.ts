@@ -1,10 +1,9 @@
-import { Component } from "@angular/core"
+import { Component, Input } from "@angular/core"
 import { Router } from "@angular/router"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { AuthorListItem, ApiResponse } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 
 const maxVisibleAuthors = 8
 
@@ -15,6 +14,7 @@ const maxVisibleAuthors = 8
 })
 export class HorizontalAuthorListComponent {
 	locale = enUS.horizontalAuthorList
+	@Input() headline: string = ""
 	authors: AuthorListItem[] = []
 	loading: boolean = true
 
@@ -22,9 +22,7 @@ export class HorizontalAuthorListComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private router: Router
-	) {
-		this.locale = this.dataService.GetLocale().horizontalAuthorList
-	}
+	) {}
 
 	async ngOnInit() {
 		// Get the latest authors
