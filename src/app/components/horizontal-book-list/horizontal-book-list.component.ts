@@ -8,7 +8,6 @@ import {
 	StoreBookResource
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
-import { enUS } from "src/locales/locales"
 
 const maxVisibleStoreBooks = 7
 type HorizontalBookListType = "latest" | "categories" | "series"
@@ -20,24 +19,19 @@ type HorizontalBookListType = "latest" | "categories" | "series"
 })
 export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"
+	@Input() headline: string = ""
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
 	@Input() series: string = ""
-	locale = enUS.horizontalBookList
-	header: string = ""
 	books: BookListItem[] = []
 	loading: boolean = true
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService
-	) {
-		this.locale = this.dataService.GetLocale().horizontalBookList
-	}
+	) {}
 
 	async ngOnInit() {
-		this.SetHeader()
-
 		if (this.type == "latest") {
 			await this.LoadLatestStoreBooks()
 		} else if (this.type == "categories" && this.categories.length > 0) {
@@ -55,19 +49,7 @@ export class HorizontalBookListComponent {
 			return
 		}
 
-		this.SetHeader()
 		await this.LoadStoreBooksByCategories()
-	}
-
-	SetHeader() {
-		if (this.type == "latest") {
-			this.header = this.locale.recentlyPublished
-		} else if (this.type == "categories") {
-			this.header =
-				this.categories.length == 1
-					? this.locale.moreBooksInCategory
-					: this.locale.moreBooksInCategories
-		}
 	}
 
 	async LoadLatestStoreBooks() {
@@ -136,7 +118,6 @@ export class HorizontalBookListComponent {
 		// Get the series
 		let response = await this.apiService.retrieveStoreBookSeries(
 			`
-				name
 				storeBooks {
 					items {
 						uuid
@@ -155,8 +136,6 @@ export class HorizontalBookListComponent {
 		)
 		let responseData = response.data.retrieveStoreBookSeries
 		if (responseData == null) return
-
-		this.header = this.locale.moreOfSeries.replace("{0}", responseData.name)
 
 		this.ShowBooks(responseData.storeBooks.items)
 	}

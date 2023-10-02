@@ -111,6 +111,7 @@
 	<div *ngIf="seriesUuid != null">
 		<pocketlib-horizontal-book-list
 			type="series"
+			[headline]="seriesHeadline"
 			[series]="seriesUuid"
 			[currentBookUuid]="uuid"
 		></pocketlib-horizontal-book-list>
@@ -120,6 +121,7 @@
 	<div>
 		<pocketlib-horizontal-book-list
 			type="categories"
+			[headline]="moreBooksHeadline"
 			[currentBookUuid]="uuid"
 			[categories]="categoryKeys"
 		></pocketlib-horizontal-book-list>

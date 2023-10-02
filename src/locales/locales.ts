@@ -293,6 +293,7 @@ const enDefaults = {
 		}
 	},
 	storeStartPage: {
+		recentlyPublished: "Recently published books",
 		newAuthors: "New authors"
 	},
 	storeBookPage: {
@@ -303,6 +304,9 @@ const enDefaults = {
 		hidden: "Hidden",
 		publish: "Publish",
 		free: "Free",
+		moreOfSeries: 'More from the series "{0}"',
+		moreBooksInCategory: "More books in this category",
+		moreBooksInCategories: "More books in these categories",
 		loginRequiredDialog: {
 			headline: "Login required",
 			description:
@@ -478,12 +482,6 @@ const enDefaults = {
 	},
 	horizontalCategoryList: {
 		headline: "Categories"
-	},
-	horizontalBookList: {
-		recentlyPublished: "Recently published books",
-		moreBooksInCategory: "More books in this category",
-		moreBooksInCategories: "More books in these categories",
-		moreOfSeries: 'More from the series "{0}"'
 	},
 	horizontalSeriesList: {
 		newSeries: "New book series"
@@ -834,6 +832,7 @@ const deDefaults = {
 		}
 	},
 	storeStartPage: {
+		recentlyPublished: "Kürzlich veröffentlichte Bücher",
 		newAuthors: "Neue Autoren"
 	},
 	storeBookPage: {
@@ -844,6 +843,9 @@ const deDefaults = {
 		hidden: "Versteckt",
 		publish: "Veröffentlichen",
 		free: "Kostenlos",
+		moreOfSeries: 'Mehr aus der Reihe "{0}"',
+		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
 		loginRequiredDialog: {
 			headline: "Anmeldung erforderlich",
 			description:
@@ -1020,12 +1022,6 @@ const deDefaults = {
 	},
 	horizontalCategoryList: {
 		headline: "Kategorien"
-	},
-	horizontalBookList: {
-		recentlyPublished: "Kürzlich veröffentlichte Bücher",
-		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
-		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		moreOfSeries: 'Mehr aus der Reihe "{0}"'
 	},
 	horizontalSeriesList: {
 		newSeries: "Neue Buch-Reihen"

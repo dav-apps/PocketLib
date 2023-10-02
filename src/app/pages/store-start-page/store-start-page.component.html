@@ -1,7 +1,9 @@
 <div class="start-page-container slide-up-in">
 	<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
 
-	<pocketlib-horizontal-book-list></pocketlib-horizontal-book-list>
+	<pocketlib-horizontal-book-list
+		[headline]="locale.recentlyPublished"
+	></pocketlib-horizontal-book-list>
 
 	<pocketlib-horizontal-author-list
 		[headline]="locale.newAuthors"

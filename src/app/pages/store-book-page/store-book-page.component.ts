@@ -42,6 +42,8 @@ export class StoreBookPageComponent {
 	purchased: boolean = false
 	collectionUuid: string = null
 	seriesUuid: string = null
+	seriesHeadline: string = ""
+	moreBooksHeadline: string = ""
 	//#endregion
 
 	//#region Cover variables
@@ -161,6 +163,7 @@ export class StoreBookPageComponent {
 				series {
 					items {
 						uuid
+						name
 					}
 				}
 			`,
@@ -261,9 +264,18 @@ export class StoreBookPageComponent {
 			}
 		}
 
+		this.moreBooksHeadline =
+			this.categories.length == 1
+				? this.locale.moreBooksInCategory
+				: this.locale.moreBooksInCategories
+
 		// Get the series of the book
 		if (responseData.series.items.length > 0) {
 			this.seriesUuid = responseData.series.items[0].uuid
+			this.seriesHeadline = this.locale.moreOfSeries.replace(
+				"{0}",
+				responseData.series.items[0].name
+			)
 		}
 
 		let author = responseData.collection.author
