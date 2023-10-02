@@ -10,7 +10,7 @@ import {
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
 const maxVisibleStoreBooks = 7
-type HorizontalBookListType = "latest" | "categories" | "series"
+type HorizontalBookListType = "latest" | "categories" | "series" | "random"
 
 @Component({
 	selector: "pocketlib-horizontal-book-list",
@@ -32,12 +32,14 @@ export class HorizontalBookListComponent {
 	) {}
 
 	async ngOnInit() {
-		if (this.type == "latest") {
-			await this.LoadLatestStoreBooks()
-		} else if (this.type == "categories" && this.categories.length > 0) {
+		if (this.type == "categories" && this.categories.length > 0) {
 			await this.LoadStoreBooksByCategories()
 		} else if (this.type == "series") {
 			await this.LoadStoreBooksBySeries()
+		} else if (this.type == "random") {
+			await this.LoadStoreBooksRandomly()
+		} else {
+			await this.LoadLatestStoreBooks()
 		}
 	}
 
@@ -138,6 +140,31 @@ export class HorizontalBookListComponent {
 		if (responseData == null) return
 
 		this.ShowBooks(responseData.storeBooks.items)
+	}
+
+	async LoadStoreBooksRandomly() {
+		let response = await this.apiService.listStoreBooks(
+			`
+				items {
+					uuid
+					title
+					cover {
+						url
+						blurhash
+					}
+				}
+			`,
+			{
+				random: true,
+				languages: await this.dataService.GetStoreLanguages(),
+				limit: maxVisibleStoreBooks
+			}
+		)
+
+		let responseData = response.data.listStoreBooks
+		if (responseData == null) return
+
+		this.ShowBooks(responseData.items)
 	}
 
 	ShowBooks(books: StoreBookResource[]) {

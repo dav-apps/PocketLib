@@ -928,6 +928,7 @@ export class ApiService {
 		variables?: {
 			categories?: string[]
 			inReview?: boolean
+			random?: boolean
 			languages?: string[]
 			limit?: number
 			offset?: number
@@ -941,6 +942,7 @@ export class ApiService {
 					query ListStoreBooks(
 						$categories: [String!]
 						$inReview: Boolean
+						$random: Boolean
 						$languages: [String!]
 						$limit: Int
 						$offset: Int
@@ -948,6 +950,7 @@ export class ApiService {
 						listStoreBooks(
 							categories: $categories
 							inReview: $inReview
+							random: $random
 							languages: $languages
 							limit: $limit
 							offset: $offset
