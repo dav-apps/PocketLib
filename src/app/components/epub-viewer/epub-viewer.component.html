@@ -93,7 +93,7 @@
 	#arrowButtonLeft
 	class="arrow-button arrow-button-left"
 	(click)="PrevPage()"
-	*ngIf="!isMobile && !firstPage && arrowButtonsVisible"
+	*ngIf="!isMobile && !firstPage"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
@@ -104,7 +104,7 @@
 	#arrowButtonRight
 	class="arrow-button arrow-button-right"
 	(click)="NextPage()"
-	*ngIf="!isMobile && arrowButtonsVisible"
+	*ngIf="!isMobile"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
