@@ -3,11 +3,18 @@
 		<div class="loading-screen-content">
 			<img
 				class="loading-screen-logo"
-				src="/assets/images/pocketlib-logo.png"
+				[src]="
+					dataService.darkTheme
+						? '/assets/images/pocketlib-logo-dark.png'
+						: '/assets/images/pocketlib-logo.png'
+				"
 				width="150"
 			/>
 
-			<dav-progress-ring size="30" color="white"></dav-progress-ring>
+			<dav-progress-ring
+				size="30"
+				[color]="dataService.darkTheme ? 'white' : 'black'"
+			></dav-progress-ring>
 
 			<p class="loading-screen-message" *ngIf="message.length > 0">
 				{{ message }}
