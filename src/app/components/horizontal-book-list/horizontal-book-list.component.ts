@@ -1,4 +1,6 @@
 import { Component, Input, SimpleChanges } from "@angular/core"
+import { Router } from "@angular/router"
+import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -9,7 +11,6 @@ import {
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
-const maxVisibleStoreBooks = 7
 type HorizontalBookListType = "latest" | "categories" | "series" | "random"
 
 @Component({
@@ -23,12 +24,16 @@ export class HorizontalBookListComponent {
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
 	@Input() series: string = ""
+	@Input() maxItems: number = 10
+	faArrowRightLight = faArrowRightLight
 	books: BookListItem[] = []
+	hasMoreItems: boolean = false
 	loading: boolean = true
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private router: Router
 	) {}
 
 	async ngOnInit() {
@@ -58,6 +63,7 @@ export class HorizontalBookListComponent {
 		// Get the latest store books
 		let response = await this.apiService.listStoreBooks(
 			`
+				total
 				items {
 					uuid
 					title
@@ -69,13 +75,14 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				languages: await this.dataService.GetStoreLanguages(),
-				limit: maxVisibleStoreBooks
+				limit: this.maxItems
 			}
 		)
 		let responseData = response.data.listStoreBooks
 		if (responseData == null) return
 
 		this.ShowBooks(responseData.items)
+		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
 	async LoadStoreBooksByCategories() {
@@ -85,6 +92,7 @@ export class HorizontalBookListComponent {
 
 		let response = await this.apiService.listStoreBooks(
 			`
+				total
 				items {
 					uuid
 					title
@@ -96,7 +104,8 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				categories,
-				languages: await this.dataService.GetStoreLanguages()
+				languages: await this.dataService.GetStoreLanguages(),
+				limit: this.maxItems
 			}
 		)
 
@@ -112,6 +121,7 @@ export class HorizontalBookListComponent {
 		}
 
 		this.ShowBooks(books)
+		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
 	async LoadStoreBooksBySeries() {
@@ -121,6 +131,7 @@ export class HorizontalBookListComponent {
 		let response = await this.apiService.retrieveStoreBookSeries(
 			`
 				storeBooks {
+					total
 					items {
 						uuid
 						title
@@ -133,18 +144,21 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				uuid: this.series,
-				languages: await this.dataService.GetStoreLanguages()
+				languages: await this.dataService.GetStoreLanguages(),
+				limit: this.maxItems
 			}
 		)
 		let responseData = response.data.retrieveStoreBookSeries
 		if (responseData == null) return
 
 		this.ShowBooks(responseData.storeBooks.items)
+		this.hasMoreItems = responseData.storeBooks.total > this.maxItems
 	}
 
 	async LoadStoreBooksRandomly() {
 		let response = await this.apiService.listStoreBooks(
 			`
+				total
 				items {
 					uuid
 					title
@@ -157,7 +171,7 @@ export class HorizontalBookListComponent {
 			{
 				random: true,
 				languages: await this.dataService.GetStoreLanguages(),
-				limit: maxVisibleStoreBooks
+				limit: this.maxItems
 			}
 		)
 
@@ -165,6 +179,7 @@ export class HorizontalBookListComponent {
 		if (responseData == null) return
 
 		this.ShowBooks(responseData.items)
+		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
 	ShowBooks(books: StoreBookResource[]) {
@@ -203,5 +218,11 @@ export class HorizontalBookListComponent {
 		}
 
 		this.loading = false
+	}
+
+	moreButtonClick() {
+		if (this.categories.length == 0) return
+
+		this.router.navigate(["store", "category", this.categories[0]])
 	}
 }

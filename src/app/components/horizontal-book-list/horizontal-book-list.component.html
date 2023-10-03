@@ -1,7 +1,17 @@
 <div class="container" *ngIf="type == 'latest' || books.length > 0">
-	<h4 class="store-list-header">
-		{{ headline }}
-	</h4>
+	<div class="store-list-header-container">
+		<h4 class="store-list-header">
+			{{ headline }}
+		</h4>
+
+		<dav-icon-button
+			size="small"
+			(click)="moreButtonClick()"
+			*ngIf="hasMoreItems"
+		>
+			<fa-icon [icon]="faArrowRightLight"></fa-icon>
+		</dav-icon-button>
+	</div>
 
 	<div class="content-container">
 		<div class="progress-ring-container" *ngIf="loading">
