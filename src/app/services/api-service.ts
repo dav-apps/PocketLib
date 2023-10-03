@@ -740,7 +740,7 @@ export class ApiService {
 	async listStoreBookSeries(
 		queryData: string,
 		variables?: {
-			latest?: boolean
+			random?: boolean
 			languages?: string[]
 			limit?: number
 			offset?: number
@@ -754,11 +754,13 @@ export class ApiService {
 			}>({
 				query: gql`
 					query ListStoreBookSeries(
+						$random: Boolean
 						$languages: [String!]
 						$limit: Int
 						$offset: Int
 					) {
 						listStoreBookSeries(
+							random: $random
 							languages: $languages
 							limit: $limit
 							offset: $offset

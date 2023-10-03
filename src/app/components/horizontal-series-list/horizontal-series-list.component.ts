@@ -6,6 +6,7 @@ import { BookListItem, SeriesListItem, ApiResponse } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
 const maxVisibleSeries = 5
+type HorizontalSeriesListType = "latest" | "random"
 
 @Component({
 	selector: "pocketlib-horizontal-series-list",
@@ -13,6 +14,7 @@ const maxVisibleSeries = 5
 	styleUrls: ["./horizontal-series-list.component.scss"]
 })
 export class HorizontalSeriesListComponent {
+	@Input() type: HorizontalSeriesListType = "latest"
 	@Input() headline: string = ""
 	series: SeriesListItem[] = []
 	loading: boolean = true
@@ -40,6 +42,7 @@ export class HorizontalSeriesListComponent {
 				}
 			`,
 			{
+				random: this.type == "random",
 				languages: await this.dataService.GetStoreLanguages(),
 				limit: maxVisibleSeries
 			}
