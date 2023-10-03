@@ -1,7 +1,13 @@
 <div class="container">
-	<h4 class="store-list-header">
-		{{ locale.headline }}
-	</h4>
+	<div class="store-list-header-container">
+		<h4>
+			{{ locale.headline }}
+		</h4>
+
+		<dav-icon-button size="small">
+			<fa-icon [icon]="faArrowRightLight"></fa-icon>
+		</dav-icon-button>
+	</div>
 
 	<div class="content-container">
 		<div class="progress-ring-container" *ngIf="loading">

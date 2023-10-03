@@ -1,5 +1,6 @@
 import { Component } from "@angular/core"
 import { Router } from "@angular/router"
+import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { CategoryCard } from "src/app/misc/types"
 import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
@@ -12,6 +13,7 @@ import { enUS } from "src/locales/locales"
 })
 export class HorizontalCategoryListComponent {
 	locale = enUS.horizontalCategoryList
+	faArrowRightLight = faArrowRightLight
 	loading: boolean = true
 	cards: CategoryCard[] = []
 
