@@ -15,7 +15,7 @@ import {
 	faCircleUser as faCircleUserLight,
 	faFile as faFileLight,
 	faFileExport as faFileExportLight,
-	faPencil as faPencilLight,
+	faPen as faPenLight,
 	faTrash as faTrashLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
@@ -26,7 +26,7 @@ import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { environment } from "src/environments/environment"
-import { GetDualScreenSettings, randomNumber } from "src/app/misc/utils"
+import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
 const pdfType = "application/pdf"
@@ -44,7 +44,7 @@ export class LibraryPageComponent {
 	faCircleUserLight = faCircleUserLight
 	faFileLight = faFileLight
 	faFileExportLight = faFileExportLight
-	faPencilLight = faPencilLight
+	faPenLight = faPenLight
 	faTrashLight = faTrashLight
 	@ViewChild("leftContentContainer")
 	leftContentContainer: ElementRef<HTMLDivElement>
@@ -58,7 +58,6 @@ export class LibraryPageComponent {
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
 	height: number = 0
-	emptyLibraryCategoryKeys: string[] = []
 	smallBookList: boolean = false
 	smallBookListWidth: number = 200
 	largeBookCoverWidth: number = 300
@@ -98,26 +97,6 @@ export class LibraryPageComponent {
 		this.loadingScreenVisible = false
 
 		this.setSize()
-
-		if (
-			this.dataService.books.length == 0 &&
-			this.emptyLibraryCategoryKeys.length == 0
-		) {
-			await this.dataService.categoriesPromiseHolder.AwaitResult()
-
-			let categoryKeys = []
-
-			for (let category of this.dataService.categories) {
-				categoryKeys.push(category.key)
-			}
-
-			let firstKeyIndex = randomNumber(0, categoryKeys.length - 1)
-			this.emptyLibraryCategoryKeys.push(categoryKeys[firstKeyIndex])
-			categoryKeys.splice(firstKeyIndex, 1)
-
-			let secondKeyIndex = randomNumber(0, categoryKeys.length - 1)
-			this.emptyLibraryCategoryKeys.push(categoryKeys[secondKeyIndex])
-		}
 	}
 
 	ngAfterViewInit() {

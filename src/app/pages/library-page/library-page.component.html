@@ -26,15 +26,16 @@
 				<h2 class="recommentations-headline">
 					{{ locale.recommendationsHeadline }}
 				</h2>
+
 				<pocketlib-horizontal-book-list
-					type="categories"
-					[categories]="[key]"
-					*ngFor="let key of emptyLibraryCategoryKeys"
+					[headline]="locale.recommendationsBooksHeadline"
 				></pocketlib-horizontal-book-list>
 
 				<pocketlib-horizontal-author-list
-					*ngIf="emptyLibraryCategoryKeys.length == 2"
+					[headline]="locale.recommendationsAuthorsHeadline"
 				></pocketlib-horizontal-author-list>
+
+				<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
 
 				<div class="discover-more-card-container">
 					<dav-icon-card
@@ -236,7 +237,7 @@
 		(click)="ShowRenameBookDialog()"
 		*ngIf="showRenameBookOption"
 	>
-		<fa-icon slot="icon" [icon]="faPencilLight"></fa-icon>
+		<fa-icon slot="icon" [icon]="faPenLight"></fa-icon>
 	</dav-context-menu-item>
 
 	<!-- Remove -->
