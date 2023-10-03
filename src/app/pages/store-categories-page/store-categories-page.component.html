@@ -1,1 +1,14 @@
-<h1>Hello World</h1>
+<div class="container slide-up-in">
+	<div class="header-container">
+		<dav-header backButtonVisible (backButtonClick)="backButtonClick()">
+			Alle Kategorien
+		</dav-header>
+	</div>
+
+	<pocketlib-horizontal-book-list
+		type="categories"
+		[headline]="category.name"
+		[categories]="[category.key]"
+		*ngFor="let category of dataService.categories"
+	></pocketlib-horizontal-book-list>
+</div>
