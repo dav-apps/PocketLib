@@ -4,7 +4,11 @@
 			{{ locale.headline }}
 		</h4>
 
-		<dav-icon-button size="small">
+		<dav-icon-button
+			size="small"
+			href="/store/categories"
+			(click)="moreButtonClick($event)"
+		>
 			<fa-icon [icon]="faArrowRightLight"></fa-icon>
 		</dav-icon-button>
 	</div>

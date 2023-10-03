@@ -50,6 +50,11 @@ export class HorizontalCategoryListComponent {
 		this.loading = false
 	}
 
+	moreButtonClick(event: PointerEvent) {
+		event.preventDefault()
+		this.router.navigate(["store", "categories"])
+	}
+
 	categoryIconCardClick(event: Event, categoryKey: string) {
 		event.preventDefault()
 		this.router.navigate(["store", "category", categoryKey])
