@@ -269,30 +269,13 @@
 	[visible]="bookmarksVisible && !isMobile"
 	(dismiss)="bookmarksVisible = false"
 >
-	<ul class="list-group list-group-flush">
-		<li
-			class="list-group-item d-flex theme-background-color-secondary"
-			style="
-				padding: 5px 0px;
-				margin-left: 20px;
-				border: none;
-				min-height: 35px;
-				font-size: 16px;
-			"
+	<dav-tree>
+		<dav-tree-item
+			[headline]="bookmark.name"
+			(click)="NavigateToBookmark(bookmark)"
 			*ngFor="let bookmark of currentBook.bookmarks"
-		>
-			<a
-				href="#"
-				class="text-color"
-				(click)="NavigateToBookmark(bookmark)"
-				[ngClass]="
-					bookmark.uuid == currentPageBookmark ? 'font-weight-bold' : ''
-				"
-			>
-				{{ bookmark.name }}
-			</a>
-		</li>
-	</ul>
+		></dav-tree-item>
+	</dav-tree>
 
 	<p
 		class="no-bookmarks-text"
