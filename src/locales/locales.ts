@@ -6,7 +6,8 @@ const enDefaults = {
 		search: "Search for books",
 		emptyHeadline: "Welcome to PocketLib!",
 		recommendationsHeadline: "Find your first book",
-		recommendationsAuthorsHeadline: "Our authors",
+		recommendationsBooksHeadline: "Recently published books",
+		recommendationsAuthorsHeadline: "New authors",
 		openBookFile: "Open a book file",
 		login: "Log in",
 		discoverMore: "Discover more",
@@ -293,8 +294,9 @@ const enDefaults = {
 		}
 	},
 	storeStartPage: {
-		recentlyPublished: "Recently published books",
-		newAuthors: "New authors"
+		booksOfTheDay: "Recommendations of the day",
+		authorsOfTheDay: "Our authors",
+		seriesOfTheDay: "Interesting book series"
 	},
 	storeBookPage: {
 		readNow: "Read now",
@@ -483,9 +485,6 @@ const enDefaults = {
 	horizontalCategoryList: {
 		headline: "Categories"
 	},
-	horizontalSeriesList: {
-		newSeries: "New book series"
-	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",
 		priceTextfieldPlaceholder: "Price of your book in Euro",
@@ -539,7 +538,8 @@ const deDefaults = {
 		search: "Suche nach Büchern",
 		emptyHeadline: "Willkommen bei PocketLib!",
 		recommendationsHeadline: "Finde dein erstes Buch",
-		recommendationsAuthorsHeadline: "Unsere Autoren",
+		recommendationsBooksHeadline: "Kürzlich veröffentlichte Bücher",
+		recommendationsAuthorsHeadline: "Neue Autoren",
 		openBookFile: "Öffne eine Buch-Datei",
 		login: "Melde dich an",
 		discoverMore: "Mehr entdecken",
@@ -832,8 +832,9 @@ const deDefaults = {
 		}
 	},
 	storeStartPage: {
-		recentlyPublished: "Kürzlich veröffentlichte Bücher",
-		newAuthors: "Neue Autoren"
+		booksOfTheDay: "Empfehlungen des Tages",
+		authorsOfTheDay: "Unsere Autoren",
+		seriesOfTheDay: "Interessante Buch-Reihen"
 	},
 	storeBookPage: {
 		readNow: "Jetzt lesen",
@@ -1022,9 +1023,6 @@ const deDefaults = {
 	},
 	horizontalCategoryList: {
 		headline: "Kategorien"
-	},
-	horizontalSeriesList: {
-		newSeries: "Neue Buch-Reihen"
 	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",

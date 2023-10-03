@@ -1,10 +1,9 @@
-import { Component } from "@angular/core"
+import { Component, Input } from "@angular/core"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { BookListItem, SeriesListItem, ApiResponse } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
-import { enUS } from "src/locales/locales"
 
 const maxVisibleSeries = 5
 
@@ -14,16 +13,14 @@ const maxVisibleSeries = 5
 	styleUrls: ["./horizontal-series-list.component.scss"]
 })
 export class HorizontalSeriesListComponent {
-	locale = enUS.horizontalSeriesList
+	@Input() headline: string = ""
 	series: SeriesListItem[] = []
 	loading: boolean = true
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService
-	) {
-		this.locale = this.dataService.GetLocale().horizontalSeriesList
-	}
+	) {}
 
 	async ngOnInit() {
 		let response = await this.apiService.listStoreBookSeries(

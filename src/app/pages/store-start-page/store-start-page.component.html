@@ -2,12 +2,16 @@
 	<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
 
 	<pocketlib-horizontal-book-list
-		[headline]="locale.recentlyPublished"
+		type="random"
+		[headline]="locale.booksOfTheDay"
 	></pocketlib-horizontal-book-list>
 
 	<pocketlib-horizontal-author-list
-		[headline]="locale.newAuthors"
+		type="random"
+		[headline]="locale.authorsOfTheDay"
 	></pocketlib-horizontal-author-list>
 
-	<pocketlib-horizontal-series-list></pocketlib-horizontal-series-list>
+	<pocketlib-horizontal-series-list
+		[headline]="locale.seriesOfTheDay"
+	></pocketlib-horizontal-series-list>
 </div>
