@@ -17,7 +17,11 @@
 					<fa-icon [icon]="faFileLight"></fa-icon>
 				</dav-icon-card>
 
-				<dav-icon-card [text]="locale.login">
+				<dav-icon-card
+					[text]="locale.login"
+					*ngIf="!dataService.dav.isLoggedIn"
+					(click)="GoToLoginPage()"
+				>
 					<fa-icon [icon]="faCircleUserLight"></fa-icon>
 				</dav-icon-card>
 			</div>

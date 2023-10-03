@@ -66,11 +66,7 @@ export class AccountPageComponent {
 	}
 
 	ShowLoginPage() {
-		if (
-			this.redirect != null &&
-			(this.redirect == "author/setup" ||
-				this.redirect.startsWith("store/book/"))
-		) {
+		if (this.redirect != null && this.redirect.startsWith("store/book/")) {
 			Dav.ShowLoginPage(
 				environment.apiKey,
 				`${window.location.origin}/${this.redirect}`
