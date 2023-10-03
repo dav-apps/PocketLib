@@ -25,6 +25,7 @@ export class HorizontalBookListComponent {
 	@Input() categories: string[] = []
 	@Input() series: string = ""
 	@Input() maxItems: number = 10
+	@Input() hideMoreButton: boolean = false
 	faArrowRightLight = faArrowRightLight
 	books: BookListItem[] = []
 	hasMoreItems: boolean = false

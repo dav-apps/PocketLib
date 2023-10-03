@@ -7,7 +7,7 @@
 		<dav-icon-button
 			size="small"
 			(click)="moreButtonClick()"
-			*ngIf="hasMoreItems"
+			*ngIf="hasMoreItems && !hideMoreButton"
 		>
 			<fa-icon [icon]="faArrowRightLight"></fa-icon>
 		</dav-icon-button>
