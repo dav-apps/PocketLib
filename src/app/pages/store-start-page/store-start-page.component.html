@@ -1,6 +1,4 @@
 <div class="start-page-container slide-up-in">
-	<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
-
 	<pocketlib-horizontal-book-list
 		type="random"
 		[headline]="locale.booksOfTheDay"
@@ -8,13 +6,15 @@
 		[hideMoreButton]="true"
 	></pocketlib-horizontal-book-list>
 
+	<pocketlib-horizontal-series-list
+		type="random"
+		[headline]="locale.seriesOfTheDay"
+	></pocketlib-horizontal-series-list>
+
 	<pocketlib-horizontal-author-list
 		type="random"
 		[headline]="locale.authorsOfTheDay"
 	></pocketlib-horizontal-author-list>
 
-	<pocketlib-horizontal-series-list
-		type="random"
-		[headline]="locale.seriesOfTheDay"
-	></pocketlib-horizontal-series-list>
+	<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
 </div>

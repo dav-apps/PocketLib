@@ -296,7 +296,7 @@ const enDefaults = {
 	storeStartPage: {
 		booksOfTheDay: "Recommendations of the day",
 		authorsOfTheDay: "Our authors",
-		seriesOfTheDay: "Interesting book series"
+		seriesOfTheDay: "Popular book series"
 	},
 	storeBookPage: {
 		readNow: "Read now",
@@ -834,7 +834,7 @@ const deDefaults = {
 	storeStartPage: {
 		booksOfTheDay: "Empfehlungen des Tages",
 		authorsOfTheDay: "Unsere Autoren",
-		seriesOfTheDay: "Interessante Buch-Reihen"
+		seriesOfTheDay: "Beliebte Buch-Reihen"
 	},
 	storeBookPage: {
 		readNow: "Jetzt lesen",
