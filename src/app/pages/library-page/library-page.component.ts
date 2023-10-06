@@ -19,7 +19,7 @@ import {
 	faTrash as faTrashLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
-import { BottomSheet, Textfield } from "dav-ui-components"
+import { BottomSheet, ContextMenu, Textfield } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -54,6 +54,8 @@ export class LibraryPageComponent {
 	bottomSheet: ElementRef<BottomSheet>
 	@ViewChild("searchTextfield")
 	searchTextfield: ElementRef<Textfield>
+	@ViewChild("contextMenu")
+	contextMenu: ElementRef<ContextMenu>
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -123,6 +125,13 @@ export class LibraryPageComponent {
 			this.smallBookListWidth = 0
 		} else {
 			this.smallBookListWidth = this.largeBookCoverWidth / 2 + 16
+		}
+	}
+
+	@HostListener("document:click", ["$event"])
+	documentClick(event: MouseEvent) {
+		if (!this.contextMenu.nativeElement.contains(event.target as Node)) {
+			this.contextMenuVisible = false
 		}
 	}
 
@@ -337,19 +346,12 @@ export class LibraryPageComponent {
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX
 		this.contextMenuPositionY = event.pageY
-
-		if (this.contextMenuVisible) {
-			this.contextMenuVisible = false
-
-			await new Promise((resolve: Function) => {
-				setTimeout(() => resolve(), 60)
-			})
-		}
-
 		this.contextMenuVisible = true
 	}
 
 	async DownloadBook() {
+		this.contextMenuVisible = false
+
 		let link = document.createElement("a")
 		link.download = (this.selectedBook as PdfBook | EpubBook).title
 		link.href = URL.createObjectURL(this.selectedBook.file)
