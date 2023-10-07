@@ -1,9 +1,15 @@
 .container {
 	max-width: 1208px;
 	margin: 0 auto 12px;
-	padding: 12px;
+	padding: 12px 0;
 }
 
 .header-container {
 	margin-bottom: 32px;
+}
+
+.lists-container {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
