@@ -46,6 +46,12 @@
 	font-size: 28px;
 }
 
+.recommendations-container {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
 .discover-more-card-container {
 	display: flex;
 	justify-content: center;

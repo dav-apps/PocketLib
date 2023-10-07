@@ -418,7 +418,7 @@ body {
 	display: flex;
 	gap: 12px;
 	align-items: center;
-	margin: 32px 0 0 16px;
+	margin-left: 16px;
 }
 
 .store-list-header-container > h4 {
@@ -432,8 +432,7 @@ body {
 	font-size: 24px;
 	font-weight: 400;
 	color: var(--dav-color-on-surface);
-	margin-left: 16px;
-	margin-bottom: 0;
+	margin: 0 0 0 16px;
 }
 
 ::-webkit-scrollbar {

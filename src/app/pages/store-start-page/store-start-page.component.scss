@@ -1,4 +1,8 @@
 .start-page-container {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 	max-width: 1208px;
+	padding-top: 16px;
 	margin: 0 auto;
 }

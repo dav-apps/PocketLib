@@ -31,17 +31,19 @@
 					{{ locale.recommendationsHeadline }}
 				</h2>
 
-				<pocketlib-horizontal-book-list
-					[headline]="locale.recommendationsBooksHeadline"
-					[maxItems]="7"
-					[hideMoreButton]="true"
-				></pocketlib-horizontal-book-list>
+				<div class="recommendations-container">
+					<pocketlib-horizontal-book-list
+						[headline]="locale.recommendationsBooksHeadline"
+						[maxItems]="7"
+						[hideMoreButton]="true"
+					></pocketlib-horizontal-book-list>
 
-				<pocketlib-horizontal-author-list
-					[headline]="locale.recommendationsAuthorsHeadline"
-				></pocketlib-horizontal-author-list>
+					<pocketlib-horizontal-author-list
+						[headline]="locale.recommendationsAuthorsHeadline"
+					></pocketlib-horizontal-author-list>
 
-				<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
+					<pocketlib-horizontal-category-list></pocketlib-horizontal-category-list>
+				</div>
 
 				<div class="discover-more-card-container">
 					<dav-icon-card
