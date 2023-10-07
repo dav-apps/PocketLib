@@ -566,13 +566,15 @@ export class AuthorProfileComponent {
 		this.editProfileDialogFirstNameError = ""
 		this.editProfileDialogLastName = this.author.lastName
 		this.editProfileDialogLastNameError = ""
-		this.editProfileDialogWebsiteUrl = this.author.websiteUrl
+		this.editProfileDialogWebsiteUrl = this.author.websiteUrl || ""
 		this.editProfileDialogWebsiteUrlError = ""
-		this.editProfileDialogFacebookUsername = this.author.facebookUsername
+		this.editProfileDialogFacebookUsername =
+			this.author.facebookUsername || ""
 		this.editProfileDialogFacebookUsernameError = ""
-		this.editProfileDialogInstagramUsername = this.author.instagramUsername
+		this.editProfileDialogInstagramUsername =
+			this.author.instagramUsername || ""
 		this.editProfileDialogInstagramUsernameError = ""
-		this.editProfileDialogTwitterUsername = this.author.twitterUsername
+		this.editProfileDialogTwitterUsername = this.author.twitterUsername || ""
 		this.editProfileDialogTwitterUsernameError = ""
 		this.editProfileDialogVisible = true
 	}

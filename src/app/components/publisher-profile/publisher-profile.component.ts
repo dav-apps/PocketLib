@@ -295,13 +295,16 @@ export class PublisherProfileComponent {
 	ShowEditProfileDialog() {
 		this.editProfileDialogName = this.publisher.name
 		this.editProfileDialogNameError = ""
-		this.editProfileDialogWebsiteUrl = this.publisher.websiteUrl
+		this.editProfileDialogWebsiteUrl = this.publisher.websiteUrl || ""
 		this.editProfileDialogWebsiteUrlError = ""
-		this.editProfileDialogFacebookUsername = this.publisher.facebookUsername
+		this.editProfileDialogFacebookUsername =
+			this.publisher.facebookUsername || ""
 		this.editProfileDialogFacebookUsernameError = ""
-		this.editProfileDialogInstagramUsername = this.publisher.instagramUsername
+		this.editProfileDialogInstagramUsername =
+			this.publisher.instagramUsername || ""
 		this.editProfileDialogInstagramUsernameError = ""
-		this.editProfileDialogTwitterUsername = this.publisher.twitterUsername
+		this.editProfileDialogTwitterUsername =
+			this.publisher.twitterUsername || ""
 		this.editProfileDialogTwitterUsernameError = ""
 		this.editProfileDialogVisible = true
 	}
