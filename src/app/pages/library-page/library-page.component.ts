@@ -364,6 +364,7 @@ export class LibraryPageComponent {
 
 	discoverMoreCardClick(event: Event) {
 		event.preventDefault()
+		window.scrollTo(0, 0)
 		this.router.navigate(["store"])
 	}
 
