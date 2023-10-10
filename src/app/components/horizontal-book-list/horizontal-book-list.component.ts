@@ -38,7 +38,8 @@ export class HorizontalBookListComponent {
 	) {}
 
 	async ngOnInit() {
-		if (this.type == "categories" && this.categories.length > 0) {
+		if (this.type == "categories") {
+			if (this.categories.length == 0) return
 			await this.LoadStoreBooksByCategories()
 		} else if (this.type == "series") {
 			await this.LoadStoreBooksBySeries()

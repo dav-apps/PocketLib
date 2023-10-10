@@ -52,6 +52,7 @@ export class HorizontalCategoryListComponent {
 
 	moreButtonClick(event: PointerEvent) {
 		event.preventDefault()
+		window.scrollTo(0, 0)
 		this.router.navigate(["store", "categories"])
 	}
 
