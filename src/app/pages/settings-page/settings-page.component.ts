@@ -66,6 +66,8 @@ export class SettingsPageComponent {
 				} else if (event.type == "VERSION_READY") {
 					this.searchForUpdates = false
 					this.dataService.updateInstalled = true
+				} else if (event.type == "NO_NEW_VERSION_DETECTED") {
+					this.searchForUpdates = false
 				} else {
 					this.searchForUpdates = false
 					this.updateError = true
