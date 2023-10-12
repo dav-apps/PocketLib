@@ -1,10 +1,9 @@
 import * as path from "path"
 import * as fs from "fs"
 import { JSDOM } from "jsdom"
-import axios from "axios"
-import { isSuccessStatusCode } from "dav-js"
+import { request, gql } from "graphql-request"
 
-let backendUrl = "http://localhost:3111/v1"
+let backendUrl = "http://localhost:4001"
 let websiteUrl = "http://localhost:3001"
 
 switch (process.env.ENV) {
@@ -20,78 +19,120 @@ switch (process.env.ENV) {
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 	try {
-		let response = await axios({
-			method: "get",
-			url: `${backendUrl}/api/1/call/store_books/${uuid}`,
-			params: {
-				fields: "title,description,cover.url"
+		let response = await request<{
+			retrieveStoreBook: {
+				title: string
+				description: string
+				cover?: { url: string }
 			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveStoreBook($uuid: String!) {
+					retrieveStoreBook(uuid: $uuid) {
+						title
+						description
+						cover {
+							url
+						}
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let responseData = response.retrieveStoreBook
+
+		return getHtml({
+			title: responseData.title,
+			description: responseData.description,
+			imageUrl: responseData.cover?.url,
+			url: `${websiteUrl}/store/book/${uuid}`
 		})
-
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = response.data as any
-
-			// Add the appropriate meta tags to the html
-			return getHtml({
-				title: responseData.title,
-				description: responseData.description,
-				imageUrl: responseData.cover?.url,
-				url: `${websiteUrl}/store/book/${uuid}`
-			})
-		}
-	} catch (error) {}
-
-	return getHtml()
+	} catch (error) {
+		console.error(error)
+		return getHtml()
+	}
 }
 
 export async function PrepareStoreAuthorPage(uuid: string) {
 	try {
-		let response = await axios({
-			method: "get",
-			url: `${backendUrl}/api/1/call/authors/${uuid}`,
-			params: {
-				fields: "first_name,last_name,bio.value,profile_image.url"
+		let response = await request<{
+			retrieveAuthor: {
+				firstName: string
+				lastName: string
+				bio?: { bio: string }
+				profileImage?: { url: string }
 			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveAuthor($uuid: String!) {
+					retrieveAuthor(uuid: $uuid) {
+						firstName
+						lastName
+						bio {
+							bio
+						}
+						profileImage {
+							url
+						}
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let responseData = response.retrieveAuthor
+
+		return getHtml({
+			title: `${responseData.firstName} ${responseData.lastName}`,
+			description: responseData.bio?.bio,
+			imageUrl: responseData.profileImage?.url,
+			url: `${websiteUrl}/store/author/${uuid}`
 		})
-
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = response.data as any
-
-			return getHtml({
-				title: `${responseData.first_name} ${responseData.last_name}`,
-				description: responseData.bio?.value,
-				imageUrl: responseData.profile_image?.url,
-				url: `${websiteUrl}/store/author/${uuid}`
-			})
-		}
-	} catch (error) {}
-
-	return getHtml()
+	} catch (error) {
+		console.error(error)
+		return getHtml()
+	}
 }
 
 export async function PrepareStorePublisherPage(uuid: string) {
 	try {
-		let response = await axios({
-			method: "get",
-			url: `${backendUrl}/api/1/call/publishers/${uuid}`,
-			params: {
-				fields: "name,description,logo.url"
+		let response = await request<{
+			retrievePublisher: {
+				name: string
+				description: string
+				logo?: { url: string }
 			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrievePublisher($uuid: String!) {
+					retrievePublisher(uuid: $uuid) {
+						name
+						description
+						logo {
+							url
+						}
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let responseData = response.retrievePublisher
+
+		return getHtml({
+			title: responseData.name,
+			description: responseData.description,
+			imageUrl: responseData.logo?.url,
+			url: `${websiteUrl}/store/publisher/${uuid}`
 		})
-
-		if (isSuccessStatusCode(response.status)) {
-			let responseData = response.data as any
-
-			return getHtml({
-				title: responseData.name,
-				description: responseData.description,
-				imageUrl: responseData.logo?.url,
-				url: `${websiteUrl}/store/publisher/${uuid}`
-			})
-		}
-	} catch (error) {}
-
-	return getHtml()
+	} catch (error) {
+		console.error(error)
+		return getHtml()
+	}
 }
 
 function getHtml(params?: {
