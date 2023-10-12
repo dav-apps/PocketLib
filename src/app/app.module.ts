@@ -164,7 +164,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 				return {
 					cache: new InMemoryCache({ dataIdFromObject }),
 					link: httpLink.create({
-						uri: environment.newPocketlibApiUrl
+						uri: environment.pocketlibApiUrl
 					})
 				}
 			},

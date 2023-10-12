@@ -233,7 +233,7 @@ export class AppComponent {
 			this.apollo.create({
 				cache: new InMemoryCache({ dataIdFromObject }),
 				link: this.httpLink.create({
-					uri: environment.newPocketlibApiUrl,
+					uri: environment.pocketlibApiUrl,
 					headers: new HttpHeaders().set(
 						"Authorization",
 						this.dataService.dav.accessToken

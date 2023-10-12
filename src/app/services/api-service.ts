@@ -210,7 +210,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: "put",
-				url: `${environment.newPocketlibApiUrl}/publishers/${params.uuid}/logo`,
+				url: `${environment.pocketlibApiUrl}/publishers/${params.uuid}/logo`,
 				headers: {
 					Authorization: Dav.accessToken,
 					"Content-Type": params.contentType
@@ -505,7 +505,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: "put",
-				url: `${environment.newPocketlibApiUrl}/authors/${params.uuid}/profileImage`,
+				url: `${environment.pocketlibApiUrl}/authors/${params.uuid}/profileImage`,
 				headers: {
 					Authorization: Dav.accessToken,
 					"Content-Type": params.contentType
@@ -1115,7 +1115,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: "put",
-				url: `${environment.newPocketlibApiUrl}/storeBooks/${params.uuid}/cover`,
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/cover`,
 				headers: {
 					Authorization: Dav.accessToken,
 					"Content-Type": params.contentType
@@ -1165,7 +1165,7 @@ export class ApiService {
 		try {
 			let response = await axios({
 				method: "put",
-				url: `${environment.newPocketlibApiUrl}/storeBooks/${params.uuid}/file`,
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/file`,
 				headers: {
 					Authorization: Dav.accessToken,
 					"Content-Type": params.contentType,

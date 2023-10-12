@@ -1,9 +1,7 @@
 export const environment = {
 	production: true,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
-	pocketlibApiBaseUrl:
-		"https://dav-backend-tfpik.ondigitalocean.app/staging/v1/api/1/master/call",
-	newPocketlibApiUrl: "http://localhost:4000",
+	pocketlibApiUrl: "http://localhost:4000",
 	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",
 	appId: 6,
 	bookTableId: 14,
