@@ -1,7 +1,7 @@
 export const environment = {
 	production: true,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
-	pocketlibApiUrl: "http://localhost:4000",
+	pocketlibApiUrl: "https://pocketlib-api-dj7q2.ondigitalocean.app/",
 	websiteBaseUrl: "https://dav-apps.tech",
 	appId: 6,
 	bookTableId: 14,
