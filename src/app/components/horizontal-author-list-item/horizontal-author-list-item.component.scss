@@ -8,8 +8,8 @@ dav-blurhash-image {
 	transition: 160ms;
 }
 
-dav-blurhash-image:hover,
-dav-blurhash-image:focus {
+a:hover dav-blurhash-image,
+a:focus dav-blurhash-image {
 	transform: translateY(-8px);
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }

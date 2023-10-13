@@ -1,4 +1,7 @@
-<a [style.opacity]="highlighted ? 0.6 : 1" [routerLink]="link">
+<a
+	[class.highlighted]="highlighted"
+	[routerLink]="link"
+>
 	<dav-blurhash-image
 		[src]="book.coverContent"
 		[fallbackSrc]="dataService.defaultStoreBookCover"
