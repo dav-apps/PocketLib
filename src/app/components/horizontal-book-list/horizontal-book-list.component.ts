@@ -51,14 +51,14 @@ export class HorizontalBookListComponent {
 	}
 
 	async ngOnChanges(changes: SimpleChanges) {
-		if (
-			changes.categories == null ||
-			changes.categories.currentValue.length == 0
+		if (changes.series != null && changes.series.currentValue != null) {
+			await this.LoadStoreBooksBySeries()
+		} else if (
+			changes.categories != null &&
+			changes.categories.currentValue.length > 0
 		) {
-			return
+			await this.LoadStoreBooksByCategories()
 		}
-
-		await this.LoadStoreBooksByCategories()
 	}
 
 	async LoadLatestStoreBooks() {
