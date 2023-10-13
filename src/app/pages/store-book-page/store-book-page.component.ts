@@ -276,6 +276,9 @@ export class StoreBookPageComponent {
 				"{0}",
 				responseData.series.items[0].name
 			)
+		} else {
+			this.seriesUuid = null
+			this.seriesHeadline = ""
 		}
 
 		let author = responseData.collection.author
