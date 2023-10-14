@@ -5,6 +5,7 @@
 	height: 76px;
 	z-index: 5;
 	background-color: transparent;
+	padding-top: env(safe-area-inset-top);
 }
 
 .navbar-header {
@@ -41,11 +42,11 @@
 }
 
 .content-padding-top {
-	padding-top: 76px;
+	padding-top: calc(76px + env(safe-area-inset-top));
 }
 
 .content-padding-bottom {
-	padding-bottom: 80px;
+	padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
 .profile-image {
@@ -58,6 +59,7 @@
 	left: 0;
 	right: 0;
 	z-index: 5;
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 dav-navigation-bar {
