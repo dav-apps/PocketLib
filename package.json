@@ -49,7 +49,7 @@
 		"core-js": "^3.16.0",
 		"cropperjs": "^1.6.0",
 		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v2.6.4",
-		"dav-ui-components": "git+https://github.com/dav-apps/dav-ui-components.git#v1.0.1",
+		"dav-ui-components": "git+https://github.com/dav-apps/dav-ui-components.git#v1.0.2",
 		"express": "^4.18.2",
 		"graphql": "^16.8.0",
 		"http": "0.0.0",
