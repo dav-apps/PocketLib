@@ -23,6 +23,7 @@ export class AccountPageComponent {
 	faLockLight = faLockLight
 	faLockKeyholeLight = faLockKeyholeLight
 	locale = enUS.accountPage
+	websiteUrl = environment.websiteBaseUrl
 	width: number = window.innerWidth
 	logoutDialogVisible: boolean = false
 	redirect: string
