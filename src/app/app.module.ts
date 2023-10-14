@@ -1,5 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
+import { Environment } from "dav-js"
 import { dataIdFromObject } from "./misc/utils"
 import { environment } from "../environments/environment"
 
@@ -150,7 +151,9 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		FontAwesomeModule,
 		DragulaModule.forRoot(),
 		ServiceWorkerModule.register("ngsw-worker.js", {
-			enabled: environment.production
+			enabled:
+				environment.environment == Environment.Staging ||
+				environment.environment == Environment.Production
 		})
 	],
 	providers: [

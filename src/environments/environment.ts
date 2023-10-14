@@ -1,9 +1,10 @@
+import { Environment } from "dav-js"
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-	production: false,
+	environment: Environment.Development,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	pocketlibApiUrl: "http://localhost:4001",
 	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",

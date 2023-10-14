@@ -1,5 +1,7 @@
+import { Environment } from "dav-js"
+
 export const environment = {
-	production: true,
+	environment: Environment.Staging,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	pocketlibApiUrl: "https://pocketlib-api-staging-aeksy.ondigitalocean.app/",
 	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",

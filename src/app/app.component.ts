@@ -103,9 +103,7 @@ export class AppComponent {
 		this.dataService.ApplyTheme()
 
 		new Dav({
-			environment: environment.production
-				? Environment.Production
-				: Environment.Development,
+			environment: environment.environment,
 			appId: environment.appId,
 			tableIds: [
 				environment.settingsTableId,

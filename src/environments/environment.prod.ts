@@ -1,5 +1,7 @@
+import { Environment } from "dav-js"
+
 export const environment = {
-	production: true,
+	environment: Environment.Production,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	pocketlibApiUrl: "https://pocketlib-api-dj7q2.ondigitalocean.app/",
 	websiteBaseUrl: "https://dav-apps.tech",
