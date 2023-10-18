@@ -3,7 +3,7 @@
 		{{ headline }}
 	</h4>
 
-	<div class="content-container">
+	<div class="content-container" [class.center]="alignment == 'center'">
 		<div class="progress-ring-container" *ngIf="loading">
 			<dav-progress-ring size="32"></dav-progress-ring>
 		</div>

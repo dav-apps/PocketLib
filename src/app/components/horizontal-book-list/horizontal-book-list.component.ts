@@ -12,6 +12,7 @@ import {
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
 type HorizontalBookListType = "latest" | "categories" | "series" | "random"
+type HorizontalBookListAlignment = "start" | "center"
 
 @Component({
 	selector: "pocketlib-horizontal-book-list",
@@ -26,6 +27,7 @@ export class HorizontalBookListComponent {
 	@Input() series: string = ""
 	@Input() maxItems: number = 10
 	@Input() hideMoreButton: boolean = false
+	@Input() alignment: HorizontalBookListAlignment = "start"
 	faArrowRightLight = faArrowRightLight
 	books: BookListItem[] = []
 	hasMoreItems: boolean = false

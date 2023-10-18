@@ -5,6 +5,8 @@ import { CategoryCard } from "src/app/misc/types"
 import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
 
+type HorizontalCategoryListAlignment = "start" | "center"
+
 @Component({
 	selector: "pocketlib-horizontal-category-list",
 	templateUrl: "./horizontal-category-list.component.html",
@@ -12,6 +14,7 @@ import { DataService } from "src/app/services/data-service"
 })
 export class HorizontalCategoryListComponent {
 	@Input() headline: string = ""
+	@Input() alignment: HorizontalCategoryListAlignment = "start"
 	faArrowRightLight = faArrowRightLight
 	loading: boolean = true
 	cards: CategoryCard[] = []

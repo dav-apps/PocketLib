@@ -7,6 +7,7 @@ import { AuthorListItem, ApiResponse } from "src/app/misc/types"
 
 const maxVisibleAuthors = 8
 type HorizontalAuthorListType = "latest" | "random"
+type HorizontalAuthorListAlignment = "start" | "center"
 
 @Component({
 	selector: "pocketlib-horizontal-author-list",
@@ -16,6 +17,7 @@ type HorizontalAuthorListType = "latest" | "random"
 export class HorizontalAuthorListComponent {
 	@Input() type: HorizontalAuthorListType = "latest"
 	@Input() headline: string = ""
+	@Input() alignment: HorizontalAuthorListAlignment = "start"
 	authors: AuthorListItem[] = []
 	loading: boolean = true
 
