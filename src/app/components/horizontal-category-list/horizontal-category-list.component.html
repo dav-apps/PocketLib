@@ -1,13 +1,12 @@
 <div class="container">
 	<div class="store-list-header-container">
-		<h4>
-			{{ locale.headline }}
-		</h4>
+		<h4 class="store-list-header">{{ headline }}</h4>
 
 		<dav-icon-button
 			size="small"
 			href="/store/categories"
 			(click)="moreButtonClick($event)"
+			*ngIf="headline"
 		>
 			<fa-icon [icon]="faArrowRightLight"></fa-icon>
 		</dav-icon-button>

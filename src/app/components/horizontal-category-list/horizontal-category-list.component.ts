@@ -1,10 +1,9 @@
-import { Component } from "@angular/core"
+import { Component, Input } from "@angular/core"
 import { Router } from "@angular/router"
 import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { CategoryCard } from "src/app/misc/types"
 import { CategoryToCategoryCard } from "src/app/misc/utils"
 import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-horizontal-category-list",
@@ -12,14 +11,12 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./horizontal-category-list.component.scss"]
 })
 export class HorizontalCategoryListComponent {
-	locale = enUS.horizontalCategoryList
+	@Input() headline: string = ""
 	faArrowRightLight = faArrowRightLight
 	loading: boolean = true
 	cards: CategoryCard[] = []
 
-	constructor(private dataService: DataService, private router: Router) {
-		this.locale = this.dataService.GetLocale().horizontalCategoryList
-	}
+	constructor(private dataService: DataService, private router: Router) {}
 
 	async ngOnInit() {
 		await this.dataService.categoriesPromiseHolder.AwaitResult()

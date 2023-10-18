@@ -295,7 +295,8 @@ const enDefaults = {
 	storeStartPage: {
 		booksOfTheDay: "Recommendations of the day",
 		authorsOfTheDay: "Our authors",
-		seriesOfTheDay: "Popular book series"
+		seriesOfTheDay: "Popular book series",
+		categories: "Categories"
 	},
 	storeBookPage: {
 		readNow: "Read now",
@@ -480,9 +481,6 @@ const enDefaults = {
 		cancel: "Cancel",
 		save: "Save",
 		create: "Create"
-	},
-	horizontalCategoryList: {
-		headline: "Categories"
 	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",
@@ -832,7 +830,8 @@ const deDefaults = {
 	storeStartPage: {
 		booksOfTheDay: "Empfehlungen des Tages",
 		authorsOfTheDay: "Unsere Autoren",
-		seriesOfTheDay: "Beliebte Buch-Reihen"
+		seriesOfTheDay: "Beliebte Buch-Reihen",
+		categories: "Kategorien"
 	},
 	storeBookPage: {
 		readNow: "Jetzt lesen",
@@ -1018,9 +1017,6 @@ const deDefaults = {
 		cancel: "Abbrechen",
 		save: "Speichern",
 		create: "Erstellen"
-	},
-	horizontalCategoryList: {
-		headline: "Kategorien"
 	},
 	priceInput: {
 		priceTextfieldLabel: "Cent in €",
