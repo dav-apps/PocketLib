@@ -121,7 +121,11 @@
 </div>
 
 <!-- Top Toolbar -->
-<div class="top-toolbar" *ngIf="!isMobile && initialized">
+<div
+	class="top-toolbar"
+	[class.windows]="dataService.windows"
+	*ngIf="!isMobile && initialized"
+>
 	<div class="top-toolbar-left-container">
 		<!-- Back button -->
 		<dav-icon-button

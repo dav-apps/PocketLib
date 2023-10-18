@@ -27,6 +27,7 @@ import { DataService } from "src/app/services/data-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { EpubBookmark } from "src/app/models/EpubBookmark"
 import { EpubReader, EpubTocItem } from "src/app/models/EpubReader"
+import { windowsToolbarHeight } from "src/constants/constants"
 import {
 	FindPositionsInHtmlElement,
 	FindPageBreakPositions,
@@ -226,6 +227,11 @@ export class EpubViewerComponent {
 		private ngZone: NgZone
 	) {
 		this.locale = this.dataService.GetLocale().epubViewer
+
+		if (this.dataService.windows) {
+			this.paddingTop += windowsToolbarHeight
+		}
+
 		this.setSize()
 	}
 

@@ -61,6 +61,7 @@ export class DataService {
 		[key: string]: any
 	} = {}
 	updateInstalled: boolean = false
+	windows: boolean = false
 
 	constructor(private apiService: ApiService, private swUpdate: SwUpdate) {
 		// Set the supported locale
@@ -341,6 +342,15 @@ export class DataService {
 				? DavUIComponents.Theme.dark
 				: DavUIComponents.Theme.light
 		)
+
+		// Notify the Windows app of the theme
+		if (window["chrome"] && window["chrome"].webview) {
+			window["chrome"].webview.postMessage(
+				JSON.stringify({
+					theme: this.darkTheme ? keys.darkThemeKey : keys.lightThemeKey
+				})
+			)
+		}
 	}
 
 	//#region Settings

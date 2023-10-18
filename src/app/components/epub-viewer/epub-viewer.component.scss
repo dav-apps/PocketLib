@@ -8,7 +8,7 @@
 .viewer {
 	border: none;
 	position: relative;
-	margin-top: 60px;
+	margin-top: calc(var(--windows-title-bar-height) + 60px);
 }
 
 .viewer-right {
@@ -90,6 +90,10 @@ a.text-color:hover {
 	z-index: 2;
 	padding: 12px;
 	box-sizing: border-box;
+}
+
+.top-toolbar.windows {
+	padding-top: 36px;
 }
 
 .top-toolbar-left-container {

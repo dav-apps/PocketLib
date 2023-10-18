@@ -70,7 +70,7 @@ export class AppComponent {
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
 				// Update the updated todo lists
-				this.dataService.currentUrl = data.url
+				this.dataService.currentUrl = data.url.split("?")[0]
 
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive =
@@ -139,10 +139,17 @@ export class AppComponent {
 			this.dataService.settings
 		)
 
-		if (
-			(await this.dataService.GetOpenLastReadBook()) &&
-			this.router.url == "/"
-		) {
+		if (this.router.url == "/?windows=true") {
+			this.dataService.windows = true
+			document.documentElement.style.setProperty(
+				"--windows-title-bar-height",
+				"28px"
+			)
+		}
+
+		let url = this.router.url.split("?")[0]
+
+		if ((await this.dataService.GetOpenLastReadBook()) && url == "/") {
 			this.router.navigate(["loading"], { skipLocationChange: true })
 		}
 

@@ -5,7 +5,7 @@
 	height: 76px;
 	z-index: 5;
 	background-color: transparent;
-	padding-top: env(safe-area-inset-top);
+	padding-top: calc(env(safe-area-inset-top) + var(--windows-title-bar-height));
 }
 
 .navbar-header {
@@ -42,7 +42,7 @@
 }
 
 .content-padding-top {
-	padding-top: calc(76px + env(safe-area-inset-top));
+	padding-top: calc((env(safe-area-inset-top) + var(--windows-title-bar-height)) + 76px);
 }
 
 .content-padding-bottom {
