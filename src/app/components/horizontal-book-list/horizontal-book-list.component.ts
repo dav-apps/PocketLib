@@ -22,6 +22,7 @@ type HorizontalBookListAlignment = "start" | "center"
 export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"
 	@Input() headline: string = ""
+	@Input() page: number = 1
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
 	@Input() series: string = ""
@@ -65,6 +66,9 @@ export class HorizontalBookListComponent {
 
 	async LoadLatestStoreBooks() {
 		// Get the latest store books
+		let page = this.page - 1
+		if (page < 0) page = 0
+
 		let response = await this.apiService.listStoreBooks(
 			`
 				total
@@ -79,7 +83,8 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				languages: await this.dataService.GetStoreLanguages(),
-				limit: this.maxItems
+				limit: this.maxItems,
+				offset: this.maxItems * page
 			}
 		)
 		let responseData = response.data.listStoreBooks
@@ -160,6 +165,9 @@ export class HorizontalBookListComponent {
 	}
 
 	async LoadStoreBooksRandomly() {
+		let page = this.page - 1
+		if (page < 0) page = 0
+
 		let response = await this.apiService.listStoreBooks(
 			`
 				total
@@ -175,7 +183,8 @@ export class HorizontalBookListComponent {
 			{
 				random: true,
 				languages: await this.dataService.GetStoreLanguages(),
-				limit: this.maxItems
+				limit: this.maxItems,
+				offset: this.maxItems * page
 			}
 		)
 

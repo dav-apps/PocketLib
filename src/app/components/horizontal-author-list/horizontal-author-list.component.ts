@@ -17,6 +17,7 @@ type HorizontalAuthorListAlignment = "start" | "center"
 export class HorizontalAuthorListComponent {
 	@Input() type: HorizontalAuthorListType = "latest"
 	@Input() headline: string = ""
+	@Input() page: number = 1
 	@Input() alignment: HorizontalAuthorListAlignment = "start"
 	authors: AuthorListItem[] = []
 	loading: boolean = true
@@ -33,6 +34,9 @@ export class HorizontalAuthorListComponent {
 
 	async LoadAuthors(random: boolean) {
 		// Get the latest authors
+		let page = this.page - 1
+		if (page < 0) page = 0
+
 		let response = await this.apiService.listAuthors(
 			`
 				items {
@@ -47,7 +51,8 @@ export class HorizontalAuthorListComponent {
 			`,
 			{
 				random,
-				limit: maxVisibleAuthors
+				limit: maxVisibleAuthors,
+				offset: maxVisibleAuthors * page
 			}
 		)
 
