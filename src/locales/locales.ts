@@ -339,6 +339,9 @@ const enDefaults = {
 	storeBooksPage: {
 		allBooksTitle: "All books"
 	},
+	storeCategoriesPage: {
+		title: "All categories"
+	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name of your collection",
 		errors: {
@@ -873,6 +876,9 @@ const deDefaults = {
 	},
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
+	},
+	storeCategoriesPage: {
+		title: "Alle Kategorien"
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name deiner Sammlung",
