@@ -98,48 +98,49 @@
 				</dav-icon-card>
 			</div>
 
-			<div [ngClass]="smallBookList ? '' : 'large-book-list-container'">
-				<!-- Big book card for last read book -->
-				<pocketlib-library-page-book-card
-					[book]="dataService.books[0]"
-					[width]="largeBookCoverWidth"
-					(click)="ShowBook(dataService.books[0])"
-					(contextMenu)="BookContextMenu($event, dataService.books[0])"
-				></pocketlib-library-page-book-card>
+			<div>
+				<div [ngClass]="smallBookList ? '' : 'large-book-list-container'">
+					<!-- Big book card for last read book -->
+					<pocketlib-library-page-book-card
+						[book]="dataService.books[0]"
+						[width]="largeBookCoverWidth"
+						(click)="ShowBook(dataService.books[0])"
+						(contextMenu)="BookContextMenu($event, dataService.books[0])"
+					></pocketlib-library-page-book-card>
 
-				<div
-					class="small-book-list-container"
-					[style.flexFlow]="smallBookList ? 'row wrap' : 'column wrap'"
-					[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
-					[style.width.px]="smallBookListWidth"
-				>
-					<div *ngFor="let book of dataService.books; let i = index">
-						<pocketlib-library-page-book-card
-							[book]="book"
-							[width]="smallBookCoverWidth"
-							(click)="ShowBook(book)"
-							(contextMenu)="BookContextMenu($event, book)"
-							*ngIf="i != 0 && i < 5"
-						></pocketlib-library-page-book-card>
+					<div
+						class="small-book-list-container"
+						[style.flexFlow]="smallBookList ? 'row wrap' : 'column wrap'"
+						[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
+						[style.width.px]="smallBookListWidth"
+					>
+						<div *ngFor="let book of dataService.books; let i = index">
+							<pocketlib-library-page-book-card
+								[book]="book"
+								[width]="smallBookCoverWidth"
+								(click)="ShowBook(book)"
+								(contextMenu)="BookContextMenu($event, book)"
+								*ngIf="i != 0 && i < 5"
+							></pocketlib-library-page-book-card>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div
-				class="all-books-button-container"
-				[style.justifyContent]="smallBookList ? 'center' : 'end'"
-				[style.width.px]="largeBookCoverWidth + smallBookListWidth"
-				*ngIf="dataService.books.length > 5"
-			>
-				<dav-button color="secondary" tonal (click)="ShowAllBooks()">
-					<p>{{ locale.allBooks }}</p>
+				<div
+					class="all-books-button-container"
+					[style.justifyContent]="smallBookList ? 'center' : 'end'"
+					*ngIf="dataService.books.length > 5"
+				>
+					<dav-button color="secondary" tonal (click)="ShowAllBooks()">
+						<p>{{ locale.allBooks }}</p>
 
-					<fa-icon
-						slot="icon-right"
-						[icon]="faArrowRightLight"
-						size="lg"
-					></fa-icon>
-				</dav-button>
+						<fa-icon
+							slot="icon-right"
+							[icon]="faArrowRightLight"
+							size="lg"
+						></fa-icon>
+					</dav-button>
+				</div>
 			</div>
 		</div>
 
