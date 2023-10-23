@@ -1,7 +1,7 @@
 {
 	"name": "PocketLib",
 	"short_name": "PocketLib",
-	"description": "PocketLib is the library in your pocket! Read your book wherever and whenever you want.",
+	"description": "PocketLib is a simple and modern ebook reader.\n\n📖 Read any epub file\nAdd any local epub file to your library. PocketLib automatically saves your reading progress, so you can go directly to the last page you read when you open the app.\n\n📚 Discover a wide range of literature\nThe PocketLib Store contains a large collection of literature in the public domain, carefully selected and produced for the true book lover. Just log in to get free access to all these books.\n\n☁ Save your data and read on any device\nLog in with your dav Account to save your library and reading progress in the cloud. Read on any device, wherever and whenever you want.",
 	"theme_color": "#0d47a1",
 	"background_color": "#0d47a1",
 	"display": "standalone",
