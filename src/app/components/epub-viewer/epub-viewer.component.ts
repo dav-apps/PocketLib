@@ -6,7 +6,10 @@ import {
 	ElementRef
 } from "@angular/core"
 import { Router } from "@angular/router"
-import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons"
+import {
+	faArrowLeft as faArrowLeftRegular,
+	faBookmark as faBookmarkSolid
+} from "@fortawesome/free-solid-svg-icons"
 import {
 	faHouse as faHouseRegular,
 	faBookmark as faBookmarkRegular,
@@ -61,6 +64,7 @@ const doubleTapToleranceTime = 400
 })
 export class EpubViewerComponent {
 	locale = enUS.epubViewer
+	faArrowLeftRegular = faArrowLeftRegular
 	faArrowLeftLight = faArrowLeftLight
 	faArrowRightLight = faArrowRightLight
 	faHouseRegular = faHouseRegular
@@ -1838,6 +1842,9 @@ export class EpubViewerComponent {
 			this.currentChapter = lastPosition.chapter
 			this.currentPage = lastPosition.page
 			this.ShowPage()
+
+			// Close the bottom sheet
+			this.bottomSheet.nativeElement.snap("bottom")
 		}
 	}
 

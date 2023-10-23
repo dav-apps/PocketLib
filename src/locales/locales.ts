@@ -358,6 +358,7 @@ const enDefaults = {
 		noBookmarks: "You have no bookmarks",
 		untitledBookmark: "Untitled bookmark",
 		bottomSheet: {
+			previousPage: "Previous page",
 			back: "Back",
 			addBookmark: "Add bookmark",
 			removeBookmark: "Remove bookmark",
@@ -896,6 +897,7 @@ const deDefaults = {
 		noBookmarks: "Du hast keine Lesezeichen",
 		untitledBookmark: "Unbenanntes Lesezeichen",
 		bottomSheet: {
+			previousPage: "Vorherige Seite",
 			back: "Zurück",
 			addBookmark: "Lesezeichen hinzufügen",
 			removeBookmark: "Lesezeichen entfernen",

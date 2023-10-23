@@ -130,8 +130,8 @@
 		<!-- Back button -->
 		<dav-icon-button
 			size="small"
-			[disabled]="navigationHistory.length == 0"
 			(click)="GoBack()"
+			*ngIf="navigationHistory.length > 0"
 		>
 			<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 		</dav-icon-button>
@@ -183,19 +183,27 @@
 >
 	<div slot="buttons">
 		<dav-icon-text-button
-			(click)="GoHome()"
+			[label]="locale.bottomSheet.previousPage"
+			(click)="GoBack()"
+			*ngIf="navigationHistory.length > 0"
+		>
+			<fa-icon [icon]="faArrowLeftRegular"></fa-icon>
+		</dav-icon-text-button>
+
+		<dav-icon-text-button
 			[label]="locale.bottomSheet.back"
+			(click)="GoHome()"
 		>
 			<fa-icon [icon]="faHouseRegular"></fa-icon>
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
-			(click)="AddOrRemoveBookmark()"
 			[label]="
 				currentPageBookmark
 					? locale.bottomSheet.removeBookmark
 					: locale.bottomSheet.addBookmark
 			"
+			(click)="AddOrRemoveBookmark()"
 		>
 			<fa-icon
 				[icon]="faBookmarkSolid"
@@ -208,15 +216,15 @@
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
-			(click)="ShowBookmarksBottomSheet()"
 			[label]="locale.bottomSheet.bookmarks"
+			(click)="ShowBookmarksBottomSheet()"
 		>
 			<fa-icon [icon]="faFolderBookmarkRegular"></fa-icon>
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
-			(click)="ShowChaptersBottomSheet()"
 			[label]="locale.bottomSheet.toc"
+			(click)="ShowChaptersBottomSheet()"
 		>
 			<fa-icon [icon]="faListUlRegular"></fa-icon>
 		</dav-icon-text-button>
