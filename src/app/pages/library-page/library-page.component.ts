@@ -30,6 +30,7 @@ import { GetDualScreenSettings } from "src/app/misc/utils"
 import { enUS } from "src/locales/locales"
 
 const pdfType = "application/pdf"
+const showAllBooksAnimationDuration = 300
 
 @Component({
 	templateUrl: "./library-page.component.html",
@@ -99,6 +100,10 @@ export class LibraryPageComponent {
 		this.loadingScreenVisible = false
 
 		this.setSize()
+	}
+
+	ngOnDestroy() {
+		this.dataService.contentContainer.style.overflow = "auto"
 	}
 
 	ngAfterViewInit() {
@@ -202,13 +207,11 @@ export class LibraryPageComponent {
 
 	async ShowAllBooks() {
 		this.LoadAllBooksList()
-
 		this.allBooksVisible = true
-		let scrollTop = document.documentElement.scrollTop
 
+		let scrollTop = this.dataService.contentContainer.scrollTop
 		this.rightContentContainer.nativeElement.style.display = "block"
-		this.rightContentContainer.nativeElement.style.height = `${window.innerHeight}px`
-		document.body.style.overflow = "hidden"
+		this.dataService.contentContainer.style.overflow = "hidden"
 
 		// Move the right content container to the Y position of the scroll position
 		await this.rightContentContainer.nativeElement.animate(
@@ -233,7 +236,7 @@ export class LibraryPageComponent {
 					}
 				],
 				{
-					duration: 300,
+					duration: showAllBooksAnimationDuration,
 					easing: "ease-in-out",
 					fill: "forwards"
 				}
@@ -247,7 +250,7 @@ export class LibraryPageComponent {
 					}
 				],
 				{
-					duration: 300,
+					duration: showAllBooksAnimationDuration,
 					easing: "ease-in-out",
 					fill: "forwards"
 				}
@@ -263,8 +266,8 @@ export class LibraryPageComponent {
 
 	async HideAllBooks() {
 		this.allBooksVisible = false
-		let scrollTop = document.documentElement.scrollTop
 
+		let scrollTop = this.dataService.contentContainer.scrollTop
 		this.leftContentContainer.nativeElement.style.display = "flex"
 
 		// Move the right content container back to the original position
@@ -278,7 +281,7 @@ export class LibraryPageComponent {
 					}
 				],
 				{
-					duration: 300,
+					duration: showAllBooksAnimationDuration,
 					easing: "ease-in-out",
 					fill: "forwards"
 				}
@@ -292,7 +295,7 @@ export class LibraryPageComponent {
 					}
 				],
 				{
-					duration: 300,
+					duration: showAllBooksAnimationDuration,
 					easing: "ease-in-out",
 					fill: "forwards"
 				}
@@ -303,8 +306,8 @@ export class LibraryPageComponent {
 			leftContentContainerTransitionAnimation.finished
 		])
 
-		document.body.style.overflow = null
 		this.rightContentContainer.nativeElement.style.display = "none"
+		this.dataService.contentContainer.style.overflow = "auto"
 	}
 
 	LoadAllBooksList() {
@@ -345,7 +348,8 @@ export class LibraryPageComponent {
 
 		// Set the position of the context menu
 		this.contextMenuPositionX = event.pageX
-		this.contextMenuPositionY = event.pageY
+		this.contextMenuPositionY =
+			event.pageY + this.dataService.contentContainer.scrollTop
 		this.contextMenuVisible = true
 	}
 

@@ -9,7 +9,6 @@
 	align-items: center;
 	width: 100%;
 	padding: 1rem 0;
-	transition: 300ms all;
 }
 
 .empty-library-container {
@@ -76,11 +75,12 @@
 .right-content-container {
 	display: none;
 	position: absolute;
-	width: 100%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
 	padding-top: 92px;
 	padding-bottom: 24px;
-	transition: 300ms all;
-	transform: translateX(3000px);
 	overflow-y: auto;
 	box-sizing: border-box;
 }
