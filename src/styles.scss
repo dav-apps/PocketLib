@@ -473,6 +473,10 @@ body {
 
 ::-webkit-scrollbar-track {
 	margin-top: calc(env(safe-area-inset-top) + var(--windows-title-bar-height) + 76px);
+	margin-bottom: calc(env(safe-area-inset-bottom));
+}
+
+.mobile::-webkit-scrollbar-track {
 	margin-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
