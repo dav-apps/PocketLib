@@ -1,11 +1,13 @@
 .navbar {
 	display: flex;
-	position: fixed;
+	position: absolute;
 	width: 100%;
 	height: 76px;
 	z-index: 5;
 	background-color: transparent;
-	padding-top: calc(env(safe-area-inset-top) + var(--windows-title-bar-height));
+	padding-top: calc(
+		env(safe-area-inset-top) + var(--windows-title-bar-height)
+	);
 }
 
 .navbar-header {
@@ -41,8 +43,19 @@
 	padding: 8px 16px;
 }
 
+.content-container {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow-x: hidden;
+}
+
 .content-padding-top {
-	padding-top: calc((env(safe-area-inset-top) + var(--windows-title-bar-height)) + 76px);
+	padding-top: calc(
+		(env(safe-area-inset-top) + var(--windows-title-bar-height)) + 76px
+	);
 }
 
 .content-padding-bottom {
@@ -54,7 +67,7 @@
 }
 
 .bottom-navbar {
-	position: fixed;
+	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;

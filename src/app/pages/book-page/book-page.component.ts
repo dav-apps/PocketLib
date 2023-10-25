@@ -28,9 +28,6 @@ export class BookPageComponent {
 			return
 		}
 
-		// Disable scrolling and min-height of root
-		document.body.setAttribute("style", "overflow: hidden")
-
 		if (!this.dataService.currentBook && this.dataService.settings.book) {
 			// Get the current book from the settings
 			this.dataService.currentBook = await GetBook(
@@ -44,9 +41,5 @@ export class BookPageComponent {
 		} else if (this.dataService.currentBook.file.type == pdfType) {
 			this.selectedPortal = new ComponentPortal(PdfViewerComponent)
 		}
-	}
-
-	ngOnDestroy() {
-		document.body.removeAttribute("style")
 	}
 }

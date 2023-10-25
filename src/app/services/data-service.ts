@@ -62,6 +62,7 @@ export class DataService {
 	} = {}
 	updateInstalled: boolean = false
 	windows: boolean = false
+	contentContainer: HTMLDivElement = null
 
 	constructor(private apiService: ApiService, private swUpdate: SwUpdate) {
 		// Set the supported locale

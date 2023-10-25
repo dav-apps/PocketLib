@@ -149,10 +149,16 @@ body {
 	--dav-color-surface-dim-rgb: var(--dav-color-palette-neutral87-rgb);
 	--dav-color-surface-bright-rgb: var(--dav-color-palette-neutral98-rgb);
 	--dav-color-surface-container-lowest-rgb: var(--white-rgb);
-	--dav-color-surface-container-low-rgb: var(--dav-color-palette-neutral96-rgb);
+	--dav-color-surface-container-low-rgb: var(
+		--dav-color-palette-neutral96-rgb
+	);
 	--dav-color-surface-container-rgb: var(--dav-color-palette-neutral94-rgb);
-	--dav-color-surface-container-high-rgb: var(--dav-color-palette-neutral92-rgb);
-	--dav-color-surface-container-highest-rgb: var(--dav-color-palette-neutral90-rgb);
+	--dav-color-surface-container-high-rgb: var(
+		--dav-color-palette-neutral92-rgb
+	);
+	--dav-color-surface-container-highest-rgb: var(
+		--dav-color-palette-neutral90-rgb
+	);
 	--dav-color-surface-variant-rgb: var(
 		--dav-color-palette-neutral-variant90-rgb
 	);
@@ -241,11 +247,19 @@ body {
 	--dav-color-surface: rgb(var(--dav-color-surface-rgb));
 	--dav-color-surface-dim: rgb(var(--dav-color-surface-dim-rgb));
 	--dav-color-surface-bright: rgb(var(--dav-color-surface-bright-rgb));
-	--dav-color-surface-container-lowest: rgb(var(--dav-color-surface-container-lowest-rgb));
-	--dav-color-surface-container-low: rgb(var(--dav-color-surface-container-low-rgb));
+	--dav-color-surface-container-lowest: rgb(
+		var(--dav-color-surface-container-lowest-rgb)
+	);
+	--dav-color-surface-container-low: rgb(
+		var(--dav-color-surface-container-low-rgb)
+	);
 	--dav-color-surface-container: rgb(var(--dav-color-surface-container-rgb));
-	--dav-color-surface-container-high: rgb(var(--dav-color-surface-container-high-rgb));
-	--dav-color-surface-container-highest: rgb(var(--dav-color-surface-container-highest-rgb));
+	--dav-color-surface-container-high: rgb(
+		var(--dav-color-surface-container-high-rgb)
+	);
+	--dav-color-surface-container-highest: rgb(
+		var(--dav-color-surface-container-highest-rgb)
+	);
 	--dav-color-surface-variant: rgb(var(--dav-color-surface-variant-rgb));
 	--dav-color-on-surface: rgb(var(--dav-color-on-surface-rgb));
 	--dav-color-on-surface-variant: rgb(var(--dav-color-on-surface-variant-rgb));
@@ -331,11 +345,19 @@ body[theme="dark"] {
 	--dav-color-surface-rgb: var(--dav-color-palette-neutral6-rgb);
 	--dav-color-surface-dim-rgb: var(--dav-color-palette-neutral6-rgb);
 	--dav-color-surface-bright-rgb: var(--dav-color-palette-neutral24-rgb);
-	--dav-color-surface-container-lowest-rgb: var(--dav-color-palette-neutral4-rgb);
-	--dav-color-surface-container-low-rgb: var(--dav-color-palette-neutral10-rgb);
+	--dav-color-surface-container-lowest-rgb: var(
+		--dav-color-palette-neutral4-rgb
+	);
+	--dav-color-surface-container-low-rgb: var(
+		--dav-color-palette-neutral10-rgb
+	);
 	--dav-color-surface-container-rgb: var(--dav-color-palette-neutral12-rgb);
-	--dav-color-surface-container-high-rgb: var(--dav-color-palette-neutral17-rgb);
-	--dav-color-surface-container-highest-rgb: var(--dav-color-palette-neutral22-rgb);
+	--dav-color-surface-container-high-rgb: var(
+		--dav-color-palette-neutral17-rgb
+	);
+	--dav-color-surface-container-highest-rgb: var(
+		--dav-color-palette-neutral22-rgb
+	);
 	--dav-color-surface-variant-rgb: var(
 		--dav-color-palette-neutral-variant30-rgb
 	);
@@ -404,7 +426,7 @@ body {
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
 	background-color: var(--dav-color-surface);
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 .cursor {
@@ -447,6 +469,11 @@ body {
 ::-webkit-scrollbar-thumb {
 	background-color: var(--dav-color-inverse-on-surface);
 	border-radius: 2px;
+}
+
+::-webkit-scrollbar-track {
+	margin-top: calc(env(safe-area-inset-top) + var(--windows-title-bar-height) + 76px);
+	margin-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
 a {

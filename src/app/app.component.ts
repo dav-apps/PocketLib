@@ -1,4 +1,10 @@
-import { Component, HostListener, ChangeDetectorRef } from "@angular/core"
+import {
+	Component,
+	HostListener,
+	ViewChild,
+	ElementRef,
+	ChangeDetectorRef
+} from "@angular/core"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
 import { Apollo } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
@@ -44,6 +50,8 @@ export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faBookRegular = faBookRegular
 	faBookSolid = faBookSolid
+	@ViewChild("contentContainer")
+	contentContainer: ElementRef<HTMLDivElement>
 	libraryLabel: string = ""
 	storeLabel: string = ""
 	libraryTabActive: boolean = false
@@ -168,6 +176,7 @@ export class AppComponent {
 	ngAfterViewInit() {
 		this.setSize()
 		this.cd.detectChanges()
+		this.dataService.contentContainer = this.contentContainer.nativeElement
 	}
 
 	@HostListener("window:resize")
