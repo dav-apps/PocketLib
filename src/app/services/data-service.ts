@@ -34,6 +34,8 @@ export class DataService {
 	isMobile: boolean = false
 	darkTheme: boolean = false
 	bookPageVisible: boolean = false
+	loadingScreenVisible: boolean = false
+	loadingScreenMessage: string = ""
 	simpleLoadingScreenVisible: boolean = false
 	defaultStoreBookCover: string = this.darkTheme
 		? defaultDarkStoreBookCoverUrl

@@ -76,7 +76,6 @@ export class LibraryPageComponent {
 	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
-	loadingScreenVisible: boolean = true
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
 
@@ -88,6 +87,7 @@ export class LibraryPageComponent {
 		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
 		this.dataService.bookPageVisible = false
+		this.dataService.loadingScreenVisible = true
 
 		// Check if this is a dual-screen device with a vertical fold
 		let dualScreenSettings = GetDualScreenSettings()
@@ -97,7 +97,7 @@ export class LibraryPageComponent {
 
 	async ngOnInit() {
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
-		this.loadingScreenVisible = false
+		this.dataService.loadingScreenVisible = false
 
 		this.setSize()
 	}
@@ -149,7 +149,7 @@ export class LibraryPageComponent {
 	}
 
 	async AddBookFilePick(file: ReadFile) {
-		this.loadingScreenVisible = true
+		this.dataService.loadingScreenVisible = true
 		let uuid: string = ""
 
 		// Create a new book
@@ -164,7 +164,7 @@ export class LibraryPageComponent {
 
 		if (uuid == null) {
 			// Show error dialog
-			this.loadingScreenVisible = false
+			this.dataService.loadingScreenVisible = false
 			this.addBookErrorDialogVisible = true
 			return
 		}

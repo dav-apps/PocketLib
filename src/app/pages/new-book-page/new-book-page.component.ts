@@ -74,11 +74,6 @@ export class NewBookPageComponent {
 	bookFileType: string = ""
 	//#endregion
 
-	//#region Loading Screen variables
-	loadingScreenVisible: boolean = false
-	loadingScreenMessage: string = ""
-	//#endregion
-
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
@@ -327,7 +322,7 @@ export class NewBookPageComponent {
 
 	//#region Loading Screen functions
 	ShowLoadingScreen() {
-		this.loadingScreenVisible = true
+		this.dataService.loadingScreenVisible = true
 
 		setTimeout(() => {
 			this.dataService.navbarVisible = false
@@ -346,7 +341,7 @@ export class NewBookPageComponent {
 
 	HideLoadingScreen() {
 		this.dataService.navbarVisible = true
-		this.loadingScreenVisible = false
+		this.dataService.loadingScreenVisible = false
 	}
 
 	async Finish() {
@@ -354,7 +349,8 @@ export class NewBookPageComponent {
 		let authorUuid = this.dataService.userIsAdmin ? this.author.uuid : null
 		let collectionUuid = null
 
-		this.loadingScreenMessage = this.locale.loadingScreen.creatingBook
+		this.dataService.loadingScreenMessage =
+			this.locale.loadingScreen.creatingBook
 
 		if (!this.noCollections && this.selectedCollection > -1) {
 			collectionUuid = this.collections[this.selectedCollection].uuid
@@ -385,7 +381,8 @@ export class NewBookPageComponent {
 			createStoreBookResponse.data.createStoreBook
 
 		if (this.coverContent) {
-			this.loadingScreenMessage = this.locale.loadingScreen.uploadingCover
+			this.dataService.loadingScreenMessage =
+				this.locale.loadingScreen.uploadingCover
 
 			// Upload the cover
 			await this.apiService.uploadStoreBookCover({
@@ -396,7 +393,8 @@ export class NewBookPageComponent {
 		}
 
 		if (this.bookFileContent) {
-			this.loadingScreenMessage = this.locale.loadingScreen.uploadingBookFile
+			this.dataService.loadingScreenMessage =
+				this.locale.loadingScreen.uploadingBookFile
 
 			// Upload the book file
 			await this.apiService.uploadStoreBookFile({
@@ -411,7 +409,8 @@ export class NewBookPageComponent {
 		//this.author.ClearCollections()
 
 		// Reload the author of the user
-		this.loadingScreenMessage = this.locale.loadingScreen.updatingLocalData
+		this.dataService.loadingScreenMessage =
+			this.locale.loadingScreen.updatingLocalData
 		await this.dataService.LoadAuthorOfUser()
 
 		// Redirect to the AuthorBookPage

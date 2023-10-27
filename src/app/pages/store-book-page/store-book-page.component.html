@@ -1,6 +1,6 @@
 <div
 	class="container"
-	[class]="simpleLoadingScreenVisible ? '' : 'slide-up-in'"
+	[class]="dataService.simpleLoadingScreenVisible ? '' : 'slide-up-in'"
 >
 	<div class="cover-panel">
 		<dav-header
@@ -129,12 +129,6 @@
 		></pocketlib-horizontal-book-list>
 	</div>
 </div>
-
-<pocketlib-loading-screen *ngIf="loadingScreenVisible">
-</pocketlib-loading-screen>
-
-<pocketlib-simple-loading-screen *ngIf="simpleLoadingScreenVisible">
-</pocketlib-simple-loading-screen>
 
 <dav-dialog
 	[headline]="locale.loginRequiredDialog.headline"

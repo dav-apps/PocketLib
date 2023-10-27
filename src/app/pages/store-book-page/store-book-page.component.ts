@@ -77,8 +77,6 @@ export class StoreBookPageComponent {
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
-	simpleLoadingScreenVisible: boolean = true
-	loadingScreenVisible: boolean = false
 	publishLoading: boolean = false
 	//#endregion
 
@@ -103,8 +101,8 @@ export class StoreBookPageComponent {
 				this.uuid = uuid
 
 				// Show the loading screen & scroll to the top
-				this.simpleLoadingScreenVisible = true
-				window.scrollTo(0, 0)
+				this.dataService.simpleLoadingScreenVisible = true
+				this.dataService.contentContainer.scrollTo(0, 0)
 
 				// Load the data of the new StoreBook
 				await this.Init()
@@ -171,7 +169,7 @@ export class StoreBookPageComponent {
 		)
 
 		let responseData = response.data.retrieveStoreBook
-		this.simpleLoadingScreenVisible = false
+		this.dataService.simpleLoadingScreenVisible = false
 
 		this.title = responseData.title
 		this.description = responseData.description
@@ -365,13 +363,13 @@ export class StoreBookPageComponent {
 			// TODO: Check if the book is already downloaded, and if not, wait for download
 			await this.OpenBook()
 		} else {
-			this.loadingScreenVisible = true
+			this.dataService.loadingScreenVisible = true
 
 			// Check if the user has purchased the book
 			if (this.purchased) {
 				if (!(await this.AddBookToLibrary())) {
 					// Show error
-					this.loadingScreenVisible = false
+					this.dataService.loadingScreenVisible = false
 					this.errorDialogVisible = true
 					return
 				}
@@ -382,14 +380,14 @@ export class StoreBookPageComponent {
 				if (this.price == 0) {
 					if (!(await this.CreatePurchaseForBook())) {
 						// Show error
-						this.loadingScreenVisible = false
+						this.dataService.loadingScreenVisible = false
 						this.errorDialogVisible = true
 						return
 					}
 
 					if (!(await this.AddBookToLibrary())) {
 						// Show error
-						this.loadingScreenVisible = false
+						this.dataService.loadingScreenVisible = false
 						this.errorDialogVisible = true
 						return
 					}
@@ -414,7 +412,7 @@ export class StoreBookPageComponent {
 						this.dataService.dav.user.Plan != 2
 					) {
 						// Show dav Pro dialog
-						this.loadingScreenVisible = false
+						this.dataService.loadingScreenVisible = false
 						this.noAccessDialogVisible = true
 						return
 					}
@@ -496,7 +494,7 @@ export class StoreBookPageComponent {
 
 		if (book == null) {
 			// Show error
-			this.loadingScreenVisible = false
+			this.dataService.loadingScreenVisible = false
 			this.errorDialogVisible = true
 			return
 		}

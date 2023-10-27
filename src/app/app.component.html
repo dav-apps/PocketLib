@@ -138,6 +138,11 @@
 	</dav-navigation-bar>
 </div>
 
+<pocketlib-loading-screen
+	[message]="dataService.loadingScreenMessage"
+	*ngIf="dataService.loadingScreenVisible">
+</pocketlib-loading-screen>
+
 <pocketlib-simple-loading-screen
 	*ngIf="dataService.simpleLoadingScreenVisible"
 ></pocketlib-simple-loading-screen>

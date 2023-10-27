@@ -15,6 +15,7 @@ export class LoadingPageComponent {
 
 	constructor(private dataService: DataService, private router: Router) {
 		this.dataService.navbarVisible = false
+		this.dataService.loadingScreenVisible = true
 	}
 
 	async ngOnInit() {
@@ -22,6 +23,10 @@ export class LoadingPageComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
 		await this.LoadSettings()
+	}
+
+	ngOnDestroy() {
+		this.dataService.loadingScreenVisible = false
 	}
 
 	async LoadSettings() {
