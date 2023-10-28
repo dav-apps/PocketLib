@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { BottomSheet, ContextMenu, Textfield } from "dav-ui-components"
+import { RemoveBookDialogComponent } from "src/app/components/dialogs/remove-book-dialog/remove-book-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -57,6 +58,8 @@ export class LibraryPageComponent {
 	searchTextfield: ElementRef<Textfield>
 	@ViewChild("contextMenu")
 	contextMenu: ElementRef<ContextMenu>
+	@ViewChild("removeBookDialog")
+	removeBookDialog: RemoveBookDialogComponent
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -73,7 +76,6 @@ export class LibraryPageComponent {
 	renameBookDialogVisible: boolean = false
 	renameBookDialogTitle: string = ""
 	renameBookDialogError: string = ""
-	removeBookDialogVisible: boolean = false
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
 	allBooksVisible: boolean = false
@@ -381,7 +383,7 @@ export class LibraryPageComponent {
 
 	ShowRemoveBookDialog() {
 		this.contextMenuVisible = false
-		this.removeBookDialogVisible = true
+		this.removeBookDialog.show()
 	}
 
 	async RenameBook() {
@@ -405,7 +407,7 @@ export class LibraryPageComponent {
 	}
 
 	async RemoveBook() {
-		this.removeBookDialogVisible = false
+		this.removeBookDialog.hide()
 		await this.selectedBook.Delete()
 
 		// Remove the selected book from the lists
