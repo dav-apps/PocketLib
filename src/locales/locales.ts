@@ -23,11 +23,6 @@ const enDefaults = {
 				titleTooLong: "The title is too long"
 			}
 		},
-		removeBookDialog: {
-			headline: "Remove book",
-			description:
-				"Are you sure you want to remove this book from your library?"
-		},
 		loginToAccessBookDialog: {
 			headline: "Login required",
 			description: "Please log in to access this book.",
@@ -39,7 +34,6 @@ const enDefaults = {
 		},
 		back: "Back",
 		save: "Save",
-		remove: "Remove",
 		close: "Close",
 		cancel: "Cancel"
 	},
@@ -513,6 +507,15 @@ const enDefaults = {
 		addBook: "Open a local file",
 		goToAuthorPage: "Go to your author profile"
 	},
+	dialogs: {
+		removeBookDialog: {
+			headline: "Remove book",
+			description:
+				"Are you sure you want to remove this book from your library?",
+			remove: "Remove",
+			cancel: "Cancel"
+		}
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -556,11 +559,6 @@ const deDefaults = {
 				titleTooLong: "Der Titel ist zu lang"
 			}
 		},
-		removeBookDialog: {
-			headline: "Buch entfernen",
-			description:
-				"Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?"
-		},
 		loginToAccessBookDialog: {
 			headline: "Anmeldung erforderlich",
 			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
@@ -572,7 +570,6 @@ const deDefaults = {
 		},
 		back: "Zurück",
 		save: "Speichern",
-		remove: "Entfernen",
 		close: "Schließen",
 		cancel: "Abbrechen"
 	},
@@ -1052,6 +1049,15 @@ const deDefaults = {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addBook: "Öffne eine lokale Datei",
 		goToAuthorPage: "Gehe zu deinem Autor-Profil"
+	},
+	dialogs: {
+		removeBookDialog: {
+			headline: "Buch entfernen",
+			description:
+				"Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?",
+			remove: "Entfernen",
+			cancel: "Abbrechen"
+		}
 	},
 	misc: {
 		languages: {
