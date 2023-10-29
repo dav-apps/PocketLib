@@ -15,7 +15,6 @@ import {
 	faCircleUser as faCircleUserLight,
 	faFile as faFileLight,
 	faFileExport as faFileExportLight,
-	faPen as faPenLight,
 	faTrash as faTrashLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
@@ -46,7 +45,6 @@ export class LibraryPageComponent {
 	faCircleUserLight = faCircleUserLight
 	faFileLight = faFileLight
 	faFileExportLight = faFileExportLight
-	faPenLight = faPenLight
 	faTrashLight = faTrashLight
 	@ViewChild("leftContentContainer")
 	leftContentContainer: ElementRef<HTMLDivElement>
@@ -71,11 +69,7 @@ export class LibraryPageComponent {
 	selectedBook: Book
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
-	showRenameBookOption: boolean = false // If the option in the context menu to rename the book is visible. Only for PdfBook
 	showExportBookOption: boolean = false // If the option in the context menu to export the book is visible
-	renameBookDialogVisible: boolean = false
-	renameBookDialogTitle: string = ""
-	renameBookDialogError: string = ""
 	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
 	allBooksVisible: boolean = false
@@ -345,7 +339,6 @@ export class LibraryPageComponent {
 		event.preventDefault()
 
 		this.selectedBook = book
-		this.showRenameBookOption = book instanceof PdfBook && !book.storeBook
 		this.showExportBookOption = book.belongsToUser || book.purchase != null
 
 		// Set the position of the context menu
@@ -374,36 +367,9 @@ export class LibraryPageComponent {
 		this.router.navigate(["store"])
 	}
 
-	ShowRenameBookDialog() {
-		this.contextMenuVisible = false
-		this.renameBookDialogTitle = (this.selectedBook as PdfBook).title
-		this.renameBookDialogError = ""
-		this.renameBookDialogVisible = true
-	}
-
 	ShowRemoveBookDialog() {
 		this.contextMenuVisible = false
 		this.removeBookDialog.show()
-	}
-
-	async RenameBook() {
-		this.renameBookDialogError = ""
-
-		if (this.renameBookDialogTitle.length == 0) {
-			this.renameBookDialogError =
-				this.locale.renameBookDialog.errors.titleMissing
-		} else if (this.renameBookDialogTitle.length < 2) {
-			this.renameBookDialogError =
-				this.locale.renameBookDialog.errors.titleTooShort
-		} else if (this.renameBookDialogTitle.length > 50) {
-			this.renameBookDialogError =
-				this.locale.renameBookDialog.errors.titleTooLong
-		} else {
-			await (this.selectedBook as PdfBook).SetTitle(
-				this.renameBookDialogTitle
-			)
-			this.renameBookDialogVisible = false
-		}
 	}
 
 	async RemoveBook() {

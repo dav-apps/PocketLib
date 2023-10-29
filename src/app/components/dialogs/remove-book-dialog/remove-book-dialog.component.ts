@@ -17,7 +17,6 @@ import { enUS } from "src/locales/locales"
 export class RemoveBookDialogComponent {
 	locale = enUS.dialogs.removeBookDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
-	@Input("headline") headline: string = ""
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 

@@ -11,18 +11,7 @@ const enDefaults = {
 		login: "Log in",
 		discoverMore: "Discover more",
 		bookContextMenuExport: "Export",
-		bookContextMenuRename: "Rename",
 		bookContextMenuRemove: "Remove",
-		renameBookDialog: {
-			headline: "Rename book",
-			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The Littlest Elf",
-			errors: {
-				titleMissing: "Please enter a title",
-				titleTooShort: "The title is too short",
-				titleTooLong: "The title is too long"
-			}
-		},
 		loginToAccessBookDialog: {
 			headline: "Login required",
 			description: "Please log in to access this book.",
@@ -33,9 +22,7 @@ const enDefaults = {
 			description: "The selected file could not be read."
 		},
 		back: "Back",
-		save: "Save",
-		close: "Close",
-		cancel: "Cancel"
+		close: "Close"
 	},
 	accountPage: {
 		title: "Your Account",
@@ -549,16 +536,6 @@ const deDefaults = {
 		bookContextMenuExport: "Exportieren",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
-		renameBookDialog: {
-			headline: "Buch umbenennen",
-			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Das winzigste Elflein",
-			errors: {
-				titleMissing: "Bitte gib einen Titel ein",
-				titleTooShort: "Der Titel ist zu kurz",
-				titleTooLong: "Der Titel ist zu lang"
-			}
-		},
 		loginToAccessBookDialog: {
 			headline: "Anmeldung erforderlich",
 			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
@@ -569,9 +546,7 @@ const deDefaults = {
 			description: "Die ausgewählte Datei konnte nicht gelesen werden."
 		},
 		back: "Zurück",
-		save: "Speichern",
-		close: "Schließen",
-		cancel: "Abbrechen"
+		close: "Schließen"
 	},
 	accountPage: {
 		title: "Dein Account",

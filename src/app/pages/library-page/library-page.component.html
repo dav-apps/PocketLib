@@ -244,15 +244,6 @@
 	<dav-context-menu-divider *ngIf="showExportBookOption">
 	</dav-context-menu-divider>
 
-	<!-- Rename -->
-	<dav-context-menu-item
-		[value]="locale.bookContextMenuRename"
-		(click)="ShowRenameBookDialog()"
-		*ngIf="showRenameBookOption"
-	>
-		<fa-icon slot="icon" [icon]="faPenLight"></fa-icon>
-	</dav-context-menu-item>
-
 	<!-- Remove -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuRemove"
@@ -261,33 +252,6 @@
 		<fa-icon slot="icon" [icon]="faTrashLight"></fa-icon>
 	</dav-context-menu-item>
 </dav-context-menu>
-
-<dav-dialog
-	[headline]="locale.renameBookDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="renameBookDialogVisible"
-	(dismiss)="renameBookDialogVisible = false"
-	(primaryButtonClick)="RenameBook()"
-	(defaultButtonClick)="renameBookDialogVisible = false"
->
-	<form>
-		<!-- Title -->
-		<div class="mb-3">
-			<dav-textfield
-				[value]="renameBookDialogTitle"
-				[label]="locale.renameBookDialog.titleTextfieldLabel"
-				[placeholder]="locale.renameBookDialog.titleTextfieldPlaceholder"
-				[errorMessage]="renameBookDialogError"
-				(change)="
-					renameBookDialogTitle = $event.detail.value;
-					renameBookDialogError = ''
-				"
-				(enter)="RenameBook()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
 
 <pocketlib-remove-book-dialog
 	#removeBookDialog
