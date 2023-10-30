@@ -55,18 +55,6 @@ const enDefaults = {
 		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
-		createPublisherDialog: {
-			headline: "Create publisher",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Name of the publisher",
-			errors: {
-				nameMissing: "Please enter a name",
-				nameTooShort: "The name is too short",
-				nameTooLong: "The name is too long",
-				unexpectedError:
-					"An unexpected error occured. Please try it again later."
-			}
-		},
 		createAuthorDialog: {
 			headline: "Create author",
 			firstNameTextfieldLabel: "First name",
@@ -85,7 +73,14 @@ const enDefaults = {
 			}
 		},
 		cancel: "Cancel",
-		create: "Create"
+		create: "Create",
+		errors: {
+			nameMissing: "Please enter a name",
+			nameTooShort: "The name is too short",
+			nameTooLong: "The name is too long",
+			unexpectedError:
+				"An unexpected error occured. Please try it again later."
+		}
 	},
 	authorBookDashboardPage: {
 		published: "Your book is published!",
@@ -503,6 +498,13 @@ const enDefaults = {
 			description: "Are you sure you want to log out?",
 			logout: "Log out",
 			cancel: "Cancel"
+		},
+		createPublisherDialog: {
+			headline: "Create publisher",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name of the publisher",
+			cancel: "Cancel",
+			create: "Create"
 		}
 	},
 	misc: {
@@ -582,18 +584,6 @@ const deDefaults = {
 		yourPublishers: "Deine Verlage",
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
-		createPublisherDialog: {
-			headline: "Verlag erstellen",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Name des Verlags",
-			errors: {
-				nameMissing: "Bitte gib einen Namen ein",
-				nameTooShort: "Der Name ist zu kurz",
-				nameTooLong: "Der Name ist zu lang",
-				unexpectedError:
-					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
-			}
-		},
 		createAuthorDialog: {
 			headline: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
@@ -612,7 +602,14 @@ const deDefaults = {
 			}
 		},
 		cancel: "Abbrechen",
-		create: "Erstellen"
+		create: "Erstellen",
+		errors: {
+			nameMissing: "Bitte gib einen Namen ein",
+			nameTooShort: "Der Name ist zu kurz",
+			nameTooLong: "Der Name ist zu lang",
+			unexpectedError:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
+		}
 	},
 	authorBookDashboardPage: {
 		published: "Dein Buch ist veröffentlicht!",
@@ -1035,6 +1032,13 @@ const deDefaults = {
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?",
 			logout: "Abmelden",
 			cancel: "Abbrechen"
+		},
+		createPublisherDialog: {
+			headline: "Verlag erstellen",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name des Verlags",
+			cancel: "Abbrechen",
+			create: "Erstellen"
 		}
 	},
 	misc: {

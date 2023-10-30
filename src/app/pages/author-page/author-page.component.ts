@@ -1,6 +1,7 @@
-import { Component } from "@angular/core"
+import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
+import { CreatePublisherDialogComponent } from "src/app/components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -16,10 +17,10 @@ import { Author } from "src/app/models/Author"
 export class AuthorPageComponent {
 	locale = enUS.authorPage
 	faPlusLight = faPlusLight
+	@ViewChild("createPublisherDialog")
+	createPublisherDialog: CreatePublisherDialogComponent
 	uuid: string
-	createPublisherDialogVisible: boolean = false
 	createPublisherDialogLoading: boolean = false
-	createPublisherDialogName: string = ""
 	createPublisherDialogNameError: string = ""
 	createAuthorDialogVisible: boolean = false
 	createAuthorDialogLoading: boolean = false
@@ -103,13 +104,12 @@ export class AuthorPageComponent {
 	}
 
 	ShowCreatePublisherDialog() {
-		this.createPublisherDialogName = ""
 		this.createPublisherDialogNameError = ""
-		this.createPublisherDialogVisible = true
+		this.createPublisherDialog.show()
 		this.createPublisherDialogLoading = false
 	}
 
-	async CreatePublisher() {
+	async CreatePublisher(result: { name: string }) {
 		this.createPublisherDialogNameError = ""
 		this.createPublisherDialogLoading = true
 
@@ -119,7 +119,7 @@ export class AuthorPageComponent {
 				name
 			`,
 			{
-				name: this.createPublisherDialogName
+				name: result.name
 			}
 		)
 
@@ -130,11 +130,7 @@ export class AuthorPageComponent {
 
 			// Add the publisher to the publishers of the admin in DataService
 			this.dataService.adminPublishers.push(
-				new Publisher(
-					responseData,
-					this.dataService,
-					this.apiService
-				)
+				new Publisher(responseData, this.dataService, this.apiService)
 			)
 
 			// Redirect to the publisher page of the new publisher
@@ -145,21 +141,21 @@ export class AuthorPageComponent {
 			for (let errorCode of errors) {
 				switch (errorCode) {
 					case ErrorCodes.nameTooShort:
-						if (this.createPublisherDialogName.length == 0) {
+						if (result.name.length == 0) {
 							this.createPublisherDialogNameError =
-								this.locale.createPublisherDialog.errors.nameMissing
+								this.locale.errors.nameMissing
 						} else {
 							this.createPublisherDialogNameError =
-								this.locale.createPublisherDialog.errors.nameTooShort
+								this.locale.errors.nameTooShort
 						}
 						break
 					case ErrorCodes.nameTooLong:
 						this.createPublisherDialogNameError =
-							this.locale.createPublisherDialog.errors.nameTooLong
+							this.locale.errors.nameTooLong
 						break
 					default:
 						this.createPublisherDialogNameError =
-							this.locale.createPublisherDialog.errors.unexpectedError
+							this.locale.errors.unexpectedError
 						break
 				}
 			}

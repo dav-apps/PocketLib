@@ -4,10 +4,7 @@
 ></pocketlib-author-profile>
 
 <!-- Admin view -->
-<div
-	class="container slide-up-in"
-	*ngIf="dataService.userIsAdmin && !uuid"
->
+<div class="container slide-up-in" *ngIf="dataService.userIsAdmin && !uuid">
 	<!-- List of publishers -->
 	<div class="header-container">
 		<dav-header
@@ -72,37 +69,12 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.createPublisherDialog.headline"
-	[primaryButtonText]="locale.create"
-	[defaultButtonText]="locale.cancel"
-	[visible]="createPublisherDialogVisible"
+<pocketlib-create-publisher-dialog
+	#createPublisherDialog
 	[loading]="createPublisherDialogLoading"
-	maxWidth="340"
-	(dismiss)="createPublisherDialogVisible = false"
-	(primaryButtonClick)="CreatePublisher()"
-	(defaultButtonClick)="createPublisherDialogVisible = false"
->
-	<form>
-		<!-- Name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="createPublisherDialogName"
-				[label]="locale.createPublisherDialog.nameTextfieldLabel"
-				[placeholder]="
-					locale.createPublisherDialog.nameTextfieldPlaceholder
-				"
-				[disabled]="createPublisherDialogLoading"
-				[errorMessage]="createPublisherDialogNameError"
-				(change)="
-					createPublisherDialogName = $event.detail.value;
-					createPublisherDialogNameError = ''
-				"
-				(enter)="CreatePublisher()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
+	[nameError]="createPublisherDialogNameError"
+	(primaryButtonClick)="CreatePublisher($event)"
+></pocketlib-create-publisher-dialog>
 
 <dav-dialog
 	[headline]="locale.createAuthorDialog.headline"
