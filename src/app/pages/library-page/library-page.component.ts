@@ -20,6 +20,7 @@ import {
 import { Dav } from "dav-js"
 import { BottomSheet, ContextMenu, Textfield } from "dav-ui-components"
 import { RemoveBookDialogComponent } from "src/app/components/dialogs/remove-book-dialog/remove-book-dialog.component"
+import { LoginToAccessBookDialogComponent } from "src/app/components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -58,6 +59,8 @@ export class LibraryPageComponent {
 	contextMenu: ElementRef<ContextMenu>
 	@ViewChild("removeBookDialog")
 	removeBookDialog: RemoveBookDialogComponent
+	@ViewChild("loginToAccessBookDialog")
+	loginToAccessBookDialog: LoginToAccessBookDialogComponent
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -70,7 +73,6 @@ export class LibraryPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	showExportBookOption: boolean = false // If the option in the context menu to export the book is visible
-	loginToAccessBookDialogVisible: boolean = false
 	addBookErrorDialogVisible: boolean = false
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
@@ -175,7 +177,7 @@ export class LibraryPageComponent {
 	async ShowBook(book: Book) {
 		// Check if the user can access the book
 		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
-			this.loginToAccessBookDialogVisible = true
+			this.loginToAccessBookDialog.show()
 			return
 		}
 

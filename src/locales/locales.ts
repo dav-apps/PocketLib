@@ -12,11 +12,6 @@ const enDefaults = {
 		discoverMore: "Discover more",
 		bookContextMenuExport: "Export",
 		bookContextMenuRemove: "Remove",
-		loginToAccessBookDialog: {
-			headline: "Login required",
-			description: "Please log in to access this book.",
-			login: "Login"
-		},
 		addBookErrorDialog: {
 			headline: "Invalid file",
 			description: "The selected file could not be read."
@@ -501,6 +496,12 @@ const enDefaults = {
 				"Are you sure you want to remove this book from your library?",
 			remove: "Remove",
 			cancel: "Cancel"
+		},
+		loginToAccessBookDialog: {
+			headline: "Login required",
+			description: "Please log in to access this book.",
+			login: "Login",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -536,11 +537,6 @@ const deDefaults = {
 		bookContextMenuExport: "Exportieren",
 		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
-		loginToAccessBookDialog: {
-			headline: "Anmeldung erforderlich",
-			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
-			login: "Anmelden"
-		},
 		addBookErrorDialog: {
 			headline: "Ungültige Datei",
 			description: "Die ausgewählte Datei konnte nicht gelesen werden."
@@ -1032,6 +1028,12 @@ const deDefaults = {
 				"Bist du dir sicher, dass du dieses Buch aus deiner Bibliothek entfernen möchtest?",
 			remove: "Entfernen",
 			cancel: "Abbrechen"
+		},
+		loginToAccessBookDialog: {
+			headline: "Anmeldung erforderlich",
+			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
+			login: "Anmelden",
+			close: "Schließen"
 		}
 	},
 	misc: {

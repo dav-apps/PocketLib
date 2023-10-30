@@ -258,18 +258,10 @@
 	(primaryButtonClick)="RemoveBook()"
 ></pocketlib-remove-book-dialog>
 
-<dav-dialog
-	[headline]="locale.loginToAccessBookDialog.headline"
-	[primaryButtonText]="locale.loginToAccessBookDialog.login"
-	[defaultButtonText]="locale.close"
-	[visible]="loginToAccessBookDialogVisible"
-	maxWidth="340"
-	(dismiss)="loginToAccessBookDialogVisible = false"
+<pocketlib-login-to-access-book-dialog
+	#loginToAccessBookDialog
 	(primaryButtonClick)="GoToLoginPage()"
-	(defaultButtonClick)="loginToAccessBookDialogVisible = false"
->
-	<p>{{ locale.loginToAccessBookDialog.description }}</p>
-</dav-dialog>
+></pocketlib-login-to-access-book-dialog>
 
 <dav-dialog
 	[headline]="locale.addBookErrorDialog.headline"

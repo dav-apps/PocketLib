@@ -60,6 +60,7 @@ import { NewBookPageCoverSectionComponent } from "./components/new-book-page-cov
 import { NewBookPageBookFileSectionComponent } from "./components/new-book-page-book-file-section/new-book-page-book-file-section.component"
 import { SimpleLoadingScreenComponent } from "./components/simple-loading-screen/simple-loading-screen.component"
 import { RemoveBookDialogComponent } from "./components/dialogs/remove-book-dialog/remove-book-dialog.component"
+import { LoginToAccessBookDialogComponent } from "./components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -119,6 +120,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		NewBookPageBookFileSectionComponent,
 		SimpleLoadingScreenComponent,
 		RemoveBookDialogComponent,
+		LoginToAccessBookDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
