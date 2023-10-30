@@ -12,12 +12,7 @@ const enDefaults = {
 		discoverMore: "Discover more",
 		bookContextMenuExport: "Export",
 		bookContextMenuRemove: "Remove",
-		addBookErrorDialog: {
-			headline: "Invalid file",
-			description: "The selected file could not be read."
-		},
-		back: "Back",
-		close: "Close"
+		back: "Back"
 	},
 	accountPage: {
 		title: "Your Account",
@@ -502,6 +497,11 @@ const enDefaults = {
 			description: "Please log in to access this book.",
 			login: "Login",
 			close: "Close"
+		},
+		addBookErrorDialog: {
+			headline: "Invalid file",
+			description: "The selected file could not be read.",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -535,14 +535,8 @@ const deDefaults = {
 		login: "Melde dich an",
 		discoverMore: "Mehr entdecken",
 		bookContextMenuExport: "Exportieren",
-		bookContextMenuRename: "Umbenennen",
 		bookContextMenuRemove: "Entfernen",
-		addBookErrorDialog: {
-			headline: "Ungültige Datei",
-			description: "Die ausgewählte Datei konnte nicht gelesen werden."
-		},
-		back: "Zurück",
-		close: "Schließen"
+		back: "Zurück"
 	},
 	accountPage: {
 		title: "Dein Account",
@@ -1033,6 +1027,11 @@ const deDefaults = {
 			headline: "Anmeldung erforderlich",
 			description: "Bitte melde dich an, um auf dieses Buch zuzugreifen.",
 			login: "Anmelden",
+			close: "Schließen"
+		},
+		addBookErrorDialog: {
+			headline: "Ungültige Datei",
+			description: "Die ausgewählte Datei konnte nicht gelesen werden.",
 			close: "Schließen"
 		}
 	},

@@ -21,6 +21,7 @@ import { Dav } from "dav-js"
 import { BottomSheet, ContextMenu, Textfield } from "dav-ui-components"
 import { RemoveBookDialogComponent } from "src/app/components/dialogs/remove-book-dialog/remove-book-dialog.component"
 import { LoginToAccessBookDialogComponent } from "src/app/components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
+import { AddBookErrorDialogComponent } from "src/app/components/dialogs/add-book-error-dialog/add-book-error-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
@@ -61,6 +62,8 @@ export class LibraryPageComponent {
 	removeBookDialog: RemoveBookDialogComponent
 	@ViewChild("loginToAccessBookDialog")
 	loginToAccessBookDialog: LoginToAccessBookDialogComponent
+	@ViewChild("addBookErrorDialog")
+	addBookErrorDialog: AddBookErrorDialogComponent
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
 	contextMenuPositionY: number = 0
@@ -73,7 +76,6 @@ export class LibraryPageComponent {
 	dualScreenLayout: boolean = false
 	dualScreenFoldMargin: number = 0
 	showExportBookOption: boolean = false // If the option in the context menu to export the book is visible
-	addBookErrorDialogVisible: boolean = false
 	allBooksVisible: boolean = false
 	allBooks: Book[] = []
 
@@ -163,7 +165,7 @@ export class LibraryPageComponent {
 		if (uuid == null) {
 			// Show error dialog
 			this.dataService.loadingScreenVisible = false
-			this.addBookErrorDialogVisible = true
+			this.addBookErrorDialog.show()
 			return
 		}
 

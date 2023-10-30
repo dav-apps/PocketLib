@@ -263,13 +263,5 @@
 	(primaryButtonClick)="GoToLoginPage()"
 ></pocketlib-login-to-access-book-dialog>
 
-<dav-dialog
-	[headline]="locale.addBookErrorDialog.headline"
-	[defaultButtonText]="locale.close"
-	[visible]="addBookErrorDialogVisible"
-	maxWidth="340"
-	(dismiss)="addBookErrorDialogVisible = false"
-	(defaultButtonClick)="addBookErrorDialogVisible = false"
->
-	<p>{{ locale.addBookErrorDialog.description }}</p>
-</dav-dialog>
+<pocketlib-add-book-error-dialog #addBookErrorDialog>
+</pocketlib-add-book-error-dialog>
