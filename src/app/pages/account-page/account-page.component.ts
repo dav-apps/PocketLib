@@ -1,4 +1,4 @@
-import { Component, HostListener } from "@angular/core"
+import { Component, HostListener, ViewChild } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 import {
 	faBagShopping as faBagShoppingLight,
@@ -7,6 +7,7 @@ import {
 	faLockKeyhole as faLockKeyholeLight
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
+import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/logout-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { BytesToGigabytesText } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
@@ -23,9 +24,10 @@ export class AccountPageComponent {
 	faLockLight = faLockLight
 	faLockKeyholeLight = faLockKeyholeLight
 	locale = enUS.accountPage
+	@ViewChild("logoutDialog")
+	logoutDialog: LogoutDialogComponent
 	websiteUrl = environment.websiteBaseUrl
 	width: number = window.innerWidth
-	logoutDialogVisible: boolean = false
 	redirect: string
 	usedStoragePercent: number = 0
 	usedStorageText: string = ""
@@ -93,7 +95,8 @@ export class AccountPageComponent {
 	}
 
 	Logout() {
-		this.logoutDialogVisible = false
+		this.logoutDialog.hide()
+
 		this.dataService.dav
 			.Logout()
 			.then(() => (window.location.href = "/account"))

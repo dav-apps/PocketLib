@@ -27,12 +27,7 @@ const enDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB of {1} GB used",
-		logoutDialog: {
-			headline: "Log out",
-			description: "Are you sure you want to log out?"
-		},
-		cancel: "Cancel"
+		storageUsed: "{0} GB of {1} GB used"
 	},
 	settingsPage: {
 		title: "Settings",
@@ -502,6 +497,12 @@ const enDefaults = {
 			headline: "Invalid file",
 			description: "The selected file could not be read.",
 			close: "Close"
+		},
+		logoutDialog: {
+			headline: "Log out",
+			description: "Are you sure you want to log out?",
+			logout: "Log out",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -551,12 +552,7 @@ const deDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB von {1} GB verwendet",
-		logoutDialog: {
-			headline: "Abmelden",
-			description: "Bist du dir sicher, dass du dich abmelden möchtest?"
-		},
-		cancel: "Abbrechen"
+		storageUsed: "{0} GB von {1} GB verwendet"
 	},
 	settingsPage: {
 		title: "Einstellungen",
@@ -1033,6 +1029,12 @@ const deDefaults = {
 			headline: "Ungültige Datei",
 			description: "Die ausgewählte Datei konnte nicht gelesen werden.",
 			close: "Schließen"
+		},
+		logoutDialog: {
+			headline: "Abmelden",
+			description: "Bist du dir sicher, dass du dich abmelden möchtest?",
+			logout: "Abmelden",
+			cancel: "Abbrechen"
 		}
 	},
 	misc: {
