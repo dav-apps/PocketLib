@@ -294,34 +294,13 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.editTitleDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="editTitleDialogVisible"
+<pocketlib-edit-title-dialog
+	#editTitleDialog
 	[loading]="editTitleDialogLoading"
-	(dismiss)="editTitleDialogVisible = false"
-	(primaryButtonClick)="UpdateTitle()"
-	(defaultButtonClick)="editTitleDialogVisible = false"
->
-	<form>
-		<!-- Title -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editTitleDialogTitle"
-				[label]="locale.editTitleDialog.titleTextfieldLabel"
-				[placeholder]="locale.editTitleDialog.titleTextfieldPlaceholder"
-				[errorMessage]="editTitleDialogTitleError"
-				[disabled]="editTitleDialogLoading"
-				(change)="
-					editTitleDialogTitle = $event.detail.value;
-					editTitleDialogTitleError = ''
-				"
-				(enter)="UpdateTitle()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
+	[title]="editTitleDialogTitle"
+	[titleError]="editTitleDialogTitleError"
+	(primaryButtonClick)="UpdateTitle($event)"
+></pocketlib-edit-title-dialog>
 
 <dav-dialog
 	[headline]="locale.categoriesSelectionDialog.headline"

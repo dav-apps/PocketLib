@@ -1,0 +1,29 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	[loading]="loading"
+	(dismiss)="visible = false"
+	(primaryButtonClick)="submit()"
+	(defaultButtonClick)="visible = false"
+>
+	<form>
+		<!-- Title -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="title"
+				[label]="locale.titleTextfieldLabel"
+				[placeholder]="locale.titleTextfieldPlaceholder"
+				[errorMessage]="titleError"
+				[disabled]="loading"
+				(change)="
+					title = $event.detail.value;
+					titleError = ''
+				"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+	</form>
+</dav-dialog>

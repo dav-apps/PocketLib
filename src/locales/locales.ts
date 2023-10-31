@@ -76,11 +76,6 @@ const enDefaults = {
 		unpublish: "Unpublish"
 	},
 	authorBookPage: {
-		editTitleDialog: {
-			headline: "Edit title",
-			titleTextfieldLabel: "Title",
-			titleTextfieldPlaceholder: "The Littlest Elf"
-		},
 		categoriesSelectionDialog: {
 			headline: "Select categories"
 		},
@@ -495,6 +490,13 @@ const enDefaults = {
 			lastNameTextfieldPlaceholder: "Last name of the author",
 			create: "Create",
 			cancel: "Cancel"
+		},
+		editTitleDialog: {
+			headline: "Edit title",
+			titleTextfieldLabel: "Title",
+			titleTextfieldPlaceholder: "The Littlest Elf",
+			save: "Save",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -595,11 +597,6 @@ const deDefaults = {
 		unpublish: "Veröffentlichung aufheben"
 	},
 	authorBookPage: {
-		editTitleDialog: {
-			headline: "Titel bearbeiten",
-			titleTextfieldLabel: "Titel",
-			titleTextfieldPlaceholder: "Das winzigste Elflein"
-		},
 		categoriesSelectionDialog: {
 			headline: "Kategorien auswählen"
 		},
@@ -1018,6 +1015,13 @@ const deDefaults = {
 			lastNameTextfieldLabel: "Nachname",
 			lastNameTextfieldPlaceholder: "Nachname des Autors",
 			create: "Erstellen",
+			cancel: "Abbrechen"
+		},
+		editTitleDialog: {
+			headline: "Titel bearbeiten",
+			titleTextfieldLabel: "Titel",
+			titleTextfieldPlaceholder: "Das winzigste Elflein",
+			save: "Speichern",
 			cancel: "Abbrechen"
 		}
 	},

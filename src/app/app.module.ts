@@ -65,6 +65,7 @@ import { AddBookErrorDialogComponent } from "./components/dialogs/add-book-error
 import { LogoutDialogComponent } from "./components/dialogs/logout-dialog/logout-dialog.component"
 import { CreatePublisherDialogComponent } from "./components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
 import { CreateAuthorDialogComponent } from "./components/dialogs/create-author-dialog/create-author-dialog.component"
+import { EditTitleDialogComponent } from "./components/dialogs/edit-title-dialog/edit-title-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -129,6 +130,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		LogoutDialogComponent,
 		CreatePublisherDialogComponent,
 		CreateAuthorDialogComponent,
+		EditTitleDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,

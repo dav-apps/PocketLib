@@ -4,6 +4,7 @@ import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
+import { EditTitleDialogComponent } from "src/app/components/dialogs/edit-title-dialog/edit-title-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
@@ -30,8 +31,12 @@ export class AuthorBookPageComponent {
 	faPenLight = faPenLight
 	@ViewChild("categoriesSelection")
 	categoriesSelectionComponent: CategoriesSelectionComponent
-	@ViewChild("priceInput") priceInput: PriceInputComponent
-	@ViewChild("isbnInput") isbnInput: IsbnInputComponent
+	@ViewChild("priceInput")
+	priceInput: PriceInputComponent
+	@ViewChild("isbnInput")
+	isbnInput: IsbnInputComponent
+	@ViewChild("editTitleDialog")
+	editTitleDialog: EditTitleDialogComponent
 	uuid: string
 	author: Author
 	storeBook: StoreBook
@@ -64,7 +69,6 @@ export class AuthorBookPageComponent {
 		fileName: null,
 		categories: []
 	}
-	editTitleDialogVisible: boolean = false
 	editTitleDialogLoading: boolean = false
 	editTitleDialogTitle: string = ""
 	editTitleDialogTitleError: string = ""
@@ -280,15 +284,15 @@ export class AuthorBookPageComponent {
 		this.editTitleDialogTitle = this.book.title
 		this.editTitleDialogTitleError = ""
 		this.editTitleDialogLoading = false
-		this.editTitleDialogVisible = true
+		this.editTitleDialog.show()
 	}
 
-	async UpdateTitle() {
+	async UpdateTitle(result: { title: string }) {
 		this.editTitleDialogLoading = true
 
 		let response = await this.apiService.updateStoreBook(`title`, {
 			uuid: this.uuid,
-			title: this.editTitleDialogTitle
+			title: result.title
 		})
 
 		this.editTitleDialogLoading = false
@@ -624,7 +628,7 @@ export class AuthorBookPageComponent {
 			// The title was updated
 			if (response.errors == null) {
 				this.book.title = response.data.updateStoreBook.title
-				this.editTitleDialogVisible = false
+				this.editTitleDialog.hide()
 			} else {
 				let errors = response.errors[0].extensions.errors as string[]
 
