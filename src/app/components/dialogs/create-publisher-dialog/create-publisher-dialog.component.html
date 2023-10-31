@@ -16,15 +16,10 @@
 			<dav-textfield
 				[value]="name"
 				[label]="locale.nameTextfieldLabel"
-				[placeholder]="
-					locale.nameTextfieldPlaceholder
-				"
+				[placeholder]="locale.nameTextfieldPlaceholder"
 				[disabled]="loading"
 				[errorMessage]="nameError"
-				(change)="
-					name = $event.detail.value;
-					nameError = ''
-				"
+				(change)="name = $event.detail.value; nameError = ''"
 				(enter)="submit()"
 			></dav-textfield>
 		</div>

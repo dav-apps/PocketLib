@@ -76,53 +76,10 @@
 	(primaryButtonClick)="CreatePublisher($event)"
 ></pocketlib-create-publisher-dialog>
 
-<dav-dialog
-	[headline]="locale.createAuthorDialog.headline"
-	[primaryButtonText]="locale.create"
-	[defaultButtonText]="locale.cancel"
-	[visible]="createAuthorDialogVisible"
+<pocketlib-create-author-dialog
+	#createAuthorDialog
 	[loading]="createAuthorDialogLoading"
-	maxWidth="340"
-	(dismiss)="createAuthorDialogVisible = false"
-	(primaryButtonClick)="CreateAuthor()"
-	(defaultButtonClick)="createAuthorDialogVisible = false"
->
-	<form>
-		<!-- First name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="createAuthorDialogFirstName"
-				[label]="locale.createAuthorDialog.firstNameTextfieldLabel"
-				[placeholder]="
-					locale.createAuthorDialog.firstNameTextfieldPlaceholder
-				"
-				autocomplete="given-name"
-				[disabled]="createAuthorDialogLoading"
-				[errorMessage]="createAuthorDialogFirstNameError"
-				(change)="
-					createAuthorDialogFirstName = $event.detail.value;
-					createAuthorDialogFirstNameError = ''
-				"
-			></dav-textfield>
-		</div>
-
-		<!-- Last name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="createAuthorDialogLastName"
-				[label]="locale.createAuthorDialog.lastNameTextfieldLabel"
-				[placeholder]="
-					locale.createAuthorDialog.lastNameTextfieldPlaceholder
-				"
-				autocomplete="family-name"
-				[disabled]="createAuthorDialogLoading"
-				[errorMessage]="createAuthorDialogLastNameError"
-				(change)="
-					createAuthorDialogLastName = $event.detail.value;
-					createAuthorDialogLastNameError = ''
-				"
-				(enter)="CreateAuthor()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
+	[firstNameError]="createAuthorDialogFirstNameError"
+	[lastNameError]="createAuthorDialogLastNameError"
+	(primaryButtonClick)="CreateAuthor($event)"
+></pocketlib-create-author-dialog>

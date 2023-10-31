@@ -2,6 +2,7 @@ import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
 import { CreatePublisherDialogComponent } from "src/app/components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
+import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -19,13 +20,12 @@ export class AuthorPageComponent {
 	faPlusLight = faPlusLight
 	@ViewChild("createPublisherDialog")
 	createPublisherDialog: CreatePublisherDialogComponent
+	@ViewChild("createAuthorDialog")
+	createAuthorDialog: CreateAuthorDialogComponent
 	uuid: string
 	createPublisherDialogLoading: boolean = false
 	createPublisherDialogNameError: string = ""
-	createAuthorDialogVisible: boolean = false
 	createAuthorDialogLoading: boolean = false
-	createAuthorDialogFirstName: string = ""
-	createAuthorDialogLastName: string = ""
 	createAuthorDialogFirstNameError: string = ""
 	createAuthorDialogLastNameError: string = ""
 	booksInReview: {
@@ -105,8 +105,8 @@ export class AuthorPageComponent {
 
 	ShowCreatePublisherDialog() {
 		this.createPublisherDialogNameError = ""
-		this.createPublisherDialog.show()
 		this.createPublisherDialogLoading = false
+		this.createPublisherDialog.show()
 	}
 
 	async CreatePublisher(result: { name: string }) {
@@ -163,15 +163,13 @@ export class AuthorPageComponent {
 	}
 
 	ShowCreateAuthorDialog() {
-		this.createAuthorDialogFirstName = ""
 		this.createAuthorDialogFirstNameError = ""
-		this.createAuthorDialogLastName = ""
 		this.createAuthorDialogLastNameError = ""
-		this.createAuthorDialogVisible = true
 		this.createAuthorDialogLoading = false
+		this.createAuthorDialog.show()
 	}
 
-	async CreateAuthor() {
+	async CreateAuthor(result: { firstName: string, lastName: string }) {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
@@ -183,8 +181,8 @@ export class AuthorPageComponent {
 				lastName
 			`,
 			{
-				firstName: this.createAuthorDialogFirstName,
-				lastName: this.createAuthorDialogLastName
+				firstName: result.firstName,
+				lastName: result.lastName
 			}
 		)
 
@@ -206,34 +204,34 @@ export class AuthorPageComponent {
 			for (let errorCode of errors) {
 				switch (errorCode) {
 					case ErrorCodes.firstNameTooShort:
-						if (this.createAuthorDialogFirstName.length == 0) {
+						if (result.firstName.length == 0) {
 							this.createAuthorDialogFirstNameError =
-								this.locale.createAuthorDialog.errors.firstNameMissing
+								this.locale.errors.firstNameMissing
 						} else {
 							this.createAuthorDialogFirstNameError =
-								this.locale.createAuthorDialog.errors.firstNameTooShort
+								this.locale.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.lastNameTooShort:
-						if (this.createAuthorDialogLastName.length == 0) {
+						if (result.lastName.length == 0) {
 							this.createAuthorDialogLastNameError =
-								this.locale.createAuthorDialog.errors.lastNameMissing
+								this.locale.errors.lastNameMissing
 						} else {
 							this.createAuthorDialogLastNameError =
-								this.locale.createAuthorDialog.errors.lastNameTooShort
+								this.locale.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.firstNameTooLong:
 						this.createAuthorDialogFirstNameError =
-							this.locale.createAuthorDialog.errors.firstNameTooLong
+							this.locale.errors.firstNameTooLong
 						break
 					case ErrorCodes.lastNameTooLong:
 						this.createAuthorDialogLastNameError =
-							this.locale.createAuthorDialog.errors.lastNameTooLong
+							this.locale.errors.lastNameTooLong
 						break
 					default:
 						this.createAuthorDialogFirstNameError =
-							this.locale.createAuthorDialog.errors.unexpectedError
+							this.locale.errors.unexpectedError
 						break
 				}
 			}

@@ -45,39 +45,20 @@ const enDefaults = {
 		noUpdateAvailable: "The app is up-to-date",
 		activateUpdate: "Activate update"
 	},
-	newAppPage: {
-		title: "New app",
-		create: "Create",
-		name: "Name",
-		redirectUrl: "Redirect url"
-	},
 	authorPage: {
 		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
 		booksInReview: "Books in review",
-		createAuthorDialog: {
-			headline: "Create author",
-			firstNameTextfieldLabel: "First name",
-			firstNameTextfieldPlaceholder: "First name of the author",
-			lastNameTextfieldLabel: "Last name",
-			lastNameTextfieldPlaceholder: "Last name of the author",
-			errors: {
-				firstNameMissing: "Please enter the first name",
-				lastNameMissing: "Please enter the last name",
-				firstNameTooShort: "The first name is too short",
-				lastNameTooShort: "The last name is too short",
-				firstNameTooLong: "The first name is too long",
-				lastNameTooLong: "The last name is too long",
-				unexpectedError:
-					"An unexpected error occured. Please try again later."
-			}
-		},
-		cancel: "Cancel",
-		create: "Create",
 		errors: {
 			nameMissing: "Please enter a name",
 			nameTooShort: "The name is too short",
 			nameTooLong: "The name is too long",
+			firstNameMissing: "Please enter the first name",
+			lastNameMissing: "Please enter the last name",
+			firstNameTooShort: "The first name is too short",
+			lastNameTooShort: "The last name is too short",
+			firstNameTooLong: "The first name is too long",
+			lastNameTooLong: "The last name is too long",
 			unexpectedError:
 				"An unexpected error occured. Please try it again later."
 		}
@@ -503,8 +484,17 @@ const enDefaults = {
 			headline: "Create publisher",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name of the publisher",
-			cancel: "Cancel",
-			create: "Create"
+			create: "Create",
+			cancel: "Cancel"
+		},
+		createAuthorDialog: {
+			headline: "Create author",
+			firstNameTextfieldLabel: "First name",
+			firstNameTextfieldPlaceholder: "First name of the author",
+			lastNameTextfieldLabel: "Last name",
+			lastNameTextfieldPlaceholder: "Last name of the author",
+			create: "Create",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -572,41 +562,22 @@ const deDefaults = {
 		noUpdateAvailable: "Die App ist aktuell",
 		activateUpdate: "Update aktivieren"
 	},
-	newAppPage: {
-		title: "Neue App",
-		create: "Erstellen",
-		name: "Name",
-		redirectUrl: "Weiterleitungs-URL"
-	},
 	authorPage: {
 		createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
 		yourPublishers: "Deine Verlage",
 		yourAuthors: "Deine Autoren",
 		booksInReview: "Bücher in Überprüfung",
-		createAuthorDialog: {
-			headline: "Autor erstellen",
-			firstNameTextfieldLabel: "Vorname",
-			firstNameTextfieldPlaceholder: "Vorname des Autors",
-			lastNameTextfieldLabel: "Nachname",
-			lastNameTextfieldPlaceholder: "Nachname des Autors",
-			errors: {
-				firstNameMissing: "Bitte gib einen Vornamen ein",
-				lastNameMissing: "Bitte gib einen Nachnamen ein",
-				firstNameTooShort: "Der Vorname ist zu kurz",
-				lastNameTooShort: "Der Nachname ist zu kurz",
-				firstNameTooLong: "Der Vorname ist zu lang",
-				lastNameTooLong: "Der Nachname ist zu lang",
-				unexpectedError:
-					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
-			}
-		},
-		cancel: "Abbrechen",
-		create: "Erstellen",
 		errors: {
 			nameMissing: "Bitte gib einen Namen ein",
 			nameTooShort: "Der Name ist zu kurz",
 			nameTooLong: "Der Name ist zu lang",
+			firstNameMissing: "Bitte gib einen Vornamen ein",
+			lastNameMissing: "Bitte gib einen Nachnamen ein",
+			firstNameTooShort: "Der Vorname ist zu kurz",
+			lastNameTooShort: "Der Nachname ist zu kurz",
+			firstNameTooLong: "Der Vorname ist zu lang",
+			lastNameTooLong: "Der Nachname ist zu lang",
 			unexpectedError:
 				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		}
@@ -1037,8 +1008,17 @@ const deDefaults = {
 			headline: "Verlag erstellen",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name des Verlags",
-			cancel: "Abbrechen",
-			create: "Erstellen"
+			create: "Erstellen",
+			cancel: "Abbrechen"
+		},
+		createAuthorDialog: {
+			headline: "Autor erstellen",
+			firstNameTextfieldLabel: "Vorname",
+			firstNameTextfieldPlaceholder: "Vorname des Autors",
+			lastNameTextfieldLabel: "Nachname",
+			lastNameTextfieldPlaceholder: "Nachname des Autors",
+			create: "Erstellen",
+			cancel: "Abbrechen"
 		}
 	},
 	misc: {
