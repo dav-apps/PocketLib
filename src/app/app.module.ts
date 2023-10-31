@@ -66,6 +66,7 @@ import { LogoutDialogComponent } from "./components/dialogs/logout-dialog/logout
 import { CreatePublisherDialogComponent } from "./components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
 import { CreateAuthorDialogComponent } from "./components/dialogs/create-author-dialog/create-author-dialog.component"
 import { EditTitleDialogComponent } from "./components/dialogs/edit-title-dialog/edit-title-dialog.component"
+import { CategoriesSelectionDialogComponent } from "./components/dialogs/categories-selection-dialog/categories-selection-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -131,6 +132,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		CreatePublisherDialogComponent,
 		CreateAuthorDialogComponent,
 		EditTitleDialogComponent,
+		CategoriesSelectionDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,

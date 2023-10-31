@@ -302,21 +302,12 @@
 	(primaryButtonClick)="UpdateTitle($event)"
 ></pocketlib-edit-title-dialog>
 
-<dav-dialog
-	[headline]="locale.categoriesSelectionDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="categoriesSelectionDialogVisible"
+<pocketlib-categories-selection-dialog
+	#categoriesSelectionDialog
 	[loading]="categoriesSelectionDialogLoading"
-	(dismiss)="categoriesSelectionDialogVisible = false"
-	(primaryButtonClick)="UpdateCategories()"
-	(defaultButtonClick)="categoriesSelectionDialogVisible = false"
->
-	<div class="dialog-formfield-container">
-		<pocketlib-categories-selection #categoriesSelection>
-		</pocketlib-categories-selection>
-	</div>
-</dav-dialog>
+	[categoryKeys]="categoryKeys"
+	(primaryButtonClick)="UpdateCategories($event)"
+></pocketlib-categories-selection-dialog>
 
 <dav-dialog
 	[headline]="locale.publishChangesDialog.headline"

@@ -1,0 +1,16 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	[loading]="loading"
+	(dismiss)="visible = false"
+	(primaryButtonClick)="submit()"
+	(defaultButtonClick)="visible = false"
+>
+	<div class="dialog-formfield-container">
+		<pocketlib-categories-selection #categoriesSelection>
+		</pocketlib-categories-selection>
+	</div>
+</dav-dialog>

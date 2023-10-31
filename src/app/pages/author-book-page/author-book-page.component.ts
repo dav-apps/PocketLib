@@ -5,9 +5,9 @@ import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { EditTitleDialogComponent } from "src/app/components/dialogs/edit-title-dialog/edit-title-dialog.component"
+import { CategoriesSelectionDialogComponent } from "src/app/components/dialogs/categories-selection-dialog/categories-selection-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
-import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
 import { Author } from "src/app/models/Author"
@@ -29,14 +29,14 @@ import { enUS } from "src/locales/locales"
 export class AuthorBookPageComponent {
 	locale = enUS.authorBookPage
 	faPenLight = faPenLight
-	@ViewChild("categoriesSelection")
-	categoriesSelectionComponent: CategoriesSelectionComponent
 	@ViewChild("priceInput")
 	priceInput: PriceInputComponent
 	@ViewChild("isbnInput")
 	isbnInput: IsbnInputComponent
 	@ViewChild("editTitleDialog")
 	editTitleDialog: EditTitleDialogComponent
+	@ViewChild("categoriesSelectionDialog")
+	categoriesSelectionDialog: CategoriesSelectionDialogComponent
 	uuid: string
 	author: Author
 	storeBook: StoreBook
@@ -91,10 +91,10 @@ export class AuthorBookPageComponent {
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
 	isbnUpdating: boolean = false
-	categoriesSelectionDialogVisible: boolean = false
 	categoriesSelectionDialogLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
+	categoryKeys: string[] = []
 
 	constructor(
 		public dataService: DataService,
@@ -332,29 +332,27 @@ export class AuthorBookPageComponent {
 	}
 
 	ShowCategoriesDialog() {
-		this.categoriesSelectionDialogLoading = false
-		this.categoriesSelectionDialogVisible = true
+		this.categoryKeys = []
 
-		setTimeout(() => {
-			// Get the category keys of the book
-			let keys: string[] = []
-			this.book.categories.forEach(c => keys.push(c.key))
-			this.categoriesSelectionComponent.SetSelectedCategories(keys)
-		}, 10)
+		for (let category of this.book.categories) {
+			this.categoryKeys.push(category.key)
+		}
+
+		this.categoriesSelectionDialogLoading = false
+		this.categoriesSelectionDialog.show()
 	}
 
-	async UpdateCategories() {
-		let categories = this.categoriesSelectionComponent.GetSelectedCategories()
+	async UpdateCategories(result: { categoryKeys: string[] }) {
 		this.categoriesSelectionDialogLoading = true
 
 		// Update the categories on the server
 		await this.apiService.updateStoreBook(`uuid`, {
 			uuid: this.uuid,
-			categories
+			categories: result.categoryKeys
 		})
 
-		this.LoadCategories(categories)
-		this.categoriesSelectionDialogVisible = false
+		this.LoadCategories(result.categoryKeys)
+		this.categoriesSelectionDialog.hide()
 		this.categoriesSelectionDialogLoading = false
 		this.ShowChanges()
 	}
