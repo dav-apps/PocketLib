@@ -1,6 +1,7 @@
-import { Component, HostListener } from "@angular/core"
+import { Component, HostListener, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { PromiseHolder } from "dav-js"
+import { LeavePageDialogComponent } from "src/app/components/dialogs/leave-page-dialog/leave-page-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -23,9 +24,10 @@ export class NewBookPageComponent {
 	//#region General variables
 	locale = enUS.newBookPage
 	author: Author
-	leavePageDialogVisible: boolean = false
 	errorMessage: string = ""
 	navigationEventPromiseHolder = new PromiseHolder<boolean>()
+	@ViewChild("leavePageDialog")
+	leavePageDialog: LeavePageDialogComponent
 	//#endregion
 
 	//#region Title variables
@@ -169,7 +171,7 @@ export class NewBookPageComponent {
 		this.navigationEventPromiseHolder.Setup()
 
 		// Show the leave page dialog
-		this.leavePageDialogVisible = true
+		this.leavePageDialog.show()
 
 		return await this.navigationEventPromiseHolder.AwaitResult()
 	}
@@ -178,7 +180,7 @@ export class NewBookPageComponent {
 		this.navigationEventPromiseHolder.Setup()
 
 		// Show the leave page dialog
-		this.leavePageDialogVisible = true
+		this.leavePageDialog.show()
 
 		if (await this.navigationEventPromiseHolder.AwaitResult()) {
 			this.routingService.NavigateBack("/author")
@@ -186,12 +188,12 @@ export class NewBookPageComponent {
 	}
 
 	LeavePageDialogLeave() {
-		this.leavePageDialogVisible = false
+		this.leavePageDialog.hide()
 		this.navigationEventPromiseHolder.Resolve(true)
 	}
 
 	LeavePageDialogCancel() {
-		this.leavePageDialogVisible = false
+		this.leavePageDialog.hide()
 		this.navigationEventPromiseHolder.Resolve(false)
 	}
 

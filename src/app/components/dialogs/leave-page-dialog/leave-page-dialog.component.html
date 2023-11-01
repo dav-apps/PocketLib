@@ -1,0 +1,16 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.leave"
+	primaryButtonColor="error"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	maxWidth="340"
+	(dismiss)="defaultButtonClick.emit()"
+	(primaryButtonClick)="primaryButtonClick.emit()"
+	(defaultButtonClick)="defaultButtonClick.emit()"
+>
+	<p class="leave-dialog-description">
+		{{ locale.description }}
+	</p>
+</dav-dialog>

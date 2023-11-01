@@ -97,18 +97,8 @@
 	></pocketlib-new-book-page-book-file-section>
 </div>
 
-<dav-dialog
-	[headline]="locale.leavePageDialog.headline"
-	[primaryButtonText]="locale.leavePageDialog.leave"
-	primaryButtonColor="error"
-	[defaultButtonText]="locale.leavePageDialog.cancel"
-	[visible]="leavePageDialogVisible"
-	maxWidth="340"
-	(dismiss)="LeavePageDialogCancel()"
+<pocketlib-leave-page-dialog
+	#leavePageDialog
 	(primaryButtonClick)="LeavePageDialogLeave()"
 	(defaultButtonClick)="LeavePageDialogCancel()"
->
-	<p class="leave-dialog-description">
-		{{ locale.leavePageDialog.description }}
-	</p>
-</dav-dialog>
+></pocketlib-leave-page-dialog>

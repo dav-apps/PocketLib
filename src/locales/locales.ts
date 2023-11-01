@@ -165,13 +165,6 @@ const enDefaults = {
 			uploadingBookFile: "Uploading the book file...",
 			updatingLocalData: "Updating local data..."
 		},
-		leavePageDialog: {
-			headline: "Leave page",
-			description:
-				"Are you sure? The data you have entered will not be saved.",
-			cancel: "Cancel",
-			leave: "Leave"
-		},
 		errorMessage: "An unexpected error occured. Please try it again later.",
 		previous: "Previous",
 		next: "Next",
@@ -502,6 +495,13 @@ const enDefaults = {
 		addBookDialog: {
 			headline: "Choose a book to add",
 			cancel: "Cancel"
+		},
+		leavePageDialog: {
+			headline: "Leave page",
+			description:
+				"Are you sure? The data you have entered will not be saved.",
+			leave: "Leave",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -691,13 +691,6 @@ const deDefaults = {
 			uploadingCover: "Cover wird hochgeladen...",
 			uploadingBookFile: "Buch-Datei wird hochgeladen...",
 			updatingLocalData: "Lokale Daten werden aktualisiert..."
-		},
-		leavePageDialog: {
-			headline: "Seite verlassen",
-			description:
-				"Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
-			cancel: "Abbrechen",
-			leave: "Verlassen"
 		},
 		errorMessage:
 			"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
@@ -1032,6 +1025,13 @@ const deDefaults = {
 		},
 		addBookDialog: {
 			headline: "Wähle ein Buch zum Hinzufügen",
+			cancel: "Abbrechen"
+		},
+		leavePageDialog: {
+			headline: "Seite verlassen",
+			description:
+				"Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
+			leave: "Verlassen",
 			cancel: "Abbrechen"
 		}
 	},
