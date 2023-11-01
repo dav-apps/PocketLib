@@ -180,23 +180,6 @@ const enDefaults = {
 		errorMessage: "An unexpected error occured. Please try it again later.",
 		create: "Create"
 	},
-	loginPage: {
-		title: "Log in to dav",
-		emailTextfieldLabel: "Email",
-		emailTextfieldPlaceholder: "Your email address",
-		passwordTextfieldLabel: "Password",
-		passwordTextfieldPlaceholder: "Your password",
-		login: "Log in",
-		deviceInfoUnknown: "Unknown",
-		errors: {
-			loginFailed: "Login failed",
-			emailMissing: "Please enter your email",
-			passwordMissing: "Please enter your password",
-			unexpectedErrorShort: "Unexpected error ({0})",
-			unexpectedErrorLong:
-				"An unexpected error occured. Please try it again."
-		}
-	},
 	storeStartPage: {
 		booksOfTheDay: "Recommendations of the day",
 		authorsOfTheDay: "Our authors",
@@ -214,11 +197,6 @@ const enDefaults = {
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
 		moreBooksInCategories: "More books in these categories",
-		loginRequiredDialog: {
-			headline: "Login required",
-			description:
-				"Log in to get access to this book and to automatically save your books and your progress."
-		},
 		noAccessDialog: {
 			headline: "No access",
 			description:
@@ -502,6 +480,13 @@ const enDefaults = {
 				"Are you sure? The data you have entered will not be saved.",
 			leave: "Leave",
 			cancel: "Cancel"
+		},
+		loginRequiredDialog: {
+			headline: "Login required",
+			description:
+				"Log in to get access to this book and to automatically save your books and your progress.",
+			learnMore: "Learn more",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -710,23 +695,6 @@ const deDefaults = {
 			"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal.",
 		create: "Erstellen"
 	},
-	loginPage: {
-		title: "Mit dav anmelden",
-		emailTextfieldLabel: "Email",
-		emailTextfieldPlaceholder: "Deine Email-Adresse",
-		passwordTextfieldLabel: "Passwort",
-		passwordTextfieldPlaceholder: "Dein Passwort",
-		login: "Anmelden",
-		deviceInfoUnknown: "Unbekannt",
-		errors: {
-			loginFailed: "Anmeldung fehlgeschlagen",
-			emailMissing: "Bitte gib deine Email-Adresse ein",
-			passwordMissing: "Bitte gib dein Passwort ein",
-			unexpectedErrorShort: "Unerwarteter Fehler ({0})",
-			unexpectedErrorLong:
-				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es nochmal."
-		}
-	},
 	storeStartPage: {
 		booksOfTheDay: "Empfehlungen des Tages",
 		authorsOfTheDay: "Unsere Autoren",
@@ -744,11 +712,6 @@ const deDefaults = {
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
 		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		loginRequiredDialog: {
-			headline: "Anmeldung erforderlich",
-			description:
-				"Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern."
-		},
 		noAccessDialog: {
 			headline: "Kein Zugriff",
 			description:
@@ -1033,6 +996,13 @@ const deDefaults = {
 				"Bist du dir sicher? Die bisher eingegebenen Daten gehen verloren.",
 			leave: "Verlassen",
 			cancel: "Abbrechen"
+		},
+		loginRequiredDialog: {
+			headline: "Anmeldung erforderlich",
+			description:
+				"Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern.",
+			learnMore: "Mehr erfahren",
+			close: "Schließen"
 		}
 	},
 	misc: {

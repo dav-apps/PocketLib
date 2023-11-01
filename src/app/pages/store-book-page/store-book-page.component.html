@@ -130,18 +130,10 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.loginRequiredDialog.headline"
-	[primaryButtonText]="locale.learnMore"
-	[defaultButtonText]="locale.close"
-	[visible]="loginRequiredDialogVisible"
-	maxWidth="340"
-	(dismiss)="loginRequiredDialogVisible = false"
+<pocketlib-login-required-dialog
+	#loginRequiredDialog
 	(primaryButtonClick)="NavigateToAccountPage()"
-	(defaultButtonClick)="loginRequiredDialogVisible = false"
->
-	<p class="text-color">{{ locale.loginRequiredDialog.description }}</p>
-</dav-dialog>
+></pocketlib-login-required-dialog>
 
 <dav-dialog
 	[headline]="locale.noAccessDialog.headline"

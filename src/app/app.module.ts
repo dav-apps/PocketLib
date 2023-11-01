@@ -72,6 +72,7 @@ import { NamesDialogComponent } from "./components/dialogs/names-dialog/names-di
 import { EditNameDialogComponent } from "./components/dialogs/edit-name-dialog/edit-name-dialog.component"
 import { AddBookDialogComponent } from "./components/dialogs/add-book-dialog/add-book-dialog.component"
 import { LeavePageDialogComponent } from "./components/dialogs/leave-page-dialog/leave-page-dialog.component"
+import { LoginRequiredDialogComponent } from "./components/dialogs/login-required-dialog/login-required-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -143,6 +144,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		EditNameDialogComponent,
 		AddBookDialogComponent,
 		LeavePageDialogComponent,
+		LoginRequiredDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,

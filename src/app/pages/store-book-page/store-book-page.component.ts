@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
 	CheckoutSessionsController,
@@ -6,6 +6,7 @@ import {
 	DownloadTableObject,
 	isSuccessStatusCode
 } from "dav-js"
+import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -72,7 +73,8 @@ export class StoreBookPageComponent {
 	//#endregion
 
 	//#region Dialog variables
-	loginRequiredDialogVisible: boolean = false
+	@ViewChild("loginRequiredDialog")
+	loginRequiredDialog: LoginRequiredDialogComponent
 	noAccessDialogVisible: boolean = false
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
@@ -354,7 +356,7 @@ export class StoreBookPageComponent {
 
 		// Check if the user is logged in
 		if (!this.dataService.dav.isLoggedIn) {
-			this.loginRequiredDialogVisible = true
+			this.loginRequiredDialog.show()
 			return
 		}
 
