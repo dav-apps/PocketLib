@@ -196,13 +196,7 @@ const enDefaults = {
 		free: "Free",
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
-		moreBooksInCategories: "More books in these categories",
-		errorDialog: {
-			headline: "Error",
-			description:
-				"An error occured. Please check your internet connection or try it again later."
-		},
-		close: "Close"
+		moreBooksInCategories: "More books in these categories"
 	},
 	storeBooksPage: {
 		allBooksTitle: "All books"
@@ -488,6 +482,12 @@ const enDefaults = {
 				"When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
 			continue: "Continue",
 			cancel: "Cancel"
+		},
+		errorDialog: {
+			headline: "Error",
+			description:
+				"An error occured. Please check your internet connection or try it again later.",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -712,13 +712,7 @@ const deDefaults = {
 		free: "Kostenlos",
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
-		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		errorDialog: {
-			headline: "Fehler",
-			description:
-				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
-		},
-		close: "Schließen"
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien"
 	},
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
@@ -1005,6 +999,12 @@ const deDefaults = {
 				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 			continue: "Weiter",
 			cancel: "Abbrechen"
+		},
+		errorDialog: {
+			headline: "Fehler",
+			description:
+				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal.",
+			close: "Schließen"
 		}
 	},
 	misc: {

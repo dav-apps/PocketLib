@@ -1,0 +1,11 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[defaultButtonText]="locale.close"
+	[visible]="visible"
+	maxWidth="340"
+	(dismiss)="visible = false"
+	(defaultButtonClick)="visible = false"
+>
+	<p class="text-color">{{ locale.description }}</p>
+</dav-dialog>

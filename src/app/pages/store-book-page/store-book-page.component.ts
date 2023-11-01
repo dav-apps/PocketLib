@@ -9,6 +9,7 @@ import {
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "src/app/components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { ErrorDialogComponent } from "src/app/components/dialogs/error-dialog/error-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -82,7 +83,8 @@ export class StoreBookPageComponent {
 	@ViewChild("buyBookDialog")
 	buyBookDialog: BuyBookDialogComponent
 	buyBookDialogLoginRequired: boolean = false
-	errorDialogVisible: boolean = false
+	@ViewChild("errorDialog")
+	errorDialog: ErrorDialogComponent
 	publishLoading: boolean = false
 	//#endregion
 
@@ -376,7 +378,7 @@ export class StoreBookPageComponent {
 				if (!(await this.AddBookToLibrary())) {
 					// Show error
 					this.dataService.loadingScreenVisible = false
-					this.errorDialogVisible = true
+					this.errorDialog.show()
 					return
 				}
 
@@ -387,14 +389,14 @@ export class StoreBookPageComponent {
 					if (!(await this.CreatePurchaseForBook())) {
 						// Show error
 						this.dataService.loadingScreenVisible = false
-						this.errorDialogVisible = true
+						this.errorDialog.show()
 						return
 					}
 
 					if (!(await this.AddBookToLibrary())) {
 						// Show error
 						this.dataService.loadingScreenVisible = false
-						this.errorDialogVisible = true
+						this.errorDialog.show()
 						return
 					}
 
@@ -501,7 +503,7 @@ export class StoreBookPageComponent {
 		if (book == null) {
 			// Show error
 			this.dataService.loadingScreenVisible = false
-			this.errorDialogVisible = true
+			this.errorDialog.show()
 			return
 		}
 
@@ -564,7 +566,7 @@ export class StoreBookPageComponent {
 		} else {
 			// Show error
 			this.buyBookDialog.hide()
-			this.errorDialogVisible = true
+			this.errorDialog.show()
 		}
 	}
 

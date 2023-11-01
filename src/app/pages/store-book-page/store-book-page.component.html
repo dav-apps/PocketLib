@@ -150,13 +150,4 @@
 	[loginRequired]="buyBookDialogLoginRequired"
 ></pocketlib-buy-book-dialog>
 
-<dav-dialog
-	[headline]="locale.errorDialog.headline"
-	[defaultButtonText]="locale.close"
-	[visible]="errorDialogVisible"
-	maxWidth="340"
-	(dismiss)="errorDialogVisible = false"
-	(defaultButtonClick)="errorDialogVisible = false"
->
-	<p class="text-color">{{ locale.errorDialog.description }}</p>
-</dav-dialog>
+<pocketlib-error-dialog #errorDialog></pocketlib-error-dialog>

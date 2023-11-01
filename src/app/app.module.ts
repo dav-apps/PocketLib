@@ -75,6 +75,7 @@ import { LeavePageDialogComponent } from "./components/dialogs/leave-page-dialog
 import { LoginRequiredDialogComponent } from "./components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "./components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "./components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { ErrorDialogComponent } from "./components/dialogs/error-dialog/error-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -149,6 +150,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		LoginRequiredDialogComponent,
 		NoAccessDialogComponent,
 		BuyBookDialogComponent,
+		ErrorDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
