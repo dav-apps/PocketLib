@@ -1,7 +1,8 @@
-import { Component, ViewChild } from "@angular/core"
+import { Component, ViewChild, ElementRef, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DragulaService } from "ng2-dragula"
 import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
+import { ContextMenu } from "dav-ui-components"
 import { EditNameDialogComponent } from "src/app/components/dialogs/edit-name-dialog/edit-name-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -28,6 +29,8 @@ export class AuthorSeriesPageComponent {
 	faTrashCanLight = faTrashCanLight
 	@ViewChild("editNameDialog")
 	editNameDialog: EditNameDialogComponent
+	@ViewChild("contextMenu")
+	contextMenu: ElementRef<ContextMenu>
 	uuid: string = ""
 	author: Author
 	series: StoreBookSeries = new StoreBookSeries(
@@ -118,6 +121,13 @@ export class AuthorSeriesPageComponent {
 
 		// Load the books for the add book dialog
 		this.LoadSelectableBooks()
+	}
+
+	@HostListener("document:click", ["$event"])
+	documentClick(event: MouseEvent) {
+		if (!this.contextMenu.nativeElement.contains(event.target as Node)) {
+			this.contextMenuVisible = false
+		}
 	}
 
 	BackButtonClick() {
