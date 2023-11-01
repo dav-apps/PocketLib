@@ -140,29 +140,15 @@
 	(primaryButtonClick)="NavigateToAccountPage()"
 ></pocketlib-no-access-dialog>
 
-<dav-dialog
-	[headline]="locale.buyBookDialog.headline"
-	[primaryButtonText]="locale.buyBookDialog.continue"
-	[defaultButtonText]="locale.cancel"
-	[visible]="buyBookDialogVisible"
-	maxWidth="400"
-	(dismiss)="buyBookDialogVisible = false"
+<pocketlib-buy-book-dialog
+	#buyBookDialog
 	(primaryButtonClick)="
 		buyBookDialogLoginRequired
 			? NavigateToAccountPage()
 			: NavigateToPurchasePage()
 	"
-	(defaultButtonClick)="buyBookDialogVisible = false"
->
-	<p
-		class="text-color"
-		[innerHTML]="
-			buyBookDialogLoginRequired
-				? locale.buyBookDialog.descriptionNotLoggedIn
-				: locale.buyBookDialog.description
-		"
-	></p>
-</dav-dialog>
+	[loginRequired]="buyBookDialogLoginRequired"
+></pocketlib-buy-book-dialog>
 
 <dav-dialog
 	[headline]="locale.errorDialog.headline"

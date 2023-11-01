@@ -197,20 +197,11 @@ const enDefaults = {
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
 		moreBooksInCategories: "More books in these categories",
-		buyBookDialog: {
-			headline: "Buy book",
-			description:
-				"When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
-			descriptionNotLoggedIn:
-				"When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
-			continue: "Continue"
-		},
 		errorDialog: {
 			headline: "Error",
 			description:
 				"An error occured. Please check your internet connection or try it again later."
 		},
-		cancel: "Cancel",
 		close: "Close"
 	},
 	storeBooksPage: {
@@ -488,6 +479,15 @@ const enDefaults = {
 				"Purchase this book or upgrade to dav Pro to read this book.",
 			learnMore: "Learn more",
 			close: "Close"
+		},
+		buyBookDialog: {
+			headline: "Buy book",
+			description:
+				"When you buy this book, you can access it regardless of your plan. You can also download the book file and read it in another app or on an Ebook reader.<br><br>80 % of the price goes directly to the author.",
+			descriptionNotLoggedIn:
+				"When you buy this book, you always have access to it and you can download the book file. Furthermore, 80 % of the price goes directly to the author.<br><br>Log in to be able to buy books.",
+			continue: "Continue",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -713,20 +713,11 @@ const deDefaults = {
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
 		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		buyBookDialog: {
-			headline: "Buch kaufen",
-			description:
-				"Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
-			descriptionNotLoggedIn:
-				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
-			continue: "Weiter"
-		},
 		errorDialog: {
 			headline: "Fehler",
 			description:
 				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
-		cancel: "Abbrechen",
 		close: "Schließen"
 	},
 	storeBooksPage: {
@@ -1005,6 +996,15 @@ const deDefaults = {
 				"Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen.",
 			learnMore: "Mehr erfahren",
 			close: "Schließen"
+		},
+		buyBookDialog: {
+			headline: "Buch kaufen",
+			description:
+				"Wenn du dieses Buch kaufst, kannst du unabhängig von deinem Abo darauf zugreifen. Außerdem kannst du die Buch-Datei herunterladen und in einer anderen App oder auf einem Ebook-Reader lesen.<br><br>80 % des Preises geht direkt an den Autor.",
+			descriptionNotLoggedIn:
+				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
+			continue: "Weiter",
+			cancel: "Abbrechen"
 		}
 	},
 	misc: {

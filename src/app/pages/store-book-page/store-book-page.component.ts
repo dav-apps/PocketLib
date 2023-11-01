@@ -8,6 +8,7 @@ import {
 } from "dav-js"
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
+import { BuyBookDialogComponent } from "src/app/components/dialogs/buy-book-dialog/buy-book-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -78,7 +79,8 @@ export class StoreBookPageComponent {
 	loginRequiredDialog: LoginRequiredDialogComponent
 	@ViewChild("noAccessDialog")
 	noAccessDialog: NoAccessDialogComponent
-	buyBookDialogVisible: boolean = false
+	@ViewChild("buyBookDialog")
+	buyBookDialog: BuyBookDialogComponent
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
 	publishLoading: boolean = false
@@ -531,7 +533,7 @@ export class StoreBookPageComponent {
 
 	ShowBuyBookDialog(loginRequired: boolean) {
 		this.buyBookDialogLoginRequired = loginRequired
-		this.buyBookDialogVisible = true
+		this.buyBookDialog.show()
 	}
 
 	NavigateToAccountPage() {
@@ -561,7 +563,7 @@ export class StoreBookPageComponent {
 			window.location.href = responseData.sessionUrl
 		} else {
 			// Show error
-			this.buyBookDialogVisible = false
+			this.buyBookDialog.hide()
 			this.errorDialogVisible = true
 		}
 	}
