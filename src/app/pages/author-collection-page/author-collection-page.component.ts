@@ -1,5 +1,6 @@
-import { Component } from "@angular/core"
+import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
+import { NamesDialogComponent } from "src/app/components/dialogs/names-dialog/names-dialog.component"
 import {
 	DataService,
 	FindAppropriateLanguage
@@ -22,6 +23,8 @@ interface ExtendedBookListItem extends BookListItem {
 })
 export class AuthorCollectionPageComponent {
 	locale = enUS.authorCollectionPage
+	@ViewChild("namesDialog")
+	namesDialog: NamesDialogComponent
 	uuid: string
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
@@ -43,7 +46,6 @@ export class AuthorCollectionPageComponent {
 		fullLanguage: string
 		edit: boolean
 	}[] = []
-	namesDialogVisible: boolean = false
 	showAddLanguageButton: boolean = false
 	newBookPageLink: {
 		path: string
@@ -160,7 +162,7 @@ export class AuthorCollectionPageComponent {
 
 	async ShowNamesDialog() {
 		await this.LoadCollectionNames()
-		this.namesDialogVisible = true
+		this.namesDialog.show()
 	}
 
 	async LoadCollectionNames() {

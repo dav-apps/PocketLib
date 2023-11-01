@@ -57,5 +57,8 @@ export class PublishChangesDialogComponent {
 			releaseName: this.releaseName,
 			releaseNotes: this.releaseNotes
 		})
+
+		this.releaseName = ""
+		this.releaseNotes = ""
 	}
 }

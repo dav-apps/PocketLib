@@ -47,5 +47,7 @@ export class CreatePublisherDialogComponent {
 		this.primaryButtonClick.emit({
 			name: this.name
 		})
+
+		this.name = ""
 	}
 }

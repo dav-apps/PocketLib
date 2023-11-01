@@ -1,0 +1,15 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[defaultButtonText]="locale.close"
+	[visible]="visible"
+	(dismiss)="visible = false"
+	(defaultButtonClick)="visible = false"
+>
+	<!-- Names -->
+	<pocketlib-edit-names
+		[names]="names"
+		[uuid]="uuid"
+		(update)="update.emit($event)"
+	></pocketlib-edit-names>
+</dav-dialog>

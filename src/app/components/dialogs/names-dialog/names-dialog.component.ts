@@ -11,22 +11,19 @@ import { DataService } from "src/app/services/data-service"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: "pocketlib-create-author-dialog",
-	templateUrl: "./create-author-dialog.component.html"
+	selector: "pocketlib-names-dialog",
+	templateUrl: "./names-dialog.component.html"
 })
-export class CreateAuthorDialogComponent {
-	locale = enUS.dialogs.createAuthorDialog
+export class NamesDialogComponent {
+	locale = enUS.dialogs.namesDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
-	@Input() loading: boolean = false
-	@Input() firstNameError: string = ""
-	@Input() lastNameError: string = ""
-	@Output() primaryButtonClick = new EventEmitter()
+	@Input() uuid: string = ""
+	@Input() names: { name: string; language: string }[]
+	@Output() update = new EventEmitter()
 	visible: boolean = false
-	firstName: string = ""
-	lastName: string = ""
 
 	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.createAuthorDialog
+		this.locale = this.dataService.GetLocale().dialogs.namesDialog
 	}
 
 	ngAfterViewInit() {
@@ -43,15 +40,5 @@ export class CreateAuthorDialogComponent {
 
 	hide() {
 		this.visible = false
-	}
-
-	submit() {
-		this.primaryButtonClick.emit({
-			firstName: this.firstName,
-			lastName: this.lastName
-		})
-
-		this.firstName = ""
-		this.lastName = ""
 	}
 }

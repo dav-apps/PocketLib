@@ -114,11 +114,7 @@ const enDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		namesDialog: {
-			headline: "Collection name"
-		},
-		noBooks: "This collection contains no books",
-		close: "Close"
+		noBooks: "This collection contains no books"
 	},
 	authorSeriesPage: {
 		editNameDialog: {
@@ -501,6 +497,10 @@ const enDefaults = {
 				"Here you can describe in detail what changes you have made (optional)",
 			publish: "Publish",
 			cancel: "Cancel"
+		},
+		namesDialog: {
+			headline: "Collection name",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -639,11 +639,7 @@ const deDefaults = {
 		}
 	},
 	authorCollectionPage: {
-		namesDialog: {
-			headline: "Name der Sammlung"
-		},
-		noBooks: "Diese Sammlung enthält keine Bücher",
-		close: "Schließen"
+		noBooks: "Diese Sammlung enthält keine Bücher"
 	},
 	authorSeriesPage: {
 		editNameDialog: {
@@ -1031,6 +1027,10 @@ const deDefaults = {
 				"Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)",
 			publish: "Veröffentlichen",
 			cancel: "Abbrechen"
+		},
+		namesDialog: {
+			headline: "Name der Sammlung",
+			close: "Schließen"
 		}
 	},
 	misc: {

@@ -47,5 +47,7 @@ export class EditTitleDialogComponent {
 		this.primaryButtonClick.emit({
 			title: this.title
 		})
+
+		this.title = ""
 	}
 }

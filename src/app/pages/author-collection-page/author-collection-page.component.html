@@ -30,17 +30,9 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.namesDialog.headline"
-	[defaultButtonText]="locale.close"
-	[visible]="namesDialogVisible"
-	(dismiss)="namesDialogVisible = false"
-	(defaultButtonClick)="namesDialogVisible = false"
->
-	<!-- Names -->
-	<pocketlib-edit-names
-		[names]="collectionNames"
-		[uuid]="uuid"
-		(update)="UpdateCollectionName($event)"
-	></pocketlib-edit-names>
-</dav-dialog>
+<pocketlib-names-dialog
+	#namesDialog
+	[uuid]="uuid"
+	[names]="collectionNames"
+	(update)="UpdateCollectionName($event)"
+></pocketlib-names-dialog>
