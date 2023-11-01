@@ -309,48 +309,10 @@
 	(primaryButtonClick)="UpdateCategories($event)"
 ></pocketlib-categories-selection-dialog>
 
-<dav-dialog
-	[headline]="locale.publishChangesDialog.headline"
-	[primaryButtonText]="locale.publish"
-	[defaultButtonText]="locale.cancel"
-	[visible]="publishChangesDialogVisible"
+<pocketlib-publish-changes-dialog
+	#publishChangesDialog
 	[loading]="publishChangesDialogLoading"
-	(primaryButtonClick)="PublishChanges()"
-	(defaultButtonClick)="publishChangesDialogVisible = false"
->
-	<form>
-		<!-- Release name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="publishChangesDialogReleaseName"
-				[label]="locale.publishChangesDialog.releaseNameTextfieldLabel"
-				[placeholder]="
-					locale.publishChangesDialog.releaseNameTextfieldPlaceholder
-				"
-				[errorMessage]="publishChangesDialogReleaseNameError"
-				[disabled]="publishChangesDialogLoading"
-				(change)="
-					publishChangesDialogReleaseName = $event.detail.value;
-					ClearPublishChangesErrors()
-				"
-				(enter)="PublishChanges()"
-			></dav-textfield>
-		</div>
-
-		<!-- Release notes -->
-		<div class="dialog-formfield-container">
-			<dav-textarea
-				[value]="publishChangesDialogReleaseNotes"
-				[label]="locale.publishChangesDialog.releaseNotesTextfieldLabel"
-				[placeholder]="
-					locale.publishChangesDialog.releaseNotesTextfieldPlaceholder
-				"
-				[disabled]="publishChangesDialogLoading"
-				(change)="
-					publishChangesDialogReleaseNotes = $event.detail.value;
-					ClearPublishChangesErrors()
-				"
-			></dav-textarea>
-		</div>
-	</form>
-</dav-dialog>
+	[releaseNameError]="publishChangesDialogReleaseNameError"
+	[releaseNotesError]="publishChangesDialogReleaseNotesError"
+	(primaryButtonClick)="PublishChanges($event)"
+></pocketlib-publish-changes-dialog>

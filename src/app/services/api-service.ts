@@ -1273,7 +1273,7 @@ export class ApiService {
 						publishStoreBookRelease(
 							uuid: $uuid
 							releaseName: $releaseName
-							releaseNote: $releaseNotes
+							releaseNotes: $releaseNotes
 						) {
 							${queryData}
 						}

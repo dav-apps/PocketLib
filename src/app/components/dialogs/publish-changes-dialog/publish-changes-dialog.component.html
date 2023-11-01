@@ -1,0 +1,43 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.publish"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	[loading]="loading"
+	(primaryButtonClick)="submit()"
+	(defaultButtonClick)="visible = false"
+>
+	<form>
+		<!-- Release name -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="releaseName"
+				[label]="locale.releaseNameTextfieldLabel"
+				[placeholder]="locale.releaseNameTextfieldPlaceholder"
+				[errorMessage]="releaseNameError"
+				[disabled]="loading"
+				(change)="
+					releaseName = $event.detail.value;
+					clearErrors()
+				"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Release notes -->
+		<div class="dialog-formfield-container">
+			<dav-textarea
+				[value]="releaseNotes"
+				[label]="locale.releaseNotesTextfieldLabel"
+				[placeholder]="locale.releaseNotesTextfieldPlaceholder"
+				[errorMessage]="releaseNotesError"
+				[disabled]="loading"
+				(change)="
+					releaseNotes = $event.detail.value;
+					clearErrors()
+				"
+			></dav-textarea>
+		</div>
+	</form>
+</dav-dialog>

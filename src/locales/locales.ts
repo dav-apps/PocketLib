@@ -76,14 +76,6 @@ const enDefaults = {
 		unpublish: "Unpublish"
 	},
 	authorBookPage: {
-		publishChangesDialog: {
-			headline: "Publish changes",
-			releaseNameTextfieldLabel: "Release name",
-			releaseNameTextfieldPlaceholder: "What was changed?",
-			releaseNotesTextfieldLabel: "Release details",
-			releaseNotesTextfieldPlaceholder:
-				"Here you can describe in detail what changes you have made (optional)"
-		},
 		releaseNotes: "Release details",
 		cover: "Cover",
 		noCover: "No cover uploaded",
@@ -499,6 +491,16 @@ const enDefaults = {
 			headline: "Select categories",
 			save: "Save",
 			cancel: "Cancel"
+		},
+		publishChangesDialog: {
+			headline: "Publish changes",
+			releaseNameTextfieldLabel: "Release name",
+			releaseNameTextfieldPlaceholder: "What was changed?",
+			releaseNotesTextfieldLabel: "Release details",
+			releaseNotesTextfieldPlaceholder:
+				"Here you can describe in detail what changes you have made (optional)",
+			publish: "Publish",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -599,14 +601,6 @@ const deDefaults = {
 		unpublish: "Veröffentlichung aufheben"
 	},
 	authorBookPage: {
-		publishChangesDialog: {
-			headline: "Änderungen veröffentlichen",
-			releaseNameTextfieldLabel: "Name der Veröffentlichung",
-			releaseNameTextfieldPlaceholder: "Was wurde geändert?",
-			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
-			releaseNotesTextfieldPlaceholder:
-				"Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)"
-		},
 		releaseNotes: "Details der Veröffentlichung",
 		cover: "Cover",
 		noCover: "Kein Cover hochgeladen",
@@ -1026,6 +1020,16 @@ const deDefaults = {
 		categoriesSelectionDialog: {
 			headline: "Kategorien auswählen",
 			save: "Speichern",
+			cancel: "Abbrechen"
+		},
+		publishChangesDialog: {
+			headline: "Änderungen veröffentlichen",
+			releaseNameTextfieldLabel: "Name der Veröffentlichung",
+			releaseNameTextfieldPlaceholder: "Was wurde geändert?",
+			releaseNotesTextfieldLabel: "Details der Veröffentlichung",
+			releaseNotesTextfieldPlaceholder:
+				"Hier kannst du im Detail beschreiben, welche Änderungen du gemacht hast (optional)",
+			publish: "Veröffentlichen",
 			cancel: "Abbrechen"
 		}
 	},

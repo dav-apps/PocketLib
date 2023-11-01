@@ -6,6 +6,7 @@ import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { EditTitleDialogComponent } from "src/app/components/dialogs/edit-title-dialog/edit-title-dialog.component"
 import { CategoriesSelectionDialogComponent } from "src/app/components/dialogs/categories-selection-dialog/categories-selection-dialog.component"
+import { PublishChangesDialogComponent } from "src/app/components/dialogs/publish-changes-dialog/publish-changes-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
@@ -37,6 +38,8 @@ export class AuthorBookPageComponent {
 	editTitleDialog: EditTitleDialogComponent
 	@ViewChild("categoriesSelectionDialog")
 	categoriesSelectionDialog: CategoriesSelectionDialogComponent
+	@ViewChild("publishChangesDialog")
+	publishChangesDialog: PublishChangesDialogComponent
 	uuid: string
 	author: Author
 	storeBook: StoreBook
@@ -72,10 +75,7 @@ export class AuthorBookPageComponent {
 	editTitleDialogLoading: boolean = false
 	editTitleDialogTitle: string = ""
 	editTitleDialogTitleError: string = ""
-	publishChangesDialogVisible: boolean = false
 	publishChangesDialogLoading: boolean = false
-	publishChangesDialogReleaseName: string = ""
-	publishChangesDialogReleaseNotes: string = ""
 	publishChangesDialogReleaseNameError: string = ""
 	publishChangesDialogReleaseNotesError: string = ""
 	changes: boolean = false
@@ -497,7 +497,7 @@ export class AuthorBookPageComponent {
 	async ShowPublishChangesDialog() {
 		this.ClearPublishChangesErrors()
 		this.publishChangesDialogLoading = false
-		this.publishChangesDialogVisible = true
+		this.publishChangesDialog.show()
 
 		// Reload the releases
 		//this.storeBook.ClearReleases()
@@ -509,24 +509,22 @@ export class AuthorBookPageComponent {
 		this.publishChangesDialogReleaseNotesError = ""
 	}
 
-	async PublishChanges() {
+	async PublishChanges(result: { releaseName: string; releaseNotes: string }) {
 		let lastRelease = this.releases[0]
 		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
 		this.publishChangesDialogLoading = true
 
 		let response = await this.apiService.publishStoreBookRelease(`uuid`, {
 			uuid: lastRelease.uuid,
-			releaseName: this.publishChangesDialogReleaseName,
-			releaseNotes: this.publishChangesDialogReleaseNotes
+			releaseName: result.releaseName,
+			releaseNotes: result.releaseNotes
 		})
 
 		this.publishChangesDialogLoading = false
 
 		if (response.errors == null) {
-			this.publishChangesDialogVisible = false
+			this.publishChangesDialog.hide()
 			this.publishChangesDialogLoading = false
-			this.publishChangesDialogReleaseName = ""
-			this.publishChangesDialogReleaseNotes = ""
 
 			this.changes = false
 			//this.author.ClearSeries()
