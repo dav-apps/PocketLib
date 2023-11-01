@@ -70,6 +70,7 @@ import { CategoriesSelectionDialogComponent } from "./components/dialogs/categor
 import { PublishChangesDialogComponent } from "./components/dialogs/publish-changes-dialog/publish-changes-dialog.component"
 import { NamesDialogComponent } from "./components/dialogs/names-dialog/names-dialog.component"
 import { EditNameDialogComponent } from "./components/dialogs/edit-name-dialog/edit-name-dialog.component"
+import { AddBookDialogComponent } from "./components/dialogs/add-book-dialog/add-book-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -139,6 +140,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		PublishChangesDialogComponent,
 		NamesDialogComponent,
 		EditNameDialogComponent,
+		AddBookDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,

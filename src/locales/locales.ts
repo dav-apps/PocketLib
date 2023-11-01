@@ -117,16 +117,12 @@ const enDefaults = {
 		noBooks: "This collection contains no books"
 	},
 	authorSeriesPage: {
-		addBookDialog: {
-			headline: "Choose a book to add"
-		},
 		errors: {
 			nameTooShort: "The name is too short",
 			nameTooLong: "The name is too long",
 			unexpectedError: "An unexpected error occured"
 		},
-		bookContextMenuRemove: "Remove",
-		cancel: "Cancel"
+		bookContextMenuRemove: "Remove"
 	},
 	newBookPage: {
 		title: "Create book",
@@ -502,6 +498,10 @@ const enDefaults = {
 			nameTextfieldPlaceholder: "Name of the book series",
 			save: "Save",
 			cancel: "Cancel"
+		},
+		addBookDialog: {
+			headline: "Choose a book to add",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -643,16 +643,12 @@ const deDefaults = {
 		noBooks: "Diese Sammlung enthält keine Bücher"
 	},
 	authorSeriesPage: {
-		addBookDialog: {
-			headline: "Wähle ein Buch zum Hinzufügen"
-		},
 		errors: {
 			nameTooShort: "Der Name ist zu kurz",
 			nameTooLong: "Der Name ist zu lang",
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
-		bookContextMenuRemove: "Entfernen",
-		cancel: "Abbrechen"
+		bookContextMenuRemove: "Entfernen"
 	},
 	newBookPage: {
 		title: "Buch erstellen",
@@ -1032,6 +1028,10 @@ const deDefaults = {
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name der Buch-Reihe",
 			save: "Speichern",
+			cancel: "Abbrechen"
+		},
+		addBookDialog: {
+			headline: "Wähle ein Buch zum Hinzufügen",
 			cancel: "Abbrechen"
 		}
 	},

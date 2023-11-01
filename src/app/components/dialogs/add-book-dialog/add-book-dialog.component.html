@@ -1,0 +1,21 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	(dismiss)="visible = false"
+	(defaultButtonClick)="visible = false"
+>
+	<div class="add-book-dialog-container">
+		<button *ngFor="let book of books">
+			<dav-blurhash-image
+				[src]="book.coverContent"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
+				[blurhash]="book.coverBlurhash"
+				[title]="book.title"
+				height="150"
+				(click)="addBook.emit(book)"
+			></dav-blurhash-image>
+		</button>
+	</div>
+</dav-dialog>

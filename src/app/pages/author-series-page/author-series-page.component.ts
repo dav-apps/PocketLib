@@ -4,6 +4,7 @@ import { DragulaService } from "ng2-dragula"
 import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
 import { ContextMenu } from "dav-ui-components"
 import { EditNameDialogComponent } from "src/app/components/dialogs/edit-name-dialog/edit-name-dialog.component"
+import { AddBookDialogComponent } from "src/app/components/dialogs/add-book-dialog/add-book-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
@@ -29,6 +30,8 @@ export class AuthorSeriesPageComponent {
 	faTrashCanLight = faTrashCanLight
 	@ViewChild("editNameDialog")
 	editNameDialog: EditNameDialogComponent
+	@ViewChild("addBookDialog")
+	addBookDialog: AddBookDialogComponent
 	@ViewChild("contextMenu")
 	contextMenu: ElementRef<ContextMenu>
 	uuid: string = ""
@@ -43,7 +46,6 @@ export class AuthorSeriesPageComponent {
 	editNameDialogLoading: boolean = false
 	editNameDialogName: string = ""
 	editNameDialogNameError: string = ""
-	addBookDialogVisible: boolean = false
 	dragging: boolean = false
 	contextMenuVisible: boolean = false
 	contextMenuPositionX: number = 0
@@ -229,7 +231,7 @@ export class AuthorSeriesPageComponent {
 		})
 
 		if (response.errors == null) {
-			this.addBookDialogVisible = false
+			this.addBookDialog.hide()
 
 			//this.author.ClearSeries()
 			//this.series.ClearStoreBooks()
@@ -259,6 +261,7 @@ export class AuthorSeriesPageComponent {
 
 	async RemoveBook() {
 		if (this.contextMenuBook == null) return
+		this.contextMenuVisible = false
 
 		// Remove the selected book
 		let i = this.books.findIndex(b => b.uuid == this.contextMenuBook.uuid)

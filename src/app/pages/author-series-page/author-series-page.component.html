@@ -5,7 +5,7 @@
 			[addButtonVisible]="selectableBooks.length > 0"
 			editButtonVisible
 			(backButtonClick)="BackButtonClick()"
-			(addButtonClick)="addBookDialogVisible = true"
+			(addButtonClick)="addBookDialog.show()"
 			(editButtonClick)="ShowEditNameDialog()"
 		>
 			{{ series.name }}
@@ -57,23 +57,8 @@
 	(primaryButtonClick)="UpdateName($event)"
 ></pocketlib-edit-name-dialog>
 
-<dav-dialog
-	[headline]="locale.addBookDialog.headline"
-	[defaultButtonText]="locale.cancel"
-	[visible]="addBookDialogVisible"
-	(dismiss)="addBookDialogVisible = false"
-	(defaultButtonClick)="addBookDialogVisible = false"
->
-	<div class="add-book-dialog-container">
-		<button *ngFor="let book of selectableBooks">
-			<dav-blurhash-image
-				[src]="book.coverContent"
-				[fallbackSrc]="dataService.defaultStoreBookCover"
-				[blurhash]="book.coverBlurhash"
-				[title]="book.title"
-				height="150"
-				(click)="AddBook(book)"
-			></dav-blurhash-image>
-		</button>
-	</div>
-</dav-dialog>
+<pocketlib-add-book-dialog
+	#addBookDialog
+	[books]="selectableBooks"
+	(addBook)="AddBook($event)"
+></pocketlib-add-book-dialog>
