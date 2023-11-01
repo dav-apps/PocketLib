@@ -197,11 +197,6 @@ const enDefaults = {
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
 		moreBooksInCategories: "More books in these categories",
-		noAccessDialog: {
-			headline: "No access",
-			description:
-				"Purchase this book or upgrade to dav Pro to read this book."
-		},
 		buyBookDialog: {
 			headline: "Buy book",
 			description:
@@ -215,7 +210,6 @@ const enDefaults = {
 			description:
 				"An error occured. Please check your internet connection or try it again later."
 		},
-		learnMore: "Learn more",
 		cancel: "Cancel",
 		close: "Close"
 	},
@@ -487,6 +481,13 @@ const enDefaults = {
 				"Log in to get access to this book and to automatically save your books and your progress.",
 			learnMore: "Learn more",
 			close: "Close"
+		},
+		noAccessDialog: {
+			headline: "No access",
+			description:
+				"Purchase this book or upgrade to dav Pro to read this book.",
+			learnMore: "Learn more",
+			close: "Close"
 		}
 	},
 	misc: {
@@ -712,11 +713,6 @@ const deDefaults = {
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
 		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
-		noAccessDialog: {
-			headline: "Kein Zugriff",
-			description:
-				"Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen."
-		},
 		buyBookDialog: {
 			headline: "Buch kaufen",
 			description:
@@ -730,7 +726,6 @@ const deDefaults = {
 			description:
 				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal."
 		},
-		learnMore: "Mehr erfahren",
 		cancel: "Abbrechen",
 		close: "Schließen"
 	},
@@ -1001,6 +996,13 @@ const deDefaults = {
 			headline: "Anmeldung erforderlich",
 			description:
 				"Melde dich an, um auf dieses Buch zuzugreifen und deine gelesenen Bücher und deinen Fortschritt automatisch zu speichern.",
+			learnMore: "Mehr erfahren",
+			close: "Schließen"
+		},
+		noAccessDialog: {
+			headline: "Kein Zugriff",
+			description:
+				"Kaufe dieses Buch oder ändere dein Abo auf dav Pro, um dieses Buch zu lesen.",
 			learnMore: "Mehr erfahren",
 			close: "Schließen"
 		}

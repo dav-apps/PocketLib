@@ -7,6 +7,7 @@ import {
 	isSuccessStatusCode
 } from "dav-js"
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
+import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -75,7 +76,8 @@ export class StoreBookPageComponent {
 	//#region Dialog variables
 	@ViewChild("loginRequiredDialog")
 	loginRequiredDialog: LoginRequiredDialogComponent
-	noAccessDialogVisible: boolean = false
+	@ViewChild("noAccessDialog")
+	noAccessDialog: NoAccessDialogComponent
 	buyBookDialogVisible: boolean = false
 	buyBookDialogLoginRequired: boolean = false
 	errorDialogVisible: boolean = false
@@ -415,7 +417,7 @@ export class StoreBookPageComponent {
 					) {
 						// Show dav Pro dialog
 						this.dataService.loadingScreenVisible = false
-						this.noAccessDialogVisible = true
+						this.noAccessDialog.show()
 						return
 					}
 

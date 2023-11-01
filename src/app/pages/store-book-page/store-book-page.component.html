@@ -135,18 +135,10 @@
 	(primaryButtonClick)="NavigateToAccountPage()"
 ></pocketlib-login-required-dialog>
 
-<dav-dialog
-	[headline]="locale.noAccessDialog.headline"
-	[primaryButtonText]="locale.learnMore"
-	[defaultButtonText]="locale.close"
-	[visible]="noAccessDialogVisible"
-	maxWidth="340"
-	(dismiss)="noAccessDialogVisible = false"
+<pocketlib-no-access-dialog
+	#noAccessDialog
 	(primaryButtonClick)="NavigateToAccountPage()"
-	(defaultButtonClick)="noAccessDialogVisible = false"
->
-	<p class="text-color">{{ locale.noAccessDialog.description }}</p>
-</dav-dialog>
+></pocketlib-no-access-dialog>
 
 <dav-dialog
 	[headline]="locale.buyBookDialog.headline"
