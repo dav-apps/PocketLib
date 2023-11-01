@@ -11,20 +11,20 @@ import { DataService } from "src/app/services/data-service"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: "pocketlib-edit-title-dialog",
-	templateUrl: "./edit-title-dialog.component.html"
+	selector: "pocketlib-edit-name-dialog",
+	templateUrl: "./edit-name-dialog.component.html"
 })
-export class EditTitleDialogComponent {
-	locale = enUS.dialogs.editTitleDialog
+export class EditNameDialogComponent {
+	locale = enUS.dialogs.editNameDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() loading: boolean = false
-	@Input() title: string = ""
-	@Input() titleError: string = ""
+	@Input() name: string = ""
+	@Input() nameError: string = ""
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
 	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.editTitleDialog
+		this.locale = this.dataService.GetLocale().dialogs.editNameDialog
 	}
 
 	ngAfterViewInit() {
@@ -45,7 +45,7 @@ export class EditTitleDialogComponent {
 
 	submit() {
 		this.primaryButtonClick.emit({
-			title: this.title
+			name: this.name
 		})
 	}
 }

@@ -50,34 +50,12 @@
 	</dav-context-menu-item>
 </dav-context-menu>
 
-<dav-dialog
-	[headline]="locale.editNameDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="editNameDialogVisible"
-	[loading]="editNameDialogLoading"
-	(dismiss)="editNameDialogVisible = false"
-	(primaryButtonClick)="UpdateName()"
-	(defaultButtonClick)="editNameDialogVisible = false"
->
-	<form>
-		<!-- Name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editNameDialogName"
-				[label]="locale.editNameDialog.nameTextfieldLabel"
-				[placeholder]="locale.editNameDialog.nameTextfieldPlaceholder"
-				[errorMessage]="editNameDialogNameError"
-				[disabled]="editNameDialogLoading"
-				(change)="
-					editNameDialogName = $event.detail.value;
-					editNameDialogNameError = ''
-				"
-				(enter)="UpdateName()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
+<pocketlib-edit-name-dialog
+	#editNameDialog
+	[name]="editNameDialogName"
+	[nameError]="editNameDialogNameError"
+	(primaryButtonClick)="UpdateName($event)"
+></pocketlib-edit-name-dialog>
 
 <dav-dialog
 	[headline]="locale.addBookDialog.headline"

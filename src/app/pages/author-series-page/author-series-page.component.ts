@@ -1,7 +1,8 @@
-import { Component } from "@angular/core"
+import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DragulaService } from "ng2-dragula"
 import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
+import { EditNameDialogComponent } from "src/app/components/dialogs/edit-name-dialog/edit-name-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
@@ -25,6 +26,8 @@ interface StoreBookItem {
 export class AuthorSeriesPageComponent {
 	locale = enUS.authorSeriesPage
 	faTrashCanLight = faTrashCanLight
+	@ViewChild("editNameDialog")
+	editNameDialog: EditNameDialogComponent
 	uuid: string = ""
 	author: Author
 	series: StoreBookSeries = new StoreBookSeries(
@@ -34,7 +37,6 @@ export class AuthorSeriesPageComponent {
 	)
 	books: StoreBookItem[] = []
 	selectableBooks: StoreBookItem[] = []
-	editNameDialogVisible: boolean = false
 	editNameDialogLoading: boolean = false
 	editNameDialogName: string = ""
 	editNameDialogNameError: string = ""
@@ -157,25 +159,25 @@ export class AuthorSeriesPageComponent {
 		this.editNameDialogName = this.series.name
 		this.editNameDialogNameError = ""
 		this.editNameDialogLoading = false
-		this.editNameDialogVisible = true
+		this.editNameDialog.show()
 	}
 
-	async UpdateName() {
+	async UpdateName(result: { name: string }) {
 		this.editNameDialogLoading = true
 
 		let updateSeriesResponse = await this.apiService.updateStoreBookSeries(
 			`uuid`,
 			{
 				uuid: this.uuid,
-				name: this.editNameDialogName
+				name: result.name
 			}
 		)
 
 		this.editNameDialogLoading = false
 
 		if (updateSeriesResponse.errors == null) {
-			this.editNameDialogVisible = false
-			this.series.name = this.editNameDialogName
+			this.editNameDialog.hide()
+			this.series.name = result.name
 		} else {
 			let errors = updateSeriesResponse.errors[0].extensions
 				.errors as string[]

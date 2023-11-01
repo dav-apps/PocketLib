@@ -117,11 +117,6 @@ const enDefaults = {
 		noBooks: "This collection contains no books"
 	},
 	authorSeriesPage: {
-		editNameDialog: {
-			headline: "Edit name",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Name of the book series"
-		},
 		addBookDialog: {
 			headline: "Choose a book to add"
 		},
@@ -131,7 +126,6 @@ const enDefaults = {
 			unexpectedError: "An unexpected error occured"
 		},
 		bookContextMenuRemove: "Remove",
-		save: "Save",
 		cancel: "Cancel"
 	},
 	newBookPage: {
@@ -501,6 +495,13 @@ const enDefaults = {
 		namesDialog: {
 			headline: "Collection name",
 			close: "Close"
+		},
+		editNameDialog: {
+			headline: "Edit name",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name of the book series",
+			save: "Save",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -642,11 +643,6 @@ const deDefaults = {
 		noBooks: "Diese Sammlung enthält keine Bücher"
 	},
 	authorSeriesPage: {
-		editNameDialog: {
-			headline: "Name der Buch-Reihe",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Name der Buch-Reihe"
-		},
 		addBookDialog: {
 			headline: "Wähle ein Buch zum Hinzufügen"
 		},
@@ -656,7 +652,6 @@ const deDefaults = {
 			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
 		},
 		bookContextMenuRemove: "Entfernen",
-		save: "Speichern",
 		cancel: "Abbrechen"
 	},
 	newBookPage: {
@@ -1031,6 +1026,13 @@ const deDefaults = {
 		namesDialog: {
 			headline: "Name der Sammlung",
 			close: "Schließen"
+		},
+		editNameDialog: {
+			headline: "Name der Buch-Reihe",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name der Buch-Reihe",
+			save: "Speichern",
+			cancel: "Abbrechen"
 		}
 	},
 	misc: {

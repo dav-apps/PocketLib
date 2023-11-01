@@ -69,6 +69,7 @@ import { EditTitleDialogComponent } from "./components/dialogs/edit-title-dialog
 import { CategoriesSelectionDialogComponent } from "./components/dialogs/categories-selection-dialog/categories-selection-dialog.component"
 import { PublishChangesDialogComponent } from "./components/dialogs/publish-changes-dialog/publish-changes-dialog.component"
 import { NamesDialogComponent } from "./components/dialogs/names-dialog/names-dialog.component"
+import { EditNameDialogComponent } from "./components/dialogs/edit-name-dialog/edit-name-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -137,6 +138,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		CategoriesSelectionDialogComponent,
 		PublishChangesDialogComponent,
 		NamesDialogComponent,
+		EditNameDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
