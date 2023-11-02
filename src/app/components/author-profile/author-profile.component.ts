@@ -4,8 +4,7 @@ import {
 	Output,
 	EventEmitter,
 	HostListener,
-	ViewChild,
-	ElementRef
+	ViewChild
 } from "@angular/core"
 import { Router } from "@angular/router"
 import { MutationResult } from "apollo-angular"
@@ -16,10 +15,10 @@ import {
 	faInstagram,
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
-import Cropper from "cropperjs"
 import { Dav, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { EditAuthorProfileDialogComponent } from "src/app/components/dialogs/edit-author-profile-dialog/edit-author-profile-dialog.component"
+import { ProfileImageDialogComponent } from "src/app/components/dialogs/profile-image-dialog/profile-image-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
@@ -105,10 +104,8 @@ export class AuthorProfileComponent {
 	providerMessage: string = ""
 
 	//#region ProfileImageDialog
-	@ViewChild("profileImageDialogImage", { static: true })
-	profileImageDialogImage: ElementRef<HTMLImageElement>
-	profileImageDialogVisible: boolean = false
-	profileImageCropper: Cropper
+	@ViewChild("profileImageDialog")
+	profileImageDialog: ProfileImageDialogComponent
 	//#endregion
 
 	//#region EditProfileDialog
@@ -511,31 +508,16 @@ export class AuthorProfileComponent {
 
 	async ProfileImageFileSelected(file: ReadFile) {
 		this.errorMessage = ""
-		this.profileImageDialogVisible = true
-
-		this.profileImageDialogImage.nativeElement.onload = () => {
-			this.profileImageCropper = new Cropper(
-				this.profileImageDialogImage.nativeElement,
-				{
-					aspectRatio: 1,
-					autoCropArea: 1,
-					viewMode: 2
-				}
-			)
-		}
-
-		this.profileImageDialogImage.nativeElement.src = file.content
+		this.profileImageDialog.show(file)
 	}
 
-	async UploadProfileImage() {
-		this.profileImageDialogVisible = false
+	async UploadProfileImage(result: { canvas: HTMLCanvasElement }) {
+		this.profileImageDialog.hide()
 		let oldProfileImageContent = this.profileImageContent
 
-		let canvas = this.profileImageCropper.getCroppedCanvas()
 		let blob = await new Promise<Blob>((r: Function) =>
-			canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
+			result.canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
 		)
-		this.profileImageCropper.destroy()
 
 		if (blob.size > maxProfileImageFileSize) {
 			this.errorMessage = this.locale.errors.profileImageFileTooLarge
@@ -543,7 +525,7 @@ export class AuthorProfileComponent {
 		}
 
 		this.profileImageLoading = true
-		this.profileImageContent = canvas.toDataURL("image/png")
+		this.profileImageContent = result.canvas.toDataURL("image/png")
 
 		// Send the file content to the server
 		let response = await this.apiService.uploadAuthorProfileImage({

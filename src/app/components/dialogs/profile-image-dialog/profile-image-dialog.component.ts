@@ -12,21 +12,21 @@ import { DataService } from "src/app/services/data-service"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: "pocketlib-logo-dialog",
-	templateUrl: "./logo-dialog.component.html",
-	styleUrls: ["logo-dialog.component.scss"]
+	selector: "pocketlib-profile-image-dialog",
+	templateUrl: "./profile-image-dialog.component.html",
+	styleUrls: ["profile-image-dialog.component.scss"]
 })
-export class LogoDialogComponent {
-	locale = enUS.dialogs.logoDialog
+export class ProfileImageDialogComponent {
+	locale = enUS.dialogs.profileImageDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
-	@ViewChild("logoDialogImage", { static: true })
-	logoDialogImage: ElementRef<HTMLImageElement>
+	@ViewChild("profileImageDialogImage", { static: true })
+	profileImageDialogImage: ElementRef<HTMLImageElement>
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
-	logoCropper: Cropper
+	profileImageCropper: Cropper
 
 	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.logoDialog
+		this.locale = this.dataService.GetLocale().dialogs.profileImageDialog
 	}
 
 	ngAfterViewInit() {
@@ -41,26 +41,29 @@ export class LogoDialogComponent {
 		this.visible = true
 
 		setTimeout(() => {
-			this.logoDialogImage.nativeElement.onload = () => {
-				this.logoCropper = new Cropper(this.logoDialogImage.nativeElement, {
-					aspectRatio: 1,
-					autoCropArea: 1,
-					viewMode: 2
-				})
+			this.profileImageDialogImage.nativeElement.onload = () => {
+				this.profileImageCropper = new Cropper(
+					this.profileImageDialogImage.nativeElement,
+					{
+						aspectRatio: 1,
+						autoCropArea: 1,
+						viewMode: 2
+					}
+				)
 			}
 
-			this.logoDialogImage.nativeElement.src = file.content
+			this.profileImageDialogImage.nativeElement.src = file.content
 		}, 100)
 	}
 
 	hide() {
 		this.visible = false
-		this.logoCropper.destroy()
+		this.profileImageCropper.destroy()
 	}
 
 	async submit() {
 		this.primaryButtonClick.emit({
-			canvas: this.logoCropper.getCroppedCanvas()
+			canvas: this.profileImageCropper.getCroppedCanvas()
 		})
 	}
 }

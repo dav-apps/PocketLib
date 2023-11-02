@@ -77,6 +77,7 @@ import { NoAccessDialogComponent } from "./components/dialogs/no-access-dialog/n
 import { BuyBookDialogComponent } from "./components/dialogs/buy-book-dialog/buy-book-dialog.component"
 import { ErrorDialogComponent } from "./components/dialogs/error-dialog/error-dialog.component"
 import { LogoDialogComponent } from "./components/dialogs/logo-dialog/logo-dialog.component"
+import { ProfileImageDialogComponent } from "./components/dialogs/profile-image-dialog/profile-image-dialog.component"
 import { EditPublisherProfileDialogComponent } from "./components/dialogs/edit-publisher-profile-dialog/edit-publisher-profile-dialog.component"
 import { EditAuthorProfileDialogComponent } from "./components/dialogs/edit-author-profile-dialog/edit-author-profile-dialog.component"
 
@@ -155,6 +156,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		BuyBookDialogComponent,
 		ErrorDialogComponent,
 		LogoDialogComponent,
+		ProfileImageDialogComponent,
 		EditPublisherProfileDialogComponent,
 		EditAuthorProfileDialogComponent,
 		// Pages

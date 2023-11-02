@@ -228,19 +228,10 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.profileImageDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="profileImageDialogVisible"
-	(dismiss)="profileImageDialogVisible = false"
-	(primaryButtonClick)="UploadProfileImage()"
-	(defaultButtonClick)="profileImageDialogVisible = false"
->
-	<div class="profile-image-dialog-content">
-		<img #profileImageDialogImage />
-	</div>
-</dav-dialog>
+<pocketlib-profile-image-dialog
+	#profileImageDialog
+	(primaryButtonClick)="UploadProfileImage($event)"
+></pocketlib-profile-image-dialog>
 
 <pocketlib-edit-author-profile-dialog
 	#editProfileDialog

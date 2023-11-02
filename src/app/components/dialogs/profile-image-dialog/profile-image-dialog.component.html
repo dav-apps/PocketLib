@@ -1,0 +1,14 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	(dismiss)="visible = false"
+	(primaryButtonClick)="submit()"
+	(defaultButtonClick)="visible = false"
+>
+	<div class="profile-image-dialog-content">
+		<img #profileImageDialogImage />
+	</div>
+</dav-dialog>

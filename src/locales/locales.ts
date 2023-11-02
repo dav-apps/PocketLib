@@ -272,9 +272,6 @@ const enDefaults = {
 		addYourBio: "Add your biography",
 		bioTextfieldPlaceholder: "Your biography",
 		noBio: "No biography provided",
-		profileImageDialog: {
-			headline: "Crop your profile image"
-		},
 		errors: {
 			profileImageFileTooLarge: "The image file is too large",
 			profileImageUploadFailed:
@@ -442,6 +439,11 @@ const enDefaults = {
 		},
 		logoDialog: {
 			headline: "Crop your logo",
+			save: "Save",
+			cancel: "Cancel"
+		},
+		profileImageDialog: {
+			headline: "Crop your profile image",
 			save: "Save",
 			cancel: "Cancel"
 		},
@@ -776,9 +778,6 @@ const deDefaults = {
 		addYourBio: "Biographie angeben",
 		bioTextfieldPlaceholder: "Deine Biographie",
 		noBio: "Keine Biographie angegeben",
-		profileImageDialog: {
-			headline: "Profilbild zuschneiden"
-		},
 		errors: {
 			profileImageFileTooLarge: "Die Bilddatei ist zu groß",
 			profileImageUploadFailed:
@@ -947,6 +946,11 @@ const deDefaults = {
 		},
 		logoDialog: {
 			headline: "Logo zuschneiden",
+			save: "Speichern",
+			cancel: "Abbrechen"
+		},
+		profileImageDialog: {
+			headline: "Profilbild zuschneiden",
 			save: "Speichern",
 			cancel: "Abbrechen"
 		},
