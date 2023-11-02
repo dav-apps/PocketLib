@@ -1,10 +1,4 @@
-import {
-	Component,
-	Input,
-	ElementRef,
-	ViewChild,
-	HostListener
-} from "@angular/core"
+import { Component, Input, ViewChild, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -13,8 +7,8 @@ import {
 	faInstagram,
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
-import Cropper from "cropperjs"
 import { isSuccessStatusCode } from "dav-js"
+import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -71,10 +65,8 @@ export class PublisherProfileComponent {
 	page: number = 1
 
 	//#region LogoDialog
-	@ViewChild("logoDialogImage", { static: true })
-	logoDialogImage: ElementRef<HTMLImageElement>
-	logoDialogVisible: boolean = false
-	logoCropper: Cropper
+	@ViewChild("logoDialog")
+	logoDialog: LogoDialogComponent
 	//#endregion
 
 	//#region EditProfileDialog
@@ -240,28 +232,16 @@ export class PublisherProfileComponent {
 
 	LogoFileSelected(file: ReadFile) {
 		this.errorMessage = ""
-		this.logoDialogVisible = true
-
-		this.logoDialogImage.nativeElement.onload = () => {
-			this.logoCropper = new Cropper(this.logoDialogImage.nativeElement, {
-				aspectRatio: 1,
-				autoCropArea: 1,
-				viewMode: 2
-			})
-		}
-
-		this.logoDialogImage.nativeElement.src = file.content
+		this.logoDialog.show(file)
 	}
 
-	async UploadLogo() {
-		this.logoDialogVisible = false
+	async UploadLogo(result: { canvas: HTMLCanvasElement }) {
+		this.logoDialog.hide()
 		let oldLogoContent = this.logoContent
 
-		let canvas = this.logoCropper.getCroppedCanvas()
 		let blob = await new Promise<Blob>((r: Function) =>
-			canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
+			result.canvas.toBlob((blob: Blob) => r(blob), "image/jpeg", 0.5)
 		)
-		this.logoCropper.destroy()
 
 		if (blob.size > maxLogoFileSize) {
 			this.errorMessage = this.locale.errors.logoFileTooLarge
@@ -269,7 +249,7 @@ export class PublisherProfileComponent {
 		}
 
 		this.logoLoading = true
-		this.logoContent = canvas.toDataURL("image/png")
+		this.logoContent = result.canvas.toDataURL("image/png")
 
 		// Send the file content to the server
 		let response = await this.apiService.uploadPublisherLogo({

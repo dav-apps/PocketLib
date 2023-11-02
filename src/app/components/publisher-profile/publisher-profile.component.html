@@ -172,19 +172,10 @@
 	</div>
 </div>
 
-<dav-dialog
-	[headline]="locale.logoDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="logoDialogVisible"
-	(dismiss)="logoDialogVisible = false"
-	(primaryButtonClick)="UploadLogo()"
-	(defaultButtonClick)="logoDialogVisible = false"
->
-	<div class="logo-dialog-content">
-		<img #logoDialogImage />
-	</div>
-</dav-dialog>
+<pocketlib-logo-dialog
+	#logoDialog
+	(primaryButtonClick)="UploadLogo($event)"
+></pocketlib-logo-dialog>
 
 <dav-dialog
 	[headline]="locale.editProfileDialog.headline"

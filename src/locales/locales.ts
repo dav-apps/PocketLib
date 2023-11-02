@@ -244,9 +244,6 @@ const enDefaults = {
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
-		logoDialog: {
-			headline: "Crop your logo"
-		},
 		editProfileDialog: {
 			headline: "Edit your profile",
 			nameTextfieldLabel: "Name",
@@ -488,6 +485,11 @@ const enDefaults = {
 			description:
 				"An error occured. Please check your internet connection or try it again later.",
 			close: "Close"
+		},
+		logoDialog: {
+			headline: "Crop your logo",
+			save: "Save",
+			cancel: "Cancel"
 		}
 	},
 	misc: {
@@ -760,9 +762,6 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
-		logoDialog: {
-			headline: "Logo zuschneiden"
-		},
 		editProfileDialog: {
 			headline: "Profil bearbeiten",
 			nameTextfieldLabel: "Name",
@@ -1005,6 +1004,11 @@ const deDefaults = {
 			description:
 				"Ein Fehler ist aufgetreten. Bitte überprüfe deine Internetverbindung oder versuche es später nochmal.",
 			close: "Schließen"
+		},
+		logoDialog: {
+			headline: "Logo zuschneiden",
+			save: "Speichern",
+			cancel: "Abbrechen"
 		}
 	},
 	misc: {
