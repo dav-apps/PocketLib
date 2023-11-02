@@ -1,0 +1,99 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="locale.save"
+	[defaultButtonText]="locale.cancel"
+	[visible]="visible"
+	(dismiss)="visible = false"
+	(primaryButtonClick)="submit()"
+	(defaultButtonClick)="visible = false"
+>
+	<form>
+		<!-- First name -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="firstName"
+				[label]="locale.firstNameTextfieldLabel"
+				placeholder="Monty"
+				autocomplete="given-name"
+				[errorMessage]="firstNameError"
+				(change)="firstName = $event.detail.value; firstNameError = ''"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Last name -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="lastName"
+				[label]="locale.lastNameTextfieldLabel"
+				placeholder="Kensicle"
+				autocomplete="family-name"
+				[errorMessage]="lastNameError"
+				(change)="lastName = $event.detail.value; lastNameError = ''"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Website url -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="websiteUrl"
+				[label]="locale.websiteUrlTextfieldLabel"
+				[placeholder]="locale.websiteUrlTextfieldPlaceholder"
+				type="url"
+				autocomplete="url"
+				[errorMessage]="websiteUrlError"
+				(change)="websiteUrl = $event.detail.value; websiteUrlError = ''"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Facebook username -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="facebookUsername"
+				[label]="locale.facebookUsernameTextfieldLabel"
+				[placeholder]="locale.facebookUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="facebookUsernameError"
+				(change)="
+					facebookUsername = $event.detail.value;
+					facebookUsernameError = ''
+				"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Instagram username -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="instagramUsername"
+				[label]="locale.instagramUsernameTextfieldLabel"
+				[placeholder]="locale.instagramUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="instagramUsernameError"
+				(change)="
+					instagramUsername = $event.detail.value;
+					instagramUsernameError = ''
+				"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+
+		<!-- Twitter username -->
+		<div class="dialog-formfield-container">
+			<dav-textfield
+				[value]="twitterUsername"
+				[label]="locale.twitterUsernameTextfieldLabel"
+				[placeholder]="locale.twitterUsernameTextfieldPlaceholder"
+				autocomplete="username"
+				[errorMessage]="twitterUsernameError"
+				(change)="
+					twitterUsername = $event.detail.value; twitterUsernameError = ''
+				"
+				(enter)="submit()"
+			></dav-textfield>
+		</div>
+	</form>
+</dav-dialog>

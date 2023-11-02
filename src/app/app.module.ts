@@ -78,6 +78,7 @@ import { BuyBookDialogComponent } from "./components/dialogs/buy-book-dialog/buy
 import { ErrorDialogComponent } from "./components/dialogs/error-dialog/error-dialog.component"
 import { LogoDialogComponent } from "./components/dialogs/logo-dialog/logo-dialog.component"
 import { EditPublisherProfileDialogComponent } from "./components/dialogs/edit-publisher-profile-dialog/edit-publisher-profile-dialog.component"
+import { EditAuthorProfileDialogComponent } from "./components/dialogs/edit-author-profile-dialog/edit-author-profile-dialog.component"
 
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
@@ -155,6 +156,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		ErrorDialogComponent,
 		LogoDialogComponent,
 		EditPublisherProfileDialogComponent,
+		EditAuthorProfileDialogComponent,
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,

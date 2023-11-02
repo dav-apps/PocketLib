@@ -19,6 +19,7 @@ import {
 import Cropper from "cropperjs"
 import { Dav, isSuccessStatusCode } from "dav-js"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
+import { EditAuthorProfileDialogComponent } from "src/app/components/dialogs/edit-author-profile-dialog/edit-author-profile-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "src/app/models/Author"
@@ -111,7 +112,8 @@ export class AuthorProfileComponent {
 	//#endregion
 
 	//#region EditProfileDialog
-	editProfileDialogVisible: boolean = false
+	@ViewChild("editProfileDialog")
+	editProfileDialog: EditAuthorProfileDialogComponent
 	editProfileDialogFirstName: string = ""
 	editProfileDialogLastName: string = ""
 	editProfileDialogFirstNameError: string = ""
@@ -576,10 +578,17 @@ export class AuthorProfileComponent {
 		this.editProfileDialogInstagramUsernameError = ""
 		this.editProfileDialogTwitterUsername = this.author.twitterUsername || ""
 		this.editProfileDialogTwitterUsernameError = ""
-		this.editProfileDialogVisible = true
+		this.editProfileDialog.show()
 	}
 
-	async SaveProfile() {
+	async SaveProfile(result: {
+		firstName: string
+		lastName: string
+		websiteUrl: string
+		facebookUsername: string
+		instagramUsername: string
+		twitterUsername: string
+	}) {
 		this.editProfileDialogFirstNameError = ""
 		this.editProfileDialogLastNameError = ""
 		this.editProfileDialogWebsiteUrlError = ""
@@ -598,18 +607,18 @@ export class AuthorProfileComponent {
 			`,
 			{
 				uuid: this.dataService.userIsAdmin ? this.author.uuid : "mine",
-				firstName: this.editProfileDialogFirstName,
-				lastName: this.editProfileDialogLastName,
-				websiteUrl: this.editProfileDialogWebsiteUrl,
-				facebookUsername: this.editProfileDialogFacebookUsername,
-				instagramUsername: this.editProfileDialogInstagramUsername,
-				twitterUsername: this.editProfileDialogTwitterUsername
+				firstName: result.firstName,
+				lastName: result.lastName,
+				websiteUrl: result.websiteUrl,
+				facebookUsername: result.facebookUsername,
+				instagramUsername: result.instagramUsername,
+				twitterUsername: result.twitterUsername
 			}
 		)
 
 		if (response.errors == null) {
 			let responseData = response.data.updateAuthor
-			this.editProfileDialogVisible = false
+			this.editProfileDialog.hide()
 
 			this.author.firstName = responseData.firstName
 			this.author.lastName = responseData.lastName
@@ -627,44 +636,44 @@ export class AuthorProfileComponent {
 					case ErrorCodes.firstNameTooShort:
 						if (this.editProfileDialogFirstName.length == 0) {
 							this.editProfileDialogFirstNameError =
-								this.locale.editProfileDialog.errors.firstNameMissing
+								this.locale.errors.firstNameMissing
 						} else {
 							this.editProfileDialogFirstNameError =
-								this.locale.editProfileDialog.errors.firstNameTooShort
+								this.locale.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.lastNameTooShort:
 						if (this.editProfileDialogLastName.length == 0) {
 							this.editProfileDialogLastNameError =
-								this.locale.editProfileDialog.errors.lastNameMissing
+								this.locale.errors.lastNameMissing
 						} else {
 							this.editProfileDialogLastNameError =
-								this.locale.editProfileDialog.errors.lastNameTooShort
+								this.locale.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.firstNameTooLong:
 						this.editProfileDialogFirstNameError =
-							this.locale.editProfileDialog.errors.firstNameTooLong
+							this.locale.errors.firstNameTooLong
 						break
 					case ErrorCodes.lastNameTooLong:
 						this.editProfileDialogLastNameError =
-							this.locale.editProfileDialog.errors.lastNameTooLong
+							this.locale.errors.lastNameTooLong
 						break
 					case ErrorCodes.websiteUrlInvalid:
 						this.editProfileDialogWebsiteUrlError =
-							this.locale.editProfileDialog.errors.websiteUrlInvalid
+							this.locale.errors.websiteUrlInvalid
 						break
 					case ErrorCodes.facebookUsernameInvalid:
 						this.editProfileDialogFacebookUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 					case ErrorCodes.instagramUsernameInvalid:
 						this.editProfileDialogInstagramUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 					case ErrorCodes.twitterUsernameInvalid:
 						this.editProfileDialogTwitterUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 				}
 			}
