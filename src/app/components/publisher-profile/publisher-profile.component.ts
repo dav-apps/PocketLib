@@ -10,6 +10,7 @@ import {
 import { isSuccessStatusCode } from "dav-js"
 import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
 import { EditProfileDialogComponent } from "src/app/components/dialogs/edit-profile-dialog/edit-profile-dialog.component"
+import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -86,10 +87,9 @@ export class PublisherProfileComponent {
 	//#endregion
 
 	//#region CreateAuthorDialog
-	createAuthorDialogVisible: boolean = false
+	@ViewChild("createAuthorDialog")
+	createAuthorDialog: CreateAuthorDialogComponent
 	createAuthorDialogLoading: boolean = false
-	createAuthorDialogFirstName: string = ""
-	createAuthorDialogLastName: string = ""
 	createAuthorDialogFirstNameError: string = ""
 	createAuthorDialogLastNameError: string = ""
 	//#endregion
@@ -418,12 +418,10 @@ export class PublisherProfileComponent {
 	}
 
 	ShowCreateAuthorDialog() {
-		this.createAuthorDialogFirstName = ""
 		this.createAuthorDialogFirstNameError = ""
-		this.createAuthorDialogLastName = ""
 		this.createAuthorDialogLastNameError = ""
-		this.createAuthorDialogVisible = true
 		this.createAuthorDialogLoading = false
+		this.createAuthorDialog.show()
 	}
 
 	authorItemClick(event: Event, author: AuthorItem) {
@@ -431,7 +429,7 @@ export class PublisherProfileComponent {
 		this.router.navigate(["store", "author", author.uuid])
 	}
 
-	async CreateAuthor() {
+	async CreateAuthor(result: { firstName: string; lastName: string }) {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true
@@ -444,8 +442,8 @@ export class PublisherProfileComponent {
 			`,
 			{
 				publisher: this.publisher.uuid,
-				firstName: this.createAuthorDialogFirstName,
-				lastName: this.createAuthorDialogLastName
+				firstName: result.firstName,
+				lastName: result.lastName
 			}
 		)
 
@@ -465,34 +463,34 @@ export class PublisherProfileComponent {
 			for (let errorCode of errors) {
 				switch (errorCode) {
 					case ErrorCodes.firstNameTooShort:
-						if (this.createAuthorDialogFirstName.length == 0) {
+						if (result.firstName.length == 0) {
 							this.createAuthorDialogFirstNameError =
-								this.locale.createAuthorDialog.errors.firstNameMissing
+								this.locale.errors.firstNameMissing
 						} else {
 							this.createAuthorDialogFirstNameError =
-								this.locale.createAuthorDialog.errors.firstNameTooShort
+								this.locale.errors.firstNameTooShort
 						}
 						break
 					case ErrorCodes.lastNameTooShort:
-						if (this.createAuthorDialogLastName.length == 0) {
+						if (result.lastName.length == 0) {
 							this.createAuthorDialogLastNameError =
-								this.locale.createAuthorDialog.errors.lastNameMissing
+								this.locale.errors.lastNameMissing
 						} else {
 							this.createAuthorDialogLastNameError =
-								this.locale.createAuthorDialog.errors.lastNameTooShort
+								this.locale.errors.lastNameTooShort
 						}
 						break
 					case ErrorCodes.firstNameTooLong:
 						this.createAuthorDialogFirstNameError =
-							this.locale.createAuthorDialog.errors.firstNameTooLong
+							this.locale.errors.firstNameTooLong
 						break
 					case ErrorCodes.lastNameTooLong:
 						this.createAuthorDialogLastNameError =
-							this.locale.createAuthorDialog.errors.lastNameTooLong
+							this.locale.errors.lastNameTooLong
 						break
 					default:
 						this.createAuthorDialogFirstNameError =
-							this.locale.createAuthorDialog.errors.unexpectedError
+							this.locale.errors.unexpectedError
 						break
 				}
 			}

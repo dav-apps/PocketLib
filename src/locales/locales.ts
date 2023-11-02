@@ -244,23 +244,6 @@ const enDefaults = {
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
-		createAuthorDialog: {
-			headline: "Create author",
-			firstNameTextfieldLabel: "First name",
-			firstNameTextfieldPlaceholder: "First name of the author",
-			lastNameTextfieldLabel: "Last name",
-			lastNameTextfieldPlaceholder: "Last name of the author",
-			errors: {
-				firstNameMissing: "Please enter the first name",
-				lastNameMissing: "Please enter the last name",
-				firstNameTooShort: "The first name is too short",
-				lastNameTooShort: "The last name is too short",
-				firstNameTooLong: "The first name is too long",
-				lastNameTooLong: "The last name is too long",
-				unexpectedError:
-					"An unexpected error occured. Please try again later."
-			}
-		},
 		errors: {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo",
@@ -270,12 +253,17 @@ const enDefaults = {
 			nameTooLong: "The name is too long",
 			websiteUrlInvalid: "The link is invalid",
 			usernameInvalid: "The username is invalid",
+			firstNameMissing: "Please enter the first name",
+			lastNameMissing: "Please enter the last name",
+			firstNameTooShort: "The first name is too short",
+			lastNameTooShort: "The last name is too short",
+			firstNameTooLong: "The first name is too long",
+			lastNameTooLong: "The last name is too long",
 			unexpectedError: "An unexpected error occured. Please try again later."
 		},
 		edit: "Edit",
 		cancel: "Cancel",
-		save: "Save",
-		create: "Create"
+		save: "Save"
 	},
 	authorProfile: {
 		yourBooks: "Your books",
@@ -760,23 +748,6 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
-		createAuthorDialog: {
-			headline: "Autor erstellen",
-			firstNameTextfieldLabel: "Vorname",
-			firstNameTextfieldPlaceholder: "Vorname des Autors",
-			lastNameTextfieldLabel: "Nachname",
-			lastNameTextfieldPlaceholder: "Nachname des Autors",
-			errors: {
-				firstNameMissing: "Bitte gib einen Vornamen ein",
-				lastNameMissing: "Bitte gib einen Nachnamen ein",
-				firstNameTooShort: "Der Vorname ist zu kurz",
-				lastNameTooShort: "Der Nachname ist zu kurz",
-				firstNameTooLong: "Der Vorname ist zu lang",
-				lastNameTooLong: "Der Nachname ist zu lang",
-				unexpectedError:
-					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
-			}
-		},
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
 			logoUploadFailed:
@@ -787,13 +758,18 @@ const deDefaults = {
 			nameTooLong: "Der Name ist zu lang",
 			websiteUrlInvalid: "Der Link ist ungültig",
 			usernameInvalid: "Der Nutzername ist ungültig",
+			firstNameMissing: "Bitte gib einen Vornamen ein",
+			lastNameMissing: "Bitte gib einen Nachnamen ein",
+			firstNameTooShort: "Der Vorname ist zu kurz",
+			lastNameTooShort: "Der Nachname ist zu kurz",
+			firstNameTooLong: "Der Vorname ist zu lang",
+			lastNameTooLong: "Der Nachname ist zu lang",
 			unexpectedError:
 				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
-		save: "Speichern",
-		create: "Erstellen"
+		save: "Speichern"
 	},
 	authorProfile: {
 		yourBooks: "Deine Bücher",
