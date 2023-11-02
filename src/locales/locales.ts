@@ -244,28 +244,6 @@ const enDefaults = {
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
-		editProfileDialog: {
-			headline: "Edit your profile",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "The name of your publisher",
-			websiteUrlTextfieldLabel: "Website",
-			websiteUrlTextfieldPlaceholder: "Link to your website",
-			facebookUsernameTextfieldLabel: "Facebook",
-			facebookUsernameTextfieldPlaceholder: "Your username on Facebook",
-			instagramUsernameTextfieldLabel: "Instagram",
-			instagramUsernameTextfieldPlaceholder: "Your username on Instagram",
-			twitterUsernameTextfieldLabel: "Twitter",
-			twitterUsernameTextfieldPlaceholder: "Your username on Twitter",
-			errors: {
-				nameMissing: "Please enter a name",
-				nameTooShort: "The name is too short",
-				nameTooLong: "The name is too long",
-				websiteUrlInvalid: "The link is invalid",
-				usernameInvalid: "The username is invalid",
-				unexpectedError:
-					"An unexpected error occured. Please try again later."
-			}
-		},
 		createAuthorDialog: {
 			headline: "Create author",
 			firstNameTextfieldLabel: "First name",
@@ -287,7 +265,12 @@ const enDefaults = {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo",
 			descriptionTooLong: "The description is too long",
-			unexpectedError: "An unexpected error occured"
+			nameMissing: "Please enter a name",
+			nameTooShort: "The name is too short",
+			nameTooLong: "The name is too long",
+			websiteUrlInvalid: "The link is invalid",
+			usernameInvalid: "The username is invalid",
+			unexpectedError: "An unexpected error occured. Please try again later."
 		},
 		edit: "Edit",
 		cancel: "Cancel",
@@ -488,6 +471,21 @@ const enDefaults = {
 		},
 		logoDialog: {
 			headline: "Crop your logo",
+			save: "Save",
+			cancel: "Cancel"
+		},
+		editProfileDialog: {
+			headline: "Edit your profile",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "The name of your publisher",
+			websiteUrlTextfieldLabel: "Website",
+			websiteUrlTextfieldPlaceholder: "Link to your website",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Your username on Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Your username on Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Your username on Twitter",
 			save: "Save",
 			cancel: "Cancel"
 		}
@@ -762,28 +760,6 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
-		editProfileDialog: {
-			headline: "Profil bearbeiten",
-			nameTextfieldLabel: "Name",
-			nameTextfieldPlaceholder: "Name deines Verlags",
-			websiteUrlTextfieldLabel: "Webseite",
-			websiteUrlTextfieldPlaceholder: "Link zu deiner Webseite",
-			facebookUsernameTextfieldLabel: "Facebook",
-			facebookUsernameTextfieldPlaceholder: "Dein Nutzername auf Facebook",
-			instagramUsernameTextfieldLabel: "Instagram",
-			instagramUsernameTextfieldPlaceholder: "Dein Nutzername auf Instagram",
-			twitterUsernameTextfieldLabel: "Twitter",
-			twitterUsernameTextfieldPlaceholder: "Dein Nutzername auf Twitter",
-			errors: {
-				nameMissing: "Bitte gib einen Namen ein",
-				nameTooShort: "Der Name ist zu kurz",
-				nameTooLong: "Der Name ist zu lang",
-				websiteUrlInvalid: "Der Link ist ungültig",
-				usernameInvalid: "Der Nutzername ist ungültig",
-				unexpectedError:
-					"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
-			}
-		},
 		createAuthorDialog: {
 			headline: "Autor erstellen",
 			firstNameTextfieldLabel: "Vorname",
@@ -806,7 +782,13 @@ const deDefaults = {
 			logoUploadFailed:
 				"Beim Hochladen des Logos ist ein Fehler aufgetreten",
 			descriptionTooLong: "Die Beschreibung ist zu lang",
-			unexpectedError: "Ein unerwarteter Fehler ist aufgetreten"
+			nameMissing: "Bitte gib einen Namen ein",
+			nameTooShort: "Der Name ist zu kurz",
+			nameTooLong: "Der Name ist zu lang",
+			websiteUrlInvalid: "Der Link ist ungültig",
+			usernameInvalid: "Der Nutzername ist ungültig",
+			unexpectedError:
+				"Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später nochmal."
 		},
 		edit: "Bearbeiten",
 		cancel: "Abbrechen",
@@ -1007,6 +989,21 @@ const deDefaults = {
 		},
 		logoDialog: {
 			headline: "Logo zuschneiden",
+			save: "Speichern",
+			cancel: "Abbrechen"
+		},
+		editProfileDialog: {
+			headline: "Profil bearbeiten",
+			nameTextfieldLabel: "Name",
+			nameTextfieldPlaceholder: "Name deines Verlags",
+			websiteUrlTextfieldLabel: "Webseite",
+			websiteUrlTextfieldPlaceholder: "Link zu deiner Webseite",
+			facebookUsernameTextfieldLabel: "Facebook",
+			facebookUsernameTextfieldPlaceholder: "Dein Nutzername auf Facebook",
+			instagramUsernameTextfieldLabel: "Instagram",
+			instagramUsernameTextfieldPlaceholder: "Dein Nutzername auf Instagram",
+			twitterUsernameTextfieldLabel: "Twitter",
+			twitterUsernameTextfieldPlaceholder: "Dein Nutzername auf Twitter",
 			save: "Speichern",
 			cancel: "Abbrechen"
 		}

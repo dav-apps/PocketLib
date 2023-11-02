@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
+import { EditProfileDialogComponent } from "src/app/components/dialogs/edit-profile-dialog/edit-profile-dialog.component"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -70,7 +71,8 @@ export class PublisherProfileComponent {
 	//#endregion
 
 	//#region EditProfileDialog
-	editProfileDialogVisible: boolean = false
+	@ViewChild("editProfileDialog")
+	editProfileDialog: EditProfileDialogComponent
 	editProfileDialogName: string = ""
 	editProfileDialogNameError: string = ""
 	editProfileDialogWebsiteUrl: string = ""
@@ -286,10 +288,16 @@ export class PublisherProfileComponent {
 		this.editProfileDialogTwitterUsername =
 			this.publisher.twitterUsername || ""
 		this.editProfileDialogTwitterUsernameError = ""
-		this.editProfileDialogVisible = true
+		this.editProfileDialog.show()
 	}
 
-	async SaveProfile() {
+	async SaveProfile(result: {
+		name: string
+		websiteUrl: string
+		facebookUsername: string
+		instagramUsername: string
+		twitterUsername: string
+	}) {
 		this.editProfileDialogNameError = ""
 		this.editProfileDialogWebsiteUrlError = ""
 		this.editProfileDialogFacebookUsernameError = ""
@@ -306,17 +314,17 @@ export class PublisherProfileComponent {
 			`,
 			{
 				uuid: this.dataService.userIsAdmin ? this.publisher.uuid : "mine",
-				name: this.editProfileDialogName,
-				websiteUrl: this.editProfileDialogWebsiteUrl,
-				facebookUsername: this.editProfileDialogFacebookUsername,
-				instagramUsername: this.editProfileDialogInstagramUsername,
-				twitterUsername: this.editProfileDialogTwitterUsername
+				name: result.name,
+				websiteUrl: result.websiteUrl,
+				facebookUsername: result.facebookUsername,
+				instagramUsername: result.instagramUsername,
+				twitterUsername: result.twitterUsername
 			}
 		)
 
 		if (response.errors == null) {
 			let responseData = response.data.updatePublisher
-			this.editProfileDialogVisible = false
+			this.editProfileDialog.hide()
 
 			this.publisher.name = responseData.name
 			this.publisher.websiteUrl = responseData.websiteUrl
@@ -333,31 +341,31 @@ export class PublisherProfileComponent {
 					case ErrorCodes.nameTooShort:
 						if (this.editProfileDialogName.length == 0) {
 							this.editProfileDialogNameError =
-								this.locale.editProfileDialog.errors.nameMissing
+								this.locale.errors.nameMissing
 						} else {
 							this.editProfileDialogNameError =
-								this.locale.editProfileDialog.errors.nameTooShort
+								this.locale.errors.nameTooShort
 						}
 						break
 					case ErrorCodes.nameTooLong:
 						this.editProfileDialogNameError =
-							this.locale.editProfileDialog.errors.nameTooLong
+							this.locale.errors.nameTooLong
 						break
 					case ErrorCodes.websiteUrlInvalid:
 						this.editProfileDialogWebsiteUrlError =
-							this.locale.editProfileDialog.errors.websiteUrlInvalid
+							this.locale.errors.websiteUrlInvalid
 						break
 					case ErrorCodes.facebookUsernameInvalid:
 						this.editProfileDialogFacebookUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 					case ErrorCodes.instagramUsernameInvalid:
 						this.editProfileDialogInstagramUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 					case ErrorCodes.twitterUsernameInvalid:
 						this.editProfileDialogTwitterUsernameError =
-							this.locale.editProfileDialog.errors.usernameInvalid
+							this.locale.errors.usernameInvalid
 						break
 				}
 			}

@@ -177,105 +177,20 @@
 	(primaryButtonClick)="UploadLogo($event)"
 ></pocketlib-logo-dialog>
 
-<dav-dialog
-	[headline]="locale.editProfileDialog.headline"
-	[primaryButtonText]="locale.save"
-	[defaultButtonText]="locale.cancel"
-	[visible]="editProfileDialogVisible"
-	(dismiss)="editProfileDialogVisible = false"
-	(primaryButtonClick)="SaveProfile()"
-	(defaultButtonClick)="editProfileDialogVisible = false"
->
-	<form>
-		<!-- Name -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editProfileDialogName"
-				[label]="locale.editProfileDialog.nameTextfieldLabel"
-				[placeholder]="locale.editProfileDialog.nameTextfieldPlaceholder"
-				[errorMessage]="editProfileDialogNameError"
-				(change)="
-					editProfileDialogName = $event.detail.value;
-					editProfileDialogNameError = ''
-				"
-				(enter)="SaveProfile()"
-			></dav-textfield>
-		</div>
-
-		<!-- Website url -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editProfileDialogWebsiteUrl"
-				[label]="locale.editProfileDialog.websiteUrlTextfieldLabel"
-				[placeholder]="
-					locale.editProfileDialog.websiteUrlTextfieldPlaceholder
-				"
-				type="url"
-				autocomplete="url"
-				[errorMessage]="editProfileDialogWebsiteUrlError"
-				(change)="
-					editProfileDialogWebsiteUrl = $event.detail.value;
-					editProfileDialogWebsiteUrlError = ''
-				"
-				(enter)="SaveProfile()"
-			></dav-textfield>
-		</div>
-
-		<!-- Facebook username -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editProfileDialogFacebookUsername"
-				[label]="locale.editProfileDialog.facebookUsernameTextfieldLabel"
-				[placeholder]="
-					locale.editProfileDialog.facebookUsernameTextfieldPlaceholder
-				"
-				autocomplete="username"
-				[errorMessage]="editProfileDialogFacebookUsernameError"
-				(change)="
-					editProfileDialogFacebookUsername = $event.detail.value;
-					editProfileDialogFacebookUsernameError = ''
-				"
-				(enter)="SaveProfile()"
-			></dav-textfield>
-		</div>
-
-		<!-- Instagram username -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editProfileDialogInstagramUsername"
-				[label]="locale.editProfileDialog.instagramUsernameTextfieldLabel"
-				[placeholder]="
-					locale.editProfileDialog.instagramUsernameTextfieldPlaceholder
-				"
-				autocomplete="username"
-				[errorMessage]="editProfileDialogInstagramUsernameError"
-				(change)="
-					editProfileDialogInstagramUsername = $event.detail.value;
-					editProfileDialogInstagramUsernameError = ''
-				"
-				(enter)="SaveProfile()"
-			></dav-textfield>
-		</div>
-
-		<!-- Twitter username -->
-		<div class="dialog-formfield-container">
-			<dav-textfield
-				[value]="editProfileDialogTwitterUsername"
-				[label]="locale.editProfileDialog.twitterUsernameTextfieldLabel"
-				[placeholder]="
-					locale.editProfileDialog.twitterUsernameTextfieldPlaceholder
-				"
-				autocomplete="username"
-				[errorMessage]="editProfileDialogTwitterUsernameError"
-				(change)="
-					editProfileDialogTwitterUsername = $event.detail.value;
-					editProfileDialogTwitterUsernameError = ''
-				"
-				(enter)="SaveProfile()"
-			></dav-textfield>
-		</div>
-	</form>
-</dav-dialog>
+<pocketlib-edit-profile-dialog
+	#editProfileDialog
+	[name]="editProfileDialogName"
+	[websiteUrl]="editProfileDialogWebsiteUrl"
+	[facebookUsername]="editProfileDialogFacebookUsername"
+	[instagramUsername]="editProfileDialogInstagramUsername"
+	[twitterUsername]="editProfileDialogTwitterUsername"
+	[nameError]="editProfileDialogNameError"
+	[websiteUrlError]="editProfileDialogWebsiteUrlError"
+	[facebookUsernameError]="editProfileDialogFacebookUsernameError"
+	[instagramUsernameError]="editProfileDialogInstagramUsernameError"
+	[twitterUsernameError]="editProfileDialogTwitterUsernameError"
+	(primaryButtonClick)="SaveProfile($event)">
+</pocketlib-edit-profile-dialog>
 
 <dav-dialog
 	[headline]="locale.createAuthorDialog.headline"
