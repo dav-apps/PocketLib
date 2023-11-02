@@ -462,7 +462,7 @@ const enDefaults = {
 			save: "Save",
 			cancel: "Cancel"
 		},
-		editProfileDialog: {
+		editPublisherProfileDialog: {
 			headline: "Edit your profile",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "The name of your publisher",
@@ -968,7 +968,7 @@ const deDefaults = {
 			save: "Speichern",
 			cancel: "Abbrechen"
 		},
-		editProfileDialog: {
+		editPublisherProfileDialog: {
 			headline: "Profil bearbeiten",
 			nameTextfieldLabel: "Name",
 			nameTextfieldPlaceholder: "Name deines Verlags",

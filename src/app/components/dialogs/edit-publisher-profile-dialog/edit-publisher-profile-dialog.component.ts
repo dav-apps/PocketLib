@@ -11,11 +11,11 @@ import { DataService } from "src/app/services/data-service"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: "pocketlib-edit-profile-dialog",
-	templateUrl: "./edit-profile-dialog.component.html"
+	selector: "pocketlib-edit-publisher-profile-dialog",
+	templateUrl: "./edit-publisher-profile-dialog.component.html"
 })
-export class EditProfileDialogComponent {
-	locale = enUS.dialogs.editProfileDialog
+export class EditPublisherProfileDialogComponent {
+	locale = enUS.dialogs.editPublisherProfileDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() name: string = ""
 	@Input() websiteUrl: string = ""
@@ -31,7 +31,8 @@ export class EditProfileDialogComponent {
 	visible: boolean = false
 
 	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.editProfileDialog
+		this.locale =
+			this.dataService.GetLocale().dialogs.editPublisherProfileDialog
 	}
 
 	ngAfterViewInit() {

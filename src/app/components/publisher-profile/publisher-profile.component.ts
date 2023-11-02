@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
 import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
-import { EditProfileDialogComponent } from "src/app/components/dialogs/edit-profile-dialog/edit-profile-dialog.component"
+import { EditPublisherProfileDialogComponent } from "src/app/components/dialogs/edit-publisher-profile-dialog/edit-publisher-profile-dialog.component"
 import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
@@ -73,7 +73,7 @@ export class PublisherProfileComponent {
 
 	//#region EditProfileDialog
 	@ViewChild("editProfileDialog")
-	editProfileDialog: EditProfileDialogComponent
+	editProfileDialog: EditPublisherProfileDialogComponent
 	editProfileDialogName: string = ""
 	editProfileDialogNameError: string = ""
 	editProfileDialogWebsiteUrl: string = ""
