@@ -129,6 +129,8 @@ export class AppComponent {
 				) => this.UpdateTableObject(tableObject, fileDownloaded),
 				UserLoaded: () => this.UserLoaded(),
 				UserDownloaded: () => this.UserDownloaded(),
+				AccessTokenRenewed: (accessToken: string) =>
+					this.AccessTokenRenewed(accessToken),
 				SyncFinished: () => this.SyncFinished()
 			}
 		})
@@ -204,6 +206,18 @@ export class AppComponent {
 		this.router.navigate(["/settings"])
 	}
 
+	setupApollo(accessToken: string) {
+		this.apollo.removeClient()
+
+		this.apollo.create({
+			cache: new InMemoryCache({ dataIdFromObject }),
+			link: this.httpLink.create({
+				uri: environment.pocketlibApiUrl,
+				headers: new HttpHeaders().set("Authorization", accessToken)
+			})
+		})
+	}
+
 	//#region dav-js callback functions
 	async UpdateAllOfTable(tableId: number, changed: boolean) {
 		if (tableId == environment.settingsTableId) {
@@ -242,18 +256,7 @@ export class AppComponent {
 
 		if (this.dataService.dav.isLoggedIn) {
 			// Setup the apollo client with the access token
-			this.apollo.removeClient()
-
-			this.apollo.create({
-				cache: new InMemoryCache({ dataIdFromObject }),
-				link: this.httpLink.create({
-					uri: environment.pocketlibApiUrl,
-					headers: new HttpHeaders().set(
-						"Authorization",
-						this.dataService.dav.accessToken
-					)
-				})
-			})
+			this.setupApollo(this.dataService.dav.accessToken)
 		}
 
 		this.dataService.userPromiseHolder.Resolve()
@@ -265,6 +268,10 @@ export class AppComponent {
 		this.dataService.userIsAdmin = environment.admins.includes(
 			this.dataService.dav.user.Id
 		)
+	}
+
+	AccessTokenRenewed(accessToken: string) {
+		this.setupApollo(accessToken)
 	}
 
 	SyncFinished() {
