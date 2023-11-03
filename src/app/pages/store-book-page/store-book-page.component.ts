@@ -520,6 +520,7 @@ export class StoreBookPageComponent {
 			await this.dataService.settings.SetBook(book.uuid, null, book.page)
 		}
 
+		this.dataService.loadingScreenVisible = false
 		this.router.navigate(["book"])
 	}
 
