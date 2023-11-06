@@ -20,7 +20,7 @@ You can find the web app here:
 
 PocketLib is also available in the Microsoft Store and in the Google Play Store:
 
-<a href='//www.microsoft.com/store/apps/9NCRKB9SQ79S?cid=storebadge&ocid=badge' target="blank"><img src='https://dav-apps.tech/assets/images/MicrosoftStoreBadge.jpg' alt='Microsoft Store badge' height="48" /></a>
+<a href='//www.microsoft.com/store/apps/9PGMTP14CLJW?cid=storebadge&ocid=badge' target="blank"><img src='https://dav-apps.tech/assets/images/MicrosoftStoreBadge.jpg' alt='Microsoft Store badge' height="48" /></a>
 
 <a href='https://play.google.com/store/apps/details?id=app.dav.pocketlib&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="blank"><img alt='Google Play Badge' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="70" /></a>
 
