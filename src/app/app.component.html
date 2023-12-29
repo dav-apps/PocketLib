@@ -29,6 +29,10 @@
 	<div class="navbar-spacer"></div>
 
 	<div class="navbar-icon-buttons-container">
+		<dav-icon-button (click)="searchButtonClick()">
+			<fa-icon [icon]="faMagnifyingGlassRegular"></fa-icon>
+		</dav-icon-button>
+
 		<dav-icon-button
 			*ngIf="dataService.userAuthor || dataService.userIsAdmin"
 			(click)="navigateToAuthorPage()"
@@ -140,9 +144,16 @@
 
 <pocketlib-loading-screen
 	[message]="dataService.loadingScreenMessage"
-	*ngIf="dataService.loadingScreenVisible">
-</pocketlib-loading-screen>
+	*ngIf="dataService.loadingScreenVisible"
+></pocketlib-loading-screen>
 
 <pocketlib-simple-loading-screen
 	*ngIf="dataService.simpleLoadingScreenVisible"
 ></pocketlib-simple-loading-screen>
+
+<dav-search
+	placeholder="Search for books..."
+	[visible]="searchVisible"
+	(change)="searchChange($event)"
+	(dismiss)="searchVisible = false"
+></dav-search>

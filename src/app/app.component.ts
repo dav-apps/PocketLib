@@ -21,10 +21,11 @@ import {
 	faBook as faBookRegular,
 	faCircleUser as faCircleUserRegular,
 	faGear as faGearRegular,
-	faBagShopping as faBagShoppingRegular
+	faBagShopping as faBagShoppingRegular,
+	faMagnifyingGlass as faMagnifyingGlassRegular
 } from "@fortawesome/pro-regular-svg-icons"
 import { faAddressCard as faAddressCardLight } from "@fortawesome/pro-light-svg-icons"
-import { Dav, TableObject, Environment } from "dav-js"
+import { Dav, TableObject } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -50,6 +51,7 @@ export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faBookRegular = faBookRegular
 	faBookSolid = faBookSolid
+	faMagnifyingGlassRegular = faMagnifyingGlassRegular
 	@ViewChild("contentContainer")
 	contentContainer: ElementRef<HTMLDivElement>
 	libraryLabel: string = ""
@@ -59,6 +61,7 @@ export class AppComponent {
 	authorButtonSelected: boolean = false
 	accountButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
+	searchVisible: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -204,6 +207,14 @@ export class AppComponent {
 
 	navigateToSettingsPage() {
 		this.router.navigate(["/settings"])
+	}
+
+	searchChange(event: CustomEvent) {
+		console.log(event.detail.value)
+	}
+
+	searchButtonClick() {
+		this.searchVisible = true
 	}
 
 	setupApollo(accessToken: string) {
