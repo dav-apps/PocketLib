@@ -235,9 +235,11 @@ export class AppComponent {
 
 		if (this.searchQuery.length > 0) {
 			for (let book of this.dataService.books) {
+				if (!(book instanceof EpubBook)) continue
+
 				if (
-					book instanceof EpubBook &&
-					book.title.toLowerCase().includes(this.searchQuery)
+					book.title.toLowerCase().includes(this.searchQuery) ||
+					book.author.toLowerCase().includes(this.searchQuery)
 				) {
 					this.searchResultItems.push(book)
 				}
