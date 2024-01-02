@@ -485,6 +485,10 @@ const enDefaults = {
 		},
 		library: "Library",
 		store: "Store",
+		search: {
+			placeholder: "Search for books",
+			noResultsMessage: "No books found"
+		},
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
 		authorProfileImageAlt: "The profile image of the author {0}"
@@ -992,6 +996,10 @@ const deDefaults = {
 		},
 		library: "Bibliothek",
 		store: "Store",
+		search: {
+			placeholder: "Suche nach Büchern",
+			noResultsMessage: "Keine Bücher gefunden"
+		},
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
 		authorProfileImageAlt: "Das Profilbild des Autors {0}"

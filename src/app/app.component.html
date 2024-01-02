@@ -118,7 +118,7 @@
 				*ngIf="libraryTabActive"
 			></fa-icon>
 
-			<p slot="label">{{ libraryLabel }}</p>
+			<p slot="label">{{ locale.library }}</p>
 		</dav-navigation-bar-item>
 
 		<dav-navigation-bar-item
@@ -137,7 +137,7 @@
 				*ngIf="storeTabActive"
 			></fa-icon>
 
-			<p slot="label">{{ storeLabel }}</p>
+			<p slot="label">{{ locale.store }}</p>
 		</dav-navigation-bar-item>
 	</dav-navigation-bar>
 </div>
@@ -153,9 +153,10 @@
 
 <dav-search
 	#search
-	placeholder="Search for books..."
+	[placeholder]="locale.search.placeholder"
 	[visible]="searchVisible"
 	[noResults]="searchQuery.length > 0 && searchResultItems.length == 0"
+	[noResultsMessage]="locale.search.noResultsMessage"
 	(change)="searchChange($event)"
 	(dismiss)="searchVisible = false"
 >

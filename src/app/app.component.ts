@@ -35,6 +35,7 @@ import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject } from "./misc/utils"
 import { smallWindowMaxSize } from "src/constants/constants"
 import { environment } from "src/environments/environment"
+import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "app-root",
@@ -42,6 +43,7 @@ import { environment } from "src/environments/environment"
 	styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
+	locale = enUS.misc
 	faCircleUserRegular = faCircleUserRegular
 	faCircleUserSolid = faCircleUserSolid
 	faGearRegular = faGearRegular
@@ -57,8 +59,6 @@ export class AppComponent {
 	contentContainer: ElementRef<HTMLDivElement>
 	@ViewChild("search")
 	search: ElementRef<DavUIComponents.Search>
-	libraryLabel: string = ""
-	storeLabel: string = ""
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
 	authorButtonSelected: boolean = false
@@ -77,9 +77,7 @@ export class AppComponent {
 		private httpLink: HttpLink,
 		private cd: ChangeDetectorRef
 	) {
-		let locale = this.dataService.GetLocale().misc
-		this.libraryLabel = locale.library
-		this.storeLabel = locale.store
+		this.locale = this.dataService.GetLocale().misc
 
 		DavUIComponents.setLocale(this.dataService.locale)
 
