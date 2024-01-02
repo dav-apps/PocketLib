@@ -152,8 +152,21 @@
 ></pocketlib-simple-loading-screen>
 
 <dav-search
+	#search
 	placeholder="Search for books..."
 	[visible]="searchVisible"
+	[noResults]="searchQuery.length > 0 && searchResultItems.length == 0"
 	(change)="searchChange($event)"
 	(dismiss)="searchVisible = false"
-></dav-search>
+>
+	<dav-list>
+		<dav-list-item
+			[imageSrc]="book.cover"
+			[imageFallbackSrc]="dataService.defaultStoreBookCover"
+			[headline]="book.title"
+			[subhead]="book.author"
+			*ngFor="let book of searchResultItems"
+			(click)="navigateToBook(book)"
+		></dav-list-item>
+	</dav-list>
+</dav-search>

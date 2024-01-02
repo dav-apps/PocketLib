@@ -6,10 +6,10 @@ import {
 	ChangeDetectorRef
 } from "@angular/core"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
+import { HttpHeaders } from "@angular/common/http"
 import { Apollo } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
-import { HttpHeaders } from "@angular/common/http"
 import {
 	faAddressCard as faAddressCardSolid,
 	faBook as faBookSolid,
@@ -29,8 +29,9 @@ import { Dav, TableObject } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { RoutingService } from "src/app/services/routing-service"
-import { GetSettings } from "src/app/models/Settings"
+import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
+import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject } from "./misc/utils"
 import { smallWindowMaxSize } from "src/constants/constants"
 import { environment } from "src/environments/environment"
@@ -54,6 +55,8 @@ export class AppComponent {
 	faMagnifyingGlassRegular = faMagnifyingGlassRegular
 	@ViewChild("contentContainer")
 	contentContainer: ElementRef<HTMLDivElement>
+	@ViewChild("search")
+	search: ElementRef<DavUIComponents.Search>
 	libraryLabel: string = ""
 	storeLabel: string = ""
 	libraryTabActive: boolean = false
@@ -62,6 +65,8 @@ export class AppComponent {
 	accountButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
 	searchVisible: boolean = false
+	searchQuery: string = ""
+	searchResultItems: EpubBook[] = []
 
 	constructor(
 		public dataService: DataService,
@@ -209,8 +214,37 @@ export class AppComponent {
 		this.router.navigate(["/settings"])
 	}
 
+	navigateToBook(book: EpubBook) {
+		// Check if the user can access the book
+		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
+			// TODO: Show dialog
+			return
+		}
+
+		// Open the book on the book page
+		this.searchVisible = false
+		this.dataService.currentBook = book
+		this.router.navigate(["book"])
+
+		setTimeout(() => {
+			this.search.nativeElement.clearSearchQuery()
+		}, 500)
+	}
+
 	searchChange(event: CustomEvent) {
-		console.log(event.detail.value)
+		this.searchQuery = event.detail.value.toLowerCase()
+		this.searchResultItems = []
+
+		if (this.searchQuery.length > 0) {
+			for (let book of this.dataService.books) {
+				if (
+					book instanceof EpubBook &&
+					book.title.toLowerCase().includes(this.searchQuery)
+				) {
+					this.searchResultItems.push(book)
+				}
+			}
+		}
 	}
 
 	searchButtonClick() {
