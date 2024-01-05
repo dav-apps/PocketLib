@@ -77,6 +77,7 @@ export class AppComponent {
 	librarySearchResultItems: EpubBook[] = []
 	storeSearchResultItems: StoreBookSearchItem[] = []
 	listStoreBooksPromiseKey: number = 0
+	storeSearchLoading: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -269,6 +270,8 @@ export class AppComponent {
 			}
 
 			// Search books on the API
+			this.storeSearchLoading = true
+
 			let searchQueryCopy = this.searchQuery
 			await new Promise(resolve => setTimeout(resolve, 500))
 
@@ -312,6 +315,8 @@ export class AppComponent {
 						cover: item.cover.url
 					})
 				}
+
+				this.storeSearchLoading = false
 			}
 		}
 	}

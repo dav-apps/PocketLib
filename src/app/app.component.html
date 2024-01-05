@@ -158,7 +158,8 @@
 	[noResults]="
 		searchQuery.length > 0 &&
 		librarySearchResultItems.length == 0 &&
-		storeSearchResultItems.length == 0
+		storeSearchResultItems.length == 0 &&
+		!storeSearchLoading
 	"
 	[noResultsMessage]="locale.search.noResultsMessage"
 	(change)="searchChange($event)"
@@ -184,12 +185,24 @@
 		<h3
 			class="search-result-headline store-search-result-headline"
 			*ngIf="
-				librarySearchResultItems.length > 0 &&
-				storeSearchResultItems.length > 0
+				(storeSearchLoading && librarySearchResultItems.length > 0) ||
+				(librarySearchResultItems.length > 0 &&
+					storeSearchResultItems.length > 0)
 			"
 		>
 			{{ locale.search.storeHeadline }}
 		</h3>
+
+		<div
+			class="store-results-progress-ring-container"
+			*ngIf="storeSearchLoading"
+		>
+			<dav-progress-ring
+				indeterminate
+				size="24"
+				[color]="dataService.darkTheme ? 'white' : 'black'"
+			></dav-progress-ring>
+		</div>
 
 		<dav-list-item
 			[imageSrc]="book.cover"
