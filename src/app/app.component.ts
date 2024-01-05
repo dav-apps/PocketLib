@@ -269,26 +269,32 @@ export class AppComponent {
 			}
 
 			// Search books on the API
+			let searchQueryCopy = this.searchQuery
+			await new Promise(resolve => setTimeout(resolve, 500))
+
+			// Load the books if the query is still the same
+			if (this.searchQuery != searchQueryCopy) return
+
 			let promiseKey = Math.random()
 			this.listStoreBooksPromiseKey = promiseKey
 
 			let response = await this.apiService.listStoreBooks(
 				`
-				total
-				items {
-					uuid
-					title
-					collection {
-						author {
-							firstName
-							lastName
+					total
+					items {
+						uuid
+						title
+						collection {
+							author {
+								firstName
+								lastName
+							}
+						}
+						cover {
+							url
 						}
 					}
-					cover {
-						url
-					}
-				}
-			`,
+				`,
 				{ query: this.searchQuery }
 			)
 

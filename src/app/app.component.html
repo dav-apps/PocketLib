@@ -182,8 +182,11 @@
 		></dav-list-item>
 
 		<h3
-			class="search-result-headline"
-			*ngIf="storeSearchResultItems.length > 0"
+			class="search-result-headline store-search-result-headline"
+			*ngIf="
+				librarySearchResultItems.length > 0 &&
+				storeSearchResultItems.length > 0
+			"
 		>
 			{{ locale.search.storeHeadline }}
 		</h3>
