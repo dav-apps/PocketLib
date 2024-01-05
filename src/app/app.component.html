@@ -14,14 +14,14 @@
 				[active]="libraryTabActive"
 				(click)="navigateToLibraryPage()"
 			>
-				{{ libraryLabel }}
+				{{ locale.library }}
 			</dav-tab-bar-item>
 
 			<dav-tab-bar-item
 				[active]="storeTabActive"
 				(click)="navigateToStorePage()"
 			>
-				{{ storeLabel }}
+				{{ locale.store }}
 			</dav-tab-bar-item>
 		</dav-tab-bar>
 	</div>
@@ -194,6 +194,7 @@
 			[headline]="book.title"
 			[subhead]="book.author"
 			*ngFor="let book of storeSearchResultItems"
+			(click)="navigateToStoreBook(book)"
 		></dav-list-item>
 	</dav-list>
 </dav-search>

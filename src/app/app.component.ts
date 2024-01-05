@@ -38,6 +38,13 @@ import { smallWindowMaxSize } from "src/constants/constants"
 import { environment } from "src/environments/environment"
 import { enUS } from "src/locales/locales"
 
+interface StoreBookSearchItem {
+	uuid: string
+	title: string
+	author: string
+	cover: string
+}
+
 @Component({
 	selector: "app-root",
 	templateUrl: "./app.component.html",
@@ -68,12 +75,7 @@ export class AppComponent {
 	searchVisible: boolean = false
 	searchQuery: string = ""
 	librarySearchResultItems: EpubBook[] = []
-	storeSearchResultItems: {
-		uuid: string
-		title: string
-		author: string
-		cover: string
-	}[] = []
+	storeSearchResultItems: StoreBookSearchItem[] = []
 	listStoreBooksPromiseKey: number = 0
 
 	constructor(
@@ -232,6 +234,15 @@ export class AppComponent {
 		this.searchVisible = false
 		this.dataService.currentBook = book
 		this.router.navigate(["book"])
+
+		setTimeout(() => {
+			this.search.nativeElement.clearSearchQuery()
+		}, 500)
+	}
+
+	navigateToStoreBook(book: StoreBookSearchItem) {
+		this.searchVisible = false
+		this.router.navigate(["store", "book", book.uuid])
 
 		setTimeout(() => {
 			this.search.nativeElement.clearSearchQuery()
