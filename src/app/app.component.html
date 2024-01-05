@@ -155,19 +155,45 @@
 	#search
 	[placeholder]="locale.search.placeholder"
 	[visible]="searchVisible"
-	[noResults]="searchQuery.length > 0 && searchResultItems.length == 0"
+	[noResults]="
+		searchQuery.length > 0 &&
+		librarySearchResultItems.length == 0 &&
+		storeSearchResultItems.length == 0
+	"
 	[noResultsMessage]="locale.search.noResultsMessage"
 	(change)="searchChange($event)"
 	(dismiss)="searchVisible = false"
 >
 	<dav-list>
+		<h3
+			class="search-result-headline"
+			*ngIf="librarySearchResultItems.length > 0"
+		>
+			{{ locale.search.libraryHeadline }}
+		</h3>
+
 		<dav-list-item
 			[imageSrc]="book.cover"
 			[imageFallbackSrc]="dataService.defaultStoreBookCover"
 			[headline]="book.title"
 			[subhead]="book.author"
-			*ngFor="let book of searchResultItems"
+			*ngFor="let book of librarySearchResultItems"
 			(click)="navigateToBook(book)"
+		></dav-list-item>
+
+		<h3
+			class="search-result-headline"
+			*ngIf="storeSearchResultItems.length > 0"
+		>
+			{{ locale.search.storeHeadline }}
+		</h3>
+
+		<dav-list-item
+			[imageSrc]="book.cover"
+			[imageFallbackSrc]="dataService.defaultStoreBookCover"
+			[headline]="book.title"
+			[subhead]="book.author"
+			*ngFor="let book of storeSearchResultItems"
 		></dav-list-item>
 	</dav-list>
 </dav-search>

@@ -934,6 +934,7 @@ export class ApiService {
 			categories?: string[]
 			inReview?: boolean
 			random?: boolean
+			query?: string
 			languages?: string[]
 			limit?: number
 			offset?: number
@@ -948,6 +949,7 @@ export class ApiService {
 						$categories: [String!]
 						$inReview: Boolean
 						$random: Boolean
+						$query: String
 						$languages: [String!]
 						$limit: Int
 						$offset: Int
@@ -956,6 +958,7 @@ export class ApiService {
 							categories: $categories
 							inReview: $inReview
 							random: $random
+							query: $query
 							languages: $languages
 							limit: $limit
 							offset: $offset

@@ -487,7 +487,9 @@ const enDefaults = {
 		store: "Store",
 		search: {
 			placeholder: "Search for books",
-			noResultsMessage: "No books found"
+			noResultsMessage: "No books found",
+			libraryHeadline: "From your library",
+			storeHeadline: "More books"
 		},
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
@@ -998,7 +1000,9 @@ const deDefaults = {
 		store: "Store",
 		search: {
 			placeholder: "Suche nach Büchern",
-			noResultsMessage: "Keine Bücher gefunden"
+			noResultsMessage: "Keine Bücher gefunden",
+			libraryHeadline: "Aus deiner Bibliothek",
+			storeHeadline: "Weitere Bücher"
 		},
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
