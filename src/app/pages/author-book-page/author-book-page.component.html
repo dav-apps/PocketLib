@@ -2,7 +2,7 @@
 	<div class="header-container">
 		<dav-header
 			backButtonVisible
-			editButtonVisible
+			[editButtonVisible]="release == null"
 			(backButtonClick)="BackButtonClick()"
 			(editButtonClick)="ShowEditTitleDialog()"
 		>
