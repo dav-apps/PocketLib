@@ -214,6 +214,16 @@ export interface StoreBookFileResource {
 	fileName: string
 }
 
+export interface StoreBookPrintCoverResource {
+	uuid: string
+	fileName: string
+}
+
+export interface StoreBookPrintFileResource {
+	uuid: string
+	fileName: string
+}
+
 export interface CategoryResource {
 	uuid: string
 	key: string

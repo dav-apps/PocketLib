@@ -19,6 +19,8 @@ import {
 	StoreBookResource,
 	StoreBookCoverResource,
 	StoreBookFileResource,
+	StoreBookPrintCoverResource,
+	StoreBookPrintFileResource,
 	StoreBookReleaseResource,
 	CategoryResource,
 	BookResource
@@ -1196,6 +1198,98 @@ export class ApiService {
 				await renewSession()
 
 				return await this.uploadStoreBookFile(params)
+			}
+
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
+	}
+	//#endregion
+
+	//#region StoreBookPrintCover
+	async uploadStoreBookPrintCover(params: {
+		uuid: string
+		data: any
+	}): Promise<ApiResponse<StoreBookPrintCoverResource>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/coverFile`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": "application/pdf"
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					fileName: response.data.fileName
+				}
+			}
+		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookPrintCover(params)
+			}
+
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
+	}
+	//#endregion
+
+	//#region StoreBookPrintFile
+	async uploadStoreBookPrintFile(params: {
+		uuid: string
+		data: any
+	}): Promise<ApiResponse<StoreBookPrintFileResource>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/printFile`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": "application/pdf"
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					fileName: response.data.fileName
+				}
+			}
+		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookPrintFile(params)
 			}
 
 			return {
