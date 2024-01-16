@@ -32,6 +32,8 @@ export class AuthorBookPageComponent {
 	faPenLight = faPenLight
 	@ViewChild("priceInput")
 	priceInput: PriceInputComponent
+	@ViewChild("printPriceInput")
+	printPriceInput: PriceInputComponent
 	@ViewChild("isbnInput")
 	isbnInput: IsbnInputComponent
 	@ViewChild("editTitleDialog")
@@ -52,6 +54,7 @@ export class AuthorBookPageComponent {
 		description: string
 		language: string
 		price: number
+		printPrice: number
 		isbn: string
 		status: StoreBookStatus
 		coverBlurhash: string
@@ -66,6 +69,7 @@ export class AuthorBookPageComponent {
 		description: "",
 		language: "en",
 		price: 0,
+		printPrice: 0,
 		isbn: "",
 		status: StoreBookStatus.Unpublished,
 		coverBlurhash: null,
@@ -90,6 +94,7 @@ export class AuthorBookPageComponent {
 	bookFileLoading: boolean = false
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
+	printPriceUpdating: boolean = false
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogLoading: boolean = false
 	backButtonLink: string = ""
@@ -170,6 +175,7 @@ export class AuthorBookPageComponent {
 			this.book.description = this.release.description ?? ""
 			this.book.language = this.storeBook.language
 			this.book.price = this.release.price
+			this.book.printPrice = this.release.printPrice
 			this.book.isbn = this.release.isbn ?? ""
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.release.cover?.blurhash
@@ -187,6 +193,7 @@ export class AuthorBookPageComponent {
 			this.book.description = this.storeBook.description ?? ""
 			this.book.language = this.storeBook.language
 			this.book.price = this.storeBook.price
+			this.book.printPrice = this.storeBook.printPrice
 			this.book.isbn = this.storeBook.isbn ?? ""
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.storeBook.cover?.blurhash
@@ -210,6 +217,7 @@ export class AuthorBookPageComponent {
 		}
 
 		this.priceInput.SetPrice(this.book.price)
+		this.printPriceInput.SetPrice(this.book.printPrice)
 		this.isbnInput.SetIsbn(this.book.isbn)
 	}
 
@@ -364,6 +372,17 @@ export class AuthorBookPageComponent {
 			await this.apiService.updateStoreBook(`price`, {
 				uuid: this.uuid,
 				price
+			})
+		)
+	}
+
+	async UpdatePrintPrice(printPrice: number) {
+		this.printPriceUpdating = true
+
+		this.UpdateStoreBookResponse(
+			await this.apiService.updateStoreBook(`printPrice`, {
+				uuid: this.uuid,
+				printPrice
 			})
 		)
 	}
@@ -597,6 +616,27 @@ export class AuthorBookPageComponent {
 						break
 					default:
 						this.priceInput.SetError(this.locale.errors.unexpectedError)
+						break
+				}
+			}
+		} else if (this.printPriceUpdating) {
+			this.printPriceUpdating = false
+
+			// The printPrice was updated
+			if (response.errors == null) {
+				this.book.printPrice = response.data.updateStoreBook.printPrice
+				this.printPriceInput.SetPrice(this.book.printPrice)
+			} else {
+				let errors = response.errors[0].extensions.errors as string[]
+
+				switch (errors[0]) {
+					case ErrorCodes.printPriceInvalid:
+						this.printPriceInput.SetError(this.locale.errors.priceInvalid)
+						break
+					default:
+						this.printPriceInput.SetError(
+							this.locale.errors.unexpectedError
+						)
 						break
 				}
 			}

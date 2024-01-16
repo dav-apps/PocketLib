@@ -27,5 +27,6 @@ export const facebookUsernameInvalid = "FACEBOOK_USERNAME_INVALID"
 export const instagramUsernameInvalid = "INSTAGRAM_USERNAME_INVALID"
 export const twitterUsernameInvalid = "TWITTER_USERNAME_INVALID"
 export const priceInvalid = "PRICE_INVALID"
+export const printPriceInvalid = "PRINT_PRICE_INVALID"
 export const isbnInvalid = "ISBN_INVALID"
 //#endregion

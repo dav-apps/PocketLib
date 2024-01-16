@@ -85,13 +85,13 @@ const enDefaults = {
 		noDescription: "No description provided",
 		language: "Language",
 		categories: "Categories",
-		price: "Price",
+		price: "Ebook price",
 		free: "Free",
-		bookFile: "Book file",
-		noBookFile: "No book file uploaded",
-		uploadBookFile: "Upload book file",
+		bookFile: "Ebook file",
+		noBookFile: "No ebook file uploaded",
+		uploadBookFile: "Upload ebook file",
 		bookFileUploading: "Uploading file...",
-		bookFileUploaded: "Book file was uploaded",
+		bookFileUploaded: "Ebook file was uploaded",
 		status: "Status",
 		unpublished: "Not published",
 		publish: "Publish",
@@ -156,8 +156,8 @@ const enDefaults = {
 			uploadButtonText: "Upload cover"
 		},
 		bookFileSection: {
-			description: "Upload the book file.",
-			uploadButtonText: "Upload book file"
+			description: "Upload the ebook file.",
+			uploadButtonText: "Upload ebook file"
 		},
 		loadingScreen: {
 			creatingBook: "Creating the book...",
@@ -591,13 +591,13 @@ const deDefaults = {
 		noDescription: "Keine Beschreibung angegeben",
 		language: "Sprache",
 		categories: "Kategorien",
-		price: "Preis",
+		price: "Ebook-Preis",
 		free: "Kostenlos",
-		bookFile: "Buch-Datei",
-		noBookFile: "Keine Buch-Datei hochgeladen",
-		uploadBookFile: "Buch-Datei hochladen",
+		bookFile: "Ebook-Datei",
+		noBookFile: "Keine Ebook-Datei hochgeladen",
+		uploadBookFile: "Ebook-Datei hochladen",
 		bookFileUploading: "Datei wird hochgeladen...",
-		bookFileUploaded: "Buch-Datei wurde hochgeladen",
+		bookFileUploaded: "Ebook-Datei wurde hochgeladen",
 		status: "Status",
 		unpublished: "Nicht veröffentlicht",
 		publish: "Veröffentlichen",
@@ -663,8 +663,8 @@ const deDefaults = {
 			uploadButtonText: "Cover hochladen"
 		},
 		bookFileSection: {
-			description: "Lade die Buch-Datei hoch.",
-			uploadButtonText: "Buch-Datei hochladen"
+			description: "Lade die Ebook-Datei hoch.",
+			uploadButtonText: "Ebook-Datei hochladen"
 		},
 		loadingScreen: {
 			creatingBook: "Buch wird erstellt...",

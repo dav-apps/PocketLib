@@ -162,19 +162,6 @@
 				</div>
 			</div>
 
-			<!-- Price -->
-			<div class="book-details-label">
-				<p>{{ locale.price }}:</p>
-			</div>
-
-			<div class="book-details-data">
-				<pocketlib-price-input
-					#priceInput
-					[canEdit]="release == null"
-					(update)="UpdatePrice($event)"
-				></pocketlib-price-input>
-			</div>
-
 			<!-- ISBN -->
 			<div class="book-details-label">
 				<p>ISBN:</p>
@@ -188,7 +175,20 @@
 				></pocketlib-isbn-input>
 			</div>
 
-			<!-- Book file -->
+			<!-- Ebook price -->
+			<div class="book-details-label">
+				<p>{{ locale.price }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				<pocketlib-price-input
+					#priceInput
+					[canEdit]="release == null"
+					(update)="UpdatePrice($event)"
+				></pocketlib-price-input>
+			</div>
+
+			<!-- Ebook file -->
 			<div class="book-details-label">
 				<p>{{ locale.bookFile }}:</p>
 			</div>
@@ -240,6 +240,19 @@
 						*ngIf="bookFileLoading"
 					></dav-progress-ring>
 				</div>
+			</div>
+
+			<!-- Print price -->
+			<div class="book-details-label">
+				<p>Print book price:</p>
+			</div>
+
+			<div class="book-details-data">
+				<pocketlib-price-input
+					#printPriceInput
+					[canEdit]="release == null"
+					(update)="UpdatePrintPrice($event)"
+				></pocketlib-price-input>
 			</div>
 
 			<!-- Status -->
