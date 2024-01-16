@@ -997,6 +997,7 @@ export class ApiService {
 			description?: string
 			language: string
 			price?: number
+			printPrice?: number
 			isbn?: string
 			categories?: string[]
 		}
@@ -1013,6 +1014,7 @@ export class ApiService {
 						$description: String
 						$language: String!
 						$price: Int
+						$printPrice: Int
 						$isbn: String
 						$categories: [String!]
 					) {
@@ -1023,6 +1025,7 @@ export class ApiService {
 							description: $description
 							language: $language
 							price: $price
+							printPrice: $printPrice
 							isbn: $isbn
 							categories: $categories
 						) {
@@ -1057,6 +1060,7 @@ export class ApiService {
 			description?: string
 			language?: string
 			price?: number
+			printPrice?: number
 			isbn?: string
 			status?: string
 			categories?: string[]
@@ -1073,6 +1077,7 @@ export class ApiService {
 						$description: String
 						$language: String
 						$price: Int
+						$printPrice: Int
 						$isbn: String
 						$status: String
 						$categories: [String!]
@@ -1083,6 +1088,7 @@ export class ApiService {
 							description: $description
 							language: $language
 							price: $price
+							printPrice: $printPrice
 							isbn: $isbn
 							status: $status
 							categories: $categories

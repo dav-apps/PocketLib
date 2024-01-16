@@ -175,6 +175,7 @@ export interface StoreBookResource {
 	description: string
 	language: string
 	price: number
+	printPrice: number
 	isbn: string
 	status: string
 	cover: StoreBookCoverResource
@@ -195,6 +196,7 @@ export interface StoreBookReleaseResource {
 	title: string
 	description: string
 	price: number
+	printPrice: number
 	isbn: string
 	status: string
 	cover: StoreBookCoverResource

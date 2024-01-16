@@ -19,6 +19,7 @@ export class StoreBook {
 	public description: string
 	public language: Language
 	public price: number
+	public printPrice: number
 	public isbn: string
 	public status: StoreBookStatus
 	public cover: {
@@ -46,6 +47,8 @@ export class StoreBook {
 				this.language = GetLanguageByString(storeBookResource.language)
 			if (storeBookResource.price != null)
 				this.price = storeBookResource.price
+			if (storeBookResource.printPrice != null)
+				this.printPrice = storeBookResource.printPrice
 			if (storeBookResource.isbn != null) this.isbn = storeBookResource.isbn
 			if (storeBookResource.status != null)
 				this.status = GetStoreBookStatusByString(storeBookResource.status)
@@ -72,6 +75,7 @@ export class StoreBook {
 				description
 				language
 				price
+				printPrice
 				isbn
 				status
 				cover {

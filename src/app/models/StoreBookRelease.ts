@@ -17,6 +17,7 @@ export class StoreBookRelease {
 	public title: string
 	public description: string
 	public price: number
+	public printPrice: number
 	public isbn: string
 	public status: StoreBookReleaseStatus
 	public cover: {
@@ -44,6 +45,8 @@ export class StoreBookRelease {
 			if (releaseResource.description != null)
 				this.description = releaseResource.description
 			if (releaseResource.price != null) this.price = releaseResource.price
+			if (releaseResource.printPrice != null)
+				this.printPrice = releaseResource.printPrice
 			if (releaseResource.isbn != null) this.isbn = releaseResource.isbn
 			if (releaseResource.status != null)
 				this.status = GetStoreBookReleaseStatusByString(
@@ -73,6 +76,7 @@ export class StoreBookRelease {
 				title
 				description
 				price
+				printPrice
 				isbn
 				status
 				cover {
