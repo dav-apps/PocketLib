@@ -198,7 +198,7 @@
 					class="no-book-file-text"
 					*ngIf="!bookFileUploaded && !bookFileLoading"
 				>
-					{{ locale.noBookFile }}
+					{{ locale.noFile }}
 				</p>
 
 				<p
@@ -207,7 +207,7 @@
 						bookFileUploaded && book.fileName == null && !bookFileLoading
 					"
 				>
-					{{ locale.bookFileUploaded }}
+					{{ locale.fileUploaded }}
 				</p>
 
 				<p
@@ -220,7 +220,7 @@
 				</p>
 
 				<p class="book-file-uploading" *ngIf="bookFileLoading">
-					{{ locale.bookFileUploading }}
+					{{ locale.fileUploading }}
 				</p>
 
 				<div class="book-file-upload-container">
@@ -232,7 +232,7 @@
 						(filePick)="BookFileUpload($event)"
 						*ngIf="release == null"
 					>
-						{{ locale.uploadBookFile }}
+						{{ locale.uploadFile }}
 					</dav-button>
 
 					<dav-progress-ring
@@ -265,7 +265,7 @@
 					class="no-book-file-text"
 					*ngIf="!printCoverUploaded && !printCoverLoading"
 				>
-					{{ locale.noBookFile }}
+					{{ locale.noFile }}
 				</p>
 
 				<p
@@ -274,7 +274,7 @@
 						printCoverUploaded && book.printCoverFileName == null && !printCoverLoading
 					"
 				>
-					{{ locale.bookFileUploaded }}
+					{{ locale.fileUploaded }}
 				</p>
 
 				<p
@@ -287,7 +287,7 @@
 				</p>
 
 				<p class="book-file-uploading" *ngIf="printCoverLoading">
-					{{ locale.bookFileUploading }}
+					{{ locale.fileUploading }}
 				</p>
 
 				<div class="book-file-upload-container">
@@ -299,7 +299,7 @@
 						(filePick)="PrintCoverUpload($event)"
 						*ngIf="release == null"
 					>
-						{{ locale.uploadBookFile }}
+						{{ locale.uploadFile }}
 					</dav-button>
 
 					<dav-progress-ring
