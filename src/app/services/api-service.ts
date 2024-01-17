@@ -1221,14 +1221,18 @@ export class ApiService {
 	async uploadStoreBookPrintCover(params: {
 		uuid: string
 		data: any
+		fileName: string
 	}): Promise<ApiResponse<StoreBookPrintCoverResource>> {
 		try {
 			let response = await axios({
 				method: "put",
-				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/coverFile`,
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/printCover`,
 				headers: {
 					Authorization: Dav.accessToken,
-					"Content-Type": "application/pdf"
+					"Content-Type": "application/pdf",
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.fileName
+					)}"`
 				},
 				data: params.data
 			})
@@ -1267,6 +1271,7 @@ export class ApiService {
 	async uploadStoreBookPrintFile(params: {
 		uuid: string
 		data: any
+		fileName: string
 	}): Promise<ApiResponse<StoreBookPrintFileResource>> {
 		try {
 			let response = await axios({
@@ -1274,7 +1279,10 @@ export class ApiService {
 				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/printFile`,
 				headers: {
 					Authorization: Dav.accessToken,
-					"Content-Type": "application/pdf"
+					"Content-Type": "application/pdf",
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.fileName
+					)}"`
 				},
 				data: params.data
 			})

@@ -255,6 +255,60 @@
 				></pocketlib-price-input>
 			</div>
 
+			<!-- Print cover -->
+			<div class="book-details-label">
+				<p>Print cover:</p>
+			</div>
+
+			<div class="book-details-data">
+				<p
+					class="no-book-file-text"
+					*ngIf="!printCoverUploaded && !printCoverLoading"
+				>
+					{{ locale.noBookFile }}
+				</p>
+
+				<p
+					class="book-file-uploaded-text"
+					*ngIf="
+						printCoverUploaded && book.printCoverFileName == null && !printCoverLoading
+					"
+				>
+					{{ locale.bookFileUploaded }}
+				</p>
+
+				<p
+					class="file-name-text"
+					*ngIf="
+						printCoverUploaded && book.printCoverFileName != null && !printCoverLoading
+					"
+				>
+					{{ book.printCoverFileName }}
+				</p>
+
+				<p class="book-file-uploading" *ngIf="printCoverLoading">
+					{{ locale.bookFileUploading }}
+				</p>
+
+				<div class="book-file-upload-container">
+					<dav-button
+						size="small"
+						ngxFilePicker
+						accept="application/pdf"
+						[disabled]="printCoverLoading"
+						(filePick)="PrintCoverUpload($event)"
+						*ngIf="release == null"
+					>
+						{{ locale.uploadBookFile }}
+					</dav-button>
+
+					<dav-progress-ring
+						size="16"
+						*ngIf="printCoverLoading"
+					></dav-progress-ring>
+				</div>
+			</div>
+
 			<!-- Status -->
 			<div
 				class="book-details-label"

@@ -59,6 +59,7 @@ export class AuthorBookPageComponent {
 		status: StoreBookStatus
 		coverBlurhash: string
 		fileName: string
+		printCoverFileName: string
 		categories: {
 			key: string
 			name: string
@@ -74,6 +75,7 @@ export class AuthorBookPageComponent {
 		status: StoreBookStatus.Unpublished,
 		coverBlurhash: null,
 		fileName: null,
+		printCoverFileName: null,
 		categories: []
 	}
 	editTitleDialogLoading: boolean = false
@@ -92,6 +94,8 @@ export class AuthorBookPageComponent {
 	coverLoading: boolean = false
 	bookFileUploaded: boolean = false
 	bookFileLoading: boolean = false
+	printCoverUploaded: boolean = false
+	printCoverLoading: boolean = false
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
 	printPriceUpdating: boolean = false
@@ -180,7 +184,9 @@ export class AuthorBookPageComponent {
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.release.cover?.blurhash
 			this.book.fileName = this.release.file?.fileName
+			this.book.printCoverFileName = this.release.printCover?.fileName
 			this.bookFileUploaded = this.release.file != null
+			this.printCoverUploaded = this.release.printCover != null
 
 			let categories = (await this.release.GetCategories()).items
 			this.LoadCategories(categories.map(c => c.key))
@@ -198,7 +204,9 @@ export class AuthorBookPageComponent {
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.storeBook.cover?.blurhash
 			this.book.fileName = this.storeBook.file.fileName
+			this.book.printCoverFileName = this.storeBook.printCover.fileName
 			this.bookFileUploaded = this.storeBook.file.fileName != null
+			this.printCoverUploaded = this.storeBook.printCover.fileName != null
 
 			let categories = (await this.storeBook.GetCategories()).items
 			this.LoadCategories(categories.map(c => c.key))
@@ -476,6 +484,37 @@ export class AuthorBookPageComponent {
 
 		if (isSuccessStatusCode(response.status)) {
 			this.book.fileName = file.name
+			this.ShowChanges()
+		} else {
+			// Show error
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
+	}
+
+	async PrintCoverUpload(file: ReadFile) {
+		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
+			let reader = new FileReader()
+			reader.addEventListener("loadend", () => {
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
+
+		let fileContent = await readPromise
+		this.printCoverLoading = true
+
+		// Upload the file
+		let response = await this.apiService.uploadStoreBookPrintCover({
+			uuid: this.uuid,
+			data: fileContent,
+			fileName: file.name
+		})
+
+		this.printCoverUploaded = isSuccessStatusCode(response.status)
+		this.printCoverLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			this.book.printCoverFileName = file.name
 			this.ShowChanges()
 		} else {
 			// Show error
