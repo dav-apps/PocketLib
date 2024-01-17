@@ -180,6 +180,8 @@ export interface StoreBookResource {
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
+	printCover: StoreBookPrintCoverResource
+	printFile: StoreBookPrintFileResource
 	categories: List<CategoryResource>
 	series: List<StoreBookSeriesResource>
 	releases: List<StoreBookReleaseResource>
@@ -201,6 +203,8 @@ export interface StoreBookReleaseResource {
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
+	printCover: StoreBookPrintCoverResource
+	printFile: StoreBookPrintFileResource
 	categories: List<CategoryResource>
 }
 

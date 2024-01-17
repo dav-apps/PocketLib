@@ -30,6 +30,12 @@ export class StoreBook {
 	public file: {
 		fileName: string
 	}
+	public printCover: {
+		fileName: string
+	}
+	public printFile: {
+		fileName: string
+	}
 	private coverContent: string
 
 	constructor(
@@ -60,6 +66,12 @@ export class StoreBook {
 			this.file = {
 				fileName: storeBookResource.file?.fileName
 			}
+			this.printCover = {
+				fileName: storeBookResource.printCover?.fileName
+			}
+			this.printFile = {
+				fileName: storeBookResource.printFile?.fileName
+			}
 		}
 	}
 
@@ -84,6 +96,12 @@ export class StoreBook {
 					blurhash
 				}
 				file {
+					fileName
+				}
+				printCover {
+					fileName
+				}
+				printFile {
 					fileName
 				}
 			`,
