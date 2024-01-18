@@ -232,7 +232,7 @@
 						(filePick)="BookFileUpload($event)"
 						*ngIf="release == null"
 					>
-						{{ locale.uploadFile }}
+						{{ locale.selectFile }}
 					</dav-button>
 
 					<dav-progress-ring
@@ -244,7 +244,7 @@
 
 			<!-- Print price -->
 			<div class="book-details-label">
-				<p>Print book price:</p>
+				<p>{{ locale.printPrice }}:</p>
 			</div>
 
 			<div class="book-details-data">
@@ -257,7 +257,7 @@
 
 			<!-- Print cover -->
 			<div class="book-details-label">
-				<p>Print cover:</p>
+				<p>{{ locale.printCover }}:</p>
 			</div>
 
 			<div class="book-details-data">
@@ -299,12 +299,66 @@
 						(filePick)="PrintCoverUpload($event)"
 						*ngIf="release == null"
 					>
-						{{ locale.uploadFile }}
+						{{ locale.selectFile }}
 					</dav-button>
 
 					<dav-progress-ring
 						size="16"
 						*ngIf="printCoverLoading"
+					></dav-progress-ring>
+				</div>
+			</div>
+
+			<!-- Print file -->
+			<div class="book-details-label">
+				<p>{{ locale.printFile }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				<p
+					class="no-book-file-text"
+					*ngIf="!printFileUploaded && !printFileLoading"
+				>
+					{{ locale.noFile }}
+				</p>
+
+				<p
+					class="book-file-uploaded-text"
+					*ngIf="
+						printFileUploaded && book.printFileName == null && !printFileLoading
+					"
+				>
+					{{ locale.fileUploaded }}
+				</p>
+
+				<p
+					class="file-name-text"
+					*ngIf="
+						printFileUploaded && book.printFileName != null && !printFileLoading
+					"
+				>
+					{{ book.printFileName }}
+				</p>
+
+				<p class="book-file-uploading" *ngIf="printFileLoading">
+					{{ locale.fileUploading }}
+				</p>
+
+				<div class="book-file-upload-container">
+					<dav-button
+						size="small"
+						ngxFilePicker
+						accept="application/pdf"
+						[disabled]="printFileLoading"
+						(filePick)="PrintFileUpload($event)"
+						*ngIf="release == null"
+					>
+						{{ locale.selectFile }}
+					</dav-button>
+
+					<dav-progress-ring
+						size="16"
+						*ngIf="printFileLoading"
 					></dav-progress-ring>
 				</div>
 			</div>
