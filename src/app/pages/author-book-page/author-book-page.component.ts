@@ -607,8 +607,16 @@ export class AuthorBookPageComponent {
 	}
 
 	async PublishChanges(result: { releaseName: string; releaseNotes: string }) {
-		let lastRelease = this.releases[0]
-		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
+		// Load the releases of the StoreBook
+		const releasesResult = await this.storeBook.GetReleases()
+		const releases = releasesResult.items
+		const lastRelease = releases[0]
+
+		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) {
+			this.publishChangesDialog.hide()
+			return
+		}
+
 		this.publishChangesDialogLoading = true
 
 		let response = await this.apiService.publishStoreBookRelease(`uuid`, {

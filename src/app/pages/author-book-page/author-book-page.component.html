@@ -271,7 +271,9 @@
 				<p
 					class="book-file-uploaded-text"
 					*ngIf="
-						printCoverUploaded && book.printCoverFileName == null && !printCoverLoading
+						printCoverUploaded &&
+						book.printCoverFileName == null &&
+						!printCoverLoading
 					"
 				>
 					{{ locale.fileUploaded }}
@@ -280,7 +282,9 @@
 				<p
 					class="file-name-text"
 					*ngIf="
-						printCoverUploaded && book.printCoverFileName != null && !printCoverLoading
+						printCoverUploaded &&
+						book.printCoverFileName != null &&
+						!printCoverLoading
 					"
 				>
 					{{ book.printCoverFileName }}
@@ -325,7 +329,9 @@
 				<p
 					class="book-file-uploaded-text"
 					*ngIf="
-						printFileUploaded && book.printFileName == null && !printFileLoading
+						printFileUploaded &&
+						book.printFileName == null &&
+						!printFileLoading
 					"
 				>
 					{{ locale.fileUploaded }}
@@ -334,7 +340,9 @@
 				<p
 					class="file-name-text"
 					*ngIf="
-						printFileUploaded && book.printFileName != null && !printFileLoading
+						printFileUploaded &&
+						book.printFileName != null &&
+						!printFileLoading
 					"
 				>
 					{{ book.printFileName }}
