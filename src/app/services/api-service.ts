@@ -23,7 +23,8 @@ import {
 	StoreBookPrintFileResource,
 	StoreBookReleaseResource,
 	CategoryResource,
-	BookResource
+	BookResource,
+	CheckoutSessionResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -1523,6 +1524,56 @@ export class ApiService {
 			await renewSession()
 
 			return await this.createBook(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region CheckoutSession
+	async createCheckoutSession(
+		queryData: string,
+		variables: {
+			storeBookUuid: string
+			successUrl: string
+			cancelUrl: string
+		}
+	): Promise<
+		MutationResult<{ createCheckoutSession: CheckoutSessionResource }>
+	> {
+		let result = await this.apollo
+			.mutate<{
+				createCheckoutSession: CheckoutSessionResource
+			}>({
+				mutation: gql`
+					mutation CreateCheckoutSession(
+						$storeBookUuid: String!
+						$successUrl: String!
+						$cancelUrl: String!
+					) {
+						createCheckoutSession(
+							storeBookUuid: $storeBookUuid
+							successUrl: $successUrl
+							cancelUrl: $cancelUrl
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createCheckoutSession(queryData, variables)
 		}
 
 		return result

@@ -105,6 +105,7 @@ export class AuthorBookPageComponent {
 	printPriceUpdating: boolean = false
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogLoading: boolean = false
+	orderTestPrintLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
 	categoryKeys: string[] = []
@@ -558,6 +559,22 @@ export class AuthorBookPageComponent {
 		} else {
 			// Show error
 			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
+	}
+
+	async orderTestPrint() {
+		this.orderTestPrintLoading = true
+
+		const createCheckoutSessionResponse =
+			await this.apiService.createCheckoutSession(`url`, {
+				storeBookUuid: this.storeBook.uuid,
+				successUrl: window.location.href,
+				cancelUrl: window.location.href
+			})
+
+		if (createCheckoutSessionResponse.data.createCheckoutSession != null) {
+			window.location.href =
+				createCheckoutSessionResponse.data.createCheckoutSession.url
 		}
 	}
 

@@ -375,10 +375,29 @@
 				></pocketlib-price-input>
 			</div>
 
+			<!-- Order print book -->
 			<div
-				class="book-details-separator"
-				*ngIf="book.status == 0 && release == null"
-			></div>
+				class="book-details-data"
+				*ngIf="printCoverUploaded && printFileUploaded"
+			>
+				<div class="order-test-print-button-container">
+					<dav-button
+						size="small"
+						color="secondary"
+						[disabled]="orderTestPrintLoading"
+						(click)="orderTestPrint()"
+					>
+						{{ locale.orderTestPrint }}
+					</dav-button>
+
+					<dav-progress-ring
+						size="16"
+						*ngIf="orderTestPrintLoading"
+					></dav-progress-ring>
+				</div>
+			</div>
+
+			<div class="book-details-separator"></div>
 
 			<!-- Status -->
 			<div

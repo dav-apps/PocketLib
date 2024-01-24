@@ -248,4 +248,8 @@ export interface BookResource {
 	storeBook: string
 	file: string
 }
+
+export interface CheckoutSessionResource {
+	url: string
+}
 //#endregion
