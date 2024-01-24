@@ -175,18 +175,7 @@
 				></pocketlib-isbn-input>
 			</div>
 
-			<!-- Ebook price -->
-			<div class="book-details-label">
-				<p>{{ locale.price }}:</p>
-			</div>
-
-			<div class="book-details-data">
-				<pocketlib-price-input
-					#priceInput
-					[canEdit]="release == null"
-					(update)="UpdatePrice($event)"
-				></pocketlib-price-input>
-			</div>
+			<div class="book-details-separator"></div>
 
 			<!-- Ebook file -->
 			<div class="book-details-label">
@@ -242,18 +231,20 @@
 				</div>
 			</div>
 
-			<!-- Print price -->
+			<!-- Ebook price -->
 			<div class="book-details-label">
-				<p>{{ locale.printPrice }}:</p>
+				<p>{{ locale.price }}:</p>
 			</div>
 
 			<div class="book-details-data">
 				<pocketlib-price-input
-					#printPriceInput
+					#priceInput
 					[canEdit]="release == null"
-					(update)="UpdatePrintPrice($event)"
+					(update)="UpdatePrice($event)"
 				></pocketlib-price-input>
 			</div>
+
+			<div class="book-details-separator"></div>
 
 			<!-- Print cover -->
 			<div class="book-details-label">
@@ -370,6 +361,24 @@
 					></dav-progress-ring>
 				</div>
 			</div>
+
+			<!-- Print price -->
+			<div class="book-details-label">
+				<p>{{ locale.printPrice }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				<pocketlib-price-input
+					#printPriceInput
+					[canEdit]="release == null"
+					(update)="UpdatePrintPrice($event)"
+				></pocketlib-price-input>
+			</div>
+
+			<div
+				class="book-details-separator"
+				*ngIf="book.status == 0 && release == null"
+			></div>
 
 			<!-- Status -->
 			<div

@@ -27,10 +27,6 @@ p {
 	grid-gap: 12px;
 }
 
-.book-details-container:nth-child(2n) {
-	background-color: green;
-}
-
 .book-details-label {
 	grid-column: 1;
 }
@@ -43,6 +39,11 @@ p {
 .book-details-data {
 	grid-column: 1;
 	margin-bottom: 12px;
+}
+
+.book-details-separator {
+	grid-column: span 2;
+	border-top: 1px solid var(--dav-color-outline-variant);
 }
 
 .release-notes-text {
