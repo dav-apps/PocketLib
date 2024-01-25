@@ -13,6 +13,10 @@ export class DavApiService {
 	private apollo: ApolloBase
 
 	constructor(private apolloProvider: Apollo) {
+		this.loadApolloClient()
+	}
+
+	loadApolloClient() {
 		this.apollo = this.apolloProvider.use(davApiClientName)
 	}
 

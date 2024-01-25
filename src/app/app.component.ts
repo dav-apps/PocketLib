@@ -29,6 +29,7 @@ import { Dav, TableObject } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { DavApiService } from "./services/dav-api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
@@ -86,6 +87,7 @@ export class AppComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private davApiService: DavApiService,
 		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
@@ -331,6 +333,8 @@ export class AppComponent {
 
 	setupApollo(accessToken: string) {
 		this.apollo.removeClient(davApiClientName)
+		this.apollo.removeClient(pocketlibApiClientName)
+
 		this.apollo.create(
 			{
 				cache: new InMemoryCache({ dataIdFromObject }),
@@ -342,7 +346,6 @@ export class AppComponent {
 			davApiClientName
 		)
 
-		this.apollo.removeClient(pocketlibApiClientName)
 		this.apollo.create(
 			{
 				cache: new InMemoryCache({ dataIdFromObject }),
@@ -353,6 +356,9 @@ export class AppComponent {
 			},
 			pocketlibApiClientName
 		)
+
+		this.davApiService.loadApolloClient()
+		this.apiService.loadApolloClient()
 	}
 
 	//#region dav-js callback functions

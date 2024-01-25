@@ -39,6 +39,10 @@ export class ApiService {
 		private cachingService: CachingService,
 		private apolloProvider: Apollo
 	) {
+		this.loadApolloClient()
+	}
+
+	loadApolloClient() {
 		this.apollo = this.apolloProvider.use(pocketlibApiClientName)
 	}
 
