@@ -99,7 +99,7 @@ export interface ApiResponse<T> {
 	}
 }
 
-//#region API interfaces
+//#region API types
 export interface PublisherResource {
 	uuid: string
 	name: string
@@ -252,4 +252,32 @@ export interface BookResource {
 export interface CheckoutSessionResource {
 	url: string
 }
+//#endregion
+
+//#region dav API types
+export interface Order {
+	uuid: string
+	shippingAddress: ShippingAddress
+	paymentIntentId: string
+	price: number
+	currency: Currency
+	status: OrderStatus
+}
+
+export interface ShippingAddress {
+	uuid: string
+	name: string
+	email: string
+	phone: string
+	city: string
+	country: string
+	line1: string
+	line2: string
+	postalCode: string
+	status: string
+}
+
+export type Currency = "EUR"
+export type TableObjectPriceType = "PURCHASE" | "ORDER"
+export type OrderStatus = "CREATED" | "PREPARATION" | "SHIPPED"
 //#endregion

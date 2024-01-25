@@ -2,6 +2,10 @@ import { BrowserModule } from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
 import { Environment } from "dav-js"
 import { dataIdFromObject } from "./misc/utils"
+import {
+	davApiClientName,
+	pocketlibApiClientName
+} from "../constants/constants"
 import { environment } from "../environments/environment"
 
 // Modules
@@ -16,7 +20,7 @@ import { ServiceWorkerModule } from "@angular/service-worker"
 
 // Apollo
 import { HttpClientModule } from "@angular/common/http"
-import { APOLLO_OPTIONS, ApolloModule } from "apollo-angular"
+import { APOLLO_NAMED_OPTIONS, ApolloModule } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
 
@@ -24,6 +28,7 @@ import { InMemoryCache } from "@apollo/client/core"
 import { RoutingService } from "./services/routing-service"
 import { DataService } from "./services/data-service"
 import { ApiService } from "./services/api-service"
+import { DavApiService } from "./services/dav-api-service"
 import { CachingService } from "./services/caching-service"
 
 // Components
@@ -202,15 +207,24 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		RoutingService,
 		DataService,
 		ApiService,
+		DavApiService,
 		CachingService,
 		{
-			provide: APOLLO_OPTIONS,
+			provide: APOLLO_NAMED_OPTIONS,
 			useFactory(httpLink: HttpLink) {
 				return {
-					cache: new InMemoryCache({ dataIdFromObject }),
-					link: httpLink.create({
-						uri: environment.pocketlibApiUrl
-					})
+					[davApiClientName]: {
+						cache: new InMemoryCache({ dataIdFromObject }),
+						link: httpLink.create({
+							uri: environment.davApiUrl
+						})
+					},
+					[pocketlibApiClientName]: {
+						cache: new InMemoryCache({ dataIdFromObject }),
+						link: httpLink.create({
+							uri: environment.pocketlibApiUrl
+						})
+					}
 				}
 			},
 			deps: [HttpLink]

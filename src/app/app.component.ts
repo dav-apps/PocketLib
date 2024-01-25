@@ -34,7 +34,11 @@ import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject } from "./misc/utils"
-import { smallWindowMaxSize } from "src/constants/constants"
+import {
+	smallWindowMaxSize,
+	davApiClientName,
+	pocketlibApiClientName
+} from "src/constants/constants"
 import { environment } from "src/environments/environment"
 import { enUS } from "src/locales/locales"
 
@@ -326,15 +330,29 @@ export class AppComponent {
 	}
 
 	setupApollo(accessToken: string) {
-		this.apollo.removeClient()
+		this.apollo.removeClient(davApiClientName)
+		this.apollo.create(
+			{
+				cache: new InMemoryCache({ dataIdFromObject }),
+				link: this.httpLink.create({
+					uri: environment.davApiUrl,
+					headers: new HttpHeaders().set("Authorization", accessToken)
+				})
+			},
+			davApiClientName
+		)
 
-		this.apollo.create({
-			cache: new InMemoryCache({ dataIdFromObject }),
-			link: this.httpLink.create({
-				uri: environment.pocketlibApiUrl,
-				headers: new HttpHeaders().set("Authorization", accessToken)
-			})
-		})
+		this.apollo.removeClient(pocketlibApiClientName)
+		this.apollo.create(
+			{
+				cache: new InMemoryCache({ dataIdFromObject }),
+				link: this.httpLink.create({
+					uri: environment.pocketlibApiUrl,
+					headers: new HttpHeaders().set("Authorization", accessToken)
+				})
+			},
+			pocketlibApiClientName
+		)
 	}
 
 	//#region dav-js callback functions

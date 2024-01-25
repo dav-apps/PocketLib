@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core"
-import { Apollo, gql, MutationResult } from "apollo-angular"
+import { Apollo, ApolloBase, gql, MutationResult } from "apollo-angular"
 import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
 import axios from "axios"
 import { Dav, BlobToBase64, renewSession } from "dav-js"
 import { environment } from "src/environments/environment"
+import { pocketlibApiClientName } from "src/constants/constants"
 import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	List,
@@ -32,10 +33,14 @@ const errorPolicy: ErrorPolicy = "all"
 
 @Injectable()
 export class ApiService {
+	private apollo: ApolloBase
+
 	constructor(
 		private cachingService: CachingService,
-		private apollo: Apollo
-	) {}
+		private apolloProvider: Apollo
+	) {
+		this.apollo = this.apolloProvider.use(pocketlibApiClientName)
+	}
 
 	//#region Publisher
 	async retrievePublisher(
