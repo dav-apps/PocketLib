@@ -27,7 +27,10 @@ const enDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB of {1} GB used"
+		storageUsed: "{0} GB of {1} GB used",
+		yourOrders: "Your orders",
+		preparationStatus: "Shipping is being prepared",
+		shippedStatus: "Shipped"
 	},
 	settingsPage: {
 		title: "Settings",
@@ -535,7 +538,10 @@ const deDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB von {1} GB verwendet"
+		storageUsed: "{0} GB von {1} GB verwendet",
+		yourOrders: "Deine Bestellungen",
+		preparationStatus: "Versand wird vorbereitet",
+		shippedStatus: "Versendet"
 	},
 	settingsPage: {
 		title: "Einstellungen",

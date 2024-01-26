@@ -255,8 +255,13 @@ export interface CheckoutSessionResource {
 //#endregion
 
 //#region dav API types
+export interface TableObject {
+	uuid: string
+}
+
 export interface Order {
 	uuid: string
+	tableObject: TableObject
 	shippingAddress: ShippingAddress
 	paymentIntentId: string
 	price: number

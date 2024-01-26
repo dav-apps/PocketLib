@@ -4,7 +4,7 @@ import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
 import { renewSession } from "dav-js"
 import { davApiClientName } from "src/constants/constants"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { List, Order } from "../misc/types"
+import { List, Order, OrderStatus } from "../misc/types"
 
 const errorPolicy: ErrorPolicy = "all"
 
@@ -23,13 +23,21 @@ export class DavApiService {
 	//#region Order
 	async listOrders(
 		queryData: string,
-		variables?: { limit?: number; offset?: number }
+		variables?: { status?: OrderStatus[]; limit?: number; offset?: number }
 	): Promise<ApolloQueryResult<{ listOrders: List<Order> }>> {
 		let result = await this.apollo
 			.query<{ listOrders: List<Order> }>({
 				query: gql`
-					query ListOrders($limit: Int, $offset: Int) {
-						listOrders(limit: $limit, offset: $offset) {
+					query ListOrders(
+						$status: [OrderStatus!]
+						$limit: Int
+						$offset: Int
+					) {
+						listOrders(
+							status: $status
+							limit: $limit
+							offset: $offset
+						) {
 							${queryData}
 						}
 					}

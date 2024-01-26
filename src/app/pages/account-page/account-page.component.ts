@@ -9,6 +9,8 @@ import {
 import { Dav } from "dav-js"
 import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/logout-dialog.component"
 import { DataService } from "src/app/services/data-service"
+import { ApiService } from "src/app/services/api-service"
+import { DavApiService } from "src/app/services/dav-api-service"
 import { BytesToGigabytesText } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
 import { enUS } from "src/locales/locales"
@@ -31,9 +33,17 @@ export class AccountPageComponent {
 	redirect: string
 	usedStoragePercent: number = 0
 	usedStorageText: string = ""
+	orders: {
+		uuid: string
+		title: string
+		coverSrc: string
+		status: string
+	}[] = []
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
+		private davApiService: DavApiService,
 		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().accountPage
@@ -61,11 +71,64 @@ export class AccountPageComponent {
 				"{1}",
 				BytesToGigabytesText(this.dataService.dav.user.TotalStorage, 0)
 			)
+
+		await this.loadOrders()
 	}
 
 	@HostListener("window:resize")
 	setSize() {
 		this.width = window.innerWidth
+	}
+
+	async loadOrders() {
+		if (!this.dataService.dav.isLoggedIn) return
+
+		// Load the orders of the user
+		let listOrdersResponse = await this.davApiService.listOrders(
+			`
+				items {
+					uuid
+					tableObject {
+						uuid
+					}
+					status
+				}
+			`,
+			{
+				status: ["PREPARATION", "SHIPPED"]
+			}
+		)
+
+		let orders = listOrdersResponse.data?.listOrders?.items ?? []
+
+		for (let order of orders) {
+			let retrieveStoreBookResponse =
+				await this.apiService.retrieveStoreBook(
+					`
+						title
+						cover {
+							url
+						}
+					`,
+					{
+						uuid: order.tableObject.uuid
+					}
+				)
+
+			const storeBook = retrieveStoreBookResponse.data?.retrieveStoreBook
+
+			if (storeBook != null) {
+				this.orders.push({
+					uuid: order.tableObject.uuid,
+					title: storeBook.title,
+					coverSrc: storeBook.cover.url,
+					status:
+						order.status == "PREPARATION"
+							? this.locale.preparationStatus
+							: this.locale.shippedStatus
+				})
+			}
+		}
 	}
 
 	ShowLoginPage() {

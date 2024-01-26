@@ -118,3 +118,20 @@ fa-icon {
 	margin-bottom: 10px;
 	color: var(--dav-color-on-surface);
 }
+
+.orders-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 32px;
+}
+
+h2 {
+	font-weight: 400;
+	font-size: 28px;
+	color: var(--dav-color-on-surface);
+}
+
+.orders-list-container {
+	max-width: 500px;
+}

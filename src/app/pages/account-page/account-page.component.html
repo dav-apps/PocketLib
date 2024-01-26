@@ -109,6 +109,21 @@
 		</div>
 	</div>
 
+	<div class="orders-container slide-up-in" *ngIf="orders.length > 0">
+		<h2>{{ locale.yourOrders }}</h2>
+
+		<div class="orders-list-container">
+			<dav-list>
+				<dav-list-item
+					*ngFor="let order of orders"
+					[imageSrc]="order.coverSrc"
+					[headline]="order.title"
+					[subhead]="order.status"
+				></dav-list-item>
+			</dav-list>
+		</div>
+	</div>
+
 	<!--
 	<div class="text-color" style="margin-top: 90px" *ngIf="dataService.dav.user.Plan < 2">
 		<h4 class="text-center fw-light">{{ locale.upgradeTitle }}</h4>
