@@ -54,6 +54,14 @@
 				<dav-button (click)="Read()">
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
+
+				<dav-button
+					color="secondary"
+					*ngIf="luluPrintableId != null"
+					(click)="Order()"
+				>
+					{{ locale.order }}
+				</dav-button>
 			</div>
 
 			<!-- Status and Publish button (only for admins) -->

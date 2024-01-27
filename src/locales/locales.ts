@@ -196,6 +196,7 @@ const enDefaults = {
 	storeBookPage: {
 		readNow: "Read now",
 		continueReading: "Continue reading",
+		order: "Order",
 		unpublished: "Unpublished",
 		review: "In review",
 		hidden: "Hidden",
@@ -713,6 +714,7 @@ const deDefaults = {
 	storeBookPage: {
 		readNow: "Jetzt lesen",
 		continueReading: "Weiterlesen",
+		order: "Bestellen",
 		unpublished: "Nicht veröffentlicht",
 		review: "In Überprüfung",
 		hidden: "Versteckt",

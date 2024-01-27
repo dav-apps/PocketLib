@@ -35,6 +35,7 @@ export class StoreBookPageComponent {
 	description: string = ""
 	price: number = 0
 	priceLabel: string = ""
+	luluPrintableId: string = null
 	status: StoreBookStatus = StoreBookStatus.Unpublished
 	statusLabel: string = ""
 	categoryKeys: string[] = []
@@ -153,6 +154,7 @@ export class StoreBookPageComponent {
 				title
 				description
 				price
+				luluPrintableId
 				status
 				cover {
 					url
@@ -182,6 +184,7 @@ export class StoreBookPageComponent {
 		this.title = responseData.title
 		this.description = responseData.description
 		this.price = responseData.price
+		this.luluPrintableId = responseData.luluPrintableId
 		this.status = GetStoreBookStatusByString(responseData.status)
 		this.inLibrary = responseData.inLibrary
 		this.purchased = responseData.purchased
@@ -532,6 +535,18 @@ export class StoreBookPageComponent {
 			// Show the Buy book dialog with login required
 			this.ShowBuyBookDialog(true)
 		}
+	}
+
+	async Order() {
+		const checkoutSessionResponse =
+			await this.apiService.createCheckoutSession(`url`, {
+				storeBookUuid: this.uuid,
+				successUrl: window.location.href,
+				cancelUrl: window.location.href
+			})
+
+		const url = checkoutSessionResponse.data?.createCheckoutSession?.url
+		if (url != null) window.location.href = url
 	}
 
 	ShowBuyBookDialog(loginRequired: boolean) {

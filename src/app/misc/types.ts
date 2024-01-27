@@ -177,6 +177,7 @@ export interface StoreBookResource {
 	price: number
 	printPrice: number
 	isbn: string
+	luluPrintableId: string
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
@@ -200,6 +201,7 @@ export interface StoreBookReleaseResource {
 	price: number
 	printPrice: number
 	isbn: string
+	luluPrintableId: string
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
