@@ -96,12 +96,10 @@ export class AppComponent {
 		private cd: ChangeDetectorRef
 	) {
 		this.locale = this.dataService.GetLocale().misc
-
 		DavUIComponents.setLocale(this.dataService.locale)
 
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
-				// Update the updated todo lists
 				this.dataService.currentUrl = data.url.split("?")[0]
 
 				this.libraryTabActive = this.dataService.currentUrl == "/"

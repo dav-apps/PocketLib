@@ -2,7 +2,6 @@
 	"compileOnSave": false,
 	"compilerOptions": {
 		"baseUrl": "./",
-		"downlevelIteration": true,
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,
 		"declaration": false,
@@ -12,15 +11,12 @@
 		"importHelpers": true,
 		"target": "ES2022",
 		"useDefineForClassFields": false,
-		"typeRoots": [
-			"node_modules/@types"
-		],
+		"typeRoots": ["node_modules/@types"],
 		"lib": ["es2020", "dom"],
 		"skipLibCheck": true,
+		"downlevelIteration": true,
 		"paths": {
-			"jszip": [
-				"node_modules/jszip/dist/jszip.min.js"
-			]
+			"jszip": ["node_modules/jszip/dist/jszip.min.js"]
 		}
 	}
 }
