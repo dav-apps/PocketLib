@@ -4,7 +4,7 @@ export const environment = {
 	environment: Environment.Staging,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	davApiUrl: "http://localhost:4000",
-	pocketlibApiUrl: "https://pocketlib-api-staging-aeksy.ondigitalocean.app/",
+	pocketlibApiUrl: "https://pocketlib-api-staging-aeksy.ondigitalocean.app",
 	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",
 	appId: 6,
 	bookTableId: 14,
