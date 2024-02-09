@@ -86,10 +86,15 @@ export class Publisher {
 	async GetAuthors(params?: {
 		limit?: number
 		offset?: number
+		query?: string
 	}): Promise<List<Author>> {
 		let response = await this.apiService.retrievePublisher(
 			`
-				authors(limit: $limit, offset: $offset) {
+				authors(
+					limit: $limit
+					offset: $offset
+					query: $query
+				) {
 					total
 					items {
 						uuid
@@ -99,7 +104,8 @@ export class Publisher {
 			{
 				uuid: this.uuid,
 				limit: params.limit,
-				offset: params.offset
+				offset: params.offset,
+				query: params.query
 			}
 		)
 
