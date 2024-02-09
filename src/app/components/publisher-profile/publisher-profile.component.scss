@@ -89,6 +89,17 @@
 	margin-top: 12px;
 }
 
+.search-textfield-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 32px;
+}
+
+.search-textfield-container > div {
+	width: 100%;
+	max-width: 350px;
+}
+
 .progress-ring-container {
 	display: flex;
 	justify-content: center;

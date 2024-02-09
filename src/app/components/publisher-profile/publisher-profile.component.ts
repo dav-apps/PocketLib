@@ -1,4 +1,10 @@
-import { Component, Input, ViewChild, HostListener } from "@angular/core"
+import {
+	Component,
+	Input,
+	ViewChild,
+	ElementRef,
+	HostListener
+} from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -8,6 +14,7 @@ import {
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
+import { Textfield } from "dav-ui-components"
 import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
 import { EditPublisherProfileDialogComponent } from "src/app/components/dialogs/edit-publisher-profile-dialog/edit-publisher-profile-dialog.component"
 import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
@@ -63,8 +70,12 @@ export class PublisherProfileComponent {
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorItems: AuthorItem[] = []
 	authorsLoading: boolean = true
+	searchAuthorsLoading: boolean = false
+	searchQuery: string = ""
 	pages: number = 1
 	page: number = 1
+	@ViewChild("searchTextfield")
+	searchTextfield: ElementRef<Textfield>
 
 	//#region LogoDialog
 	@ViewChild("logoDialog")
@@ -108,10 +119,16 @@ export class PublisherProfileComponent {
 			let urlSegments = this.activatedRoute.snapshot.url
 			if (urlSegments.length == 0) return
 
-			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
-				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+			const queryParams = this.activatedRoute.snapshot.queryParamMap
+
+			if (queryParams.has("page")) {
+				this.page = +queryParams.get("page")
 			} else {
 				this.page = 1
+			}
+
+			if (queryParams.has("query")) {
+				this.searchQuery = queryParams.get("query")
 			}
 		})
 	}
@@ -121,6 +138,9 @@ export class PublisherProfileComponent {
 
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
+
+		// Set the default value of the search textfield, given in the url
+		this.searchTextfield.nativeElement.value = this.searchQuery
 
 		let publisher = null
 
@@ -184,11 +204,18 @@ export class PublisherProfileComponent {
 	}
 
 	async LoadAuthors() {
+		if (this.searchQuery.length > 0) {
+			this.searchAuthorsLoading = true
+		} else {
+			this.authorsLoading = true
+		}
+
 		this.authorItems = []
-		this.authorsLoading = true
+
 		let authorsResponse = await this.publisher.GetAuthors({
 			limit: maxAuthorsPerPage,
-			offset: (this.page - 1) * maxAuthorsPerPage
+			offset: (this.page - 1) * maxAuthorsPerPage,
+			query: this.searchQuery
 		})
 
 		for (let author of authorsResponse.items) {
@@ -216,11 +243,24 @@ export class PublisherProfileComponent {
 
 		this.pages = Math.floor(authorsResponse.total / maxAuthorsPerPage)
 		this.authorsLoading = false
+		this.searchAuthorsLoading = false
+	}
+
+	async searchQueryChange(event: CustomEvent) {
+		this.searchQuery = event.detail.value
+
+		this.router.navigate([], {
+			queryParams: { page: this.page, query: this.searchQuery }
+		})
+
+		await this.LoadAuthors()
 	}
 
 	PageChange(page: number) {
 		this.page = page
-		this.router.navigate([], { queryParams: { page } })
+		this.router.navigate([], {
+			queryParams: { page, query: this.searchQuery }
+		})
 		this.LoadAuthors()
 	}
 

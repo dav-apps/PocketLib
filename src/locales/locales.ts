@@ -252,6 +252,7 @@ const enDefaults = {
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
+		searchTextfieldPlaceholder: "Search for authors",
 		errors: {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo",
@@ -770,6 +771,7 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
+		searchTextfieldPlaceholder: "Suche nach Autoren",
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
 			logoUploadFailed:

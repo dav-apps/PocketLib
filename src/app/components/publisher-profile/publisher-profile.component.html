@@ -144,11 +144,30 @@
 			</dav-header>
 		</div>
 
-		<div class="progress-ring-container" *ngIf="authorsLoading">
+		<div
+			class="search-textfield-container"
+			[style.display]="authorsLoading ? 'none' : ''"
+		>
+			<div>
+				<dav-textfield
+					#searchTextfield
+					[placeholder]="locale.searchTextfieldPlaceholder"
+					(change)="searchQueryChange($event)"
+				></dav-textfield>
+			</div>
+		</div>
+
+		<div
+			class="progress-ring-container"
+			*ngIf="authorsLoading || this.searchAuthorsLoading"
+		>
 			<dav-progress-ring size="28"></dav-progress-ring>
 		</div>
 
-		<div class="author-list-container" *ngIf="!authorsLoading">
+		<div
+			class="author-list-container"
+			*ngIf="!authorsLoading && !this.searchAuthorsLoading"
+		>
 			<dav-list>
 				<dav-list-item
 					[imageSrc]="author.profileImageContent"
@@ -189,8 +208,8 @@
 	[facebookUsernameError]="editProfileDialogFacebookUsernameError"
 	[instagramUsernameError]="editProfileDialogInstagramUsernameError"
 	[twitterUsernameError]="editProfileDialogTwitterUsernameError"
-	(primaryButtonClick)="SaveProfile($event)">
-</pocketlib-edit-publisher-profile-dialog>
+	(primaryButtonClick)="SaveProfile($event)"
+></pocketlib-edit-publisher-profile-dialog>
 
 <pocketlib-create-author-dialog
 	#createAuthorDialog
