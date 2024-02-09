@@ -72,6 +72,7 @@ export class PublisherProfileComponent {
 	authorsLoading: boolean = true
 	searchAuthorsLoading: boolean = false
 	searchQuery: string = ""
+	getAuthorsPromiseKey: number = 0
 	pages: number = 1
 	page: number = 1
 	@ViewChild("searchTextfield")
@@ -189,7 +190,6 @@ export class PublisherProfileComponent {
 
 		// Get the authors of the publisher
 		await this.LoadAuthors()
-		this.authorsLoading = false
 	}
 
 	@HostListener("window:resize")
@@ -205,11 +205,19 @@ export class PublisherProfileComponent {
 
 	async LoadAuthors() {
 		if (this.searchQuery.length > 0) {
-			this.searchAuthorsLoading = true
-		} else {
-			this.authorsLoading = true
+			if (this.searchAuthorsLoading) {
+				let searchQueryCopy = this.searchQuery
+				await new Promise(resolve => setTimeout(resolve, 500))
+
+				// Check if the query has changed
+				if (this.searchQuery != searchQueryCopy) return
+			}
 		}
 
+		this.searchAuthorsLoading = true
+
+		let promiseKey = Math.random()
+		this.getAuthorsPromiseKey = promiseKey
 		this.authorItems = []
 
 		let authorsResponse = await this.publisher.GetAuthors({
@@ -217,6 +225,10 @@ export class PublisherProfileComponent {
 			offset: (this.page - 1) * maxAuthorsPerPage,
 			query: this.searchQuery
 		})
+
+		if (authorsResponse == null || this.getAuthorsPromiseKey != promiseKey) {
+			return
+		}
 
 		for (let author of authorsResponse.items) {
 			let authorItem: AuthorItem = {
