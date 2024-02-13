@@ -18,6 +18,11 @@ switch (process.env.ENV) {
 		break
 }
 
+interface PageResult {
+	html: string
+	status: number
+}
+
 export async function generateSitemap() {
 	if (sitemap != null) {
 		return sitemap
@@ -114,7 +119,7 @@ export async function generateSitemap() {
 	return result
 }
 
-export async function PrepareStoreBookPage(uuid: string): Promise<string> {
+export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 	try {
 		let response = await request<{
 			retrieveStoreBook: {
@@ -140,19 +145,27 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 
 		let responseData = response.retrieveStoreBook
 
-		return getHtml({
-			title: responseData.title,
-			description: responseData.description,
-			imageUrl: responseData.cover?.url,
-			url: `${websiteUrl}/store/book/${uuid}`
-		})
+		return {
+			html: getHtml({
+				title: responseData.title,
+				description: responseData.description,
+				imageUrl: responseData.cover?.url,
+				url: `${websiteUrl}/store/book/${uuid}`
+			}),
+			status: 200
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+		return {
+			html: getHtml(),
+			status: 404
+		}
 	}
 }
 
-export async function PrepareStoreAuthorPage(uuid: string) {
+export async function prepareStoreAuthorPage(
+	uuid: string
+): Promise<PageResult> {
 	try {
 		let response = await request<{
 			retrieveAuthor: {
@@ -182,19 +195,27 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 
 		let responseData = response.retrieveAuthor
 
-		return getHtml({
-			title: `${responseData.firstName} ${responseData.lastName}`,
-			description: responseData.bio?.bio,
-			imageUrl: responseData.profileImage?.url,
-			url: `${websiteUrl}/store/author/${uuid}`
-		})
+		return {
+			html: getHtml({
+				title: `${responseData.firstName} ${responseData.lastName}`,
+				description: responseData.bio?.bio,
+				imageUrl: responseData.profileImage?.url,
+				url: `${websiteUrl}/store/author/${uuid}`
+			}),
+			status: 200
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+		return {
+			html: getHtml(),
+			status: 404
+		}
 	}
 }
 
-export async function PrepareStorePublisherPage(uuid: string) {
+export async function prepareStorePublisherPage(
+	uuid: string
+): Promise<PageResult> {
 	try {
 		let response = await request<{
 			retrievePublisher: {
@@ -220,15 +241,21 @@ export async function PrepareStorePublisherPage(uuid: string) {
 
 		let responseData = response.retrievePublisher
 
-		return getHtml({
-			title: responseData.name,
-			description: responseData.description,
-			imageUrl: responseData.logo?.url,
-			url: `${websiteUrl}/store/publisher/${uuid}`
-		})
+		return {
+			html: getHtml({
+				title: responseData.name,
+				description: responseData.description,
+				imageUrl: responseData.logo?.url,
+				url: `${websiteUrl}/store/publisher/${uuid}`
+			}),
+			status: 200
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+		return {
+			html: getHtml(),
+			status: 404
+		}
 	}
 }
 

@@ -4,9 +4,9 @@ import { createServer } from "http"
 import dotenv from "dotenv"
 import {
 	generateSitemap,
-	PrepareStoreBookPage,
-	PrepareStoreAuthorPage,
-	PrepareStorePublisherPage
+	prepareStoreBookPage,
+	prepareStoreAuthorPage,
+	prepareStorePublisherPage
 } from "./index.js"
 
 dotenv.config()
@@ -19,19 +19,19 @@ app.get("/sitemap.txt", async (req, res) => {
 	res.send(await generateSitemap())
 })
 
-app.get("/store/book/:uuid", (req, res) => {
-	let uuid = req.params.uuid
-	PrepareStoreBookPage(uuid).then(result => res.send(result))
+app.get("/store/book/:uuid", async (req, res) => {
+	let result = await prepareStoreBookPage(req.params.uuid)
+	res.status(result.status).send(result.html)
 })
 
-app.get("/store/author/:uuid", (req, res) => {
-	let uuid = req.params.uuid
-	PrepareStoreAuthorPage(uuid).then(result => res.send(result))
+app.get("/store/author/:uuid", async (req, res) => {
+	let result = await prepareStoreAuthorPage(req.params.uuid)
+	res.status(result.status).send(result.html)
 })
 
-app.get("/store/publisher/:uuid", (req, res) => {
-	let uuid = req.params.uuid
-	PrepareStorePublisherPage(uuid).then(result => res.send(result))
+app.get("/store/publisher/:uuid", async (req, res) => {
+	let result = await prepareStorePublisherPage(req.params.uuid)
+	res.status(result.status).send(result.html)
 })
 
 function getRoot(request, response) {
