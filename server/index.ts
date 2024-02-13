@@ -23,7 +23,7 @@ interface PageResult {
 	status: number
 }
 
-export async function generateSitemap() {
+export async function generateSitemap(): Promise<string> {
 	if (sitemap != null) {
 		return sitemap
 	}
