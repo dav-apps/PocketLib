@@ -5,7 +5,5 @@
 		"outDir": "dist",
 		"moduleResolution": "Node"
 	},
-	"include": [
-		"index.ts"
-	]
+	"include": ["server.ts", "index.ts"]
 }
