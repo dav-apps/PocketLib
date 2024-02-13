@@ -3,18 +3,115 @@ import * as fs from "fs"
 import { JSDOM } from "jsdom"
 import { request, gql } from "graphql-request"
 
+let sitemap: string = null
 let backendUrl = "http://localhost:4001"
 let websiteUrl = "http://localhost:3001"
 
 switch (process.env.ENV) {
 	case "production":
 		backendUrl = "https://pocketlib-api-dj7q2.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib.app/"
+		websiteUrl = "https://pocketlib.app"
 		break
 	case "staging":
 		backendUrl = "https://pocketlib-api-staging-aeksy.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib-staging-d9rk6.ondigitalocean.app/"
+		websiteUrl = "https://pocketlib-staging-d9rk6.ondigitalocean.app"
 		break
+}
+
+export async function generateSitemap() {
+	if (sitemap != null) {
+		return sitemap
+	}
+
+	let result = ""
+
+	// Base urls
+	result += `${websiteUrl}\n`
+	result += `${websiteUrl}/store\n`
+
+	// Publishers
+	try {
+		let response = await request<{
+			listPublishers: { items: { uuid: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListPublishers {
+					listPublishers(limit: 10000) {
+						items {
+							uuid
+						}
+					}
+				}
+			`,
+			{}
+		)
+
+		let publisherItems = response.listPublishers.items
+
+		for (let item of publisherItems) {
+			result += `${websiteUrl}/store/publisher/${item.uuid}\n`
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	// Authors
+	try {
+		let response = await request<{
+			listAuthors: { items: { uuid: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListAuthors {
+					listAuthors(limit: 10000) {
+						items {
+							uuid
+						}
+					}
+				}
+			`,
+			{}
+		)
+
+		let authorItems = response.listAuthors.items
+
+		for (let item of authorItems) {
+			result += `${websiteUrl}/store/author/${item.uuid}\n`
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	// StoreBooks
+	try {
+		let response = await request<{
+			listStoreBooks: { items: { uuid: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListStoreBooks {
+					listStoreBooks(limit: 10000) {
+						items {
+							uuid
+						}
+					}
+				}
+			`,
+			{}
+		)
+
+		let storeBookItems = response.listStoreBooks.items
+
+		for (let item of storeBookItems) {
+			result += `${websiteUrl}/store/book/${item.uuid}\n`
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	sitemap = result
+	return result
 }
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {
