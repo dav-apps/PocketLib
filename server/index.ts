@@ -23,11 +23,7 @@ export async function generateSitemap(): Promise<string> {
 		return sitemap
 	}
 
-	let result = ""
-
-	// Base urls
-	result += `${websiteUrl}\n`
-	result += `${websiteUrl}/store\n`
+	let urls: string[] = [websiteUrl, `${websiteUrl}/store`]
 
 	// Publishers
 	try {
@@ -50,7 +46,7 @@ export async function generateSitemap(): Promise<string> {
 		let publisherItems = response.listPublishers.items
 
 		for (let item of publisherItems) {
-			result += `${websiteUrl}/store/publisher/${item.uuid}\n`
+			urls.push(`${websiteUrl}/store/publisher/${item.uuid}`)
 		}
 	} catch (error) {
 		console.error(error)
@@ -77,7 +73,7 @@ export async function generateSitemap(): Promise<string> {
 		let authorItems = response.listAuthors.items
 
 		for (let item of authorItems) {
-			result += `${websiteUrl}/store/author/${item.uuid}\n`
+			urls.push(`${websiteUrl}/store/author/${item.uuid}`)
 		}
 	} catch (error) {
 		console.error(error)
@@ -104,14 +100,21 @@ export async function generateSitemap(): Promise<string> {
 		let storeBookItems = response.listStoreBooks.items
 
 		for (let item of storeBookItems) {
-			result += `${websiteUrl}/store/book/${item.uuid}\n`
+			urls.push(`${websiteUrl}/store/book/${item.uuid}`)
 		}
 	} catch (error) {
 		console.error(error)
 	}
 
-	sitemap = result
-	return result
+	let combinedUrls = ""
+
+	for (let url of urls) {
+		combinedUrls += `<url><loc>${url}</loc></url>`
+	}
+
+	sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${combinedUrls}</urlset>`
+
+	return sitemap
 }
 
 export async function PrepareStoreBookPage(uuid: string): Promise<string> {

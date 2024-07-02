@@ -14,8 +14,8 @@ dotenv.config()
 const app = express()
 const http = createServer(app)
 
-app.get("/sitemap.txt", async (req, res) => {
-	res.setHeader("Content-Type", "text/plain")
+app.get("/sitemap.xml", async (req, res) => {
+	res.setHeader("Content-Type", "application/xml")
 	res.send(await generateSitemap())
 })
 
