@@ -3,15 +3,21 @@ import express from 'express'
 import { createServer } from 'http'
 import dotenv from 'dotenv'
 import {
+	generateSitemap,
 	PrepareStoreBookPage,
 	PrepareStoreAuthorPage,
 	PrepareStorePublisherPage
-} from './index.js'
+} from "./index.js"
 
 dotenv.config()
 
 const app = express()
 const http = createServer(app)
+
+app.get("/sitemap.txt", async (req, res) => {
+	res.setHeader("Content-Type", "text/plain")
+	res.send(await generateSitemap())
+})
 
 app.get('/store/book/:uuid', (req, res) => {
 	let uuid = req.params.uuid
