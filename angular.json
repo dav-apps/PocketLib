@@ -93,9 +93,14 @@
 							],
 							"serviceWorker": true,
 							"ngswConfigPath": "ngsw-config.json"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
 						}
 					},
-					"defaultConfiguration": ""
+					"defaultConfiguration": "development"
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
