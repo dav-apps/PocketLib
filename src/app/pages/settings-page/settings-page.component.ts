@@ -7,7 +7,6 @@ import { enUS } from "src/locales/locales"
 import { DataService } from "src/app/services/data-service"
 
 @Component({
-	selector: "pocketlib-settings-page",
 	templateUrl: "./settings-page.component.html",
 	styleUrls: ["./settings-page.component.scss"]
 })
