@@ -104,19 +104,19 @@
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
-					"options": {
-						"browserTarget": "PocketLib:build"
+          "options": {
+            "buildTarget": "PocketLib:build"
 					},
 					"configurations": {
-						"production": {
-							"browserTarget": "PocketLib:build:production"
+            "production": {
+              "buildTarget": "PocketLib:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
-					"options": {
-						"browserTarget": "PocketLib:build"
+          "options": {
+            "buildTarget": "PocketLib:build"
 					}
 				},
 				"test": {
