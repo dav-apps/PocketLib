@@ -35,6 +35,7 @@ const maxAuthorsPerPage = 5
 
 interface AuthorItem {
 	uuid: string
+	slug: string
 	name: string
 	profileImageContent: string
 	profileImageBlurhash: string
@@ -52,7 +53,7 @@ export class PublisherProfileComponent {
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
-	@Input() uuid: string
+	@Input() slug: string
 	publisherMode: PublisherMode = PublisherMode.Normal
 	publisher: Publisher = new Publisher(null, this.dataService, this.apiService)
 	facebookLink: string = ""
@@ -148,7 +149,7 @@ export class PublisherProfileComponent {
 		if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
 			publisher = this.dataService.adminPublishers.find(
-				publisher => publisher.uuid == this.uuid
+				publisher => publisher.slug == this.slug
 			)
 		} else if (this.dataService.userPublisher) {
 			this.publisherMode = PublisherMode.PublisherOfUser
@@ -160,7 +161,7 @@ export class PublisherProfileComponent {
 
 			// Get the publisher from the server
 			this.publisher = await Publisher.Retrieve(
-				this.uuid,
+				this.slug,
 				this.dataService,
 				this.apiService
 			)
@@ -233,6 +234,7 @@ export class PublisherProfileComponent {
 		for (let author of authorsResponse.items) {
 			let authorItem: AuthorItem = {
 				uuid: author.uuid,
+				slug: author.slug,
 				name: `${author.firstName} ${author.lastName}`,
 				profileImageContent: this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profileImage.blurhash,
@@ -310,7 +312,7 @@ export class PublisherProfileComponent {
 			uuid:
 				this.publisherMode == PublisherMode.PublisherOfUser
 					? "mine"
-					: this.uuid,
+					: this.publisher.uuid,
 			contentType: blob.type,
 			data: blob
 		})
@@ -478,7 +480,7 @@ export class PublisherProfileComponent {
 
 	authorItemClick(event: Event, author: AuthorItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "author", author.uuid])
+		this.router.navigate(["store", "author", author.slug])
 	}
 
 	async CreateAuthor(result: { firstName: string; lastName: string }) {

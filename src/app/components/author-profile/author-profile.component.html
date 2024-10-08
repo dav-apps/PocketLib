@@ -220,7 +220,7 @@
 				imageAspectRatio="1:1.5"
 				[headline]="book.title"
 				size="large"
-				[href]="'/store/book/' + book.uuid"
+				[href]="'/store/book/' + book.slug"
 				(click)="bookItemClick($event, book)"
 				*ngFor="let book of books"
 			></dav-list-item>

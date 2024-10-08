@@ -8,7 +8,7 @@
 	<div class="list-container">
 		<a
 			class="book-card"
-			[routerLink]="'/store/book/' + book.uuid"
+			[routerLink]="'/store/book/' + book.slug"
 			*ngFor="let book of books"
 		>
 			<dav-blurhash-image

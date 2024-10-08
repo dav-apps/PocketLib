@@ -22,7 +22,7 @@ export class AuthorPageComponent {
 	createPublisherDialog: CreatePublisherDialogComponent
 	@ViewChild("createAuthorDialog")
 	createAuthorDialog: CreateAuthorDialogComponent
-	uuid: string
+	slug: string
 	createPublisherDialogLoading: boolean = false
 	createPublisherDialogNameError: string = ""
 	createAuthorDialogLoading: boolean = false
@@ -42,14 +42,14 @@ export class AuthorPageComponent {
 	) {
 		this.locale = this.dataService.GetLocale().authorPage
 
-		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
+		// Get the slug from the url
+		this.slug = this.activatedRoute.snapshot.paramMap.get("slug")
 	}
 
 	async ngOnInit() {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
-		if (this.dataService.userIsAdmin && !this.uuid) {
+		if (this.dataService.userIsAdmin && !this.slug) {
 			// Get the books in review
 			let response = await this.apiService.listStoreBooks(
 				`
@@ -169,7 +169,7 @@ export class AuthorPageComponent {
 		this.createAuthorDialog.show()
 	}
 
-	async CreateAuthor(result: { firstName: string, lastName: string }) {
+	async CreateAuthor(result: { firstName: string; lastName: string }) {
 		this.createAuthorDialogFirstNameError = ""
 		this.createAuthorDialogLastNameError = ""
 		this.createAuthorDialogLoading = true

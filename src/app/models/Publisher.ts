@@ -5,6 +5,7 @@ import { Author } from "./Author"
 
 export class Publisher {
 	public uuid: string
+	public slug: string
 	public name: string
 	public description: string
 	public websiteUrl: string
@@ -23,6 +24,7 @@ export class Publisher {
 	) {
 		if (publisherResource != null) {
 			if (publisherResource.uuid != null) this.uuid = publisherResource.uuid
+			if (publisherResource.slug != null) this.slug = publisherResource.slug
 			if (publisherResource.name != null) this.name = publisherResource.name
 			if (publisherResource.description != null)
 				this.description = publisherResource.description
@@ -49,6 +51,7 @@ export class Publisher {
 		let response = await apiService.retrievePublisher(
 			`
 				uuid
+				slug
 				name
 				description
 				websiteUrl

@@ -31,6 +31,7 @@ export class StoreBookPageComponent {
 
 	//#region StoreBook variables
 	uuid: string = ""
+	slug: string = ""
 	title: string = ""
 	description: string = ""
 	price: number = 0
@@ -62,6 +63,7 @@ export class StoreBookPageComponent {
 
 	//#region Author variables
 	authorUuid: string = ""
+	authorSlug: string = ""
 	authorName: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageBlurhash: string = ""
@@ -70,6 +72,7 @@ export class StoreBookPageComponent {
 
 	//#region Publisher variables
 	publisherUuid: string = ""
+	publisherSlug: string = ""
 	publisherName: string = ""
 	publisherLogoContent: string = this.dataService.defaultProfileImageUrl
 	publisherLogoBlurhash: string = ""
@@ -102,12 +105,12 @@ export class StoreBookPageComponent {
 	async ngOnInit() {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
-		// Get the uuid from the params
+		// Get the slug from the params
 		this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
-			let uuid = paramMap.get("uuid")
+			let slug = paramMap.get("slug")
 
-			if (this.uuid != uuid) {
-				this.uuid = uuid
+			if (this.slug != slug) {
+				this.slug = slug
 
 				// Show the loading screen & scroll to the top
 				this.dataService.simpleLoadingScreenVisible = true
@@ -137,12 +140,14 @@ export class StoreBookPageComponent {
 						uuid
 						publisher {
 							uuid
+							slug
 							name
 							logo {
 								url
 								blurhash
 							}
 						}
+						slug
 						firstName
 						lastName
 						profileImage {
@@ -175,12 +180,13 @@ export class StoreBookPageComponent {
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{ uuid: this.slug }
 		)
 
 		let responseData = response.data.retrieveStoreBook
 		this.dataService.simpleLoadingScreenVisible = false
 
+		this.uuid = responseData.uuid
 		this.title = responseData.title
 		this.description = responseData.description
 		this.price = responseData.price
@@ -291,6 +297,7 @@ export class StoreBookPageComponent {
 		}
 
 		let author = responseData.collection.author
+		this.authorSlug = author.slug
 		this.authorUuid = author.uuid
 		this.authorName = `${author.firstName} ${author.lastName}`
 		this.authorProfileImageBlurhash = author.profileImage?.blurhash
@@ -317,6 +324,7 @@ export class StoreBookPageComponent {
 
 		if (publisher != null) {
 			this.publisherUuid = publisher.uuid
+			this.publisherSlug = publisher.slug
 			this.publisherName = publisher.name
 			this.publisherLogoBlurhash = publisher.logo?.blurhash
 			this.publisherLogoAlt = this.dataService
@@ -616,12 +624,12 @@ export class StoreBookPageComponent {
 
 	authorProfileCardClick(event: Event) {
 		event.preventDefault()
-		this.router.navigate(["store", "author", this.authorUuid])
+		this.router.navigate(["store", "author", this.authorSlug])
 	}
 
 	publisherProfileCardClick(event: Event) {
 		event.preventDefault()
-		this.router.navigate(["store", "publisher", this.publisherUuid])
+		this.router.navigate(["store", "publisher", this.publisherSlug])
 	}
 
 	categoryBadgeClick(event: Event, categoryKey: string) {

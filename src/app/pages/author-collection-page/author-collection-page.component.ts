@@ -118,6 +118,7 @@ export class AuthorCollectionPageComponent {
 		for (let storeBook of storeBooksResult.items) {
 			let bookItem: ExtendedBookListItem = {
 				uuid: storeBook.uuid,
+				slug: storeBook.slug,
 				title: storeBook.title,
 				coverContent: null,
 				coverBlurhash: storeBook.cover?.blurhash,

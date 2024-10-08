@@ -41,6 +41,7 @@ export class HorizontalAuthorListComponent {
 			`
 				items {
 					uuid
+					slug
 					firstName
 					lastName
 					profileImage {
@@ -65,8 +66,9 @@ export class HorizontalAuthorListComponent {
 			this.dataService.GetLocale().misc.authorProfileImageAlt
 
 		for (let author of responseData.items) {
-			let authorItem = {
+			let authorItem: AuthorListItem = {
 				uuid: author.uuid,
+				slug: author.slug,
 				firstName: author.firstName,
 				lastName: author.lastName,
 				profileImageContent: null,

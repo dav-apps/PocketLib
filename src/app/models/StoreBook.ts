@@ -15,6 +15,7 @@ import { Category } from "./Category"
 
 export class StoreBook {
 	public uuid: string
+	public slug: string
 	public title: string
 	public description: string
 	public language: Language
@@ -45,6 +46,7 @@ export class StoreBook {
 	) {
 		if (storeBookResource != null) {
 			if (storeBookResource.uuid != null) this.uuid = storeBookResource.uuid
+			if (storeBookResource.slug != null) this.slug = storeBookResource.slug
 			if (storeBookResource.title != null)
 				this.title = storeBookResource.title
 			if (storeBookResource.description != null)
@@ -83,6 +85,7 @@ export class StoreBook {
 		let response = await apiService.retrieveStoreBook(
 			`
 				uuid
+				slug
 				title
 				description
 				language

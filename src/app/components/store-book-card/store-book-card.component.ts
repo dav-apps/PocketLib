@@ -19,6 +19,6 @@ export class StoreBookCardComponent {
 		this.alt = this.dataService
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.book.title)
-		this.link = `/store/book/${this.book.uuid}`
+		this.link = `/store/book/${this.book.slug}`
 	}
 }

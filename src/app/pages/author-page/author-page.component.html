@@ -1,10 +1,10 @@
 <pocketlib-author-profile
-	*ngIf="dataService.userAuthor || (dataService.userIsAdmin && uuid)"
-	[uuid]="uuid"
+	*ngIf="dataService.userAuthor || (dataService.userIsAdmin && slug)"
+	[slug]="uuid"
 ></pocketlib-author-profile>
 
 <!-- Admin view -->
-<div class="container slide-up-in" *ngIf="dataService.userIsAdmin && !uuid">
+<div class="container slide-up-in" *ngIf="dataService.userIsAdmin && !slug">
 	<!-- List of publishers -->
 	<div class="header-container">
 		<dav-header

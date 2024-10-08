@@ -74,6 +74,7 @@ export class HorizontalBookListComponent {
 				total
 				items {
 					uuid
+					slug
 					title
 					cover {
 						url
@@ -104,6 +105,7 @@ export class HorizontalBookListComponent {
 				total
 				items {
 					uuid
+					slug
 					title
 					cover {
 						url
@@ -143,6 +145,7 @@ export class HorizontalBookListComponent {
 					total
 					items {
 						uuid
+						slug
 						title
 						cover {
 							url
@@ -173,6 +176,7 @@ export class HorizontalBookListComponent {
 				total
 				items {
 					uuid
+					slug
 					title
 					cover {
 						url
@@ -210,6 +214,7 @@ export class HorizontalBookListComponent {
 
 			let bookItem: BookListItem = {
 				uuid: storeBook.uuid,
+				slug: storeBook.slug,
 				title: storeBook.title,
 				coverContent: null,
 				coverBlurhash: storeBook.cover.blurhash,

@@ -15,6 +15,7 @@ import { ApolloQueryResult } from "@apollo/client"
 
 interface BookItem {
 	uuid: string
+	slug: string
 	coverContent: string
 	blurhash: string
 	title: string
@@ -104,6 +105,7 @@ export class StoreBooksPageComponent {
 						total
 						items {
 							uuid
+							slug
 							title
 							cover {
 								url
@@ -126,6 +128,7 @@ export class StoreBooksPageComponent {
 						total
 						items {
 							uuid
+							slug
 							title
 							cover {
 								url
@@ -153,6 +156,7 @@ export class StoreBooksPageComponent {
 		for (let storeBook of responseBooks) {
 			let bookItem: BookItem = {
 				uuid: storeBook.uuid,
+				slug: storeBook.slug,
 				coverContent: this.dataService.defaultStoreBookCover,
 				blurhash: storeBook.cover?.blurhash || "",
 				title: storeBook.title

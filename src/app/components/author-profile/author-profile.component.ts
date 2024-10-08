@@ -74,7 +74,7 @@ export class AuthorProfileComponent {
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
-	@Input() uuid: string
+	@Input() slug: string
 	@Output() loaded = new EventEmitter()
 	collectionsLoaded: boolean = false
 	seriesLoaded: boolean = false
@@ -145,12 +145,12 @@ export class AuthorProfileComponent {
 		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
 			author = this.dataService.adminAuthors.find(
-				author => author.uuid == this.uuid
+				author => author.slug == this.slug
 			)
 
 			if (author == null) {
 				author = await Author.Retrieve(
-					this.uuid,
+					this.slug,
 					this.dataService,
 					this.apiService
 				)
@@ -442,7 +442,7 @@ export class AuthorProfileComponent {
 				await this.ProcessSetBioResponse(response)
 			} else {
 				let response = await this.apiService.setAuthorBio(`uuid`, {
-					uuid: this.uuid,
+					uuid: this.author.uuid,
 					language: this.bioLanguageDropdownSelectedKey,
 					bio: this.newBio
 				})
@@ -529,7 +529,10 @@ export class AuthorProfileComponent {
 
 		// Send the file content to the server
 		let response = await this.apiService.uploadAuthorProfileImage({
-			uuid: this.authorMode == AuthorMode.AuthorOfUser ? "mine" : this.uuid,
+			uuid:
+				this.authorMode == AuthorMode.AuthorOfUser
+					? "mine"
+					: this.author.uuid,
 			contentType: blob.type,
 			data: blob
 		})
@@ -693,7 +696,7 @@ export class AuthorProfileComponent {
 
 	async LoadAuthor() {
 		this.author = await Author.Retrieve(
-			this.uuid,
+			this.slug,
 			this.dataService,
 			this.apiService
 		)
@@ -715,6 +718,7 @@ export class AuthorProfileComponent {
 			for (let storeBook of storeBooksResult.items) {
 				let bookItem: BookListItem = {
 					uuid: storeBook.uuid,
+					slug: storeBook.slug,
 					title: storeBook.title,
 					coverContent: null,
 					coverBlurhash: storeBook.cover?.blurhash

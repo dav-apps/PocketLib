@@ -67,6 +67,7 @@ export class HorizontalSeriesListComponent {
 
 				let bookItem: BookListItem = {
 					uuid: book.uuid,
+					slug: book.slug,
 					title: book.title,
 					coverContent: null,
 					coverBlurhash: book.cover.blurhash,

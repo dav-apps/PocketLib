@@ -14,6 +14,7 @@ import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 
 export class Author {
 	public uuid: string
+	public slug: string
 	public firstName: string
 	public lastName: string
 	public bio: {
@@ -37,6 +38,7 @@ export class Author {
 	) {
 		if (authorResource != null) {
 			if (authorResource.uuid != null) this.uuid = authorResource.uuid
+			if (authorResource.slug != null) this.slug = authorResource.slug
 			if (authorResource.firstName != null)
 				this.firstName = authorResource.firstName
 			if (authorResource.lastName != null)
@@ -68,6 +70,7 @@ export class Author {
 		let response = await apiService.retrieveAuthor(
 			`
 				uuid
+				slug
 				firstName
 				lastName
 				bio(languages: $languages) {

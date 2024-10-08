@@ -80,9 +80,9 @@ const routes: Routes = [
 	{ path: "loading", component: LoadingPageComponent },
 	{ path: "store", component: StoreStartPageComponent },
 	{ path: "store/categories", component: StoreCategoriesPageComponent },
-	{ path: "store/publisher/:uuid", component: StorePublisherPageComponent },
-	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
-	{ path: "store/book/:uuid", component: StoreBookPageComponent },
+	{ path: "store/publisher/:slug", component: StorePublisherPageComponent },
+	{ path: "store/author/:slug", component: StoreAuthorPageComponent },
+	{ path: "store/book/:slug", component: StoreBookPageComponent },
 	{ path: "store/category/:key", component: StoreBooksPageComponent }
 ]
 

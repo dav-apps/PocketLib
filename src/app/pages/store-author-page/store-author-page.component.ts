@@ -6,10 +6,10 @@ import { ActivatedRoute } from "@angular/router"
 	templateUrl: "./store-author-page.component.html"
 })
 export class StoreAuthorPageComponent {
-	uuid: string
+	slug: string
 
 	constructor(private activatedRoute: ActivatedRoute) {
 		// Get the uuid from the url
-		this.uuid = this.activatedRoute.snapshot.paramMap.get("uuid")
+		this.slug = this.activatedRoute.snapshot.paramMap.get("slug")
 	}
 }

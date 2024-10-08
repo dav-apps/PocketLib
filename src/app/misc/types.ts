@@ -2,6 +2,7 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
 
 export interface BookListItem {
 	uuid: string
+	slug: string
 	title: string
 	coverContent: string
 	coverBlurhash: string
@@ -16,6 +17,7 @@ export interface SeriesListItem {
 
 export interface AuthorListItem {
 	uuid: string
+	slug: string
 	firstName: string
 	lastName: string
 	profileImageContent: string
@@ -102,6 +104,7 @@ export interface ApiResponse<T> {
 //#region API types
 export interface PublisherResource {
 	uuid: string
+	slug: string
 	name: string
 	description: string
 	websiteUrl: string
@@ -121,6 +124,7 @@ export interface PublisherLogoResource {
 export interface AuthorResource {
 	uuid: string
 	publisher: PublisherResource
+	slug: string
 	firstName: string
 	lastName: string
 	bio: AuthorBioResource
@@ -171,6 +175,7 @@ export interface StoreBookSeriesResource {
 export interface StoreBookResource {
 	uuid: string
 	collection: StoreBookCollectionResource
+	slug: string
 	title: string
 	description: string
 	language: string

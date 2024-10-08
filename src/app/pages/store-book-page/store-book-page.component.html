@@ -34,7 +34,7 @@
 				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
 				[imageBlurhash]="authorProfileImageBlurhash"
 				[name]="authorName"
-				[href]="'/store/author/' + authorUuid"
+				[href]="'/store/author/' + authorSlug"
 				(click)="authorProfileCardClick($event)"
 			></dav-profile-card>
 
@@ -44,7 +44,7 @@
 				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
 				[imageBlurhash]="publisherLogoBlurhash"
 				[name]="publisherName"
-				[href]="'/store/publisher' + publisherUuid"
+				[href]="'/store/publisher/' + publisherSlug"
 				(click)="publisherProfileCardClick($event)"
 				*ngIf="publisherName"
 			></dav-profile-card>

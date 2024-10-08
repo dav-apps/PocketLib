@@ -10,6 +10,7 @@ import { DataService } from "src/app/services/data-service"
 export class HorizontalAuthorListItemComponent {
 	@Input() author: AuthorListItem = {
 		uuid: "",
+		slug: "",
 		firstName: "",
 		lastName: "",
 		profileImageContent: null,
