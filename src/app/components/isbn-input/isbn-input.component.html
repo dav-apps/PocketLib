@@ -18,20 +18,20 @@
 		></dav-textfield>
 
 		<div>
-			<dav-icon-button size="small" (click)="UpdateValue()">
+			<dav-icon-button size="sm" (click)="UpdateValue()">
 				<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
 			</dav-icon-button>
 		</div>
 
 		<div>
-			<dav-icon-button size="small" (click)="Cancel()">
+			<dav-icon-button size="sm" (click)="Cancel()">
 				<fa-icon [icon]="faXmarkLight"></fa-icon>
 			</dav-icon-button>
 		</div>
 	</div>
 
 	<dav-icon-button
-		size="small"
+		size="sm"
 		*ngIf="!edit && canEdit"
 		(click)="EnableEditing()"
 	>

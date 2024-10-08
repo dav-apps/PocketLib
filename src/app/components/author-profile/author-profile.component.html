@@ -13,7 +13,7 @@
 			></dav-blurhash-image>
 
 			<dav-button
-				size="small"
+				size="sm"
 				tonal
 				ngxFilePicker
 				accept="image/png,image/jpeg"
@@ -27,7 +27,7 @@
 
 		<dav-header
 			[editButtonVisible]="authorMode > 0"
-			size="small"
+			size="sm"
 			(editButtonClick)="ShowEditProfileDialog()"
 		>
 			{{ author.firstName }} {{ author.lastName }}
@@ -104,7 +104,7 @@
 
 		<div class="edit-bio-button-container">
 			<dav-button
-				size="small"
+				size="sm"
 				[tonal]="bioMode != 1 && bioMode != 3"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
@@ -115,7 +115,7 @@
 
 			<dav-button
 				color="secondary"
-				size="small"
+				size="sm"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
 				*ngIf="authorMode != 0 && bioMode == 3"
@@ -143,7 +143,7 @@
 		<!-- List of collections -->
 		<div>
 			<dav-header
-				size="small"
+				size="sm"
 				addButtonVisible
 				(addButtonClick)="NavigateToNewBookPage()"
 			>
@@ -172,7 +172,7 @@
 					"
 					imageAspectRatio="1:1.5"
 					[headline]="collection.name"
-					size="large"
+					size="lg"
 					[href]="collection.link"
 					(click)="collectionItemClick($event, collection)"
 					*ngFor="let collection of collections"
@@ -183,7 +183,7 @@
 		<!-- List of series -->
 		<div>
 			<dav-header
-				size="small"
+				size="sm"
 				addButtonVisible
 				(addButtonClick)="NavigateToNewSeriesPage()"
 			>
@@ -202,7 +202,7 @@
 					[imageBlurhash]="s.coverBlurhash"
 					imageAspectRatio="1:1.5"
 					[headline]="s.name"
-					size="large"
+					size="lg"
 					[href]="s.link"
 					(click)="seriesItemClick($event, s)"
 					*ngFor="let s of series"
@@ -219,7 +219,7 @@
 				[imageBlurhash]="book.coverBlurhash"
 				imageAspectRatio="1:1.5"
 				[headline]="book.title"
-				size="large"
+				size="lg"
 				[href]="'/store/book/' + book.slug"
 				(click)="bookItemClick($event, book)"
 				*ngFor="let book of books"

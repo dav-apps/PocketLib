@@ -8,7 +8,7 @@
 	<!-- List of publishers -->
 	<div class="header-container">
 		<dav-header
-			size="small"
+			size="sm"
 			addButtonVisible
 			(addButtonClick)="ShowCreatePublisherDialog()"
 		>
@@ -20,7 +20,7 @@
 		<dav-list>
 			<dav-list-item
 				[headline]="publisher.name"
-				size="small"
+				size="sm"
 				(click)="ShowPublisher(publisher.uuid)"
 				*ngFor="let publisher of dataService.adminPublishers"
 			></dav-list-item>
@@ -30,7 +30,7 @@
 	<!-- List of authors -->
 	<div class="header-container">
 		<dav-header
-			size="small"
+			size="sm"
 			addButtonVisible
 			(addButtonClick)="ShowCreateAuthorDialog()"
 		>
@@ -42,7 +42,7 @@
 		<dav-list>
 			<dav-list-item
 				[headline]="author.firstName + ' ' + author.lastName"
-				size="small"
+				size="sm"
 				(click)="ShowAuthor(author.uuid)"
 				*ngFor="let author of dataService.adminAuthors"
 			></dav-list-item>
@@ -51,7 +51,7 @@
 
 	<!-- List of books in review -->
 	<div class="header-container">
-		<dav-header size="small">
+		<dav-header size="sm">
 			{{ locale.booksInReview }}
 		</dav-header>
 	</div>
@@ -61,7 +61,7 @@
 			<dav-list-item
 				[headline]="book.title"
 				[subhead]="book.author"
-				size="small"
+				size="sm"
 				(click)="ShowBook(book.uuid)"
 				*ngFor="let book of booksInReview"
 			></dav-list-item>

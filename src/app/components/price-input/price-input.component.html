@@ -16,14 +16,14 @@
 		></dav-textfield>
 
 		<div>
-			<dav-icon-button size="small" (click)="UpdatePrice()">
+			<dav-icon-button size="sm" (click)="UpdatePrice()">
 				<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
 			</dav-icon-button>
 		</div>
 	</div>
 
 	<dav-icon-button
-		size="small"
+		size="sm"
 		*ngIf="canEdit && !edit"
 		(click)="ShowEditPrice()"
 	>

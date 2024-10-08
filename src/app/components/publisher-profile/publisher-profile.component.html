@@ -13,7 +13,7 @@
 			></dav-blurhash-image>
 
 			<dav-button
-				size="small"
+				size="sm"
 				tonal
 				ngxFilePicker
 				accept="image/png,image/jpeg"
@@ -27,7 +27,7 @@
 
 		<dav-header
 			[editButtonVisible]="publisherMode > 0"
-			size="small"
+			size="sm"
 			(editButtonClick)="ShowEditProfileDialog()"
 		>
 			{{ publisher.name }}
@@ -101,7 +101,7 @@
 
 		<div class="edit-description-button-container">
 			<dav-button
-				size="small"
+				size="sm"
 				[tonal]="!editDescription"
 				[disabled]="descriptionLoading"
 				(click)="EditDescription()"
@@ -112,7 +112,7 @@
 
 			<dav-button
 				color="secondary"
-				size="small"
+				size="sm"
 				[disabled]="descriptionLoading"
 				(click)="CancelEditDescription()"
 				*ngIf="editDescription"
@@ -136,7 +136,7 @@
 		<!-- List of authors -->
 		<div *ngIf="publisherMode != 0">
 			<dav-header
-				size="small"
+				size="sm"
 				addButtonVisible
 				(addButtonClick)="ShowCreateAuthorDialog()"
 			>

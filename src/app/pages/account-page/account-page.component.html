@@ -1,6 +1,6 @@
 <!-- Layout for not logged in -->
 <div class="container slide-up-in" *ngIf="!dataService.dav.isLoggedIn">
-	<dav-header size="large">
+	<dav-header size="lg">
 		{{ locale.title }}
 	</dav-header>
 
@@ -53,7 +53,7 @@
 <!-- Layout for logged in -->
 <div class="container slide-up-in" *ngIf="dataService.dav.isLoggedIn">
 	<div class="header-logged-in-container">
-		<dav-header size="large">
+		<dav-header size="lg">
 			{{ locale.title }}
 		</dav-header>
 	</div>
@@ -101,7 +101,7 @@
 			<dav-button
 				color="error"
 				outline
-				size="small"
+				size="sm"
 				(click)="logoutDialog.show()"
 			>
 				{{ locale.logout }}
