@@ -14,9 +14,11 @@
 	<div>
 		<p class="description-text">{{ locale.bookFileSection.description }}</p>
 
-		<p class="file-name-text" *ngIf="bookFileName.length > 0">
+		@if (bookFileName.length > 0) {
+		<p class="file-name-text">
 			{{ bookFileName }}
 		</p>
+		}
 
 		<dav-button
 			ngxFilePicker
@@ -31,7 +33,7 @@
 		<dav-button size="sm" outline (click)="Previous()">
 			{{ locale.previous }}
 		</dav-button>
-	
+
 		<dav-button size="sm" (click)="Finish()">
 			{{ locale.finish }}
 		</dav-button>

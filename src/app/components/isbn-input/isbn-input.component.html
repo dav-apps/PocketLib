@@ -1,13 +1,14 @@
 <div class="container">
-	<p class="isbn-text" *ngIf="isbn.length > 0 && !edit">
+	@if (isbn.length > 0 && !edit) {
+	<p class="isbn-text">
 		{{ isbn }}
 	</p>
-
-	<p class="no-isbn-text" *ngIf="isbn.length == 0 && !edit">
+	} @if (isbn.length == 0 && !edit) {
+	<p class="no-isbn-text">
 		{{ locale.noIsbn }}
 	</p>
-
-	<div class="edit-container" *ngIf="edit">
+	} @if (edit) {
+	<div class="edit-container">
 		<dav-textfield
 			[value]="isbn"
 			label="ISBN"
@@ -29,12 +30,9 @@
 			</dav-icon-button>
 		</div>
 	</div>
-
-	<dav-icon-button
-		size="sm"
-		*ngIf="!edit && canEdit"
-		(click)="EnableEditing()"
-	>
+	} @if (!edit && canEdit) {
+	<dav-icon-button size="sm" (click)="EnableEditing()">
 		<fa-icon [icon]="faPenLight"></fa-icon>
 	</dav-icon-button>
+	}
 </div>

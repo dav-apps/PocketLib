@@ -19,14 +19,12 @@
 	</div>
 </a>
 
+@if (dataService.userAuthor || dataService.userIsAdmin) {
 <!-- Card for going to the author page, if the user is an author -->
-<a
-	class="card"
-	routerLink="/author"
-	*ngIf="dataService.userAuthor || dataService.userIsAdmin"
->
+<a class="card" routerLink="/author">
 	<div class="card-body">
 		<fa-icon [icon]="faAddressCardLight"></fa-icon>
 		<p class="card-text">{{ locale.goToAuthorPage }}</p>
 	</div>
 </a>
+}

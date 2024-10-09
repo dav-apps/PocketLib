@@ -89,52 +89,44 @@
 </div>
 
 <!-- Arrow buttons -->
+@if (!isMobile && !firstPage) {
 <button
 	#arrowButtonLeft
 	class="arrow-button arrow-button-left"
 	(click)="PrevPage()"
-	*ngIf="!isMobile && !firstPage"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</dav-icon-button>
 </button>
-
+} @else if (!isMobile) {
 <button
 	#arrowButtonRight
 	class="arrow-button arrow-button-right"
 	(click)="NextPage()"
-	*ngIf="!isMobile"
 >
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
 	</dav-icon-button>
 </button>
-
+} @if (!isMobile) {
 <!-- Chapter title -->
 <div
 	class="chapter-title-container"
 	[ngClass]="dualScreenLayout ? 'dual-screen' : ''"
-	*ngIf="!isMobile"
 >
 	<p>{{ currentChapterTitle }}</p>
 </div>
-
+} @if (!isMobile && initialized) {
 <!-- Top Toolbar -->
-<div
-	class="top-toolbar"
-	[class.windows]="dataService.windows"
-	*ngIf="!isMobile && initialized"
->
+<div class="top-toolbar" [class.windows]="dataService.windows">
 	<div class="top-toolbar-left-container">
+		@if (navigationHistory.length > 0) {
 		<!-- Back button -->
-		<dav-icon-button
-			size="sm"
-			(click)="GoBack()"
-			*ngIf="navigationHistory.length > 0"
-		>
+		<dav-icon-button size="sm" (click)="GoBack()">
 			<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 		</dav-icon-button>
+		}
 
 		<!-- Home button -->
 		<dav-icon-button size="sm" (click)="GoHome()">
@@ -152,14 +144,11 @@
 		</div>
 
 		<dav-icon-button size="sm" (click)="AddOrRemoveBookmark()">
-			<fa-icon
-				[icon]="faBookmarkSolid"
-				*ngIf="currentPageBookmark"
-			></fa-icon>
-			<fa-icon
-				[icon]="faBookmarkLight"
-				*ngIf="!currentPageBookmark"
-			></fa-icon>
+			@if (currentPageBookmark) {
+			<fa-icon [icon]="faBookmarkSolid"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faBookmarkLight"></fa-icon>
+			}
 		</dav-icon-button>
 
 		<dav-icon-button size="sm" (click)="ShowBookmarksPanel()">
@@ -171,6 +160,7 @@
 		</dav-icon-button>
 	</div>
 </div>
+}
 
 <dav-bottom-sheet
 	#bottomSheet
@@ -182,13 +172,14 @@
 	[style.display]="isMobile ? '' : 'none'"
 >
 	<div slot="buttons">
+		@if (navigationHistory.length > 0) {
 		<dav-icon-text-button
 			[label]="locale.bottomSheet.previousPage"
 			(click)="GoBack()"
-			*ngIf="navigationHistory.length > 0"
 		>
 			<fa-icon [icon]="faArrowLeftRegular"></fa-icon>
 		</dav-icon-text-button>
+		}
 
 		<dav-icon-text-button
 			[label]="locale.bottomSheet.back"
@@ -205,14 +196,11 @@
 			"
 			(click)="AddOrRemoveBookmark()"
 		>
-			<fa-icon
-				[icon]="faBookmarkSolid"
-				*ngIf="currentPageBookmark"
-			></fa-icon>
-			<fa-icon
-				[icon]="faBookmarkRegular"
-				*ngIf="!currentPageBookmark"
-			></fa-icon>
+			@if (currentPageBookmark) {
+			<fa-icon [icon]="faBookmarkSolid"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faBookmarkRegular"></fa-icon>
+			}
 		</dav-icon-text-button>
 
 		<dav-icon-text-button

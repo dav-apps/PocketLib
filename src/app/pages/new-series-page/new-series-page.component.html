@@ -6,12 +6,14 @@
 		</dav-header>
 	</div>
 
+	@if (errorMessage.length > 0) {
 	<!-- Error message bar -->
-	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+	<div class="error-message-container">
 		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
+	}
 
 	<div class="selection-container">
 		<div class="selection-content-container">
@@ -37,11 +39,12 @@
 		</div>
 	</div>
 
-	<div class="progress-ring-container" *ngIf="booksLoading">
+	@if (booksLoading) {
+	<div class="progress-ring-container">
 		<dav-progress-ring size="28"></dav-progress-ring>
 	</div>
-
-	<div class="books-container" *ngIf="!booksLoading && bookItems.length > 0">
+	} @if (!booksLoading && bookItems.length > 0) {
+	<div class="books-container">
 		<div class="inner-books-container">
 			<div>
 				<dav-checkbox
@@ -62,15 +65,15 @@
 					{{ locale.create }}
 				</dav-button>
 
-				<dav-progress-ring size="16" *ngIf="loading"></dav-progress-ring>
+				@if (loading){
+				<dav-progress-ring size="16"></dav-progress-ring>
+				}
 			</div>
 		</div>
 	</div>
-
-	<div
-		class="no-books-container"
-		*ngIf="bookItems.length == 0 && !booksLoading"
-	>
+	} @if (bookItems.length == 0 && !booksLoading) {
+	<div class="no-books-container">
 		<p>{{ locale.noBooksMessage }}</p>
 	</div>
+	}
 </div>

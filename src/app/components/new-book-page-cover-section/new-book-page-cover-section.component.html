@@ -14,9 +14,11 @@
 	<div>
 		<p class="description-text">{{ locale.coverSection.description }}</p>
 
-		<div class="cover-container" *ngIf="coverContent">
+		@if (coverContent) {
+		<div class="cover-container">
 			<img [src]="coverContentBase64" height="200" />
 		</div>
+		}
 
 		<div class="upload-button-container">
 			<dav-button

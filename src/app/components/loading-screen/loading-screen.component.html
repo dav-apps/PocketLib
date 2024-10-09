@@ -16,9 +16,11 @@
 				[color]="dataService.darkTheme ? 'white' : 'black'"
 			></dav-progress-ring>
 
-			<p class="loading-screen-message" *ngIf="message.length > 0">
+			@if (message.length > 0) {
+			<p class="loading-screen-message">
 				{{ message }}
 			</p>
+			}
 		</div>
 	</div>
 </div>

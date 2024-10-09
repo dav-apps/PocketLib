@@ -5,14 +5,19 @@
 		</dav-header>
 	</div>
 
+	@if (status == 2) {
 	<!-- Published -->
-	<div *ngIf="status == 2">
+	<div>
 		<p class="status-text">
 			{{ locale.published }}
 		</p>
 
 		<div class="button-container">
-			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+			<dav-button
+				outline
+				[disabled]="loading"
+				(click)="ShowDetailsButtonClick()"
+			>
 				{{ locale.showDetails }}
 			</dav-button>
 
@@ -33,15 +38,19 @@
 			</dav-button>
 		</div>
 	</div>
-
+	} @else if (status == 3) {
 	<!-- Hidden -->
-	<div *ngIf="status == 3">
+	<div>
 		<p class="status-text">
 			{{ locale.hidden }}
 		</p>
 
 		<div class="button-container">
-			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+			<dav-button
+				outline
+				[disabled]="loading"
+				(click)="ShowDetailsButtonClick()"
+			>
 				{{ locale.showDetails }}
 			</dav-button>
 
@@ -53,17 +62,14 @@
 				{{ locale.showReleases }}
 			</dav-button>
 
-			<dav-button
-				[disabled]="loading"
-				(click)="PublishButtonClick()"
-			>
+			<dav-button [disabled]="loading" (click)="PublishButtonClick()">
 				{{ locale.publish }}
 			</dav-button>
 		</div>
 	</div>
-
+	} @else if (status == 1) {
 	<!-- In Review -->
-	<div *ngIf="status == 1">
+	<div>
 		<p class="status-text">
 			{{ locale.inReview }}
 		</p>
@@ -73,7 +79,11 @@
 		</p>
 
 		<div class="button-container">
-			<dav-button outline [disabled]="loading" (click)="ShowDetailsButtonClick()">
+			<dav-button
+				outline
+				[disabled]="loading"
+				(click)="ShowDetailsButtonClick()"
+			>
 				{{ locale.showDetails }}
 			</dav-button>
 
@@ -86,4 +96,5 @@
 			</dav-button>
 		</div>
 	</div>
+	}
 </div>

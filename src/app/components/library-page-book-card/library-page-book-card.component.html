@@ -1,14 +1,14 @@
 <button class="book-card" (contextmenu)="ContextMenu($event)">
+	@if (!showDefaultCover) {
 	<img
 		[src]="cover"
 		[style.width.px]="width"
 		[style.height.px]="width * 1.5"
 		[title]="book.title"
 		[alt]="alt"
-		*ngIf="!showDefaultCover"
 	/>
-
-	<div *ngIf="showDefaultCover">
+	} @else {
+	<div>
 		<img
 			[src]="cover"
 			[style.width.px]="width"
@@ -21,4 +21,5 @@
 			<p>{{ book.title }}</p>
 		</div>
 	</div>
+	}
 </button>

@@ -118,42 +118,32 @@
 </div>
 
 <!-- Arrow buttons -->
-<div
-	class="arrow-button-container arrow-button-left"
-	(click)="PrevPage()"
-	*ngIf="!firstPage && !isMobile"
->
+@if (!firstPage && !isMobile) {
+<div class="arrow-button-container arrow-button-left" (click)="PrevPage()">
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</dav-icon-button>
 </div>
-
-<div
-	class="arrow-button-container arrow-button-right"
-	(click)="NextPage()"
-	*ngIf="!isMobile"
->
+} @if (!isMobile) {
+<div class="arrow-button-container arrow-button-right" (click)="NextPage()">
 	<dav-icon-button>
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
 	</dav-icon-button>
 </div>
-
+} @if (!isMobile) {
 <!-- Top Toolbar -->
-<div class="w-100" style="z-index: 2; position: absolute" *ngIf="!isMobile">
+<div class="w-100" style="z-index: 2; position: absolute">
 	<dav-icon-button (click)="GoHome()">
 		<fa-icon [icon]="faHouseLight"></fa-icon>
 	</dav-icon-button>
 
 	<div style="float: right">
 		<dav-icon-button (click)="AddOrRemoveBookmark()">
-			<fa-icon
-				[icon]="faBookmarkSolid"
-				*ngIf="currentPageBookmark"
-			></fa-icon>
-			<fa-icon
-				[icon]="faBookmarkLight"
-				*ngIf="!currentPageBookmark"
-			></fa-icon>
+			@if (currentPageBookmark) {
+			<fa-icon [icon]="faBookmarkSolid"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faBookmarkLight"></fa-icon>
+			}
 		</dav-icon-button>
 
 		<dav-icon-button (click)="ShowBookmarksPanel()">
@@ -161,6 +151,7 @@
 		</dav-icon-button>
 	</div>
 </div>
+}
 
 <dav-bottom-sheet
 	#bottomSheet
@@ -188,14 +179,11 @@
 					: locale.bottomSheet.addBookmark
 			"
 		>
-			<fa-icon
-				[icon]="faBookmarkSolid"
-				*ngIf="currentPageBookmark"
-			></fa-icon>
-			<fa-icon
-				[icon]="faBookmarkRegular"
-				*ngIf="!currentPageBookmark"
-			></fa-icon>
+			@if (currentPageBookmark) {
+			<fa-icon [icon]="faBookmarkSolid"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faBookmarkRegular"></fa-icon>
+			}
 		</dav-icon-text-button>
 
 		<dav-icon-text-button
@@ -210,7 +198,8 @@
 		id="bottom-sheet-container"
 		[style.height.px]="bottomSheetContainerHeight"
 	>
-		<div #bottomSheetBookmarksContainer *ngIf="showBookmarksPanel">
+		@if (showBookmarksPanel) {
+		<div #bottomSheetBookmarksContainer>
 			<ul class="list-group list-group-flush">
 				<li
 					class="list-group-item d-flex"
@@ -241,6 +230,7 @@
 				{{ locale.noBookmarks }}
 			</p>
 		</div>
+		}
 	</div>
 </dav-bottom-sheet>
 
@@ -257,22 +247,19 @@
 ></div>
 
 <!-- Page indicators -->
-<div
-	style="z-index: 3; position: absolute; bottom: 0; left: 0"
-	*ngIf="showSecondPage"
->
+@if (showSecondPage) {
+<div style="z-index: 3; position: absolute; bottom: 0; left: 0">
 	<p class="fw-light" style="font-size: 13px; margin: 6px 10px">
 		{{ currentPage }}
 	</p>
 </div>
-<div
-	style="z-index: 3; position: absolute; bottom: 0; right: 0"
-	*ngIf="!showSecondPage || (!lastPage && showSecondPage)"
->
+} @if (!showSecondPage || (!lastPage && showSecondPage)) {
+<div style="z-index: 3; position: absolute; bottom: 0; right: 0">
 	<p class="fw-light" style="font-size: 13px; margin: 6px 10px">
 		{{ currentPage + (showSecondPage ? 1 : 0) }}
 	</p>
 </div>
+}
 
 <dav-panel
 	[header]="locale.bookmarks"

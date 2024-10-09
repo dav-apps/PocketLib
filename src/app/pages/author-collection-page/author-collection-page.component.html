@@ -12,9 +12,11 @@
 		</dav-header>
 	</div>
 
-	<p class="no-books-text" *ngIf="books.length == 0">
+	@if (books.length == 0) {
+	<p class="no-books-text">
 		{{ locale.noBooks }}
 	</p>
+	}
 
 	<div class="book-list-container">
 		<dav-list>

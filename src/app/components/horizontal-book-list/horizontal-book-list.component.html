@@ -4,29 +4,26 @@
 			{{ headline }}
 		</h4>
 
-		<dav-icon-button
-			size="sm"
-			(click)="moreButtonClick()"
-			*ngIf="hasMoreItems && !hideMoreButton"
-		>
+		@if (hasMoreItems && !hideMoreButton) {
+		<dav-icon-button size="sm" (click)="moreButtonClick()">
 			<fa-icon [icon]="faArrowRightLight"></fa-icon>
 		</dav-icon-button>
+		}
 	</div>
 
 	<div class="content-container" [class.center]="alignment == 'center'">
-		<div class="progress-ring-container" *ngIf="loading">
+		@if (loading) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="32"></dav-progress-ring>
 		</div>
-
-		<div
-			class="book-list-container horizontal-store-list slide-up-in"
-			*ngIf="!loading"
-		>
+		} @else {
+		<div class="book-list-container horizontal-store-list slide-up-in">
 			<pocketlib-store-book-card
 				[book]="book"
 				[highlighted]="type == 'series' && book.uuid == currentBookUuid"
 				*ngFor="let book of books"
 			></pocketlib-store-book-card>
 		</div>
+		}
 	</div>
 </div>

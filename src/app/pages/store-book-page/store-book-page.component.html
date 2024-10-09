@@ -3,15 +3,16 @@
 	[class]="dataService.simpleLoadingScreenVisible ? '' : 'slide-up-in'"
 >
 	<div class="cover-panel">
+		@if (title.length > 0) {
 		<dav-header
 			class="mobile-header"
 			size="sm"
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
-			*ngIf="title.length > 0"
 		>
 			{{ title }}
 		</dav-header>
+		}
 
 		<div class="cover-panel-content">
 			<!-- Cover -->
@@ -38,6 +39,7 @@
 				(click)="authorProfileCardClick($event)"
 			></dav-profile-card>
 
+			@if (publisherName) {
 			<dav-profile-card
 				class="publisher-profile-card"
 				[imageSrc]="publisherLogoContent"
@@ -46,8 +48,8 @@
 				[name]="publisherName"
 				[href]="'/store/publisher/' + publisherSlug"
 				(click)="publisherProfileCardClick($event)"
-				*ngIf="publisherName"
 			></dav-profile-card>
+			}
 
 			<!-- Read now / continue reading button -->
 			<div class="read-button-container">
@@ -55,20 +57,16 @@
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 
-				<dav-button
-					color="secondary"
-					*ngIf="luluPrintableId != null"
-					(click)="Order()"
-				>
+				@if (luluPrintableId != null) {
+				<dav-button color="secondary" (click)="Order()">
 					{{ locale.order }}
 				</dav-button>
+				}
 			</div>
 
+			@if (dataService.userIsAdmin && status == 1) {
 			<!-- Status and Publish button (only for admins) -->
-			<div
-				class="publish-button-container"
-				*ngIf="dataService.userIsAdmin && status == 1"
-			>
+			<div class="publish-button-container">
 				<dav-button
 					[disabled]="publishLoading"
 					(click)="PublishStoreBook()"
@@ -76,19 +74,21 @@
 					{{ locale.publish }}
 				</dav-button>
 			</div>
+			}
 		</div>
 	</div>
 
 	<div class="description-panel">
+		@if (title.length > 0) {
 		<dav-header
 			class="desktop-header"
 			size="sm"
 			backButtonVisible
 			(backButtonClick)="BackButtonClick()"
-			*ngIf="title.length > 0"
 		>
 			{{ title }}
 		</dav-header>
+		}
 
 		<div class="description-container">
 			<!-- Description -->
@@ -115,8 +115,9 @@
 <div class="divider"></div>
 
 <div class="recommendations-container">
+	@if (seriesUuid != null) {
 	<!-- List of books of the series -->
-	<div *ngIf="seriesUuid != null">
+	<div>
 		<pocketlib-horizontal-book-list
 			type="series"
 			[headline]="seriesHeadline"
@@ -125,6 +126,7 @@
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
 	</div>
+	}
 
 	<!-- List of books with the same categories -->
 	<div>

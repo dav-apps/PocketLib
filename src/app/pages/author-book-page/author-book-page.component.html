@@ -10,30 +10,28 @@
 		</dav-header>
 	</div>
 
-	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+	@if (errorMessage.length > 0) {
+	<div class="error-message-container">
 		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
+	}
 
 	<div class="content-container">
 		<div class="book-details-container">
 			<!-- Release notes -->
-			<div
-				class="book-details-label"
-				*ngIf="release != null && release.releaseNotes"
-			>
+			@if (release != null && release.releaseNotes) {
+			<div class="book-details-label">
 				<p>{{ locale.releaseNotes }}:</p>
 			</div>
 
-			<div
-				class="book-details-data"
-				*ngIf="release != null && release.releaseNotes"
-			>
+			<div class="book-details-data">
 				<p class="release-notes-text">
 					{{ release.releaseNotes }}
 				</p>
 			</div>
+			}
 
 			<!-- Cover -->
 			<div class="book-details-label">
@@ -41,11 +39,12 @@
 			</div>
 
 			<div class="book-details-data">
-				<p class="no-cover-text" *ngIf="!coverContent">
+				@if (!coverContent) {
+				<p class="no-cover-text">
 					{{ locale.noCover }}
 				</p>
-
-				<div class="cover-container" *ngIf="coverContent">
+				} @else {
+				<div class="cover-container">
 					<dav-blurhash-image
 						[src]="coverContent"
 						[fallbackSrc]="dataService.defaultStoreBookCover"
@@ -55,17 +54,17 @@
 						[loading]="coverLoading"
 					></dav-blurhash-image>
 				</div>
-
+				} @if (release == null) {
 				<dav-button
 					size="sm"
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
 					(filePick)="CoverUpload($event)"
-					*ngIf="release == null"
 				>
 					{{ locale.uploadCover }}
 				</dav-button>
+				}
 			</div>
 
 			<!-- Description -->
@@ -74,21 +73,16 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="description-text"
-					*ngIf="book.description && !editDescription"
-				>
+				@if (book.description && !editDescription) {
+				<p class="description-text">
 					{{ book.description }}
 				</p>
-
-				<p
-					class="no-description-text"
-					*ngIf="!book.description && !editDescription"
-				>
+				} @if (!book.description && !editDescription) {
+				<p class="no-description-text">
 					{{ locale.noDescription }}
 				</p>
-
-				<div class="edit-description-container" *ngIf="editDescription">
+				} @if (editDescription) {
+				<div class="edit-description-container">
 					<dav-textarea
 						[value]="newDescription"
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
@@ -100,26 +94,27 @@
 						"
 					></dav-textarea>
 				</div>
+				}
 
 				<div class="edit-description-button-container">
+					@if (release == null) {
 					<dav-button
 						size="sm"
 						[disabled]="descriptionLoading"
 						(click)="EditDescription()"
-						*ngIf="release == null"
 					>
 						{{ editDescription ? locale.save : locale.edit }}
 					</dav-button>
-
+					} @if (editDescription) {
 					<dav-button
 						color="secondary"
 						size="sm"
 						[disabled]="descriptionLoading"
 						(click)="editDescription = false"
-						*ngIf="editDescription"
 					>
 						{{ locale.cancel }}
 					</dav-button>
+					}
 				</div>
 			</div>
 
@@ -152,13 +147,11 @@
 						{{ category.name }}
 					</dav-badge>
 
-					<dav-icon-button
-						size="sm"
-						(click)="ShowCategoriesDialog()"
-						*ngIf="release == null"
-					>
+					@if (release == null) {
+					<dav-icon-button size="sm" (click)="ShowCategoriesDialog()">
 						<fa-icon [icon]="faPenLight"></fa-icon>
 					</dav-icon-button>
+					}
 				</div>
 			</div>
 
@@ -183,51 +176,40 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="no-book-file-text"
-					*ngIf="!bookFileUploaded && !bookFileLoading"
-				>
+				@if (!bookFileUploaded && !bookFileLoading) {
+				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-
-				<p
-					class="book-file-uploaded-text"
-					*ngIf="
-						bookFileUploaded && book.fileName == null && !bookFileLoading
-					"
-				>
+				} @if (bookFileUploaded && book.fileName == null &&
+				!bookFileLoading) {
+				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-
-				<p
-					class="file-name-text"
-					*ngIf="
-						bookFileUploaded && book.fileName != null && !bookFileLoading
-					"
-				>
+				} @if (bookFileUploaded && book.fileName != null &&
+				!bookFileLoading) {
+				<p class="file-name-text">
 					{{ book.fileName }}
 				</p>
-
-				<p class="book-file-uploading" *ngIf="bookFileLoading">
+				} @if (bookFileLoading) {
+				<p class="book-file-uploading">
 					{{ locale.fileUploading }}
 				</p>
+				}
 
 				<div class="book-file-upload-container">
+					@if (release == null) {
 					<dav-button
 						size="sm"
 						ngxFilePicker
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
-						*ngIf="release == null"
 					>
 						{{ locale.selectFile }}
 					</dav-button>
-
-					<dav-progress-ring
-						size="16"
-						*ngIf="bookFileLoading"
-					></dav-progress-ring>
+					} @if (bookFileLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
 				</div>
 			</div>
 
@@ -252,55 +234,40 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="no-book-file-text"
-					*ngIf="!printCoverUploaded && !printCoverLoading"
-				>
+				@if (!printCoverUploaded && !printCoverLoading) {
+				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-
-				<p
-					class="book-file-uploaded-text"
-					*ngIf="
-						printCoverUploaded &&
-						book.printCoverFileName == null &&
-						!printCoverLoading
-					"
-				>
+				} @if (printCoverUploaded && book.printCoverFileName == null &&
+				!printCoverLoading){
+				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-
-				<p
-					class="file-name-text"
-					*ngIf="
-						printCoverUploaded &&
-						book.printCoverFileName != null &&
-						!printCoverLoading
-					"
-				>
+				} @if (printCoverUploaded && book.printCoverFileName != null &&
+				!printCoverLoading) {
+				<p class="file-name-text">
 					{{ book.printCoverFileName }}
 				</p>
-
-				<p class="book-file-uploading" *ngIf="printCoverLoading">
+				} @if (printCoverLoading) {
+				<p class="book-file-uploading">
 					{{ locale.fileUploading }}
 				</p>
+				}
 
 				<div class="book-file-upload-container">
+					@if (release == null) {
 					<dav-button
 						size="sm"
 						ngxFilePicker
 						accept="application/pdf"
 						[disabled]="printCoverLoading"
 						(filePick)="PrintCoverUpload($event)"
-						*ngIf="release == null"
 					>
 						{{ locale.selectFile }}
 					</dav-button>
-
-					<dav-progress-ring
-						size="16"
-						*ngIf="printCoverLoading"
-					></dav-progress-ring>
+					} @if (printCoverLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
 				</div>
 			</div>
 
@@ -310,55 +277,40 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="no-book-file-text"
-					*ngIf="!printFileUploaded && !printFileLoading"
-				>
+				@if (!printFileUploaded && !printFileLoading) {
+				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-
-				<p
-					class="book-file-uploaded-text"
-					*ngIf="
-						printFileUploaded &&
-						book.printFileName == null &&
-						!printFileLoading
-					"
-				>
+				} @if (printFileUploaded && book.printFileName == null &&
+				!printFileLoading) {
+				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-
-				<p
-					class="file-name-text"
-					*ngIf="
-						printFileUploaded &&
-						book.printFileName != null &&
-						!printFileLoading
-					"
-				>
+				} @if (printFileUploaded && book.printFileName != null &&
+				!printFileLoading) {
+				<p class="file-name-text">
 					{{ book.printFileName }}
 				</p>
-
-				<p class="book-file-uploading" *ngIf="printFileLoading">
+				} @if (printFileLoading) {
+				<p class="book-file-uploading">
 					{{ locale.fileUploading }}
 				</p>
+				}
 
 				<div class="book-file-upload-container">
+					@if (release == null) {
 					<dav-button
 						size="sm"
 						ngxFilePicker
 						accept="application/pdf"
 						[disabled]="printFileLoading"
 						(filePick)="PrintFileUpload($event)"
-						*ngIf="release == null"
 					>
 						{{ locale.selectFile }}
 					</dav-button>
-
-					<dav-progress-ring
-						size="16"
-						*ngIf="printFileLoading"
-					></dav-progress-ring>
+					} @if (printFileLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
 				</div>
 			</div>
 
@@ -376,10 +328,8 @@
 			</div>
 
 			<!-- Order print book -->
-			<div
-				class="book-details-data"
-				*ngIf="printCoverUploaded && printFileUploaded"
-			>
+			@if (printCoverUploaded && printFileUploaded) {
+			<div class="book-details-data">
 				<div class="order-test-print-button-container">
 					<dav-button
 						size="sm"
@@ -390,25 +340,25 @@
 						{{ locale.orderTestPrint }}
 					</dav-button>
 
-					<dav-progress-ring
-						size="16"
-						*ngIf="orderTestPrintLoading"
-					></dav-progress-ring>
+					@if (orderTestPrintLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
 				</div>
 			</div>
+			}
 
 			<div class="book-details-separator"></div>
 
 			<!-- Status -->
-			<div
-				class="book-details-label"
-				*ngIf="book.status == 0 && release == null"
-			>
+			@if (book.status == 0 && release == null) {
+			<div class="book-details-label">
 				<p>{{ locale.status }}:</p>
 			</div>
+			}
 
 			<div class="book-details-data">
-				<div *ngIf="book.status == 0">
+				@if (book.status == 0) {
+				<div>
 					<p class="unpublished-text">{{ locale.unpublished }}</p>
 
 					<div class="publish-button-container">
@@ -424,21 +374,14 @@
 							{{ locale.publish }}
 						</dav-button>
 
-						<dav-progress-ring
-							size="24"
-							*ngIf="statusLoading"
-						></dav-progress-ring>
+						@if (statusLoading) {
+						<dav-progress-ring size="24"></dav-progress-ring>
+						}
 					</div>
 				</div>
-
-				<div
-					class="publish-changes-button-container"
-					*ngIf="
-						(book.status == 2 || book.status == 3) &&
-						release == null &&
-						changes
-					"
-				>
+				} @if ((book.status == 2 || book.status == 3) && release == null &&
+				changes) {
+				<div class="publish-changes-button-container">
 					<dav-button
 						[disabled]="publishChangesLoading"
 						(click)="ShowPublishChangesDialog()"
@@ -446,6 +389,7 @@
 						{{ locale.publishChanges }}
 					</dav-button>
 				</div>
+				}
 			</div>
 		</div>
 	</div>

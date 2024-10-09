@@ -1,5 +1,6 @@
+@if (!dataService.dav.isLoggedIn) {
 <!-- Layout for not logged in -->
-<div class="container slide-up-in" *ngIf="!dataService.dav.isLoggedIn">
+<div class="container slide-up-in">
 	<dav-header size="lg">
 		{{ locale.title }}
 	</dav-header>
@@ -49,9 +50,9 @@
 		</dav-button>
 	</div>
 </div>
-
+} @else {
 <!-- Layout for logged in -->
-<div class="container slide-up-in" *ngIf="dataService.dav.isLoggedIn">
+<div class="container slide-up-in">
 	<div class="header-logged-in-container">
 		<dav-header size="lg">
 			{{ locale.title }}
@@ -132,6 +133,7 @@
 	</div>
 	-->
 </div>
+}
 
 <pocketlib-logout-dialog #logoutDialog (primaryButtonClick)="Logout()">
 </pocketlib-logout-dialog>
