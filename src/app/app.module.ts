@@ -19,7 +19,7 @@ import { DragulaModule } from "ng2-dragula"
 import { ServiceWorkerModule } from "@angular/service-worker"
 
 // Apollo
-import { HttpClientModule } from "@angular/common/http"
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
 import { APOLLO_NAMED_OPTIONS, ApolloModule } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
@@ -186,11 +186,12 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		StoreBookPageComponent,
 		StoreBooksPageComponent
 	],
+	bootstrap: [AppComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		ApolloModule,
-		HttpClientModule,
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
 		PortalModule,
@@ -228,9 +229,8 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 				}
 			},
 			deps: [HttpLink]
-		}
-	],
-	bootstrap: [AppComponent],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+		},
+		provideHttpClient(withInterceptorsFromDi())
+	]
 })
 export class AppModule {}
