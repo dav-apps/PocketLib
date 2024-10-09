@@ -29,7 +29,9 @@
 							"src/manifest.webmanifest",
 							"src/.well-known/assetlinks.json"
 						],
-						"styles": ["src/styles.scss"],
+						"styles": [
+							"src/styles.scss"
+						],
 						"vendorChunk": true,
 						"extractLicenses": false,
 						"buildOptimizer": false,
@@ -104,59 +106,22 @@
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "buildTarget": "PocketLib:build"
+					"options": {
+						"buildTarget": "PocketLib:build"
 					},
 					"configurations": {
-            "production": {
-              "buildTarget": "PocketLib:build:production"
+						"production": {
+							"buildTarget": "PocketLib:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "PocketLib:build"
-					}
-				},
-				"test": {
-					"builder": "@angular-devkit/build-angular:karma",
 					"options": {
-						"main": "src/test.ts",
-						"polyfills": "src/polyfills.ts",
-						"tsConfig": "src/tsconfig.spec.json",
-						"karmaConfig": "src/karma.conf.js",
-						"styles": [
-							"src/styles.scss"
-						],
-						"scripts": [],
-						"assets": [
-							"src/favicon.ico",
-							"src/assets",
-							"src/manifest.webmanifest"
-						]
-					}
-				}
-			}
-		},
-		"PocketLib-e2e": {
-			"root": "e2e/",
-			"projectType": "application",
-			"prefix": "",
-			"architect": {
-				"e2e": {
-					"builder": "@angular-devkit/build-angular:protractor",
-					"options": {
-						"protractorConfig": "e2e/protractor.conf.js",
-						"devServerTarget": "PocketLib:serve"
-					},
-					"configurations": {
-						"production": {
-							"devServerTarget": "PocketLib:serve:production"
-						}
+						"buildTarget": "PocketLib:build"
 					}
 				}
 			}
 		}
-  }
+	}
 }
