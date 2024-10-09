@@ -16,12 +16,13 @@
 
 	<div class="list-container">
 		<dav-list>
+			@for (publisher of dataService.adminPublishers; track publisher.uuid) {
 			<dav-list-item
 				[headline]="publisher.name"
 				size="sm"
 				(click)="ShowPublisher(publisher.uuid)"
-				*ngFor="let publisher of dataService.adminPublishers"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 
@@ -38,12 +39,13 @@
 
 	<div class="list-container">
 		<dav-list>
+			@for (author of dataService.adminAuthors; track author.uuid) {
 			<dav-list-item
 				[headline]="author.firstName + ' ' + author.lastName"
 				size="sm"
 				(click)="ShowAuthor(author.uuid)"
-				*ngFor="let author of dataService.adminAuthors"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 
@@ -56,13 +58,14 @@
 
 	<div class="list-container">
 		<dav-list>
+			@for (book of booksInReview; track book.uuid) {
 			<dav-list-item
 				[headline]="book.title"
 				[subhead]="book.author"
 				size="sm"
 				(click)="ShowBook(book.uuid)"
-				*ngFor="let book of booksInReview"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 </div>

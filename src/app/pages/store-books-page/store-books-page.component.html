@@ -8,11 +8,8 @@
 	}
 
 	<div class="list-container">
-		<a
-			class="book-card"
-			[routerLink]="'/store/book/' + book.slug"
-			*ngFor="let book of books"
-		>
+		@for (book of books; track book.uuid) {
+		<a class="book-card" [routerLink]="'/store/book/' + book.slug">
 			<dav-blurhash-image
 				[src]="book.coverContent"
 				[blurhash]="book.blurhash"
@@ -21,6 +18,7 @@
 				height="255"
 			></dav-blurhash-image>
 		</a>
+		}
 	</div>
 
 	@if (pages > 1 && !dataService.simpleLoadingScreenVisible) {

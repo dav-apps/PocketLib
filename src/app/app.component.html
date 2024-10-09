@@ -144,18 +144,15 @@
 		<h3 class="search-result-headline">
 			{{ locale.search.libraryHeadline }}
 		</h3>
-		}
-
+		} @for (book of librarySearchResultItems; track book.uuid) {
 		<dav-list-item
 			[imageSrc]="book.cover"
 			[imageFallbackSrc]="dataService.defaultStoreBookCover"
 			[headline]="book.title"
 			[subhead]="book.author"
-			*ngFor="let book of librarySearchResultItems"
 			(click)="navigateToBook(book)"
 		></dav-list-item>
-
-		@if ((storeSearchLoading && librarySearchResultItems.length > 0) ||
+		} @if ((storeSearchLoading && librarySearchResultItems.length > 0) ||
 		(librarySearchResultItems.length > 0 && storeSearchResultItems.length >
 		0)) {
 		<h3 class="search-result-headline store-search-result-headline">
@@ -169,15 +166,14 @@
 				[color]="dataService.darkTheme ? 'white' : 'black'"
 			></dav-progress-ring>
 		</div>
-		}
-
+		} @for (book of storeSearchResultItems; track book.uuid) {
 		<dav-list-item
 			[imageSrc]="book.cover"
 			[imageFallbackSrc]="dataService.defaultStoreBookCover"
 			[headline]="book.title"
 			[subhead]="book.author"
-			*ngFor="let book of storeSearchResultItems"
 			(click)="navigateToStoreBook(book)"
 		></dav-list-item>
+		}
 	</dav-list>
 </dav-search>

@@ -10,10 +10,11 @@
 		</div>
 		} @else {
 		<div class="author-list-item-container horizontal-store-list slide-up-in">
+			@for (author of authors; track author.uuid) {
 			<pocketlib-horizontal-author-list-item
 				[author]="author"
-				*ngFor="let author of authors"
 			></pocketlib-horizontal-author-list-item>
+			}
 		</div>
 		}
 	</div>

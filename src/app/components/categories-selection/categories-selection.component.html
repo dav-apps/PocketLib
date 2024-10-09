@@ -1,4 +1,5 @@
 <div>
+	@for (category of dataService.categories; track category.key) {
 	<dav-checkbox
 		[label]="category.name"
 		[checked]="selectedCategories.includes(category.key)"
@@ -7,6 +8,6 @@
 			!selectedCategories.includes(category.key)
 		"
 		(change)="CategoryCheckboxSelected($event.detail.checked, category.key)"
-		*ngFor="let category of dataService.categories"
 	></dav-checkbox>
+	}
 </div>

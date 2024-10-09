@@ -228,11 +228,12 @@
 			</p>
 
 			<dav-tree>
+				@for (bookmark of currentBook.bookmarks; track bookmark.uuid) {
 				<dav-tree-item
 					[headline]="bookmark.name"
 					(click)="NavigateToBookmark(bookmark)"
-					*ngFor="let bookmark of currentBook.bookmarks"
 				></dav-tree-item>
+				}
 			</dav-tree>
 		</div>
 
@@ -270,11 +271,12 @@
 	(dismiss)="bookmarksVisible = false"
 >
 	<dav-tree>
+		@for (bookmark of currentBook.bookmarks; track bookmark.uuid) {
 		<dav-tree-item
 			[headline]="bookmark.name"
 			(click)="NavigateToBookmark(bookmark)"
-			*ngFor="let bookmark of currentBook.bookmarks"
 		></dav-tree-item>
+		}
 	</dav-tree>
 
 	<p

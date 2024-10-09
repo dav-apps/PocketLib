@@ -9,6 +9,7 @@ import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookReleaseStatus } from "src/app/misc/types"
 
 interface ReleaseItem {
+	uuid: string
 	name: string
 	link: string
 }
@@ -86,6 +87,7 @@ export class AuthorReleasesPageComponent {
 			if (release.status == StoreBookReleaseStatus.Unpublished) continue
 
 			let releaseItem: ReleaseItem = {
+				uuid: release.uuid,
 				name: release.releaseName,
 				link: ""
 			}

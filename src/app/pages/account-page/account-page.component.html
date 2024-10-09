@@ -115,12 +115,13 @@
 
 		<div class="orders-list-container">
 			<dav-list>
+				@for (order of orders; track order.uuid) {
 				<dav-list-item
-					*ngFor="let order of orders"
 					[imageSrc]="order.coverSrc"
 					[headline]="order.title"
 					[subhead]="order.status"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
 	</div>

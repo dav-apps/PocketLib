@@ -47,12 +47,13 @@
 	<div class="books-container">
 		<div class="inner-books-container">
 			<div>
+				@for (book of bookItems; track book.uuid) {
 				<dav-checkbox
 					[label]="book.title"
 					[checked]="book.checked"
 					(change)="ToggleSelectedBook(book)"
-					*ngFor="let book of bookItems"
 				></dav-checkbox>
+				}
 			</div>
 
 			<div class="submit-button-container">

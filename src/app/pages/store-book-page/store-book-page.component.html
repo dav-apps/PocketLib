@@ -98,15 +98,16 @@
 
 			<!-- Categories -->
 			<div class="category-badge-container">
+				@for (category of categories; track category.key; let i = $index) {
 				<dav-badge
 					[color]="i == 0 ? 'primary' : 'secondary'"
 					tonal
 					[href]="'/store/category/' + category.key"
 					(click)="categoryBadgeClick($event, category.key)"
-					*ngFor="let category of categories; let i = index"
 				>
 					{{ category.name }}
 				</dav-badge>
+				}
 			</div>
 		</div>
 	</div>

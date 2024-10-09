@@ -18,11 +18,12 @@
 		</div>
 		} @else {
 		<div class="book-list-container horizontal-store-list slide-up-in">
+			@for (book of books; track book.uuid) {
 			<pocketlib-store-book-card
 				[book]="book"
 				[highlighted]="type == 'series' && book.uuid == currentBookUuid"
-				*ngFor="let book of books"
 			></pocketlib-store-book-card>
+			}
 		</div>
 		}
 	</div>

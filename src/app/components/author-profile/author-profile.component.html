@@ -158,6 +158,7 @@
 		} @else {
 		<div class="list-container">
 			<dav-list>
+				@for (collection of collections; track collection.uuid) {
 				<dav-list-item
 					[imageSrc]="
 						collection.books.length > 0 &&
@@ -176,8 +177,8 @@
 					size="lg"
 					[href]="collection.link"
 					(click)="collectionItemClick($event, collection)"
-					*ngFor="let collection of collections"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
 		}
@@ -200,6 +201,7 @@
 		} @else {
 		<div class="list-container">
 			<dav-list>
+				@for (s of series; track s.uuid) {
 				<dav-list-item
 					[imageSrc]="s.coverContent"
 					[imageBlurhash]="s.coverBlurhash"
@@ -208,8 +210,8 @@
 					size="lg"
 					[href]="s.link"
 					(click)="seriesItemClick($event, s)"
-					*ngFor="let s of series"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
 		}
@@ -218,6 +220,7 @@
 	<div class="books-panel">
 		<!-- List of books -->
 		<dav-list>
+			@for (book of books; track book.uuid) {
 			<dav-list-item
 				[imageSrc]="book.coverContent"
 				[imageBlurhash]="book.coverBlurhash"
@@ -226,8 +229,8 @@
 				size="lg"
 				[href]="'/store/book/' + book.slug"
 				(click)="bookItemClick($event, book)"
-				*ngFor="let book of books"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 	}

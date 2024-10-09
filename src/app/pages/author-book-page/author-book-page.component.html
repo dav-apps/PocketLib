@@ -140,14 +140,12 @@
 
 			<div class="book-details-data">
 				<div class="categories-container">
-					<dav-badge
-						[color]="i == 0 ? 'primary' : 'secondary'"
-						*ngFor="let category of book.categories; let i = index"
-					>
+					@for (category of book.categories; track category.key; let i =
+					$index) {
+					<dav-badge [color]="i == 0 ? 'primary' : 'secondary'">
 						{{ category.name }}
 					</dav-badge>
-
-					@if (release == null) {
+					} @if (release == null) {
 					<dav-icon-button size="sm" (click)="ShowCategoriesDialog()">
 						<fa-icon [icon]="faPenLight"></fa-icon>
 					</dav-icon-button>

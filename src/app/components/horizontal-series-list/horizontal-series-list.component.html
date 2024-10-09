@@ -10,10 +10,11 @@
 		</div>
 		} @else {
 		<div class="series-list-container horizontal-store-list slide-up-in">
+			@for (s of series; track s.uuid) {
 			<pocketlib-horizontal-series-list-item
 				[series]="s"
-				*ngFor="let s of series"
 			></pocketlib-horizontal-series-list-item>
+			}
 		</div>
 		}
 	</div>

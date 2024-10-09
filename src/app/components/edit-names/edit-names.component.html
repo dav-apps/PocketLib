@@ -1,4 +1,5 @@
-<div *ngFor="let name of names">
+@for (name of names; track name.name) {
+<div>
 	<p class="language-label">{{ name.fullLanguage }}:</p>
 
 	<div class="content-container">
@@ -32,3 +33,4 @@
 		</dav-icon-button>
 	</div>
 </div>
+}

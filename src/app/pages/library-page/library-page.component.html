@@ -107,7 +107,9 @@
 						[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
 						[style.width.px]="smallBookListWidth"
 					>
-						<div *ngFor="let book of dataService.books; let i = index">
+						@for (book of dataService.books; track book.uuid; let i =
+						$index) {
+						<div>
 							@if (i != 0 && i < 5) {
 							<pocketlib-library-page-book-card
 								[book]="book"
@@ -117,6 +119,7 @@
 							></pocketlib-library-page-book-card>
 							}
 						</div>
+						}
 					</div>
 				</div>
 
@@ -178,6 +181,7 @@
 					}
 
 					<dav-list class="all-books-list">
+						@for (book of allBooks; track book.uuid) {
 						<dav-list-item
 							[imageSrc]="book.cover"
 							[imageFallbackSrc]="dataService.defaultStoreBookCover"
@@ -185,8 +189,8 @@
 							[subhead]="book.author"
 							(click)="ShowBook(book)"
 							(contextmenu)="BookContextMenu($event, book)"
-							*ngFor="let book of allBooks"
 						></dav-list-item>
+						}
 					</dav-list>
 				</div>
 			</div>
@@ -214,12 +218,13 @@
 		[style.marginLeft.px]="dualScreenFoldMargin"
 	>
 		<div>
+			@for (book of dataService.books; track book.uuid) {
 			<pocketlib-library-page-book-card
-				*ngFor="let book of dataService.books"
 				[book]="book"
 				(click)="ShowBook(book)"
 				(contextMenu)="BookContextMenu($event, book)"
 			></pocketlib-library-page-book-card>
+			}
 		</div>
 	</div>
 </div>

@@ -201,6 +201,7 @@
 		@if (showBookmarksPanel) {
 		<div #bottomSheetBookmarksContainer>
 			<ul class="list-group list-group-flush">
+				@for (page of currentBook.bookmarks; track page) {
 				<li
 					class="list-group-item d-flex"
 					style="
@@ -210,7 +211,6 @@
 						min-height: 35px;
 						font-size: 16px;
 					"
-					*ngFor="let page of currentBook.bookmarks"
 				>
 					<a
 						href="#"
@@ -221,6 +221,7 @@
 						{{ locale.page }} {{ page }}
 					</a>
 				</li>
+				}
 			</ul>
 
 			<p
@@ -267,6 +268,7 @@
 	(dismiss)="showBookmarksPanel = false"
 >
 	<ul class="list-group list-group-flush">
+		@for (page of currentBook.bookmarks; track page) {
 		<li
 			class="list-group-item d-flex"
 			style="
@@ -276,7 +278,6 @@
 				min-height: 35px;
 				font-size: 16px;
 			"
-			*ngFor="let page of currentBook.bookmarks"
 		>
 			<a
 				href="#"
@@ -287,6 +288,7 @@
 				{{ locale.page }} {{ page }}
 			</a>
 		</li>
+		}
 	</ul>
 
 	<p

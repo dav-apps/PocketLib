@@ -151,6 +151,7 @@
 		} @if (!authorsLoading && !this.searchAuthorsLoading) {
 		<div class="author-list-container">
 			<dav-list>
+				@for (author of authorItems; track author.uuid) {
 				<dav-list-item
 					[imageSrc]="author.profileImageContent"
 					imageRounded
@@ -159,8 +160,8 @@
 					[imageTitle]="author.name"
 					[imageAlt]="author.alt"
 					(click)="authorItemClick($event, author)"
-					*ngFor="let author of authorItems"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
 		} @if (pages > 1) {
