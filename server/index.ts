@@ -14,7 +14,7 @@ switch (process.env.ENV) {
 		break
 	case "staging":
 		backendUrl = "https://pocketlib-api-staging-aeksy.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib-staging-d9rk6.ondigitalocean.app"
+		websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
 		break
 }
 
@@ -258,6 +258,8 @@ function getHtml(params?: {
 		let head = html.querySelector("head")
 
 		let metas: { name?: string; property?: string; content: string }[] = [
+			// Other tags
+			{ name: "description", content: params.description },
 			// Twitter tags
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@dav_apps" },
@@ -318,6 +320,12 @@ function getHtml(params?: {
 				meta.setAttribute("content", metaObj.content)
 			}
 		}
+
+		// Set canonical link tag
+		let link = dom.window.document.createElement("link")
+		link.setAttribute("rel", "canonical")
+		link.setAttribute("href", params.url)
+		head.appendChild(link)
 
 		return html.outerHTML
 	}
