@@ -14,7 +14,7 @@ switch (process.env.ENV) {
 		break
 	case "staging":
 		backendUrl = "https://pocketlib-api-staging-aeksy.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib-staging-d9rk6.ondigitalocean.app"
+		websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
 		break
 }
 
@@ -37,14 +37,14 @@ export async function generateSitemap(): Promise<string> {
 	// Publishers
 	try {
 		let response = await request<{
-			listPublishers: { items: { uuid: string }[] }
+			listPublishers: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListPublishers {
 					listPublishers(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -55,7 +55,7 @@ export async function generateSitemap(): Promise<string> {
 		let publisherItems = response.listPublishers.items
 
 		for (let item of publisherItems) {
-			result += `${websiteUrl}/store/publisher/${item.uuid}\n`
+			result += `${websiteUrl}/store/publisher/${item.slug}\n`
 		}
 	} catch (error) {
 		console.error(error)
@@ -64,14 +64,14 @@ export async function generateSitemap(): Promise<string> {
 	// Authors
 	try {
 		let response = await request<{
-			listAuthors: { items: { uuid: string }[] }
+			listAuthors: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListAuthors {
 					listAuthors(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -82,7 +82,7 @@ export async function generateSitemap(): Promise<string> {
 		let authorItems = response.listAuthors.items
 
 		for (let item of authorItems) {
-			result += `${websiteUrl}/store/author/${item.uuid}\n`
+			result += `${websiteUrl}/store/author/${item.slug}\n`
 		}
 	} catch (error) {
 		console.error(error)
@@ -91,14 +91,14 @@ export async function generateSitemap(): Promise<string> {
 	// StoreBooks
 	try {
 		let response = await request<{
-			listStoreBooks: { items: { uuid: string }[] }
+			listStoreBooks: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListStoreBooks {
 					listStoreBooks(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -109,7 +109,7 @@ export async function generateSitemap(): Promise<string> {
 		let storeBookItems = response.listStoreBooks.items
 
 		for (let item of storeBookItems) {
-			result += `${websiteUrl}/store/book/${item.uuid}\n`
+			result += `${websiteUrl}/store/book/${item.slug}\n`
 		}
 	} catch (error) {
 		console.error(error)
@@ -123,6 +123,7 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 	try {
 		let response = await request<{
 			retrieveStoreBook: {
+				slug: string
 				title: string
 				description: string
 				cover?: { url: string }
@@ -132,6 +133,7 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 			gql`
 				query RetrieveStoreBook($uuid: String!) {
 					retrieveStoreBook(uuid: $uuid) {
+						slug
 						title
 						description
 						cover {
@@ -150,7 +152,7 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 				title: responseData.title,
 				description: responseData.description,
 				imageUrl: responseData.cover?.url,
-				url: `${websiteUrl}/store/book/${uuid}`
+				url: `${websiteUrl}/store/book/${responseData.slug}`
 			}),
 			status: 200
 		}
@@ -169,6 +171,7 @@ export async function prepareStoreAuthorPage(
 	try {
 		let response = await request<{
 			retrieveAuthor: {
+				slug: string
 				firstName: string
 				lastName: string
 				bio?: { bio: string }
@@ -179,6 +182,7 @@ export async function prepareStoreAuthorPage(
 			gql`
 				query RetrieveAuthor($uuid: String!) {
 					retrieveAuthor(uuid: $uuid) {
+						slug
 						firstName
 						lastName
 						bio {
@@ -200,7 +204,7 @@ export async function prepareStoreAuthorPage(
 				title: `${responseData.firstName} ${responseData.lastName}`,
 				description: responseData.bio?.bio,
 				imageUrl: responseData.profileImage?.url,
-				url: `${websiteUrl}/store/author/${uuid}`
+				url: `${websiteUrl}/store/author/${responseData.slug}`
 			}),
 			status: 200
 		}
@@ -219,6 +223,7 @@ export async function prepareStorePublisherPage(
 	try {
 		let response = await request<{
 			retrievePublisher: {
+				slug: string
 				name: string
 				description: string
 				logo?: { url: string }
@@ -228,6 +233,7 @@ export async function prepareStorePublisherPage(
 			gql`
 				query RetrievePublisher($uuid: String!) {
 					retrievePublisher(uuid: $uuid) {
+						slug
 						name
 						description
 						logo {
@@ -246,7 +252,7 @@ export async function prepareStorePublisherPage(
 				title: responseData.name,
 				description: responseData.description,
 				imageUrl: responseData.logo?.url,
-				url: `${websiteUrl}/store/publisher/${uuid}`
+				url: `${websiteUrl}/store/publisher/${responseData.slug}`
 			}),
 			status: 200
 		}
@@ -282,6 +288,8 @@ function getHtml(params?: {
 		let head = html.querySelector("head")
 
 		let metas: { name?: string; property?: string; content: string }[] = [
+			// Other tags
+			{ name: "description", content: params.description },
 			// Twitter tags
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@dav_apps" },
@@ -342,6 +350,12 @@ function getHtml(params?: {
 				meta.setAttribute("content", metaObj.content)
 			}
 		}
+
+		// Set canonical link tag
+		let link = dom.window.document.createElement("link")
+		link.setAttribute("rel", "canonical")
+		link.setAttribute("href", params.url)
+		head.appendChild(link)
 
 		return html.outerHTML
 	}

@@ -32,6 +32,7 @@ export class HorizontalSeriesListComponent {
 					storeBooks {
 						items {
 							uuid
+							slug
 							title
 							cover {
 								url

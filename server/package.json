@@ -15,6 +15,7 @@
 		"typescript": "^5.2.2"
 	},
 	"devDependencies": {
+		"@types/jsdom": "^21.1.7",
 		"@types/node": "^18.17.16",
 		"dotenv": "^16.3.1"
 	}
