@@ -1,6 +1,7 @@
 <div class="container slide-up-in">
 	<div class="search-field-container">
 		<dav-textfield
+			[value]="query"
 			placeholder="Suche nach Büchern"
 			(change)="searchQueryChange($event)"
 		></dav-textfield>

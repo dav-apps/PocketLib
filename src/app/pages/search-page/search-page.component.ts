@@ -1,4 +1,5 @@
 import { Component } from "@angular/core"
+import { Router, ActivatedRoute } from "@angular/router"
 import { ApiService } from "src/app/services/api-service"
 
 interface BookItem {
@@ -13,13 +14,43 @@ interface BookItem {
 	styleUrl: "./search-page.component.scss"
 })
 export class SearchPageComponent {
+	books: BookItem[] = []
 	debounceTimeoutId: number = 0
 	isLoading: boolean = false
-	books: BookItem[] = []
+	query: string = ""
+	pages: number = 1
+	page: number = 1
 
-	constructor(private apiService: ApiService) {}
+	constructor(
+		private apiService: ApiService,
+		private router: Router,
+		private activatedRoute: ActivatedRoute
+	) {
+		this.activatedRoute.url.subscribe(() => {
+			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
+				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+			}
+
+			if (this.activatedRoute.snapshot.queryParamMap.has("query")) {
+				this.query = this.activatedRoute.snapshot.queryParamMap.get("query")
+			}
+
+			this.triggerSearch()
+		})
+	}
 
 	searchQueryChange(event: CustomEvent) {
+		this.query = event.detail.value
+		this.triggerSearch()
+	}
+
+	triggerSearch() {
+		if (this.query.length == 0) {
+			this.books = []
+			this.updateUrl()
+			return
+		}
+
 		if (this.debounceTimeoutId != 0) {
 			window.clearTimeout(this.debounceTimeoutId)
 		}
@@ -27,8 +58,6 @@ export class SearchPageComponent {
 		this.isLoading = true
 
 		this.debounceTimeoutId = window.setTimeout(async () => {
-			const query = event.detail.value
-
 			let result = await this.apiService.search(
 				`
 					total
@@ -45,7 +74,7 @@ export class SearchPageComponent {
 					}
 				`,
 				{
-					query
+					query: this.query
 				}
 			)
 
@@ -63,6 +92,13 @@ export class SearchPageComponent {
 			}
 
 			this.isLoading = false
+			this.updateUrl()
 		}, 500)
+	}
+
+	updateUrl() {
+		this.router.navigate([], {
+			queryParams: { query: this.query, page: this.page }
+		})
 	}
 }
