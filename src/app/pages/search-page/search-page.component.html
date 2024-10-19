@@ -11,4 +11,17 @@
 		<dav-progress-ring size="32"></dav-progress-ring>
 	</div>
 	}
+
+	<div class="list-container">
+		<dav-list>
+			@for (book of books; track book.id) {
+				<dav-list-item
+					[imageSrc]="book.coverUrl"
+					[headline]="book.title"
+					[subhead]="book.author"
+					size="lg"
+				></dav-list-item>
+			}
+		</dav-list>
+	</div>
 </div>

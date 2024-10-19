@@ -1,6 +1,13 @@
 import { Component } from "@angular/core"
 import { ApiService } from "src/app/services/api-service"
 
+interface BookItem {
+	id: string
+	title: string
+	author: string
+	coverUrl: string
+}
+
 @Component({
 	templateUrl: "./search-page.component.html",
 	styleUrl: "./search-page.component.scss"
@@ -8,6 +15,7 @@ import { ApiService } from "src/app/services/api-service"
 export class SearchPageComponent {
 	debounceTimeoutId: number = 0
 	isLoading: boolean = false
+	books: BookItem[] = []
 
 	constructor(private apiService: ApiService) {}
 
@@ -26,7 +34,13 @@ export class SearchPageComponent {
 					total
 					items {
 						... on VlbItem {
+							id
 							title
+							coverUrl
+							author {
+								firstName
+								lastName
+							}
 						}
 					}
 				`,
@@ -35,8 +49,20 @@ export class SearchPageComponent {
 				}
 			)
 
+			this.books = []
+
+			for (let item of result.data.search.items) {
+				this.books.push({
+					id: item.id,
+					title: item.title,
+					author: item.author
+						? `${item.author.firstName} ${item.author.lastName}`
+						: "",
+					coverUrl: item.coverUrl
+				})
+			}
+
 			this.isLoading = false
-			console.log(result.data.search)
 		}, 500)
 	}
 }
