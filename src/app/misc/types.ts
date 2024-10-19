@@ -259,6 +259,20 @@ export interface BookResource {
 export interface CheckoutSessionResource {
 	url: string
 }
+
+export interface VlbItemResource {
+	__typename: "VlbItem"
+	id: string
+	isbn: string
+	title: string
+	description?: string
+	publisher: string
+	author: {
+		firstName: string
+		lastName: string
+	}
+	coverUrl?: string
+}
 //#endregion
 
 //#region dav API types

@@ -25,7 +25,8 @@ import {
 	StoreBookReleaseResource,
 	CategoryResource,
 	BookResource,
-	CheckoutSessionResource
+	CheckoutSessionResource,
+	VlbItemResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -1590,6 +1591,54 @@ export class ApiService {
 			await renewSession()
 
 			return await this.createCheckoutSession(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region Misc
+	async search(
+		queryData: string,
+		variables: {
+			query: string
+			limit?: number
+			offset?: number
+		}
+	): Promise<ApolloQueryResult<{ search: List<VlbItemResource> }>> {
+		let result = await this.apollo
+			.query<{
+				search: List<VlbItemResource>
+			}>({
+				query: gql`
+				query Search(
+					$query: String!
+					$limit: Int
+					$offset: Int
+				) {
+					search(
+						query: $query
+						limit: $limit
+						offset: $offset
+					) {
+						${queryData}
+					}
+				}
+			`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.search(queryData, variables)
 		}
 
 		return result

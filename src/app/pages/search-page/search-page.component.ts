@@ -1,12 +1,29 @@
 import { Component } from "@angular/core"
+import { ApiService } from "src/app/services/api-service"
 
 @Component({
 	templateUrl: "./search-page.component.html",
 	styleUrl: "./search-page.component.scss"
 })
 export class SearchPageComponent {
-	searchQueryChange(event: CustomEvent) {
+	constructor(private apiService: ApiService) {}
+
+	async searchQueryChange(event: CustomEvent) {
 		const query = event.detail.value
-		console.log(query)
+
+		let result = await this.apiService.search(
+			`
+				total
+				items {
+					... on VlbItem {
+						title
+					}
+				}
+			`,
+			{
+				query
+			}
+		)
+		console.log(result.data.search)
 	}
 }
