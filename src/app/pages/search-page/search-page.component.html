@@ -5,4 +5,10 @@
 			(change)="searchQueryChange($event)"
 		></dav-textfield>
 	</div>
+
+	@if (isLoading) {
+	<div class="progress-ring-container">
+		<dav-progress-ring size="32"></dav-progress-ring>
+	</div>
+	}
 </div>

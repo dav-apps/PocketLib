@@ -6,24 +6,37 @@ import { ApiService } from "src/app/services/api-service"
 	styleUrl: "./search-page.component.scss"
 })
 export class SearchPageComponent {
+	debounceTimeoutId: number = 0
+	isLoading: boolean = false
+
 	constructor(private apiService: ApiService) {}
 
-	async searchQueryChange(event: CustomEvent) {
-		const query = event.detail.value
+	searchQueryChange(event: CustomEvent) {
+		if (this.debounceTimeoutId != 0) {
+			window.clearTimeout(this.debounceTimeoutId)
+		}
 
-		let result = await this.apiService.search(
-			`
-				total
-				items {
-					... on VlbItem {
-						title
+		this.isLoading = true
+
+		this.debounceTimeoutId = window.setTimeout(async () => {
+			const query = event.detail.value
+
+			let result = await this.apiService.search(
+				`
+					total
+					items {
+						... on VlbItem {
+							title
+						}
 					}
+				`,
+				{
+					query
 				}
-			`,
-			{
-				query
-			}
-		)
-		console.log(result.data.search)
+			)
+
+			this.isLoading = false
+			console.log(result.data.search)
+		}, 500)
 	}
 }
