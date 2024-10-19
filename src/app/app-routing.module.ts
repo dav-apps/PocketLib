@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router"
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
 import { BookPageComponent } from "./pages/book-page/book-page.component"
 import { SettingsPageComponent } from "./pages/settings-page/settings-page.component"
+import { SearchPageComponent } from "./pages/search-page/search-page.component"
 import { AccountPageComponent } from "./pages/account-page/account-page.component"
 import { PublisherPageComponent } from "./pages/publisher-page/publisher-page.component"
 import { AuthorPageComponent } from "./pages/author-page/author-page.component"
@@ -26,6 +27,7 @@ const routes: Routes = [
 	{ path: "book", component: BookPageComponent },
 	{ path: "account", component: AccountPageComponent },
 	{ path: "settings", component: SettingsPageComponent },
+	{ path: "search", component: SearchPageComponent },
 	{ path: "publisher/:uuid", component: PublisherPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },
