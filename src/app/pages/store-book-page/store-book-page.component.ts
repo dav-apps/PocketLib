@@ -145,6 +145,7 @@ export class StoreBookPageComponent {
 				id
 				title
 				description
+				price
 				publisher
 				author {
 					firstName
@@ -163,6 +164,11 @@ export class StoreBookPageComponent {
 		this.uuid = responseData.id
 		this.title = responseData.title
 		this.description = responseData.description
+		this.price = responseData.price
+		this.priceLabel = (this.price / 100).toFixed(2) + " €"
+		if (this.dataService.supportedLocale == "de") {
+			this.priceLabel = this.priceLabel.replace(".", ",")
+		}
 		this.coverUrl = responseData.coverUrl
 		this.coverContent = responseData.coverUrl
 		this.coverAlt = this.dataService

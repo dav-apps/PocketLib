@@ -266,6 +266,7 @@ export interface VlbItemResource {
 	isbn: string
 	title: string
 	description?: string
+	price: number
 	publisher: string
 	author: {
 		firstName: string

@@ -51,6 +51,11 @@
 			></dav-profile-card>
 			}
 
+			<!-- Price label -->
+			@if (bookSource == "vlb") {
+			<p class="price-label">{{ priceLabel }}</p>
+			}
+
 			<!-- Read now / continue reading button -->
 			<div class="read-button-container">
 				@if (bookSource == "pocketlib") {
