@@ -1,10 +1,19 @@
 <div class="container slide-up-in">
 	<div class="search-field-container">
-		<dav-textfield
-			[value]="query"
-			placeholder="Suche nach Büchern"
-			(change)="searchQueryChange($event)"
-		></dav-textfield>
+		<div class="search-input-container">
+			<input
+				#searchInput
+				class="search-input"
+				[value]="query"
+				type="search"
+				placeholder="Suche nach Büchern"
+				(input)="searchQueryChange()"
+			/>
+
+			<div class="search-icon-container">
+				<fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+			</div>
+		</div>
 	</div>
 
 	@if (isLoading) {

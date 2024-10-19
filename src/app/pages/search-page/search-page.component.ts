@@ -1,5 +1,6 @@
-import { Component } from "@angular/core"
+import { Component, ElementRef, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
+import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons"
 import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 
@@ -15,6 +16,7 @@ interface BookItem {
 	styleUrl: "./search-page.component.scss"
 })
 export class SearchPageComponent {
+	faMagnifyingGlass = faMagnifyingGlass
 	books: BookItem[] = []
 	debounceTimeoutId: number = 0
 	isLoading: boolean = false
@@ -22,6 +24,8 @@ export class SearchPageComponent {
 	pages: number = 1
 	page: number = 1
 	maxVisibleBooks: number = 12
+
+	@ViewChild("searchInput") searchInput: ElementRef<HTMLInputElement>
 
 	constructor(
 		private apiService: ApiService,
@@ -42,8 +46,8 @@ export class SearchPageComponent {
 		})
 	}
 
-	searchQueryChange(event: CustomEvent) {
-		this.query = event.detail.value
+	searchQueryChange() {
+		this.query = this.searchInput.nativeElement.value
 		this.page = 1
 		this.triggerSearch()
 	}
@@ -57,6 +61,8 @@ export class SearchPageComponent {
 		this.books = []
 
 		if (this.query.length == 0) {
+			this.pages = 1
+			this.page = 1
 			this.updateUrl()
 			return
 		}
