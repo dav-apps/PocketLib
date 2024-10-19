@@ -495,6 +495,7 @@ const enDefaults = {
 		library: "Library",
 		store: "Store",
 		search: {
+			label: "Search",
 			placeholder: "Search for books",
 			noResultsMessage: "No books found",
 			libraryHeadline: "From your library",
@@ -1017,6 +1018,7 @@ const deDefaults = {
 		library: "Bibliothek",
 		store: "Store",
 		search: {
+			label: "Suche",
 			placeholder: "Suche nach Büchern",
 			noResultsMessage: "Keine Bücher gefunden",
 			libraryHeadline: "Aus deiner Bibliothek",
