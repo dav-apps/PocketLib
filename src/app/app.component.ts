@@ -74,6 +74,7 @@ export class AppComponent {
 	search: ElementRef<DavUIComponents.Search>
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
+	searchTabActive: boolean = false
 	authorButtonSelected: boolean = false
 	accountButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
@@ -105,6 +106,7 @@ export class AppComponent {
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive =
 					this.dataService.currentUrl.startsWith("/store")
+				this.searchTabActive = this.dataService.currentUrl == "/search"
 				this.authorButtonSelected =
 					this.dataService.currentUrl == "/author" ||
 					this.dataService.currentUrl == "/publisher"
@@ -214,6 +216,10 @@ export class AppComponent {
 
 	navigateToStorePage() {
 		this.router.navigate(["/store"])
+	}
+
+	navigateToSearchPage() {
+		this.router.navigate(["/search"])
 	}
 
 	navigateToAuthorPage() {

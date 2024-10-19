@@ -37,7 +37,7 @@
 		<dav-icon-button (click)="navigateToAuthorPage()">
 			@if (!authorButtonSelected) {
 			<fa-icon [icon]="faAddressCardLight"></fa-icon>
-			} @if (authorButtonSelected) {
+			} @else {
 			<fa-icon [icon]="faAddressCardSolid"></fa-icon>
 			}
 		</dav-icon-button>
@@ -67,7 +67,7 @@
 		>
 			@if (!settingsButtonSelected) {
 			<fa-icon [icon]="faGearRegular"></fa-icon>
-			} @if (settingsButtonSelected) {
+			} @else {
 			<fa-icon [icon]="faGearSolid"></fa-icon>
 			}
 		</dav-icon-button>
@@ -96,7 +96,7 @@
 		>
 			@if (!libraryTabActive) {
 			<fa-icon slot="icon" [icon]="faBookRegular"></fa-icon>
-			} @if (libraryTabActive) {
+			} @else {
 			<fa-icon slot="icon" [icon]="faBookSolid"></fa-icon>
 			}
 
@@ -109,9 +109,18 @@
 		>
 			@if (!storeTabActive) {
 			<fa-icon slot="icon" [icon]="faBagShoppingRegular"></fa-icon>
-			} @if (storeTabActive) {
+			} @else {
 			<fa-icon slot="icon" [icon]="faBagShoppingSolid"></fa-icon>
 			}
+
+			<p slot="label">{{ locale.store }}</p>
+		</dav-navigation-bar-item>
+
+		<dav-navigation-bar-item
+			[active]="searchTabActive"
+			(click)="navigateToSearchPage()"
+		>
+			<fa-icon slot="icon" [icon]="faMagnifyingGlassRegular"></fa-icon>
 
 			<p slot="label">{{ locale.store }}</p>
 		</dav-navigation-bar-item>
