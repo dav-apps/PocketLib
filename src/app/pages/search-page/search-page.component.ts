@@ -1,6 +1,7 @@
 import { Component } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ApiService } from "src/app/services/api-service"
+import { DataService } from "src/app/services/data-service"
 
 interface BookItem {
 	id: string
@@ -20,9 +21,11 @@ export class SearchPageComponent {
 	query: string = ""
 	pages: number = 1
 	page: number = 1
+	maxVisibleBooks: number = 12
 
 	constructor(
 		private apiService: ApiService,
+		private dataService: DataService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -41,21 +44,29 @@ export class SearchPageComponent {
 
 	searchQueryChange(event: CustomEvent) {
 		this.query = event.detail.value
+		this.page = 1
+		this.triggerSearch()
+	}
+
+	pageChange(event: CustomEvent) {
+		this.page = event.detail.page
 		this.triggerSearch()
 	}
 
 	triggerSearch() {
+		this.books = []
+
 		if (this.query.length == 0) {
-			this.books = []
 			this.updateUrl()
 			return
 		}
 
+		this.isLoading = true
+		this.dataService.contentContainer.scrollTo({ top: 0 })
+
 		if (this.debounceTimeoutId != 0) {
 			window.clearTimeout(this.debounceTimeoutId)
 		}
-
-		this.isLoading = true
 
 		this.debounceTimeoutId = window.setTimeout(async () => {
 			let result = await this.apiService.search(
@@ -74,11 +85,11 @@ export class SearchPageComponent {
 					}
 				`,
 				{
-					query: this.query
+					query: this.query,
+					limit: this.maxVisibleBooks,
+					offset: (this.page - 1) * this.maxVisibleBooks
 				}
 			)
-
-			this.books = []
 
 			for (let item of result.data.search.items) {
 				this.books.push({
@@ -92,6 +103,7 @@ export class SearchPageComponent {
 			}
 
 			this.isLoading = false
+			this.pages = Math.ceil(result.data.search.total / this.maxVisibleBooks)
 			this.updateUrl()
 		}, 500)
 	}

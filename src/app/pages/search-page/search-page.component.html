@@ -16,13 +16,23 @@
 	<div class="list-container">
 		<dav-list>
 			@for (book of books; track book.id) {
-				<dav-list-item
-					[imageSrc]="book.coverUrl"
-					[headline]="book.title"
-					[subhead]="book.author"
-					size="lg"
-				></dav-list-item>
+			<dav-list-item
+				[imageSrc]="book.coverUrl"
+				[headline]="book.title"
+				[subhead]="book.author"
+				size="lg"
+			></dav-list-item>
 			}
 		</dav-list>
 	</div>
+
+	@if (pages > 1 && !isLoading) {
+	<div class="pagination-container">
+		<dav-pagination
+			[pages]="pages"
+			[currentPage]="page"
+			(pageChange)="pageChange($event)"
+		></dav-pagination>
+	</div>
+	}
 </div>
