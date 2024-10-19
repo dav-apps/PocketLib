@@ -30,6 +30,8 @@
 				[headline]="book.title"
 				[subhead]="book.author"
 				size="lg"
+				[href]="book.href"
+				(click)="bookItemClick($event, book)"
 			></dav-list-item>
 			}
 		</dav-list>

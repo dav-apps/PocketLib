@@ -9,6 +9,7 @@ interface BookItem {
 	title: string
 	author: string
 	coverUrl: string
+	href: string
 }
 
 @Component({
@@ -104,7 +105,8 @@ export class SearchPageComponent {
 					author: item.author
 						? `${item.author.firstName} ${item.author.lastName}`
 						: "",
-					coverUrl: item.coverUrl
+					coverUrl: item.coverUrl,
+					href: `/store/book/${item.id}`
 				})
 			}
 
@@ -118,5 +120,10 @@ export class SearchPageComponent {
 		this.router.navigate([], {
 			queryParams: { query: this.query, page: this.page }
 		})
+	}
+
+	bookItemClick(event: Event, book: BookItem) {
+		event.preventDefault()
+		this.router.navigate(["store", "book", book.id])
 	}
 }
