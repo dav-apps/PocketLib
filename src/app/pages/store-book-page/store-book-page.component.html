@@ -29,6 +29,7 @@
 				></dav-blurhash-image>
 			</div>
 
+			@if (bookSource == "pocketlib") {
 			<dav-profile-card
 				class="author-profile-card"
 				[imageSrc]="authorProfileImageContent"
@@ -38,8 +39,7 @@
 				[href]="'/store/author/' + authorSlug"
 				(click)="authorProfileCardClick($event)"
 			></dav-profile-card>
-
-			@if (publisherName) {
+			} @if (publisherName && bookSource == "pocketlib") {
 			<dav-profile-card
 				class="publisher-profile-card"
 				[imageSrc]="publisherLogoContent"
@@ -53,11 +53,11 @@
 
 			<!-- Read now / continue reading button -->
 			<div class="read-button-container">
+				@if (bookSource == "pocketlib") {
 				<dav-button (click)="Read()">
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
-
-				@if (luluPrintableId != null) {
+				} @if (luluPrintableId != null || bookSource == "vlb") {
 				<dav-button color="secondary" (click)="Order()">
 					{{ locale.order }}
 				</dav-button>
@@ -92,9 +92,7 @@
 
 		<div class="description-container">
 			<!-- Description -->
-			<p class="book-description">
-				{{ description }}
-			</p>
+			<div class="book-description" [innerHTML]="description"></div>
 
 			<!-- Categories -->
 			<div class="category-badge-container">
@@ -115,6 +113,7 @@
 
 <div class="divider"></div>
 
+@if (bookSource == "pocketlib") {
 <div class="recommendations-container">
 	@if (seriesUuid != null) {
 	<!-- List of books of the series -->
@@ -140,6 +139,7 @@
 		></pocketlib-horizontal-book-list>
 	</div>
 </div>
+}
 
 <pocketlib-login-required-dialog
 	#loginRequiredDialog

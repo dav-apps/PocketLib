@@ -1597,6 +1597,44 @@ export class ApiService {
 	}
 	//#endregion
 
+	//#region VlbItem
+	async retrieveVlbItem(
+		queryData: string,
+		variables: {
+			id: string
+		}
+	): Promise<ApolloQueryResult<{ retrieveVlbItem: VlbItemResource }>> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbItem: VlbItemResource
+			}>({
+				query: gql`
+				query RetrieveVlbItem($id: String!) {
+					retrieveVlbItem(id: $id) {
+						${queryData}
+					}
+				}
+			`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbItem(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
 	//#region Misc
 	async search(
 		queryData: string,
@@ -1611,20 +1649,20 @@ export class ApiService {
 				search: List<VlbItemResource>
 			}>({
 				query: gql`
-				query Search(
-					$query: String!
-					$limit: Int
-					$offset: Int
-				) {
-					search(
-						query: $query
-						limit: $limit
-						offset: $offset
+					query Search(
+						$query: String!
+						$limit: Int
+						$offset: Int
 					) {
-						${queryData}
+						search(
+							query: $query
+							limit: $limit
+							offset: $offset
+						) {
+							${queryData}
+						}
 					}
-				}
-			`,
+				`,
 				variables,
 				errorPolicy
 			})

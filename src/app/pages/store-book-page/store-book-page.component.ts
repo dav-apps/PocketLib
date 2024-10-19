@@ -28,6 +28,7 @@ import { enUS } from "src/locales/locales"
 })
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
+	bookSource: "pocketlib" | "vlb" = "pocketlib"
 
 	//#region StoreBook variables
 	uuid: string = ""
@@ -123,12 +124,51 @@ export class StoreBookPageComponent {
 	}
 
 	async Init() {
-		// Get StoreBook, StoreBookCollection and Author
-		await this.LoadStoreBookData()
+		if (this.slug.includes("-")) {
+			this.bookSource = "pocketlib"
+
+			// Get StoreBook, StoreBookCollection and Author
+			await this.LoadStoreBookData()
+		} else {
+			this.bookSource = "vlb"
+			await this.loadVlbItemData()
+		}
 	}
 
 	BackButtonClick() {
 		this.routingService.NavigateBack("/store")
+	}
+
+	async loadVlbItemData() {
+		let response = await this.apiService.retrieveVlbItem(
+			`
+				id
+				title
+				description
+				publisher
+				author {
+					firstName
+					lastName
+				}
+				coverUrl
+			`,
+			{
+				id: this.slug
+			}
+		)
+
+		let responseData = response.data.retrieveVlbItem
+		this.dataService.simpleLoadingScreenVisible = false
+
+		this.uuid = responseData.id
+		this.title = responseData.title
+		this.description = responseData.description
+		this.coverUrl = responseData.coverUrl
+		this.coverContent = responseData.coverUrl
+		this.coverAlt = this.dataService
+			.GetLocale()
+			.misc.bookCoverAlt.replace("{0}", this.title)
+		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
 	}
 
 	async LoadStoreBookData() {
