@@ -63,7 +63,11 @@
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 				} @if (luluPrintableId != null || bookSource == "vlb") {
-				<dav-button color="secondary" (click)="Order()">
+				<dav-button
+					color="secondary"
+					(click)="Order()"
+					[disabled]="orderLoading"
+				>
 					{{ locale.order }}
 				</dav-button>
 				}

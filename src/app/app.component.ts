@@ -122,10 +122,11 @@ export class AppComponent {
 			if (params["accessToken"]) {
 				// Login with the access token
 				await this.dataService.dav.Login(params["accessToken"])
-				window.location.href = this.router.url.slice(
-					0,
-					this.router.url.indexOf("?")
-				)
+
+				// Reload the page without accessToken in the url
+				let url = new URL(window.location.href)
+				url.searchParams.delete("accessToken")
+				window.location.href = url.toString()
 			}
 		})
 	}

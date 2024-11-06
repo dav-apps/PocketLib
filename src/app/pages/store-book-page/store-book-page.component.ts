@@ -1,6 +1,7 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
+	Dav,
 	CheckoutSessionsController,
 	CreateCheckoutSessionResponseData,
 	DownloadTableObject,
@@ -17,6 +18,7 @@ import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
+import { environment } from "src/environments/environment"
 import { GetStoreBookStatusByString } from "src/app/misc/utils"
 import { ApiResponse, StoreBookStatus } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
@@ -29,6 +31,8 @@ import { enUS } from "src/locales/locales"
 export class StoreBookPageComponent {
 	locale = enUS.storeBookPage
 	bookSource: "pocketlib" | "vlb" = "pocketlib"
+	orderLoading: boolean = false
+	redirectToCheckout: boolean = false
 
 	//#region StoreBook variables
 	uuid: string = ""
@@ -121,6 +125,14 @@ export class StoreBookPageComponent {
 				await this.Init()
 			}
 		})
+
+		this.activatedRoute.queryParamMap.subscribe(
+			async (paramMap: ParamMap) => {
+				this.redirectToCheckout =
+					paramMap.get("redirectToCheckout") == "true" &&
+					paramMap.get("accessToken") == null
+			}
+		)
 	}
 
 	async Init() {
@@ -159,7 +171,7 @@ export class StoreBookPageComponent {
 		)
 
 		let responseData = response.data.retrieveVlbItem
-		this.dataService.simpleLoadingScreenVisible = false
+		this.dataService.simpleLoadingScreenVisible = this.redirectToCheckout
 
 		this.uuid = responseData.id
 		this.title = responseData.title
@@ -175,6 +187,11 @@ export class StoreBookPageComponent {
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.title)
 		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+
+		if (this.redirectToCheckout) {
+			// Navigate to the checkout page
+			this.Order()
+		}
 	}
 
 	async LoadStoreBookData() {
@@ -592,12 +609,25 @@ export class StoreBookPageComponent {
 	}
 
 	async Order() {
+		await this.dataService.userPromiseHolder.AwaitResult()
+
+		if (!this.dataService.dav.isLoggedIn) {
+			// Go to login page with redirectToCheckout=true in the url
+			let url = new URL(window.location.href)
+			url.searchParams.append("redirectToCheckout", "true")
+			Dav.ShowLoginPage(environment.apiKey, url.toString())
+			return
+		}
+
+		let redirectUrl = window.location.origin + window.location.pathname
+		this.orderLoading = true
+
 		if (this.bookSource == "vlb") {
 			let createCheckoutSessionResponse =
 				await this.apiService.createCheckoutSessionForVlbItem(`url`, {
 					productId: this.uuid,
-					successUrl: window.location.href,
-					cancelUrl: window.location.href
+					successUrl: redirectUrl,
+					cancelUrl: redirectUrl
 				})
 
 			const url =
@@ -609,8 +639,8 @@ export class StoreBookPageComponent {
 			let createCheckoutSessionResponse =
 				await this.apiService.createCheckoutSessionForStoreBook(`url`, {
 					storeBookUuid: this.uuid,
-					successUrl: window.location.href,
-					cancelUrl: window.location.href
+					successUrl: redirectUrl,
+					cancelUrl: redirectUrl
 				})
 
 			const url =
@@ -628,7 +658,7 @@ export class StoreBookPageComponent {
 
 	NavigateToAccountPage() {
 		this.router.navigate(["account"], {
-			queryParams: { redirect: `store/book/${this.uuid}` }
+			queryParams: { redirect: `store/book/${this.slug}` }
 		})
 	}
 
