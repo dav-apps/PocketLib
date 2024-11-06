@@ -592,15 +592,33 @@ export class StoreBookPageComponent {
 	}
 
 	async Order() {
-		const checkoutSessionResponse =
-			await this.apiService.createCheckoutSession(`url`, {
-				storeBookUuid: this.uuid,
-				successUrl: window.location.href,
-				cancelUrl: window.location.href
-			})
+		if (this.bookSource == "vlb") {
+			let createCheckoutSessionResponse =
+				await this.apiService.createCheckoutSessionForVlbItem(`url`, {
+					productId: this.uuid,
+					successUrl: window.location.href,
+					cancelUrl: window.location.href
+				})
 
-		const url = checkoutSessionResponse.data?.createCheckoutSession?.url
-		if (url != null) window.location.href = url
+			const url =
+				createCheckoutSessionResponse.data?.createCheckoutSessionForVlbItem
+					?.url
+
+			if (url != null) window.location.href = url
+		} else {
+			let createCheckoutSessionResponse =
+				await this.apiService.createCheckoutSessionForStoreBook(`url`, {
+					storeBookUuid: this.uuid,
+					successUrl: window.location.href,
+					cancelUrl: window.location.href
+				})
+
+			const url =
+				createCheckoutSessionResponse.data
+					?.createCheckoutSessionForStoreBook?.url
+
+			if (url != null) window.location.href = url
+		}
 	}
 
 	ShowBuyBookDialog(loginRequired: boolean) {

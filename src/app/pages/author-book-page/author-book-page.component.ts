@@ -566,15 +566,18 @@ export class AuthorBookPageComponent {
 		this.orderTestPrintLoading = true
 
 		const createCheckoutSessionResponse =
-			await this.apiService.createCheckoutSession(`url`, {
+			await this.apiService.createCheckoutSessionForStoreBook(`url`, {
 				storeBookUuid: this.storeBook.uuid,
 				successUrl: window.location.href,
 				cancelUrl: window.location.href
 			})
 
-		if (createCheckoutSessionResponse.data.createCheckoutSession != null) {
+		if (
+			createCheckoutSessionResponse.data.createCheckoutSessionForStoreBook !=
+			null
+		) {
 			window.location.href =
-				createCheckoutSessionResponse.data.createCheckoutSession.url
+				createCheckoutSessionResponse.data.createCheckoutSessionForStoreBook.url
 		}
 	}
 

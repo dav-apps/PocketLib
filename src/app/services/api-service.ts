@@ -1548,7 +1548,7 @@ export class ApiService {
 	//#endregion
 
 	//#region CheckoutSession
-	async createCheckoutSession(
+	async createCheckoutSessionForStoreBook(
 		queryData: string,
 		variables: {
 			storeBookUuid: string
@@ -1556,19 +1556,21 @@ export class ApiService {
 			cancelUrl: string
 		}
 	): Promise<
-		MutationResult<{ createCheckoutSession: CheckoutSessionResource }>
+		MutationResult<{
+			createCheckoutSessionForStoreBook: CheckoutSessionResource
+		}>
 	> {
 		let result = await this.apollo
 			.mutate<{
-				createCheckoutSession: CheckoutSessionResource
+				createCheckoutSessionForStoreBook: CheckoutSessionResource
 			}>({
 				mutation: gql`
-					mutation CreateCheckoutSession(
+					mutation CreateCheckoutSessionForStoreBook(
 						$storeBookUuid: String!
 						$successUrl: String!
 						$cancelUrl: String!
 					) {
-						createCheckoutSession(
+						createCheckoutSessionForStoreBook(
 							storeBookUuid: $storeBookUuid
 							successUrl: $successUrl
 							cancelUrl: $cancelUrl
@@ -1590,7 +1592,60 @@ export class ApiService {
 			// Renew the access token and run the query again
 			await renewSession()
 
-			return await this.createCheckoutSession(queryData, variables)
+			return await this.createCheckoutSessionForStoreBook(
+				queryData,
+				variables
+			)
+		}
+
+		return result
+	}
+
+	async createCheckoutSessionForVlbItem(
+		queryData: string,
+		variables: {
+			productId: string
+			successUrl: string
+			cancelUrl: string
+		}
+	): Promise<
+		MutationResult<{
+			createCheckoutSessionForVlbItem: CheckoutSessionResource
+		}>
+	> {
+		let result = await this.apollo
+			.mutate<{
+				createCheckoutSessionForVlbItem: CheckoutSessionResource
+			}>({
+				mutation: gql`
+					mutation CreateCheckoutSessionForVlbItem(
+						$productId: String!
+						$successUrl: String!
+						$cancelUrl: String!
+					) {
+						createCheckoutSessionForVlbItem(
+							productId: $productId
+							successUrl: $successUrl
+							cancelUrl: $cancelUrl
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createCheckoutSessionForVlbItem(queryData, variables)
 		}
 
 		return result
