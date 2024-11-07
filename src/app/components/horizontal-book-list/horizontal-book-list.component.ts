@@ -7,7 +7,8 @@ import { ApiService } from "src/app/services/api-service"
 import {
 	BookListItem,
 	ApiResponse,
-	StoreBookResource
+	StoreBookResource,
+	VlbItemResource
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
@@ -168,71 +169,124 @@ export class HorizontalBookListComponent {
 	}
 
 	async LoadStoreBooksRandomly() {
+		let total = 0
 		let page = this.page - 1
 		if (page < 0) page = 0
 
-		let response = await this.apiService.listStoreBooks(
-			`
-				total
-				items {
-					uuid
-					slug
-					title
-					cover {
-						url
-						blurhash
+		if (this.dataService.locale.startsWith("de")) {
+			let response = await this.apiService.listVlbItems(
+				`
+					total
+					items {
+						id
+						title
+						description
+						coverUrl
 					}
+				`,
+				{
+					random: true,
+					limit: this.maxItems,
+					offset: this.maxItems * page
 				}
-			`,
-			{
-				random: true,
-				languages: await this.dataService.GetStoreLanguages(),
-				limit: this.maxItems,
-				offset: this.maxItems * page
-			}
-		)
-
-		let responseData = response.data.listStoreBooks
-		if (responseData == null) return
-
-		this.ShowBooks(responseData.items)
-		this.hasMoreItems = responseData.total > this.maxItems
-	}
-
-	ShowBooks(books: StoreBookResource[]) {
-		this.books = []
-
-		for (let storeBook of books) {
-			if (storeBook.cover == null) continue
-
-			let height = 209
-			let width = AdaptCoverWidthHeightToAspectRatio(
-				135,
-				height,
-				storeBook.cover.aspectRatio
 			)
 
-			let bookItem: BookListItem = {
-				uuid: storeBook.uuid,
-				slug: storeBook.slug,
-				title: storeBook.title,
-				coverContent: null,
-				coverBlurhash: storeBook.cover.blurhash,
-				coverWidth: width,
-				coverHeight: height
-			}
+			let responseData = response.data.listVlbItems
+			if (responseData == null) return
 
-			this.apiService
-				.downloadFile(storeBook.cover.url)
-				.then((fileResponse: ApiResponse<string>) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						bookItem.coverContent = (
-							fileResponse as ApiResponse<string>
-						).data
+			this.ShowBooks(responseData.items)
+			total = responseData.total
+		} else {
+			let response = await this.apiService.listStoreBooks(
+				`
+					total
+					items {
+						uuid
+						slug
+						title
+						cover {
+							url
+							blurhash
+						}
 					}
-				})
+				`,
+				{
+					random: true,
+					languages: await this.dataService.GetStoreLanguages(),
+					limit: this.maxItems,
+					offset: this.maxItems * page
+				}
+			)
 
-			this.books.push(bookItem)
+			let responseData = response.data.listStoreBooks
+			if (responseData == null) return
+
+			this.ShowBooks(responseData.items)
+			total = responseData.total
+		}
+
+		this.hasMoreItems = total > this.maxItems
+	}
+
+	ShowBooks(books: StoreBookResource[] | VlbItemResource[]) {
+		this.books = []
+
+		if (books.length == 0) {
+			this.loading = false
+			return
+		}
+
+		if ("uuid" in books[0]) {
+			// books is StoreBookResource[]
+			for (let book of books) {
+				let storeBook = book as StoreBookResource
+				if (storeBook.cover == null) continue
+
+				let height = 209
+				let width = AdaptCoverWidthHeightToAspectRatio(
+					135,
+					height,
+					storeBook.cover.aspectRatio
+				)
+
+				let bookListItem: BookListItem = {
+					uuid: storeBook.uuid,
+					slug: storeBook.slug,
+					title: storeBook.title,
+					coverContent: null,
+					coverBlurhash: storeBook.cover.blurhash,
+					coverWidth: width,
+					coverHeight: height
+				}
+
+				this.apiService
+					.downloadFile(storeBook.cover.url)
+					.then((fileResponse: ApiResponse<string>) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookListItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
+
+				this.books.push(bookListItem)
+			}
+		} else {
+			// books is VlbItemResource[]
+			for (let book of books) {
+				let vlbItem = book as VlbItemResource
+				if (vlbItem.coverUrl == null) continue
+
+				this.books.push({
+					uuid: vlbItem.id,
+					slug: vlbItem.id,
+					title: vlbItem.title,
+					coverContent: vlbItem.coverUrl,
+					coverBlurhash: null,
+					coverWidth: null,
+					coverHeight: 209
+				})
+			}
 		}
 
 		this.loading = false
