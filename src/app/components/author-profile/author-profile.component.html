@@ -1,11 +1,12 @@
 <div class="container slide-up-in">
 	<div class="author-panel">
+		@if (authorMode != 3) {
 		<div class="profile-image-container">
 			<dav-blurhash-image
 				[src]="profileImageContent"
 				[fallbackSrc]="dataService.defaultProfileImageUrl"
-				[blurhash]="author.profileImage?.blurhash"
-				[title]="author.firstName + ' ' + author.lastName"
+				[blurhash]="author?.profileImage?.blurhash"
+				[title]="author?.firstName + ' ' + author?.lastName"
 				[alt]="profileImageAlt"
 				[width]="profileImageWidth"
 				[height]="profileImageWidth"
@@ -25,37 +26,40 @@
 			</dav-button>
 			}
 		</div>
-
+		} @if (authorMode == 3) {
+		<dav-header size="sm">
+			{{ vlbAuthorFirstName }} {{ vlbAuthorLastName }}
+		</dav-header>
+		} @else {
 		<dav-header
 			[editButtonVisible]="authorMode > 0"
 			size="sm"
 			(editButtonClick)="ShowEditProfileDialog()"
 		>
-			{{ author.firstName }} {{ author.lastName }}
+			{{ author?.firstName }} {{ author?.lastName }}
 		</dav-header>
-
-		@if (author.websiteUrl || author.facebookUsername ||
-		author.instagramUsername || author.twitterUsername) {
+		} @if (author?.websiteUrl || author?.facebookUsername ||
+		author?.instagramUsername || author?.twitterUsername) {
 		<div class="social-media-buttons-container">
-			@if (author.websiteUrl) {
+			@if (author?.websiteUrl) {
 			<!-- Website -->
 			<pocketlib-link-icon-button
 				[icon]="faGlobeLight"
 				[link]="author.websiteUrl"
 			></pocketlib-link-icon-button>
-			} @if (author.facebookUsername) {
+			} @if (author?.facebookUsername) {
 			<!-- Facebook -->
 			<pocketlib-link-icon-button
 				[icon]="faFacebook"
 				[link]="facebookLink"
 			></pocketlib-link-icon-button>
-			} @if (author.instagramUsername) {
+			} @if (author?.instagramUsername) {
 			<!-- Instagram -->
 			<pocketlib-link-icon-button
 				[icon]="faInstagram"
 				[link]="instagramLink"
 			></pocketlib-link-icon-button>
-			} @if (author.twitterUsername) {
+			} @if (author?.twitterUsername) {
 			<!-- Twitter -->
 			<pocketlib-link-icon-button
 				[icon]="faTwitter"
@@ -63,8 +67,11 @@
 			></pocketlib-link-icon-button>
 			}
 		</div>
-		}
-
+		} @if (authorMode == 3) {
+		<p class="bio-text">
+			{{ vlbAuthorDescription }}
+		</p>
+		} @else {
 		<div class="bio-language-dropdown-container">
 			@if (authorMode != 0) {
 			<dav-dropdown
@@ -120,9 +127,10 @@
 			</dav-button>
 			}
 		</div>
+		}
 	</div>
 
-	@if (authorMode != 0) {
+	@if (authorMode == 1 || authorMode == 2) {
 	<div class="books-panel">
 		@if (errorMessage.length > 0) {
 		<!-- Error message -->

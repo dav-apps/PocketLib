@@ -103,6 +103,14 @@ export class AuthorProfileComponent {
 	errorMessage: string = ""
 	providerMessage: string = ""
 
+	//#region VlbAuthor variables
+	vlbAuthorUuid: string = ""
+	vlbAuthorSlug: string = ""
+	vlbAuthorFirstName: string = ""
+	vlbAuthorLastName: string = ""
+	vlbAuthorDescription: string = ""
+	//#endregion
+
 	//#region ProfileImageDialog
 	@ViewChild("profileImageDialog")
 	profileImageDialog: ProfileImageDialogComponent
@@ -160,6 +168,64 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
+			} else {
+				// VlbAuthor
+				let retrieveVlbAuthorResponse =
+					await this.apiService.retrieveVlbAuthor(
+						`
+							uuid
+							slug
+							firstName
+							lastName
+							description
+						`,
+						{ uuid: this.slug }
+					)
+
+				let retrieveVlbAuthorResponseData =
+					retrieveVlbAuthorResponse.data?.retrieveVlbAuthor
+
+				if (retrieveVlbAuthorResponseData == null) return
+
+				this.authorMode = AuthorMode.VlbAuthor
+				this.vlbAuthorUuid = retrieveVlbAuthorResponseData.uuid
+				this.vlbAuthorSlug = retrieveVlbAuthorResponseData.slug
+				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
+				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
+				this.vlbAuthorDescription =
+					retrieveVlbAuthorResponseData.description
+
+				// Get the books of the author
+				let listVlbItemsResponse = await this.apiService.listVlbItems(
+					`
+						total
+						items {
+							id
+							title
+							coverUrl
+						}
+					`,
+					{
+						vlbAuthorUuid: this.vlbAuthorUuid
+					}
+				)
+
+				let listVlbItemsResponseData =
+					listVlbItemsResponse.data?.listVlbItems
+
+				if (listVlbItemsResponseData == null) return
+
+				for (let item of listVlbItemsResponseData.items) {
+					this.books.push({
+						uuid: item.id,
+						slug: item.id,
+						title: item.title,
+						coverContent: item.coverUrl,
+						coverBlurhash: null
+					})
+				}
+
+				return
 			}
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser

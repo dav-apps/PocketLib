@@ -62,7 +62,8 @@ export enum PublisherMode {
 export enum AuthorMode {
 	Normal = 0, // If the user is not an author and not an admin or an admin but author does not belong to admin
 	AuthorOfUser = 1, // If the author belongs to the user
-	AuthorOfAdmin = 2 // If the user is an admin and the author belongs to the admin
+	AuthorOfAdmin = 2, // If the user is an admin and the author belongs to the admin
+	VlbAuthor = 3 // If the author is a VlbAuthor
 }
 
 export enum StoreBookStatus {
@@ -268,15 +269,21 @@ export interface VlbItemResource {
 	description?: string
 	price: number
 	publisher: string
-	author: {
-		firstName: string
-		lastName: string
-	}
+	author?: VlbAuthorResource
 	coverUrl?: string
 	collections: {
 		id: string
 		title: string
 	}[]
+}
+
+export interface VlbAuthorResource {
+	uuid: string
+	slug: string
+	isni?: string
+	firstName: string
+	lastName: string
+	description?: string
 }
 //#endregion
 

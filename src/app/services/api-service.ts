@@ -26,7 +26,8 @@ import {
 	CategoryResource,
 	BookResource,
 	CheckoutSessionResource,
-	VlbItemResource
+	VlbItemResource,
+	VlbAuthorResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -1664,12 +1665,12 @@ export class ApiService {
 				retrieveVlbItem: VlbItemResource
 			}>({
 				query: gql`
-				query RetrieveVlbItem($id: String!) {
-					retrieveVlbItem(id: $id) {
-						${queryData}
+					query RetrieveVlbItem($id: String!) {
+						retrieveVlbItem(id: $id) {
+							${queryData}
+						}
 					}
-				}
-			`,
+				`,
 				variables,
 				errorPolicy
 			})
@@ -1694,6 +1695,7 @@ export class ApiService {
 		variables: {
 			random?: boolean
 			collectionId?: string
+			vlbAuthorUuid?: string
 			limit?: number
 			offset?: number
 		}
@@ -1706,12 +1708,14 @@ export class ApiService {
 					query ListVlbItems(
 						$random: Boolean
 						$collectionId: String
+						$vlbAuthorUuid: String
 						$limit: Int
 						$offset: Int
 					) {
 						listVlbItems(
 							random: $random
 							collectionId: $collectionId
+							vlbAuthorUuid: $vlbAuthorUuid
 							limit: $limit
 							offset: $offset
 						) {
@@ -1733,6 +1737,44 @@ export class ApiService {
 			await renewSession()
 
 			return await this.listVlbItems(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbAuthor
+	async retrieveVlbAuthor(
+		queryData: string,
+		variables: {
+			uuid: string
+		}
+	): Promise<ApolloQueryResult<{ retrieveVlbAuthor: VlbAuthorResource }>> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbAuthor: VlbAuthorResource
+			}>({
+				query: gql`
+					query RetrieveVlbAuthor($uuid: String!) {
+						retrieveVlbAuthor(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbAuthor(queryData, variables)
 		}
 
 		return result
