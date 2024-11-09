@@ -1693,6 +1693,7 @@ export class ApiService {
 		queryData: string,
 		variables: {
 			random?: boolean
+			collectionId?: string
 			limit?: number
 			offset?: number
 		}
@@ -1704,11 +1705,13 @@ export class ApiService {
 				query: gql`
 					query ListVlbItems(
 						$random: Boolean
+						$collectionId: String
 						$limit: Int
 						$offset: Int
 					) {
 						listVlbItems(
 							random: $random
+							collectionId: $collectionId
 							limit: $limit
 							offset: $offset
 						) {

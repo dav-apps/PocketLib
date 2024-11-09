@@ -273,6 +273,10 @@ export interface VlbItemResource {
 		lastName: string
 	}
 	coverUrl?: string
+	collections: {
+		id: string
+		title: string
+	}[]
 }
 //#endregion
 

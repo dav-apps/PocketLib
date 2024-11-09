@@ -148,6 +148,20 @@
 		></pocketlib-horizontal-book-list>
 	</div>
 </div>
+} @else {
+<div class="recommendations-container">
+	@for (collection of collections; track collection.id) {
+	<div>
+		<pocketlib-horizontal-book-list
+			type="collection"
+			[headline]="collection.title"
+			[currentBookUuid]="uuid"
+			[collectionId]="collection.id"
+			[hideMoreButton]="true"
+		></pocketlib-horizontal-book-list>
+	</div>
+	}
+</div>
 }
 
 <pocketlib-login-required-dialog

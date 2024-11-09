@@ -57,6 +57,13 @@ export class StoreBookPageComponent {
 	moreBooksHeadline: string = ""
 	//#endregion
 
+	//#region VlbItem variables
+	collections: {
+		id: string
+		title: string
+	}[] = []
+	//#endregion
+
 	//#region Cover variables
 	coverContent: string = this.dataService.defaultStoreBookCover
 	coverUrl: string = ""
@@ -164,6 +171,10 @@ export class StoreBookPageComponent {
 					lastName
 				}
 				coverUrl
+				collections {
+					id
+					title
+				}
 			`,
 			{
 				id: this.slug
@@ -187,6 +198,14 @@ export class StoreBookPageComponent {
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.title)
 		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+		this.collections = []
+
+		for (let collection of responseData.collections) {
+			this.collections.push({
+				id: collection.id,
+				title: this.locale.moreOfSeries.replace("{0}", collection.title)
+			})
+		}
 
 		if (this.redirectToCheckout) {
 			// Navigate to the checkout page

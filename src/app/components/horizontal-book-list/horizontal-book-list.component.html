@@ -21,7 +21,7 @@
 			@for (book of books; track book.uuid) {
 			<pocketlib-store-book-card
 				[book]="book"
-				[highlighted]="type == 'series' && book.uuid == currentBookUuid"
+				[highlighted]="(type == 'series' || type == 'collection') && book.uuid == currentBookUuid"
 			></pocketlib-store-book-card>
 			}
 		</div>

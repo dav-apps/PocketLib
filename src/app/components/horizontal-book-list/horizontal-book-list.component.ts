@@ -12,7 +12,12 @@ import {
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
-type HorizontalBookListType = "latest" | "categories" | "series" | "random"
+type HorizontalBookListType =
+	| "latest"
+	| "categories"
+	| "series"
+	| "collection"
+	| "random"
 type HorizontalBookListAlignment = "start" | "center"
 
 @Component({
@@ -27,6 +32,7 @@ export class HorizontalBookListComponent {
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
 	@Input() series: string = ""
+	@Input() collectionId: string = ""
 	@Input() maxItems: number = 10
 	@Input() hideMoreButton: boolean = false
 	@Input() alignment: HorizontalBookListAlignment = "start"
@@ -47,6 +53,8 @@ export class HorizontalBookListComponent {
 			await this.LoadStoreBooksByCategories()
 		} else if (this.type == "series") {
 			await this.LoadStoreBooksBySeries()
+		} else if (this.type == "collection") {
+			await this.LoadVlbItemsByCollectionId()
 		} else if (this.type == "random") {
 			await this.LoadStoreBooksRandomly()
 		} else {
@@ -57,6 +65,11 @@ export class HorizontalBookListComponent {
 	async ngOnChanges(changes: SimpleChanges) {
 		if (changes.series != null && changes.series.currentValue != null) {
 			await this.LoadStoreBooksBySeries()
+		} else if (
+			changes.collectionId != null &&
+			changes.collectionId.currentValue != null
+		) {
+			await this.LoadVlbItemsByCollectionId()
 		} else if (
 			changes.categories != null &&
 			changes.categories.currentValue.length > 0
@@ -166,6 +179,32 @@ export class HorizontalBookListComponent {
 
 		this.ShowBooks(responseData.storeBooks.items)
 		this.hasMoreItems = responseData.storeBooks.total > this.maxItems
+	}
+
+	async LoadVlbItemsByCollectionId() {
+		if (this.collectionId.length == 0) return
+
+		let response = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					id
+					title
+					description
+					coverUrl
+				}
+			`,
+			{
+				collectionId: this.collectionId,
+				limit: this.maxItems
+			}
+		)
+
+		let responseData = response.data.listVlbItems
+		if (responseData == null) return
+
+		this.ShowBooks(responseData.items)
+		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
 	async LoadStoreBooksRandomly() {
