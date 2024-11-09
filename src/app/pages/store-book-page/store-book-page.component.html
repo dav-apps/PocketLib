@@ -39,6 +39,13 @@
 				[href]="'/store/author/' + authorSlug"
 				(click)="authorProfileCardClick($event)"
 			></dav-profile-card>
+			} @else if (bookSource == "vlb" && authorSlug != null) {
+			<dav-profile-card
+				class="author-profile-card"
+				[name]="authorName"
+				[href]="'/store/author/' + authorSlug"
+				(click)="authorProfileCardClick($event)"
+			></dav-profile-card>
 			} @if (publisherName && bookSource == "pocketlib") {
 			<dav-profile-card
 				class="publisher-profile-card"

@@ -167,6 +167,7 @@ export class StoreBookPageComponent {
 				price
 				publisher
 				author {
+					slug
 					firstName
 					lastName
 				}
@@ -198,6 +199,7 @@ export class StoreBookPageComponent {
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.title)
 		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+		this.authorSlug = responseData.author?.slug
 		this.collections = []
 
 		for (let collection of responseData.collections) {
