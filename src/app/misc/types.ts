@@ -56,7 +56,8 @@ export interface Route {
 export enum PublisherMode {
 	Normal = 0, // If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
 	PublisherOfUser = 1, // If the publisher belongs to the user
-	PublisherOfAdmin = 2 // If the user is an admin and the publisher belongs to the admin
+	PublisherOfAdmin = 2, // If the user is an admin and the publisher belongs to the admin
+	VlbPublisher = 3 // If the publisher is a VlbPublisher
 }
 
 export enum AuthorMode {

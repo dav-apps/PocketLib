@@ -1,11 +1,12 @@
 <div class="container slide-up-in">
 	<div class="publisher-panel">
+		@if (publisherMode != 3) {
 		<div class="logo-container">
 			<dav-blurhash-image
 				[src]="logoContent"
 				[fallbackSrc]="dataService.defaultProfileImageUrl"
-				[blurhash]="publisher.logo?.blurhash"
-				[title]="publisher.name"
+				[blurhash]="publisher?.logo?.blurhash"
+				[title]="publisher?.name"
 				[alt]="logoAlt"
 				[width]="logoWidth"
 				[height]="logoWidth"
@@ -25,37 +26,41 @@
 			</dav-button>
 			}
 		</div>
-
+		} @if (publisherMode == 3) {
+		<dav-header size="sm">
+			{{ vlbPublisherName }}
+		</dav-header>
+		} @else {
 		<dav-header
 			[editButtonVisible]="publisherMode > 0"
 			size="sm"
 			(editButtonClick)="ShowEditProfileDialog()"
 		>
-			{{ publisher.name }}
+			{{ publisher?.name }}
 		</dav-header>
-
-		@if (publisher.websiteUrl || publisher.facebookUsername ||
-		publisher.instagramUsername || publisher.twitterUsername) {
+		} @if (publisher?.websiteUrl || publisher?.facebookUsername ||
+		publisher?.instagramUsername || publisher?.twitterUsername ||
+		vlbPublisherUrl) {
 		<div class="social-media-buttons-container">
-			@if (publisher.websiteUrl) {
+			@if (publisher?.websiteUrl || vlbPublisherUrl) {
 			<!-- Website -->
 			<pocketlib-link-icon-button
 				[icon]="faGlobeLight"
-				[link]="publisher.websiteUrl"
+				[link]="publisher.websiteUrl ?? vlbPublisherUrl"
 			></pocketlib-link-icon-button>
-			} @if (publisher.facebookUsername) {
+			} @if (publisher?.facebookUsername) {
 			<!-- Facebook -->
 			<pocketlib-link-icon-button
 				[icon]="faFacebook"
 				[link]="facebookLink"
 			></pocketlib-link-icon-button>
-			} @if (publisher.instagramUsername) {
+			} @if (publisher?.instagramUsername) {
 			<!-- Instagram -->
 			<pocketlib-link-icon-button
 				[icon]="faInstagram"
 				[link]="instagramLink"
 			></pocketlib-link-icon-button>
-			} @if (publisher.twitterUsername) {
+			} @if (publisher?.twitterUsername) {
 			<!-- Twitter -->
 			<pocketlib-link-icon-button
 				[icon]="faTwitter"
@@ -63,11 +68,11 @@
 			></pocketlib-link-icon-button>
 			}
 		</div>
-		} @if (!editDescription) {
+		} @if (publisherMode != 3) { @if (!editDescription) {
 		<p class="description-text">
-			{{ publisher.description }}
+			{{ publisher?.description }}
 		</p>
-		} @if ((publisher.description == null || publisher.description.length ==
+		} @if ((publisher?.description == null || publisher?.description.length ==
 		0) && !editDescription) {
 		<p class="no-description-text">
 			{{ locale.noDescription }}
@@ -108,8 +113,42 @@
 			</dav-button>
 			}
 		</div>
+		}
 	</div>
 
+	@if (publisherMode == 3) {
+	<div class="authors-panel">
+		<!-- List of books -->
+		@if (vlbItemsLoading) {
+		<div class="progress-ring-container">
+			<dav-progress-ring size="28"></dav-progress-ring>
+		</div>
+		} @else {
+		<dav-list>
+			@for (book of books; track book.uuid) {
+			<dav-list-item
+				[imageSrc]="book.coverContent"
+				[imageBlurhash]="book.coverBlurhash"
+				imageAspectRatio="1:1.5"
+				[headline]="book.title"
+				size="lg"
+				[href]="'/store/book/' + book.slug"
+				(click)="bookItemClick($event, book)"
+			></dav-list-item>
+			}
+		</dav-list>
+
+		@if (pages > 1) {
+		<div class="pagination-container">
+			<dav-pagination
+				[pages]="pages"
+				[currentPage]="page"
+				(pageChange)="booksPageChange($event.detail.page)"
+			></dav-pagination>
+		</div>
+		} }
+	</div>
+	} @else {
 	<div class="authors-panel">
 		@if (errorMessage.length > 0 && publisherMode != 0) {
 		<!-- Error message -->
@@ -168,10 +207,11 @@
 		<dav-pagination
 			[pages]="pages"
 			[currentPage]="page"
-			(pageChange)="PageChange($event.detail.page)"
+			(pageChange)="authorPageChange($event.detail.page)"
 		></dav-pagination>
 		}
 	</div>
+	}
 </div>
 
 <pocketlib-logo-dialog

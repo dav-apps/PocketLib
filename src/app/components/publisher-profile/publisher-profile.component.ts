@@ -26,12 +26,13 @@ import {
 	GenerateInstagramLink,
 	GenerateTwitterLink
 } from "src/app/misc/utils"
-import { ApiResponse, PublisherMode } from "src/app/misc/types"
+import { ApiResponse, BookListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
 const maxAuthorsPerPage = 5
+const maxVlbItemsPerPage = 5
 
 interface AuthorItem {
 	uuid: string
@@ -78,6 +79,14 @@ export class PublisherProfileComponent {
 	page: number = 1
 	@ViewChild("searchTextfield")
 	searchTextfield: ElementRef<Textfield>
+
+	//#region VlbPublisher variables
+	vlbPublisherId: string = ""
+	vlbPublisherName: string = ""
+	vlbPublisherUrl: string = ""
+	vlbItemsLoading: boolean = false
+	books: BookListItem[] = []
+	//#endregion
 
 	//#region LogoDialog
 	@ViewChild("logoDialog")
@@ -146,7 +155,32 @@ export class PublisherProfileComponent {
 
 		let publisher = null
 
-		if (this.dataService.userIsAdmin) {
+		if (!this.slug.includes("-")) {
+			// VlbPublisher
+			let retrieveVlbPublisherResponse =
+				await this.apiService.retrieveVlbPublisher(
+					`
+						id
+						name
+						url
+					`,
+					{ id: this.slug }
+				)
+
+			let retrieveVlbPublisherResponseData =
+				retrieveVlbPublisherResponse.data?.retrieveVlbPublisher
+
+			if (retrieveVlbPublisherResponseData == null) return
+
+			this.publisherMode = PublisherMode.VlbPublisher
+			this.vlbPublisherId = retrieveVlbPublisherResponseData.id
+			this.vlbPublisherName = retrieveVlbPublisherResponseData.name
+			this.vlbPublisherUrl = retrieveVlbPublisherResponseData.url
+
+			// Get book items
+			await this.loadVlbPublisherItems()
+			return
+		} else if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
 			publisher = this.dataService.adminPublishers.find(
 				publisher => publisher.slug == this.slug
@@ -202,6 +236,47 @@ export class PublisherProfileComponent {
 		} else {
 			this.logoWidth = 130
 		}
+	}
+
+	async loadVlbPublisherItems() {
+		this.vlbItemsLoading = true
+
+		let listVlbItemsResponse = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					id
+					title
+					coverUrl
+				}
+			`,
+			{
+				vlbPublisherId: this.vlbPublisherId,
+				limit: maxVlbItemsPerPage,
+				offset: (this.page - 1) * maxVlbItemsPerPage
+			}
+		)
+
+		this.vlbItemsLoading = false
+
+		let listVlbItemsResponseData = listVlbItemsResponse.data?.listVlbItems
+		if (listVlbItemsResponseData == null) return
+
+		this.books = []
+
+		for (let item of listVlbItemsResponseData.items) {
+			this.books.push({
+				uuid: item.id,
+				slug: item.id,
+				title: item.title,
+				coverContent: item.coverUrl,
+				coverBlurhash: null
+			})
+		}
+
+		this.pages = Math.floor(
+			listVlbItemsResponseData.total / maxVlbItemsPerPage
+		)
 	}
 
 	async LoadAuthors() {
@@ -260,6 +335,11 @@ export class PublisherProfileComponent {
 		this.searchAuthorsLoading = false
 	}
 
+	bookItemClick(event: Event, book: BookListItem) {
+		event.preventDefault()
+		this.router.navigate(["store", "book", book.uuid])
+	}
+
 	async searchQueryChange(event: CustomEvent) {
 		this.searchQuery = event.detail.value
 
@@ -270,7 +350,15 @@ export class PublisherProfileComponent {
 		await this.LoadAuthors()
 	}
 
-	PageChange(page: number) {
+	booksPageChange(page: number) {
+		this.page = page
+		this.router.navigate([], {
+			queryParams: { page }
+		})
+		this.loadVlbPublisherItems()
+	}
+
+	authorPageChange(page: number) {
 		this.page = page
 		this.router.navigate([], {
 			queryParams: { page, query: this.searchQuery }
