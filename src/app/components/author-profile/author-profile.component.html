@@ -227,6 +227,11 @@
 	} @else {
 	<div class="books-panel">
 		<!-- List of books -->
+		@if (vlbItemsLoading) {
+		<div class="progress-ring-container">
+			<dav-progress-ring size="28"></dav-progress-ring>
+		</div>
+		} @else {
 		<dav-list>
 			@for (book of books; track book.uuid) {
 			<dav-list-item
@@ -240,6 +245,16 @@
 			></dav-list-item>
 			}
 		</dav-list>
+
+		@if (pages > 1) {
+		<div class="pagination-container">
+			<dav-pagination
+				[pages]="pages"
+				[currentPage]="page"
+				(pageChange)="pageChange($event.detail.page)"
+			></dav-pagination>
+		</div>
+		} }
 	</div>
 	}
 </div>

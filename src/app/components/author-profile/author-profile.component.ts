@@ -62,6 +62,7 @@ enum BioMode {
 }
 
 const maxProfileImageFileSize = 2000000
+const maxItemsPerPage = 5
 
 @Component({
 	selector: "pocketlib-author-profile",
@@ -102,6 +103,8 @@ export class AuthorProfileComponent {
 	bookTitleFontSize: number = 20
 	errorMessage: string = ""
 	providerMessage: string = ""
+	pages: number = 1
+	page: number = 1
 
 	//#region VlbAuthor variables
 	vlbAuthorUuid: string = ""
@@ -109,6 +112,7 @@ export class AuthorProfileComponent {
 	vlbAuthorFirstName: string = ""
 	vlbAuthorLastName: string = ""
 	vlbAuthorDescription: string = ""
+	vlbItemsLoading: boolean = false
 	//#endregion
 
 	//#region ProfileImageDialog
@@ -196,35 +200,7 @@ export class AuthorProfileComponent {
 					retrieveVlbAuthorResponseData.description
 
 				// Get the books of the author
-				let listVlbItemsResponse = await this.apiService.listVlbItems(
-					`
-						total
-						items {
-							id
-							title
-							coverUrl
-						}
-					`,
-					{
-						vlbAuthorUuid: this.vlbAuthorUuid
-					}
-				)
-
-				let listVlbItemsResponseData =
-					listVlbItemsResponse.data?.listVlbItems
-
-				if (listVlbItemsResponseData == null) return
-
-				for (let item of listVlbItemsResponseData.items) {
-					this.books.push({
-						uuid: item.id,
-						slug: item.id,
-						title: item.title,
-						coverContent: item.coverUrl,
-						coverBlurhash: null
-					})
-				}
-
+				await this.loadVlbAuthorItems()
 				return
 			}
 		} else if (this.dataService.userAuthor) {
@@ -279,6 +255,45 @@ export class AuthorProfileComponent {
 		await this.LoadCollections()
 		await this.LoadSeries()
 		this.loaded.emit()
+	}
+
+	async loadVlbAuthorItems() {
+		this.vlbItemsLoading = true
+
+		let listVlbItemsResponse = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					id
+					title
+					coverUrl
+				}
+			`,
+			{
+				vlbAuthorUuid: this.vlbAuthorUuid,
+				limit: maxItemsPerPage,
+				offset: (this.page - 1) * maxItemsPerPage
+			}
+		)
+
+		this.vlbItemsLoading = false
+
+		let listVlbItemsResponseData = listVlbItemsResponse.data?.listVlbItems
+		if (listVlbItemsResponseData == null) return
+
+		this.books = []
+
+		for (let item of listVlbItemsResponseData.items) {
+			this.books.push({
+				uuid: item.id,
+				slug: item.id,
+				title: item.title,
+				coverContent: item.coverUrl,
+				coverBlurhash: null
+			})
+		}
+
+		this.pages = Math.floor(listVlbItemsResponseData.total / maxItemsPerPage)
 	}
 
 	@HostListener("window:resize")
@@ -811,5 +826,13 @@ export class AuthorProfileComponent {
 		this.facebookLink = GenerateFacebookLink(this.author.facebookUsername)
 		this.instagramLink = GenerateInstagramLink(this.author.instagramUsername)
 		this.twitterLink = GenerateTwitterLink(this.author.twitterUsername)
+	}
+
+	pageChange(page: number) {
+		this.page = page
+		this.router.navigate([], {
+			queryParams: { page }
+		})
+		this.loadVlbAuthorItems()
 	}
 }
