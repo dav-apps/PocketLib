@@ -133,7 +133,11 @@ export class PublisherProfileComponent {
 			const queryParams = this.activatedRoute.snapshot.queryParamMap
 
 			if (queryParams.has("page")) {
-				this.page = +queryParams.get("page")
+				this.page = Number(queryParams.get("page"))
+
+				if (this.publisherMode == PublisherMode.VlbPublisher) {
+					this.loadVlbPublisherItems()
+				}
 			} else {
 				this.page = 1
 			}

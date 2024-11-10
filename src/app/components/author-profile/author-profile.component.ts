@@ -6,7 +6,7 @@ import {
 	HostListener,
 	ViewChild
 } from "@angular/core"
-import { Router } from "@angular/router"
+import { Router, ActivatedRoute } from "@angular/router"
 import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -140,10 +140,28 @@ export class AuthorProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private router: Router
+		private router: Router,
+		private activatedRoute: ActivatedRoute
 	) {
 		this.locale = this.dataService.GetLocale().authorProfile
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
+
+		this.activatedRoute.url.subscribe(() => {
+			let urlSegments = this.activatedRoute.snapshot.url
+			if (urlSegments.length == 0) return
+
+			const queryParams = this.activatedRoute.snapshot.queryParamMap
+
+			if (queryParams.has("page")) {
+				this.page = Number(queryParams.get("page"))
+
+				if (this.authorMode == AuthorMode.VlbAuthor) {
+					this.loadVlbAuthorItems()
+				}
+			} else {
+				this.page = 1
+			}
+		})
 	}
 
 	async ngOnInit() {
