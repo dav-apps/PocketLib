@@ -28,7 +28,8 @@ import {
 	CheckoutSessionResource,
 	VlbItemResource,
 	VlbPublisherResource,
-	VlbAuthorResource
+	VlbAuthorResource,
+	VlbCollectionResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -1819,6 +1820,46 @@ export class ApiService {
 			await renewSession()
 
 			return await this.retrieveVlbAuthor(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbCollection
+	async retrieveVlbCollection(
+		queryData: string,
+		variables: {
+			uuid: string
+		}
+	): Promise<
+		ApolloQueryResult<{ retrieveVlbCollection: VlbCollectionResource }>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbCollection: VlbCollectionResource
+			}>({
+				query: gql`
+					query RetrieveVlbCollection($uuid: String!) {
+						retrieveVlbCollection(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbCollection(queryData, variables)
 		}
 
 		return result
