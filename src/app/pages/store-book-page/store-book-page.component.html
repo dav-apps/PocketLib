@@ -138,7 +138,7 @@
 			type="series"
 			[headline]="seriesHeadline"
 			[series]="seriesUuid"
-			[currentBookUuid]="uuid"
+			[currentBookUuid]="slug"
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
 	</div>
@@ -149,7 +149,7 @@
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[headline]="moreBooksHeadline"
-			[currentBookUuid]="uuid"
+			[currentBookUuid]="slug"
 			[categories]="categoryKeys"
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
@@ -162,7 +162,7 @@
 		<pocketlib-horizontal-book-list
 			type="collection"
 			[headline]="collection.title"
-			[currentBookUuid]="uuid"
+			[currentBookUuid]="slug"
 			[collectionId]="collection.id"
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
