@@ -272,10 +272,7 @@ export interface VlbItemResource {
 	publisher?: VlbPublisherResource
 	author?: VlbAuthorResource
 	coverUrl?: string
-	collections: {
-		id: string
-		title: string
-	}[]
+	collections: VlbCollectionResource[]
 }
 
 export interface VlbPublisherResource {
@@ -291,6 +288,12 @@ export interface VlbAuthorResource {
 	firstName: string
 	lastName: string
 	description?: string
+}
+
+export interface VlbCollectionResource {
+	uuid: string
+	slug: string
+	title: string
 }
 //#endregion
 

@@ -20,7 +20,7 @@ import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
 import { environment } from "src/environments/environment"
 import { GetStoreBookStatusByString } from "src/app/misc/utils"
-import { ApiResponse, StoreBookStatus } from "src/app/misc/types"
+import { ApiResponse, StoreBookStatus, VlbCollectionResource } from "src/app/misc/types"
 import { enUS } from "src/locales/locales"
 
 @Component({
@@ -58,10 +58,7 @@ export class StoreBookPageComponent {
 	//#endregion
 
 	//#region VlbItem variables
-	collections: {
-		id: string
-		title: string
-	}[] = []
+	collections: VlbCollectionResource[] = []
 	//#endregion
 
 	//#region Cover variables
@@ -176,7 +173,8 @@ export class StoreBookPageComponent {
 				}
 				coverUrl
 				collections {
-					id
+					uuid
+					slug
 					title
 				}
 			`,
@@ -209,7 +207,8 @@ export class StoreBookPageComponent {
 
 		for (let collection of responseData.collections) {
 			this.collections.push({
-				id: collection.id,
+				uuid: collection.uuid,
+				slug: collection.slug,
 				title: this.locale.moreOfSeries.replace("{0}", collection.title)
 			})
 		}
