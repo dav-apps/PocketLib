@@ -165,7 +165,10 @@ export class StoreBookPageComponent {
 				title
 				description
 				price
-				publisher
+				publisher {
+					id
+					name
+				}
 				author {
 					slug
 					firstName
@@ -200,6 +203,8 @@ export class StoreBookPageComponent {
 			.misc.bookCoverAlt.replace("{0}", this.title)
 		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
 		this.authorSlug = responseData.author?.slug
+		this.publisherSlug = responseData.publisher?.id
+		this.publisherName = responseData.publisher?.name
 		this.collections = []
 
 		for (let collection of responseData.collections) {

@@ -268,13 +268,19 @@ export interface VlbItemResource {
 	title: string
 	description?: string
 	price: number
-	publisher: string
+	publisher?: VlbPublisherResource
 	author?: VlbAuthorResource
 	coverUrl?: string
 	collections: {
 		id: string
 		title: string
 	}[]
+}
+
+export interface VlbPublisherResource {
+	id: string
+	name: string
+	url: string
 }
 
 export interface VlbAuthorResource {

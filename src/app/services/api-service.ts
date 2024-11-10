@@ -27,6 +27,7 @@ import {
 	BookResource,
 	CheckoutSessionResource,
 	VlbItemResource,
+	VlbPublisherResource,
 	VlbAuthorResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
@@ -1695,6 +1696,7 @@ export class ApiService {
 		variables: {
 			random?: boolean
 			collectionId?: string
+			vlbPublisherId?: string
 			vlbAuthorUuid?: string
 			limit?: number
 			offset?: number
@@ -1708,6 +1710,7 @@ export class ApiService {
 					query ListVlbItems(
 						$random: Boolean
 						$collectionId: String
+						$vlbPublisherId: String
 						$vlbAuthorUuid: String
 						$limit: Int
 						$offset: Int
@@ -1715,6 +1718,7 @@ export class ApiService {
 						listVlbItems(
 							random: $random
 							collectionId: $collectionId
+							vlbPublisherId: $vlbPublisherId
 							vlbAuthorUuid: $vlbAuthorUuid
 							limit: $limit
 							offset: $offset
@@ -1737,6 +1741,46 @@ export class ApiService {
 			await renewSession()
 
 			return await this.listVlbItems(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbPublisher
+	async retrieveVlbPublisher(
+		queryData: string,
+		variables: {
+			id: string
+		}
+	): Promise<
+		ApolloQueryResult<{ retrieveVlbPublisher: VlbPublisherResource }>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbPublisher: VlbPublisherResource
+			}>({
+				query: gql`
+					query RetrieveVlbPublisher($id: String!) {
+						retrieveVlbPublisher(id: $id) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbPublisher(queryData, variables)
 		}
 
 		return result
