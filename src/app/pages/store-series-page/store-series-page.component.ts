@@ -9,6 +9,7 @@ import { RoutingService } from "src/app/services/routing-service"
 	styleUrl: "./store-series-page.component.scss"
 })
 export class StoreSeriesPageComponent {
+	uuid: string = ""
 	slug: string = ""
 	title: string = ""
 
@@ -27,6 +28,7 @@ export class StoreSeriesPageComponent {
 		let retrieveVlbCollectionResponse =
 			await this.apiService.retrieveVlbCollection(
 				`
+					uuid
 					title
 				`,
 				{ uuid: this.slug }
@@ -41,6 +43,24 @@ export class StoreSeriesPageComponent {
 			return
 		}
 
+		this.uuid = retrieveVlbCollectionResponseData.uuid
 		this.title = retrieveVlbCollectionResponseData.title
+
+		let listVlbItemsResponse = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					id
+					title
+					coverUrl
+				}
+			`,
+			{ vlbCollectionUuid: this.uuid }
+		)
+
+		let listVlbItemsResponseData = listVlbItemsResponse.data?.listVlbItems
+		if (listVlbItemsResponse == null) return
+
+		console.log(listVlbItemsResponseData)
 	}
 }

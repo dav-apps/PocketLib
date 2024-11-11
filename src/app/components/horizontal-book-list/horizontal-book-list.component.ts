@@ -195,7 +195,7 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				collectionId: this.collectionId,
+				vlbCollectionUuid: this.collectionId,
 				limit: this.maxItems
 			}
 		)
