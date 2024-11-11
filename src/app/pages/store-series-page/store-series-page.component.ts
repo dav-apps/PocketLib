@@ -44,9 +44,15 @@ export class StoreSeriesPageComponent {
 
 		this.activatedRoute.url.subscribe(() => {
 			const queryParams = this.activatedRoute.snapshot.queryParamMap
+			let previousPage = this.page
 
 			if (queryParams.has("page")) {
 				this.page = Number(queryParams.get("page"))
+			} else {
+				this.page = 1
+			}
+
+			if (this.page != previousPage) {
 				this.loadBooks()
 			}
 		})
