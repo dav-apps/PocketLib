@@ -1,1 +1,34 @@
-<h1>{{ title }}</h1>
+<div class="container slide-up-in">
+	<div class="header-container">
+		<dav-header backButtonVisible (backButtonClick)="backButtonClick()">
+			{{ title }}
+		</dav-header>
+	</div>
+
+	@if (loading) {
+	<div class="progress-ring-container">
+		<dav-progress-ring size="28"></dav-progress-ring>
+	</div>
+	} @else {
+	<div class="list-container">
+		@for (book of books; track book.id) {
+		<a class="book-card" [routerLink]="'/store/book/' + book.id">
+			<dav-blurhash-image
+				[src]="book.coverUrl"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
+				[title]="book.title"
+				height="255"
+			></dav-blurhash-image>
+		</a>
+		}
+	</div>
+	} @if (pages > 1 && !loading) {
+	<div class="pagination-container">
+		<dav-pagination
+			[pages]="pages"
+			[currentPage]="page"
+			(pageChange)="pageChange($event.detail.page)"
+		></dav-pagination>
+	</div>
+	}
+</div>

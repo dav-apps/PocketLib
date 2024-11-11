@@ -108,6 +108,7 @@ import { StorePublisherPageComponent } from "./pages/store-publisher-page/store-
 import { StoreAuthorPageComponent } from "./pages/store-author-page/store-author-page.component"
 import { StoreBookPageComponent } from "./pages/store-book-page/store-book-page.component"
 import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-page.component"
+import { StoreSeriesPageComponent } from "./pages/store-series-page/store-series-page.component"
 
 @NgModule({
 	declarations: [
@@ -186,7 +187,8 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		StorePublisherPageComponent,
 		StoreAuthorPageComponent,
 		StoreBookPageComponent,
-		StoreBooksPageComponent
+		StoreBooksPageComponent,
+		StoreSeriesPageComponent
 	],
 	bootstrap: [AppComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

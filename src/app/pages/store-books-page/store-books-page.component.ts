@@ -183,9 +183,4 @@ export class StoreBooksPageComponent {
 		this.router.navigate([], { queryParams: { page } })
 		this.UpdateView()
 	}
-
-	bookItemClick(event: Event, bookItem: BookItem) {
-		event.preventDefault()
-		this.router.navigate(["store", "book", bookItem.uuid])
-	}
 }
