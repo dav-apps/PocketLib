@@ -332,8 +332,12 @@ export class HorizontalBookListComponent {
 	}
 
 	moreButtonClick() {
-		if (this.categories.length == 0) return
+		if (this.type == "categories") {
+			if (this.categories.length == 0) return
 
-		this.router.navigate(["store", "category", this.categories[0]])
+			this.router.navigate(["store", "category", this.categories[0]])
+		} else if (this.type == "collection") {
+			this.router.navigate(["store", "series", this.collectionId])
+		}
 	}
 }
