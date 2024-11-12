@@ -29,11 +29,11 @@
 	<div class="navbar-spacer"></div>
 
 	<div class="navbar-icon-buttons-container">
-		<dav-icon-button (click)="searchButtonClick()">
+		@if (!dataService.isMobile) {
+		<dav-icon-button [selected]="searchTabActive" (click)="navigateToSearchPage()">
 			<fa-icon [icon]="faMagnifyingGlassRegular"></fa-icon>
 		</dav-icon-button>
-
-		@if (dataService.userAuthor || dataService.userIsAdmin) {
+		} @if (dataService.userAuthor || dataService.userIsAdmin) {
 		<dav-icon-button (click)="navigateToAuthorPage()">
 			@if (!authorButtonSelected) {
 			<fa-icon [icon]="faAddressCardLight"></fa-icon>
@@ -133,56 +133,3 @@
 } @if (dataService.simpleLoadingScreenVisible) {
 <pocketlib-simple-loading-screen></pocketlib-simple-loading-screen>
 }
-
-<dav-search
-	#search
-	[placeholder]="locale.search.placeholder"
-	[visible]="searchVisible"
-	[noResults]="
-		searchQuery.length > 0 &&
-		librarySearchResultItems.length == 0 &&
-		storeSearchResultItems.length == 0 &&
-		!storeSearchLoading
-	"
-	[noResultsMessage]="locale.search.noResultsMessage"
-	(change)="searchChange($event)"
-	(dismiss)="searchVisible = false"
->
-	<dav-list>
-		@if (librarySearchResultItems.length > 0) {
-		<h3 class="search-result-headline">
-			{{ locale.search.libraryHeadline }}
-		</h3>
-		} @for (book of librarySearchResultItems; track book.uuid) {
-		<dav-list-item
-			[imageSrc]="book.cover"
-			[imageFallbackSrc]="dataService.defaultStoreBookCover"
-			[headline]="book.title"
-			[subhead]="book.author"
-			(click)="navigateToBook(book)"
-		></dav-list-item>
-		} @if ((storeSearchLoading && librarySearchResultItems.length > 0) ||
-		(librarySearchResultItems.length > 0 && storeSearchResultItems.length >
-		0)) {
-		<h3 class="search-result-headline store-search-result-headline">
-			{{ locale.search.storeHeadline }}
-		</h3>
-		} @if (storeSearchLoading) {
-		<div class="store-results-progress-ring-container">
-			<dav-progress-ring
-				indeterminate
-				size="24"
-				[color]="dataService.darkTheme ? 'white' : 'black'"
-			></dav-progress-ring>
-		</div>
-		} @for (book of storeSearchResultItems; track book.uuid) {
-		<dav-list-item
-			[imageSrc]="book.cover"
-			[imageFallbackSrc]="dataService.defaultStoreBookCover"
-			[headline]="book.title"
-			[subhead]="book.author"
-			(click)="navigateToStoreBook(book)"
-		></dav-list-item>
-		}
-	</dav-list>
-</dav-search>

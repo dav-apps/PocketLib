@@ -494,13 +494,6 @@ const enDefaults = {
 		},
 		library: "Library",
 		store: "Store",
-		search: {
-			label: "Search",
-			placeholder: "Search for books",
-			noResultsMessage: "No books found",
-			libraryHeadline: "From your library",
-			storeHeadline: "More books"
-		},
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
 		authorProfileImageAlt: "The profile image of the author {0}"
@@ -1017,13 +1010,6 @@ const deDefaults = {
 		},
 		library: "Bibliothek",
 		store: "Store",
-		search: {
-			label: "Suche",
-			placeholder: "Suche nach Büchern",
-			noResultsMessage: "Keine Bücher gefunden",
-			libraryHeadline: "Aus deiner Bibliothek",
-			storeHeadline: "Weitere Bücher"
-		},
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
 		authorProfileImageAlt: "Das Profilbild des Autors {0}"

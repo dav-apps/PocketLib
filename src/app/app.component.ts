@@ -30,7 +30,6 @@ import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "./services/dav-api-service"
-import { RoutingService } from "src/app/services/routing-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
@@ -42,13 +41,6 @@ import {
 } from "src/constants/constants"
 import { environment } from "src/environments/environment"
 import { enUS } from "src/locales/locales"
-
-interface StoreBookSearchItem {
-	uuid: string
-	title: string
-	author: string
-	cover: string
-}
 
 @Component({
 	selector: "app-root",
@@ -70,26 +62,17 @@ export class AppComponent {
 	faMagnifyingGlassRegular = faMagnifyingGlassRegular
 	@ViewChild("contentContainer")
 	contentContainer: ElementRef<HTMLDivElement>
-	@ViewChild("search")
-	search: ElementRef<DavUIComponents.Search>
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
 	searchTabActive: boolean = false
 	authorButtonSelected: boolean = false
 	accountButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
-	searchVisible: boolean = false
-	searchQuery: string = ""
-	librarySearchResultItems: EpubBook[] = []
-	storeSearchResultItems: StoreBookSearchItem[] = []
-	listStoreBooksPromiseKey: number = 0
-	storeSearchLoading: boolean = false
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private davApiService: DavApiService,
-		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
@@ -243,97 +226,8 @@ export class AppComponent {
 		}
 
 		// Open the book on the book page
-		this.searchVisible = false
 		this.dataService.currentBook = book
 		this.router.navigate(["book"])
-
-		setTimeout(() => {
-			this.search.nativeElement.clearSearchQuery()
-		}, 500)
-	}
-
-	navigateToStoreBook(book: StoreBookSearchItem) {
-		this.searchVisible = false
-		this.router.navigate(["store", "book", book.uuid])
-
-		setTimeout(() => {
-			this.search.nativeElement.clearSearchQuery()
-		}, 500)
-	}
-
-	async searchChange(event: CustomEvent) {
-		this.searchQuery = event.detail.value.toLowerCase()
-		this.librarySearchResultItems = []
-		this.storeSearchResultItems = []
-
-		if (this.searchQuery.length > 0) {
-			// Search books in the library
-			for (let book of this.dataService.books) {
-				if (this.librarySearchResultItems.length >= 3) break
-				if (!(book instanceof EpubBook)) continue
-
-				if (
-					book.title.toLowerCase().includes(this.searchQuery) ||
-					book.author.toLowerCase().includes(this.searchQuery)
-				) {
-					this.librarySearchResultItems.push(book)
-				}
-			}
-
-			// Search books on the API
-			this.storeSearchLoading = true
-
-			let searchQueryCopy = this.searchQuery
-			await new Promise(resolve => setTimeout(resolve, 500))
-
-			// Load the books if the query is still the same
-			if (this.searchQuery != searchQueryCopy) return
-
-			let promiseKey = Math.random()
-			this.listStoreBooksPromiseKey = promiseKey
-
-			let response = await this.apiService.listStoreBooks(
-				`
-					total
-					items {
-						uuid
-						title
-						collection {
-							author {
-								firstName
-								lastName
-							}
-						}
-						cover {
-							url
-						}
-					}
-				`,
-				{ query: this.searchQuery }
-			)
-
-			if (
-				response.data != null &&
-				this.listStoreBooksPromiseKey == promiseKey
-			) {
-				let responseData = response.data.listStoreBooks
-
-				for (let item of responseData.items) {
-					this.storeSearchResultItems.push({
-						uuid: item.uuid,
-						title: item.title,
-						author: `${item.collection.author.firstName} ${item.collection.author.lastName}`,
-						cover: item.cover.url
-					})
-				}
-
-				this.storeSearchLoading = false
-			}
-		}
-	}
-
-	searchButtonClick() {
-		this.searchVisible = true
 	}
 
 	setupApollo(accessToken: string) {
