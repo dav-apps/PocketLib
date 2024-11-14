@@ -190,36 +190,6 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
-			} else {
-				// VlbAuthor
-				let retrieveVlbAuthorResponse =
-					await this.apiService.retrieveVlbAuthor(
-						`
-							uuid
-							slug
-							firstName
-							lastName
-							description
-						`,
-						{ uuid: this.slug }
-					)
-
-				let retrieveVlbAuthorResponseData =
-					retrieveVlbAuthorResponse.data?.retrieveVlbAuthor
-
-				if (retrieveVlbAuthorResponseData == null) return
-
-				this.authorMode = AuthorMode.VlbAuthor
-				this.vlbAuthorUuid = retrieveVlbAuthorResponseData.uuid
-				this.vlbAuthorSlug = retrieveVlbAuthorResponseData.slug
-				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
-				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
-				this.vlbAuthorDescription =
-					retrieveVlbAuthorResponseData.description
-
-				// Get the books of the author
-				await this.loadVlbAuthorItems()
-				return
 			}
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser
@@ -241,8 +211,38 @@ export class AuthorProfileComponent {
 		if (author == null && this.storeContext) {
 			this.authorMode = AuthorMode.Normal
 
-			// Get the author from the server
-			await this.LoadAuthor()
+			// VlbAuthor
+			let retrieveVlbAuthorResponse =
+				await this.apiService.retrieveVlbAuthor(
+					`
+						uuid
+						slug
+						firstName
+						lastName
+						description
+					`,
+					{ uuid: this.slug }
+				)
+
+			let retrieveVlbAuthorResponseData =
+				retrieveVlbAuthorResponse.data?.retrieveVlbAuthor
+
+			if (retrieveVlbAuthorResponseData == null) {
+				// Get the author from the server
+				await this.LoadAuthor()
+			} else {
+				this.authorMode = AuthorMode.VlbAuthor
+				this.vlbAuthorUuid = retrieveVlbAuthorResponseData.uuid
+				this.vlbAuthorSlug = retrieveVlbAuthorResponseData.slug
+				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
+				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
+				this.vlbAuthorDescription =
+					retrieveVlbAuthorResponseData.description
+
+				// Get the books of the author
+				await this.loadVlbAuthorItems()
+				return
+			}
 		} else if (author == null) {
 			return
 		}
