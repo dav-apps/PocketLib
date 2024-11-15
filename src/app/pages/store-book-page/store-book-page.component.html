@@ -29,41 +29,39 @@
 				></dav-blurhash-image>
 			</div>
 
-			@if (bookSource == "pocketlib") {
-			<dav-profile-card
-				class="author-profile-card"
-				[imageSrc]="authorProfileImageContent"
-				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
-				[imageBlurhash]="authorProfileImageBlurhash"
-				[name]="authorName"
-				[href]="'/store/author/' + authorSlug"
-				(click)="authorProfileCardClick($event)"
-			></dav-profile-card>
-			} @else if (bookSource == "vlb") { @if (authorSlug != null) {
-			<dav-profile-card
-				class="author-profile-card"
-				[name]="authorName"
-				[href]="'/store/author/' + authorSlug"
-				(click)="authorProfileCardClick($event)"
-			></dav-profile-card>
-			} @if (publisherSlug != null) {
-			<dav-profile-card
-				class="publisher-profile-card"
-				[name]="publisherName"
-				[href]="'/store/publisher/' + publisherSlug"
-				(click)="publisherProfileCardClick($event)"
-			></dav-profile-card>
-			} } @if (publisherName && bookSource == "pocketlib") {
-			<dav-profile-card
-				class="publisher-profile-card"
-				[imageSrc]="publisherLogoContent"
-				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
-				[imageBlurhash]="publisherLogoBlurhash"
-				[name]="publisherName"
-				[href]="'/store/publisher/' + publisherSlug"
-				(click)="publisherProfileCardClick($event)"
-			></dav-profile-card>
-			}
+			<div class="profile-cards-container">
+				@if (bookSource == "pocketlib") {
+				<dav-profile-card
+					[imageSrc]="authorProfileImageContent"
+					[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+					[imageBlurhash]="authorProfileImageBlurhash"
+					[name]="authorName"
+					[href]="'/store/author/' + authorSlug"
+					(click)="authorProfileCardClick($event)"
+				></dav-profile-card>
+				} @else if (bookSource == "vlb") { @if (authorSlug.length > 0) {
+				<dav-profile-card
+					[name]="authorName"
+					[href]="'/store/author/' + authorSlug"
+					(click)="authorProfileCardClick($event)"
+				></dav-profile-card>
+				} @if (publisherSlug.length > 0) {
+				<dav-profile-card
+					[name]="publisherName"
+					[href]="'/store/publisher/' + publisherSlug"
+					(click)="publisherProfileCardClick($event)"
+				></dav-profile-card>
+				} } @if (publisherName && bookSource == "pocketlib") {
+				<dav-profile-card
+					[imageSrc]="publisherLogoContent"
+					[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+					[imageBlurhash]="publisherLogoBlurhash"
+					[name]="publisherName"
+					[href]="'/store/publisher/' + publisherSlug"
+					(click)="publisherProfileCardClick($event)"
+				></dav-profile-card>
+				}
+			</div>
 
 			<!-- Price label -->
 			@if (bookSource == "vlb") {

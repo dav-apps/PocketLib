@@ -199,10 +199,17 @@ export class StoreBookPageComponent {
 		this.coverAlt = this.dataService
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.title)
-		this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
-		this.authorSlug = responseData.author?.slug
-		this.publisherSlug = responseData.publisher?.id
-		this.publisherName = responseData.publisher?.name
+		
+		if (responseData.author != null) {
+			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+			this.authorSlug = responseData.author.slug
+		}
+
+		if (responseData.publisher != null) {
+			this.publisherSlug = responseData.publisher.id
+			this.publisherName = responseData.publisher.name
+		}
+
 		this.collections = []
 
 		for (let collection of responseData.collections) {
