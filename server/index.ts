@@ -121,7 +121,7 @@ export async function generateSitemap(): Promise<string> {
 
 export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 	try {
-		let response = await request<{
+		let storeBookResponse = await request<{
 			retrieveStoreBook: {
 				slug: string
 				title: string
@@ -145,23 +145,62 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 			{ uuid }
 		)
 
-		let responseData = response.retrieveStoreBook
+		let storeBookResponseData = storeBookResponse.retrieveStoreBook
 
-		return {
-			html: getHtml({
-				title: responseData.title,
-				description: responseData.description,
-				imageUrl: responseData.cover?.url,
-				url: `${websiteUrl}/store/book/${responseData.slug}`
-			}),
-			status: 200
+		if (storeBookResponseData != null) {
+			return {
+				html: getHtml({
+					title: storeBookResponseData.title,
+					description: storeBookResponseData.description,
+					imageUrl: storeBookResponseData.cover?.url,
+					url: `${websiteUrl}/store/book/${storeBookResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbItemResponse = await request<{
+			retrieveVlbItem: {
+				id: string
+				title: string
+				description: string
+				coverUrl: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbItem($id: String!) {
+					retrieveVlbItem(id: $id) {
+						id
+						title
+						description
+						coverUrl
+					}
+				}
+			`,
+			{ id: uuid }
+		)
+
+		let vlbItemResponseData = vlbItemResponse.retrieveVlbItem
+
+		if (vlbItemResponseData != null) {
+			return {
+				html: getHtml({
+					title: vlbItemResponseData.title,
+					description: vlbItemResponseData.description,
+					imageUrl: vlbItemResponseData.coverUrl,
+					url: `${websiteUrl}/store/book/${vlbItemResponseData.id}`
+				}),
+				status: 200
+			}
 		}
 	} catch (error) {
 		console.error(error)
-		return {
-			html: getHtml(),
-			status: 404
-		}
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
@@ -169,7 +208,7 @@ export async function prepareStoreAuthorPage(
 	uuid: string
 ): Promise<PageResult> {
 	try {
-		let response = await request<{
+		let authorResponse = await request<{
 			retrieveAuthor: {
 				slug: string
 				firstName: string
@@ -197,23 +236,61 @@ export async function prepareStoreAuthorPage(
 			{ uuid }
 		)
 
-		let responseData = response.retrieveAuthor
+		let authorResponseData = authorResponse.retrieveAuthor
 
-		return {
-			html: getHtml({
-				title: `${responseData.firstName} ${responseData.lastName}`,
-				description: responseData.bio?.bio,
-				imageUrl: responseData.profileImage?.url,
-				url: `${websiteUrl}/store/author/${responseData.slug}`
-			}),
-			status: 200
+		if (authorResponseData != null) {
+			return {
+				html: getHtml({
+					title: `${authorResponseData.firstName} ${authorResponseData.lastName}`,
+					description: authorResponseData.bio?.bio,
+					imageUrl: authorResponseData.profileImage?.url,
+					url: `${websiteUrl}/store/author/${authorResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbAuthorResponse = await request<{
+			retrieveVlbAuthor: {
+				slug: string
+				firstName: string
+				lastName: string
+				description: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbAuthor($uuid: String!) {
+					retrieveVlbAuthor(uuid: $uuid) {
+						slug
+						firstName
+						lastName
+						description
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let vlbAuthorResponseData = vlbAuthorResponse.retrieveVlbAuthor
+
+		if (vlbAuthorResponseData != null) {
+			return {
+				html: getHtml({
+					title: `${vlbAuthorResponseData.firstName} ${vlbAuthorResponseData.lastName}`,
+					description: vlbAuthorResponseData.description,
+					url: `${websiteUrl}/store/author/${vlbAuthorResponseData.slug}`
+				}),
+				status: 200
+			}
 		}
 	} catch (error) {
 		console.error(error)
-		return {
-			html: getHtml(),
-			status: 404
-		}
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
@@ -221,7 +298,7 @@ export async function prepareStorePublisherPage(
 	uuid: string
 ): Promise<PageResult> {
 	try {
-		let response = await request<{
+		let publisherResponse = await request<{
 			retrievePublisher: {
 				slug: string
 				name: string
@@ -245,30 +322,64 @@ export async function prepareStorePublisherPage(
 			{ uuid }
 		)
 
-		let responseData = response.retrievePublisher
+		let publisherResponseData = publisherResponse.retrievePublisher
 
-		return {
-			html: getHtml({
-				title: responseData.name,
-				description: responseData.description,
-				imageUrl: responseData.logo?.url,
-				url: `${websiteUrl}/store/publisher/${responseData.slug}`
-			}),
-			status: 200
+		if (publisherResponseData != null) {
+			return {
+				html: getHtml({
+					title: publisherResponseData.name,
+					description: publisherResponseData.description,
+					imageUrl: publisherResponseData.logo?.url,
+					url: `${websiteUrl}/store/publisher/${publisherResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbPublisherResponse = await request<{
+			retrieveVlbPublisher: {
+				id: string
+				name: string
+				url: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbPublisher($id: String!) {
+					retrieveVlbPublisher(id: $id) {
+						name
+					}
+				}
+			`,
+			{ id: uuid }
+		)
+
+		let vlbPublisherResponseData = vlbPublisherResponse.retrieveVlbPublisher
+
+		if (vlbPublisherResponseData != null) {
+			return {
+				html: getHtml({
+					title: vlbPublisherResponseData.name,
+					description: "",
+					url: `${websiteUrl}/store/publisher/${uuid}`
+				}),
+				status: 200
+			}
 		}
 	} catch (error) {
 		console.error(error)
-		return {
-			html: getHtml(),
-			status: 404
-		}
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
 function getHtml(params?: {
 	title: string
-	description: string
-	imageUrl: string
+	description?: string
+	imageUrl?: string
 	url: string
 	book?: {
 		author: {
@@ -288,19 +399,40 @@ function getHtml(params?: {
 		let head = html.querySelector("head")
 
 		let metas: { name?: string; property?: string; content: string }[] = [
-			// Other tags
-			{ name: "description", content: params.description },
 			// Twitter tags
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@dav_apps" },
 			{ name: "twitter:title", content: params.title },
-			{ name: "twitter:description", content: params.description },
-			{ name: "twitter:image", content: params.imageUrl },
 			// Open Graph tags
 			{ property: "og:title", content: params.title },
-			{ property: "og:image", content: params.imageUrl },
 			{ property: "og:url", content: params.url }
 		]
+
+		if (params.description != null) {
+			metas.push(
+				{
+					name: "description",
+					content: params.description
+				},
+				{
+					name: "twitter:description",
+					content: params.description
+				}
+			)
+		}
+
+		if (params.imageUrl != null) {
+			metas.push(
+				{
+					name: "twitter:image",
+					content: params.imageUrl
+				},
+				{
+					property: "og:image",
+					content: params.imageUrl
+				}
+			)
+		}
 
 		if (params.book) {
 			// Open Graph book tags
