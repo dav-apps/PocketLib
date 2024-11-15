@@ -239,6 +239,7 @@
 			@for (book of books; track book.uuid) {
 			<dav-list-item
 				[imageSrc]="book.coverContent"
+				[imageFallbackSrc]="dataService.defaultStoreBookCover"
 				[imageBlurhash]="book.coverBlurhash"
 				imageAspectRatio="1:1.5"
 				[headline]="book.title"
