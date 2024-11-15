@@ -1,4 +1,7 @@
-<div class="container slide-up-in">
+<div
+	class="container slide-up-in"
+	[class.compact]="authorMode == 3 && vlbAuthorDescription.length == 0"
+>
 	<div class="author-panel">
 		@if (authorMode != 3) {
 		<div class="profile-image-container">

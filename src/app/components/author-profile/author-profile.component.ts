@@ -237,7 +237,7 @@ export class AuthorProfileComponent {
 				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
 				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
 				this.vlbAuthorDescription =
-					retrieveVlbAuthorResponseData.description
+					retrieveVlbAuthorResponseData.description ?? ""
 
 				// Get the books of the author
 				await this.loadVlbAuthorItems()
