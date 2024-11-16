@@ -1659,7 +1659,7 @@ export class ApiService {
 	async retrieveVlbItem(
 		queryData: string,
 		variables: {
-			id: string
+			uuid: string
 		}
 	): Promise<ApolloQueryResult<{ retrieveVlbItem: VlbItemResource }>> {
 		let result = await this.apollo
@@ -1667,8 +1667,8 @@ export class ApiService {
 				retrieveVlbItem: VlbItemResource
 			}>({
 				query: gql`
-					query RetrieveVlbItem($id: String!) {
-						retrieveVlbItem(id: $id) {
+					query RetrieveVlbItem($uuid: String!) {
+						retrieveVlbItem(uuid: $uuid) {
 							${queryData}
 						}
 					}

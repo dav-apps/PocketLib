@@ -188,7 +188,8 @@ export class HorizontalBookListComponent {
 			`
 				total
 				items {
-					id
+					uuid
+					slug
 					title
 					description
 					coverUrl
@@ -217,7 +218,8 @@ export class HorizontalBookListComponent {
 				`
 					total
 					items {
-						id
+						uuid
+						slug
 						title
 						description
 						coverUrl
@@ -275,7 +277,7 @@ export class HorizontalBookListComponent {
 			return
 		}
 
-		if ("uuid" in books[0]) {
+		if (books[0].__typename == "StoreBook") {
 			// books is StoreBookResource[]
 			for (let book of books) {
 				let storeBook = book as StoreBookResource
@@ -317,8 +319,8 @@ export class HorizontalBookListComponent {
 				if (vlbItem.coverUrl == null) continue
 
 				this.books.push({
-					uuid: vlbItem.id,
-					slug: vlbItem.id,
+					uuid: vlbItem.uuid,
+					slug: vlbItem.slug,
 					title: vlbItem.title,
 					coverContent: vlbItem.coverUrl,
 					coverBlurhash: null,

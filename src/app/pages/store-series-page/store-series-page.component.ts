@@ -5,7 +5,8 @@ import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 
 interface BookItem {
-	id: string
+	uuid: string
+	slug: string
 	coverUrl: string
 	title: string
 }
@@ -91,7 +92,8 @@ export class StoreSeriesPageComponent {
 			`
 				total
 				items {
-					id
+					uuid
+					slug
 					title
 					coverUrl
 				}
@@ -115,7 +117,8 @@ export class StoreSeriesPageComponent {
 
 		for (let book of listVlbItemsResponseData.items) {
 			this.books.push({
-				id: book.id,
+				uuid: book.uuid,
+				slug: book.slug,
 				coverUrl: book.coverUrl,
 				title: book.title
 			})

@@ -24,9 +24,10 @@
 
 	<div class="list-container">
 		<dav-list>
-			@for (book of books; track book.id) {
+			@for (book of books; track book.uuid) {
 			<dav-list-item
 				[imageSrc]="book.coverUrl"
+				[imageFallbackSrc]="dataService.defaultStoreBookCover"
 				[headline]="book.title"
 				[subhead]="book.author"
 				size="lg"

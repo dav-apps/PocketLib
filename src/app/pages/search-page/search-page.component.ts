@@ -5,7 +5,8 @@ import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 
 interface BookItem {
-	id: string
+	uuid: string
+	slug: string
 	title: string
 	author: string
 	coverUrl: string
@@ -81,7 +82,8 @@ export class SearchPageComponent {
 					total
 					items {
 						... on VlbItem {
-							id
+							uuid
+							slug
 							title
 							coverUrl
 							author {
@@ -100,13 +102,14 @@ export class SearchPageComponent {
 
 			for (let item of result.data.search.items) {
 				this.books.push({
-					id: item.id,
+					uuid: item.uuid,
+					slug: item.slug,
 					title: item.title,
 					author: item.author
 						? `${item.author.firstName} ${item.author.lastName}`
 						: "",
 					coverUrl: item.coverUrl,
-					href: `/store/book/${item.id}`
+					href: `/store/book/${item.slug}`
 				})
 			}
 
@@ -124,6 +127,6 @@ export class SearchPageComponent {
 
 	bookItemClick(event: Event, book: BookItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "book", book.id])
+		this.router.navigate(["store", "book", book.slug])
 	}
 }

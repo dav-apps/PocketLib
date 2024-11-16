@@ -140,14 +140,11 @@ export class StoreBookPageComponent {
 	}
 
 	async Init() {
-		if (this.slug.includes("-")) {
+		this.bookSource = "vlb"
+		
+		if (!await this.loadVlbItemData()) {
 			this.bookSource = "pocketlib"
-
-			// Get StoreBook, StoreBookCollection and Author
 			await this.LoadStoreBookData()
-		} else {
-			this.bookSource = "vlb"
-			await this.loadVlbItemData()
 		}
 	}
 
@@ -155,10 +152,10 @@ export class StoreBookPageComponent {
 		this.routingService.NavigateBack("/store")
 	}
 
-	async loadVlbItemData() {
+	async loadVlbItemData(): Promise<boolean> {
 		let response = await this.apiService.retrieveVlbItem(
 			`
-				id
+				uuid
 				title
 				description
 				price
@@ -179,14 +176,16 @@ export class StoreBookPageComponent {
 				}
 			`,
 			{
-				id: this.slug
+				uuid: this.slug
 			}
 		)
 
 		let responseData = response.data.retrieveVlbItem
+		if (responseData == null) return false
+
 		this.dataService.simpleLoadingScreenVisible = this.redirectToCheckout
 
-		this.uuid = responseData.id
+		this.uuid = responseData.uuid
 		this.title = responseData.title
 		this.description = responseData.description
 		this.price = responseData.price
@@ -199,7 +198,7 @@ export class StoreBookPageComponent {
 		this.coverAlt = this.dataService
 			.GetLocale()
 			.misc.bookCoverAlt.replace("{0}", this.title)
-		
+
 		if (responseData.author != null) {
 			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
 			this.authorSlug = responseData.author.slug
@@ -224,11 +223,14 @@ export class StoreBookPageComponent {
 			// Navigate to the checkout page
 			this.Order()
 		}
+
+		return true
 	}
 
 	async LoadStoreBookData() {
 		let response = await this.apiService.retrieveStoreBook(
 			`
+				uuid
 				collection {
 					uuid
 					author {

@@ -249,7 +249,8 @@ export class PublisherProfileComponent {
 			`
 				total
 				items {
-					id
+					uuid
+					slug
 					title
 					coverUrl
 				}
@@ -270,8 +271,8 @@ export class PublisherProfileComponent {
 
 		for (let item of listVlbItemsResponseData.items) {
 			this.books.push({
-				uuid: item.id,
-				slug: item.id,
+				uuid: item.uuid,
+				slug: item.slug,
 				title: item.title,
 				coverContent: item.coverUrl,
 				coverBlurhash: null

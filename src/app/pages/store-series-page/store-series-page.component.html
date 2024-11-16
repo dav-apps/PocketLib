@@ -11,8 +11,8 @@
 	</div>
 	} @else {
 	<div class="list-container">
-		@for (book of books; track book.id) {
-		<a class="book-card" [routerLink]="'/store/book/' + book.id">
+		@for (book of books; track book.uuid) {
+		<a class="book-card" [routerLink]="'/store/book/' + book.slug">
 			<dav-blurhash-image
 				[src]="book.coverUrl"
 				[fallbackSrc]="dataService.defaultStoreBookCover"

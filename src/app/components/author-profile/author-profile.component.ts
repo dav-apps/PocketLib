@@ -281,7 +281,8 @@ export class AuthorProfileComponent {
 			`
 				total
 				items {
-					id
+					uuid
+					slug
 					title
 					coverUrl
 				}
@@ -302,8 +303,8 @@ export class AuthorProfileComponent {
 
 		for (let item of listVlbItemsResponseData.items) {
 			this.books.push({
-				uuid: item.id,
-				slug: item.id,
+				uuid: item.uuid,
+				slug: item.slug,
 				title: item.title,
 				coverContent: item.coverUrl,
 				coverBlurhash: null
@@ -583,7 +584,7 @@ export class AuthorProfileComponent {
 
 	bookItemClick(event: Event, book: BookListItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "book", book.uuid])
+		this.router.navigate(["store", "book", book.slug])
 	}
 
 	collectionItemClick(event: Event, collection: CollectionItem) {

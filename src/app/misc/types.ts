@@ -175,6 +175,7 @@ export interface StoreBookSeriesResource {
 }
 
 export interface StoreBookResource {
+	__typename: "StoreBook"
 	uuid: string
 	collection: StoreBookCollectionResource
 	slug: string
@@ -264,7 +265,8 @@ export interface CheckoutSessionResource {
 
 export interface VlbItemResource {
 	__typename: "VlbItem"
-	id: string
+	uuid: string
+	slug: string
 	isbn: string
 	title: string
 	description?: string
