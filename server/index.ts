@@ -161,7 +161,7 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 
 		let vlbItemResponse = await request<{
 			retrieveVlbItem: {
-				id: string
+				slug: string
 				title: string
 				description: string
 				coverUrl: string
@@ -169,16 +169,16 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 		}>(
 			backendUrl,
 			gql`
-				query RetrieveVlbItem($id: String!) {
-					retrieveVlbItem(id: $id) {
-						id
+				query RetrieveVlbItem($uuid: String!) {
+					retrieveVlbItem(uuid: $uuid) {
+						uuid
 						title
 						description
 						coverUrl
 					}
 				}
 			`,
-			{ id: uuid }
+			{ uuid }
 		)
 
 		let vlbItemResponseData = vlbItemResponse.retrieveVlbItem
@@ -189,7 +189,7 @@ export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
 					title: vlbItemResponseData.title,
 					description: vlbItemResponseData.description,
 					imageUrl: vlbItemResponseData.coverUrl,
-					url: `${websiteUrl}/store/book/${vlbItemResponseData.id}`
+					url: `${websiteUrl}/store/book/${vlbItemResponseData.slug}`
 				}),
 				status: 200
 			}
@@ -255,7 +255,7 @@ export async function prepareStoreAuthorPage(
 				slug: string
 				firstName: string
 				lastName: string
-				description: string
+				bio: string
 			}
 		}>(
 			backendUrl,
@@ -265,7 +265,7 @@ export async function prepareStoreAuthorPage(
 						slug
 						firstName
 						lastName
-						description
+						bio
 					}
 				}
 			`,
@@ -278,7 +278,7 @@ export async function prepareStoreAuthorPage(
 			return {
 				html: getHtml({
 					title: `${vlbAuthorResponseData.firstName} ${vlbAuthorResponseData.lastName}`,
-					description: vlbAuthorResponseData.description,
+					description: vlbAuthorResponseData.bio,
 					url: `${websiteUrl}/store/author/${vlbAuthorResponseData.slug}`
 				}),
 				status: 200
