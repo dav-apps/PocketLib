@@ -1,6 +1,6 @@
 <div
 	class="container slide-up-in"
-	[class.compact]="authorMode == 3 && vlbAuthorDescription.length == 0"
+	[class.compact]="authorMode == 3 && vlbAuthorBio.length == 0"
 >
 	<div class="author-panel">
 		@if (authorMode != 3) {
@@ -72,7 +72,7 @@
 		</div>
 		} @if (authorMode == 3) {
 		<p class="bio-text">
-			{{ vlbAuthorDescription }}
+			{{ vlbAuthorBio }}
 		</p>
 		} @else {
 		<div class="bio-language-dropdown-container">

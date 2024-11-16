@@ -111,7 +111,7 @@ export class AuthorProfileComponent {
 	vlbAuthorSlug: string = ""
 	vlbAuthorFirstName: string = ""
 	vlbAuthorLastName: string = ""
-	vlbAuthorDescription: string = ""
+	vlbAuthorBio: string = ""
 	vlbItemsLoading: boolean = false
 	//#endregion
 
@@ -219,7 +219,7 @@ export class AuthorProfileComponent {
 						slug
 						firstName
 						lastName
-						description
+						bio
 					`,
 					{ uuid: this.slug }
 				)
@@ -236,8 +236,7 @@ export class AuthorProfileComponent {
 				this.vlbAuthorSlug = retrieveVlbAuthorResponseData.slug
 				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
 				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
-				this.vlbAuthorDescription =
-					retrieveVlbAuthorResponseData.description ?? ""
+				this.vlbAuthorBio = retrieveVlbAuthorResponseData.bio ?? ""
 
 				// Get the books of the author
 				await this.loadVlbAuthorItems()

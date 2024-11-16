@@ -287,7 +287,7 @@ export interface VlbAuthorResource {
 	isni?: string
 	firstName: string
 	lastName: string
-	description?: string
+	bio?: string
 }
 
 export interface VlbCollectionResource {
