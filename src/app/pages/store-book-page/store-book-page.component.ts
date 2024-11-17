@@ -659,7 +659,7 @@ export class StoreBookPageComponent {
 		if (this.bookSource == "vlb") {
 			let createCheckoutSessionResponse =
 				await this.apiService.createCheckoutSessionForVlbItem(`url`, {
-					productId: this.uuid,
+					uuid: this.uuid,
 					successUrl: redirectUrl,
 					cancelUrl: redirectUrl
 				})

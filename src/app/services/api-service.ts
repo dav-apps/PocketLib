@@ -1607,7 +1607,7 @@ export class ApiService {
 	async createCheckoutSessionForVlbItem(
 		queryData: string,
 		variables: {
-			productId: string
+			uuid: string
 			successUrl: string
 			cancelUrl: string
 		}
@@ -1622,12 +1622,12 @@ export class ApiService {
 			}>({
 				mutation: gql`
 					mutation CreateCheckoutSessionForVlbItem(
-						$productId: String!
+						$uuid: String!
 						$successUrl: String!
 						$cancelUrl: String!
 					) {
 						createCheckoutSessionForVlbItem(
-							productId: $productId
+							uuid: $uuid
 							successUrl: $successUrl
 							cancelUrl: $cancelUrl
 						) {
