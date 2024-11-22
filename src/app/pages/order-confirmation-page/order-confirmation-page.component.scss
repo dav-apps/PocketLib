@@ -7,3 +7,40 @@
 dav-header {
 	margin-bottom: 32px;
 }
+
+.intro-text {
+	margin: 0 auto;
+	font-size: 20px;
+}
+
+.content-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 42px;
+	width: 100%;
+	max-width: 600px;
+	margin-top: 46px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.cover-content {
+	display: flex;
+	justify-content: center;
+}
+
+.cover-image {
+	border-radius: 8px;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.title {
+	font-size: 24px;
+	margin: 0;
+}
+
+.price {
+	font-size: 20px;
+	margin-top: 8px;
+}

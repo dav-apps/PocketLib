@@ -1,7 +1,26 @@
 <div class="container slide-up-in">
-	<dav-header size="lg">
-		Danke für deine Bestellung!
-	</dav-header>
+	<dav-header size="lg"> Danke für deine Bestellung! </dav-header>
 
-	<div></div>
+	<p class="intro-text">Folgender Artikel wird in Kürze zu dir geliefert:</p>
+
+	<div class="content-container">
+		<!-- Cover -->
+		<div class="cover-content">
+			<dav-blurhash-image
+				class="cover-image"
+				[src]="coverUrl"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
+				[title]="title"
+				[alt]="title"
+				[width]="coverWidth"
+				[height]="coverHeight"
+			></dav-blurhash-image>
+		</div>
+
+		<!-- Title & price -->
+		<div>
+			<p class="title">{{ title }}</p>
+			<p class="price">{{ price }}</p>
+		</div>
+	</div>
 </div>
