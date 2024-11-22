@@ -22,6 +22,7 @@ import { StoreAuthorPageComponent } from "./pages/store-author-page/store-author
 import { StoreBookPageComponent } from "./pages/store-book-page/store-book-page.component"
 import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-page.component"
 import { StoreSeriesPageComponent } from "./pages/store-series-page/store-series-page.component"
+import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/order-confirmation-page.component"
 
 const routes: Routes = [
 	{ path: "", component: LibraryPageComponent },
@@ -87,7 +88,11 @@ const routes: Routes = [
 	{ path: "store/author/:slug", component: StoreAuthorPageComponent },
 	{ path: "store/book/:slug", component: StoreBookPageComponent },
 	{ path: "store/category/:key", component: StoreBooksPageComponent },
-	{ path: "store/series/:slug", component: StoreSeriesPageComponent }
+	{ path: "store/series/:slug", component: StoreSeriesPageComponent },
+	{
+		path: "store/book/:slug/confirmation",
+		component: OrderConfirmationPageComponent
+	}
 ]
 
 @NgModule({
