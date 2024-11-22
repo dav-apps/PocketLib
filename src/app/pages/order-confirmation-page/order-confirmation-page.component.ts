@@ -55,4 +55,13 @@ export class OrderConfirmationPageComponent {
 		this.dataService.simpleLoadingScreenVisible = false
 		confetti({})
 	}
+
+	coverClick(event: PointerEvent) {
+		confetti({
+			position: {
+				x: (event.x / window.innerWidth) * 100,
+				y: (event.y / window.innerHeight) * 100
+			}
+		})
+	}
 }
