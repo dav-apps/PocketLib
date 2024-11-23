@@ -59,6 +59,35 @@ export class SettingsService {
 	}
 	//#endregion
 
+	//#region SearchQueries
+	async setSearchQueries(searchQueries: string[]) {
+		await localforage.setItem(keys.settingsSearchQueriesKey, searchQueries)
+		this.cache[keys.settingsSearchQueriesKey] = searchQueries
+	}
+
+	async getSearchQueries(): Promise<string[]> {
+		return this.getSetting<string[]>(keys.settingsSearchQueriesKey, [])
+	}
+
+	async addSearchQuery(searchQuery: string) {
+		let searchQueries = await this.getSearchQueries()
+
+		let i = searchQueries.findIndex(q => q == searchQuery)
+		if (i == -1) searchQueries.push(searchQuery)
+
+		await this.setSearchQueries(searchQueries)
+	}
+
+	async removeSearchQuery(searchQuery: string) {
+		let searchQueries = await this.getSearchQueries()
+
+		let i = searchQueries.findIndex(q => q == searchQuery)
+		if (i != -1) searchQueries.splice(i, 1)
+
+		await this.setSearchQueries(searchQueries)
+	}
+	//#endregion
+
 	private async getSetting<T>(key: string, defaultValue: T): Promise<T> {
 		let cachedValue = this.cache[key]
 		if (cachedValue != null) return cachedValue

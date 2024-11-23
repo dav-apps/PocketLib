@@ -4,6 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons"
 import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 
 interface BookItem {
 	uuid: string
@@ -35,6 +36,7 @@ export class SearchPageComponent {
 		private apiService: ApiService,
 		private dataService: DataService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -128,8 +130,11 @@ export class SearchPageComponent {
 		})
 	}
 
-	bookItemClick(event: Event, book: BookItem) {
+	async bookItemClick(event: Event, book: BookItem) {
 		event.preventDefault()
+
+		await this.settingsService.addSearchQuery(this.query)
+
 		this.router.navigate(["store", "book", book.slug])
 	}
 }
