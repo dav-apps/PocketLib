@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { faMagnifyingGlass, faXmark } from "@fortawesome/pro-light-svg-icons"
+import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons"
 import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
@@ -22,7 +22,6 @@ interface BookItem {
 export class SearchPageComponent {
 	locale = this.localizationService.locale.searchPage
 	faMagnifyingGlass = faMagnifyingGlass
-	faXmark = faXmark
 	books: BookItem[] = []
 	debounceTimeoutId: number = 0
 	isLoading: boolean = false
@@ -144,11 +143,16 @@ export class SearchPageComponent {
 		this.router.navigate(["store", "book", book.slug])
 	}
 
-	searchQueryClick(event: PointerEvent, searchQuery: string) {
-		event.preventDefault()
-
+	searchQueryClick(searchQuery: string) {
 		this.query = searchQuery
 		this.page = 1
 		this.triggerSearch()
+	}
+
+	searchQueryCloseButtonClick(searchQuery: string) {
+		let i = this.searchQueries.findIndex(q => q == searchQuery)
+		if (i != -1) this.searchQueries.splice(i, 1)
+
+		this.settingsService.removeSearchQuery(searchQuery)
 	}
 }
