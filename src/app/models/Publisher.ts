@@ -1,7 +1,6 @@
-import { PublisherResource, List } from "../misc/types"
-import { DataService } from "../services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "./Author"
+import { PublisherResource, List, Language } from "../misc/types"
 
 export class Publisher {
 	public uuid: string
@@ -19,7 +18,7 @@ export class Publisher {
 
 	constructor(
 		publisherResource: PublisherResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (publisherResource != null) {
@@ -45,7 +44,7 @@ export class Publisher {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<Publisher> {
 		let response = await apiService.retrievePublisher(
@@ -69,7 +68,7 @@ export class Publisher {
 		let responseData = response.data.retrievePublisher
 		if (responseData == null) return null
 
-		return new Publisher(responseData, dataService, apiService)
+		return new Publisher(responseData, languages, apiService)
 	}
 
 	async ReloadLogo() {
@@ -119,7 +118,7 @@ export class Publisher {
 
 		for (let item of responseData.authors.items) {
 			items.push(
-				await Author.Retrieve(item.uuid, this.dataService, this.apiService)
+				await Author.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

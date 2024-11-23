@@ -7,7 +7,6 @@ import {
 	List
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
@@ -33,7 +32,7 @@ export class Author {
 
 	constructor(
 		authorResource: AuthorResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (authorResource != null) {
@@ -64,7 +63,7 @@ export class Author {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<Author> {
 		let response = await apiService.retrieveAuthor(
@@ -88,14 +87,14 @@ export class Author {
 			`,
 			{
 				uuid,
-				languages: await dataService.GetStoreLanguages()
+				languages
 			}
 		)
 
 		let responseData = response.data.retrieveAuthor
 		if (responseData == null) return null
 
-		return new Author(responseData, dataService, apiService)
+		return new Author(responseData, languages, apiService)
 	}
 
 	async GetProfileImageContent(): Promise<string> {
@@ -198,7 +197,7 @@ export class Author {
 			items.push(
 				await StoreBookCollection.Retrieve(
 					item.uuid,
-					this.dataService,
+					this.languages,
 					this.apiService
 				)
 			)
@@ -240,7 +239,7 @@ export class Author {
 			items.push(
 				await StoreBookSeries.Retrieve(
 					item.uuid,
-					this.dataService,
+					this.languages,
 					this.apiService
 				)
 			)

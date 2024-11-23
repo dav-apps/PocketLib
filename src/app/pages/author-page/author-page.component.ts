@@ -6,6 +6,7 @@ import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-a
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import * as ErrorCodes from "src/constants/errorCodes"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
@@ -38,6 +39,7 @@ export class AuthorPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -65,7 +67,9 @@ export class AuthorPageComponent {
 				`,
 				{
 					inReview: true,
-					languages: await this.dataService.GetStoreLanguages()
+					languages: await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					)
 				}
 			)
 
@@ -129,7 +133,13 @@ export class AuthorPageComponent {
 
 			// Add the publisher to the publishers of the admin in DataService
 			this.dataService.adminPublishers.push(
-				new Publisher(responseData, this.dataService, this.apiService)
+				new Publisher(
+					responseData,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
+					this.apiService
+				)
 			)
 
 			// Redirect to the publisher page of the new publisher
@@ -192,7 +202,13 @@ export class AuthorPageComponent {
 
 			// Add the author to the admin authors in DataService
 			this.dataService.adminAuthors.push(
-				new Author(responseData, this.dataService, this.apiService)
+				new Author(
+					responseData,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
+					this.apiService
+				)
 			)
 
 			// Redirect to the author page of the new author

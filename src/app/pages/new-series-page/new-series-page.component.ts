@@ -4,6 +4,7 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 
 interface BookItem {
@@ -34,6 +35,7 @@ export class NewSeriesPageComponent {
 		private apiService: ApiService,
 		private routingService: RoutingService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {}
@@ -55,7 +57,9 @@ export class NewSeriesPageComponent {
 			if (author == null) {
 				author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}

@@ -4,6 +4,7 @@ import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-ic
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import {
 	BookListItem,
 	ApiResponse,
@@ -44,6 +45,7 @@ export class HorizontalBookListComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private settingsService: SettingsService,
 		private router: Router
 	) {}
 
@@ -97,7 +99,9 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems,
 				offset: this.maxItems * page
 			}
@@ -129,7 +133,9 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				categories,
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems
 			}
 		)
@@ -170,7 +176,9 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				uuid: this.series,
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems
 			}
 		)
@@ -253,7 +261,9 @@ export class HorizontalBookListComponent {
 				`,
 				{
 					random: true,
-					languages: await this.dataService.GetStoreLanguages(),
+					languages: await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					limit: this.maxItems,
 					offset: this.maxItems * page
 				}

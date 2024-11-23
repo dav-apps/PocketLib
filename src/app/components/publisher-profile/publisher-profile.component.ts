@@ -22,6 +22,7 @@ import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
@@ -57,7 +58,7 @@ export class PublisherProfileComponent {
 	faTwitter = faTwitter
 	@Input() slug: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, this.dataService, this.apiService)
+	publisher: Publisher = new Publisher(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -121,6 +122,7 @@ export class PublisherProfileComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -200,7 +202,9 @@ export class PublisherProfileComponent {
 			// Get the publisher from the server
 			this.publisher = await Publisher.Retrieve(
 				this.slug,
-				this.dataService,
+				await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				this.apiService
 			)
 		} else if (publisher == null) {

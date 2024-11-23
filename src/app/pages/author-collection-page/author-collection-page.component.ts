@@ -7,6 +7,7 @@ import {
 } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { GetLanguageByString } from "src/app/misc/utils"
@@ -29,7 +30,7 @@ export class AuthorCollectionPageComponent {
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
 		null,
-		this.dataService,
+		[],
 		this.apiService
 	)
 	books: ExtendedBookListItem[] = []
@@ -56,6 +57,7 @@ export class AuthorCollectionPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {}
@@ -77,7 +79,9 @@ export class AuthorCollectionPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -99,7 +103,7 @@ export class AuthorCollectionPageComponent {
 		// Get the collection
 		this.collection = await StoreBookCollection.Retrieve(
 			this.uuid,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 

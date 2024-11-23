@@ -3,11 +3,11 @@ import {
 	StoreBookReleaseStatus,
 	ApiResponse,
 	List,
-	StoreBookReleaseResource
+	StoreBookReleaseResource,
+	Language
 } from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
-import { DataService } from "../services/data-service"
 import { Category } from "./Category"
 
 export class StoreBookRelease {
@@ -38,7 +38,7 @@ export class StoreBookRelease {
 
 	constructor(
 		releaseResource: StoreBookReleaseResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (releaseResource != null) {
@@ -77,7 +77,7 @@ export class StoreBookRelease {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<StoreBookRelease> {
 		let response = await apiService.retrieveStoreBookRelease(
@@ -112,7 +112,7 @@ export class StoreBookRelease {
 		let responseData = response.data.retrieveStoreBookRelease
 		if (responseData == null) return null
 
-		return new StoreBookRelease(responseData, dataService, apiService)
+		return new StoreBookRelease(responseData, languages, apiService)
 	}
 
 	async GetCoverContent(): Promise<string> {
@@ -157,11 +157,7 @@ export class StoreBookRelease {
 
 		for (let item of responseData.categories.items) {
 			items.push(
-				await Category.Retrieve(
-					item.uuid,
-					this.dataService,
-					this.apiService
-				)
+				await Category.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

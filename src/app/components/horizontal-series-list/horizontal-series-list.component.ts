@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { BookListItem, SeriesListItem, ApiResponse } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
@@ -21,7 +22,8 @@ export class HorizontalSeriesListComponent {
 
 	constructor(
 		public dataService: DataService,
-		private apiService: ApiService
+		private apiService: ApiService,
+		private settingsService: SettingsService
 	) {}
 
 	async ngOnInit() {
@@ -44,7 +46,9 @@ export class HorizontalSeriesListComponent {
 			`,
 			{
 				random: this.type == "random",
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: maxVisibleSeries
 			}
 		)

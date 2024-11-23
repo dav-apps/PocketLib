@@ -31,6 +31,7 @@ import { ApiService } from "./services/api-service"
 import { DavApiService } from "./services/dav-api-service"
 import { CachingService } from "./services/caching-service"
 import { LocalizationService } from "./services/localization-service"
+import { SettingsService } from "./services/settings-service"
 
 // Components
 import { AppComponent } from "./app.component"
@@ -218,6 +219,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		DavApiService,
 		CachingService,
 		LocalizationService,
+		SettingsService,
 		{
 			provide: APOLLO_NAMED_OPTIONS,
 			useFactory(httpLink: HttpLink) {

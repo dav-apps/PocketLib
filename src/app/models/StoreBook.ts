@@ -1,5 +1,4 @@
 import { isSuccessStatusCode } from "dav-js"
-import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import {
 	StoreBookStatus,
@@ -41,7 +40,7 @@ export class StoreBook {
 
 	constructor(
 		storeBookResource: StoreBookResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (storeBookResource != null) {
@@ -79,7 +78,7 @@ export class StoreBook {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<StoreBook> {
 		let response = await apiService.retrieveStoreBook(
@@ -114,7 +113,7 @@ export class StoreBook {
 		let responseData = response.data.retrieveStoreBook
 		if (responseData == null) return null
 
-		return new StoreBook(responseData, dataService, apiService)
+		return new StoreBook(responseData, languages, apiService)
 	}
 
 	async GetCoverContent(): Promise<string> {
@@ -147,7 +146,7 @@ export class StoreBook {
 
 		return await StoreBookCollection.Retrieve(
 			responseData.collection.uuid,
-			this.dataService,
+			this.languages,
 			this.apiService
 		)
 	}
@@ -181,7 +180,7 @@ export class StoreBook {
 			items.push(
 				await StoreBookRelease.Retrieve(
 					item.uuid,
-					this.dataService,
+					this.languages,
 					this.apiService
 				)
 			)
@@ -220,11 +219,7 @@ export class StoreBook {
 
 		for (let item of responseData.categories.items) {
 			items.push(
-				await Category.Retrieve(
-					item.uuid,
-					this.dataService,
-					this.apiService
-				)
+				await Category.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

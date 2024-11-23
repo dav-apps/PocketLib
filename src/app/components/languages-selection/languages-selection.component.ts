@@ -1,6 +1,7 @@
 import { Component } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { GetLanguageByString } from "src/app/misc/utils"
 import { Language as LangCode } from "src/app/misc/types"
 
@@ -14,7 +15,8 @@ export class LanguagesSelectionComponent {
 
 	constructor(
 		public dataService: DataService,
-		private localizationService: LocalizationService
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService
 	) {}
 
 	async ngOnInit() {
@@ -38,7 +40,9 @@ export class LanguagesSelectionComponent {
 
 	async SelectInitialLanguages() {
 		// Get the selected languages from the database
-		let selectedLanguages = await this.dataService.GetStoreLanguages()
+		let selectedLanguages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
 
 		// Check all selected languages
 		for (let language of this.languages) {
@@ -81,7 +85,7 @@ export class LanguagesSelectionComponent {
 			}
 		}
 
-		await this.dataService.SetStoreLanguages(languageCodes)
+		await this.settingsService.setStoreLanguages(languageCodes)
 	}
 }
 

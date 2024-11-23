@@ -8,6 +8,7 @@ import { AddBookDialogComponent } from "src/app/components/dialogs/add-book-dial
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 import { StoreBook } from "src/app/models/StoreBook"
@@ -36,11 +37,7 @@ export class AuthorSeriesPageComponent {
 	contextMenu: ElementRef<ContextMenu>
 	uuid: string = ""
 	author: Author
-	series: StoreBookSeries = new StoreBookSeries(
-		null,
-		this.dataService,
-		this.apiService
-	)
+	series: StoreBookSeries = new StoreBookSeries(null, [], this.apiService)
 	books: StoreBookItem[] = []
 	selectableBooks: StoreBookItem[] = []
 	editNameDialogLoading: boolean = false
@@ -56,6 +53,7 @@ export class AuthorSeriesPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService
@@ -83,7 +81,9 @@ export class AuthorSeriesPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}

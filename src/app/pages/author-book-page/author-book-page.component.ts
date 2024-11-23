@@ -10,6 +10,7 @@ import { PublishChangesDialogComponent } from "src/app/components/dialogs/publis
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
 import { Author } from "src/app/models/Author"
@@ -114,6 +115,7 @@ export class AuthorBookPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {}
@@ -135,7 +137,9 @@ export class AuthorBookPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -154,7 +158,7 @@ export class AuthorBookPageComponent {
 		// Get the store book
 		this.storeBook = await StoreBook.Retrieve(
 			this.uuid,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 

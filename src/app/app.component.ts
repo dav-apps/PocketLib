@@ -31,6 +31,7 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "./services/dav-api-service"
 import { LocalizationService } from "./services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
@@ -74,6 +75,7 @@ export class AppComponent {
 		private apiService: ApiService,
 		private davApiService: DavApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
@@ -166,7 +168,7 @@ export class AppComponent {
 
 		let url = this.router.url.split("?")[0]
 
-		if ((await this.dataService.GetOpenLastReadBook()) && url == "/") {
+		if ((await this.settingsService.getOpenLastReadBook()) && url == "/") {
 			this.router.navigate(["loading"], { skipLocationChange: true })
 		}
 

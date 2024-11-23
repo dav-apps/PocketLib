@@ -22,6 +22,7 @@ import { ProfileImageDialogComponent } from "src/app/components/dialogs/profile-
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import {
 	GetLanguageByString,
@@ -82,7 +83,7 @@ export class AuthorProfileComponent {
 	seriesLoaded: boolean = false
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(null, this.dataService, this.apiService)
+	author: Author = new Author(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -142,6 +143,7 @@ export class AuthorProfileComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -182,7 +184,9 @@ export class AuthorProfileComponent {
 			if (author == null) {
 				author = await Author.Retrieve(
 					this.slug,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -797,7 +801,7 @@ export class AuthorProfileComponent {
 	async LoadAuthor() {
 		this.author = await Author.Retrieve(
 			this.slug,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 		if (this.author == null) return null

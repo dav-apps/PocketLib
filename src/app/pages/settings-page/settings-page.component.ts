@@ -4,6 +4,7 @@ import { faCheck } from "@fortawesome/pro-light-svg-icons"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { keys } from "src/constants/keys"
 
 @Component({
@@ -43,6 +44,7 @@ export class SettingsPageComponent {
 	constructor(
 		public dataService: DataService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private swUpdate: SwUpdate
 	) {
 		this.themeDropdownOptions[0].value = this.locale.systemTheme
@@ -52,10 +54,10 @@ export class SettingsPageComponent {
 
 	async ngOnInit() {
 		// Set the openLastReadBook toggle
-		this.openLastReadBook = await this.dataService.GetOpenLastReadBook()
+		this.openLastReadBook = await this.settingsService.getOpenLastReadBook()
 
 		// Select the correct theme radio button
-		this.selectedTheme = await this.dataService.GetTheme()
+		this.selectedTheme = await this.settingsService.getTheme()
 
 		if (this.swUpdate.isEnabled && !this.dataService.updateInstalled) {
 			// Check for updates
@@ -89,14 +91,14 @@ export class SettingsPageComponent {
 
 	onOpenLastReadBookToggleChange(checked: boolean) {
 		this.openLastReadBook = checked
-		this.dataService.SetOpenLastReadBook(checked)
+		this.settingsService.setOpenLastReadBook(checked)
 	}
 
 	themeDropdownChange(event: CustomEvent) {
 		let selectedKey = event.detail.key
 
 		this.selectedTheme = selectedKey
-		this.dataService.SetTheme(selectedKey)
+		this.settingsService.setTheme(selectedKey)
 		this.dataService.ApplyTheme(selectedKey)
 	}
 
