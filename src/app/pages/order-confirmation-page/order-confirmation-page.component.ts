@@ -72,6 +72,6 @@ export class OrderConfirmationPageComponent {
 	}
 
 	navigateToUserPage() {
-		this.routingService.NavigateToAccountPage()
+		this.routingService.NavigateToUserPage()
 	}
 }

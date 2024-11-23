@@ -141,8 +141,8 @@ export class StoreBookPageComponent {
 
 	async Init() {
 		this.bookSource = "vlb"
-		
-		if (!await this.loadVlbItemData()) {
+
+		if (!(await this.loadVlbItemData())) {
 			this.bookSource = "pocketlib"
 			await this.LoadStoreBookData()
 		}
@@ -691,8 +691,8 @@ export class StoreBookPageComponent {
 		this.buyBookDialog.show()
 	}
 
-	NavigateToAccountPage() {
-		this.router.navigate(["account"], {
+	NavigateToUserPage() {
+		this.router.navigate(["user"], {
 			queryParams: { redirect: `store/book/${this.slug}` }
 		})
 	}

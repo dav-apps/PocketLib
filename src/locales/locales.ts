@@ -14,7 +14,7 @@ const enDefaults = {
 		bookContextMenuRemove: "Remove",
 		back: "Back"
 	},
-	accountPage: {
+	userPage: {
 		title: "Your Account",
 		text1: "Save your library and access it from anywhere",
 		text2: "Use the same library on all your devices",
@@ -521,7 +521,7 @@ const deDefaults = {
 		bookContextMenuRemove: "Entfernen",
 		back: "Zurück"
 	},
-	accountPage: {
+	userPage: {
 		title: "Dein Account",
 		text1: "Sichere deine Bibliothek und greife von überall darauf zu",
 		text2: "Nutze die gleiche Bibliothek auf all deinen Geräten",

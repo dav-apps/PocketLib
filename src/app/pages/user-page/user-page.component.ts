@@ -16,16 +16,15 @@ import { environment } from "src/environments/environment"
 import { enUS } from "src/locales/locales"
 
 @Component({
-	selector: "pocketlib-account-page",
-	templateUrl: "./account-page.component.html",
-	styleUrls: ["./account-page.component.scss"]
+	templateUrl: "./user-page.component.html",
+	styleUrls: ["./user-page.component.scss"]
 })
-export class AccountPageComponent {
+export class UserPageComponent {
 	faBagShoppingLight = faBagShoppingLight
 	faRotateLight = faRotateLight
 	faLockLight = faLockLight
 	faLockKeyholeLight = faLockKeyholeLight
-	locale = enUS.accountPage
+	locale = enUS.userPage
 	@ViewChild("logoutDialog")
 	logoutDialog: LogoutDialogComponent
 	websiteUrl = environment.websiteBaseUrl
@@ -46,7 +45,7 @@ export class AccountPageComponent {
 		private davApiService: DavApiService,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().accountPage
+		this.locale = this.dataService.GetLocale().userPage
 
 		// Get the redirect url param
 		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect")
@@ -182,9 +181,6 @@ export class AccountPageComponent {
 
 	Logout() {
 		this.logoutDialog.hide()
-
-		this.dataService.dav
-			.Logout()
-			.then(() => (window.location.href = "/account"))
+		this.dataService.dav.Logout().then(() => (window.location.href = "/user"))
 	}
 }

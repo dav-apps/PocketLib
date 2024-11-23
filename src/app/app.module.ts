@@ -89,7 +89,7 @@ import { EditAuthorProfileDialogComponent } from "./components/dialogs/edit-auth
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
 import { BookPageComponent } from "./pages/book-page/book-page.component"
-import { AccountPageComponent } from "./pages/account-page/account-page.component"
+import { UserPageComponent } from "./pages/user-page/user-page.component"
 import { SettingsPageComponent } from "./pages/settings-page/settings-page.component"
 import { SearchPageComponent } from "./pages/search-page/search-page.component"
 import { PublisherPageComponent } from "./pages/publisher-page/publisher-page.component"
@@ -170,7 +170,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
-		AccountPageComponent,
+		UserPageComponent,
 		SettingsPageComponent,
 		SearchPageComponent,
 		PublisherPageComponent,

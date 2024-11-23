@@ -44,12 +44,12 @@
 		}
 
 		<dav-icon-button
-			[selected]="accountButtonSelected"
-			(click)="navigateToAccountPage()"
+			[selected]="userButtonSelected"
+			(click)="navigateToUserPage()"
 		>
-			@if (!accountButtonSelected && !dataService.dav.isLoggedIn) {
+			@if (!userButtonSelected && !dataService.dav.isLoggedIn) {
 			<fa-icon [icon]="faCircleUserRegular"></fa-icon>
-			} @if (accountButtonSelected && !dataService.dav.isLoggedIn) {
+			} @if (userButtonSelected && !dataService.dav.isLoggedIn) {
 			<fa-icon [icon]="faCircleUserSolid"></fa-icon>
 			} @if (dataService.dav.isLoggedIn) {
 			<img

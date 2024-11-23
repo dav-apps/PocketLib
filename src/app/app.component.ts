@@ -66,7 +66,7 @@ export class AppComponent {
 	storeTabActive: boolean = false
 	searchTabActive: boolean = false
 	authorButtonSelected: boolean = false
-	accountButtonSelected: boolean = false
+	userButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
 
 	constructor(
@@ -93,8 +93,7 @@ export class AppComponent {
 				this.authorButtonSelected =
 					this.dataService.currentUrl == "/author" ||
 					this.dataService.currentUrl == "/publisher"
-				this.accountButtonSelected =
-					this.dataService.currentUrl == "/account"
+				this.userButtonSelected = this.dataService.currentUrl == "/user"
 				this.settingsButtonSelected =
 					this.dataService.currentUrl == "/settings"
 			}
@@ -210,8 +209,8 @@ export class AppComponent {
 		this.router.navigate(["/author"])
 	}
 
-	navigateToAccountPage() {
-		this.router.navigate(["/account"])
+	navigateToUserPage() {
+		this.router.navigate(["/user"])
 	}
 
 	navigateToSettingsPage() {

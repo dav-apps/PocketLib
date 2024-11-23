@@ -62,8 +62,8 @@ export class RoutingService {
 		this.navigateToPage(["store"])
 	}
 
-	NavigateToAccountPage() {
-		this.navigateToPage(["account"])
+	NavigateToUserPage() {
+		this.navigateToPage(["user"])
 	}
 
 	NavigateToSettingsPage() {

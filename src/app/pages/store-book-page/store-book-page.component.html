@@ -177,19 +177,19 @@
 
 <pocketlib-login-required-dialog
 	#loginRequiredDialog
-	(primaryButtonClick)="NavigateToAccountPage()"
+	(primaryButtonClick)="NavigateToUserPage()"
 ></pocketlib-login-required-dialog>
 
 <pocketlib-no-access-dialog
 	#noAccessDialog
-	(primaryButtonClick)="NavigateToAccountPage()"
+	(primaryButtonClick)="NavigateToUserPage()"
 ></pocketlib-no-access-dialog>
 
 <pocketlib-buy-book-dialog
 	#buyBookDialog
 	(primaryButtonClick)="
 		buyBookDialogLoginRequired
-			? NavigateToAccountPage()
+			? NavigateToUserPage()
 			: NavigateToPurchasePage()
 	"
 	[loginRequired]="buyBookDialogLoginRequired"
