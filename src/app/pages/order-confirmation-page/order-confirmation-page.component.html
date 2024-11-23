@@ -23,4 +23,22 @@
 			<p class="price">{{ price }}</p>
 		</div>
 	</div>
+
+	<div class="buttons-container">
+		<dav-button
+			color="primary"
+			tonal
+			(click)="navigateBack()"
+		>
+			Zurück
+		</dav-button>
+
+		<dav-button
+			color="secondary"
+			tonal
+			(click)="navigateToUserPage()"
+		>
+			Bestellungen ansehen
+		</dav-button>
+	</div>
 </div>

@@ -110,18 +110,41 @@ export class AccountPageComponent {
 							url
 						}
 					`,
-					{
-						uuid: order.tableObject.uuid
-					}
+					{ uuid: order.tableObject.uuid }
 				)
 
 			const storeBook = retrieveStoreBookResponse.data?.retrieveStoreBook
 
 			if (storeBook != null) {
 				this.orders.push({
-					uuid: order.tableObject.uuid,
+					uuid: order.uuid,
 					title: storeBook.title,
 					coverSrc: storeBook.cover.url,
+					status:
+						order.status == "PREPARATION"
+							? this.locale.preparationStatus
+							: this.locale.shippedStatus
+				})
+
+				continue
+			}
+
+			let retrieveVlbItemResponse = await this.apiService.retrieveVlbItem(
+				`
+					title
+					coverUrl
+				`,
+				{ uuid: order.tableObject.uuid }
+			)
+
+			let retrieveVlbItemResponseData =
+				retrieveVlbItemResponse.data?.retrieveVlbItem
+
+			if (retrieveVlbItemResponseData != null) {
+				this.orders.push({
+					uuid: order.uuid,
+					title: retrieveVlbItemResponseData.title,
+					coverSrc: retrieveVlbItemResponseData.coverUrl,
 					status:
 						order.status == "PREPARATION"
 							? this.locale.preparationStatus

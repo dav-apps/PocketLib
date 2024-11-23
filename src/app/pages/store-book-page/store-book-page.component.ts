@@ -653,7 +653,8 @@ export class StoreBookPageComponent {
 			return
 		}
 
-		let redirectUrl = window.location.origin + window.location.pathname
+		let redirectUrl =
+			window.location.origin + window.location.pathname + "/confirmation"
 		this.orderLoading = true
 
 		if (this.bookSource == "vlb") {

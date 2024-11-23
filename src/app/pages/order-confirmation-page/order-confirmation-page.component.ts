@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { confetti } from "@tsparticles/confetti"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { RoutingService } from "src/app/services/routing-service"
 
 @Component({
 	templateUrl: "./order-confirmation-page.component.html",
@@ -19,6 +20,7 @@ export class OrderConfirmationPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private routingService: RoutingService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -63,5 +65,13 @@ export class OrderConfirmationPageComponent {
 				y: (event.y / window.innerHeight) * 100
 			}
 		})
+	}
+
+	navigateBack() {
+		this.routingService.NavigateBack(`/store/book/${this.slug}`)
+	}
+
+	navigateToUserPage() {
+		this.routingService.NavigateToAccountPage()
 	}
 }
