@@ -6,7 +6,7 @@
 				class="search-input"
 				[value]="query"
 				type="search"
-				placeholder="Suche nach Büchern"
+				[placeholder]="locale.searchInputPlaceholder"
 				(input)="searchQueryChange()"
 			/>
 

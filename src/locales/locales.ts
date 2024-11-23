@@ -48,6 +48,9 @@ const enDefaults = {
 		noUpdateAvailable: "The app is up-to-date",
 		activateUpdate: "Activate update"
 	},
+	searchPage: {
+		searchInputPlaceholder: "Search for books"
+	},
 	authorPage: {
 		yourPublishers: "Your publishers",
 		yourAuthors: "Your authors",
@@ -211,6 +214,12 @@ const enDefaults = {
 	},
 	storeCategoriesPage: {
 		title: "All categories"
+	},
+	orderConfirmationPage: {
+		title: "Thank you for your order!",
+		description: "The following item will be delivered to you shortly:",
+		back: "Back",
+		showOrders: "Show orders"
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name of your collection",
@@ -555,6 +564,9 @@ const deDefaults = {
 		noUpdateAvailable: "Die App ist aktuell",
 		activateUpdate: "Update aktivieren"
 	},
+	searchPage: {
+		searchInputPlaceholder: "Suche nach Büchern"
+	},
 	authorPage: {
 		createProfile: "Erstelle dein Profil",
 		login: "Melde dich an, um dein Profil zu erstellen",
@@ -724,6 +736,12 @@ const deDefaults = {
 	},
 	storeCategoriesPage: {
 		title: "Alle Kategorien"
+	},
+	orderConfirmationPage: {
+		title: "Danke für deine Bestellung!",
+		description: "Folgender Artikel wird in Kürze zu dir geliefert:",
+		back: "Zurück",
+		showOrders: "Bestellungen ansehen"
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name deiner Sammlung",

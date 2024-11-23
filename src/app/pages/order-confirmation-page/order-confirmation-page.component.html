@@ -1,7 +1,7 @@
 <div class="container slide-up-in">
-	<dav-header size="lg"> Danke für deine Bestellung! </dav-header>
+	<dav-header size="lg">{{ locale.title }}</dav-header>
 
-	<p class="intro-text">Folgender Artikel wird in Kürze zu dir geliefert:</p>
+	<p class="description-text">{{ locale.description }}</p>
 
 	<div class="content-container">
 		<!-- Cover -->
@@ -25,20 +25,12 @@
 	</div>
 
 	<div class="buttons-container">
-		<dav-button
-			color="primary"
-			tonal
-			(click)="navigateBack()"
-		>
-			Zurück
+		<dav-button color="primary" tonal (click)="navigateBack()">
+			{{ locale.back }}
 		</dav-button>
 
-		<dav-button
-			color="secondary"
-			tonal
-			(click)="navigateToUserPage()"
-		>
-			Bestellungen ansehen
+		<dav-button color="secondary" tonal (click)="navigateToUserPage()">
+			{{ locale.showOrders }}
 		</dav-button>
 	</div>
 </div>

@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons"
 import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
 
 interface BookItem {
 	uuid: string
@@ -18,6 +19,7 @@ interface BookItem {
 	styleUrl: "./search-page.component.scss"
 })
 export class SearchPageComponent {
+	locale = this.localizationService.locale.searchPage
 	faMagnifyingGlass = faMagnifyingGlass
 	books: BookItem[] = []
 	debounceTimeoutId: number = 0
@@ -32,6 +34,7 @@ export class SearchPageComponent {
 	constructor(
 		private apiService: ApiService,
 		private dataService: DataService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
