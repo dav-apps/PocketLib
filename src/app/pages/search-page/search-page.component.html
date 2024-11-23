@@ -20,6 +20,23 @@
 	<div class="progress-ring-container">
 		<dav-progress-ring size="32"></dav-progress-ring>
 	</div>
+	} @else if (query.length == 0) {
+	<div class="previous-searches-container">
+		@for (searchQuery of searchQueries; track searchQuery) {
+		<a
+			class="previous-search-card"
+			routerLink="/search"
+			[queryParams]="{ query: searchQuery, page: 1 }"
+			(click)="searchQueryClick($event, searchQuery)"
+		>
+			<p>{{ searchQuery }}</p>
+
+			<dav-icon-button size="xs">
+				<fa-icon [icon]="faXmark"></fa-icon>
+			</dav-icon-button>
+		</a>
+		}
+	</div>
 	}
 
 	<div class="list-container">
