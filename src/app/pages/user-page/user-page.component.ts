@@ -11,9 +11,9 @@ import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "src/app/services/dav-api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { BytesToGigabytesText } from "src/app/misc/utils"
 import { environment } from "src/environments/environment"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	templateUrl: "./user-page.component.html",
@@ -24,7 +24,7 @@ export class UserPageComponent {
 	faRotateLight = faRotateLight
 	faLockLight = faLockLight
 	faLockKeyholeLight = faLockKeyholeLight
-	locale = enUS.userPage
+	locale = this.localizationService.locale.userPage
 	@ViewChild("logoutDialog")
 	logoutDialog: LogoutDialogComponent
 	websiteUrl = environment.websiteBaseUrl
@@ -43,10 +43,9 @@ export class UserPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private davApiService: DavApiService,
+		private localizationService: LocalizationService,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().userPage
-
 		// Get the redirect url param
 		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect")
 	}

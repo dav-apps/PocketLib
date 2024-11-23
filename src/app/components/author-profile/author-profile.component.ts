@@ -21,6 +21,7 @@ import { EditAuthorProfileDialogComponent } from "src/app/components/dialogs/edi
 import { ProfileImageDialogComponent } from "src/app/components/dialogs/profile-image-dialog/profile-image-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { Author } from "src/app/models/Author"
 import {
 	GetLanguageByString,
@@ -37,7 +38,6 @@ import {
 	StoreBookStatus
 } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 interface CollectionItem {
 	uuid: string
@@ -70,7 +70,8 @@ const maxItemsPerPage = 5
 	styleUrls: ["./author-profile.component.scss"]
 })
 export class AuthorProfileComponent {
-	locale = enUS.authorProfile
+	locale = this.localizationService.locale.authorProfile
+	miscLocale = this.localizationService.locale.misc
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
@@ -140,10 +141,10 @@ export class AuthorProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().authorProfile
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 
 		this.activatedRoute.url.subscribe(() => {
@@ -262,12 +263,10 @@ export class AuthorProfileComponent {
 		}
 
 		this.SetupBioLanguageDropdown()
-		this.profileImageAlt = this.dataService
-			.GetLocale()
-			.misc.authorProfileImageAlt.replace(
-				"{0}",
-				`${this.author.firstName} ${this.author.lastName}`
-			)
+		this.profileImageAlt = this.miscLocale.authorProfileImageAlt.replace(
+			"{0}",
+			`${this.author.firstName} ${this.author.lastName}`
+		)
 
 		await this.LoadCollections()
 		await this.LoadSeries()
@@ -460,7 +459,7 @@ export class AuthorProfileComponent {
 		for (let bio of this.bios) {
 			this.bioLanguageDropdownOptions.push({
 				key: bio.language,
-				value: this.dataService.GetFullLanguage(
+				value: this.localizationService.getFullLanguage(
 					GetLanguageByString(bio.language)
 				),
 				type: DropdownOptionType.option
@@ -478,7 +477,8 @@ export class AuthorProfileComponent {
 			})
 
 			// Add each supported language
-			let languages = this.dataService.GetLocale().misc.languages
+			let languages = this.localizationService.locale.misc.languages
+
 			for (let language of Object.keys(languages)) {
 				this.bioLanguageDropdownOptions.push({
 					key: language,
@@ -496,7 +496,8 @@ export class AuthorProfileComponent {
 				}
 			]
 
-			let languages = this.dataService.GetLocale().misc.languages
+			let languages = this.miscLocale.languages
+
 			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
 				let index = this.bioLanguageDropdownOptions.findIndex(

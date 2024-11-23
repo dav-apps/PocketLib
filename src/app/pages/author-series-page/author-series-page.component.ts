@@ -7,11 +7,11 @@ import { EditNameDialogComponent } from "src/app/components/dialogs/edit-name-di
 import { AddBookDialogComponent } from "src/app/components/dialogs/add-book-dialog/add-book-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookSeries } from "src/app/models/StoreBookSeries"
 import { StoreBook } from "src/app/models/StoreBook"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 interface StoreBookItem {
 	uuid: string
@@ -26,7 +26,7 @@ interface StoreBookItem {
 	styleUrls: ["./author-series-page.component.scss"]
 })
 export class AuthorSeriesPageComponent {
-	locale = enUS.authorSeriesPage
+	locale = this.localizationService.locale.authorSeriesPage
 	faTrashCanLight = faTrashCanLight
 	@ViewChild("editNameDialog")
 	editNameDialog: EditNameDialogComponent
@@ -55,12 +55,11 @@ export class AuthorSeriesPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dragulaService: DragulaService
 	) {
-		this.locale = this.dataService.GetLocale().authorSeriesPage
-
 		this.dragulaService.drag("books").subscribe(() => (this.dragging = true))
 		this.dragulaService
 			.dragend("books")

@@ -4,9 +4,9 @@ import { PromiseHolder } from "dav-js"
 import { LeavePageDialogComponent } from "src/app/components/dialogs/leave-page-dialog/leave-page-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { Author } from "src/app/models/Author"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "pocketlib-new-book-page",
@@ -22,7 +22,7 @@ export class NewBookPageComponent {
 	//#endregion
 
 	//#region General variables
-	locale = enUS.newBookPage
+	locale = this.localizationService.locale.newBookPage
 	author: Author
 	errorMessage: string = ""
 	navigationEventPromiseHolder = new PromiseHolder<boolean>()
@@ -80,10 +80,10 @@ export class NewBookPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().newBookPage
 		this.routingService.toolbarNavigationEvent = async () =>
 			await this.HandleToolbarNavigationEvent()
 	}

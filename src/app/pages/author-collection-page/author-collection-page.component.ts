@@ -6,11 +6,11 @@ import {
 	FindAppropriateLanguage
 } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { GetLanguageByString } from "src/app/misc/utils"
 import { BookListItem, StoreBookStatus } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 
 interface ExtendedBookListItem extends BookListItem {
 	link: string
@@ -22,7 +22,7 @@ interface ExtendedBookListItem extends BookListItem {
 	styleUrls: ["./author-collection-page.component.scss"]
 })
 export class AuthorCollectionPageComponent {
-	locale = enUS.authorCollectionPage
+	locale = this.localizationService.locale.authorCollectionPage
 	@ViewChild("namesDialog")
 	namesDialog: NamesDialogComponent
 	uuid: string
@@ -55,11 +55,10 @@ export class AuthorCollectionPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {
-		this.locale = this.dataService.GetLocale().authorCollectionPage
-	}
+	) {}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded
@@ -175,7 +174,7 @@ export class AuthorCollectionPageComponent {
 			this.collectionNames.push({
 				name: collectionName.name,
 				language: collectionName.language,
-				fullLanguage: this.dataService.GetFullLanguage(
+				fullLanguage: this.localizationService.getFullLanguage(
 					GetLanguageByString(collectionName.language)
 				),
 				edit: false

@@ -21,6 +21,7 @@ import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-a
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
@@ -28,7 +29,6 @@ import {
 } from "src/app/misc/utils"
 import { ApiResponse, BookListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
 const maxAuthorsPerPage = 5
@@ -49,7 +49,8 @@ interface AuthorItem {
 	styleUrls: ["./publisher-profile.component.scss"]
 })
 export class PublisherProfileComponent {
-	locale = enUS.publisherProfile
+	locale = this.localizationService.locale.publisherProfile
+	miscLocale = this.localizationService.locale.misc
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
@@ -119,11 +120,10 @@ export class PublisherProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().publisherProfile
-
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 
 		this.activatedRoute.url.subscribe(() => {
@@ -223,9 +223,10 @@ export class PublisherProfileComponent {
 				})
 		}
 
-		this.logoAlt = this.dataService
-			.GetLocale()
-			.misc.publisherLogoAlt.replace("{0}", this.publisher.name)
+		this.logoAlt = this.miscLocale.publisherLogoAlt.replace(
+			"{0}",
+			this.publisher.name
+		)
 
 		// Get the authors of the publisher
 		await this.LoadAuthors()
@@ -318,12 +319,10 @@ export class PublisherProfileComponent {
 				name: `${author.firstName} ${author.lastName}`,
 				profileImageContent: this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profileImage.blurhash,
-				alt: this.dataService
-					.GetLocale()
-					.misc.authorProfileImageAlt.replace(
-						"{0}",
-						`${author.firstName} ${author.lastName}`
-					)
+				alt: this.miscLocale.authorProfileImageAlt.replace(
+					"{0}",
+					`${author.firstName} ${author.lastName}`
+				)
 			}
 
 			author.GetProfileImageContent().then((response: string) => {

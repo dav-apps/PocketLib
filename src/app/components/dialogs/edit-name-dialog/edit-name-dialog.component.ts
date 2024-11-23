@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-edit-name-dialog",
 	templateUrl: "./edit-name-dialog.component.html"
 })
 export class EditNameDialogComponent {
-	locale = enUS.dialogs.editNameDialog
+	locale = this.localizationService.locale.dialogs.editNameDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() loading: boolean = false
 	@Input() name: string = ""
@@ -23,9 +22,7 @@ export class EditNameDialogComponent {
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.editNameDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

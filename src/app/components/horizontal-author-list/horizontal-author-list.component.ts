@@ -3,6 +3,7 @@ import { Router } from "@angular/router"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { AuthorListItem, ApiResponse } from "src/app/misc/types"
 
 const maxVisibleAuthors = 8
@@ -25,6 +26,7 @@ export class HorizontalAuthorListComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router
 	) {}
 
@@ -63,7 +65,7 @@ export class HorizontalAuthorListComponent {
 		this.authors = []
 
 		let profileImageAltTemplate =
-			this.dataService.GetLocale().misc.authorProfileImageAlt
+			this.localizationService.locale.misc.authorProfileImageAlt
 
 		for (let author of responseData.items) {
 			let authorItem: AuthorListItem = {

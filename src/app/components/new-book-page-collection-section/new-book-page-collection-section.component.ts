@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-new-book-page-collection-section",
@@ -8,7 +7,7 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./new-book-page-collection-section.component.scss"]
 })
 export class NewBookPageCollectionSectionComponent {
-	locale = enUS.newBookPage
+	locale = this.localizationService.locale.newBookPage
 	@Input() section: number = 0
 	@Input() visibleSection: number = 0
 	@Input() forwardNavigation: boolean = false
@@ -22,9 +21,7 @@ export class NewBookPageCollectionSectionComponent {
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().newBookPage
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	Select(index: number) {
 		this.select.emit(index)

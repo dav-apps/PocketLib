@@ -5,8 +5,8 @@ import { CreatePublisherDialogComponent } from "src/app/components/dialogs/creat
 import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 import { Publisher } from "src/app/models/Publisher"
 import { Author } from "src/app/models/Author"
 
@@ -16,7 +16,7 @@ import { Author } from "src/app/models/Author"
 	styleUrls: ["./author-page.component.scss"]
 })
 export class AuthorPageComponent {
-	locale = enUS.authorPage
+	locale = this.localizationService.locale.authorPage
 	faPlusLight = faPlusLight
 	@ViewChild("createPublisherDialog")
 	createPublisherDialog: CreatePublisherDialogComponent
@@ -37,11 +37,10 @@ export class AuthorPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().authorPage
-
 		// Get the slug from the url
 		this.slug = this.activatedRoute.snapshot.paramMap.get("slug")
 	}

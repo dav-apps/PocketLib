@@ -14,14 +14,18 @@ import { ErrorDialogComponent } from "src/app/components/dialogs/error-dialog/er
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
 import { environment } from "src/environments/environment"
 import { GetStoreBookStatusByString } from "src/app/misc/utils"
-import { ApiResponse, StoreBookStatus, VlbCollectionResource } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
+import {
+	ApiResponse,
+	StoreBookStatus,
+	VlbCollectionResource
+} from "src/app/misc/types"
 
 @Component({
 	selector: "pocketlib-store-book-page",
@@ -29,7 +33,8 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./store-book-page.component.scss"]
 })
 export class StoreBookPageComponent {
-	locale = enUS.storeBookPage
+	locale = this.localizationService.locale.storeBookPage
+	miscLocale = this.localizationService.locale.misc
 	bookSource: "pocketlib" | "vlb" = "pocketlib"
 	orderLoading: boolean = false
 	redirectToCheckout: boolean = false
@@ -105,11 +110,10 @@ export class StoreBookPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {
-		this.locale = this.dataService.GetLocale().storeBookPage
-	}
+	) {}
 
 	async ngOnInit() {
 		await this.dataService.userPromiseHolder.AwaitResult()
@@ -195,9 +199,7 @@ export class StoreBookPageComponent {
 		}
 		this.coverUrl = responseData.coverUrl
 		this.coverContent = responseData.coverUrl
-		this.coverAlt = this.dataService
-			.GetLocale()
-			.misc.bookCoverAlt.replace("{0}", this.title)
+		this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
 
 		if (responseData.author != null) {
 			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
@@ -303,9 +305,7 @@ export class StoreBookPageComponent {
 			this.coverUrl = cover.url
 			this.coverBlurhash = cover.blurhash
 
-			this.coverAlt = this.dataService
-				.GetLocale()
-				.misc.bookCoverAlt.replace("{0}", this.title)
+			this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
 
 			this.apiService
 				.downloadFile(this.coverUrl)
@@ -398,10 +398,8 @@ export class StoreBookPageComponent {
 		this.authorUuid = author.uuid
 		this.authorName = `${author.firstName} ${author.lastName}`
 		this.authorProfileImageBlurhash = author.profileImage?.blurhash
-
-		this.authorProfileImageAlt = this.dataService
-			.GetLocale()
-			.misc.authorProfileImageAlt.replace("{0}", this.authorName)
+		this.authorProfileImageAlt =
+			this.miscLocale.authorProfileImageAlt.replace("{0}", this.authorName)
 
 		let authorProfileImageUrl = author.profileImage?.url
 
@@ -424,9 +422,10 @@ export class StoreBookPageComponent {
 			this.publisherSlug = publisher.slug
 			this.publisherName = publisher.name
 			this.publisherLogoBlurhash = publisher.logo?.blurhash
-			this.publisherLogoAlt = this.dataService
-				.GetLocale()
-				.misc.publisherLogoAlt.replace("{0}", this.publisherName)
+			this.publisherLogoAlt = this.miscLocale.publisherLogoAlt.replace(
+				"{0}",
+				this.publisherName
+			)
 
 			let publisherLogoUrl = publisher.logo?.url
 

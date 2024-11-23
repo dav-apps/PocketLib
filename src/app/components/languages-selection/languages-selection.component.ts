@@ -1,5 +1,6 @@
 import { Component } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { GetLanguageByString } from "src/app/misc/utils"
 import { Language as LangCode } from "src/app/misc/types"
 
@@ -11,13 +12,16 @@ export class LanguagesSelectionComponent {
 	languages: Language[] = []
 	selectedLanguages: string[] = []
 
-	constructor(public dataService: DataService) {}
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService
+	) {}
 
 	async ngOnInit() {
 		// Get the languages
 		this.languages = []
 
-		let languages = this.dataService.GetLocale().misc.languages
+		let languages = this.localizationService.locale.misc.languages
 
 		for (let language of Object.keys(languages)) {
 			this.languages.push({

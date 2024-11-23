@@ -8,15 +8,14 @@ import {
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-categories-selection-dialog",
 	templateUrl: "./categories-selection-dialog.component.html"
 })
 export class CategoriesSelectionDialogComponent {
-	locale = enUS.dialogs.categoriesSelectionDialog
+	locale = this.localizationService.locale.dialogs.categoriesSelectionDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@ViewChild("categoriesSelection")
 	categoriesSelection: CategoriesSelectionComponent
@@ -25,10 +24,7 @@ export class CategoriesSelectionDialogComponent {
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale =
-			this.dataService.GetLocale().dialogs.categoriesSelectionDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

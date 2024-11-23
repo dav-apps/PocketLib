@@ -12,7 +12,6 @@ import { Settings } from "../models/Settings"
 import { BookOrder } from "../models/BookOrder"
 import { Publisher } from "../models/Publisher"
 import { Author } from "src/app/models/Author"
-import * as locales from "src/locales/locales"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -270,34 +269,6 @@ export class DataService {
 		if (!bookObject) return
 
 		await this.ReloadBook(bookObject.Uuid)
-	}
-
-	GetFullLanguage(language: Language): string {
-		let languagesLocale = this.GetLocale().misc.languages
-
-		switch (language) {
-			case Language.de:
-				return languagesLocale.de
-			default:
-				return languagesLocale.en
-		}
-	}
-
-	GetLocale() {
-		let l = this.locale.toLowerCase()
-
-		if (l.startsWith("en")) {
-			// en
-			if (l == "en-gb") return locales.enGB
-			else return locales.enUS
-		} else if (l.startsWith("de")) {
-			// de
-			if (l == "de-at") return locales.deAT
-			else if (l == "de-ch") return locales.deCH
-			else return locales.deDE
-		}
-
-		return locales.enUS
 	}
 
 	async ApplyTheme(theme?: string) {

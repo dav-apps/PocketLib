@@ -30,6 +30,7 @@ import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "./services/dav-api-service"
+import { LocalizationService } from "./services/localization-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
@@ -40,7 +41,6 @@ import {
 	pocketlibApiClientName
 } from "src/constants/constants"
 import { environment } from "src/environments/environment"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	selector: "app-root",
@@ -48,7 +48,7 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-	locale = enUS.misc
+	locale = this.localizationService.locale.misc
 	faCircleUserRegular = faCircleUserRegular
 	faCircleUserSolid = faCircleUserSolid
 	faGearRegular = faGearRegular
@@ -73,13 +73,13 @@ export class AppComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private davApiService: DavApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
 		private httpLink: HttpLink,
 		private cd: ChangeDetectorRef
 	) {
-		this.locale = this.dataService.GetLocale().misc
 		DavUIComponents.setLocale(this.dataService.locale)
 
 		this.router.events.forEach(data => {

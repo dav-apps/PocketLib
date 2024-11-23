@@ -2,16 +2,16 @@ import { Component } from "@angular/core"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { faCheck } from "@fortawesome/pro-light-svg-icons"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
-import { keys } from "src/constants/keys"
-import { enUS } from "src/locales/locales"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { keys } from "src/constants/keys"
 
 @Component({
 	templateUrl: "./settings-page.component.html",
 	styleUrls: ["./settings-page.component.scss"]
 })
 export class SettingsPageComponent {
-	locale = enUS.settingsPage
+	locale = this.localizationService.locale.settingsPage
 	faCheck = faCheck
 	version: string = keys.version
 	year = new Date().getFullYear()
@@ -40,8 +40,11 @@ export class SettingsPageComponent {
 		}
 	]
 
-	constructor(public dataService: DataService, private swUpdate: SwUpdate) {
-		this.locale = this.dataService.GetLocale().settingsPage
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService,
+		private swUpdate: SwUpdate
+	) {
 		this.themeDropdownOptions[0].value = this.locale.systemTheme
 		this.themeDropdownOptions[1].value = this.locale.lightTheme
 		this.themeDropdownOptions[2].value = this.locale.darkTheme

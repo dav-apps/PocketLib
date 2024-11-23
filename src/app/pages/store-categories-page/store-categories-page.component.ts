@@ -1,7 +1,7 @@
 import { Component } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { RoutingService } from "src/app/services/routing-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-store-categories-page",
@@ -9,14 +9,13 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./store-categories-page.component.scss"]
 })
 export class StoreCategoriesPageComponent {
-	locale = enUS.storeCategoriesPage
+	locale = this.localizationService.locale.storeCategoriesPage
 
 	constructor(
 		public dataService: DataService,
-		private routingService: RoutingService
-	) {
-		this.locale = this.dataService.GetLocale().storeCategoriesPage
-	}
+		private routingService: RoutingService,
+		private localizationService: LocalizationService
+	) {}
 
 	backButtonClick() {
 		this.routingService.NavigateBack("/store")

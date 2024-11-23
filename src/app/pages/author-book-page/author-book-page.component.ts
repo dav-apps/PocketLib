@@ -9,6 +9,7 @@ import { CategoriesSelectionDialogComponent } from "src/app/components/dialogs/c
 import { PublishChangesDialogComponent } from "src/app/components/dialogs/publish-changes-dialog/publish-changes-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
 import { Author } from "src/app/models/Author"
@@ -21,14 +22,13 @@ import {
 	StoreBookReleaseStatus,
 	StoreBookResource
 } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	templateUrl: "./author-book-page.component.html",
 	styleUrls: ["./author-book-page.component.scss"]
 })
 export class AuthorBookPageComponent {
-	locale = enUS.authorBookPage
+	locale = this.localizationService.locale.authorBookPage
 	faPenLight = faPenLight
 	@ViewChild("priceInput")
 	priceInput: PriceInputComponent
@@ -113,11 +113,10 @@ export class AuthorBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {
-		this.locale = this.dataService.GetLocale().authorBookPage
-	}
+	) {}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded

@@ -27,6 +27,7 @@ import {
 import { PromiseHolder } from "dav-js"
 import { BottomSheet, Tree, TreeItem } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { EpubBookmark } from "src/app/models/EpubBookmark"
 import { EpubReader, EpubTocItem } from "src/app/models/EpubReader"
@@ -38,7 +39,6 @@ import {
 	FindPageForPosition,
 	AdaptLinkTag
 } from "src/app/misc/utils"
-import { enUS } from "src/locales/locales"
 import { GetDualScreenSettings } from "src/app/misc/utils"
 
 const secondPageMinWidth = 1050 // Show two pages on the window if the window width is greater than this
@@ -63,7 +63,7 @@ const doubleTapToleranceTime = 400
 	styleUrls: ["./epub-viewer.component.scss"]
 })
 export class EpubViewerComponent {
-	locale = enUS.epubViewer
+	locale = this.localizationService.locale.epubViewer
 	faArrowLeftRegular = faArrowLeftRegular
 	faArrowLeftLight = faArrowLeftLight
 	faArrowRightLight = faArrowRightLight
@@ -227,11 +227,10 @@ export class EpubViewerComponent {
 
 	constructor(
 		public dataService: DataService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private ngZone: NgZone
 	) {
-		this.locale = this.dataService.GetLocale().epubViewer
-
 		if (this.dataService.windows) {
 			this.paddingTop += windowsToolbarHeight
 		}

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-new-book-page-description-section",
@@ -8,7 +8,7 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./new-book-page-description-section.component.scss"]
 })
 export class NewBookPageDescriptionSectionComponent {
-	locale = enUS.newBookPage
+	locale = this.localizationService.locale.newBookPage
 	@Input() section: number = 0
 	@Input() visibleSection: number = 0
 	@Input() forwardNavigation: boolean = false
@@ -18,9 +18,10 @@ export class NewBookPageDescriptionSectionComponent {
 	description: string = ""
 	language: string = this.dataService.supportedLocale
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().newBookPage
-	}
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService
+	) {}
 
 	SetLanguage(language: string) {
 		this.language = language

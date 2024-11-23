@@ -4,7 +4,7 @@ import {
 	faPen as faPenLight
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-price-input",
@@ -12,7 +12,7 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./price-input.component.scss"]
 })
 export class PriceInputComponent {
-	locale = enUS.priceInput
+	locale = this.localizationService.locale.priceInput
 	faFloppyDiskLight = faFloppyDiskLight
 	faPenLight = faPenLight
 	price: string = "0"
@@ -22,9 +22,10 @@ export class PriceInputComponent {
 	edit: boolean
 	errorMessage: string = ""
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().priceInput
-	}
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService
+	) {}
 
 	ngOnInit() {
 		this.UpdateFormattedPrice()

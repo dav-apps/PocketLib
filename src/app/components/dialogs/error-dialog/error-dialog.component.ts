@@ -6,22 +6,19 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-error-dialog",
 	templateUrl: "./error-dialog.component.html"
 })
 export class ErrorDialogComponent {
-	locale = enUS.dialogs.errorDialog
+	locale = this.localizationService.locale.dialogs.errorDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.errorDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

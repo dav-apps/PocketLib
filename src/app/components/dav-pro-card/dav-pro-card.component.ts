@@ -1,18 +1,15 @@
 import { Component } from "@angular/core"
 import { Dav } from "dav-js"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-dav-pro-card",
 	templateUrl: "./dav-pro-card.component.html"
 })
 export class DavProCardComponent {
-	locale = enUS.davProCard
+	locale = this.localizationService.locale.davProCard
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().davProCard
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ShowPlansAccountPage() {
 		Dav.ShowUserPage("plans", true)
