@@ -19,6 +19,8 @@
 			<div class="cover-content">
 				<dav-blurhash-image
 					class="cover-image"
+					[style.maxWidth.px]="maxCoverWidth"
+					[style.maxHeight.px]="maxCoverHeight"
 					[src]="coverContent"
 					[fallbackSrc]="dataService.defaultStoreBookCover"
 					[blurhash]="coverBlurhash"
@@ -26,6 +28,7 @@
 					[alt]="coverAlt"
 					[width]="coverWidth"
 					[height]="coverHeight"
+					(imageLoaded)="coverImageLoaded($event)"
 				></dav-blurhash-image>
 			</div>
 

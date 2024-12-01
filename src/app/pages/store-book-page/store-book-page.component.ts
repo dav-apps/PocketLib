@@ -73,6 +73,8 @@ export class StoreBookPageComponent {
 	coverAlt: string = ""
 	coverHeight = 270
 	coverWidth = 180
+	maxCoverHeight = 270
+	maxCoverWidth = 180
 	//#endregion
 
 	//#region Author variables
@@ -304,7 +306,6 @@ export class StoreBookPageComponent {
 		if (cover != null) {
 			this.coverUrl = cover.url
 			this.coverBlurhash = cover.blurhash
-
 			this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
 
 			this.apiService
@@ -748,6 +749,16 @@ export class StoreBookPageComponent {
 		}
 
 		this.publishLoading = false
+	}
+
+	coverImageLoaded(event: CustomEvent<{ image: HTMLImageElement }>) {
+		if (
+			this.bookSource == "vlb" &&
+			event.detail.image.src == this.coverContent
+		) {
+			this.coverWidth = event.detail.image.naturalWidth
+			this.coverHeight = event.detail.image.naturalHeight
+		}
 	}
 
 	authorProfileCardClick(event: Event) {
