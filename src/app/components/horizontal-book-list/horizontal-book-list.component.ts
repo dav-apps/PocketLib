@@ -18,6 +18,7 @@ type HorizontalBookListType =
 	| "categories"
 	| "series"
 	| "collection"
+	| "author"
 	| "random"
 type HorizontalBookListAlignment = "start" | "center"
 
@@ -34,6 +35,7 @@ export class HorizontalBookListComponent {
 	@Input() categories: string[] = []
 	@Input() series: string = ""
 	@Input() collectionId: string = ""
+	@Input() authorUuid: string = ""
 	@Input() maxItems: number = 10
 	@Input() hideMoreButton: boolean = false
 	@Input() alignment: HorizontalBookListAlignment = "start"
@@ -57,6 +59,8 @@ export class HorizontalBookListComponent {
 			await this.LoadStoreBooksBySeries()
 		} else if (this.type == "collection") {
 			await this.LoadVlbItemsByCollectionId()
+		} else if (this.type == "author") {
+			await this.LoadVlbItemsByAuthor()
 		} else if (this.type == "random") {
 			await this.LoadStoreBooksRandomly()
 		} else {
@@ -77,6 +81,11 @@ export class HorizontalBookListComponent {
 			changes.categories.currentValue.length > 0
 		) {
 			await this.LoadStoreBooksByCategories()
+		} else if (
+			changes.authorUuid != null &&
+			changes.authorUuid.currentValue.length > 0
+		) {
+			await this.LoadVlbItemsByAuthor()
 		}
 	}
 
@@ -205,6 +214,33 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				vlbCollectionUuid: this.collectionId,
+				limit: this.maxItems
+			}
+		)
+
+		let responseData = response.data.listVlbItems
+		if (responseData == null) return
+
+		this.ShowBooks(responseData.items)
+		this.hasMoreItems = responseData.total > this.maxItems
+	}
+
+	async LoadVlbItemsByAuthor() {
+		if (this.authorUuid.length == 0) return
+
+		let response = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					uuid
+					slug
+					title
+					description
+					coverUrl
+				}
+			`,
+			{
+				vlbAuthorUuid: this.authorUuid,
 				limit: this.maxItems
 			}
 		)
@@ -350,6 +386,8 @@ export class HorizontalBookListComponent {
 			this.router.navigate(["store", "category", this.categories[0]])
 		} else if (this.type == "collection") {
 			this.router.navigate(["store", "series", this.collectionId])
+		} else if (this.type == "author") {
+			this.router.navigate(["store", "author", this.authorUuid])
 		}
 	}
 }

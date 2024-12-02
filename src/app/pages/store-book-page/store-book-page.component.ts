@@ -64,6 +64,7 @@ export class StoreBookPageComponent {
 
 	//#region VlbItem variables
 	collections: VlbCollectionResource[] = []
+	moreBooksByAuthorHeadline: string = ""
 	//#endregion
 
 	//#region Cover variables
@@ -204,8 +205,12 @@ export class StoreBookPageComponent {
 		this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
 
 		if (responseData.author != null) {
-			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
 			this.authorSlug = responseData.author.slug
+			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+			this.moreBooksByAuthorHeadline = this.locale.moreBooksByAuthor.replace(
+				"{0}",
+				this.authorName
+			)
 		}
 
 		if (responseData.publisher != null) {

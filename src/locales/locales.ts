@@ -207,7 +207,8 @@ const enDefaults = {
 		free: "Free",
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
-		moreBooksInCategories: "More books in these categories"
+		moreBooksInCategories: "More books in these categories",
+		moreBooksByAuthor: "More books by {0}"
 	},
 	storeBooksPage: {
 		allBooksTitle: "All books"
@@ -730,7 +731,8 @@ const deDefaults = {
 		free: "Kostenlos",
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
-		moreBooksInCategories: "Weitere Bücher in diesen Kategorien"
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
+		moreBooksByAuthor: "Weitere Bücher von {0}"
 	},
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
