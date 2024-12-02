@@ -258,6 +258,10 @@ export class PublisherProfileComponent {
 					slug
 					title
 					coverUrl
+					author {
+						firstName
+						lastName
+					}
 				}
 			`,
 			{
@@ -275,13 +279,19 @@ export class PublisherProfileComponent {
 		this.books = []
 
 		for (let item of listVlbItemsResponseData.items) {
-			this.books.push({
+			let bookListItem: BookListItem = {
 				uuid: item.uuid,
 				slug: item.slug,
 				title: item.title,
 				coverContent: item.coverUrl,
 				coverBlurhash: null
-			})
+			}
+
+			if (item.author != null) {
+				bookListItem.author = `${item.author.firstName} ${item.author.lastName}`
+			}
+
+			this.books.push(bookListItem)
 		}
 
 		this.pages = Math.floor(

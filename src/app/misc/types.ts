@@ -8,6 +8,7 @@ export interface BookListItem {
 	coverBlurhash: string
 	coverWidth?: number
 	coverHeight?: number
+	author?: string
 }
 
 export interface SeriesListItem {

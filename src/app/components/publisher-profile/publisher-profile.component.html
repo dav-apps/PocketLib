@@ -132,6 +132,7 @@
 				[imageBlurhash]="book.coverBlurhash"
 				imageAspectRatio="1:1.5"
 				[headline]="book.title"
+				[subhead]="book.author"
 				size="lg"
 				[href]="'/store/book/' + book.slug"
 				(click)="bookItemClick($event, book)"
