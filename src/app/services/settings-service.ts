@@ -71,9 +71,16 @@ export class SettingsService {
 
 	async addSearchQuery(searchQuery: string) {
 		let searchQueries = await this.getSearchQueries()
-
 		let i = searchQueries.findIndex(q => q == searchQuery)
-		if (i == -1) searchQueries.push(searchQuery)
+
+		if (i == -1) {
+			// Add the new search query
+			searchQueries.unshift(searchQuery)
+		} else {
+			// Move the search query to the first position
+			searchQueries.splice(i, 1)
+			searchQueries.unshift(searchQuery)
+		}
 
 		await this.setSearchQueries(searchQueries)
 	}

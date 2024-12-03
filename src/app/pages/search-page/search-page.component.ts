@@ -143,10 +143,12 @@ export class SearchPageComponent {
 		this.router.navigate(["store", "book", book.slug])
 	}
 
-	searchQueryClick(searchQuery: string) {
+	async searchQueryClick(searchQuery: string) {
 		this.query = searchQuery
 		this.page = 1
 		this.triggerSearch()
+
+		await this.settingsService.addSearchQuery(this.query)
 	}
 
 	searchQueryCloseButtonClick(searchQuery: string) {
