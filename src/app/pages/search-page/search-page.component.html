@@ -22,17 +22,21 @@
 	</div>
 	} @else if (query.length == 0) {
 	<div class="previous-searches-container">
-		<dav-list>
-			@for (searchQuery of searchQueries; track searchQuery) {
-			<dav-list-item
-				[headline]="searchQuery"
-				size="sm"
-				[closeButtonVisible]="true"
-				(click)="searchQueryClick(searchQuery)"
-				(closeButtonClick)="searchQueryCloseButtonClick(searchQuery)"
-			></dav-list-item>
-			}
-		</dav-list>
+		<dav-header size="sm">{{ locale.previousSearches }}</dav-header>
+
+		<div class="previous-searches-list-container">
+			<dav-list>
+				@for (searchQuery of searchQueries; track searchQuery) {
+				<dav-list-item
+					[headline]="searchQuery"
+					size="sm"
+					[closeButtonVisible]="true"
+					(click)="searchQueryClick(searchQuery)"
+					(closeButtonClick)="searchQueryCloseButtonClick(searchQuery)"
+				></dav-list-item>
+				}
+			</dav-list>
+		</div>
 	</div>
 	}
 

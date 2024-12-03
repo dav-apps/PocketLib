@@ -55,7 +55,7 @@ export class SearchPageComponent {
 	}
 
 	async ngOnInit() {
-		this.searchQueries = await this.settingsService.getSearchQueries()
+		await this.loadSearchQueries()
 	}
 
 	searchQueryChange() {
@@ -67,6 +67,12 @@ export class SearchPageComponent {
 	pageChange(event: CustomEvent) {
 		this.page = event.detail.page
 		this.triggerSearch()
+	}
+
+	async loadSearchQueries() {
+		this.searchQueries = (
+			await this.settingsService.getSearchQueries()
+		).slice(0, 5)
 	}
 
 	triggerSearch() {
@@ -151,10 +157,8 @@ export class SearchPageComponent {
 		await this.settingsService.addSearchQuery(this.query)
 	}
 
-	searchQueryCloseButtonClick(searchQuery: string) {
-		let i = this.searchQueries.findIndex(q => q == searchQuery)
-		if (i != -1) this.searchQueries.splice(i, 1)
-
+	async searchQueryCloseButtonClick(searchQuery: string) {
 		this.settingsService.removeSearchQuery(searchQuery)
+		await this.loadSearchQueries()
 	}
 }

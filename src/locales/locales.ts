@@ -49,7 +49,8 @@ const enDefaults = {
 		activateUpdate: "Activate update"
 	},
 	searchPage: {
-		searchInputPlaceholder: "Search for books"
+		searchInputPlaceholder: "Search for books",
+		previousSearches: "Recently searched"
 	},
 	authorPage: {
 		yourPublishers: "Your publishers",
@@ -567,7 +568,8 @@ const deDefaults = {
 		activateUpdate: "Update aktivieren"
 	},
 	searchPage: {
-		searchInputPlaceholder: "Suche nach Büchern"
+		searchInputPlaceholder: "Suche nach Büchern",
+		previousSearches: "Zuletzt gesucht"
 	},
 	authorPage: {
 		createProfile: "Erstelle dein Profil",
