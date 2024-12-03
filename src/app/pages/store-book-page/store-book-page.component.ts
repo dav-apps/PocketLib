@@ -658,16 +658,17 @@ export class StoreBookPageComponent {
 			return
 		}
 
-		let redirectUrl =
+		let successUrl =
 			window.location.origin + window.location.pathname + "/confirmation"
+		let cancelUrl = window.location.origin + window.location.pathname
 		this.orderLoading = true
 
 		if (this.bookSource == "vlb") {
 			let createCheckoutSessionResponse =
 				await this.apiService.createCheckoutSessionForVlbItem(`url`, {
 					uuid: this.uuid,
-					successUrl: redirectUrl,
-					cancelUrl: redirectUrl
+					successUrl,
+					cancelUrl
 				})
 
 			const url =
@@ -679,8 +680,8 @@ export class StoreBookPageComponent {
 			let createCheckoutSessionResponse =
 				await this.apiService.createCheckoutSessionForStoreBook(`url`, {
 					storeBookUuid: this.uuid,
-					successUrl: redirectUrl,
-					cancelUrl: redirectUrl
+					successUrl,
+					cancelUrl
 				})
 
 			const url =

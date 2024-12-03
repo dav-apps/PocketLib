@@ -355,7 +355,7 @@ export class PublisherProfileComponent {
 
 	bookItemClick(event: Event, book: BookListItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "book", book.uuid])
+		this.router.navigate(["store", "book", book.slug])
 	}
 
 	async searchQueryChange(event: CustomEvent) {
