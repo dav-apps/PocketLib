@@ -1,5 +1,14 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
 
+export interface VisitedBook {
+	type: "StoreBook" | "VlbItem"
+	slug: string
+	title: string
+	coverUrl: string
+	coverBlurhash: string
+	coverAspectRatio: string
+}
+
 export interface BookListItem {
 	uuid: string
 	slug: string

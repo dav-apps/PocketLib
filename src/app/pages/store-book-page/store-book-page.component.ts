@@ -15,6 +15,7 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
@@ -114,6 +115,7 @@ export class StoreBookPageComponent {
 		private apiService: ApiService,
 		private routingService: RoutingService,
 		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {}
@@ -232,6 +234,15 @@ export class StoreBookPageComponent {
 			// Navigate to the checkout page
 			this.Order()
 		}
+
+		this.settingsService.addVisitedBook({
+			type: "VlbItem",
+			slug: this.slug,
+			title: this.title,
+			coverUrl: this.coverUrl,
+			coverBlurhash: null,
+			coverAspectRatio: null
+		})
 
 		return true
 	}
@@ -446,6 +457,15 @@ export class StoreBookPageComponent {
 					})
 			}
 		}
+
+		this.settingsService.addVisitedBook({
+			type: "StoreBook",
+			slug: this.slug,
+			title: this.title,
+			coverUrl: this.coverUrl,
+			coverBlurhash: this.coverBlurhash,
+			coverAspectRatio: cover?.aspectRatio
+		})
 	}
 
 	async Read() {

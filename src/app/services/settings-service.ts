@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core"
 import * as localforage from "localforage"
 import { keys } from "src/constants/keys"
-import { Language } from "src/app/misc/types"
+import { Language, VisitedBook } from "src/app/misc/types"
 
 @Injectable()
 export class SettingsService {
@@ -92,6 +92,33 @@ export class SettingsService {
 		if (i != -1) searchQueries.splice(i, 1)
 
 		await this.setSearchQueries(searchQueries)
+	}
+	//#endregion
+
+	//#region VisitedBooks
+	async setVisitedBooks(visitedBooks: VisitedBook[]) {
+		await localforage.setItem(keys.settingsVisitedBooksKey, visitedBooks)
+		this.cache[keys.settingsVisitedBooksKey] = visitedBooks
+	}
+
+	async getVisitedBooks(): Promise<VisitedBook[]> {
+		return this.getSetting<VisitedBook[]>(keys.settingsVisitedBooksKey, [])
+	}
+
+	async addVisitedBook(visitedBook: VisitedBook) {
+		let visitedBooks = await this.getVisitedBooks()
+		let i = visitedBooks.findIndex(b => b.slug == visitedBook.slug)
+
+		if (i == -1) {
+			// Add the new item
+			visitedBooks.unshift(visitedBook)
+		} else {
+			// Move the item to the first position
+			visitedBooks.splice(i, 1)
+			visitedBooks.unshift(visitedBook)
+		}
+
+		await this.setVisitedBooks(visitedBooks)
 	}
 	//#endregion
 

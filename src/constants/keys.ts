@@ -32,6 +32,7 @@ export const keys = {
 	settingsOpenLastReadBookKey: "settings-openLastReadBook",
 	settingsStoreLanguagesKey: "settings-storeLanguages",
 	settingsSearchQueriesKey: "settings-searchQueries",
+	settingsVisitedBooksKey: "settings-visitedBooks",
 	// Settings default
 	settingsThemeDefault: "system",
 	settingsOpenLastReadBookDefault: true,
