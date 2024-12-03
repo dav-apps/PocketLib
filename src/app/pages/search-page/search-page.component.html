@@ -38,6 +38,16 @@
 			</dav-list>
 		</div>
 	</div>
+
+	<div class="visited-books-container">
+		<dav-header size="sm">{{ locale.previouslyVisited }}</dav-header>
+
+		<pocketlib-horizontal-book-list
+			type="visitedBooks"
+			alignment="center"
+			[visitedBooks]="visitedBooks"
+		></pocketlib-horizontal-book-list>
+	</div>
 	}
 
 	<div class="list-container">

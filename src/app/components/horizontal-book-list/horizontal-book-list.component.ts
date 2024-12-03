@@ -6,6 +6,7 @@ import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { SettingsService } from "src/app/services/settings-service"
 import {
+	VisitedBook,
 	BookListItem,
 	ApiResponse,
 	StoreBookResource,
@@ -19,6 +20,7 @@ type HorizontalBookListType =
 	| "series"
 	| "collection"
 	| "author"
+	| "visitedBooks"
 	| "random"
 type HorizontalBookListAlignment = "start" | "center"
 
@@ -36,6 +38,7 @@ export class HorizontalBookListComponent {
 	@Input() series: string = ""
 	@Input() collectionId: string = ""
 	@Input() authorUuid: string = ""
+	@Input() visitedBooks: VisitedBook[] = []
 	@Input() maxItems: number = 10
 	@Input() hideMoreButton: boolean = false
 	@Input() alignment: HorizontalBookListAlignment = "start"
@@ -61,6 +64,8 @@ export class HorizontalBookListComponent {
 			await this.LoadVlbItemsByCollectionId()
 		} else if (this.type == "author") {
 			await this.LoadVlbItemsByAuthor()
+		} else if (this.type == "visitedBooks") {
+			await this.LoadVisitedBooks()
 		} else if (this.type == "random") {
 			await this.LoadStoreBooksRandomly()
 		} else {
@@ -86,6 +91,11 @@ export class HorizontalBookListComponent {
 			changes.authorUuid.currentValue.length > 0
 		) {
 			await this.LoadVlbItemsByAuthor()
+		} else if (
+			changes.visitedBooks != null &&
+			changes.visitedBooks.currentValue.length > 0
+		) {
+			await this.LoadVisitedBooks()
 		}
 	}
 
@@ -252,6 +262,62 @@ export class HorizontalBookListComponent {
 		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
+	async LoadVisitedBooks() {
+		this.books = []
+
+		if (this.visitedBooks.length == 0) {
+			this.loading = false
+			return
+		}
+
+		for (let visitedBook of this.visitedBooks) {
+			if (visitedBook.type == "StoreBook") {
+				// visitedBook is StoreBook
+				let height = 209
+				let width = AdaptCoverWidthHeightToAspectRatio(
+					135,
+					height,
+					visitedBook.coverAspectRatio
+				)
+
+				let bookListItem: BookListItem = {
+					uuid: visitedBook.slug,
+					slug: visitedBook.slug,
+					title: visitedBook.title,
+					coverContent: null,
+					coverBlurhash: visitedBook.coverBlurhash,
+					coverWidth: width,
+					coverHeight: height
+				}
+
+				this.apiService
+					.downloadFile(visitedBook.coverUrl)
+					.then((fileResponse: ApiResponse<string>) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookListItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
+
+				this.books.push(bookListItem)
+			} else {
+				// visitedBook is VlbItem
+				this.books.push({
+					uuid: visitedBook.slug,
+					slug: visitedBook.slug,
+					title: visitedBook.title,
+					coverContent: visitedBook.coverUrl,
+					coverBlurhash: null,
+					coverWidth: null,
+					coverHeight: 209
+				})
+			}
+		}
+
+		this.loading = false
+	}
+
 	async LoadStoreBooksRandomly() {
 		let total = 0
 		let page = this.page - 1
@@ -265,7 +331,6 @@ export class HorizontalBookListComponent {
 						uuid
 						slug
 						title
-						description
 						coverUrl
 					}
 				`,
@@ -315,7 +380,7 @@ export class HorizontalBookListComponent {
 		this.hasMoreItems = total > this.maxItems
 	}
 
-	ShowBooks(books: StoreBookResource[] | VlbItemResource[]) {
+	ShowBooks(books: (StoreBookResource | VlbItemResource)[]) {
 		this.books = []
 
 		if (books.length == 0) {
@@ -323,9 +388,9 @@ export class HorizontalBookListComponent {
 			return
 		}
 
-		if (books[0].__typename == "StoreBook") {
-			// books is StoreBookResource[]
-			for (let book of books) {
+		for (let book of books) {
+			if (book.__typename == "StoreBook") {
+				// book is StoreBookResource
 				let storeBook = book as StoreBookResource
 				if (storeBook.cover == null) continue
 
@@ -357,10 +422,8 @@ export class HorizontalBookListComponent {
 					})
 
 				this.books.push(bookListItem)
-			}
-		} else {
-			// books is VlbItemResource[]
-			for (let book of books) {
+			} else {
+				// book is VlbItemResource
 				let vlbItem = book as VlbItemResource
 				if (vlbItem.coverUrl == null) continue
 

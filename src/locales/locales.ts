@@ -50,7 +50,8 @@ const enDefaults = {
 	},
 	searchPage: {
 		searchInputPlaceholder: "Search for books",
-		previousSearches: "Recently searched"
+		previousSearches: "Recently searched",
+		previouslyVisited: "Recently viewed"
 	},
 	authorPage: {
 		yourPublishers: "Your publishers",
@@ -569,7 +570,8 @@ const deDefaults = {
 	},
 	searchPage: {
 		searchInputPlaceholder: "Suche nach Büchern",
-		previousSearches: "Zuletzt gesucht"
+		previousSearches: "Zuletzt gesucht",
+		previouslyVisited: "Zuletzt angesehen"
 	},
 	authorPage: {
 		createProfile: "Erstelle dein Profil",

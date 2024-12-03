@@ -5,6 +5,7 @@ import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
+import { VisitedBook } from "src/app/misc/types"
 
 interface BookItem {
 	uuid: string
@@ -30,6 +31,7 @@ export class SearchPageComponent {
 	page: number = 1
 	maxVisibleBooks: number = 12
 	searchQueries: string[] = []
+	visitedBooks: VisitedBook[] = []
 
 	@ViewChild("searchInput") searchInput: ElementRef<HTMLInputElement>
 
@@ -56,6 +58,7 @@ export class SearchPageComponent {
 
 	async ngOnInit() {
 		await this.loadSearchQueries()
+		await this.loadVisitedBooks()
 	}
 
 	searchQueryChange() {
@@ -73,6 +76,13 @@ export class SearchPageComponent {
 		this.searchQueries = (
 			await this.settingsService.getSearchQueries()
 		).slice(0, 5)
+	}
+
+	async loadVisitedBooks() {
+		this.visitedBooks = (await this.settingsService.getVisitedBooks()).slice(
+			0,
+			10
+		)
 	}
 
 	triggerSearch() {
