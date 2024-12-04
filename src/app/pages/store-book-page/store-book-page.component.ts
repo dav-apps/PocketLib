@@ -157,8 +157,16 @@ export class StoreBookPageComponent {
 		}
 	}
 
-	BackButtonClick() {
-		this.routingService.navigateBack("/store")
+	backButtonClick() {
+		// Check if the user came from the confirmation page
+		let lastUrl =
+			this.router.lastSuccessfulNavigation.previousNavigation?.extractedUrl.toString()
+
+		if (lastUrl != null && lastUrl.endsWith("/confirmation")) {
+			this.routingService.navigateToStorePage()
+		} else {
+			this.routingService.navigateBack("/store")
+		}
 	}
 
 	async loadVlbItemData(): Promise<boolean> {
