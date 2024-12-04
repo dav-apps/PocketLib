@@ -71,10 +71,10 @@ export class OrderConfirmationPageComponent {
 	}
 
 	navigateBack() {
-		this.routingService.NavigateBack(`/store/book/${this.slug}`)
+		this.router.navigate(["store", "book", this.slug])
 	}
 
 	navigateToUserPage() {
-		this.routingService.NavigateToUserPage()
+		this.routingService.navigateToUserPage()
 	}
 }

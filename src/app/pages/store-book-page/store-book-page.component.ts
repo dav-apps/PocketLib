@@ -158,7 +158,7 @@ export class StoreBookPageComponent {
 	}
 
 	BackButtonClick() {
-		this.routingService.NavigateBack("/store")
+		this.routingService.navigateBack("/store")
 	}
 
 	async loadVlbItemData(): Promise<boolean> {

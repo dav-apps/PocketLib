@@ -120,7 +120,7 @@ export class NewBookPageComponent {
 		}
 
 		if (this.author == null) {
-			this.routingService.NavigateBack("/author")
+			this.routingService.navigateBack("/author")
 			return
 		}
 
@@ -187,7 +187,7 @@ export class NewBookPageComponent {
 		this.leavePageDialog.show()
 
 		if (await this.navigationEventPromiseHolder.AwaitResult()) {
-			this.routingService.NavigateBack("/author")
+			this.routingService.navigateBack("/author")
 		}
 	}
 

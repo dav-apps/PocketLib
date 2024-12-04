@@ -18,6 +18,6 @@ export class StoreCategoriesPageComponent {
 	) {}
 
 	backButtonClick() {
-		this.routingService.NavigateBack("/store")
+		this.routingService.navigateBack("/store")
 	}
 }

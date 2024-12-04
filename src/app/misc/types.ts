@@ -57,12 +57,6 @@ export interface CategoryCard {
 	text: string
 }
 
-export interface Route {
-	url: string
-	fullUrl?: string
-	params: { [key: string]: any }
-}
-
 export enum PublisherMode {
 	Normal = 0, // If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
 	PublisherOfUser = 1, // If the publisher belongs to the user

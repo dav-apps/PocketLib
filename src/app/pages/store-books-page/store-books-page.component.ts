@@ -73,7 +73,7 @@ export class StoreBooksPageComponent {
 	}
 
 	BackButtonClick() {
-		this.routingService.NavigateBack("/store")
+		this.routingService.navigateBack("/store")
 	}
 
 	async UpdateView() {

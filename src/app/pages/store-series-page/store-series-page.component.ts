@@ -74,8 +74,7 @@ export class StoreSeriesPageComponent {
 			retrieveVlbCollectionResponse.data?.retrieveVlbCollection
 
 		if (retrieveVlbCollectionResponseData == null) {
-			// Redirect to back
-			this.routingService.NavigateBack("/store")
+			this.routingService.navigateBack("/store")
 			return
 		}
 
@@ -127,7 +126,7 @@ export class StoreSeriesPageComponent {
 	}
 
 	backButtonClick() {
-		this.routingService.NavigateBack("/store")
+		this.routingService.navigateBack("/store")
 	}
 
 	pageChange(page: number) {

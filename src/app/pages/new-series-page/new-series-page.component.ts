@@ -116,7 +116,7 @@ export class NewSeriesPageComponent {
 	}
 
 	GoBack() {
-		this.routingService.NavigateBack("/author")
+		this.routingService.navigateBack("/author")
 	}
 
 	SetLanguage(language: string) {

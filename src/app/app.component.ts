@@ -30,6 +30,7 @@ import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "./services/dav-api-service"
+import { RoutingService } from "./services/routing-service"
 import { LocalizationService } from "./services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "./models/EpubBook"
@@ -74,6 +75,7 @@ export class AppComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private davApiService: DavApiService,
+		private routingService: RoutingService,
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
@@ -196,27 +198,27 @@ export class AppComponent {
 	}
 
 	navigateToLibraryPage() {
-		this.router.navigate(["/"])
+		this.routingService.navigateToLibraryPage()
 	}
 
 	navigateToStorePage() {
-		this.router.navigate(["/store"])
+		this.routingService.navigateToStorePage()
 	}
 
 	navigateToSearchPage() {
-		this.router.navigate(["/search"])
+		this.routingService.navigateToSearchPage()
 	}
 
 	navigateToAuthorPage() {
-		this.router.navigate(["/author"])
+		this.routingService.navigateToAuthorPage()
 	}
 
 	navigateToUserPage() {
-		this.router.navigate(["/user"])
+		this.routingService.navigateToUserPage()
 	}
 
 	navigateToSettingsPage() {
-		this.router.navigate(["/settings"])
+		this.routingService.navigateToSettingsPage()
 	}
 
 	navigateToBook(book: EpubBook) {
