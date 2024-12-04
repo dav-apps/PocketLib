@@ -20,7 +20,7 @@
 	<div class="progress-ring-container">
 		<dav-progress-ring size="32"></dav-progress-ring>
 	</div>
-	} @else if (query.length == 0) {
+	} @else if (query.length == 0) { @if (searchQueries.length > 0) {
 	<div class="previous-searches-container">
 		<dav-header size="sm">{{ locale.previousSearches }}</dav-header>
 
@@ -38,7 +38,7 @@
 			</dav-list>
 		</div>
 	</div>
-
+	} @if (visitedBooks.length > 0) {
 	<div class="visited-books-container">
 		<dav-header size="sm">{{ locale.previouslyVisited }}</dav-header>
 
@@ -48,7 +48,7 @@
 			[visitedBooks]="visitedBooks"
 		></pocketlib-horizontal-book-list>
 	</div>
-	}
+	} }
 
 	<div class="list-container">
 		<dav-list>

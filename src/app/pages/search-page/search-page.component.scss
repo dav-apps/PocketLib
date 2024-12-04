@@ -1,13 +1,16 @@
 .container {
 	display: flex;
 	flex-direction: column;
-	padding: 12px;
 	align-items: center;
+	padding-top: 24px;
 }
 
 .search-field-container {
 	max-width: 400px;
 	width: 100%;
+	box-sizing: border-box;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 .search-input-container {
@@ -51,10 +54,14 @@
 .list-container {
 	max-width: 600px;
 	margin: 32px auto;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 .previous-searches-container {
 	margin-top: 64px;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 .previous-searches-list-container {
@@ -68,6 +75,7 @@
 
 .visited-books-container {
 	margin-top: 64px;
+	max-width: 100%;
 
 	dav-header {
 		margin-bottom: 32px;
