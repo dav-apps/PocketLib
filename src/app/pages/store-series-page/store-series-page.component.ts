@@ -1,5 +1,5 @@
 import { Component } from "@angular/core"
-import { Router, ActivatedRoute, ParamMap } from "@angular/router"
+import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
@@ -37,11 +37,12 @@ export class StoreSeriesPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.dataService.simpleLoadingScreenVisible = true
+		this.slug = this.activatedRoute.snapshot.paramMap.get("slug")
 
-		this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
-			this.slug = paramMap.get("slug")
-			this.loadSeries()
-		})
+		let pageParam = this.activatedRoute.snapshot.queryParamMap.get("page")
+		if (pageParam != null) this.page = Number(pageParam)
+
+		this.loadSeries()
 
 		this.activatedRoute.url.subscribe(() => {
 			const queryParams = this.activatedRoute.snapshot.queryParamMap
