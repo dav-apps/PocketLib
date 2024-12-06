@@ -12,6 +12,7 @@ dav-header {
 	margin: 0 auto;
 	font-size: 20px;
 	text-align: center;
+	color: var(--dav-color-on-surface);
 }
 
 .content-container {
@@ -40,12 +41,14 @@ dav-header {
 .title {
 	font-size: 24px;
 	margin: 0;
+	color: var(--dav-color-on-surface);
 }
 
 .price {
 	font-size: 20px;
 	margin-top: 8px;
 	margin-bottom: 0;
+	color: var(--dav-color-on-surface);
 }
 
 .buttons-container {
