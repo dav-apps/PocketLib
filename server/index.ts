@@ -13,7 +13,7 @@ switch (process.env.ENV) {
 		websiteUrl = "https://pocketlib.app"
 		break
 	case "staging":
-		backendUrl = "https://pocketlib-api-staging-aeksy.ondigitalocean.app/"
+		backendUrl = "https://pocketlib-api-staging-rl8zc.ondigitalocean.app/"
 		websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
 		break
 }
