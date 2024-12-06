@@ -3,7 +3,7 @@ import { Environment } from "dav-js"
 export const environment = {
 	environment: Environment.Production,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
-	davApiUrl: "http://localhost:4000",
+	davApiUrl: "https://dav-api-ax6gp.ondigitalocean.app",
 	pocketlibApiUrl: "https://pocketlib-api-dj7q2.ondigitalocean.app",
 	websiteBaseUrl: "https://dav-apps.tech",
 	appId: 6,
