@@ -1864,6 +1864,54 @@ export class ApiService {
 
 		return result
 	}
+
+	async listVlbCollections(
+		queryData: string,
+		variables: {
+			random?: boolean
+			limit?: number
+			offset?: number
+		}
+	): Promise<
+		ApolloQueryResult<{ listVlbCollections: List<VlbCollectionResource> }>
+	> {
+		let result = await this.apollo
+			.query<{
+				listVlbCollections: List<VlbCollectionResource>
+			}>({
+				query: gql`
+					query ListVlbCollections(
+						$random: Boolean
+						$limit: Int
+						$offset: Int
+					) {
+						listVlbCollections(
+							random: $random
+							limit: $limit
+							offset: $offset
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listVlbCollections(queryData, variables)
+		}
+
+		return result
+	}
 	//#endregion
 
 	//#region Misc

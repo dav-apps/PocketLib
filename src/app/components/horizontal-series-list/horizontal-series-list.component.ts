@@ -3,7 +3,12 @@ import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { SettingsService } from "src/app/services/settings-service"
-import { BookListItem, SeriesListItem, ApiResponse } from "src/app/misc/types"
+import {
+	BookListItem,
+	SeriesListItem,
+	ApiResponse,
+	Language
+} from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
 const maxVisibleSeries = 5
@@ -27,6 +32,20 @@ export class HorizontalSeriesListComponent {
 	) {}
 
 	async ngOnInit() {
+		let languages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
+
+		if (languages.includes(Language.de)) {
+			// Show VlbCollections
+			await this.loadVlbCollections()
+		} else {
+			// Show StoreBookSeries
+			await this.loadStoreBookSeries()
+		}
+	}
+
+	async loadStoreBookSeries() {
 		let response = await this.apiService.listStoreBookSeries(
 			`
 				items {
@@ -94,6 +113,57 @@ export class HorizontalSeriesListComponent {
 			}
 
 			this.series.push(seriesItem)
+		}
+
+		this.loading = false
+	}
+
+	async loadVlbCollections() {
+		let response = await this.apiService.listVlbCollections(
+			`
+				items {
+					uuid
+					slug
+					vlbItems(limit: 6) {
+						items {
+							uuid
+							slug
+							title
+							coverUrl
+						}
+					}
+				}
+			`,
+			{
+				random: this.type == "random",
+				limit: maxVisibleSeries
+			}
+		)
+
+		let responseData = response.data.listVlbCollections
+		if (responseData == null) return
+
+		for (let vlbCollection of responseData.items) {
+			let collectionItem: SeriesListItem = {
+				uuid: vlbCollection.uuid,
+				books: []
+			}
+
+			for (let vlbItem of vlbCollection.vlbItems.items) {
+				if (vlbItem.coverUrl == null) continue
+
+				collectionItem.books.push({
+					uuid: vlbItem.uuid,
+					slug: vlbItem.slug,
+					title: vlbItem.title,
+					coverContent: vlbItem.coverUrl,
+					coverBlurhash: null,
+					coverWidth: null,
+					coverHeight: 165
+				})
+			}
+
+			this.series.push(collectionItem)
 		}
 
 		this.loading = false

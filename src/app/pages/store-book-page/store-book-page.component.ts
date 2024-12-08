@@ -234,7 +234,8 @@ export class StoreBookPageComponent {
 			this.collections.push({
 				uuid: collection.uuid,
 				slug: collection.slug,
-				title: this.locale.moreOfSeries.replace("{0}", collection.title)
+				title: this.locale.moreOfSeries.replace("{0}", collection.title),
+				vlbItems: null
 			})
 		}
 

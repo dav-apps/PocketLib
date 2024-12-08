@@ -300,6 +300,7 @@ export interface VlbCollectionResource {
 	uuid: string
 	slug: string
 	title: string
+	vlbItems: List<VlbItemResource>
 }
 //#endregion
 
