@@ -62,6 +62,8 @@ export class AuthorSeriesPageComponent {
 		this.dragulaService
 			.dragend("books")
 			.subscribe(() => (this.dragging = false))
+		
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

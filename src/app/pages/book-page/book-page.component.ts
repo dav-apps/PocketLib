@@ -19,6 +19,8 @@ export class BookPageComponent {
 	constructor(public dataService: DataService, private router: Router) {
 		this.dataService.navbarVisible = false
 		this.dataService.bookPageVisible = true
+
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

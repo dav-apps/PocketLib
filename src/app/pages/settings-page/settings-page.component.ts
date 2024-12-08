@@ -47,6 +47,8 @@ export class SettingsPageComponent {
 		private settingsService: SettingsService,
 		private swUpdate: SwUpdate
 	) {
+		this.dataService.setMeta()
+
 		this.themeDropdownOptions[0].value = this.locale.systemTheme
 		this.themeDropdownOptions[1].value = this.locale.lightTheme
 		this.themeDropdownOptions[2].value = this.locale.darkTheme

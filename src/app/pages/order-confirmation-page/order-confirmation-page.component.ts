@@ -28,6 +28,7 @@ export class OrderConfirmationPageComponent {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.dataService.simpleLoadingScreenVisible = true
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

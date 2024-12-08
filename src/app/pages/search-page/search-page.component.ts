@@ -43,6 +43,8 @@ export class SearchPageComponent {
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
+		this.dataService.setMeta()
+
 		this.activatedRoute.url.subscribe(() => {
 			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
 				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")

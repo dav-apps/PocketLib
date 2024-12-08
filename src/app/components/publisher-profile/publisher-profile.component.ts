@@ -182,6 +182,7 @@ export class PublisherProfileComponent {
 			this.vlbPublisherId = retrieveVlbPublisherResponseData.id
 			this.vlbPublisherName = retrieveVlbPublisherResponseData.name
 			this.vlbPublisherUrl = retrieveVlbPublisherResponseData.url
+			this.setMeta()
 
 			// Get book items
 			await this.loadVlbPublisherItems()
@@ -214,7 +215,9 @@ export class PublisherProfileComponent {
 		}
 
 		if (this.publisher == null) return
+
 		this.UpdateSocialMediaLinks()
+		this.setMeta()
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
@@ -390,6 +393,22 @@ export class PublisherProfileComponent {
 			this.publisher.instagramUsername
 		)
 		this.twitterLink = GenerateTwitterLink(this.publisher.twitterUsername)
+	}
+
+	setMeta() {
+		if (this.publisherMode == PublisherMode.VlbPublisher) {
+			this.dataService.setMeta({
+				title: `${this.vlbPublisherName} | PocketLib`,
+				url: `store/publisher/${this.vlbPublisherId}`
+			})
+		} else {
+			this.dataService.setMeta({
+				title: `${this.publisher.name} | PocketLib`,
+				description: this.publisher.description,
+				image: this.publisher.logo.url,
+				url: `store/publisher/${this.publisher.slug}`
+			})
+		}
 	}
 
 	LogoFileSelected(file: ReadFile) {

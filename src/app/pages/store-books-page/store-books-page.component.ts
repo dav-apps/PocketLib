@@ -91,6 +91,11 @@ export class StoreBooksPageComponent {
 			this.header = this.locale.allBooksTitle
 		}
 
+		this.dataService.setMeta({
+			title: `${this.header} | PocketLib`,
+			url: `store/category/${this.key}`
+		})
+
 		// Get the books of the appropriate context
 		this.books = []
 		this.dataService.simpleLoadingScreenVisible = true

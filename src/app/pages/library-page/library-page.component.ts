@@ -99,6 +99,7 @@ export class LibraryPageComponent {
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
 		this.dataService.loadingScreenVisible = false
 
+		this.dataService.setMeta()
 		this.setSize()
 	}
 

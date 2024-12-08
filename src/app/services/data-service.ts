@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
+import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { ApiService } from "src/app/services/api-service"
@@ -65,7 +66,9 @@ export class DataService {
 	constructor(
 		private apiService: ApiService,
 		private settingsService: SettingsService,
-		private swUpdate: SwUpdate
+		private swUpdate: SwUpdate,
+		private title: Title,
+		private meta: Meta
 	) {
 		// Set the supported locale
 		if (this.locale.startsWith("de")) {
@@ -339,6 +342,33 @@ export class DataService {
 				})
 			)
 		}
+	}
+
+	setMeta(params?: {
+		title?: string
+		description?: string
+		image?: string
+		url?: string
+	}) {
+		const title = params?.title ?? "PocketLib"
+		const description =
+			params?.description ?? "PocketLib is a simple and modern ebook reader"
+		const image = params?.image ?? "/assets/icons/icon-128x128.png"
+		const url = params?.url ?? ""
+		const absoluteUrl = `https://pocketlib.app/${url}`
+
+		this.title.setTitle(title)
+		this.meta.updateTag({ content: description }, "name='description'")
+		this.meta.updateTag({ content: title }, "name='twitter:title'")
+		this.meta.updateTag(
+			{ content: description },
+			"name='twitter:description'"
+		)
+		this.meta.updateTag({ content: image }, "name='twitter:image'")
+
+		this.meta.updateTag({ content: title }, "property='og:title'")
+		this.meta.updateTag({ content: image }, "property='og:image'")
+		this.meta.updateTag({ content: absoluteUrl }, "property='og:url'")
 	}
 }
 

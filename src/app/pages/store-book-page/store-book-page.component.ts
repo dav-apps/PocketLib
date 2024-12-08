@@ -253,6 +253,13 @@ export class StoreBookPageComponent {
 			this.Order()
 		}
 
+		this.dataService.setMeta({
+			title: `${this.title} | PocketLib`,
+			description: this.description,
+			image: this.coverUrl,
+			url: `store/book/${this.slug}`
+		})
+
 		this.settingsService.addVisitedBook({
 			type: "VlbItem",
 			slug: this.slug,
@@ -475,6 +482,13 @@ export class StoreBookPageComponent {
 					})
 			}
 		}
+
+		this.dataService.setMeta({
+			title: `${this.title} | PocketLib`,
+			description: this.description,
+			image: this.coverUrl,
+			url: `store/book/${this.slug}`
+		})
 
 		this.settingsService.addVisitedBook({
 			type: "StoreBook",

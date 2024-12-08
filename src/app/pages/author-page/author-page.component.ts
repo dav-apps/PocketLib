@@ -45,6 +45,8 @@ export class AuthorPageComponent {
 	) {
 		// Get the slug from the url
 		this.slug = this.activatedRoute.snapshot.paramMap.get("slug")
+
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

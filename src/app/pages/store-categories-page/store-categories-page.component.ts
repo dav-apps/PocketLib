@@ -15,7 +15,9 @@ export class StoreCategoriesPageComponent {
 		public dataService: DataService,
 		private routingService: RoutingService,
 		private localizationService: LocalizationService
-	) {}
+	) {
+		this.dataService.setMeta()
+	}
 
 	backButtonClick() {
 		this.routingService.navigateBack("/store")

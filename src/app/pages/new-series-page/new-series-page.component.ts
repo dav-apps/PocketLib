@@ -38,7 +38,9 @@ export class NewSeriesPageComponent {
 		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {}
+	) {
+		this.dataService.setMeta()
+	}
 
 	async ngOnInit() {
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()

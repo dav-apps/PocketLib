@@ -81,6 +81,11 @@ export class StoreSeriesPageComponent {
 		this.uuid = retrieveVlbCollectionResponseData.uuid
 		this.title = retrieveVlbCollectionResponseData.title
 
+		this.dataService.setMeta({
+			title: `${this.title} | PocketLib`,
+			url: `store/series/${this.slug}`
+		})
+
 		await this.loadBooks()
 	}
 

@@ -48,6 +48,8 @@ export class UserPageComponent {
 	) {
 		// Get the redirect url param
 		this.redirect = this.activatedRoute.snapshot.queryParamMap.get("redirect")
+
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

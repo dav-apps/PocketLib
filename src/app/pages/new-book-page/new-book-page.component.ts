@@ -88,6 +88,8 @@ export class NewBookPageComponent {
 	) {
 		this.routingService.toolbarNavigationEvent = async () =>
 			await this.HandleToolbarNavigationEvent()
+
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {

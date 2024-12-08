@@ -13,5 +13,7 @@ export class StoreStartPageComponent {
 	constructor(
 		public dataService: DataService,
 		private localizationService: LocalizationService
-	) {}
+	) {
+		this.dataService.setMeta()
+	}
 }

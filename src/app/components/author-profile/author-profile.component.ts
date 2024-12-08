@@ -195,6 +195,7 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
+				this.setMeta()
 			}
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser
@@ -204,6 +205,7 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
+				this.setMeta()
 
 				// Set the text and visibility for the provider message
 				this.providerMessage = this.locale.messages.providerMessage.replace(
@@ -235,6 +237,7 @@ export class AuthorProfileComponent {
 			if (retrieveVlbAuthorResponseData == null) {
 				// Get the author from the server
 				await this.LoadAuthor()
+				this.setMeta()
 			} else {
 				this.authorMode = AuthorMode.VlbAuthor
 				this.vlbAuthorUuid = retrieveVlbAuthorResponseData.uuid
@@ -242,6 +245,8 @@ export class AuthorProfileComponent {
 				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
 				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
 				this.vlbAuthorBio = retrieveVlbAuthorResponseData.bio ?? ""
+
+				this.setMeta()
 
 				// Get the books of the author
 				await this.loadVlbAuthorItems()
@@ -585,6 +590,23 @@ export class AuthorProfileComponent {
 		}
 
 		this.UpdateCurrentBio()
+	}
+
+	setMeta() {
+		if (this.authorMode == AuthorMode.VlbAuthor) {
+			this.dataService.setMeta({
+				title: `${this.vlbAuthorFirstName} ${this.vlbAuthorLastName} | PocketLib`,
+				description: this.vlbAuthorBio,
+				url: `store/author/${this.vlbAuthorSlug}`
+			})
+		} else {
+			this.dataService.setMeta({
+				title: `${this.author.firstName} ${this.author.lastName} | PocketLib`,
+				description: this.author.bio.bio,
+				image: this.author.profileImage.url,
+				url: `store/author/${this.author.slug}`
+			})
+		}
 	}
 
 	bookItemClick(event: Event, book: BookListItem) {

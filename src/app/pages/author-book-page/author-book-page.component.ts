@@ -118,7 +118,9 @@ export class AuthorBookPageComponent {
 		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {}
+	) {
+		this.dataService.setMeta()
+	}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded
