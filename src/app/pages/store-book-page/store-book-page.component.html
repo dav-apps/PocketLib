@@ -11,6 +11,10 @@
 			(backButtonClick)="backButtonClick()"
 		>
 			{{ title }}
+
+			<dav-icon-button slot="icons" size="sm" (click)="shareButtonClick()">
+				<fa-icon [icon]="faShareFromSquare"></fa-icon>
+			</dav-icon-button>
 		</dav-header>
 		}
 
@@ -111,6 +115,10 @@
 			(backButtonClick)="backButtonClick()"
 		>
 			{{ title }}
+
+			<dav-icon-button slot="icons" size="sm" (click)="shareButtonClick()">
+				<fa-icon [icon]="faShareFromSquare"></fa-icon>
+			</dav-icon-button>
 		</dav-header>
 		}
 

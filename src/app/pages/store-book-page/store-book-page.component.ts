@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
+import { faShareFromSquare } from "@fortawesome/pro-regular-svg-icons"
 import {
 	Dav,
 	CheckoutSessionsController,
@@ -36,6 +37,7 @@ import {
 export class StoreBookPageComponent {
 	locale = this.localizationService.locale.storeBookPage
 	miscLocale = this.localizationService.locale.misc
+	faShareFromSquare = faShareFromSquare
 	bookSource: "pocketlib" | "vlb" = "pocketlib"
 	orderLoading: boolean = false
 	redirectToCheckout: boolean = false
@@ -167,6 +169,13 @@ export class StoreBookPageComponent {
 		} else {
 			this.routingService.navigateBack("/store")
 		}
+	}
+
+	shareButtonClick() {
+		navigator.share({
+			url: window.location.origin + window.location.pathname,
+			title: this.title
+		})
 	}
 
 	async loadVlbItemData(): Promise<boolean> {
