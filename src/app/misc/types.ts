@@ -332,6 +332,11 @@ export interface ShippingAddress {
 	status: string
 }
 
+export interface CheckoutSession {
+	url: string
+}
+
+export type Plan = "FREE" | "PLUS" | "PRO"
 export type Currency = "EUR"
 export type TableObjectPriceType = "PURCHASE" | "ORDER"
 export type OrderStatus = "CREATED" | "PREPARATION" | "SHIPPED"

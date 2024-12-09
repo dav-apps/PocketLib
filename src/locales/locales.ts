@@ -30,7 +30,13 @@ const enDefaults = {
 		storageUsed: "{0} GB of {1} GB used",
 		yourOrders: "Your orders",
 		preparationStatus: "Shipping is being prepared",
-		shippedStatus: "Shipped"
+		shippedStatus: "Shipped",
+		upgradeProCard: {
+			headline: "PocketLib Pro",
+			subhead: "10 € per month",
+			benefit1: "🚚 Free shipping",
+			getStarted: "Get started"
+		}
 	},
 	settingsPage: {
 		title: "Settings",
@@ -542,7 +548,13 @@ const deDefaults = {
 		storageUsed: "{0} GB von {1} GB verwendet",
 		yourOrders: "Deine Bestellungen",
 		preparationStatus: "Versand wird vorbereitet",
-		shippedStatus: "Versendet"
+		shippedStatus: "Versendet",
+		upgradeProCard: {
+			headline: "PocketLib Pro",
+			subhead: "10 € pro Monat",
+			benefit1: "🚚 Kostenloser Versand",
+			getStarted: "Jetzt loslegen"
+		}
 	},
 	settingsPage: {
 		title: "Einstellungen",

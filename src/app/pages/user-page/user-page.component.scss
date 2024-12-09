@@ -69,7 +69,7 @@
 	}
 }
 
-fa-icon {
+.benefits-container fa-icon {
 	font-size: 60px;
 }
 
@@ -134,4 +134,55 @@ h2 {
 
 .orders-list-container {
 	max-width: 500px;
+}
+
+.pro-card-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 90px;
+}
+
+.pro-card-inner-container {
+	text-align: center;
+	margin: 0;
+	min-width: 200px;
+	max-width: 250px;
+
+	h3 {
+		font-size: 20px;
+		margin: 4px 0;
+	}
+
+	.card-price {
+		margin: 10px 0 16px;
+	}
+
+	.border {
+		border-top: 1px solid rgb(var(--dav-color-outline-rgb), 0.15);
+	}
+
+	.card-item {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		padding: 16px 0;
+
+		p {
+			width: 80%;
+			margin: 0;
+		}
+	}
+
+	.action-button-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 16px;
+		padding-bottom: 4px;
+	}
+
+	.action-button-container.loading {
+		margin-left: 32px;
+	}
 }

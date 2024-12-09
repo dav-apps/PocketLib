@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core"
-import { Apollo, ApolloBase, gql } from "apollo-angular"
+import { Apollo, ApolloBase, MutationResult, gql } from "apollo-angular"
 import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
 import { renewSession } from "dav-js"
 import { davApiClientName } from "src/constants/constants"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { List, Order, OrderStatus } from "../misc/types"
+import { List, Order, OrderStatus, CheckoutSession, Plan } from "../misc/types"
 
 const errorPolicy: ErrorPolicy = "all"
 
@@ -56,6 +56,55 @@ export class DavApiService {
 			await renewSession()
 
 			return await this.listOrders(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region CheckoutSession
+	async createSubscriptionCheckoutSession(
+		queryData: string,
+		variables: { plan: Plan; successUrl: string; cancelUrl: string }
+	): Promise<
+		MutationResult<{ createSubscriptionCheckoutSession: CheckoutSession }>
+	> {
+		let result = await this.apollo
+			.mutate<{
+				createSubscriptionCheckoutSession: CheckoutSession
+			}>({
+				mutation: gql`
+					mutation CreateSubscriptionCheckoutSession(
+						$plan: Plan!
+						$successUrl: String!
+						$cancelUrl: String!
+					) {
+						createSubscriptionCheckoutSession(
+							plan: $plan
+							successUrl: $successUrl
+							cancelUrl: $cancelUrl
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions["code"] == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createSubscriptionCheckoutSession(
+				queryData,
+				variables
+			)
 		}
 
 		return result

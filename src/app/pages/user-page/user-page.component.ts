@@ -1,10 +1,11 @@
 import { Component, HostListener, ViewChild } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 import {
-	faBagShopping as faBagShoppingLight,
-	faRotate as faRotateLight,
-	faLock as faLockLight,
-	faLockKeyhole as faLockKeyholeLight
+	faBagShopping,
+	faRotate,
+	faLock,
+	faLockKeyhole,
+	faCircleInfo
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/logout-dialog.component"
@@ -20,10 +21,11 @@ import { environment } from "src/environments/environment"
 	styleUrls: ["./user-page.component.scss"]
 })
 export class UserPageComponent {
-	faBagShoppingLight = faBagShoppingLight
-	faRotateLight = faRotateLight
-	faLockLight = faLockLight
-	faLockKeyholeLight = faLockKeyholeLight
+	faBagShopping = faBagShopping
+	faRotate = faRotate
+	faLock = faLock
+	faLockKeyhole = faLockKeyhole
+	faCircleInfo = faCircleInfo
 	locale = this.localizationService.locale.userPage
 	@ViewChild("logoutDialog")
 	logoutDialog: LogoutDialogComponent
@@ -38,6 +40,7 @@ export class UserPageComponent {
 		coverSrc: string
 		status: string
 	}[] = []
+	proCardLoading: boolean = false
 
 	constructor(
 		public dataService: DataService,
@@ -183,5 +186,26 @@ export class UserPageComponent {
 	Logout() {
 		this.logoutDialog.hide()
 		this.dataService.dav.Logout().then(() => (window.location.href = "/user"))
+	}
+
+	async navigateToCheckoutPage() {
+		this.proCardLoading = true
+
+		let response = await this.davApiService.createSubscriptionCheckoutSession(
+			`url`,
+			{
+				plan: "PRO",
+				successUrl: window.location.origin,
+				cancelUrl: window.location.href
+			}
+		)
+
+		const url = response.data?.createSubscriptionCheckoutSession?.url
+
+		if (url != null) {
+			window.location.href = url
+		} else {
+			this.proCardLoading = false
+		}
 	}
 }
