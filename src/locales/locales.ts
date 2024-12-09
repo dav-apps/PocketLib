@@ -331,14 +331,6 @@ const enDefaults = {
 			isbnInvalid: "The ISBN is invalid"
 		}
 	},
-	davProCard: {
-		plan: "dav Pro",
-		price: "10 € per month",
-		feature1: "Get access to all books in the PocketLib Store",
-		feature2: "Support the authors of the books you read",
-		feature3: "Help us with the development of new apps and features",
-		selectPlan: "Select"
-	},
 	libraryPageCards: {
 		discoverBooks: "Discover books in the PocketLib Store",
 		addBook: "Open a local file",
@@ -859,14 +851,6 @@ const deDefaults = {
 		errors: {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}
-	},
-	davProCard: {
-		plan: "dav Pro",
-		price: "10 € pro Monat",
-		feature1: "Greife auf alle Bücher im PocketLib Store zu",
-		feature2: "Unterstütze die Autoren der Bücher, die du liest",
-		feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen",
-		selectPlan: "Auswählen"
 	},
 	libraryPageCards: {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
