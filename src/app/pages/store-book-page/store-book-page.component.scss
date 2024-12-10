@@ -156,6 +156,18 @@
 	margin-top: 16px;
 }
 
+.order-button-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.order-button-container.loading {
+	margin-left: 32px;
+}
+
 .publish-button-container {
 	display: flex;
 	margin-top: 16px;

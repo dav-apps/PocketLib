@@ -79,15 +79,15 @@
 					<fa-icon [icon]="faCircleInfo"></fa-icon>
 				</dav-icon-button>
 			</div>
-			}
-
+			} @if (bookSource == "pocketlib") {
 			<!-- Read now / continue reading button -->
 			<div class="read-button-container">
-				@if (bookSource == "pocketlib") {
 				<dav-button (click)="Read()">
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
-				} @if (luluPrintableId != null || bookSource == "vlb") {
+			</div>
+			} @if (luluPrintableId != null || bookSource == "vlb") {
+			<div class="order-button-container" [class.loading]="orderLoading">
 				<dav-button
 					color="primary"
 					(click)="Order()"
@@ -95,10 +95,12 @@
 				>
 					{{ locale.order }}
 				</dav-button>
+
+				@if (orderLoading) {
+				<dav-progress-ring size="16"></dav-progress-ring>
 				}
 			</div>
-
-			@if (dataService.userIsAdmin && status == 1) {
+			} @if (dataService.userIsAdmin && status == 1) {
 			<!-- Status and Publish button (only for admins) -->
 			<div class="publish-button-container">
 				<dav-button
