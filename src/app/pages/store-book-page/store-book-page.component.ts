@@ -1,6 +1,7 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import { faShareFromSquare } from "@fortawesome/pro-regular-svg-icons"
+import { faCircleInfo } from "@fortawesome/pro-light-svg-icons"
 import {
 	Dav,
 	CheckoutSessionsController,
@@ -11,6 +12,7 @@ import {
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "src/app/components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { ShippingCostInfoDialogComponent } from "src/app/components/dialogs/shipping-cost-info-dialog/shipping-cost-info-dialog.component"
 import { ErrorDialogComponent } from "src/app/components/dialogs/error-dialog/error-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -38,6 +40,7 @@ export class StoreBookPageComponent {
 	locale = this.localizationService.locale.storeBookPage
 	miscLocale = this.localizationService.locale.misc
 	faShareFromSquare = faShareFromSquare
+	faCircleInfo = faCircleInfo
 	bookSource: "pocketlib" | "vlb" = "pocketlib"
 	orderLoading: boolean = false
 	redirectToCheckout: boolean = false
@@ -107,6 +110,8 @@ export class StoreBookPageComponent {
 	@ViewChild("buyBookDialog")
 	buyBookDialog: BuyBookDialogComponent
 	buyBookDialogLoginRequired: boolean = false
+	@ViewChild("shippingCostInfoDialog")
+	shippingCostInfoDialog: ShippingCostInfoDialogComponent
 	@ViewChild("errorDialog")
 	errorDialog: ErrorDialogComponent
 	publishLoading: boolean = false
@@ -817,6 +822,10 @@ export class StoreBookPageComponent {
 			this.coverWidth = event.detail.image.naturalWidth
 			this.coverHeight = event.detail.image.naturalHeight
 		}
+	}
+
+	shippingCostInfoButtonClick() {
+		this.shippingCostInfoDialog.show()
 	}
 
 	authorProfileCardClick(event: Event) {

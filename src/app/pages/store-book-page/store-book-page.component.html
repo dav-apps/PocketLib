@@ -72,7 +72,13 @@
 
 			<!-- Price label -->
 			@if (bookSource == "vlb") {
-			<p class="price-label">{{ priceLabel }}</p>
+			<div class="price-label-container">
+				<p class="price-label">{{ priceLabel }}</p>
+
+				<dav-icon-button size="xs" (click)="shippingCostInfoButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+			</div>
 			}
 
 			<!-- Read now / continue reading button -->
@@ -214,5 +220,9 @@
 	"
 	[loginRequired]="buyBookDialogLoginRequired"
 ></pocketlib-buy-book-dialog>
+
+<pocketlib-shipping-cost-info-dialog
+	#shippingCostInfoDialog
+></pocketlib-shipping-cost-info-dialog>
 
 <pocketlib-error-dialog #errorDialog></pocketlib-error-dialog>

@@ -123,9 +123,16 @@
 	margin-top: 24px;
 }
 
-.price-label {
+.price-label-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	margin-top: 22px;
 	margin-bottom: 0;
+}
+
+.price-label {
+	margin: 0;
 	font-size: 18px;
 	color: var(--dav-color-on-surface);
 }
