@@ -367,6 +367,12 @@ const enDefaults = {
 			logout: "Log out",
 			cancel: "Cancel"
 		},
+		upgradeProDialog: {
+			headline: "PocketLib Pro",
+			intro: "Exclusive benefits for our most avid readers:",
+			freeShipping:
+				"🚚 <strong>Free shipping</strong>: Save on shipping costs for all your orders on PocketLib."
+		},
 		createPublisherDialog: {
 			headline: "Create publisher",
 			nameTextfieldLabel: "Name",
@@ -496,6 +502,10 @@ const enDefaults = {
 			save: "Save",
 			cancel: "Cancel"
 		}
+	},
+	actions: {
+		getStarted: "Get started",
+		close: "Close"
 	},
 	misc: {
 		languages: {
@@ -894,6 +904,12 @@ const deDefaults = {
 			logout: "Abmelden",
 			cancel: "Abbrechen"
 		},
+		upgradeProDialog: {
+			headline: "PocketLib Pro",
+			intro: "Exklusive Vorteile für unsere eifrigsten Leser:",
+			freeShipping:
+				"🚚 <strong>Kostenloser Versand</strong>: Spar dir die Versandkosten für alle deine Bestellungen auf PocketLib."
+		},
 		createPublisherDialog: {
 			headline: "Verlag erstellen",
 			nameTextfieldLabel: "Name",
@@ -1023,6 +1039,10 @@ const deDefaults = {
 			save: "Speichern",
 			cancel: "Abbrechen"
 		}
+	},
+	actions: {
+		getStarted: "Jetzt loslegen",
+		close: "Schließen"
 	},
 	misc: {
 		languages: {

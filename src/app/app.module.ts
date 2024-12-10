@@ -69,6 +69,7 @@ import { RemoveBookDialogComponent } from "./components/dialogs/remove-book-dial
 import { LoginToAccessBookDialogComponent } from "./components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
 import { AddBookErrorDialogComponent } from "./components/dialogs/add-book-error-dialog/add-book-error-dialog.component"
 import { LogoutDialogComponent } from "./components/dialogs/logout-dialog/logout-dialog.component"
+import { UpgradeProDialogComponent } from "./components/dialogs/upgrade-pro-dialog/upgrade-pro-dialog.component"
 import { CreatePublisherDialogComponent } from "./components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
 import { CreateAuthorDialogComponent } from "./components/dialogs/create-author-dialog/create-author-dialog.component"
 import { EditTitleDialogComponent } from "./components/dialogs/edit-title-dialog/edit-title-dialog.component"
@@ -150,6 +151,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		LoginToAccessBookDialogComponent,
 		AddBookErrorDialogComponent,
 		LogoutDialogComponent,
+		UpgradeProDialogComponent,
 		CreatePublisherDialogComponent,
 		CreateAuthorDialogComponent,
 		EditTitleDialogComponent,

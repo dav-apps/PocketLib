@@ -1,0 +1,18 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[primaryButtonText]="actionsLocale.getStarted"
+	[defaultButtonText]="actionsLocale.close"
+	[visible]="visible"
+	[loading]="loading"
+	maxWidth="400"
+	(dismiss)="visible = false"
+	(primaryButtonClick)="primaryButtonClick.emit()"
+	(defaultButtonClick)="visible = false"
+>
+	<p>{{ locale.intro }}</p>
+
+	<ul>
+		<li [innerHTML]="locale.freeShipping"></li>
+	</ul>
+</dav-dialog>
