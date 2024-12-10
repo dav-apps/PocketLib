@@ -456,6 +456,11 @@ const enDefaults = {
 			continue: "Continue",
 			cancel: "Cancel"
 		},
+		shippingCostInfoDialog: {
+			headline: "Shipping rate at PocketLib",
+			description:
+				"Our shipping costs are a flat rate of €2.50, regardless of the order.<br>Currently, we only ship within Germany.<br><br>Shipping is free for PocketLib Pro users."
+		},
 		errorDialog: {
 			headline: "Error",
 			description:
@@ -992,6 +997,11 @@ const deDefaults = {
 				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 			continue: "Weiter",
 			cancel: "Abbrechen"
+		},
+		shippingCostInfoDialog: {
+			headline: "Versandkosten bei PocketLib",
+			description:
+				"Unsere Versandkosten betragen pauschal 2,50 €, unabhängig von der Bestellung.<br>Aktuell versenden wir nur innerhalb von Deutschland.<br><br>Für Nutzer von PocketLib Pro ist der Versand kostenlos."
 		},
 		errorDialog: {
 			headline: "Fehler",

@@ -1,14 +1,22 @@
-import { Component, ElementRef, ViewChild } from "@angular/core"
+import {
+	Component,
+	Output,
+	EventEmitter,
+	ElementRef,
+	ViewChild
+} from "@angular/core"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
-	selector: "pocketlib-error-dialog",
-	templateUrl: "./error-dialog.component.html"
+	selector: "pocketlib-shipping-cost-info-dialog",
+	templateUrl: "./shipping-cost-info-dialog.component.html"
 })
-export class ErrorDialogComponent {
-	locale = this.localizationService.locale.dialogs.errorDialog
+export class ShippingCostInfoDialogComponent {
+	locale = this.localizationService.locale.dialogs.shippingCostInfoDialog
+	actionsLocale = this.localizationService.locale.actions
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
+	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
 	constructor(private localizationService: LocalizationService) {}

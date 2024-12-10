@@ -82,6 +82,7 @@ import { LeavePageDialogComponent } from "./components/dialogs/leave-page-dialog
 import { LoginRequiredDialogComponent } from "./components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "./components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "./components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { ShippingCostInfoDialogComponent } from "./components/dialogs/shipping-cost-info-dialog/shipping-cost-info-dialog.component"
 import { ErrorDialogComponent } from "./components/dialogs/error-dialog/error-dialog.component"
 import { LogoDialogComponent } from "./components/dialogs/logo-dialog/logo-dialog.component"
 import { ProfileImageDialogComponent } from "./components/dialogs/profile-image-dialog/profile-image-dialog.component"
@@ -164,6 +165,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		LoginRequiredDialogComponent,
 		NoAccessDialogComponent,
 		BuyBookDialogComponent,
+		ShippingCostInfoDialogComponent,
 		ErrorDialogComponent,
 		LogoDialogComponent,
 		ProfileImageDialogComponent,
