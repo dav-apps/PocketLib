@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/logout-dialog.component"
+import { UpgradeProDialogComponent } from "src/app/components/dialogs/upgrade-pro-dialog/upgrade-pro-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "src/app/services/dav-api-service"
@@ -29,6 +30,8 @@ export class UserPageComponent {
 	locale = this.localizationService.locale.userPage
 	@ViewChild("logoutDialog")
 	logoutDialog: LogoutDialogComponent
+	@ViewChild("upgradeProDialog")
+	upgradeProDialog: UpgradeProDialogComponent
 	websiteUrl = environment.websiteBaseUrl
 	width: number = window.innerWidth
 	redirect: string
@@ -157,7 +160,7 @@ export class UserPageComponent {
 		}
 	}
 
-	ShowLoginPage() {
+	showLoginPage() {
 		if (this.redirect != null && this.redirect.startsWith("store/book/")) {
 			Dav.ShowLoginPage(
 				environment.apiKey,
@@ -168,7 +171,7 @@ export class UserPageComponent {
 		}
 	}
 
-	ShowSignupPage() {
+	showSignupPage() {
 		if (
 			this.redirect != null &&
 			(this.redirect == "author/setup" ||
@@ -183,9 +186,13 @@ export class UserPageComponent {
 		}
 	}
 
-	Logout() {
+	logout() {
 		this.logoutDialog.hide()
 		this.dataService.dav.Logout().then(() => (window.location.href = "/user"))
+	}
+
+	showUpgradeProDialog() {
+		this.upgradeProDialog.show()
 	}
 
 	async navigateToCheckoutPage() {

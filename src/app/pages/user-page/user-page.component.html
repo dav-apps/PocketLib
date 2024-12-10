@@ -41,11 +41,11 @@
 	</div>
 
 	<div class="dav-buttons-container">
-		<dav-button tonal (click)="ShowLoginPage()">
+		<dav-button tonal (click)="showLoginPage()">
 			{{ locale.login }}
 		</dav-button>
 
-		<dav-button color="secondary" tonal (click)="ShowSignupPage()">
+		<dav-button color="secondary" tonal (click)="showSignupPage()">
 			{{ locale.signup }}
 		</dav-button>
 	</div>
@@ -122,7 +122,7 @@
 				<div class="card-item">
 					<p>{{ locale.upgradeProCard.benefit1 }}</p>
 
-					<dav-icon-button size="sm" (click)="showUpgradePlusDialog()">
+					<dav-icon-button size="sm" (click)="showUpgradeProDialog()">
 						<fa-icon [icon]="faCircleInfo"></fa-icon>
 					</dav-icon-button>
 				</div>
@@ -166,7 +166,15 @@
 		</div>
 	</div>
 </div>
-}
 
-<pocketlib-logout-dialog #logoutDialog (primaryButtonClick)="Logout()">
-</pocketlib-logout-dialog>
+<pocketlib-logout-dialog
+	#logoutDialog
+	(primaryButtonClick)="logout()"
+></pocketlib-logout-dialog>
+
+<pocketlib-upgrade-pro-dialog
+	#upgradeProDialog
+	[loading]="proCardLoading"
+	(primaryButtonClick)="navigateToCheckoutPage()"
+></pocketlib-upgrade-pro-dialog>
+}
