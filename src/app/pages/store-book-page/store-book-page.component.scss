@@ -40,6 +40,11 @@
 	margin-bottom: 32px;
 }
 
+.header-icons-container {
+	display: flex;
+	gap: 4px;
+}
+
 .book-description {
 	white-space: pre-line;
 	text-align: justify;

@@ -12,6 +12,7 @@ import {
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "src/app/components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { BookDetailsDialogComponent } from "src/app/components/dialogs/book-details-dialog/book-details-dialog.component"
 import { ShippingCostInfoDialogComponent } from "src/app/components/dialogs/shipping-cost-info-dialog/shipping-cost-info-dialog.component"
 import { ErrorDialogComponent } from "src/app/components/dialogs/error-dialog/error-dialog.component"
 import { DataService } from "src/app/services/data-service"
@@ -27,6 +28,7 @@ import { environment } from "src/environments/environment"
 import { GetStoreBookStatusByString } from "src/app/misc/utils"
 import {
 	ApiResponse,
+	Language,
 	StoreBookStatus,
 	VlbCollectionResource
 } from "src/app/misc/types"
@@ -69,6 +71,10 @@ export class StoreBookPageComponent {
 	//#endregion
 
 	//#region VlbItem variables
+	isbn: string = ""
+	language: string = ""
+	publicationDate: string = ""
+	pageCount: number = 0
 	collections: VlbCollectionResource[] = []
 	moreBooksByAuthorHeadline: string = ""
 	//#endregion
@@ -110,6 +116,8 @@ export class StoreBookPageComponent {
 	@ViewChild("buyBookDialog")
 	buyBookDialog: BuyBookDialogComponent
 	buyBookDialogLoginRequired: boolean = false
+	@ViewChild("bookDetailsDialog")
+	bookDetailsDialog: BookDetailsDialogComponent
 	@ViewChild("shippingCostInfoDialog")
 	shippingCostInfoDialog: ShippingCostInfoDialogComponent
 	@ViewChild("errorDialog")
@@ -164,25 +172,6 @@ export class StoreBookPageComponent {
 		}
 	}
 
-	backButtonClick() {
-		// Check if the user came from the confirmation page
-		let lastUrl =
-			this.router.lastSuccessfulNavigation.previousNavigation?.extractedUrl.toString()
-
-		if (lastUrl != null && lastUrl.endsWith("/confirmation")) {
-			this.routingService.navigateToStorePage()
-		} else {
-			this.routingService.navigateBack("/store")
-		}
-	}
-
-	shareButtonClick() {
-		navigator.share({
-			url: window.location.origin + window.location.pathname,
-			title: this.title
-		})
-	}
-
 	async loadVlbItemData(): Promise<boolean> {
 		let response = await this.apiService.retrieveVlbItem(
 			`
@@ -190,6 +179,10 @@ export class StoreBookPageComponent {
 				title
 				description
 				price
+				isbn
+				language
+				publicationDate
+				pageCount
 				publisher {
 					id
 					name
@@ -224,6 +217,12 @@ export class StoreBookPageComponent {
 		if (this.dataService.supportedLocale == "de") {
 			this.priceLabel = this.priceLabel.replace(".", ",")
 		}
+		this.isbn = responseData.isbn
+		this.language = this.localizationService.getFullLanguage(
+			responseData.language as Language
+		)
+		this.publicationDate = responseData.publicationDate
+		this.pageCount = responseData.pageCount
 		this.coverUrl = responseData.coverUrl
 		this.coverContent = responseData.coverUrl
 		this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
@@ -822,6 +821,29 @@ export class StoreBookPageComponent {
 			this.coverWidth = event.detail.image.naturalWidth
 			this.coverHeight = event.detail.image.naturalHeight
 		}
+	}
+
+	backButtonClick() {
+		// Check if the user came from the confirmation page
+		let lastUrl =
+			this.router.lastSuccessfulNavigation.previousNavigation?.extractedUrl.toString()
+
+		if (lastUrl != null && lastUrl.endsWith("/confirmation")) {
+			this.routingService.navigateToStorePage()
+		} else {
+			this.routingService.navigateBack("/store")
+		}
+	}
+
+	shareButtonClick() {
+		navigator.share({
+			url: window.location.origin + window.location.pathname,
+			title: this.title
+		})
+	}
+
+	bookDetailsButtonClick() {
+		this.bookDetailsDialog.show()
 	}
 
 	shippingCostInfoButtonClick() {

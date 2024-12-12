@@ -12,9 +12,17 @@
 		>
 			{{ title }}
 
-			<dav-icon-button slot="icons" size="sm" (click)="shareButtonClick()">
-				<fa-icon [icon]="faShareFromSquare"></fa-icon>
-			</dav-icon-button>
+			<div class="header-icons-container" slot="icons">
+				@if (bookSource == "vlb") {
+				<dav-icon-button size="sm" (click)="bookDetailsButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+				}
+
+				<dav-icon-button size="sm" (click)="shareButtonClick()">
+					<fa-icon [icon]="faShareFromSquare"></fa-icon>
+				</dav-icon-button>
+			</div>
 		</dav-header>
 		}
 
@@ -124,9 +132,17 @@
 		>
 			{{ title }}
 
-			<dav-icon-button slot="icons" size="sm" (click)="shareButtonClick()">
-				<fa-icon [icon]="faShareFromSquare"></fa-icon>
-			</dav-icon-button>
+			<div class="header-icons-container" slot="icons">
+				@if (bookSource == "vlb") {
+				<dav-icon-button size="sm" (click)="bookDetailsButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+				}
+
+				<dav-icon-button size="sm" (click)="shareButtonClick()">
+					<fa-icon [icon]="faShareFromSquare"></fa-icon>
+				</dav-icon-button>
+			</div>
 		</dav-header>
 		}
 
@@ -222,6 +238,14 @@
 	"
 	[loginRequired]="buyBookDialogLoginRequired"
 ></pocketlib-buy-book-dialog>
+
+<pocketlib-book-details-dialog
+	#bookDetailsDialog
+	[isbn]="isbn"
+	[language]="language"
+	[publicationDate]="publicationDate"
+	[pageCount]="pageCount"
+></pocketlib-book-details-dialog>
 
 <pocketlib-shipping-cost-info-dialog
 	#shippingCostInfoDialog

@@ -275,6 +275,9 @@ export interface VlbItemResource {
 	title: string
 	description?: string
 	price: number
+	language?: string
+	publicationDate?: string
+	pageCount?: number
 	publisher?: VlbPublisherResource
 	author?: VlbAuthorResource
 	coverUrl?: string
