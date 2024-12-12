@@ -456,6 +456,13 @@ const enDefaults = {
 			continue: "Continue",
 			cancel: "Cancel"
 		},
+		bookDetailsDialog: {
+			headline: "Book details",
+			isbn: "ISBN",
+			language: "Language",
+			publicationDate: "Publication date",
+			pageCount: "Number of pages"
+		},
 		shippingCostInfoDialog: {
 			headline: "Shipping rate at PocketLib",
 			description:
@@ -997,6 +1004,13 @@ const deDefaults = {
 				"Wenn du dieses Buch kaufst, hast du immer Zugriff darauf und kannst die Buch-Datei herunterladen. Außerdem geht 80 % des Preises direkt an den Autor.<br><br>Melde dich an, um Bücher kaufen zu können.",
 			continue: "Weiter",
 			cancel: "Abbrechen"
+		},
+		bookDetailsDialog: {
+			headline: "Buch-Details",
+			isbn: "ISBN",
+			language: "Sprache",
+			publicationDate: "Erscheinungsdatum",
+			pageCount: "Seitenanzahl"
 		},
 		shippingCostInfoDialog: {
 			headline: "Versandkosten bei PocketLib",

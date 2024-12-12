@@ -1,0 +1,19 @@
+<dav-dialog
+	#dialog
+	[headline]="locale.headline"
+	[defaultButtonText]="actionsLocale.close"
+	[visible]="visible"
+	maxWidth="360"
+	(dismiss)="visible = false"
+	(defaultButtonClick)="visible = false"
+>
+	@if (isbn) {
+	<p>{{ locale.isbn }}: {{ isbn }}</p>
+	} @if (language) {
+	<p>{{ locale.language }}: {{ language }}</p>
+	} @if (publicationDate) {
+	<p>{{ locale.publicationDate }}: {{ publicationDate }}</p>
+	} @if (pageCount > 0) {
+	<p>{{ locale.pageCount }}: {{ pageCount }}</p>
+	}
+</dav-dialog>
