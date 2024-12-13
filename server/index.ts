@@ -37,7 +37,7 @@ export async function generateSitemap(): Promise<string> {
 	// Publishers
 	try {
 		let response = await request<{
-			listPublishers: { items: { slug: string }[] }
+			listPublishers?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
@@ -52,10 +52,12 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let publisherItems = response.listPublishers.items
+		let publisherItems = response.listPublishers?.items
 
-		for (let item of publisherItems) {
-			result += `${websiteUrl}/store/publisher/${item.slug}\n`
+		if (publisherItems != null) {
+			for (let item of publisherItems) {
+				result += `${websiteUrl}/store/publisher/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
@@ -64,7 +66,7 @@ export async function generateSitemap(): Promise<string> {
 	// Authors
 	try {
 		let response = await request<{
-			listAuthors: { items: { slug: string }[] }
+			listAuthors?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
@@ -79,10 +81,40 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let authorItems = response.listAuthors.items
+		let authorItems = response.listAuthors?.items
 
-		for (let item of authorItems) {
-			result += `${websiteUrl}/store/author/${item.slug}\n`
+		if (authorItems != null) {
+			for (let item of authorItems) {
+				result += `${websiteUrl}/store/author/${item.slug}\n`
+			}
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	// VlbAuthors
+	try {
+		let response = await request<{
+			listVlbAuthors?: { items: { slug: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListVlbAuthors {
+					listVlbAuthors(limit: 10000) {
+						items {
+							slug
+						}
+					}
+				}
+			`
+		)
+
+		let vlbAuthorItems = response.listVlbAuthors?.items
+
+		if (vlbAuthorItems != null) {
+			for (let item of vlbAuthorItems) {
+				result += `${websiteUrl}/store/author/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
@@ -91,7 +123,7 @@ export async function generateSitemap(): Promise<string> {
 	// StoreBooks
 	try {
 		let response = await request<{
-			listStoreBooks: { items: { slug: string }[] }
+			listStoreBooks?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
@@ -106,10 +138,40 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let storeBookItems = response.listStoreBooks.items
+		let storeBookItems = response.listStoreBooks?.items
 
-		for (let item of storeBookItems) {
-			result += `${websiteUrl}/store/book/${item.slug}\n`
+		if (storeBookItems != null) {
+			for (let item of storeBookItems) {
+				result += `${websiteUrl}/store/book/${item.slug}\n`
+			}
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	// VlbItems
+	try {
+		let response = await request<{
+			listVlbItems?: { items: { slug: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListVlbItems {
+					listVlbItems(limit: 10000) {
+						items {
+							slug
+						}
+					}
+				}
+			`
+		)
+
+		let vlbItems = response.listVlbItems?.items
+
+		if (vlbItems != null) {
+			for (let item of vlbItems) {
+				result += `${websiteUrl}/store/book/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
