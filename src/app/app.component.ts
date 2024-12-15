@@ -37,6 +37,7 @@ import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject } from "./misc/utils"
+import { Language } from "./misc/types"
 import {
 	smallWindowMaxSize,
 	davApiClientName,
@@ -70,6 +71,7 @@ export class AppComponent {
 	authorButtonSelected: boolean = false
 	userButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
+	storeLanguages: Language[] = [Language.en]
 
 	constructor(
 		public dataService: DataService,
@@ -120,6 +122,9 @@ export class AppComponent {
 	async ngOnInit() {
 		this.setSize()
 		this.dataService.ApplyTheme()
+		this.storeLanguages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
 
 		new Dav({
 			environment: environment.environment,

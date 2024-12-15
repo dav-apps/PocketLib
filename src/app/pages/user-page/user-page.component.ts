@@ -13,8 +13,10 @@ import { UpgradeProDialogComponent } from "src/app/components/dialogs/upgrade-pr
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { DavApiService } from "src/app/services/dav-api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { BytesToGigabytesText } from "src/app/misc/utils"
+import { Language } from "src/app/misc/types"
 import { environment } from "src/environments/environment"
 
 @Component({
@@ -44,11 +46,13 @@ export class UserPageComponent {
 		status: string
 	}[] = []
 	proCardLoading: boolean = false
+	storeLanguages: Language[] = [Language.en]
 
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
 		private davApiService: DavApiService,
+		private settingsService: SettingsService,
 		private localizationService: LocalizationService,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -60,6 +64,7 @@ export class UserPageComponent {
 
 	async ngOnInit() {
 		this.setSize()
+		this.storeLanguages = await this.settingsService.getStoreLanguages(this.dataService.locale)
 
 		await this.dataService.userPromiseHolder.AwaitResult()
 

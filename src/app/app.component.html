@@ -29,8 +29,11 @@
 	<div class="navbar-spacer"></div>
 
 	<div class="navbar-icon-buttons-container">
-		@if (!dataService.isMobile) {
-		<dav-icon-button [selected]="searchTabActive" (click)="navigateToSearchPage()">
+		@if (!dataService.isMobile && storeLanguages.includes("de")) {
+		<dav-icon-button
+			[selected]="searchTabActive"
+			(click)="navigateToSearchPage()"
+		>
 			<fa-icon [icon]="faMagnifyingGlassRegular"></fa-icon>
 		</dav-icon-button>
 		} @if (dataService.userAuthor || dataService.userIsAdmin) {
@@ -116,6 +119,7 @@
 			<p slot="label">{{ locale.store }}</p>
 		</dav-navigation-bar-item>
 
+		@if (storeLanguages.includes("de")) {
 		<dav-navigation-bar-item
 			[active]="searchTabActive"
 			(click)="navigateToSearchPage()"
@@ -124,6 +128,7 @@
 
 			<p slot="label">{{ locale.search }}</p>
 		</dav-navigation-bar-item>
+		}
 	</dav-navigation-bar>
 </div>
 } @if (dataService.loadingScreenVisible) {

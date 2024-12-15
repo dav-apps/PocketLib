@@ -49,7 +49,7 @@ export class SettingsService {
 		if (locale.toLowerCase().startsWith("de")) {
 			defaultLanguages = [Language.de, Language.en]
 		} else {
-			defaultLanguages = [Language.en, Language.de]
+			defaultLanguages = [Language.en]
 		}
 
 		return this.getSetting<Language[]>(
