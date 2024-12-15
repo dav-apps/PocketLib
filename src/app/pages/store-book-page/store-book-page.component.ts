@@ -1,7 +1,9 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
-import { faShareFromSquare } from "@fortawesome/pro-regular-svg-icons"
-import { faCircleInfo } from "@fortawesome/pro-light-svg-icons"
+import {
+	faShareFromSquare,
+	faCircleInfo
+} from "@fortawesome/pro-regular-svg-icons"
 import {
 	Dav,
 	CheckoutSessionsController,

@@ -1,11 +1,11 @@
 import { Component, HostListener, ViewChild } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
+import { faCircleInfo } from "@fortawesome/pro-regular-svg-icons"
 import {
 	faBagShopping,
 	faRotate,
 	faLock,
-	faLockKeyhole,
-	faCircleInfo
+	faLockKeyhole
 } from "@fortawesome/pro-light-svg-icons"
 import { Dav } from "dav-js"
 import { LogoutDialogComponent } from "src/app/components/dialogs/logout-dialog/logout-dialog.component"
