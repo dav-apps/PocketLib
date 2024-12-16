@@ -5,7 +5,15 @@ import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
+import { Language } from "src/app/misc/types"
 import { keys } from "src/constants/keys"
+
+interface LanguageOption {
+	key: Language
+	label: string
+	checked: boolean
+	disabled: boolean
+}
 
 @Component({
 	templateUrl: "./settings-page.component.html",
@@ -23,6 +31,7 @@ export class SettingsPageComponent {
 	noUpdateAvailable: boolean = false
 	hideNoUpdateAvailable: boolean = false
 	selectedTheme: string = keys.systemThemeKey
+	languageOptions: LanguageOption[] = []
 	themeDropdownOptions: DropdownOption[] = [
 		{
 			key: keys.systemThemeKey,
@@ -48,13 +57,26 @@ export class SettingsPageComponent {
 		private swUpdate: SwUpdate
 	) {
 		this.dataService.setMeta()
-
-		this.themeDropdownOptions[0].value = this.locale.systemTheme
-		this.themeDropdownOptions[1].value = this.locale.lightTheme
-		this.themeDropdownOptions[2].value = this.locale.darkTheme
 	}
 
 	async ngOnInit() {
+		// Init the preferred languages setting
+		let languages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
+
+		for (let language of Object.keys(Language)) {
+			let lang = language as Language
+			let checked = languages.includes(lang)
+
+			this.languageOptions.push({
+				key: lang,
+				label: this.localizationService.getFullLanguage(lang),
+				checked,
+				disabled: checked && languages.length == 1
+			})
+		}
+
 		// Set the openLastReadBook toggle
 		this.openLastReadBook = await this.settingsService.getOpenLastReadBook()
 
@@ -94,6 +116,35 @@ export class SettingsPageComponent {
 	onOpenLastReadBookToggleChange(checked: boolean) {
 		this.openLastReadBook = checked
 		this.settingsService.setOpenLastReadBook(checked)
+	}
+
+	languageCheckboxChange(event: CustomEvent, language: LanguageOption) {
+		let checked = event.detail.checked
+		language.checked = checked
+
+		// Get & save all languages
+		let languages: Language[] = []
+		let checkedLanguagesCount = 0
+
+		for (let languageOption of this.languageOptions) {
+			if (languageOption.checked) {
+				languages.push(languageOption.key)
+				checkedLanguagesCount++
+			}
+
+			languageOption.disabled = false
+		}
+
+		this.settingsService.setStoreLanguages(languages)
+
+		// If only one language is checked, disable it
+		if (checkedLanguagesCount == 1) {
+			for (let languageOption of this.languageOptions) {
+				if (languageOption.checked) {
+					languageOption.disabled = true
+				}
+			}
+		}
 	}
 
 	themeDropdownChange(event: CustomEvent) {

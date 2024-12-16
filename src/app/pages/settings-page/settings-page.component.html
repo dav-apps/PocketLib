@@ -15,6 +15,25 @@
 		</div>
 
 		<div class="setting">
+			<dav-setting [header]="locale.preferredLanguages" [expandable]="true">
+				<p class="preferred-languages-description">
+					{{ locale.preferredLanguagesDescription }}
+				</p>
+
+				<div class="preferred-languages-checkboxes-container">
+					@for (lang of languageOptions; track lang.key) {
+					<dav-checkbox
+						[label]="lang.label"
+						[checked]="lang.checked"
+						[disabled]="lang.disabled"
+						(change)="languageCheckboxChange($event, lang)"
+					></dav-checkbox>
+					}
+				</div>
+			</dav-setting>
+		</div>
+
+		<div class="setting">
 			<!-- Theme -->
 			<dav-setting [header]="locale.theme">
 				<dav-dropdown

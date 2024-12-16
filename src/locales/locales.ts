@@ -44,6 +44,9 @@ const enDefaults = {
 		lightTheme: "Light",
 		darkTheme: "Dark",
 		systemTheme: "System default",
+		preferredLanguages: "Preferred languages",
+		preferredLanguagesDescription:
+			"Select the languages for which books should be displayed in the PocketLib Store.",
 		openLastReadBook: "Open the last book read when starting the app",
 		news: "News and updates",
 		github: "PocketLib on GitHub",
@@ -584,6 +587,9 @@ const deDefaults = {
 		lightTheme: "Hell",
 		darkTheme: "Dunkel",
 		systemTheme: "System-Standard",
+		preferredLanguages: "Bevorzugte Sprachen",
+		preferredLanguagesDescription:
+			"Wähle die Sprachen, für die Bücher im PocketLib Store angezeigt werden sollen.",
 		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten der App",
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
