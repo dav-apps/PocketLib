@@ -118,7 +118,7 @@ export class SettingsPageComponent {
 		this.settingsService.setOpenLastReadBook(checked)
 	}
 
-	languageCheckboxChange(event: CustomEvent, language: LanguageOption) {
+	async languageCheckboxChange(event: CustomEvent, language: LanguageOption) {
 		let checked = event.detail.checked
 		language.checked = checked
 
@@ -135,8 +135,6 @@ export class SettingsPageComponent {
 			languageOption.disabled = false
 		}
 
-		this.settingsService.setStoreLanguages(languages)
-
 		// If only one language is checked, disable it
 		if (checkedLanguagesCount == 1) {
 			for (let languageOption of this.languageOptions) {
@@ -145,6 +143,12 @@ export class SettingsPageComponent {
 				}
 			}
 		}
+
+		await this.settingsService.setStoreLanguages(languages)
+
+		window.dispatchEvent(
+			new CustomEvent("preferred-languages-setting-changed")
+		)
 	}
 
 	themeDropdownChange(event: CustomEvent) {

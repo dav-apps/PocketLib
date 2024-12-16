@@ -122,9 +122,7 @@ export class AppComponent {
 	async ngOnInit() {
 		this.setSize()
 		this.dataService.ApplyTheme()
-		this.storeLanguages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		await this.loadStoreLanguages()
 
 		new Dav({
 			environment: environment.environment,
@@ -200,6 +198,13 @@ export class AppComponent {
 	@HostListener("window:resize")
 	setSize() {
 		this.dataService.isMobile = window.innerWidth <= smallWindowMaxSize
+	}
+
+	@HostListener("window:preferred-languages-setting-changed")
+	async loadStoreLanguages() {
+		this.storeLanguages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
 	}
 
 	navigateToLibraryPage() {
