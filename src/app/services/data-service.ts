@@ -194,21 +194,19 @@ export class DataService {
 		// Get the categories
 		this.categories = []
 
-		let languages = await this.settingsService.getStoreLanguages(this.locale)
-
 		let listCategoriesResponse = await this.apiService.listCategories(
 			`
 				total
 				items {
 					uuid
 					key
-					name(languages: $languages) {
+					name(language: $language) {
 						name
 						language
 					}
 				}
 			`,
-			{ limit: 100, languages: languages }
+			{ limit: 100, language: this.supportedLocale }
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories.items) {

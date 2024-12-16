@@ -1473,7 +1473,7 @@ export class ApiService {
 
 	async listCategories(
 		queryData: string,
-		variables?: { limit?: number; offset?: number; languages?: string[] }
+		variables?: { limit?: number; offset?: number; language?: string }
 	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
 		let result = await this.apollo
 			.query<{
@@ -1481,12 +1481,12 @@ export class ApiService {
 			}>({
 				query: gql`
 					query ListCategories(
-						$languages: [String!]
-						$limit: Int,
+						$language: String
+						$limit: Int
 						$offset: Int
 					) {
 						listCategories(
-							languages: $languages
+							language: $language
 							limit: $limit
 							offset: $offset
 						) {
