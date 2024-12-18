@@ -10,7 +10,8 @@ import {
 	BookListItem,
 	ApiResponse,
 	StoreBookResource,
-	VlbItemResource
+	VlbItemResource,
+	Language
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
@@ -323,7 +324,11 @@ export class HorizontalBookListComponent {
 		let page = this.page - 1
 		if (page < 0) page = 0
 
-		if (this.dataService.locale.startsWith("de")) {
+		let languages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
+
+		if (languages.includes(Language.de)) {
 			let response = await this.apiService.listVlbItems(
 				`
 					total
@@ -362,9 +367,7 @@ export class HorizontalBookListComponent {
 				`,
 				{
 					random: true,
-					languages: await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					languages,
 					limit: this.maxItems,
 					offset: this.maxItems * page
 				}
