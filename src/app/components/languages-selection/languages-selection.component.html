@@ -1,8 +1,0 @@
-@for (lang of languages; track lang.code) {
-<dav-checkbox
-	[label]="lang.name"
-	[checked]="lang.checked"
-	[disabled]="lang.disabled"
-	(change)="ToggleLanguage(lang.code)"
-></dav-checkbox>
-}

@@ -53,7 +53,6 @@ import { CategoriesSelectionComponent } from "./components/categories-selection/
 import { PriceInputComponent } from "./components/price-input/price-input.component"
 import { IsbnInputComponent } from "./components/isbn-input/isbn-input.component"
 import { LinkIconButtonComponent } from "./components/link-icon-button/link-icon-button.component"
-import { LanguagesSelectionComponent } from "./components/languages-selection/languages-selection.component"
 import { LibraryPageCardsComponent } from "./components/library-page-cards/library-page-cards.component"
 import { LibraryPageBookCardComponent } from "./components/library-page-book-card/library-page-book-card.component"
 import { NewBookPageTitleSectionComponent } from "./components/new-book-page-title-section/new-book-page-title-section.component"
@@ -137,7 +136,6 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		PriceInputComponent,
 		IsbnInputComponent,
 		LinkIconButtonComponent,
-		LanguagesSelectionComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
 		NewBookPageTitleSectionComponent,
