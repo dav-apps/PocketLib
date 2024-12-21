@@ -10,12 +10,14 @@
 		</dav-header>
 	</div>
 
+	@if (errorMessage.length > 0) {
 	<!-- Error message bar -->
-	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+	<div class="error-message-container">
 		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
+	}
 
 	<!-- Title -->
 	<pocketlib-new-book-page-title-section

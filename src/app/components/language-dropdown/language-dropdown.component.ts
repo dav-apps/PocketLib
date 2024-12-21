@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-language-dropdown",
@@ -12,7 +11,7 @@ export class LanguageDropdownComponent {
 	@Input() label: string = ""
 	@Input() disabled: boolean = false
 	@Output() updated = new EventEmitter()
-	languages = enUS.misc.languages
+	languages = this.localizationService.locale.misc.languages
 	options: DropdownOption[] = [
 		{
 			key: "en",
@@ -26,8 +25,7 @@ export class LanguageDropdownComponent {
 		}
 	]
 
-	constructor(public dataService: DataService) {
-		this.languages = this.dataService.GetLocale().misc.languages
+	constructor(private localizationService: LocalizationService) {
 		this.options[0].value = this.languages.en
 		this.options[1].value = this.languages.de
 	}

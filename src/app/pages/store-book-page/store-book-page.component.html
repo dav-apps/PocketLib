@@ -3,21 +3,36 @@
 	[class]="dataService.simpleLoadingScreenVisible ? '' : 'slide-up-in'"
 >
 	<div class="cover-panel">
+		@if (title.length > 0) {
 		<dav-header
 			class="mobile-header"
-			size="small"
+			size="sm"
 			backButtonVisible
-			(backButtonClick)="BackButtonClick()"
-			*ngIf="title.length > 0"
+			(backButtonClick)="backButtonClick()"
 		>
 			{{ title }}
+
+			<div class="header-icons-container" slot="icons">
+				@if (bookSource == "vlb") {
+				<dav-icon-button size="sm" (click)="bookDetailsButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+				}
+
+				<dav-icon-button size="sm" (click)="shareButtonClick()">
+					<fa-icon [icon]="faShareFromSquare"></fa-icon>
+				</dav-icon-button>
+			</div>
 		</dav-header>
+		}
 
 		<div class="cover-panel-content">
 			<!-- Cover -->
 			<div class="cover-content">
 				<dav-blurhash-image
 					class="cover-image"
+					[style.maxWidth.px]="maxCoverWidth"
+					[style.maxHeight.px]="maxCoverHeight"
 					[src]="coverContent"
 					[fallbackSrc]="dataService.defaultStoreBookCover"
 					[blurhash]="coverBlurhash"
@@ -25,42 +40,77 @@
 					[alt]="coverAlt"
 					[width]="coverWidth"
 					[height]="coverHeight"
+					(imageLoaded)="coverImageLoaded($event)"
 				></dav-blurhash-image>
 			</div>
 
-			<dav-profile-card
-				class="author-profile-card"
-				[imageSrc]="authorProfileImageContent"
-				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
-				[imageBlurhash]="authorProfileImageBlurhash"
-				[name]="authorName"
-				[href]="'/store/author/' + authorUuid"
-				(click)="authorProfileCardClick($event)"
-			></dav-profile-card>
+			<div class="profile-cards-container">
+				@if (bookSource == "pocketlib") {
+				<dav-profile-card
+					[imageSrc]="authorProfileImageContent"
+					[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+					[imageBlurhash]="authorProfileImageBlurhash"
+					[name]="authorName"
+					[href]="'/store/author/' + authorSlug"
+					(click)="authorProfileCardClick($event)"
+				></dav-profile-card>
+				} @else if (bookSource == "vlb") { @if (authorSlug.length > 0) {
+				<dav-profile-card
+					[name]="authorName"
+					[href]="'/store/author/' + authorSlug"
+					(click)="authorProfileCardClick($event)"
+				></dav-profile-card>
+				} @if (publisherSlug.length > 0) {
+				<dav-profile-card
+					[name]="publisherName"
+					[href]="'/store/publisher/' + publisherSlug"
+					(click)="publisherProfileCardClick($event)"
+				></dav-profile-card>
+				} } @if (publisherName && bookSource == "pocketlib") {
+				<dav-profile-card
+					[imageSrc]="publisherLogoContent"
+					[imageFallbackSrc]="dataService.defaultProfileImageUrl"
+					[imageBlurhash]="publisherLogoBlurhash"
+					[name]="publisherName"
+					[href]="'/store/publisher/' + publisherSlug"
+					(click)="publisherProfileCardClick($event)"
+				></dav-profile-card>
+				}
+			</div>
 
-			<dav-profile-card
-				class="publisher-profile-card"
-				[imageSrc]="publisherLogoContent"
-				[imageFallbackSrc]="dataService.defaultProfileImageUrl"
-				[imageBlurhash]="publisherLogoBlurhash"
-				[name]="publisherName"
-				[href]="'/store/publisher' + publisherUuid"
-				(click)="publisherProfileCardClick($event)"
-				*ngIf="publisherName"
-			></dav-profile-card>
+			<!-- Price label -->
+			@if (bookSource == "vlb") {
+			<div class="price-label-container">
+				<p class="price-label">{{ priceLabel }}</p>
 
+				<dav-icon-button size="xs" (click)="shippingCostInfoButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+			</div>
+			} @if (bookSource == "pocketlib") {
 			<!-- Read now / continue reading button -->
 			<div class="read-button-container">
 				<dav-button (click)="Read()">
 					{{ inLibrary ? locale.continueReading : locale.readNow }}
 				</dav-button>
 			</div>
+			} @if (luluPrintableId != null || bookSource == "vlb") {
+			<div class="order-button-container" [class.loading]="orderLoading">
+				<dav-button
+					color="primary"
+					(click)="Order()"
+					[disabled]="orderLoading"
+				>
+					{{ locale.order }}
+				</dav-button>
 
+				@if (orderLoading) {
+				<dav-progress-ring size="16"></dav-progress-ring>
+				}
+			</div>
+			} @if (dataService.userIsAdmin && status == 1) {
 			<!-- Status and Publish button (only for admins) -->
-			<div
-				class="publish-button-container"
-				*ngIf="dataService.userIsAdmin && status == 1"
-			>
+			<div class="publish-button-container">
 				<dav-button
 					[disabled]="publishLoading"
 					(click)="PublishStoreBook()"
@@ -68,37 +118,50 @@
 					{{ locale.publish }}
 				</dav-button>
 			</div>
+			}
 		</div>
 	</div>
 
 	<div class="description-panel">
+		@if (title.length > 0) {
 		<dav-header
 			class="desktop-header"
-			size="small"
+			size="sm"
 			backButtonVisible
-			(backButtonClick)="BackButtonClick()"
-			*ngIf="title.length > 0"
+			(backButtonClick)="backButtonClick()"
 		>
 			{{ title }}
+
+			<div class="header-icons-container" slot="icons">
+				@if (bookSource == "vlb") {
+				<dav-icon-button size="sm" (click)="bookDetailsButtonClick()">
+					<fa-icon [icon]="faCircleInfo"></fa-icon>
+				</dav-icon-button>
+				}
+
+				<dav-icon-button size="sm" (click)="shareButtonClick()">
+					<fa-icon [icon]="faShareFromSquare"></fa-icon>
+				</dav-icon-button>
+			</div>
 		</dav-header>
+		}
 
 		<div class="description-container">
 			<!-- Description -->
-			<p class="book-description">
-				{{ description }}
-			</p>
+			<div class="book-description" [innerHTML]="description"></div>
 
 			<!-- Categories -->
 			<div class="category-badge-container">
+				@for (category of categories; track category.key; let i = $index) {
 				<dav-badge
 					[color]="i == 0 ? 'primary' : 'secondary'"
 					tonal
 					[href]="'/store/category/' + category.key"
 					(click)="categoryBadgeClick($event, category.key)"
-					*ngFor="let category of categories; let i = index"
 				>
 					{{ category.name }}
 				</dav-badge>
+				}
 			</div>
 		</div>
 	</div>
@@ -106,48 +169,86 @@
 
 <div class="divider"></div>
 
+@if (bookSource == "pocketlib") {
 <div class="recommendations-container">
+	@if (seriesUuid != null) {
 	<!-- List of books of the series -->
-	<div *ngIf="seriesUuid != null">
+	<div>
 		<pocketlib-horizontal-book-list
 			type="series"
 			[headline]="seriesHeadline"
 			[series]="seriesUuid"
-			[currentBookUuid]="uuid"
+			[currentBookUuid]="slug"
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
 	</div>
+	}
 
 	<!-- List of books with the same categories -->
 	<div>
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[headline]="moreBooksHeadline"
-			[currentBookUuid]="uuid"
+			[currentBookUuid]="slug"
 			[categories]="categoryKeys"
 			[hideMoreButton]="true"
 		></pocketlib-horizontal-book-list>
 	</div>
 </div>
+} @else {
+<div class="recommendations-container">
+	@for (collection of collections; track collection.uuid) {
+	<div>
+		<pocketlib-horizontal-book-list
+			type="collection"
+			[headline]="collection.title"
+			[currentBookUuid]="slug"
+			[collectionId]="collection.slug"
+		></pocketlib-horizontal-book-list>
+	</div>
+	} @if (authorSlug.length > 0) {
+	<div>
+		<pocketlib-horizontal-book-list
+			type="author"
+			[headline]="moreBooksByAuthorHeadline"
+			[currentBookUuid]="slug"
+			[authorUuid]="authorSlug"
+		></pocketlib-horizontal-book-list>
+	</div>
+	}
+</div>
+}
 
 <pocketlib-login-required-dialog
 	#loginRequiredDialog
-	(primaryButtonClick)="NavigateToAccountPage()"
+	(primaryButtonClick)="NavigateToUserPage()"
 ></pocketlib-login-required-dialog>
 
 <pocketlib-no-access-dialog
 	#noAccessDialog
-	(primaryButtonClick)="NavigateToAccountPage()"
+	(primaryButtonClick)="NavigateToUserPage()"
 ></pocketlib-no-access-dialog>
 
 <pocketlib-buy-book-dialog
 	#buyBookDialog
 	(primaryButtonClick)="
 		buyBookDialogLoginRequired
-			? NavigateToAccountPage()
+			? NavigateToUserPage()
 			: NavigateToPurchasePage()
 	"
 	[loginRequired]="buyBookDialogLoginRequired"
 ></pocketlib-buy-book-dialog>
+
+<pocketlib-book-details-dialog
+	#bookDetailsDialog
+	[isbn]="isbn"
+	[language]="language"
+	[publicationDate]="publicationDate"
+	[pageCount]="pageCount"
+></pocketlib-book-details-dialog>
+
+<pocketlib-shipping-cost-info-dialog
+	#shippingCostInfoDialog
+></pocketlib-shipping-cost-info-dialog>
 
 <pocketlib-error-dialog #errorDialog></pocketlib-error-dialog>

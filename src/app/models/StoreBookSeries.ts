@@ -1,6 +1,5 @@
 import { List, Language, StoreBookSeriesResource } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBook } from "./StoreBook"
 
@@ -11,7 +10,7 @@ export class StoreBookSeries {
 
 	constructor(
 		seriesResource: StoreBookSeriesResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (seriesResource != null) {
@@ -24,7 +23,7 @@ export class StoreBookSeries {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<StoreBookSeries> {
 		let response = await apiService.retrieveStoreBookSeries(
@@ -40,7 +39,7 @@ export class StoreBookSeries {
 
 		return new StoreBookSeries(
 			{ uuid, ...responseData },
-			dataService,
+			languages,
 			apiService
 		)
 	}
@@ -72,11 +71,7 @@ export class StoreBookSeries {
 
 		for (let item of responseData.storeBooks.items) {
 			items.push(
-				await StoreBook.Retrieve(
-					item.uuid,
-					this.dataService,
-					this.apiService
-				)
+				await StoreBook.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

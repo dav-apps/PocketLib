@@ -17,7 +17,7 @@ export class HorizontalSeriesListItemComponent {
 	constructor(public dataService: DataService) {}
 
 	ngOnInit() {
-		this.link = `/store/book/${this.series.books[0].uuid}`
+		this.link = `/store/book/${this.series.books[0].slug}`
 		this.advancedHoverAnimation = this.series.books.length > 3
 		this.advancedHoverAnimationIndexTransform = Math.floor(
 			(this.series.books.length - 1) / 3

@@ -1,0 +1,16 @@
+p {
+	line-height: 22px;
+	margin-bottom: 24px;
+}
+
+ul {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+li {
+	list-style: none;
+	text-indent: -24px;
+	line-height: 22px;
+}

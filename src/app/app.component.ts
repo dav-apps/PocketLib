@@ -6,10 +6,10 @@ import {
 	ChangeDetectorRef
 } from "@angular/core"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
+import { HttpHeaders } from "@angular/common/http"
 import { Apollo } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
-import { HttpHeaders } from "@angular/common/http"
 import {
 	faAddressCard as faAddressCardSolid,
 	faBook as faBookSolid,
@@ -21,17 +21,28 @@ import {
 	faBook as faBookRegular,
 	faCircleUser as faCircleUserRegular,
 	faGear as faGearRegular,
-	faBagShopping as faBagShoppingRegular
+	faBagShopping as faBagShoppingRegular,
+	faMagnifyingGlass as faMagnifyingGlassRegular
 } from "@fortawesome/pro-regular-svg-icons"
 import { faAddressCard as faAddressCardLight } from "@fortawesome/pro-light-svg-icons"
-import { Dav, TableObject, Environment } from "dav-js"
+import { Dav, TableObject } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
-import { RoutingService } from "src/app/services/routing-service"
-import { GetSettings } from "src/app/models/Settings"
+import { ApiService } from "src/app/services/api-service"
+import { DavApiService } from "./services/dav-api-service"
+import { RoutingService } from "./services/routing-service"
+import { LocalizationService } from "./services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
+import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
+import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject } from "./misc/utils"
-import { smallWindowMaxSize } from "src/constants/constants"
+import { Language } from "./misc/types"
+import {
+	smallWindowMaxSize,
+	davApiClientName,
+	pocketlibApiClientName
+} from "src/constants/constants"
 import { environment } from "src/environments/environment"
 
 @Component({
@@ -40,6 +51,7 @@ import { environment } from "src/environments/environment"
 	styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
+	locale = this.localizationService.locale.misc
 	faCircleUserRegular = faCircleUserRegular
 	faCircleUserSolid = faCircleUserSolid
 	faGearRegular = faGearRegular
@@ -50,44 +62,44 @@ export class AppComponent {
 	faAddressCardSolid = faAddressCardSolid
 	faBookRegular = faBookRegular
 	faBookSolid = faBookSolid
+	faMagnifyingGlassRegular = faMagnifyingGlassRegular
 	@ViewChild("contentContainer")
 	contentContainer: ElementRef<HTMLDivElement>
-	libraryLabel: string = ""
-	storeLabel: string = ""
 	libraryTabActive: boolean = false
 	storeTabActive: boolean = false
+	searchTabActive: boolean = false
 	authorButtonSelected: boolean = false
-	accountButtonSelected: boolean = false
+	userButtonSelected: boolean = false
 	settingsButtonSelected: boolean = false
+	storeLanguages: Language[] = [Language.en]
 
 	constructor(
 		public dataService: DataService,
+		private apiService: ApiService,
+		private davApiService: DavApiService,
 		private routingService: RoutingService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
 		private httpLink: HttpLink,
 		private cd: ChangeDetectorRef
 	) {
-		let locale = this.dataService.GetLocale().misc
-		this.libraryLabel = locale.library
-		this.storeLabel = locale.store
-
 		DavUIComponents.setLocale(this.dataService.locale)
 
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
-				// Update the updated todo lists
 				this.dataService.currentUrl = data.url.split("?")[0]
 
 				this.libraryTabActive = this.dataService.currentUrl == "/"
 				this.storeTabActive =
 					this.dataService.currentUrl.startsWith("/store")
+				this.searchTabActive = this.dataService.currentUrl == "/search"
 				this.authorButtonSelected =
 					this.dataService.currentUrl == "/author" ||
 					this.dataService.currentUrl == "/publisher"
-				this.accountButtonSelected =
-					this.dataService.currentUrl == "/account"
+				this.userButtonSelected = this.dataService.currentUrl == "/user"
 				this.settingsButtonSelected =
 					this.dataService.currentUrl == "/settings"
 			}
@@ -98,10 +110,11 @@ export class AppComponent {
 			if (params["accessToken"]) {
 				// Login with the access token
 				await this.dataService.dav.Login(params["accessToken"])
-				window.location.href = this.router.url.slice(
-					0,
-					this.router.url.indexOf("?")
-				)
+
+				// Reload the page without accessToken in the url
+				let url = new URL(window.location.href)
+				url.searchParams.delete("accessToken")
+				window.location.href = url.toString()
 			}
 		})
 	}
@@ -109,6 +122,7 @@ export class AppComponent {
 	async ngOnInit() {
 		this.setSize()
 		this.dataService.ApplyTheme()
+		await this.loadStoreLanguages()
 
 		new Dav({
 			environment: environment.environment,
@@ -159,7 +173,7 @@ export class AppComponent {
 
 		let url = this.router.url.split("?")[0]
 
-		if ((await this.dataService.GetOpenLastReadBook()) && url == "/") {
+		if ((await this.settingsService.getOpenLastReadBook()) && url == "/") {
 			this.router.navigate(["loading"], { skipLocationChange: true })
 		}
 
@@ -186,36 +200,77 @@ export class AppComponent {
 		this.dataService.isMobile = window.innerWidth <= smallWindowMaxSize
 	}
 
+	@HostListener("window:preferred-languages-setting-changed")
+	async loadStoreLanguages() {
+		this.storeLanguages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
+	}
+
 	navigateToLibraryPage() {
-		this.router.navigate(["/"])
+		this.routingService.navigateToLibraryPage()
 	}
 
 	navigateToStorePage() {
-		this.router.navigate(["/store"])
+		this.routingService.navigateToStorePage()
+	}
+
+	navigateToSearchPage() {
+		this.routingService.navigateToSearchPage()
 	}
 
 	navigateToAuthorPage() {
-		this.router.navigate(["/author"])
+		this.routingService.navigateToAuthorPage()
 	}
 
-	navigateToAccountPage() {
-		this.router.navigate(["/account"])
+	navigateToUserPage() {
+		this.routingService.navigateToUserPage()
 	}
 
 	navigateToSettingsPage() {
-		this.router.navigate(["/settings"])
+		this.routingService.navigateToSettingsPage()
+	}
+
+	navigateToBook(book: EpubBook) {
+		// Check if the user can access the book
+		if (book.storeBook && !this.dataService.dav.isLoggedIn) {
+			// TODO: Show dialog
+			return
+		}
+
+		// Open the book on the book page
+		this.dataService.currentBook = book
+		this.router.navigate(["book"])
 	}
 
 	setupApollo(accessToken: string) {
-		this.apollo.removeClient()
+		this.apollo.removeClient(davApiClientName)
+		this.apollo.removeClient(pocketlibApiClientName)
 
-		this.apollo.create({
-			cache: new InMemoryCache({ dataIdFromObject }),
-			link: this.httpLink.create({
-				uri: environment.pocketlibApiUrl,
-				headers: new HttpHeaders().set("Authorization", accessToken)
-			})
-		})
+		this.apollo.create(
+			{
+				cache: new InMemoryCache({ dataIdFromObject }),
+				link: this.httpLink.create({
+					uri: environment.davApiUrl,
+					headers: new HttpHeaders().set("Authorization", accessToken)
+				})
+			},
+			davApiClientName
+		)
+
+		this.apollo.create(
+			{
+				cache: new InMemoryCache({ dataIdFromObject }),
+				link: this.httpLink.create({
+					uri: environment.pocketlibApiUrl,
+					headers: new HttpHeaders().set("Authorization", accessToken)
+				})
+			},
+			pocketlibApiClientName
+		)
+
+		this.davApiService.loadApolloClient()
+		this.apiService.loadApolloClient()
 	}
 
 	//#region dav-js callback functions

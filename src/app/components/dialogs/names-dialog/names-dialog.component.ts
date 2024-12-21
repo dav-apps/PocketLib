@@ -7,24 +7,21 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-names-dialog",
 	templateUrl: "./names-dialog.component.html"
 })
 export class NamesDialogComponent {
-	locale = enUS.dialogs.namesDialog
+	locale = this.localizationService.locale.dialogs.namesDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() uuid: string = ""
 	@Input() names: { name: string; language: string }[]
 	@Output() update = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.namesDialog
-	}
+	constructor(public localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

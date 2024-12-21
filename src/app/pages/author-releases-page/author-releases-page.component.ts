@@ -3,12 +3,14 @@ import { Router, ActivatedRoute } from "@angular/router"
 import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import { StoreBook } from "src/app/models/StoreBook"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { StoreBookReleaseStatus } from "src/app/misc/types"
 
 interface ReleaseItem {
+	uuid: string
 	name: string
 	link: string
 }
@@ -28,9 +30,12 @@ export class AuthorReleasesPageComponent {
 	constructor(
 		public dataService: DataService,
 		public apiService: ApiService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {}
+	) {
+		this.dataService.setMeta()
+	}
 
 	async ngOnInit() {
 		// Wait for the user to be loaded
@@ -49,7 +54,9 @@ export class AuthorReleasesPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -67,7 +74,7 @@ export class AuthorReleasesPageComponent {
 
 		this.book = await StoreBook.Retrieve(
 			storeBookUuid,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 
@@ -86,6 +93,7 @@ export class AuthorReleasesPageComponent {
 			if (release.status == StoreBookReleaseStatus.Unpublished) continue
 
 			let releaseItem: ReleaseItem = {
+				uuid: release.uuid,
 				name: release.releaseName,
 				link: ""
 			}

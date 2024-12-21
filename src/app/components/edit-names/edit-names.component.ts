@@ -5,8 +5,8 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 interface Name {
 	name: string
@@ -22,7 +22,7 @@ interface Name {
 	styleUrls: ["./edit-names.component.scss"]
 })
 export class EditNamesComponent {
-	locale = enUS.editNames
+	locale = this.localizationService.locale.editNames
 	@Input() names: Name[] = []
 	@Input() uuid: string
 	@Output() update = new EventEmitter()
@@ -31,10 +31,9 @@ export class EditNamesComponent {
 
 	constructor(
 		private dataService: DataService,
-		private apiService: ApiService
-	) {
-		this.locale = this.dataService.GetLocale().editNames
-	}
+		private apiService: ApiService,
+		private localizationService: LocalizationService
+	) {}
 
 	async UpdateName(name: Name) {
 		name.errorMessage = ""

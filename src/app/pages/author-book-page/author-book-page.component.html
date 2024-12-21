@@ -2,7 +2,7 @@
 	<div class="header-container">
 		<dav-header
 			backButtonVisible
-			editButtonVisible
+			[editButtonVisible]="release == null"
 			(backButtonClick)="BackButtonClick()"
 			(editButtonClick)="ShowEditTitleDialog()"
 		>
@@ -10,30 +10,28 @@
 		</dav-header>
 	</div>
 
-	<div class="error-message-container" *ngIf="errorMessage.length > 0">
+	@if (errorMessage.length > 0) {
+	<div class="error-message-container">
 		<dav-message-bar color="error" type="error">
 			{{ errorMessage }}
 		</dav-message-bar>
 	</div>
+	}
 
 	<div class="content-container">
 		<div class="book-details-container">
 			<!-- Release notes -->
-			<div
-				class="book-details-label"
-				*ngIf="release != null && release.releaseNotes"
-			>
+			@if (release != null && release.releaseNotes) {
+			<div class="book-details-label">
 				<p>{{ locale.releaseNotes }}:</p>
 			</div>
 
-			<div
-				class="book-details-data"
-				*ngIf="release != null && release.releaseNotes"
-			>
+			<div class="book-details-data">
 				<p class="release-notes-text">
 					{{ release.releaseNotes }}
 				</p>
 			</div>
+			}
 
 			<!-- Cover -->
 			<div class="book-details-label">
@@ -41,11 +39,12 @@
 			</div>
 
 			<div class="book-details-data">
-				<p class="no-cover-text" *ngIf="!coverContent">
+				@if (!coverContent) {
+				<p class="no-cover-text">
 					{{ locale.noCover }}
 				</p>
-
-				<div class="cover-container" *ngIf="coverContent">
+				} @else {
+				<div class="cover-container">
 					<dav-blurhash-image
 						[src]="coverContent"
 						[fallbackSrc]="dataService.defaultStoreBookCover"
@@ -55,17 +54,17 @@
 						[loading]="coverLoading"
 					></dav-blurhash-image>
 				</div>
-
+				} @if (release == null) {
 				<dav-button
-					size="small"
+					size="sm"
 					ngxFilePicker
 					accept="image/png,image/jpeg"
 					[disabled]="coverLoading"
 					(filePick)="CoverUpload($event)"
-					*ngIf="release == null"
 				>
 					{{ locale.uploadCover }}
 				</dav-button>
+				}
 			</div>
 
 			<!-- Description -->
@@ -74,21 +73,16 @@
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="description-text"
-					*ngIf="book.description && !editDescription"
-				>
+				@if (book.description && !editDescription) {
+				<p class="description-text">
 					{{ book.description }}
 				</p>
-
-				<p
-					class="no-description-text"
-					*ngIf="!book.description && !editDescription"
-				>
+				} @if (!book.description && !editDescription) {
+				<p class="no-description-text">
 					{{ locale.noDescription }}
 				</p>
-
-				<div class="edit-description-container" *ngIf="editDescription">
+				} @if (editDescription) {
+				<div class="edit-description-container">
 					<dav-textarea
 						[value]="newDescription"
 						[placeholder]="locale.descriptionTextfieldPlaceholder"
@@ -100,26 +94,27 @@
 						"
 					></dav-textarea>
 				</div>
+				}
 
 				<div class="edit-description-button-container">
+					@if (release == null) {
 					<dav-button
-						size="small"
+						size="sm"
 						[disabled]="descriptionLoading"
 						(click)="EditDescription()"
-						*ngIf="release == null"
 					>
 						{{ editDescription ? locale.save : locale.edit }}
 					</dav-button>
-
+					} @if (editDescription) {
 					<dav-button
 						color="secondary"
-						size="small"
+						size="sm"
 						[disabled]="descriptionLoading"
 						(click)="editDescription = false"
-						*ngIf="editDescription"
 					>
 						{{ locale.cancel }}
 					</dav-button>
+					}
 				</div>
 			</div>
 
@@ -145,34 +140,17 @@
 
 			<div class="book-details-data">
 				<div class="categories-container">
-					<dav-badge
-						[color]="i == 0 ? 'primary' : 'secondary'"
-						*ngFor="let category of book.categories; let i = index"
-					>
+					@for (category of book.categories; track category.key; let i =
+					$index) {
+					<dav-badge [color]="i == 0 ? 'primary' : 'secondary'">
 						{{ category.name }}
 					</dav-badge>
-
-					<dav-icon-button
-						size="small"
-						(click)="ShowCategoriesDialog()"
-						*ngIf="release == null"
-					>
+					} @if (release == null) {
+					<dav-icon-button size="sm" (click)="ShowCategoriesDialog()">
 						<fa-icon [icon]="faPenLight"></fa-icon>
 					</dav-icon-button>
+					}
 				</div>
-			</div>
-
-			<!-- Price -->
-			<div class="book-details-label">
-				<p>{{ locale.price }}:</p>
-			</div>
-
-			<div class="book-details-data">
-				<pocketlib-price-input
-					#priceInput
-					[canEdit]="release == null"
-					(update)="UpdatePrice($event)"
-				></pocketlib-price-input>
 			</div>
 
 			<!-- ISBN -->
@@ -188,70 +166,197 @@
 				></pocketlib-isbn-input>
 			</div>
 
-			<!-- Book file -->
+			<div class="book-details-separator"></div>
+
+			<!-- Ebook file -->
 			<div class="book-details-label">
 				<p>{{ locale.bookFile }}:</p>
 			</div>
 
 			<div class="book-details-data">
-				<p
-					class="no-book-file-text"
-					*ngIf="!bookFileUploaded && !bookFileLoading"
-				>
-					{{ locale.noBookFile }}
+				@if (!bookFileUploaded && !bookFileLoading) {
+				<p class="no-book-file-text">
+					{{ locale.noFile }}
 				</p>
-
-				<p
-					class="book-file-uploaded-text"
-					*ngIf="
-						bookFileUploaded && book.fileName == null && !bookFileLoading
-					"
-				>
-					{{ locale.bookFileUploaded }}
+				} @if (bookFileUploaded && book.fileName == null &&
+				!bookFileLoading) {
+				<p class="book-file-uploaded-text">
+					{{ locale.fileUploaded }}
 				</p>
-
-				<p
-					class="file-name-text"
-					*ngIf="
-						bookFileUploaded && book.fileName != null && !bookFileLoading
-					"
-				>
+				} @if (bookFileUploaded && book.fileName != null &&
+				!bookFileLoading) {
+				<p class="file-name-text">
 					{{ book.fileName }}
 				</p>
-
-				<p class="book-file-uploading" *ngIf="bookFileLoading">
-					{{ locale.bookFileUploading }}
+				} @if (bookFileLoading) {
+				<p class="book-file-uploading">
+					{{ locale.fileUploading }}
 				</p>
+				}
 
 				<div class="book-file-upload-container">
+					@if (release == null) {
 					<dav-button
-						size="small"
+						size="sm"
 						ngxFilePicker
 						accept="application/epub+zip"
 						[disabled]="bookFileLoading"
 						(filePick)="BookFileUpload($event)"
-						*ngIf="release == null"
 					>
-						{{ locale.uploadBookFile }}
+						{{ locale.selectFile }}
 					</dav-button>
-
-					<dav-progress-ring
-						size="16"
-						*ngIf="bookFileLoading"
-					></dav-progress-ring>
+					} @if (bookFileLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
 				</div>
 			</div>
 
-			<!-- Status -->
-			<div
-				class="book-details-label"
-				*ngIf="book.status == 0 && release == null"
-			>
-				<p>{{ locale.status }}:</p>
+			<!-- Ebook price -->
+			<div class="book-details-label">
+				<p>{{ locale.price }}:</p>
 			</div>
 
 			<div class="book-details-data">
-				<div *ngIf="book.status == 0">
+				<pocketlib-price-input
+					#priceInput
+					[canEdit]="release == null"
+					(update)="UpdatePrice($event)"
+				></pocketlib-price-input>
+			</div>
+
+			<div class="book-details-separator"></div>
+
+			<!-- Print cover -->
+			<div class="book-details-label">
+				<p>{{ locale.printCover }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				@if (!printCoverUploaded && !printCoverLoading) {
+				<p class="no-book-file-text">
+					{{ locale.noFile }}
+				</p>
+				} @if (printCoverUploaded && book.printCoverFileName == null &&
+				!printCoverLoading){
+				<p class="book-file-uploaded-text">
+					{{ locale.fileUploaded }}
+				</p>
+				} @if (printCoverUploaded && book.printCoverFileName != null &&
+				!printCoverLoading) {
+				<p class="file-name-text">
+					{{ book.printCoverFileName }}
+				</p>
+				} @if (printCoverLoading) {
+				<p class="book-file-uploading">
+					{{ locale.fileUploading }}
+				</p>
+				}
+
+				<div class="book-file-upload-container">
+					@if (release == null) {
+					<dav-button
+						size="sm"
+						ngxFilePicker
+						accept="application/pdf"
+						[disabled]="printCoverLoading"
+						(filePick)="PrintCoverUpload($event)"
+					>
+						{{ locale.selectFile }}
+					</dav-button>
+					} @if (printCoverLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
+				</div>
+			</div>
+
+			<!-- Print file -->
+			<div class="book-details-label">
+				<p>{{ locale.printFile }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				@if (!printFileUploaded && !printFileLoading) {
+				<p class="no-book-file-text">
+					{{ locale.noFile }}
+				</p>
+				} @if (printFileUploaded && book.printFileName == null &&
+				!printFileLoading) {
+				<p class="book-file-uploaded-text">
+					{{ locale.fileUploaded }}
+				</p>
+				} @if (printFileUploaded && book.printFileName != null &&
+				!printFileLoading) {
+				<p class="file-name-text">
+					{{ book.printFileName }}
+				</p>
+				} @if (printFileLoading) {
+				<p class="book-file-uploading">
+					{{ locale.fileUploading }}
+				</p>
+				}
+
+				<div class="book-file-upload-container">
+					@if (release == null) {
+					<dav-button
+						size="sm"
+						ngxFilePicker
+						accept="application/pdf"
+						[disabled]="printFileLoading"
+						(filePick)="PrintFileUpload($event)"
+					>
+						{{ locale.selectFile }}
+					</dav-button>
+					} @if (printFileLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
+				</div>
+			</div>
+
+			<!-- Print price -->
+			<div class="book-details-label">
+				<p>{{ locale.printPrice }}:</p>
+			</div>
+
+			<div class="book-details-data">
+				<pocketlib-price-input
+					#printPriceInput
+					[canEdit]="release == null"
+					(update)="UpdatePrintPrice($event)"
+				></pocketlib-price-input>
+			</div>
+
+			<!-- Order print book -->
+			@if (printCoverUploaded && printFileUploaded) {
+			<div class="book-details-data">
+				<div class="order-test-print-button-container">
+					<dav-button
+						size="sm"
+						color="secondary"
+						[disabled]="orderTestPrintLoading"
+						(click)="orderTestPrint()"
+					>
+						{{ locale.orderTestPrint }}
+					</dav-button>
+
+					@if (orderTestPrintLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
+				</div>
+			</div>
+			}
+
+			<div class="book-details-separator"></div>
+
+			<!-- Status -->
+			@if (book.status == 0 && release == null) {
+			<div class="book-details-label">
+				<p>{{ locale.status }}:</p>
+			</div>
+			}
+
+			<div class="book-details-data">
+				@if (book.status == 0) {
+				<div>
 					<p class="unpublished-text">{{ locale.unpublished }}</p>
 
 					<div class="publish-button-container">
@@ -267,21 +372,14 @@
 							{{ locale.publish }}
 						</dav-button>
 
-						<dav-progress-ring
-							size="24"
-							*ngIf="statusLoading"
-						></dav-progress-ring>
+						@if (statusLoading) {
+						<dav-progress-ring size="24"></dav-progress-ring>
+						}
 					</div>
 				</div>
-
-				<div
-					class="publish-changes-button-container"
-					*ngIf="
-						(book.status == 2 || book.status == 3) &&
-						release == null &&
-						changes
-					"
-				>
+				} @if ((book.status == 2 || book.status == 3) && release == null &&
+				changes) {
+				<div class="publish-changes-button-container">
 					<dav-button
 						[disabled]="publishChangesLoading"
 						(click)="ShowPublishChangesDialog()"
@@ -289,6 +387,7 @@
 						{{ locale.publishChanges }}
 					</dav-button>
 				</div>
+				}
 			</div>
 		</div>
 	</div>

@@ -5,7 +5,6 @@ import {
 	List
 } from "../misc/types"
 import { GetLanguageByString } from "../misc/utils"
-import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { StoreBook } from "./StoreBook"
 import { StoreBookCollectionName } from "./StoreBookCollectionName"
@@ -19,7 +18,7 @@ export class StoreBookCollection {
 
 	constructor(
 		collectionResource: StoreBookCollectionResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (collectionResource != null) {
@@ -34,7 +33,7 @@ export class StoreBookCollection {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<StoreBookCollection> {
 		let response = await apiService.retrieveStoreBookCollection(
@@ -46,7 +45,7 @@ export class StoreBookCollection {
 			`,
 			{
 				uuid,
-				languages: await dataService.GetStoreLanguages()
+				languages
 			}
 		)
 
@@ -55,7 +54,7 @@ export class StoreBookCollection {
 
 		return new StoreBookCollection(
 			{ uuid, ...responseData },
-			dataService,
+			languages,
 			apiService
 		)
 	}
@@ -124,11 +123,7 @@ export class StoreBookCollection {
 
 		for (let item of responseData.storeBooks.items) {
 			items.push(
-				await StoreBook.Retrieve(
-					item.uuid,
-					this.dataService,
-					this.apiService
-				)
+				await StoreBook.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

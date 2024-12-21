@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
-import * as localforage from "localforage"
+import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
 import * as DavUIComponents from "dav-ui-components"
 import { ApiService } from "src/app/services/api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Book } from "../models/Book"
 import { EpubBook } from "../models/EpubBook"
 import { PdfBook } from "../models/PdfBook"
@@ -12,7 +13,6 @@ import { Settings } from "../models/Settings"
 import { BookOrder } from "../models/BookOrder"
 import { Publisher } from "../models/Publisher"
 import { Author } from "src/app/models/Author"
-import * as locales from "src/locales/locales"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -20,7 +20,7 @@ import {
 } from "src/constants/constants"
 import { keys } from "src/constants/keys"
 import { environment } from "src/environments/environment"
-import { Category, Language } from "src/app/misc/types"
+import { Category } from "src/app/misc/types"
 
 @Injectable()
 export class DataService {
@@ -59,14 +59,17 @@ export class DataService {
 	userIsAdmin: boolean = false
 	categories: Category[] = []
 	categoriesPromiseHolder = new PromiseHolder()
-	settingsCache: {
-		[key: string]: any
-	} = {}
 	updateInstalled: boolean = false
 	windows: boolean = false
 	contentContainer: HTMLDivElement = null
 
-	constructor(private apiService: ApiService, private swUpdate: SwUpdate) {
+	constructor(
+		private apiService: ApiService,
+		private settingsService: SettingsService,
+		private swUpdate: SwUpdate,
+		private title: Title,
+		private meta: Meta
+	) {
 		// Set the supported locale
 		if (this.locale.startsWith("de")) {
 			this.supportedLocale = "de"
@@ -108,7 +111,13 @@ export class DataService {
 				if (listPublishersResponseData != null) {
 					for (let item of listPublishersResponseData.items) {
 						this.adminPublishers.push(
-							await Publisher.Retrieve(item.uuid, this, this.apiService)
+							await Publisher.Retrieve(
+								item.uuid,
+								await this.settingsService.getStoreLanguages(
+									this.locale
+								),
+								this.apiService
+							)
 						)
 					}
 				}
@@ -143,7 +152,13 @@ export class DataService {
 
 						for (let item of listAuthorsResponseData.items) {
 							this.adminAuthors.push(
-								await Author.Retrieve(item.uuid, this, this.apiService)
+								await Author.Retrieve(
+									item.uuid,
+									await this.settingsService.getStoreLanguages(
+										this.locale
+									),
+									this.apiService
+								)
 							)
 						}
 					} else {
@@ -154,7 +169,7 @@ export class DataService {
 				// Try to get the author of the user
 				this.userAuthor = await Author.Retrieve(
 					"mine",
-					this,
+					await this.settingsService.getStoreLanguages(this.locale),
 					this.apiService
 				)
 
@@ -162,7 +177,7 @@ export class DataService {
 					// Try to get the publisher of the user
 					this.userPublisher = await Publisher.Retrieve(
 						"mine",
-						this,
+						await this.settingsService.getStoreLanguages(this.locale),
 						this.apiService
 					)
 				}
@@ -179,20 +194,19 @@ export class DataService {
 		// Get the categories
 		this.categories = []
 
-		let languages = await this.GetStoreLanguages()
 		let listCategoriesResponse = await this.apiService.listCategories(
 			`
 				total
 				items {
 					uuid
 					key
-					name(languages: $languages) {
+					name(language: $language) {
 						name
 						language
 					}
 				}
 			`,
-			{ limit: 100, languages: languages }
+			{ limit: 100, language: this.supportedLocale }
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories.items) {
@@ -272,38 +286,10 @@ export class DataService {
 		await this.ReloadBook(bookObject.Uuid)
 	}
 
-	GetFullLanguage(language: Language): string {
-		let languagesLocale = this.GetLocale().misc.languages
-
-		switch (language) {
-			case Language.de:
-				return languagesLocale.de
-			default:
-				return languagesLocale.en
-		}
-	}
-
-	GetLocale() {
-		let l = this.locale.toLowerCase()
-
-		if (l.startsWith("en")) {
-			// en
-			if (l == "en-gb") return locales.enGB
-			else return locales.enUS
-		} else if (l.startsWith("de")) {
-			// de
-			if (l == "de-at") return locales.deAT
-			else if (l == "de-ch") return locales.deCH
-			else return locales.deDE
-		}
-
-		return locales.enUS
-	}
-
 	async ApplyTheme(theme?: string) {
 		if (!theme) {
 			// Get the theme from the settings
-			theme = await this.GetTheme()
+			theme = await this.settingsService.getTheme()
 		}
 
 		switch (theme) {
@@ -356,63 +342,32 @@ export class DataService {
 		}
 	}
 
-	//#region Settings
-	async SetTheme(value: string) {
-		await localforage.setItem(keys.settingsThemeKey, value)
-		this.settingsCache[keys.settingsThemeKey] = value
-	}
+	setMeta(params?: {
+		title?: string
+		description?: string
+		image?: string
+		url?: string
+	}) {
+		const title = params?.title ?? "PocketLib"
+		const description =
+			params?.description ?? "PocketLib is a simple and modern ebook reader"
+		const image = params?.image ?? "/assets/icons/icon-128x128.png"
+		const url = params?.url ?? ""
+		const absoluteUrl = `https://pocketlib.app/${url}`
 
-	async GetTheme(): Promise<string> {
-		return this.GetSetting<string>(
-			keys.settingsThemeKey,
-			keys.settingsThemeDefault
+		this.title.setTitle(title)
+		this.meta.updateTag({ content: description }, "name='description'")
+		this.meta.updateTag({ content: title }, "name='twitter:title'")
+		this.meta.updateTag(
+			{ content: description },
+			"name='twitter:description'"
 		)
+		this.meta.updateTag({ content: image }, "name='twitter:image'")
+
+		this.meta.updateTag({ content: title }, "property='og:title'")
+		this.meta.updateTag({ content: image }, "property='og:image'")
+		this.meta.updateTag({ content: absoluteUrl }, "property='og:url'")
 	}
-
-	async SetOpenLastReadBook(value: boolean) {
-		await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
-		this.settingsCache[keys.settingsOpenLastReadBookKey] = value
-	}
-
-	async GetOpenLastReadBook(): Promise<boolean> {
-		return this.GetSetting<boolean>(
-			keys.settingsOpenLastReadBookKey,
-			keys.settingsOpenLastReadBookDefault
-		)
-	}
-
-	async SetStoreLanguages(languages: Language[]) {
-		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
-		this.settingsCache[keys.settingsStoreLanguagesKey] = languages
-	}
-
-	async GetStoreLanguages(): Promise<Language[]> {
-		let defaultLanguages = []
-		let l = this.locale.toLowerCase()
-
-		if (l.startsWith("de")) {
-			defaultLanguages = [Language.de, Language.en]
-		} else {
-			defaultLanguages = [Language.en, Language.de]
-		}
-
-		return this.GetSetting<Language[]>(
-			keys.settingsStoreLanguagesKey,
-			defaultLanguages
-		)
-	}
-
-	private async GetSetting<T>(key: string, defaultValue: T): Promise<T> {
-		let cachedValue = this.settingsCache[key]
-		if (cachedValue != null) return cachedValue
-
-		let value = (await localforage.getItem(key)) as T
-		if (value == null) value = defaultValue
-
-		this.settingsCache[key] = value
-		return value
-	}
-	//#endregion
 }
 
 export function FindElement(currentElement: Element, tagName: string): Element {

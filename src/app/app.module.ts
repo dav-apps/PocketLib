@@ -2,6 +2,10 @@ import { BrowserModule } from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
 import { Environment } from "dav-js"
 import { dataIdFromObject } from "./misc/utils"
+import {
+	davApiClientName,
+	pocketlibApiClientName
+} from "../constants/constants"
 import { environment } from "../environments/environment"
 
 // Modules
@@ -15,8 +19,8 @@ import { DragulaModule } from "ng2-dragula"
 import { ServiceWorkerModule } from "@angular/service-worker"
 
 // Apollo
-import { HttpClientModule } from "@angular/common/http"
-import { APOLLO_OPTIONS, ApolloModule } from "apollo-angular"
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
+import { APOLLO_NAMED_OPTIONS, ApolloModule } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
 
@@ -24,7 +28,10 @@ import { InMemoryCache } from "@apollo/client/core"
 import { RoutingService } from "./services/routing-service"
 import { DataService } from "./services/data-service"
 import { ApiService } from "./services/api-service"
+import { DavApiService } from "./services/dav-api-service"
 import { CachingService } from "./services/caching-service"
+import { LocalizationService } from "./services/localization-service"
+import { SettingsService } from "./services/settings-service"
 
 // Components
 import { AppComponent } from "./app.component"
@@ -46,8 +53,6 @@ import { CategoriesSelectionComponent } from "./components/categories-selection/
 import { PriceInputComponent } from "./components/price-input/price-input.component"
 import { IsbnInputComponent } from "./components/isbn-input/isbn-input.component"
 import { LinkIconButtonComponent } from "./components/link-icon-button/link-icon-button.component"
-import { LanguagesSelectionComponent } from "./components/languages-selection/languages-selection.component"
-import { DavProCardComponent } from "./components/dav-pro-card/dav-pro-card.component"
 import { LibraryPageCardsComponent } from "./components/library-page-cards/library-page-cards.component"
 import { LibraryPageBookCardComponent } from "./components/library-page-book-card/library-page-book-card.component"
 import { NewBookPageTitleSectionComponent } from "./components/new-book-page-title-section/new-book-page-title-section.component"
@@ -63,6 +68,7 @@ import { RemoveBookDialogComponent } from "./components/dialogs/remove-book-dial
 import { LoginToAccessBookDialogComponent } from "./components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
 import { AddBookErrorDialogComponent } from "./components/dialogs/add-book-error-dialog/add-book-error-dialog.component"
 import { LogoutDialogComponent } from "./components/dialogs/logout-dialog/logout-dialog.component"
+import { UpgradeProDialogComponent } from "./components/dialogs/upgrade-pro-dialog/upgrade-pro-dialog.component"
 import { CreatePublisherDialogComponent } from "./components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
 import { CreateAuthorDialogComponent } from "./components/dialogs/create-author-dialog/create-author-dialog.component"
 import { EditTitleDialogComponent } from "./components/dialogs/edit-title-dialog/edit-title-dialog.component"
@@ -75,6 +81,8 @@ import { LeavePageDialogComponent } from "./components/dialogs/leave-page-dialog
 import { LoginRequiredDialogComponent } from "./components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "./components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "./components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { BookDetailsDialogComponent } from "./components/dialogs/book-details-dialog/book-details-dialog.component"
+import { ShippingCostInfoDialogComponent } from "./components/dialogs/shipping-cost-info-dialog/shipping-cost-info-dialog.component"
 import { ErrorDialogComponent } from "./components/dialogs/error-dialog/error-dialog.component"
 import { LogoDialogComponent } from "./components/dialogs/logo-dialog/logo-dialog.component"
 import { ProfileImageDialogComponent } from "./components/dialogs/profile-image-dialog/profile-image-dialog.component"
@@ -84,8 +92,9 @@ import { EditAuthorProfileDialogComponent } from "./components/dialogs/edit-auth
 // Pages
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
 import { BookPageComponent } from "./pages/book-page/book-page.component"
-import { AccountPageComponent } from "./pages/account-page/account-page.component"
+import { UserPageComponent } from "./pages/user-page/user-page.component"
 import { SettingsPageComponent } from "./pages/settings-page/settings-page.component"
+import { SearchPageComponent } from "./pages/search-page/search-page.component"
 import { PublisherPageComponent } from "./pages/publisher-page/publisher-page.component"
 import { AuthorPageComponent } from "./pages/author-page/author-page.component"
 import { AuthorCollectionPageComponent } from "./pages/author-collection-page/author-collection-page.component"
@@ -102,6 +111,8 @@ import { StorePublisherPageComponent } from "./pages/store-publisher-page/store-
 import { StoreAuthorPageComponent } from "./pages/store-author-page/store-author-page.component"
 import { StoreBookPageComponent } from "./pages/store-book-page/store-book-page.component"
 import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-page.component"
+import { StoreSeriesPageComponent } from "./pages/store-series-page/store-series-page.component"
+import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/order-confirmation-page.component"
 
 @NgModule({
 	declarations: [
@@ -125,8 +136,6 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		PriceInputComponent,
 		IsbnInputComponent,
 		LinkIconButtonComponent,
-		LanguagesSelectionComponent,
-		DavProCardComponent,
 		LibraryPageCardsComponent,
 		LibraryPageBookCardComponent,
 		NewBookPageTitleSectionComponent,
@@ -142,6 +151,7 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		LoginToAccessBookDialogComponent,
 		AddBookErrorDialogComponent,
 		LogoutDialogComponent,
+		UpgradeProDialogComponent,
 		CreatePublisherDialogComponent,
 		CreateAuthorDialogComponent,
 		EditTitleDialogComponent,
@@ -154,6 +164,8 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		LoginRequiredDialogComponent,
 		NoAccessDialogComponent,
 		BuyBookDialogComponent,
+		BookDetailsDialogComponent,
+		ShippingCostInfoDialogComponent,
 		ErrorDialogComponent,
 		LogoDialogComponent,
 		ProfileImageDialogComponent,
@@ -162,8 +174,9 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		// Pages
 		LibraryPageComponent,
 		BookPageComponent,
-		AccountPageComponent,
+		UserPageComponent,
 		SettingsPageComponent,
+		SearchPageComponent,
 		PublisherPageComponent,
 		AuthorPageComponent,
 		AuthorCollectionPageComponent,
@@ -179,13 +192,16 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		StorePublisherPageComponent,
 		StoreAuthorPageComponent,
 		StoreBookPageComponent,
-		StoreBooksPageComponent
+		StoreBooksPageComponent,
+		StoreSeriesPageComponent,
+		OrderConfirmationPageComponent
 	],
+	bootstrap: [AppComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 		ApolloModule,
-		HttpClientModule,
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
 		PortalModule,
@@ -202,21 +218,31 @@ import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-pa
 		RoutingService,
 		DataService,
 		ApiService,
+		DavApiService,
 		CachingService,
+		LocalizationService,
+		SettingsService,
 		{
-			provide: APOLLO_OPTIONS,
+			provide: APOLLO_NAMED_OPTIONS,
 			useFactory(httpLink: HttpLink) {
 				return {
-					cache: new InMemoryCache({ dataIdFromObject }),
-					link: httpLink.create({
-						uri: environment.pocketlibApiUrl
-					})
+					[davApiClientName]: {
+						cache: new InMemoryCache({ dataIdFromObject }),
+						link: httpLink.create({
+							uri: environment.davApiUrl
+						})
+					},
+					[pocketlibApiClientName]: {
+						cache: new InMemoryCache({ dataIdFromObject }),
+						link: httpLink.create({
+							uri: environment.pocketlibApiUrl
+						})
+					}
 				}
 			},
 			deps: [HttpLink]
-		}
-	],
-	bootstrap: [AppComponent],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+		},
+		provideHttpClient(withInterceptorsFromDi())
+	]
 })
 export class AppModule {}

@@ -6,8 +6,8 @@
 				? 'slide-left-out'
 				: 'slide-right-out'
 			: forwardNavigation
-				? 'slide-left-in'
-				: 'slide-right-in'
+			? 'slide-left-in'
+			: 'slide-right-in'
 	"
 	[style.display]="visibleSection != 1 ? 'none' : null"
 >
@@ -15,22 +15,24 @@
 		<p class="description-text">{{ locale.collectionSection.description }}</p>
 
 		<dav-list>
+			@for (collection of collections; track collection.uuid; let i = $index)
+			{
 			<dav-list-item
 				[imageSrc]="collection.coverContent"
 				[imageTitle]="collection.name"
 				[headline]="collection.name"
 				(click)="Select(i)"
-				*ngFor="let collection of collections; let i = index"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 
 	<div class="button-container">
-		<dav-button size="small" outline (click)="Previous()">
+		<dav-button size="sm" outline (click)="Previous()">
 			{{ locale.previous }}
 		</dav-button>
 
-		<dav-button size="small" (click)="Select(-1)">
+		<dav-button size="sm" (click)="Select(-1)">
 			{{ locale.collectionSection.newPublication }}
 		</dav-button>
 	</div>

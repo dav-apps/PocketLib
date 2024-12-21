@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-edit-author-profile-dialog",
 	templateUrl: "./edit-author-profile-dialog.component.html"
 })
 export class EditAuthorProfileDialogComponent {
-	locale = enUS.dialogs.editAuthorProfileDialog
+	locale = this.localizationService.locale.dialogs.editAuthorProfileDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() firstName: string = ""
 	@Input() lastName: string = ""
@@ -32,9 +31,7 @@ export class EditAuthorProfileDialogComponent {
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.editAuthorProfileDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

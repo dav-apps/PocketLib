@@ -6,6 +6,7 @@ import { Environment } from "dav-js"
 export const environment = {
 	environment: Environment.Development,
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
+	davApiUrl: "http://localhost:4000",
 	pocketlibApiUrl: "http://localhost:4001",
 	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",
 	appId: 6,

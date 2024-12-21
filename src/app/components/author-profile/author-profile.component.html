@@ -1,97 +1,103 @@
-<div class="container slide-up-in">
+<div
+	class="container slide-up-in"
+	[class.compact]="authorMode == 3 && vlbAuthorBio.length == 0"
+>
 	<div class="author-panel">
+		@if (authorMode != 3) {
 		<div class="profile-image-container">
 			<dav-blurhash-image
 				[src]="profileImageContent"
 				[fallbackSrc]="dataService.defaultProfileImageUrl"
-				[blurhash]="author.profileImage?.blurhash"
-				[title]="author.firstName + ' ' + author.lastName"
+				[blurhash]="author?.profileImage?.blurhash"
+				[title]="author?.firstName + ' ' + author?.lastName"
 				[alt]="profileImageAlt"
 				[width]="profileImageWidth"
 				[height]="profileImageWidth"
 				[loading]="profileImageLoading"
 			></dav-blurhash-image>
 
+			@if (authorMode != 0) {
 			<dav-button
-				size="small"
+				size="sm"
 				tonal
 				ngxFilePicker
 				accept="image/png,image/jpeg"
 				[disabled]="profileImageLoading"
 				(filePick)="ProfileImageFileSelected($event)"
-				*ngIf="authorMode != 0"
 			>
 				{{ locale.uploadProfileImage }}
 			</dav-button>
+			}
 		</div>
-
+		} @if (authorMode == 3) {
+		<dav-header size="sm">
+			{{ vlbAuthorFirstName }} {{ vlbAuthorLastName }}
+		</dav-header>
+		} @else {
 		<dav-header
 			[editButtonVisible]="authorMode > 0"
-			size="small"
+			size="sm"
 			(editButtonClick)="ShowEditProfileDialog()"
 		>
-			{{ author.firstName }} {{ author.lastName }}
+			{{ author?.firstName }} {{ author?.lastName }}
 		</dav-header>
-
-		<div
-			class="social-media-buttons-container"
-			*ngIf="
-				author.websiteUrl ||
-				author.facebookUsername ||
-				author.instagramUsername ||
-				author.twitterUsername
-			"
-		>
+		} @if (author?.websiteUrl || author?.facebookUsername ||
+		author?.instagramUsername || author?.twitterUsername) {
+		<div class="social-media-buttons-container">
+			@if (author?.websiteUrl) {
 			<!-- Website -->
 			<pocketlib-link-icon-button
 				[icon]="faGlobeLight"
 				[link]="author.websiteUrl"
-				*ngIf="author.websiteUrl"
 			></pocketlib-link-icon-button>
-
+			} @if (author?.facebookUsername) {
 			<!-- Facebook -->
 			<pocketlib-link-icon-button
 				[icon]="faFacebook"
 				[link]="facebookLink"
-				*ngIf="author.facebookUsername"
 			></pocketlib-link-icon-button>
-
+			} @if (author?.instagramUsername) {
 			<!-- Instagram -->
 			<pocketlib-link-icon-button
 				[icon]="faInstagram"
 				[link]="instagramLink"
-				*ngIf="author.instagramUsername"
 			></pocketlib-link-icon-button>
-
+			} @if (author?.twitterUsername) {
 			<!-- Twitter -->
 			<pocketlib-link-icon-button
 				[icon]="faTwitter"
 				[link]="twitterLink"
-				*ngIf="author.twitterUsername"
 			></pocketlib-link-icon-button>
+			}
 		</div>
-
+		} @if (authorMode == 3) {
+		<p class="bio-text">
+			{{ vlbAuthorBio }}
+		</p>
+		} @else {
 		<div class="bio-language-dropdown-container">
+			@if (authorMode != 0) {
 			<dav-dropdown
 				width="170"
 				[options]="bioLanguageDropdownOptions"
 				[selectedKey]="bioLanguageDropdownSelectedKey"
 				(change)="BioLanguageDropdownChange($event)"
-				*ngIf="authorMode != 0"
 			></dav-dropdown>
+			}
 		</div>
 
+		@if (bioMode == 2) {
 		<!-- Display the content of the bio in the selected language -->
-		<p class="bio-text" *ngIf="bioMode == 2">
+		<p class="bio-text">
 			{{ currentBio }}
 		</p>
-
+		} @else if (bioMode == 0) {
 		<!-- Text for the case that there are no bios -->
-		<p class="no-bio-text" *ngIf="bioMode == 0">
+		<p class="no-bio-text">
 			{{ locale.noBio }}
 		</p>
-
-		<div class="edit-bio-container" *ngIf="bioMode == 1 || bioMode == 3">
+		} @else if (bioMode == 1 || bioMode == 3) {
+		<div class="edit-bio-container">
 			<dav-textarea
 				[value]="newBio"
 				[placeholder]="locale.bioTextfieldPlaceholder"
@@ -101,49 +107,54 @@
 				(change)="newBio = $event.detail.value; newBioError = ''"
 			></dav-textarea>
 		</div>
+		}
 
 		<div class="edit-bio-button-container">
+			@if (authorMode != 0 && bioMode != 0) {
 			<dav-button
-				size="small"
+				size="sm"
 				[tonal]="bioMode != 1 && bioMode != 3"
 				[disabled]="bioLoading"
 				(click)="EditBio()"
-				*ngIf="authorMode != 0 && bioMode != 0"
 			>
 				{{ bioMode == 1 || bioMode == 3 ? locale.save : locale.edit }}
 			</dav-button>
-
+			} @if (authorMode != 0 && bioMode == 3) {
 			<dav-button
 				color="secondary"
-				size="small"
+				size="sm"
 				[disabled]="bioLoading"
 				(click)="CancelEditBio()"
-				*ngIf="authorMode != 0 && bioMode == 3"
 			>
 				{{ locale.cancel }}
 			</dav-button>
+			}
 		</div>
+		}
 	</div>
 
-	<div class="books-panel" *ngIf="authorMode != 0">
+	@if (authorMode == 1 || authorMode == 2) {
+	<div class="books-panel">
+		@if (errorMessage.length > 0) {
 		<!-- Error message -->
-		<div class="error-message-container" *ngIf="errorMessage.length > 0">
+		<div class="error-message-container">
 			<dav-message-bar color="error" type="error">
 				{{ errorMessage }}
 			</dav-message-bar>
 		</div>
-
+		} @if (providerMessage.length > 0) {
 		<!-- Message to sign up as a provider -->
-		<div class="error-message-container" *ngIf="providerMessage.length > 0">
+		<div class="error-message-container">
 			<dav-message-bar>
 				<span [innerHtml]="providerMessage"></span>
 			</dav-message-bar>
 		</div>
+		}
 
 		<!-- List of collections -->
 		<div>
 			<dav-header
-				size="small"
+				size="sm"
 				addButtonVisible
 				(addButtonClick)="NavigateToNewBookPage()"
 			>
@@ -151,12 +162,14 @@
 			</dav-header>
 		</div>
 
-		<div class="progress-ring-container" *ngIf="!collectionsLoaded">
+		@if (!collectionsLoaded) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="28"></dav-progress-ring>
 		</div>
-
-		<div class="list-container" *ngIf="collectionsLoaded">
+		} @else {
+		<div class="list-container">
 			<dav-list>
+				@for (collection of collections; track collection.uuid) {
 				<dav-list-item
 					[imageSrc]="
 						collection.books.length > 0 &&
@@ -172,18 +185,19 @@
 					"
 					imageAspectRatio="1:1.5"
 					[headline]="collection.name"
-					size="large"
+					size="lg"
 					[href]="collection.link"
 					(click)="collectionItemClick($event, collection)"
-					*ngFor="let collection of collections"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
+		}
 
 		<!-- List of series -->
 		<div>
 			<dav-header
-				size="small"
+				size="sm"
 				addButtonVisible
 				(addButtonClick)="NavigateToNewSeriesPage()"
 			>
@@ -191,41 +205,62 @@
 			</dav-header>
 		</div>
 
-		<div class="progress-ring-container" *ngIf="!seriesLoaded">
+		@if (!seriesLoaded) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="28"></dav-progress-ring>
 		</div>
-
-		<div class="list-container" *ngIf="seriesLoaded">
+		} @else {
+		<div class="list-container">
 			<dav-list>
+				@for (s of series; track s.uuid) {
 				<dav-list-item
 					[imageSrc]="s.coverContent"
 					[imageBlurhash]="s.coverBlurhash"
 					imageAspectRatio="1:1.5"
 					[headline]="s.name"
-					size="large"
+					size="lg"
 					[href]="s.link"
 					(click)="seriesItemClick($event, s)"
-					*ngFor="let s of series"
 				></dav-list-item>
+				}
 			</dav-list>
 		</div>
+		}
 	</div>
-
-	<div class="books-panel" *ngIf="authorMode == 0">
+	} @else {
+	<div class="books-panel">
 		<!-- List of books -->
+		@if (vlbItemsLoading) {
+		<div class="progress-ring-container">
+			<dav-progress-ring size="28"></dav-progress-ring>
+		</div>
+		} @else {
 		<dav-list>
+			@for (book of books; track book.uuid) {
 			<dav-list-item
 				[imageSrc]="book.coverContent"
+				[imageFallbackSrc]="dataService.defaultStoreBookCover"
 				[imageBlurhash]="book.coverBlurhash"
 				imageAspectRatio="1:1.5"
 				[headline]="book.title"
-				size="large"
-				[href]="'/store/book/' + book.uuid"
+				size="lg"
+				[href]="'/store/book/' + book.slug"
 				(click)="bookItemClick($event, book)"
-				*ngFor="let book of books"
 			></dav-list-item>
+			}
 		</dav-list>
+
+		@if (pages > 1) {
+		<div class="pagination-container">
+			<dav-pagination
+				[pages]="pages"
+				[currentPage]="page"
+				(pageChange)="pageChange($event.detail.page)"
+			></dav-pagination>
+		</div>
+		} }
 	</div>
+	}
 </div>
 
 <pocketlib-profile-image-dialog

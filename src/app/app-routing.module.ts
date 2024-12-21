@@ -3,7 +3,8 @@ import { Routes, RouterModule } from "@angular/router"
 import { LibraryPageComponent } from "./pages/library-page/library-page.component"
 import { BookPageComponent } from "./pages/book-page/book-page.component"
 import { SettingsPageComponent } from "./pages/settings-page/settings-page.component"
-import { AccountPageComponent } from "./pages/account-page/account-page.component"
+import { SearchPageComponent } from "./pages/search-page/search-page.component"
+import { UserPageComponent } from "./pages/user-page/user-page.component"
 import { PublisherPageComponent } from "./pages/publisher-page/publisher-page.component"
 import { AuthorPageComponent } from "./pages/author-page/author-page.component"
 import { AuthorCollectionPageComponent } from "./pages/author-collection-page/author-collection-page.component"
@@ -20,12 +21,15 @@ import { StorePublisherPageComponent } from "./pages/store-publisher-page/store-
 import { StoreAuthorPageComponent } from "./pages/store-author-page/store-author-page.component"
 import { StoreBookPageComponent } from "./pages/store-book-page/store-book-page.component"
 import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-page.component"
+import { StoreSeriesPageComponent } from "./pages/store-series-page/store-series-page.component"
+import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/order-confirmation-page.component"
 
 const routes: Routes = [
 	{ path: "", component: LibraryPageComponent },
 	{ path: "book", component: BookPageComponent },
-	{ path: "account", component: AccountPageComponent },
+	{ path: "user", component: UserPageComponent },
 	{ path: "settings", component: SettingsPageComponent },
+	{ path: "search", component: SearchPageComponent },
 	{ path: "publisher/:uuid", component: PublisherPageComponent },
 	{ path: "author", component: AuthorPageComponent },
 	{ path: "author/:uuid", component: AuthorPageComponent },
@@ -80,10 +84,15 @@ const routes: Routes = [
 	{ path: "loading", component: LoadingPageComponent },
 	{ path: "store", component: StoreStartPageComponent },
 	{ path: "store/categories", component: StoreCategoriesPageComponent },
-	{ path: "store/publisher/:uuid", component: StorePublisherPageComponent },
-	{ path: "store/author/:uuid", component: StoreAuthorPageComponent },
-	{ path: "store/book/:uuid", component: StoreBookPageComponent },
-	{ path: "store/category/:key", component: StoreBooksPageComponent }
+	{ path: "store/publisher/:slug", component: StorePublisherPageComponent },
+	{ path: "store/author/:slug", component: StoreAuthorPageComponent },
+	{ path: "store/book/:slug", component: StoreBookPageComponent },
+	{ path: "store/category/:key", component: StoreBooksPageComponent },
+	{ path: "store/series/:slug", component: StoreSeriesPageComponent },
+	{
+		path: "store/book/:slug/confirmation",
+		component: OrderConfirmationPageComponent
+	}
 ]
 
 @NgModule({

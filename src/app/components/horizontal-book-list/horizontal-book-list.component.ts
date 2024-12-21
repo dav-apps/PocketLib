@@ -4,14 +4,25 @@ import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-ic
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { SettingsService } from "src/app/services/settings-service"
 import {
+	VisitedBook,
 	BookListItem,
 	ApiResponse,
-	StoreBookResource
+	StoreBookResource,
+	VlbItemResource,
+	Language
 } from "src/app/misc/types"
 import { AdaptCoverWidthHeightToAspectRatio } from "src/app/misc/utils"
 
-type HorizontalBookListType = "latest" | "categories" | "series" | "random"
+type HorizontalBookListType =
+	| "latest"
+	| "categories"
+	| "series"
+	| "collection"
+	| "author"
+	| "visitedBooks"
+	| "random"
 type HorizontalBookListAlignment = "start" | "center"
 
 @Component({
@@ -26,6 +37,9 @@ export class HorizontalBookListComponent {
 	@Input() currentBookUuid: string = ""
 	@Input() categories: string[] = []
 	@Input() series: string = ""
+	@Input() collectionId: string = ""
+	@Input() authorUuid: string = ""
+	@Input() visitedBooks: VisitedBook[] = []
 	@Input() maxItems: number = 10
 	@Input() hideMoreButton: boolean = false
 	@Input() alignment: HorizontalBookListAlignment = "start"
@@ -37,6 +51,7 @@ export class HorizontalBookListComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private settingsService: SettingsService,
 		private router: Router
 	) {}
 
@@ -46,6 +61,12 @@ export class HorizontalBookListComponent {
 			await this.LoadStoreBooksByCategories()
 		} else if (this.type == "series") {
 			await this.LoadStoreBooksBySeries()
+		} else if (this.type == "collection") {
+			await this.LoadVlbItemsByCollectionId()
+		} else if (this.type == "author") {
+			await this.LoadVlbItemsByAuthor()
+		} else if (this.type == "visitedBooks") {
+			await this.LoadVisitedBooks()
 		} else if (this.type == "random") {
 			await this.LoadStoreBooksRandomly()
 		} else {
@@ -57,10 +78,25 @@ export class HorizontalBookListComponent {
 		if (changes.series != null && changes.series.currentValue != null) {
 			await this.LoadStoreBooksBySeries()
 		} else if (
+			changes.collectionId != null &&
+			changes.collectionId.currentValue != null
+		) {
+			await this.LoadVlbItemsByCollectionId()
+		} else if (
 			changes.categories != null &&
 			changes.categories.currentValue.length > 0
 		) {
 			await this.LoadStoreBooksByCategories()
+		} else if (
+			changes.authorUuid != null &&
+			changes.authorUuid.currentValue.length > 0
+		) {
+			await this.LoadVlbItemsByAuthor()
+		} else if (
+			changes.visitedBooks != null &&
+			changes.visitedBooks.currentValue.length > 0
+		) {
+			await this.LoadVisitedBooks()
 		}
 	}
 
@@ -74,6 +110,7 @@ export class HorizontalBookListComponent {
 				total
 				items {
 					uuid
+					slug
 					title
 					cover {
 						url
@@ -82,7 +119,9 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems,
 				offset: this.maxItems * page
 			}
@@ -104,6 +143,7 @@ export class HorizontalBookListComponent {
 				total
 				items {
 					uuid
+					slug
 					title
 					cover {
 						url
@@ -113,7 +153,9 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				categories,
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems
 			}
 		)
@@ -143,6 +185,7 @@ export class HorizontalBookListComponent {
 					total
 					items {
 						uuid
+						slug
 						title
 						cover {
 							url
@@ -153,7 +196,9 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				uuid: this.series,
-				languages: await this.dataService.GetStoreLanguages(),
+				languages: await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				limit: this.maxItems
 			}
 		)
@@ -164,78 +209,251 @@ export class HorizontalBookListComponent {
 		this.hasMoreItems = responseData.storeBooks.total > this.maxItems
 	}
 
-	async LoadStoreBooksRandomly() {
-		let page = this.page - 1
-		if (page < 0) page = 0
+	async LoadVlbItemsByCollectionId() {
+		if (this.collectionId.length == 0) return
 
-		let response = await this.apiService.listStoreBooks(
+		let response = await this.apiService.listVlbItems(
 			`
 				total
 				items {
 					uuid
+					slug
 					title
-					cover {
-						url
-						blurhash
-					}
+					description
+					coverUrl
 				}
 			`,
 			{
-				random: true,
-				languages: await this.dataService.GetStoreLanguages(),
-				limit: this.maxItems,
-				offset: this.maxItems * page
+				vlbCollectionUuid: this.collectionId,
+				limit: this.maxItems
 			}
 		)
 
-		let responseData = response.data.listStoreBooks
+		let responseData = response.data.listVlbItems
 		if (responseData == null) return
 
 		this.ShowBooks(responseData.items)
 		this.hasMoreItems = responseData.total > this.maxItems
 	}
 
-	ShowBooks(books: StoreBookResource[]) {
+	async LoadVlbItemsByAuthor() {
+		if (this.authorUuid.length == 0) return
+
+		let response = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					uuid
+					slug
+					title
+					description
+					coverUrl
+				}
+			`,
+			{
+				vlbAuthorUuid: this.authorUuid,
+				limit: this.maxItems
+			}
+		)
+
+		let responseData = response.data.listVlbItems
+		if (responseData == null) return
+
+		this.ShowBooks(responseData.items)
+		this.hasMoreItems = responseData.total > this.maxItems
+	}
+
+	async LoadVisitedBooks() {
 		this.books = []
 
-		for (let storeBook of books) {
-			if (storeBook.cover == null) continue
+		if (this.visitedBooks.length == 0) {
+			this.loading = false
+			return
+		}
 
-			let height = 209
-			let width = AdaptCoverWidthHeightToAspectRatio(
-				135,
-				height,
-				storeBook.cover.aspectRatio
+		for (let visitedBook of this.visitedBooks) {
+			if (visitedBook.type == "StoreBook") {
+				// visitedBook is StoreBook
+				let height = 209
+				let width = AdaptCoverWidthHeightToAspectRatio(
+					135,
+					height,
+					visitedBook.coverAspectRatio
+				)
+
+				let bookListItem: BookListItem = {
+					uuid: visitedBook.slug,
+					slug: visitedBook.slug,
+					title: visitedBook.title,
+					coverContent: null,
+					coverBlurhash: visitedBook.coverBlurhash,
+					coverWidth: width,
+					coverHeight: height
+				}
+
+				this.apiService
+					.downloadFile(visitedBook.coverUrl)
+					.then((fileResponse: ApiResponse<string>) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookListItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
+
+				this.books.push(bookListItem)
+			} else {
+				// visitedBook is VlbItem
+				this.books.push({
+					uuid: visitedBook.slug,
+					slug: visitedBook.slug,
+					title: visitedBook.title,
+					coverContent: visitedBook.coverUrl,
+					coverBlurhash: null,
+					coverWidth: null,
+					coverHeight: 209
+				})
+			}
+		}
+
+		this.loading = false
+	}
+
+	async LoadStoreBooksRandomly() {
+		let total = 0
+		let page = this.page - 1
+		if (page < 0) page = 0
+
+		let languages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
+
+		if (languages.includes(Language.de)) {
+			let response = await this.apiService.listVlbItems(
+				`
+					total
+					items {
+						uuid
+						slug
+						title
+						coverUrl
+					}
+				`,
+				{
+					random: true,
+					limit: this.maxItems,
+					offset: this.maxItems * page
+				}
 			)
 
-			let bookItem: BookListItem = {
-				uuid: storeBook.uuid,
-				title: storeBook.title,
-				coverContent: null,
-				coverBlurhash: storeBook.cover.blurhash,
-				coverWidth: width,
-				coverHeight: height
-			}
+			let responseData = response.data.listVlbItems
+			if (responseData == null) return
 
-			this.apiService
-				.downloadFile(storeBook.cover.url)
-				.then((fileResponse: ApiResponse<string>) => {
-					if (isSuccessStatusCode(fileResponse.status)) {
-						bookItem.coverContent = (
-							fileResponse as ApiResponse<string>
-						).data
+			this.ShowBooks(responseData.items)
+			total = responseData.total
+		} else {
+			let response = await this.apiService.listStoreBooks(
+				`
+					total
+					items {
+						uuid
+						slug
+						title
+						cover {
+							url
+							blurhash
+						}
 					}
-				})
+				`,
+				{
+					random: true,
+					languages,
+					limit: this.maxItems,
+					offset: this.maxItems * page
+				}
+			)
 
-			this.books.push(bookItem)
+			let responseData = response.data.listStoreBooks
+			if (responseData == null) return
+
+			this.ShowBooks(responseData.items)
+			total = responseData.total
+		}
+
+		this.hasMoreItems = total > this.maxItems
+	}
+
+	ShowBooks(books: (StoreBookResource | VlbItemResource)[]) {
+		this.books = []
+
+		if (books.length == 0) {
+			this.loading = false
+			return
+		}
+
+		for (let book of books) {
+			if (book.__typename == "StoreBook") {
+				// book is StoreBookResource
+				let storeBook = book as StoreBookResource
+				if (storeBook.cover == null) continue
+
+				let height = 209
+				let width = AdaptCoverWidthHeightToAspectRatio(
+					135,
+					height,
+					storeBook.cover.aspectRatio
+				)
+
+				let bookListItem: BookListItem = {
+					uuid: storeBook.uuid,
+					slug: storeBook.slug,
+					title: storeBook.title,
+					coverContent: null,
+					coverBlurhash: storeBook.cover.blurhash,
+					coverWidth: width,
+					coverHeight: height
+				}
+
+				this.apiService
+					.downloadFile(storeBook.cover.url)
+					.then((fileResponse: ApiResponse<string>) => {
+						if (isSuccessStatusCode(fileResponse.status)) {
+							bookListItem.coverContent = (
+								fileResponse as ApiResponse<string>
+							).data
+						}
+					})
+
+				this.books.push(bookListItem)
+			} else {
+				// book is VlbItemResource
+				let vlbItem = book as VlbItemResource
+				if (vlbItem.coverUrl == null) continue
+
+				this.books.push({
+					uuid: vlbItem.uuid,
+					slug: vlbItem.slug,
+					title: vlbItem.title,
+					coverContent: vlbItem.coverUrl,
+					coverBlurhash: null,
+					coverWidth: null,
+					coverHeight: 209
+				})
+			}
 		}
 
 		this.loading = false
 	}
 
 	moreButtonClick() {
-		if (this.categories.length == 0) return
+		if (this.type == "categories") {
+			if (this.categories.length == 0) return
 
-		this.router.navigate(["store", "category", this.categories[0]])
+			this.router.navigate(["store", "category", this.categories[0]])
+		} else if (this.type == "collection") {
+			this.router.navigate(["store", "series", this.collectionId])
+		} else if (this.type == "author") {
+			this.router.navigate(["store", "author", this.authorUuid])
+		}
 	}
 }

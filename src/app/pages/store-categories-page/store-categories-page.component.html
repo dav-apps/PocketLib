@@ -6,11 +6,12 @@
 	</div>
 
 	<div class="lists-container">
+		@for (category of dataService.categories; track category.key) {
 		<pocketlib-horizontal-book-list
 			type="categories"
 			[headline]="category.name"
 			[categories]="[category.key]"
-			*ngFor="let category of dataService.categories"
 		></pocketlib-horizontal-book-list>
+		}
 	</div>
 </div>

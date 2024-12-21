@@ -1,85 +1,82 @@
-<div
-	class="navbar acrylic"
-	*ngIf="dataService.navbarVisible && !dataService.bookPageVisible"
->
+@if (dataService.navbarVisible && !dataService.bookPageVisible) {
+<div class="navbar acrylic">
 	<!-- Logo + name -->
 	<a class="navbar-header" routerLink="/">
 		<img src="/assets/icons/icon-72x72.png" width="60" height="60" />
 		<span>PocketLib</span>
 	</a>
 
-	<div class="navbar-tab-bar-container" *ngIf="!dataService.isMobile">
+	@if (!dataService.isMobile) {
+	<div class="navbar-tab-bar-container">
 		<dav-tab-bar>
 			<dav-tab-bar-item
 				[active]="libraryTabActive"
 				(click)="navigateToLibraryPage()"
 			>
-				{{ libraryLabel }}
+				{{ locale.library }}
 			</dav-tab-bar-item>
 
 			<dav-tab-bar-item
 				[active]="storeTabActive"
 				(click)="navigateToStorePage()"
 			>
-				{{ storeLabel }}
+				{{ locale.store }}
 			</dav-tab-bar-item>
 		</dav-tab-bar>
 	</div>
+	}
 
 	<div class="navbar-spacer"></div>
 
 	<div class="navbar-icon-buttons-container">
+		@if (!dataService.isMobile && storeLanguages.includes("de")) {
 		<dav-icon-button
-			*ngIf="dataService.userAuthor || dataService.userIsAdmin"
-			(click)="navigateToAuthorPage()"
+			[selected]="searchTabActive"
+			(click)="navigateToSearchPage()"
 		>
-			<fa-icon
-				[icon]="faAddressCardLight"
-				*ngIf="!authorButtonSelected"
-			></fa-icon>
-
-			<fa-icon
-				[icon]="faAddressCardSolid"
-				*ngIf="authorButtonSelected"
-			></fa-icon>
+			<fa-icon [icon]="faMagnifyingGlassRegular"></fa-icon>
 		</dav-icon-button>
+		} @if (dataService.userAuthor || dataService.userIsAdmin) {
+		<dav-icon-button (click)="navigateToAuthorPage()">
+			@if (!authorButtonSelected) {
+			<fa-icon [icon]="faAddressCardLight"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faAddressCardSolid"></fa-icon>
+			}
+		</dav-icon-button>
+		}
 
 		<dav-icon-button
-			[selected]="accountButtonSelected"
-			(click)="navigateToAccountPage()"
+			[selected]="userButtonSelected"
+			(click)="navigateToUserPage()"
 		>
-			<fa-icon
-				[icon]="faCircleUserRegular"
-				*ngIf="!accountButtonSelected && !dataService.dav.isLoggedIn"
-			></fa-icon>
-
-			<fa-icon
-				[icon]="faCircleUserSolid"
-				*ngIf="accountButtonSelected && !dataService.dav.isLoggedIn"
-			></fa-icon>
-
+			@if (!userButtonSelected && !dataService.dav.isLoggedIn) {
+			<fa-icon [icon]="faCircleUserRegular"></fa-icon>
+			} @if (userButtonSelected && !dataService.dav.isLoggedIn) {
+			<fa-icon [icon]="faCircleUserSolid"></fa-icon>
+			} @if (dataService.dav.isLoggedIn) {
 			<img
-				*ngIf="dataService.dav.isLoggedIn"
 				[src]="dataService.dav.user.ProfileImage"
 				class="profile-image"
 				height="28"
 				width="28"
 			/>
+			}
 		</dav-icon-button>
 
 		<dav-icon-button
 			[selected]="settingsButtonSelected"
 			(click)="navigateToSettingsPage()"
 		>
-			<fa-icon
-				[icon]="faGearRegular"
-				*ngIf="!settingsButtonSelected"
-			></fa-icon>
-
-			<fa-icon [icon]="faGearSolid" *ngIf="settingsButtonSelected"></fa-icon>
+			@if (!settingsButtonSelected) {
+			<fa-icon [icon]="faGearRegular"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faGearSolid"></fa-icon>
+			}
 		</dav-icon-button>
 	</div>
 </div>
+}
 
 <div
 	#contentContainer
@@ -93,56 +90,51 @@
 	<router-outlet></router-outlet>
 </div>
 
-<div
-	class="bottom-navbar acrylic"
-	*ngIf="dataService.isMobile && !dataService.bookPageVisible"
->
+@if (dataService.isMobile && !dataService.bookPageVisible) {
+<div class="bottom-navbar acrylic">
 	<dav-navigation-bar>
 		<dav-navigation-bar-item
 			[active]="libraryTabActive"
 			(click)="navigateToLibraryPage()"
 		>
-			<fa-icon
-				slot="icon"
-				[icon]="faBookRegular"
-				*ngIf="!libraryTabActive"
-			></fa-icon>
+			@if (!libraryTabActive) {
+			<fa-icon slot="icon" [icon]="faBookRegular"></fa-icon>
+			} @else {
+			<fa-icon slot="icon" [icon]="faBookSolid"></fa-icon>
+			}
 
-			<fa-icon
-				slot="icon"
-				[icon]="faBookSolid"
-				*ngIf="libraryTabActive"
-			></fa-icon>
-
-			<p slot="label">{{ libraryLabel }}</p>
+			<p slot="label">{{ locale.library }}</p>
 		</dav-navigation-bar-item>
 
 		<dav-navigation-bar-item
 			[active]="storeTabActive"
 			(click)="navigateToStorePage()"
 		>
-			<fa-icon
-				slot="icon"
-				[icon]="faBagShoppingRegular"
-				*ngIf="!storeTabActive"
-			></fa-icon>
+			@if (!storeTabActive) {
+			<fa-icon slot="icon" [icon]="faBagShoppingRegular"></fa-icon>
+			} @else {
+			<fa-icon slot="icon" [icon]="faBagShoppingSolid"></fa-icon>
+			}
 
-			<fa-icon
-				slot="icon"
-				[icon]="faBagShoppingSolid"
-				*ngIf="storeTabActive"
-			></fa-icon>
-
-			<p slot="label">{{ storeLabel }}</p>
+			<p slot="label">{{ locale.store }}</p>
 		</dav-navigation-bar-item>
+
+		@if (storeLanguages.includes("de")) {
+		<dav-navigation-bar-item
+			[active]="searchTabActive"
+			(click)="navigateToSearchPage()"
+		>
+			<fa-icon slot="icon" [icon]="faMagnifyingGlassRegular"></fa-icon>
+
+			<p slot="label">{{ locale.search }}</p>
+		</dav-navigation-bar-item>
+		}
 	</dav-navigation-bar>
 </div>
-
+} @if (dataService.loadingScreenVisible) {
 <pocketlib-loading-screen
 	[message]="dataService.loadingScreenMessage"
-	*ngIf="dataService.loadingScreenVisible">
-</pocketlib-loading-screen>
-
-<pocketlib-simple-loading-screen
-	*ngIf="dataService.simpleLoadingScreenVisible"
-></pocketlib-simple-loading-screen>
+></pocketlib-loading-screen>
+} @if (dataService.simpleLoadingScreenVisible) {
+<pocketlib-simple-loading-screen></pocketlib-simple-loading-screen>
+}

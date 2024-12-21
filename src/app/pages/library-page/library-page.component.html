@@ -1,10 +1,9 @@
+@if (!dualScreenLayout) {
 <!-- Normal layout -->
-<div class="container slide-up-in" *ngIf="!dualScreenLayout">
+<div class="container slide-up-in">
 	<div>
-		<div
-			class="empty-library-container"
-			*ngIf="dataService.books.length == 0"
-		>
+		@if (dataService.books.length == 0) {
+		<div class="empty-library-container">
 			<h1 class="headline">{{ locale.emptyHeadline }}</h1>
 
 			<div class="empty-library-actions-container">
@@ -17,13 +16,11 @@
 					<fa-icon [icon]="faFileLight"></fa-icon>
 				</dav-icon-card>
 
-				<dav-icon-card
-					[text]="locale.login"
-					*ngIf="!dataService.dav.isLoggedIn"
-					(click)="GoToLoginPage()"
-				>
+				@if (!dataService.dav.isLoggedIn) {
+				<dav-icon-card [text]="locale.login" (click)="GoToLoginPage()">
 					<fa-icon [icon]="faCircleUserLight"></fa-icon>
 				</dav-icon-card>
+				}
 			</div>
 
 			<div class="empty-library-recommendations-container">
@@ -62,12 +59,8 @@
 				</div>
 			</div>
 		</div>
-
-		<div
-			#leftContentContainer
-			class="left-content-container"
-			*ngIf="dataService.books.length > 0"
-		>
+		} @else {
+		<div #leftContentContainer class="left-content-container">
 			<div class="quick-action-buttons-container">
 				<!-- Card for discovering books in the Store -->
 				<dav-icon-card
@@ -77,25 +70,25 @@
 					<fa-icon [icon]="faBagShoppingLight"></fa-icon>
 				</dav-icon-card>
 
+				@if (dataService.books.length > 0) {
 				<!-- Card for adding book file -->
 				<dav-icon-card
 					class="quick-action-button"
 					ngxFilePicker
 					accept="application/epub+zip"
 					(filePick)="AddBookFilePick($event)"
-					*ngIf="dataService.books.length > 0"
 				>
 					<fa-icon [icon]="faFileLight"></fa-icon>
 				</dav-icon-card>
-
+				} @if (dataService.userAuthor || dataService.userIsAdmin) {
 				<!-- Card for going to the author page, if the user is an author -->
 				<dav-icon-card
 					class="quick-action-button"
 					(click)="NavigateToAuthorPage()"
-					*ngIf="dataService.userAuthor || dataService.userIsAdmin"
 				>
 					<fa-icon [icon]="faAddressCardLight"></fa-icon>
 				</dav-icon-card>
+				}
 			</div>
 
 			<div>
@@ -114,22 +107,26 @@
 						[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
 						[style.width.px]="smallBookListWidth"
 					>
-						<div *ngFor="let book of dataService.books; let i = index">
+						@for (book of dataService.books; track book.uuid; let i =
+						$index) {
+						<div>
+							@if (i != 0 && i < 5) {
 							<pocketlib-library-page-book-card
 								[book]="book"
 								[width]="smallBookCoverWidth"
 								(click)="ShowBook(book)"
 								(contextMenu)="BookContextMenu($event, book)"
-								*ngIf="i != 0 && i < 5"
 							></pocketlib-library-page-book-card>
+							}
 						</div>
+						}
 					</div>
 				</div>
 
+				@if (dataService.books.length > 5) {
 				<div
 					class="all-books-button-container"
 					[style.justifyContent]="smallBookList ? 'center' : 'end'"
-					*ngIf="dataService.books.length > 5"
 				>
 					<dav-button color="secondary" tonal (click)="ShowAllBooks()">
 						<p>{{ locale.allBooks }}</p>
@@ -141,8 +138,10 @@
 						></fa-icon>
 					</dav-button>
 				</div>
+				}
 			</div>
 		</div>
+		}
 
 		<div
 			#rightContentContainer
@@ -153,7 +152,7 @@
 				<div class="right-content-inner-container">
 					<div class="search-container">
 						<dav-button
-							size="small"
+							size="sm"
 							color="secondary"
 							text
 							(click)="HideAllBooks()"
@@ -175,11 +174,14 @@
 						></dav-textfield>
 					</div>
 
-					<p class="no-books-text" *ngIf="allBooks.length == 0">
+					@if (allBooks.length == 0) {
+					<p class="no-books-text">
 						{{ locale.noBooks }}
 					</p>
+					}
 
 					<dav-list class="all-books-list">
+						@for (book of allBooks; track book.uuid) {
 						<dav-list-item
 							[imageSrc]="book.cover"
 							[imageFallbackSrc]="dataService.defaultStoreBookCover"
@@ -187,17 +189,17 @@
 							[subhead]="book.author"
 							(click)="ShowBook(book)"
 							(contextmenu)="BookContextMenu($event, book)"
-							*ngFor="let book of allBooks"
 						></dav-list-item>
+						}
 					</dav-list>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
+} @else {
 <!-- Dual-Screen layout -->
-<div class="dual-screen-container slide-up-in" *ngIf="dualScreenLayout">
+<div class="dual-screen-container slide-up-in">
 	<!-- Left screen -->
 	<div
 		class="dual-screen-container-left"
@@ -216,15 +218,17 @@
 		[style.marginLeft.px]="dualScreenFoldMargin"
 	>
 		<div>
+			@for (book of dataService.books; track book.uuid) {
 			<pocketlib-library-page-book-card
-				*ngFor="let book of dataService.books"
 				[book]="book"
 				(click)="ShowBook(book)"
 				(contextMenu)="BookContextMenu($event, book)"
 			></pocketlib-library-page-book-card>
+			}
 		</div>
 	</div>
 </div>
+}
 
 <dav-context-menu
 	#contextMenu
@@ -232,17 +236,17 @@
 	[posX]="contextMenuPositionX"
 	[posY]="contextMenuPositionY"
 >
+	@if (showExportBookOption) {
 	<!-- Export -->
 	<dav-context-menu-item
 		[value]="locale.bookContextMenuExport"
 		(click)="DownloadBook()"
-		*ngIf="showExportBookOption"
 	>
 		<fa-icon slot="icon" [icon]="faFileExportLight"></fa-icon>
 	</dav-context-menu-item>
 
-	<dav-context-menu-divider *ngIf="showExportBookOption">
-	</dav-context-menu-divider>
+	<dav-context-menu-divider></dav-context-menu-divider>
+	}
 
 	<!-- Remove -->
 	<dav-context-menu-item

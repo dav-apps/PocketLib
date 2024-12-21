@@ -22,9 +22,15 @@
 	</div>
 
 	<div class="button-container">
-		<dav-progress-ring size="16" *ngIf="loading"></dav-progress-ring>
+		@if (loading) {
+		<dav-progress-ring size="16"></dav-progress-ring>
+		}
 
-		<dav-button size="small" [disabled]="title.length < 3 || loading" (click)="Submit()">
+		<dav-button
+			size="sm"
+			[disabled]="title.length < 3 || loading"
+			(click)="Submit()"
+		>
 			{{ locale.next }}
 		</dav-button>
 	</div>

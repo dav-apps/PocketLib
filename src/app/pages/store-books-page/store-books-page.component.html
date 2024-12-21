@@ -1,16 +1,15 @@
 <div class="container slide-up-in">
-	<div class="header-container" *ngIf="header.length > 0">
+	@if (header.length > 0) {
+	<div class="header-container">
 		<dav-header backButtonVisible (backButtonClick)="BackButtonClick()">
 			{{ header }}
 		</dav-header>
 	</div>
+	}
 
 	<div class="list-container">
-		<a
-			class="book-card"
-			[routerLink]="'/store/book/' + book.uuid"
-			*ngFor="let book of books"
-		>
+		@for (book of books; track book.uuid) {
+		<a class="book-card" [routerLink]="'/store/book/' + book.slug">
 			<dav-blurhash-image
 				[src]="book.coverContent"
 				[blurhash]="book.blurhash"
@@ -19,16 +18,16 @@
 				height="255"
 			></dav-blurhash-image>
 		</a>
+		}
 	</div>
 
-	<div
-		class="pagination-container"
-		*ngIf="pages > 1 && !dataService.simpleLoadingScreenVisible"
-	>
+	@if (pages > 1 && !dataService.simpleLoadingScreenVisible) {
+	<div class="pagination-container">
 		<dav-pagination
 			[pages]="pages"
 			[currentPage]="page"
 			(pageChange)="PageChange($event.detail.page)"
 		></dav-pagination>
 	</div>
+	}
 </div>

@@ -1,6 +1,11 @@
 import { Component, ViewChild } from "@angular/core"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
+	faShareFromSquare,
+	faCircleInfo
+} from "@fortawesome/pro-regular-svg-icons"
+import {
+	Dav,
 	CheckoutSessionsController,
 	CreateCheckoutSessionResponseData,
 	DownloadTableObject,
@@ -9,17 +14,26 @@ import {
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
 import { BuyBookDialogComponent } from "src/app/components/dialogs/buy-book-dialog/buy-book-dialog.component"
+import { BookDetailsDialogComponent } from "src/app/components/dialogs/book-details-dialog/book-details-dialog.component"
+import { ShippingCostInfoDialogComponent } from "src/app/components/dialogs/shipping-cost-info-dialog/shipping-cost-info-dialog.component"
 import { ErrorDialogComponent } from "src/app/components/dialogs/error-dialog/error-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
+import { environment } from "src/environments/environment"
 import { GetStoreBookStatusByString } from "src/app/misc/utils"
-import { ApiResponse, StoreBookStatus } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
+import {
+	ApiResponse,
+	Language,
+	StoreBookStatus,
+	VlbCollectionResource
+} from "src/app/misc/types"
 
 @Component({
 	selector: "pocketlib-store-book-page",
@@ -27,14 +41,22 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./store-book-page.component.scss"]
 })
 export class StoreBookPageComponent {
-	locale = enUS.storeBookPage
+	locale = this.localizationService.locale.storeBookPage
+	miscLocale = this.localizationService.locale.misc
+	faShareFromSquare = faShareFromSquare
+	faCircleInfo = faCircleInfo
+	bookSource: "pocketlib" | "vlb" = "pocketlib"
+	orderLoading: boolean = false
+	redirectToCheckout: boolean = false
 
 	//#region StoreBook variables
 	uuid: string = ""
+	slug: string = ""
 	title: string = ""
 	description: string = ""
 	price: number = 0
 	priceLabel: string = ""
+	luluPrintableId: string = null
 	status: StoreBookStatus = StoreBookStatus.Unpublished
 	statusLabel: string = ""
 	categoryKeys: string[] = []
@@ -50,6 +72,15 @@ export class StoreBookPageComponent {
 	moreBooksHeadline: string = ""
 	//#endregion
 
+	//#region VlbItem variables
+	isbn: string = ""
+	language: string = ""
+	publicationDate: string = ""
+	pageCount: number = 0
+	collections: VlbCollectionResource[] = []
+	moreBooksByAuthorHeadline: string = ""
+	//#endregion
+
 	//#region Cover variables
 	coverContent: string = this.dataService.defaultStoreBookCover
 	coverUrl: string = ""
@@ -57,10 +88,13 @@ export class StoreBookPageComponent {
 	coverAlt: string = ""
 	coverHeight = 270
 	coverWidth = 180
+	maxCoverHeight = 270
+	maxCoverWidth = 180
 	//#endregion
 
 	//#region Author variables
 	authorUuid: string = ""
+	authorSlug: string = ""
 	authorName: string = ""
 	authorProfileImageContent: string = this.dataService.defaultProfileImageUrl
 	authorProfileImageBlurhash: string = ""
@@ -69,6 +103,7 @@ export class StoreBookPageComponent {
 
 	//#region Publisher variables
 	publisherUuid: string = ""
+	publisherSlug: string = ""
 	publisherName: string = ""
 	publisherLogoContent: string = this.dataService.defaultProfileImageUrl
 	publisherLogoBlurhash: string = ""
@@ -83,6 +118,10 @@ export class StoreBookPageComponent {
 	@ViewChild("buyBookDialog")
 	buyBookDialog: BuyBookDialogComponent
 	buyBookDialogLoginRequired: boolean = false
+	@ViewChild("bookDetailsDialog")
+	bookDetailsDialog: BookDetailsDialogComponent
+	@ViewChild("shippingCostInfoDialog")
+	shippingCostInfoDialog: ShippingCostInfoDialogComponent
 	@ViewChild("errorDialog")
 	errorDialog: ErrorDialogComponent
 	publishLoading: boolean = false
@@ -92,21 +131,21 @@ export class StoreBookPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
-	) {
-		this.locale = this.dataService.GetLocale().storeBookPage
-	}
+	) {}
 
 	async ngOnInit() {
 		await this.dataService.userPromiseHolder.AwaitResult()
 
-		// Get the uuid from the params
+		// Get the slug from the params
 		this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
-			let uuid = paramMap.get("uuid")
+			let slug = paramMap.get("slug")
 
-			if (this.uuid != uuid) {
-				this.uuid = uuid
+			if (this.slug != slug) {
+				this.slug = slug
 
 				// Show the loading screen & scroll to the top
 				this.dataService.simpleLoadingScreenVisible = true
@@ -116,32 +155,147 @@ export class StoreBookPageComponent {
 				await this.Init()
 			}
 		})
+
+		this.activatedRoute.queryParamMap.subscribe(
+			async (paramMap: ParamMap) => {
+				this.redirectToCheckout =
+					paramMap.get("redirectToCheckout") == "true" &&
+					paramMap.get("accessToken") == null
+			}
+		)
 	}
 
 	async Init() {
-		// Get StoreBook, StoreBookCollection and Author
-		await this.LoadStoreBookData()
+		this.bookSource = "vlb"
+
+		if (!(await this.loadVlbItemData())) {
+			this.bookSource = "pocketlib"
+			await this.LoadStoreBookData()
+		}
 	}
 
-	BackButtonClick() {
-		this.routingService.NavigateBack("/store")
+	async loadVlbItemData(): Promise<boolean> {
+		let response = await this.apiService.retrieveVlbItem(
+			`
+				uuid
+				title
+				description
+				price
+				isbn
+				language
+				publicationDate
+				pageCount
+				publisher {
+					id
+					name
+				}
+				author {
+					slug
+					firstName
+					lastName
+				}
+				coverUrl
+				collections {
+					uuid
+					slug
+					title
+				}
+			`,
+			{
+				uuid: this.slug
+			}
+		)
+
+		let responseData = response.data.retrieveVlbItem
+		if (responseData == null) return false
+
+		this.dataService.simpleLoadingScreenVisible = this.redirectToCheckout
+
+		this.uuid = responseData.uuid
+		this.title = responseData.title
+		this.description = responseData.description
+		this.price = responseData.price
+		this.priceLabel = (this.price / 100).toFixed(2) + " €"
+		if (this.dataService.supportedLocale == "de") {
+			this.priceLabel = this.priceLabel.replace(".", ",")
+		}
+		this.isbn = responseData.isbn
+		this.language = this.localizationService.getFullLanguage(
+			responseData.language as Language
+		)
+		this.publicationDate = responseData.publicationDate
+		this.pageCount = responseData.pageCount
+		this.coverUrl = responseData.coverUrl
+		this.coverContent = responseData.coverUrl
+		this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
+
+		if (responseData.author != null) {
+			this.authorSlug = responseData.author.slug
+			this.authorName = `${responseData.author.firstName} ${responseData.author.lastName}`
+			this.moreBooksByAuthorHeadline = this.locale.moreBooksByAuthor.replace(
+				"{0}",
+				this.authorName
+			)
+		}
+
+		if (responseData.publisher != null) {
+			this.publisherSlug = responseData.publisher.id
+			this.publisherName = responseData.publisher.name
+		}
+
+		this.collections = []
+
+		for (let collection of responseData.collections) {
+			this.collections.push({
+				uuid: collection.uuid,
+				slug: collection.slug,
+				title: this.locale.moreOfSeries.replace("{0}", collection.title),
+				vlbItems: null
+			})
+		}
+
+		if (this.redirectToCheckout) {
+			// Navigate to the checkout page
+			this.Order()
+		}
+
+		this.dataService.setMeta({
+			title: `${this.title} | PocketLib`,
+			description: this.description,
+			image: this.coverUrl,
+			url: `store/book/${this.slug}`
+		})
+
+		this.settingsService.addVisitedBook({
+			type: "VlbItem",
+			slug: this.slug,
+			title: this.title,
+			coverUrl: this.coverUrl,
+			coverBlurhash: null,
+			coverAspectRatio: null
+		})
+
+		return true
 	}
 
 	async LoadStoreBookData() {
 		let response = await this.apiService.retrieveStoreBook(
 			`
+				uuid
 				collection {
 					uuid
 					author {
 						uuid
 						publisher {
 							uuid
+							slug
 							name
 							logo {
 								url
 								blurhash
 							}
 						}
+						slug
 						firstName
 						lastName
 						profileImage {
@@ -153,6 +307,7 @@ export class StoreBookPageComponent {
 				title
 				description
 				price
+				luluPrintableId
 				status
 				cover {
 					url
@@ -173,15 +328,17 @@ export class StoreBookPageComponent {
 					}
 				}
 			`,
-			{ uuid: this.uuid }
+			{ uuid: this.slug }
 		)
 
 		let responseData = response.data.retrieveStoreBook
 		this.dataService.simpleLoadingScreenVisible = false
 
+		this.uuid = responseData.uuid
 		this.title = responseData.title
 		this.description = responseData.description
 		this.price = responseData.price
+		this.luluPrintableId = responseData.luluPrintableId
 		this.status = GetStoreBookStatusByString(responseData.status)
 		this.inLibrary = responseData.inLibrary
 		this.purchased = responseData.purchased
@@ -196,10 +353,7 @@ export class StoreBookPageComponent {
 		if (cover != null) {
 			this.coverUrl = cover.url
 			this.coverBlurhash = cover.blurhash
-
-			this.coverAlt = this.dataService
-				.GetLocale()
-				.misc.bookCoverAlt.replace("{0}", this.title)
+			this.coverAlt = this.miscLocale.bookCoverAlt.replace("{0}", this.title)
 
 			this.apiService
 				.downloadFile(this.coverUrl)
@@ -288,13 +442,12 @@ export class StoreBookPageComponent {
 		}
 
 		let author = responseData.collection.author
+		this.authorSlug = author.slug
 		this.authorUuid = author.uuid
 		this.authorName = `${author.firstName} ${author.lastName}`
 		this.authorProfileImageBlurhash = author.profileImage?.blurhash
-
-		this.authorProfileImageAlt = this.dataService
-			.GetLocale()
-			.misc.authorProfileImageAlt.replace("{0}", this.authorName)
+		this.authorProfileImageAlt =
+			this.miscLocale.authorProfileImageAlt.replace("{0}", this.authorName)
 
 		let authorProfileImageUrl = author.profileImage?.url
 
@@ -314,11 +467,13 @@ export class StoreBookPageComponent {
 
 		if (publisher != null) {
 			this.publisherUuid = publisher.uuid
+			this.publisherSlug = publisher.slug
 			this.publisherName = publisher.name
 			this.publisherLogoBlurhash = publisher.logo?.blurhash
-			this.publisherLogoAlt = this.dataService
-				.GetLocale()
-				.misc.publisherLogoAlt.replace("{0}", this.publisherName)
+			this.publisherLogoAlt = this.miscLocale.publisherLogoAlt.replace(
+				"{0}",
+				this.publisherName
+			)
 
 			let publisherLogoUrl = publisher.logo?.url
 
@@ -333,6 +488,22 @@ export class StoreBookPageComponent {
 					})
 			}
 		}
+
+		this.dataService.setMeta({
+			title: `${this.title} | PocketLib`,
+			description: this.description,
+			image: this.coverUrl,
+			url: `store/book/${this.slug}`
+		})
+
+		this.settingsService.addVisitedBook({
+			type: "StoreBook",
+			slug: this.slug,
+			title: this.title,
+			coverUrl: this.coverUrl,
+			coverBlurhash: this.coverBlurhash,
+			coverAspectRatio: cover?.aspectRatio
+		})
 	}
 
 	async Read() {
@@ -534,14 +705,59 @@ export class StoreBookPageComponent {
 		}
 	}
 
+	async Order() {
+		await this.dataService.userPromiseHolder.AwaitResult()
+
+		if (!this.dataService.dav.isLoggedIn) {
+			// Go to login page with redirectToCheckout=true in the url
+			let url = new URL(window.location.href)
+			url.searchParams.append("redirectToCheckout", "true")
+			Dav.ShowLoginPage(environment.apiKey, url.toString())
+			return
+		}
+
+		let successUrl =
+			window.location.origin + window.location.pathname + "/confirmation"
+		let cancelUrl = window.location.origin + window.location.pathname
+		this.orderLoading = true
+
+		if (this.bookSource == "vlb") {
+			let createCheckoutSessionResponse =
+				await this.apiService.createCheckoutSessionForVlbItem(`url`, {
+					uuid: this.uuid,
+					successUrl,
+					cancelUrl
+				})
+
+			const url =
+				createCheckoutSessionResponse.data?.createCheckoutSessionForVlbItem
+					?.url
+
+			if (url != null) window.location.href = url
+		} else {
+			let createCheckoutSessionResponse =
+				await this.apiService.createCheckoutSessionForStoreBook(`url`, {
+					storeBookUuid: this.uuid,
+					successUrl,
+					cancelUrl
+				})
+
+			const url =
+				createCheckoutSessionResponse.data
+					?.createCheckoutSessionForStoreBook?.url
+
+			if (url != null) window.location.href = url
+		}
+	}
+
 	ShowBuyBookDialog(loginRequired: boolean) {
 		this.buyBookDialogLoginRequired = loginRequired
 		this.buyBookDialog.show()
 	}
 
-	NavigateToAccountPage() {
-		this.router.navigate(["account"], {
-			queryParams: { redirect: `store/book/${this.uuid}` }
+	NavigateToUserPage() {
+		this.router.navigate(["user"], {
+			queryParams: { redirect: `store/book/${this.slug}` }
 		})
 	}
 
@@ -599,14 +815,51 @@ export class StoreBookPageComponent {
 		this.publishLoading = false
 	}
 
+	coverImageLoaded(event: CustomEvent<{ image: HTMLImageElement }>) {
+		if (
+			this.bookSource == "vlb" &&
+			event.detail.image.src == this.coverContent
+		) {
+			this.coverWidth = event.detail.image.naturalWidth
+			this.coverHeight = event.detail.image.naturalHeight
+		}
+	}
+
+	backButtonClick() {
+		// Check if the user came from the confirmation page
+		let lastUrl =
+			this.router.lastSuccessfulNavigation.previousNavigation?.extractedUrl.toString()
+
+		if (lastUrl != null && lastUrl.endsWith("/confirmation")) {
+			this.routingService.navigateToStorePage()
+		} else {
+			this.routingService.navigateBack("/store")
+		}
+	}
+
+	shareButtonClick() {
+		navigator.share({
+			url: window.location.origin + window.location.pathname,
+			title: this.title
+		})
+	}
+
+	bookDetailsButtonClick() {
+		this.bookDetailsDialog.show()
+	}
+
+	shippingCostInfoButtonClick() {
+		this.shippingCostInfoDialog.show()
+	}
+
 	authorProfileCardClick(event: Event) {
 		event.preventDefault()
-		this.router.navigate(["store", "author", this.authorUuid])
+		this.router.navigate(["store", "author", this.authorSlug])
 	}
 
 	publisherProfileCardClick(event: Event) {
 		event.preventDefault()
-		this.router.navigate(["store", "publisher", this.publisherUuid])
+		this.router.navigate(["store", "publisher", this.publisherSlug])
 	}
 
 	categoryBadgeClick(event: Event, categoryKey: string) {

@@ -6,6 +6,7 @@
 	(focusin)="hover = true"
 	(focusout)="hover = false"
 >
+	@for (book of series.books; track book.uuid; let i = $index) {
 	<dav-blurhash-image
 		[style.transform]="
 			hover
@@ -33,6 +34,6 @@
 		[title]="book.title"
 		[width]="book.coverWidth"
 		[height]="book.coverHeight"
-		*ngFor="let book of series.books; let i = index"
 	></dav-blurhash-image>
+	}
 </a>

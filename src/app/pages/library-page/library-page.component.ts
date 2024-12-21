@@ -23,13 +23,13 @@ import { RemoveBookDialogComponent } from "src/app/components/dialogs/remove-boo
 import { LoginToAccessBookDialogComponent } from "src/app/components/dialogs/login-to-access-book-dialog/login-to-access-book-dialog.component"
 import { AddBookErrorDialogComponent } from "src/app/components/dialogs/add-book-error-dialog/add-book-error-dialog.component"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { Book } from "src/app/models/Book"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { environment } from "src/environments/environment"
 import { GetDualScreenSettings } from "src/app/misc/utils"
-import { enUS } from "src/locales/locales"
 
 const pdfType = "application/pdf"
 const showAllBooksAnimationDuration = 300
@@ -39,7 +39,7 @@ const showAllBooksAnimationDuration = 300
 	styleUrls: ["./library-page.component.scss"]
 })
 export class LibraryPageComponent {
-	locale = enUS.libraryPage
+	locale = this.localizationService.locale.libraryPage
 	faAddressCardLight = faAddressCardLight
 	faArrowLeftLight = faArrowLeftLight
 	faArrowRightLight = faArrowRightLight
@@ -81,10 +81,10 @@ export class LibraryPageComponent {
 
 	constructor(
 		public dataService: DataService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private cd: ChangeDetectorRef
 	) {
-		this.locale = this.dataService.GetLocale().libraryPage
 		this.dataService.navbarVisible = true
 		this.dataService.bookPageVisible = false
 		this.dataService.loadingScreenVisible = true
@@ -99,6 +99,7 @@ export class LibraryPageComponent {
 		await this.dataService.allBooksInitialLoadPromiseHolder.AwaitResult()
 		this.dataService.loadingScreenVisible = false
 
+		this.dataService.setMeta()
 		this.setSize()
 	}
 

@@ -1,6 +1,5 @@
-<!-- Normal layout -->
 <div class="container slide-up-in">
-	<dav-header size="large">
+	<dav-header size="lg">
 		{{ locale.title }}
 	</dav-header>
 
@@ -14,7 +13,26 @@
 				></dav-toggle>
 			</dav-setting>
 		</div>
-	
+
+		<div class="setting">
+			<dav-setting [header]="locale.preferredLanguages" [expandable]="true">
+				<p class="preferred-languages-description">
+					{{ locale.preferredLanguagesDescription }}
+				</p>
+
+				<div class="preferred-languages-checkboxes-container">
+					@for (lang of languageOptions; track lang.key) {
+					<dav-checkbox
+						[label]="lang.label"
+						[checked]="lang.checked"
+						[disabled]="lang.disabled"
+						(change)="languageCheckboxChange($event, lang)"
+					></dav-checkbox>
+					}
+				</div>
+			</dav-setting>
+		</div>
+
 		<div class="setting">
 			<!-- Theme -->
 			<dav-setting [header]="locale.theme">
@@ -49,33 +67,33 @@
 				Copyright &copy; {{ year }} by dav
 			</p>
 
-			<div class="search-update-container" *ngIf="searchForUpdates">
+			@if (searchForUpdates) {
+			<div class="search-update-container">
 				<dav-progress-ring size="16"></dav-progress-ring>
 				<p>{{ updateMessage }}</p>
 			</div>
-
+			} @if (noUpdateAvailable) {
 			<div
 				class="no-update-container"
 				[ngClass]="hideNoUpdateAvailable ? 'slide-down-out' : ''"
-				*ngIf="noUpdateAvailable"
 			>
 				<fa-icon [icon]="faCheck"></fa-icon>
 				<p>{{ locale.noUpdateAvailable }}</p>
 			</div>
-
-			<div class="update-error-container" *ngIf="updateError">
+			} @if (updateError) {
+			<div class="update-error-container">
 				<p>{{ locale.updateError }}</p>
 			</div>
-
+			} @if (dataService.updateInstalled) {
 			<dav-button
 				class="activate-update-button"
-				size="small"
+				size="sm"
 				outline
 				(click)="ActivateUpdate()"
-				*ngIf="dataService.updateInstalled"
 			>
 				{{ locale.activateUpdate }}
 			</dav-button>
+			}
 		</div>
 	</div>
 </div>

@@ -6,7 +6,7 @@ import {
 	HostListener,
 	ViewChild
 } from "@angular/core"
-import { Router } from "@angular/router"
+import { Router, ActivatedRoute } from "@angular/router"
 import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -21,6 +21,8 @@ import { EditAuthorProfileDialogComponent } from "src/app/components/dialogs/edi
 import { ProfileImageDialogComponent } from "src/app/components/dialogs/profile-image-dialog/profile-image-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import {
 	GetLanguageByString,
@@ -37,7 +39,6 @@ import {
 	StoreBookStatus
 } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 interface CollectionItem {
 	uuid: string
@@ -62,6 +63,7 @@ enum BioMode {
 }
 
 const maxProfileImageFileSize = 2000000
+const maxItemsPerPage = 5
 
 @Component({
 	selector: "pocketlib-author-profile",
@@ -69,18 +71,19 @@ const maxProfileImageFileSize = 2000000
 	styleUrls: ["./author-profile.component.scss"]
 })
 export class AuthorProfileComponent {
-	locale = enUS.authorProfile
+	locale = this.localizationService.locale.authorProfile
+	miscLocale = this.localizationService.locale.misc
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
-	@Input() uuid: string
+	@Input() slug: string
 	@Output() loaded = new EventEmitter()
 	collectionsLoaded: boolean = false
 	seriesLoaded: boolean = false
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorMode: AuthorMode = AuthorMode.Normal
-	author: Author = new Author(null, this.dataService, this.apiService)
+	author: Author = new Author(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -102,6 +105,17 @@ export class AuthorProfileComponent {
 	bookTitleFontSize: number = 20
 	errorMessage: string = ""
 	providerMessage: string = ""
+	pages: number = 1
+	page: number = 1
+
+	//#region VlbAuthor variables
+	vlbAuthorUuid: string = ""
+	vlbAuthorSlug: string = ""
+	vlbAuthorFirstName: string = ""
+	vlbAuthorLastName: string = ""
+	vlbAuthorBio: string = ""
+	vlbItemsLoading: boolean = false
+	//#endregion
 
 	//#region ProfileImageDialog
 	@ViewChild("profileImageDialog")
@@ -128,10 +142,29 @@ export class AuthorProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
-		private router: Router
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
+		private router: Router,
+		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().authorProfile
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
+
+		this.activatedRoute.url.subscribe(() => {
+			let urlSegments = this.activatedRoute.snapshot.url
+			if (urlSegments.length == 0) return
+
+			const queryParams = this.activatedRoute.snapshot.queryParamMap
+
+			if (queryParams.has("page")) {
+				this.page = Number(queryParams.get("page"))
+
+				if (this.authorMode == AuthorMode.VlbAuthor) {
+					this.loadVlbAuthorItems()
+				}
+			} else {
+				this.page = 1
+			}
+		})
 	}
 
 	async ngOnInit() {
@@ -145,13 +178,15 @@ export class AuthorProfileComponent {
 		if (this.dataService.userIsAdmin) {
 			this.authorMode = AuthorMode.AuthorOfAdmin
 			author = this.dataService.adminAuthors.find(
-				author => author.uuid == this.uuid
+				author => author.slug == this.slug
 			)
 
 			if (author == null) {
 				author = await Author.Retrieve(
-					this.uuid,
-					this.dataService,
+					this.slug,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -160,6 +195,7 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
+				this.setMeta()
 			}
 		} else if (this.dataService.userAuthor) {
 			this.authorMode = AuthorMode.AuthorOfUser
@@ -169,6 +205,7 @@ export class AuthorProfileComponent {
 				this.author = author
 				await this.LoadBios()
 				await this.SelectDefaultBio()
+				this.setMeta()
 
 				// Set the text and visibility for the provider message
 				this.providerMessage = this.locale.messages.providerMessage.replace(
@@ -181,8 +218,40 @@ export class AuthorProfileComponent {
 		if (author == null && this.storeContext) {
 			this.authorMode = AuthorMode.Normal
 
-			// Get the author from the server
-			await this.LoadAuthor()
+			// VlbAuthor
+			let retrieveVlbAuthorResponse =
+				await this.apiService.retrieveVlbAuthor(
+					`
+						uuid
+						slug
+						firstName
+						lastName
+						bio
+					`,
+					{ uuid: this.slug }
+				)
+
+			let retrieveVlbAuthorResponseData =
+				retrieveVlbAuthorResponse.data?.retrieveVlbAuthor
+
+			if (retrieveVlbAuthorResponseData == null) {
+				// Get the author from the server
+				await this.LoadAuthor()
+				this.setMeta()
+			} else {
+				this.authorMode = AuthorMode.VlbAuthor
+				this.vlbAuthorUuid = retrieveVlbAuthorResponseData.uuid
+				this.vlbAuthorSlug = retrieveVlbAuthorResponseData.slug
+				this.vlbAuthorFirstName = retrieveVlbAuthorResponseData.firstName
+				this.vlbAuthorLastName = retrieveVlbAuthorResponseData.lastName
+				this.vlbAuthorBio = retrieveVlbAuthorResponseData.bio ?? ""
+
+				this.setMeta()
+
+				// Get the books of the author
+				await this.loadVlbAuthorItems()
+				return
+			}
 		} else if (author == null) {
 			return
 		}
@@ -203,16 +272,54 @@ export class AuthorProfileComponent {
 		}
 
 		this.SetupBioLanguageDropdown()
-		this.profileImageAlt = this.dataService
-			.GetLocale()
-			.misc.authorProfileImageAlt.replace(
-				"{0}",
-				`${this.author.firstName} ${this.author.lastName}`
-			)
+		this.profileImageAlt = this.miscLocale.authorProfileImageAlt.replace(
+			"{0}",
+			`${this.author.firstName} ${this.author.lastName}`
+		)
 
 		await this.LoadCollections()
 		await this.LoadSeries()
 		this.loaded.emit()
+	}
+
+	async loadVlbAuthorItems() {
+		this.vlbItemsLoading = true
+
+		let listVlbItemsResponse = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					uuid
+					slug
+					title
+					coverUrl
+				}
+			`,
+			{
+				vlbAuthorUuid: this.vlbAuthorUuid,
+				limit: maxItemsPerPage,
+				offset: (this.page - 1) * maxItemsPerPage
+			}
+		)
+
+		this.vlbItemsLoading = false
+
+		let listVlbItemsResponseData = listVlbItemsResponse.data?.listVlbItems
+		if (listVlbItemsResponseData == null) return
+
+		this.books = []
+
+		for (let item of listVlbItemsResponseData.items) {
+			this.books.push({
+				uuid: item.uuid,
+				slug: item.slug,
+				title: item.title,
+				coverContent: item.coverUrl,
+				coverBlurhash: null
+			})
+		}
+
+		this.pages = Math.floor(listVlbItemsResponseData.total / maxItemsPerPage)
 	}
 
 	@HostListener("window:resize")
@@ -361,7 +468,7 @@ export class AuthorProfileComponent {
 		for (let bio of this.bios) {
 			this.bioLanguageDropdownOptions.push({
 				key: bio.language,
-				value: this.dataService.GetFullLanguage(
+				value: this.localizationService.getFullLanguage(
 					GetLanguageByString(bio.language)
 				),
 				type: DropdownOptionType.option
@@ -379,7 +486,8 @@ export class AuthorProfileComponent {
 			})
 
 			// Add each supported language
-			let languages = this.dataService.GetLocale().misc.languages
+			let languages = this.localizationService.locale.misc.languages
+
 			for (let language of Object.keys(languages)) {
 				this.bioLanguageDropdownOptions.push({
 					key: language,
@@ -397,7 +505,8 @@ export class AuthorProfileComponent {
 				}
 			]
 
-			let languages = this.dataService.GetLocale().misc.languages
+			let languages = this.miscLocale.languages
+
 			for (let language of Object.keys(languages)) {
 				// Check if there is a bio with the supported language
 				let index = this.bioLanguageDropdownOptions.findIndex(
@@ -442,7 +551,7 @@ export class AuthorProfileComponent {
 				await this.ProcessSetBioResponse(response)
 			} else {
 				let response = await this.apiService.setAuthorBio(`uuid`, {
-					uuid: this.uuid,
+					uuid: this.author.uuid,
 					language: this.bioLanguageDropdownSelectedKey,
 					bio: this.newBio
 				})
@@ -483,9 +592,26 @@ export class AuthorProfileComponent {
 		this.UpdateCurrentBio()
 	}
 
+	setMeta() {
+		if (this.authorMode == AuthorMode.VlbAuthor) {
+			this.dataService.setMeta({
+				title: `${this.vlbAuthorFirstName} ${this.vlbAuthorLastName} | PocketLib`,
+				description: this.vlbAuthorBio,
+				url: `store/author/${this.vlbAuthorSlug}`
+			})
+		} else {
+			this.dataService.setMeta({
+				title: `${this.author.firstName} ${this.author.lastName} | PocketLib`,
+				description: this.author.bio.bio,
+				image: this.author.profileImage.url,
+				url: `store/author/${this.author.slug}`
+			})
+		}
+	}
+
 	bookItemClick(event: Event, book: BookListItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "book", book.uuid])
+		this.router.navigate(["store", "book", book.slug])
 	}
 
 	collectionItemClick(event: Event, collection: CollectionItem) {
@@ -529,7 +655,10 @@ export class AuthorProfileComponent {
 
 		// Send the file content to the server
 		let response = await this.apiService.uploadAuthorProfileImage({
-			uuid: this.authorMode == AuthorMode.AuthorOfUser ? "mine" : this.uuid,
+			uuid:
+				this.authorMode == AuthorMode.AuthorOfUser
+					? "mine"
+					: this.author.uuid,
 			contentType: blob.type,
 			data: blob
 		})
@@ -693,8 +822,8 @@ export class AuthorProfileComponent {
 
 	async LoadAuthor() {
 		this.author = await Author.Retrieve(
-			this.uuid,
-			this.dataService,
+			this.slug,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 		if (this.author == null) return null
@@ -715,6 +844,7 @@ export class AuthorProfileComponent {
 			for (let storeBook of storeBooksResult.items) {
 				let bookItem: BookListItem = {
 					uuid: storeBook.uuid,
+					slug: storeBook.slug,
 					title: storeBook.title,
 					coverContent: null,
 					coverBlurhash: storeBook.cover?.blurhash
@@ -741,5 +871,13 @@ export class AuthorProfileComponent {
 		this.facebookLink = GenerateFacebookLink(this.author.facebookUsername)
 		this.instagramLink = GenerateInstagramLink(this.author.instagramUsername)
 		this.twitterLink = GenerateTwitterLink(this.author.twitterUsername)
+	}
+
+	pageChange(page: number) {
+		this.page = page
+		this.router.navigate([], {
+			queryParams: { page }
+		})
+		this.loadVlbAuthorItems()
 	}
 }

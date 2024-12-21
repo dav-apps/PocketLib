@@ -1,12 +1,23 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
 
+export interface VisitedBook {
+	type: "StoreBook" | "VlbItem"
+	slug: string
+	title: string
+	coverUrl: string
+	coverBlurhash: string
+	coverAspectRatio: string
+}
+
 export interface BookListItem {
 	uuid: string
+	slug: string
 	title: string
 	coverContent: string
 	coverBlurhash: string
 	coverWidth?: number
 	coverHeight?: number
+	author?: string
 }
 
 export interface SeriesListItem {
@@ -16,6 +27,7 @@ export interface SeriesListItem {
 
 export interface AuthorListItem {
 	uuid: string
+	slug: string
 	firstName: string
 	lastName: string
 	profileImageContent: string
@@ -45,22 +57,18 @@ export interface CategoryCard {
 	text: string
 }
 
-export interface Route {
-	url: string
-	fullUrl?: string
-	params: { [key: string]: any }
-}
-
 export enum PublisherMode {
 	Normal = 0, // If the user is not a publisher and not an admin or an admin but publisher does not belong to admin
 	PublisherOfUser = 1, // If the publisher belongs to the user
-	PublisherOfAdmin = 2 // If the user is an admin and the publisher belongs to the admin
+	PublisherOfAdmin = 2, // If the user is an admin and the publisher belongs to the admin
+	VlbPublisher = 3 // If the publisher is a VlbPublisher
 }
 
 export enum AuthorMode {
 	Normal = 0, // If the user is not an author and not an admin or an admin but author does not belong to admin
 	AuthorOfUser = 1, // If the author belongs to the user
-	AuthorOfAdmin = 2 // If the user is an admin and the author belongs to the admin
+	AuthorOfAdmin = 2, // If the user is an admin and the author belongs to the admin
+	VlbAuthor = 3 // If the author is a VlbAuthor
 }
 
 export enum StoreBookStatus {
@@ -99,9 +107,10 @@ export interface ApiResponse<T> {
 	}
 }
 
-//#region API interfaces
+//#region API types
 export interface PublisherResource {
 	uuid: string
+	slug: string
 	name: string
 	description: string
 	websiteUrl: string
@@ -121,6 +130,7 @@ export interface PublisherLogoResource {
 export interface AuthorResource {
 	uuid: string
 	publisher: PublisherResource
+	slug: string
 	firstName: string
 	lastName: string
 	bio: AuthorBioResource
@@ -169,16 +179,22 @@ export interface StoreBookSeriesResource {
 }
 
 export interface StoreBookResource {
+	__typename: "StoreBook"
 	uuid: string
 	collection: StoreBookCollectionResource
+	slug: string
 	title: string
 	description: string
 	language: string
 	price: number
+	printPrice: number
 	isbn: string
+	luluPrintableId: string
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
+	printCover: StoreBookPrintCoverResource
+	printFile: StoreBookPrintFileResource
 	categories: List<CategoryResource>
 	series: List<StoreBookSeriesResource>
 	releases: List<StoreBookReleaseResource>
@@ -195,10 +211,14 @@ export interface StoreBookReleaseResource {
 	title: string
 	description: string
 	price: number
+	printPrice: number
 	isbn: string
+	luluPrintableId: string
 	status: string
 	cover: StoreBookCoverResource
 	file: StoreBookFileResource
+	printCover: StoreBookPrintCoverResource
+	printFile: StoreBookPrintFileResource
 	categories: List<CategoryResource>
 }
 
@@ -210,6 +230,16 @@ export interface StoreBookCoverResource {
 }
 
 export interface StoreBookFileResource {
+	uuid: string
+	fileName: string
+}
+
+export interface StoreBookPrintCoverResource {
+	uuid: string
+	fileName: string
+}
+
+export interface StoreBookPrintFileResource {
 	uuid: string
 	fileName: string
 }
@@ -232,4 +262,85 @@ export interface BookResource {
 	storeBook: string
 	file: string
 }
+
+export interface CheckoutSessionResource {
+	url: string
+}
+
+export interface VlbItemResource {
+	__typename: "VlbItem"
+	uuid: string
+	slug: string
+	isbn: string
+	title: string
+	description?: string
+	price: number
+	language?: string
+	publicationDate?: string
+	pageCount?: number
+	publisher?: VlbPublisherResource
+	author?: VlbAuthorResource
+	coverUrl?: string
+	collections: VlbCollectionResource[]
+}
+
+export interface VlbPublisherResource {
+	id: string
+	name: string
+	url: string
+}
+
+export interface VlbAuthorResource {
+	uuid: string
+	slug: string
+	isni?: string
+	firstName: string
+	lastName: string
+	bio?: string
+}
+
+export interface VlbCollectionResource {
+	uuid: string
+	slug: string
+	title: string
+	vlbItems: List<VlbItemResource>
+}
+//#endregion
+
+//#region dav API types
+export interface TableObject {
+	uuid: string
+}
+
+export interface Order {
+	uuid: string
+	tableObject: TableObject
+	shippingAddress: ShippingAddress
+	paymentIntentId: string
+	price: number
+	currency: Currency
+	status: OrderStatus
+}
+
+export interface ShippingAddress {
+	uuid: string
+	name: string
+	email: string
+	phone: string
+	city: string
+	country: string
+	line1: string
+	line2: string
+	postalCode: string
+	status: string
+}
+
+export interface CheckoutSession {
+	url: string
+}
+
+export type Plan = "FREE" | "PLUS" | "PRO"
+export type Currency = "EUR"
+export type TableObjectPriceType = "PURCHASE" | "ORDER"
+export type OrderStatus = "CREATED" | "PREPARATION" | "SHIPPED"
 //#endregion

@@ -12,20 +12,23 @@
 		</dav-header>
 	</div>
 
-	<p class="no-books-text" *ngIf="books.length == 0">
+	@if (books.length == 0) {
+	<p class="no-books-text">
 		{{ locale.noBooks }}
 	</p>
+	}
 
 	<div class="book-list-container">
 		<dav-list>
+			@for (book of books; track book.uuid) {
 			<dav-list-item
 				[imageSrc]="book.coverContent"
 				[imageBlurhash]="book.coverBlurhash"
 				[headline]="book.title"
 				[href]="book.link"
 				(click)="bookItemClick($event, book)"
-				*ngFor="let book of books"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 </div>

@@ -6,7 +6,7 @@ import {
 	faShoppingBag as faShoppingBagLight
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-library-page-cards",
@@ -14,15 +14,16 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["./library-page-cards.component.scss"]
 })
 export class LibraryPageCardsComponent {
-	locale = enUS.libraryPageCards
+	locale = this.localizationService.locale.libraryPageCards
 	@Output() addBookFilePick = new EventEmitter()
 	faAddressCardLight = faAddressCardLight
 	faPlusLight = faPlusLight
 	faShoppingBagLight = faShoppingBagLight
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().libraryPageCards
-	}
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService
+	) {}
 
 	AddBookFilePick(file: ReadFile) {
 		this.addBookFilePick.emit(file)

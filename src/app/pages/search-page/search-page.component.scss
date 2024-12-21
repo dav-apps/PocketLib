@@ -1,0 +1,83 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 24px;
+}
+
+.search-field-container {
+	max-width: 400px;
+	width: 100%;
+	box-sizing: border-box;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+.search-input-container {
+	position: relative;
+	height: 54px;
+}
+
+.search-input {
+	width: 100%;
+	padding: 16px 18px 16px 58px;
+	border: 1px solid var(--dav-color-on-surface);
+	border-radius: 28px;
+	background-color: transparent;
+	color: var(--dav-color-on-surface);
+	font-size: 18px;
+	transition: 200ms;
+}
+
+.search-input:hover, .search-input:focus {
+	box-shadow: 0px 4px 8px 0px rgb(var(--dav-color-shadow-rgb), 0.1);
+}
+
+.search-icon-container {
+	position: absolute;
+	top: 0;
+	left: 20px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.search-icon-container ::ng-deep svg {
+	height: 22px;
+	color: var(--dav-color-on-surface);
+}
+
+.progress-ring-container {
+	margin-top: 36px;
+}
+
+.list-container {
+	max-width: 600px;
+	margin: 32px auto;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+.previous-searches-container {
+	margin-top: 64px;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+
+.previous-searches-list-container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+	max-width: 400px;
+	margin-top: 32px;
+}
+
+.visited-books-container {
+	margin-top: 64px;
+	max-width: 100%;
+
+	dav-header {
+		margin-bottom: 32px;
+	}
+}

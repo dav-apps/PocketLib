@@ -5,7 +5,7 @@ import {
 	faXmark as faXmarkLight
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 const isbnValidityRegex =
 	/^[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]{1,7}(\-|\ )?[0-9]$/
@@ -16,7 +16,7 @@ const isbnValidityRegex =
 	styleUrls: ["./isbn-input.component.scss"]
 })
 export class IsbnInputComponent {
-	locale = enUS.isbnInput
+	locale = this.localizationService.locale.isbnInput
 	faFloppyDiskLight = faFloppyDiskLight
 	faPenLight = faPenLight
 	faXmarkLight = faXmarkLight
@@ -27,9 +27,10 @@ export class IsbnInputComponent {
 	isbn: string = ""
 	errorMessage: string = ""
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().isbnInput
-	}
+	constructor(
+		public dataService: DataService,
+		private localizationService: LocalizationService
+	) {}
 
 	EnableEditing() {
 		this.SetEdit(true)

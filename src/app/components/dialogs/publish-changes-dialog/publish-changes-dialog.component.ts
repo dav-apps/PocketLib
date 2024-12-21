@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-publish-changes-dialog",
 	templateUrl: "./publish-changes-dialog.component.html"
 })
 export class PublishChangesDialogComponent {
-	locale = enUS.dialogs.publishChangesDialog
+	locale = this.localizationService.locale.dialogs.publishChangesDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() loading: boolean = false
 	@Input() releaseNameError: string = ""
@@ -25,9 +24,7 @@ export class PublishChangesDialogComponent {
 	releaseName: string = ""
 	releaseNotes: string = ""
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.publishChangesDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

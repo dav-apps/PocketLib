@@ -1,0 +1,36 @@
+<div class="container slide-up-in">
+	<dav-header size="lg">{{ locale.title }}</dav-header>
+
+	<p class="description-text">{{ locale.description }}</p>
+
+	<div class="content-container">
+		<!-- Cover -->
+		<div class="cover-content" (click)="coverClick($event)">
+			<dav-blurhash-image
+				class="cover-image"
+				[src]="coverUrl"
+				[fallbackSrc]="dataService.defaultStoreBookCover"
+				[title]="title"
+				[alt]="title"
+				[width]="coverWidth"
+				[height]="coverHeight"
+			></dav-blurhash-image>
+		</div>
+
+		<!-- Title & price -->
+		<div class="item-details-container">
+			<p class="title">{{ title }}</p>
+			<p class="price">{{ price }}</p>
+		</div>
+	</div>
+
+	<div class="buttons-container">
+		<dav-button color="primary" tonal (click)="navigateBack()">
+			{{ locale.back }}
+		</dav-button>
+
+		<dav-button color="secondary" tonal (click)="navigateToUserPage()">
+			{{ locale.showOrders }}
+		</dav-button>
+	</div>
+</div>

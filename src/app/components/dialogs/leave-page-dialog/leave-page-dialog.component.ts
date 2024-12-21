@@ -6,23 +6,20 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-leave-page-dialog",
 	templateUrl: "./leave-page-dialog.component.html"
 })
 export class LeavePageDialogComponent {
-	locale = enUS.dialogs.leavePageDialog
+	locale = this.localizationService.locale.dialogs.leavePageDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Output() defaultButtonClick = new EventEmitter()
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.leavePageDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

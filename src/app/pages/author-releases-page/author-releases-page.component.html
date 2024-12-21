@@ -1,21 +1,19 @@
 <div class="container slide-up-in">
 	<div class="header-container">
-		<dav-header
-			backButtonVisible
-			(backButtonClick)="BackButtonClick()"
-		>
+		<dav-header backButtonVisible (backButtonClick)="BackButtonClick()">
 			{{ title }}
 		</dav-header>
 	</div>
 
 	<div class="list-container">
 		<dav-list>
+			@for (release of releaseItems; track release.uuid) {
 			<dav-list-item
 				[headline]="release.name"
 				[href]="release.link"
 				(click)="releaseItemClick($event, release)"
-				*ngFor="let release of releaseItems"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 </div>

@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-create-author-dialog",
 	templateUrl: "./create-author-dialog.component.html"
 })
 export class CreateAuthorDialogComponent {
-	locale = enUS.dialogs.createAuthorDialog
+	locale = this.localizationService.locale.dialogs.createAuthorDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() loading: boolean = false
 	@Input() firstNameError: string = ""
@@ -25,9 +24,7 @@ export class CreateAuthorDialogComponent {
 	firstName: string = ""
 	lastName: string = ""
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.createAuthorDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

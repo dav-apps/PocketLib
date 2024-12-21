@@ -1,9 +1,10 @@
 <div class="container">
-	<p class="formatted-price-text" *ngIf="!edit">
+	@if (!edit) {
+	<p class="formatted-price-text">
 		{{ formattedPrice }}
 	</p>
-
-	<div class="edit-container" *ngIf="edit">
+	} @if (edit) {
+	<div class="edit-container">
 		<dav-textfield
 			[value]="price"
 			[label]="locale.priceTextfieldLabel"
@@ -16,17 +17,14 @@
 		></dav-textfield>
 
 		<div>
-			<dav-icon-button size="small" (click)="UpdatePrice()">
+			<dav-icon-button size="sm" (click)="UpdatePrice()">
 				<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
 			</dav-icon-button>
 		</div>
 	</div>
-
-	<dav-icon-button
-		size="small"
-		*ngIf="canEdit && !edit"
-		(click)="ShowEditPrice()"
-	>
+	} @if (canEdit && !edit) {
+	<dav-icon-button size="sm" (click)="ShowEditPrice()">
 		<fa-icon [icon]="faPenLight"></fa-icon>
 	</dav-icon-button>
+	}
 </div>

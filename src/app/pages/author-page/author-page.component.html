@@ -1,14 +1,12 @@
-<pocketlib-author-profile
-	*ngIf="dataService.userAuthor || (dataService.userIsAdmin && uuid)"
-	[uuid]="uuid"
-></pocketlib-author-profile>
-
+@if (dataService.userAuthor || (dataService.userIsAdmin && slug)) {
+<pocketlib-author-profile [slug]="uuid"></pocketlib-author-profile>
+} @if (dataService.userIsAdmin && !slug) {
 <!-- Admin view -->
-<div class="container slide-up-in" *ngIf="dataService.userIsAdmin && !uuid">
+<div class="container slide-up-in">
 	<!-- List of publishers -->
 	<div class="header-container">
 		<dav-header
-			size="small"
+			size="sm"
 			addButtonVisible
 			(addButtonClick)="ShowCreatePublisherDialog()"
 		>
@@ -18,19 +16,20 @@
 
 	<div class="list-container">
 		<dav-list>
+			@for (publisher of dataService.adminPublishers; track publisher.uuid) {
 			<dav-list-item
 				[headline]="publisher.name"
-				size="small"
+				size="sm"
 				(click)="ShowPublisher(publisher.uuid)"
-				*ngFor="let publisher of dataService.adminPublishers"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 
 	<!-- List of authors -->
 	<div class="header-container">
 		<dav-header
-			size="small"
+			size="sm"
 			addButtonVisible
 			(addButtonClick)="ShowCreateAuthorDialog()"
 		>
@@ -40,34 +39,37 @@
 
 	<div class="list-container">
 		<dav-list>
+			@for (author of dataService.adminAuthors; track author.uuid) {
 			<dav-list-item
 				[headline]="author.firstName + ' ' + author.lastName"
-				size="small"
+				size="sm"
 				(click)="ShowAuthor(author.uuid)"
-				*ngFor="let author of dataService.adminAuthors"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 
 	<!-- List of books in review -->
 	<div class="header-container">
-		<dav-header size="small">
+		<dav-header size="sm">
 			{{ locale.booksInReview }}
 		</dav-header>
 	</div>
 
 	<div class="list-container">
 		<dav-list>
+			@for (book of booksInReview; track book.uuid) {
 			<dav-list-item
 				[headline]="book.title"
 				[subhead]="book.author"
-				size="small"
+				size="sm"
 				(click)="ShowBook(book.uuid)"
-				*ngFor="let book of booksInReview"
 			></dav-list-item>
+			}
 		</dav-list>
 	</div>
 </div>
+}
 
 <pocketlib-create-publisher-dialog
 	#createPublisherDialog

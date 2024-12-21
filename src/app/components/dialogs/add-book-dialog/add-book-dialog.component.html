@@ -7,7 +7,8 @@
 	(defaultButtonClick)="visible = false"
 >
 	<div class="add-book-dialog-container">
-		<button *ngFor="let book of books">
+		@for (book of books; track book.uuid) {
+		<button>
 			<dav-blurhash-image
 				[src]="book.coverContent"
 				[fallbackSrc]="dataService.defaultStoreBookCover"
@@ -17,5 +18,6 @@
 				(click)="addBook.emit(book)"
 			></dav-blurhash-image>
 		</button>
+		}
 	</div>
 </dav-dialog>

@@ -18,11 +18,8 @@
 		[dragulaModel]="books"
 		(dragulaModelChange)="BooksReordered($event)"
 	>
-		<div
-			class="book-card"
-			(contextmenu)="ShowBookContextMenu($event, book)"
-			*ngFor="let book of books"
-		>
+		@for (book of books; track book.uuid) {
+		<div class="book-card" (contextmenu)="ShowBookContextMenu($event, book)">
 			<dav-blurhash-image
 				[src]="book.coverContent"
 				[fallbackSrc]="dataService.defaultStoreBookCover"
@@ -32,6 +29,7 @@
 				height="255"
 			></dav-blurhash-image>
 		</div>
+		}
 	</div>
 </div>
 

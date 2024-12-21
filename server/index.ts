@@ -9,13 +9,18 @@ let websiteUrl = "http://localhost:3001"
 
 switch (process.env.ENV) {
 	case "production":
-		backendUrl = "https://pocketlib-api-dj7q2.ondigitalocean.app/"
+		backendUrl = "https://pocketlib-api-bdb2i.ondigitalocean.app/"
 		websiteUrl = "https://pocketlib.app"
 		break
 	case "staging":
-		backendUrl = "https://pocketlib-api-staging-aeksy.ondigitalocean.app/"
+		backendUrl = "https://pocketlib-api-staging-rl8zc.ondigitalocean.app/"
 		websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
 		break
+}
+
+interface PageResult {
+	html: string
+	status: number
 }
 
 export async function generateSitemap(): Promise<string> {
@@ -23,19 +28,23 @@ export async function generateSitemap(): Promise<string> {
 		return sitemap
 	}
 
-	let urls: string[] = [websiteUrl, `${websiteUrl}/store`]
+	let result = ""
+
+	// Base urls
+	result += `${websiteUrl}\n`
+	result += `${websiteUrl}/store\n`
 
 	// Publishers
 	try {
 		let response = await request<{
-			listPublishers: { items: { uuid: string }[] }
+			listPublishers?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListPublishers {
 					listPublishers(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -43,10 +52,12 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let publisherItems = response.listPublishers.items
+		let publisherItems = response.listPublishers?.items
 
-		for (let item of publisherItems) {
-			urls.push(`${websiteUrl}/store/publisher/${item.uuid}`)
+		if (publisherItems != null) {
+			for (let item of publisherItems) {
+				result += `${websiteUrl}/store/publisher/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
@@ -55,14 +66,14 @@ export async function generateSitemap(): Promise<string> {
 	// Authors
 	try {
 		let response = await request<{
-			listAuthors: { items: { uuid: string }[] }
+			listAuthors?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListAuthors {
 					listAuthors(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -70,10 +81,40 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let authorItems = response.listAuthors.items
+		let authorItems = response.listAuthors?.items
 
-		for (let item of authorItems) {
-			urls.push(`${websiteUrl}/store/author/${item.uuid}`)
+		if (authorItems != null) {
+			for (let item of authorItems) {
+				result += `${websiteUrl}/store/author/${item.slug}\n`
+			}
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	// VlbAuthors
+	try {
+		let response = await request<{
+			listVlbAuthors?: { items: { slug: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListVlbAuthors {
+					listVlbAuthors(limit: 10000) {
+						items {
+							slug
+						}
+					}
+				}
+			`
+		)
+
+		let vlbAuthorItems = response.listVlbAuthors?.items
+
+		if (vlbAuthorItems != null) {
+			for (let item of vlbAuthorItems) {
+				result += `${websiteUrl}/store/author/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
@@ -82,14 +123,14 @@ export async function generateSitemap(): Promise<string> {
 	// StoreBooks
 	try {
 		let response = await request<{
-			listStoreBooks: { items: { uuid: string }[] }
+			listStoreBooks?: { items: { slug: string }[] }
 		}>(
 			backendUrl,
 			gql`
 				query ListStoreBooks {
 					listStoreBooks(limit: 10000) {
 						items {
-							uuid
+							slug
 						}
 					}
 				}
@@ -97,30 +138,54 @@ export async function generateSitemap(): Promise<string> {
 			{}
 		)
 
-		let storeBookItems = response.listStoreBooks.items
+		let storeBookItems = response.listStoreBooks?.items
 
-		for (let item of storeBookItems) {
-			urls.push(`${websiteUrl}/store/book/${item.uuid}`)
+		if (storeBookItems != null) {
+			for (let item of storeBookItems) {
+				result += `${websiteUrl}/store/book/${item.slug}\n`
+			}
 		}
 	} catch (error) {
 		console.error(error)
 	}
 
-	let combinedUrls = ""
-
-	for (let url of urls) {
-		combinedUrls += `<url><loc>${url}</loc></url>`
-	}
-
-	sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${combinedUrls}</urlset>`
-
-	return sitemap
-}
-
-export async function PrepareStoreBookPage(uuid: string): Promise<string> {
+	// VlbItems
 	try {
 		let response = await request<{
+			listVlbItems?: { items: { slug: string }[] }
+		}>(
+			backendUrl,
+			gql`
+				query ListVlbItems {
+					listVlbItems(limit: 10000) {
+						items {
+							slug
+						}
+					}
+				}
+			`
+		)
+
+		let vlbItems = response.listVlbItems?.items
+
+		if (vlbItems != null) {
+			for (let item of vlbItems) {
+				result += `${websiteUrl}/store/book/${item.slug}\n`
+			}
+		}
+	} catch (error) {
+		console.error(error)
+	}
+
+	sitemap = result
+	return result
+}
+
+export async function prepareStoreBookPage(uuid: string): Promise<PageResult> {
+	try {
+		let storeBookResponse = await request<{
 			retrieveStoreBook: {
+				slug: string
 				title: string
 				description: string
 				cover?: { url: string }
@@ -130,6 +195,7 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 			gql`
 				query RetrieveStoreBook($uuid: String!) {
 					retrieveStoreBook(uuid: $uuid) {
+						slug
 						title
 						description
 						cover {
@@ -141,24 +207,72 @@ export async function PrepareStoreBookPage(uuid: string): Promise<string> {
 			{ uuid }
 		)
 
-		let responseData = response.retrieveStoreBook
+		let storeBookResponseData = storeBookResponse.retrieveStoreBook
 
-		return getHtml({
-			title: responseData.title,
-			description: responseData.description,
-			imageUrl: responseData.cover?.url,
-			url: `${websiteUrl}/store/book/${uuid}`
-		})
+		if (storeBookResponseData != null) {
+			return {
+				html: getHtml({
+					title: storeBookResponseData.title,
+					description: storeBookResponseData.description,
+					imageUrl: storeBookResponseData.cover?.url,
+					url: `${websiteUrl}/store/book/${storeBookResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbItemResponse = await request<{
+			retrieveVlbItem: {
+				slug: string
+				title: string
+				description: string
+				coverUrl: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbItem($uuid: String!) {
+					retrieveVlbItem(uuid: $uuid) {
+						uuid
+						title
+						description
+						coverUrl
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let vlbItemResponseData = vlbItemResponse.retrieveVlbItem
+
+		if (vlbItemResponseData != null) {
+			return {
+				html: getHtml({
+					title: vlbItemResponseData.title,
+					description: vlbItemResponseData.description,
+					imageUrl: vlbItemResponseData.coverUrl,
+					url: `${websiteUrl}/store/book/${vlbItemResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
-export async function PrepareStoreAuthorPage(uuid: string) {
+export async function prepareStoreAuthorPage(
+	uuid: string
+): Promise<PageResult> {
 	try {
-		let response = await request<{
+		let authorResponse = await request<{
 			retrieveAuthor: {
+				slug: string
 				firstName: string
 				lastName: string
 				bio?: { bio: string }
@@ -169,6 +283,7 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 			gql`
 				query RetrieveAuthor($uuid: String!) {
 					retrieveAuthor(uuid: $uuid) {
+						slug
 						firstName
 						lastName
 						bio {
@@ -183,24 +298,71 @@ export async function PrepareStoreAuthorPage(uuid: string) {
 			{ uuid }
 		)
 
-		let responseData = response.retrieveAuthor
+		let authorResponseData = authorResponse.retrieveAuthor
 
-		return getHtml({
-			title: `${responseData.firstName} ${responseData.lastName}`,
-			description: responseData.bio?.bio,
-			imageUrl: responseData.profileImage?.url,
-			url: `${websiteUrl}/store/author/${uuid}`
-		})
+		if (authorResponseData != null) {
+			return {
+				html: getHtml({
+					title: `${authorResponseData.firstName} ${authorResponseData.lastName}`,
+					description: authorResponseData.bio?.bio,
+					imageUrl: authorResponseData.profileImage?.url,
+					url: `${websiteUrl}/store/author/${authorResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbAuthorResponse = await request<{
+			retrieveVlbAuthor: {
+				slug: string
+				firstName: string
+				lastName: string
+				bio: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbAuthor($uuid: String!) {
+					retrieveVlbAuthor(uuid: $uuid) {
+						slug
+						firstName
+						lastName
+						bio
+					}
+				}
+			`,
+			{ uuid }
+		)
+
+		let vlbAuthorResponseData = vlbAuthorResponse.retrieveVlbAuthor
+
+		if (vlbAuthorResponseData != null) {
+			return {
+				html: getHtml({
+					title: `${vlbAuthorResponseData.firstName} ${vlbAuthorResponseData.lastName}`,
+					description: vlbAuthorResponseData.bio,
+					url: `${websiteUrl}/store/author/${vlbAuthorResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
-export async function PrepareStorePublisherPage(uuid: string) {
+export async function prepareStorePublisherPage(
+	uuid: string
+): Promise<PageResult> {
 	try {
-		let response = await request<{
+		let publisherResponse = await request<{
 			retrievePublisher: {
+				slug: string
 				name: string
 				description: string
 				logo?: { url: string }
@@ -210,6 +372,7 @@ export async function PrepareStorePublisherPage(uuid: string) {
 			gql`
 				query RetrievePublisher($uuid: String!) {
 					retrievePublisher(uuid: $uuid) {
+						slug
 						name
 						description
 						logo {
@@ -221,24 +384,64 @@ export async function PrepareStorePublisherPage(uuid: string) {
 			{ uuid }
 		)
 
-		let responseData = response.retrievePublisher
+		let publisherResponseData = publisherResponse.retrievePublisher
 
-		return getHtml({
-			title: responseData.name,
-			description: responseData.description,
-			imageUrl: responseData.logo?.url,
-			url: `${websiteUrl}/store/publisher/${uuid}`
-		})
+		if (publisherResponseData != null) {
+			return {
+				html: getHtml({
+					title: publisherResponseData.name,
+					description: publisherResponseData.description,
+					imageUrl: publisherResponseData.logo?.url,
+					url: `${websiteUrl}/store/publisher/${publisherResponseData.slug}`
+				}),
+				status: 200
+			}
+		}
+
+		let vlbPublisherResponse = await request<{
+			retrieveVlbPublisher: {
+				id: string
+				name: string
+				url: string
+			}
+		}>(
+			backendUrl,
+			gql`
+				query RetrieveVlbPublisher($id: String!) {
+					retrieveVlbPublisher(id: $id) {
+						name
+					}
+				}
+			`,
+			{ id: uuid }
+		)
+
+		let vlbPublisherResponseData = vlbPublisherResponse.retrieveVlbPublisher
+
+		if (vlbPublisherResponseData != null) {
+			return {
+				html: getHtml({
+					title: vlbPublisherResponseData.name,
+					description: "",
+					url: `${websiteUrl}/store/publisher/${uuid}`
+				}),
+				status: 200
+			}
+		}
 	} catch (error) {
 		console.error(error)
-		return getHtml()
+	}
+
+	return {
+		html: getHtml(),
+		status: 404
 	}
 }
 
 function getHtml(params?: {
 	title: string
-	description: string
-	imageUrl: string
+	description?: string
+	imageUrl?: string
 	url: string
 	book?: {
 		author: {
@@ -264,13 +467,36 @@ function getHtml(params?: {
 			{ name: "twitter:card", content: "summary" },
 			{ name: "twitter:site", content: "@dav_apps" },
 			{ name: "twitter:title", content: params.title },
-			{ name: "twitter:description", content: params.description },
-			{ name: "twitter:image", content: params.imageUrl },
 			// Open Graph tags
 			{ property: "og:title", content: params.title },
-			{ property: "og:image", content: params.imageUrl },
 			{ property: "og:url", content: params.url }
 		]
+
+		if (params.description != null) {
+			metas.push(
+				{
+					name: "description",
+					content: params.description
+				},
+				{
+					name: "twitter:description",
+					content: params.description
+				}
+			)
+		}
+
+		if (params.imageUrl != null) {
+			metas.push(
+				{
+					name: "twitter:image",
+					content: params.imageUrl
+				},
+				{
+					property: "og:image",
+					content: params.imageUrl
+				}
+			)
+		}
 
 		if (params.book) {
 			// Open Graph book tags

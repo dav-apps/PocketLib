@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-create-publisher-dialog",
 	templateUrl: "./create-publisher-dialog.component.html"
 })
 export class CreatePublisherDialogComponent {
-	locale = enUS.dialogs.createPublisherDialog
+	locale = this.localizationService.locale.dialogs.createPublisherDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() loading: boolean = false
 	@Input() nameError: string = ""
@@ -23,9 +22,7 @@ export class CreatePublisherDialogComponent {
 	visible: boolean = false
 	name: string = ""
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.createPublisherDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

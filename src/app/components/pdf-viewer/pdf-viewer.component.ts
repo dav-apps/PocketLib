@@ -21,8 +21,8 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { BottomSheet } from "dav-ui-components"
 import { DataService } from "src/app/services/data-service"
+import { LocalizationService } from "src/app/services/localization-service"
 import { PdfBook } from "src/app/models/PdfBook"
-import { enUS } from "src/locales/locales"
 
 const progressFactor = 100000
 const currentViewerZIndex = -2
@@ -46,7 +46,7 @@ const doubleTapToleranceTime = 400
 	styleUrls: ["./pdf-viewer.component.scss"]
 })
 export class PdfViewerComponent {
-	locale = enUS.pdfViewer
+	locale = this.localizationService.locale.pdfViewer
 	faArrowLeftLight = faArrowLeftLight
 	faArrowRightLight = faArrowRightLight
 	faHouseRegular = faHouseRegular
@@ -135,11 +135,10 @@ export class PdfViewerComponent {
 
 	constructor(
 		private dataService: DataService,
+		private localizationService: LocalizationService,
 		private router: Router,
 		private ngZone: NgZone
-	) {
-		this.locale = this.dataService.GetLocale().pdfViewer
-	}
+	) {}
 
 	async ngOnInit() {
 		this.currentBook = this.dataService.currentBook as PdfBook

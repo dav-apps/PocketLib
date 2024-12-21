@@ -1,4 +1,10 @@
-import { Component, Input, ViewChild, HostListener } from "@angular/core"
+import {
+	Component,
+	Input,
+	ViewChild,
+	ElementRef,
+	HostListener
+} from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -8,26 +14,30 @@ import {
 	faTwitter
 } from "@fortawesome/free-brands-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
+import { Textfield } from "dav-ui-components"
 import { LogoDialogComponent } from "src/app/components/dialogs/logo-dialog/logo-dialog.component"
 import { EditPublisherProfileDialogComponent } from "src/app/components/dialogs/edit-publisher-profile-dialog/edit-publisher-profile-dialog.component"
 import { CreateAuthorDialogComponent } from "src/app/components/dialogs/create-author-dialog/create-author-dialog.component"
 import { Publisher } from "src/app/models/Publisher"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
 	GenerateTwitterLink
 } from "src/app/misc/utils"
-import { ApiResponse, PublisherMode } from "src/app/misc/types"
+import { ApiResponse, BookListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
-import { enUS } from "src/locales/locales"
 
 const maxLogoFileSize = 2000000
 const maxAuthorsPerPage = 5
+const maxVlbItemsPerPage = 5
 
 interface AuthorItem {
 	uuid: string
+	slug: string
 	name: string
 	profileImageContent: string
 	profileImageBlurhash: string
@@ -40,14 +50,15 @@ interface AuthorItem {
 	styleUrls: ["./publisher-profile.component.scss"]
 })
 export class PublisherProfileComponent {
-	locale = enUS.publisherProfile
+	locale = this.localizationService.locale.publisherProfile
+	miscLocale = this.localizationService.locale.misc
 	faGlobeLight = faGlobeLight
 	faFacebook = faFacebook
 	faInstagram = faInstagram
 	faTwitter = faTwitter
-	@Input() uuid: string
+	@Input() slug: string
 	publisherMode: PublisherMode = PublisherMode.Normal
-	publisher: Publisher = new Publisher(null, this.dataService, this.apiService)
+	publisher: Publisher = new Publisher(null, [], this.apiService)
 	facebookLink: string = ""
 	instagramLink: string = ""
 	twitterLink: string = ""
@@ -63,8 +74,21 @@ export class PublisherProfileComponent {
 	storeContext: boolean = true // Whether the component is shown in the Store
 	authorItems: AuthorItem[] = []
 	authorsLoading: boolean = true
+	searchAuthorsLoading: boolean = false
+	searchQuery: string = ""
+	getAuthorsPromiseKey: number = 0
 	pages: number = 1
 	page: number = 1
+	@ViewChild("searchTextfield")
+	searchTextfield: ElementRef<Textfield>
+
+	//#region VlbPublisher variables
+	vlbPublisherId: string = ""
+	vlbPublisherName: string = ""
+	vlbPublisherUrl: string = ""
+	vlbItemsLoading: boolean = false
+	books: BookListItem[] = []
+	//#endregion
 
 	//#region LogoDialog
 	@ViewChild("logoDialog")
@@ -97,21 +121,31 @@ export class PublisherProfileComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().publisherProfile
-
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 
 		this.activatedRoute.url.subscribe(() => {
 			let urlSegments = this.activatedRoute.snapshot.url
 			if (urlSegments.length == 0) return
 
-			if (this.activatedRoute.snapshot.queryParamMap.has("page")) {
-				this.page = +this.activatedRoute.snapshot.queryParamMap.get("page")
+			const queryParams = this.activatedRoute.snapshot.queryParamMap
+
+			if (queryParams.has("page")) {
+				this.page = Number(queryParams.get("page"))
+
+				if (this.publisherMode == PublisherMode.VlbPublisher) {
+					this.loadVlbPublisherItems()
+				}
 			} else {
 				this.page = 1
+			}
+
+			if (queryParams.has("query")) {
+				this.searchQuery = queryParams.get("query")
 			}
 		})
 	}
@@ -122,12 +156,41 @@ export class PublisherProfileComponent {
 		await this.dataService.userPromiseHolder.AwaitResult()
 		await this.dataService.userAuthorPromiseHolder.AwaitResult()
 
+		// Set the default value of the search textfield, given in the url
+		this.searchTextfield.nativeElement.value = this.searchQuery
+
 		let publisher = null
 
-		if (this.dataService.userIsAdmin) {
+		if (!this.slug.includes("-")) {
+			// VlbPublisher
+			let retrieveVlbPublisherResponse =
+				await this.apiService.retrieveVlbPublisher(
+					`
+						id
+						name
+						url
+					`,
+					{ id: this.slug }
+				)
+
+			let retrieveVlbPublisherResponseData =
+				retrieveVlbPublisherResponse.data?.retrieveVlbPublisher
+
+			if (retrieveVlbPublisherResponseData == null) return
+
+			this.publisherMode = PublisherMode.VlbPublisher
+			this.vlbPublisherId = retrieveVlbPublisherResponseData.id
+			this.vlbPublisherName = retrieveVlbPublisherResponseData.name
+			this.vlbPublisherUrl = retrieveVlbPublisherResponseData.url
+			this.setMeta()
+
+			// Get book items
+			await this.loadVlbPublisherItems()
+			return
+		} else if (this.dataService.userIsAdmin) {
 			this.publisherMode = PublisherMode.PublisherOfAdmin
 			publisher = this.dataService.adminPublishers.find(
-				publisher => publisher.uuid == this.uuid
+				publisher => publisher.slug == this.slug
 			)
 		} else if (this.dataService.userPublisher) {
 			this.publisherMode = PublisherMode.PublisherOfUser
@@ -139,8 +202,10 @@ export class PublisherProfileComponent {
 
 			// Get the publisher from the server
 			this.publisher = await Publisher.Retrieve(
-				this.uuid,
-				this.dataService,
+				this.slug,
+				await this.settingsService.getStoreLanguages(
+					this.dataService.locale
+				),
 				this.apiService
 			)
 		} else if (publisher == null) {
@@ -150,7 +215,9 @@ export class PublisherProfileComponent {
 		}
 
 		if (this.publisher == null) return
+
 		this.UpdateSocialMediaLinks()
+		this.setMeta()
 
 		if (this.publisher.logo?.url != null) {
 			// Load the publisher profile image
@@ -163,13 +230,13 @@ export class PublisherProfileComponent {
 				})
 		}
 
-		this.logoAlt = this.dataService
-			.GetLocale()
-			.misc.publisherLogoAlt.replace("{0}", this.publisher.name)
+		this.logoAlt = this.miscLocale.publisherLogoAlt.replace(
+			"{0}",
+			this.publisher.name
+		)
 
 		// Get the authors of the publisher
 		await this.LoadAuthors()
-		this.authorsLoading = false
 	}
 
 	@HostListener("window:resize")
@@ -183,26 +250,96 @@ export class PublisherProfileComponent {
 		}
 	}
 
+	async loadVlbPublisherItems() {
+		this.vlbItemsLoading = true
+
+		let listVlbItemsResponse = await this.apiService.listVlbItems(
+			`
+				total
+				items {
+					uuid
+					slug
+					title
+					coverUrl
+					author {
+						firstName
+						lastName
+					}
+				}
+			`,
+			{
+				vlbPublisherId: this.vlbPublisherId,
+				limit: maxVlbItemsPerPage,
+				offset: (this.page - 1) * maxVlbItemsPerPage
+			}
+		)
+
+		this.vlbItemsLoading = false
+
+		let listVlbItemsResponseData = listVlbItemsResponse.data?.listVlbItems
+		if (listVlbItemsResponseData == null) return
+
+		this.books = []
+
+		for (let item of listVlbItemsResponseData.items) {
+			let bookListItem: BookListItem = {
+				uuid: item.uuid,
+				slug: item.slug,
+				title: item.title,
+				coverContent: item.coverUrl,
+				coverBlurhash: null
+			}
+
+			if (item.author != null) {
+				bookListItem.author = `${item.author.firstName} ${item.author.lastName}`
+			}
+
+			this.books.push(bookListItem)
+		}
+
+		this.pages = Math.floor(
+			listVlbItemsResponseData.total / maxVlbItemsPerPage
+		)
+	}
+
 	async LoadAuthors() {
+		if (this.searchQuery.length > 0) {
+			if (this.searchAuthorsLoading) {
+				let searchQueryCopy = this.searchQuery
+				await new Promise(resolve => setTimeout(resolve, 500))
+
+				// Check if the query has changed
+				if (this.searchQuery != searchQueryCopy) return
+			}
+		}
+
+		this.searchAuthorsLoading = true
+
+		let promiseKey = Math.random()
+		this.getAuthorsPromiseKey = promiseKey
 		this.authorItems = []
-		this.authorsLoading = true
+
 		let authorsResponse = await this.publisher.GetAuthors({
 			limit: maxAuthorsPerPage,
-			offset: (this.page - 1) * maxAuthorsPerPage
+			offset: (this.page - 1) * maxAuthorsPerPage,
+			query: this.searchQuery
 		})
+
+		if (authorsResponse == null || this.getAuthorsPromiseKey != promiseKey) {
+			return
+		}
 
 		for (let author of authorsResponse.items) {
 			let authorItem: AuthorItem = {
 				uuid: author.uuid,
+				slug: author.slug,
 				name: `${author.firstName} ${author.lastName}`,
 				profileImageContent: this.dataService.defaultProfileImageUrl,
 				profileImageBlurhash: author.profileImage.blurhash,
-				alt: this.dataService
-					.GetLocale()
-					.misc.authorProfileImageAlt.replace(
-						"{0}",
-						`${author.firstName} ${author.lastName}`
-					)
+				alt: this.miscLocale.authorProfileImageAlt.replace(
+					"{0}",
+					`${author.firstName} ${author.lastName}`
+				)
 			}
 
 			author.GetProfileImageContent().then((response: string) => {
@@ -216,11 +353,37 @@ export class PublisherProfileComponent {
 
 		this.pages = Math.floor(authorsResponse.total / maxAuthorsPerPage)
 		this.authorsLoading = false
+		this.searchAuthorsLoading = false
 	}
 
-	PageChange(page: number) {
+	bookItemClick(event: Event, book: BookListItem) {
+		event.preventDefault()
+		this.router.navigate(["store", "book", book.slug])
+	}
+
+	async searchQueryChange(event: CustomEvent) {
+		this.searchQuery = event.detail.value
+
+		this.router.navigate([], {
+			queryParams: { page: this.page, query: this.searchQuery }
+		})
+
+		await this.LoadAuthors()
+	}
+
+	booksPageChange(page: number) {
 		this.page = page
-		this.router.navigate([], { queryParams: { page } })
+		this.router.navigate([], {
+			queryParams: { page }
+		})
+		this.loadVlbPublisherItems()
+	}
+
+	authorPageChange(page: number) {
+		this.page = page
+		this.router.navigate([], {
+			queryParams: { page, query: this.searchQuery }
+		})
 		this.LoadAuthors()
 	}
 
@@ -230,6 +393,22 @@ export class PublisherProfileComponent {
 			this.publisher.instagramUsername
 		)
 		this.twitterLink = GenerateTwitterLink(this.publisher.twitterUsername)
+	}
+
+	setMeta() {
+		if (this.publisherMode == PublisherMode.VlbPublisher) {
+			this.dataService.setMeta({
+				title: `${this.vlbPublisherName} | PocketLib`,
+				url: `store/publisher/${this.vlbPublisherId}`
+			})
+		} else {
+			this.dataService.setMeta({
+				title: `${this.publisher.name} | PocketLib`,
+				description: this.publisher.description,
+				image: this.publisher.logo.url,
+				url: `store/publisher/${this.publisher.slug}`
+			})
+		}
 	}
 
 	LogoFileSelected(file: ReadFile) {
@@ -258,7 +437,7 @@ export class PublisherProfileComponent {
 			uuid:
 				this.publisherMode == PublisherMode.PublisherOfUser
 					? "mine"
-					: this.uuid,
+					: this.publisher.uuid,
 			contentType: blob.type,
 			data: blob
 		})
@@ -426,7 +605,7 @@ export class PublisherProfileComponent {
 
 	authorItemClick(event: Event, author: AuthorItem) {
 		event.preventDefault()
-		this.router.navigate(["store", "author", author.uuid])
+		this.router.navigate(["store", "author", author.slug])
 	}
 
 	async CreateAuthor(result: { firstName: string; lastName: string }) {

@@ -3,11 +3,11 @@ import {
 	StoreBookReleaseStatus,
 	ApiResponse,
 	List,
-	StoreBookReleaseResource
+	StoreBookReleaseResource,
+	Language
 } from "src/app/misc/types"
 import { GetStoreBookReleaseStatusByString } from "../misc/utils"
 import { ApiService } from "../services/api-service"
-import { DataService } from "../services/data-service"
 import { Category } from "./Category"
 
 export class StoreBookRelease {
@@ -17,6 +17,7 @@ export class StoreBookRelease {
 	public title: string
 	public description: string
 	public price: number
+	public printPrice: number
 	public isbn: string
 	public status: StoreBookReleaseStatus
 	public cover: {
@@ -27,11 +28,17 @@ export class StoreBookRelease {
 	public file: {
 		fileName: string
 	}
+	public printCover: {
+		fileName: string
+	}
+	public printFile: {
+		fileName: string
+	}
 	private coverContent: string
 
 	constructor(
 		releaseResource: StoreBookReleaseResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (releaseResource != null) {
@@ -44,6 +51,8 @@ export class StoreBookRelease {
 			if (releaseResource.description != null)
 				this.description = releaseResource.description
 			if (releaseResource.price != null) this.price = releaseResource.price
+			if (releaseResource.printPrice != null)
+				this.printPrice = releaseResource.printPrice
 			if (releaseResource.isbn != null) this.isbn = releaseResource.isbn
 			if (releaseResource.status != null)
 				this.status = GetStoreBookReleaseStatusByString(
@@ -57,12 +66,18 @@ export class StoreBookRelease {
 			this.file = {
 				fileName: releaseResource.file?.fileName
 			}
+			this.printCover = {
+				fileName: releaseResource.printCover?.fileName
+			}
+			this.printFile = {
+				fileName: releaseResource.printFile?.fileName
+			}
 		}
 	}
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<StoreBookRelease> {
 		let response = await apiService.retrieveStoreBookRelease(
@@ -73,6 +88,7 @@ export class StoreBookRelease {
 				title
 				description
 				price
+				printPrice
 				isbn
 				status
 				cover {
@@ -83,6 +99,12 @@ export class StoreBookRelease {
 				file {
 					fileName
 				}
+				printCover {
+					fileName
+				}
+				printFile {
+					fileName
+				}
 			`,
 			{ uuid }
 		)
@@ -90,7 +112,7 @@ export class StoreBookRelease {
 		let responseData = response.data.retrieveStoreBookRelease
 		if (responseData == null) return null
 
-		return new StoreBookRelease(responseData, dataService, apiService)
+		return new StoreBookRelease(responseData, languages, apiService)
 	}
 
 	async GetCoverContent(): Promise<string> {
@@ -135,11 +157,7 @@ export class StoreBookRelease {
 
 		for (let item of responseData.categories.items) {
 			items.push(
-				await Category.Retrieve(
-					item.uuid,
-					this.dataService,
-					this.apiService
-				)
+				await Category.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

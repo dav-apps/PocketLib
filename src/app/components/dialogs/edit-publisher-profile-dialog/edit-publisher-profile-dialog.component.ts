@@ -7,15 +7,14 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-edit-publisher-profile-dialog",
 	templateUrl: "./edit-publisher-profile-dialog.component.html"
 })
 export class EditPublisherProfileDialogComponent {
-	locale = enUS.dialogs.editPublisherProfileDialog
+	locale = this.localizationService.locale.dialogs.editPublisherProfileDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@Input() name: string = ""
 	@Input() websiteUrl: string = ""
@@ -30,10 +29,7 @@ export class EditPublisherProfileDialogComponent {
 	@Output() primaryButtonClick = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public dataService: DataService) {
-		this.locale =
-			this.dataService.GetLocale().dialogs.editPublisherProfileDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

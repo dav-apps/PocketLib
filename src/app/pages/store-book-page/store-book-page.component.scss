@@ -40,6 +40,11 @@
 	margin-bottom: 32px;
 }
 
+.header-icons-container {
+	display: flex;
+	gap: 4px;
+}
+
 .book-description {
 	white-space: pre-line;
 	text-align: justify;
@@ -115,12 +120,26 @@
 	justify-content: center;
 }
 
-.author-profile-card {
+.profile-cards-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
 	margin-top: 24px;
 }
 
-.publisher-profile-card {
-	margin-top: 12px;
+.price-label-container {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 22px;
+	margin-bottom: 0;
+}
+
+.price-label {
+	margin: 0;
+	font-size: 18px;
+	color: var(--dav-color-on-surface);
 }
 
 .cover-image {
@@ -135,7 +154,23 @@
 }
 
 .read-button-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
 	margin-top: 16px;
+}
+
+.order-button-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.order-button-container.loading {
+	margin-left: 32px;
 }
 
 .publish-button-container {

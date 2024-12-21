@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core"
-import { Apollo, gql, MutationResult } from "apollo-angular"
+import { Apollo, ApolloBase, gql, MutationResult } from "apollo-angular"
 import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
 import axios from "axios"
 import { Dav, BlobToBase64, renewSession } from "dav-js"
 import { environment } from "src/environments/environment"
+import { pocketlibApiClientName } from "src/constants/constants"
 import * as ErrorCodes from "src/constants/errorCodes"
 import {
 	List,
@@ -19,9 +20,16 @@ import {
 	StoreBookResource,
 	StoreBookCoverResource,
 	StoreBookFileResource,
+	StoreBookPrintCoverResource,
+	StoreBookPrintFileResource,
 	StoreBookReleaseResource,
 	CategoryResource,
-	BookResource
+	BookResource,
+	CheckoutSessionResource,
+	VlbItemResource,
+	VlbPublisherResource,
+	VlbAuthorResource,
+	VlbCollectionResource
 } from "../misc/types"
 import { CachingService } from "./caching-service"
 
@@ -29,18 +37,32 @@ const errorPolicy: ErrorPolicy = "all"
 
 @Injectable()
 export class ApiService {
+	private apollo: ApolloBase
+
 	constructor(
 		private cachingService: CachingService,
-		private apollo: Apollo
-	) {}
+		private apolloProvider: Apollo
+	) {
+		this.loadApolloClient()
+	}
+
+	loadApolloClient() {
+		this.apollo = this.apolloProvider.use(pocketlibApiClientName)
+	}
 
 	//#region Publisher
 	async retrievePublisher(
 		queryData: string,
-		variables: { uuid: string; limit?: number; offset?: number }
+		variables: {
+			uuid: string
+			limit?: number
+			offset?: number
+			query?: string
+		}
 	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource }>> {
 		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
 		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
+		let queryParam = queryData.includes("query") ? "$query: String" : ""
 
 		let result = await this.apollo
 			.query<{
@@ -51,6 +73,7 @@ export class ApiService {
 						$uuid: String!
 						${limitParam}
 						${offsetParam}
+						${queryParam}
 					) {
 						retrievePublisher(uuid: $uuid) {
 							${queryData}
@@ -934,6 +957,7 @@ export class ApiService {
 			categories?: string[]
 			inReview?: boolean
 			random?: boolean
+			query?: string
 			languages?: string[]
 			limit?: number
 			offset?: number
@@ -948,6 +972,7 @@ export class ApiService {
 						$categories: [String!]
 						$inReview: Boolean
 						$random: Boolean
+						$query: String
 						$languages: [String!]
 						$limit: Int
 						$offset: Int
@@ -956,6 +981,7 @@ export class ApiService {
 							categories: $categories
 							inReview: $inReview
 							random: $random
+							query: $query
 							languages: $languages
 							limit: $limit
 							offset: $offset
@@ -992,6 +1018,7 @@ export class ApiService {
 			description?: string
 			language: string
 			price?: number
+			printPrice?: number
 			isbn?: string
 			categories?: string[]
 		}
@@ -1008,6 +1035,7 @@ export class ApiService {
 						$description: String
 						$language: String!
 						$price: Int
+						$printPrice: Int
 						$isbn: String
 						$categories: [String!]
 					) {
@@ -1018,6 +1046,7 @@ export class ApiService {
 							description: $description
 							language: $language
 							price: $price
+							printPrice: $printPrice
 							isbn: $isbn
 							categories: $categories
 						) {
@@ -1052,6 +1081,7 @@ export class ApiService {
 			description?: string
 			language?: string
 			price?: number
+			printPrice?: number
 			isbn?: string
 			status?: string
 			categories?: string[]
@@ -1068,6 +1098,7 @@ export class ApiService {
 						$description: String
 						$language: String
 						$price: Int
+						$printPrice: Int
 						$isbn: String
 						$status: String
 						$categories: [String!]
@@ -1078,6 +1109,7 @@ export class ApiService {
 							description: $description
 							language: $language
 							price: $price
+							printPrice: $printPrice
 							isbn: $isbn
 							status: $status
 							categories: $categories
@@ -1193,6 +1225,106 @@ export class ApiService {
 				await renewSession()
 
 				return await this.uploadStoreBookFile(params)
+			}
+
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
+	}
+	//#endregion
+
+	//#region StoreBookPrintCover
+	async uploadStoreBookPrintCover(params: {
+		uuid: string
+		data: any
+		fileName: string
+	}): Promise<ApiResponse<StoreBookPrintCoverResource>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/printCover`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": "application/pdf",
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.fileName
+					)}"`
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					fileName: response.data.fileName
+				}
+			}
+		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookPrintCover(params)
+			}
+
+			return {
+				status: error.response.status,
+				error: {
+					code: error.response.data.code,
+					message: error.response.data.message
+				}
+			}
+		}
+	}
+	//#endregion
+
+	//#region StoreBookPrintFile
+	async uploadStoreBookPrintFile(params: {
+		uuid: string
+		data: any
+		fileName: string
+	}): Promise<ApiResponse<StoreBookPrintFileResource>> {
+		try {
+			let response = await axios({
+				method: "put",
+				url: `${environment.pocketlibApiUrl}/storeBooks/${params.uuid}/printFile`,
+				headers: {
+					Authorization: Dav.accessToken,
+					"Content-Type": "application/pdf",
+					"Content-Disposition": `attachment; filename="${encodeURIComponent(
+						params.fileName
+					)}"`
+				},
+				data: params.data
+			})
+
+			return {
+				status: response.status,
+				data: {
+					uuid: response.data.uuid,
+					fileName: response.data.fileName
+				}
+			}
+		} catch (error) {
+			if (error.response?.data == null) {
+				return { status: 500 }
+			}
+
+			if (error.response.data.code == ErrorCodes.sessionEnded) {
+				// Renew the access token and run the query again
+				await renewSession()
+
+				return await this.uploadStoreBookPrintFile(params)
 			}
 
 			return {
@@ -1341,7 +1473,7 @@ export class ApiService {
 
 	async listCategories(
 		queryData: string,
-		variables?: { limit?: number; offset?: number; languages?: string[] }
+		variables?: { limit?: number; offset?: number; language?: string }
 	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
 		let result = await this.apollo
 			.query<{
@@ -1349,12 +1481,12 @@ export class ApiService {
 			}>({
 				query: gql`
 					query ListCategories(
-						$languages: [String!]
-						$limit: Int,
+						$language: String
+						$limit: Int
 						$offset: Int
 					) {
 						listCategories(
-							languages: $languages
+							language: $language
 							limit: $limit
 							offset: $offset
 						) {
@@ -1412,6 +1544,418 @@ export class ApiService {
 			await renewSession()
 
 			return await this.createBook(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region CheckoutSession
+	async createCheckoutSessionForStoreBook(
+		queryData: string,
+		variables: {
+			storeBookUuid: string
+			successUrl: string
+			cancelUrl: string
+		}
+	): Promise<
+		MutationResult<{
+			createCheckoutSessionForStoreBook: CheckoutSessionResource
+		}>
+	> {
+		let result = await this.apollo
+			.mutate<{
+				createCheckoutSessionForStoreBook: CheckoutSessionResource
+			}>({
+				mutation: gql`
+					mutation CreateCheckoutSessionForStoreBook(
+						$storeBookUuid: String!
+						$successUrl: String!
+						$cancelUrl: String!
+					) {
+						createCheckoutSessionForStoreBook(
+							storeBookUuid: $storeBookUuid
+							successUrl: $successUrl
+							cancelUrl: $cancelUrl
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createCheckoutSessionForStoreBook(
+				queryData,
+				variables
+			)
+		}
+
+		return result
+	}
+
+	async createCheckoutSessionForVlbItem(
+		queryData: string,
+		variables: {
+			uuid: string
+			successUrl: string
+			cancelUrl: string
+		}
+	): Promise<
+		MutationResult<{
+			createCheckoutSessionForVlbItem: CheckoutSessionResource
+		}>
+	> {
+		let result = await this.apollo
+			.mutate<{
+				createCheckoutSessionForVlbItem: CheckoutSessionResource
+			}>({
+				mutation: gql`
+					mutation CreateCheckoutSessionForVlbItem(
+						$uuid: String!
+						$successUrl: String!
+						$cancelUrl: String!
+					) {
+						createCheckoutSessionForVlbItem(
+							uuid: $uuid
+							successUrl: $successUrl
+							cancelUrl: $cancelUrl
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.createCheckoutSessionForVlbItem(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbItem
+	async retrieveVlbItem(
+		queryData: string,
+		variables: {
+			uuid: string
+		}
+	): Promise<ApolloQueryResult<{ retrieveVlbItem: VlbItemResource }>> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbItem: VlbItemResource
+			}>({
+				query: gql`
+					query RetrieveVlbItem($uuid: String!) {
+						retrieveVlbItem(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbItem(queryData, variables)
+		}
+
+		return result
+	}
+
+	async listVlbItems(
+		queryData: string,
+		variables: {
+			random?: boolean
+			vlbPublisherId?: string
+			vlbAuthorUuid?: string
+			vlbCollectionUuid?: string
+			limit?: number
+			offset?: number
+		}
+	): Promise<ApolloQueryResult<{ listVlbItems: List<VlbItemResource> }>> {
+		let result = await this.apollo
+			.query<{
+				listVlbItems: List<VlbItemResource>
+			}>({
+				query: gql`
+					query ListVlbItems(
+						$random: Boolean
+						$vlbPublisherId: String
+						$vlbAuthorUuid: String
+						$vlbCollectionUuid: String
+						$limit: Int
+						$offset: Int
+					) {
+						listVlbItems(
+							random: $random
+							vlbPublisherId: $vlbPublisherId
+							vlbAuthorUuid: $vlbAuthorUuid
+							vlbCollectionUuid: $vlbCollectionUuid
+							limit: $limit
+							offset: $offset
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listVlbItems(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbPublisher
+	async retrieveVlbPublisher(
+		queryData: string,
+		variables: {
+			id: string
+		}
+	): Promise<
+		ApolloQueryResult<{ retrieveVlbPublisher: VlbPublisherResource }>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbPublisher: VlbPublisherResource
+			}>({
+				query: gql`
+					query RetrieveVlbPublisher($id: String!) {
+						retrieveVlbPublisher(id: $id) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbPublisher(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbAuthor
+	async retrieveVlbAuthor(
+		queryData: string,
+		variables: {
+			uuid: string
+		}
+	): Promise<ApolloQueryResult<{ retrieveVlbAuthor: VlbAuthorResource }>> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbAuthor: VlbAuthorResource
+			}>({
+				query: gql`
+					query RetrieveVlbAuthor($uuid: String!) {
+						retrieveVlbAuthor(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbAuthor(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region VlbCollection
+	async retrieveVlbCollection(
+		queryData: string,
+		variables: {
+			uuid: string
+		}
+	): Promise<
+		ApolloQueryResult<{ retrieveVlbCollection: VlbCollectionResource }>
+	> {
+		let result = await this.apollo
+			.query<{
+				retrieveVlbCollection: VlbCollectionResource
+			}>({
+				query: gql`
+					query RetrieveVlbCollection($uuid: String!) {
+						retrieveVlbCollection(uuid: $uuid) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.retrieveVlbCollection(queryData, variables)
+		}
+
+		return result
+	}
+
+	async listVlbCollections(
+		queryData: string,
+		variables: {
+			random?: boolean
+			limit?: number
+			offset?: number
+		}
+	): Promise<
+		ApolloQueryResult<{ listVlbCollections: List<VlbCollectionResource> }>
+	> {
+		let result = await this.apollo
+			.query<{
+				listVlbCollections: List<VlbCollectionResource>
+			}>({
+				query: gql`
+					query ListVlbCollections(
+						$random: Boolean
+						$limit: Int
+						$offset: Int
+					) {
+						listVlbCollections(
+							random: $random
+							limit: $limit
+							offset: $offset
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.listVlbCollections(queryData, variables)
+		}
+
+		return result
+	}
+	//#endregion
+
+	//#region Misc
+	async search(
+		queryData: string,
+		variables: {
+			query: string
+			limit?: number
+			offset?: number
+		}
+	): Promise<ApolloQueryResult<{ search: List<VlbItemResource> }>> {
+		let result = await this.apollo
+			.query<{
+				search: List<VlbItemResource>
+			}>({
+				query: gql`
+					query Search(
+						$query: String!
+						$limit: Int
+						$offset: Int
+					) {
+						search(
+							query: $query
+							limit: $limit
+							offset: $offset
+						) {
+							${queryData}
+						}
+					}
+				`,
+				variables,
+				errorPolicy
+			})
+			.toPromise()
+
+		if (
+			result.errors != null &&
+			result.errors.length > 0 &&
+			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+		) {
+			// Renew the access token and run the query again
+			await renewSession()
+
+			return await this.search(queryData, variables)
 		}
 
 		return result

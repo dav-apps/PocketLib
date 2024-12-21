@@ -1,5 +1,5 @@
 export const keys = {
-	version: "1.6",
+	version: "1.7",
 	// Shared keys for book table
 	bookTableFileKey: "file",
 	bookTableStoreBookKey: "store_book",
@@ -31,6 +31,8 @@ export const keys = {
 	settingsThemeKey: "settings-theme",
 	settingsOpenLastReadBookKey: "settings-openLastReadBook",
 	settingsStoreLanguagesKey: "settings-storeLanguages",
+	settingsSearchQueriesKey: "settings-searchQueries",
+	settingsVisitedBooksKey: "settings-visitedBooks",
 	// Settings default
 	settingsThemeDefault: "system",
 	settingsOpenLastReadBookDefault: true,

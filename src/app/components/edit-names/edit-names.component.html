@@ -1,14 +1,16 @@
-<div *ngFor="let name of names">
+@for (name of names; track name.name) {
+<div>
 	<p class="language-label">{{ name.fullLanguage }}:</p>
 
 	<div class="content-container">
-		<div *ngIf="!name.edit">
+		@if (!name.edit) {
+		<div>
 			<p class="name-text">
 				{{ name.name }}
 			</p>
 		</div>
-
-		<form *ngIf="name.edit">
+		} @else {
+		<form>
 			<dav-textfield
 				[value]="name.name"
 				[placeholder]="locale.collectionNameTextfieldPlaceholder"
@@ -17,13 +19,18 @@
 				(enter)="name.edit ? UpdateName(name) : (name.edit = true)"
 			></dav-textfield>
 		</form>
+		}
 
 		<dav-icon-button
-			size="small"
+			size="sm"
 			(click)="name.edit ? UpdateName(name) : (name.edit = true)"
 		>
-			<fa-icon [icon]="faFloppyDiskLight" *ngIf="name.edit"></fa-icon>
-			<fa-icon [icon]="faPenLight" *ngIf="!name.edit"></fa-icon
-		></dav-icon-button>
+			@if (name.edit) {
+			<fa-icon [icon]="faFloppyDiskLight"></fa-icon>
+			} @else {
+			<fa-icon [icon]="faPenLight"></fa-icon>
+			}
+		</dav-icon-button>
 	</div>
 </div>
+}

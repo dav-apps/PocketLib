@@ -4,18 +4,18 @@
 	</h4>
 
 	<div class="content-container" [class.center]="alignment == 'center'">
-		<div class="progress-ring-container" *ngIf="loading">
+		@if (loading) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="32"></dav-progress-ring>
 		</div>
-
-		<div
-			class="author-list-item-container horizontal-store-list slide-up-in"
-			*ngIf="!loading"
-		>
+		} @else {
+		<div class="author-list-item-container horizontal-store-list slide-up-in">
+			@for (author of authors; track author.uuid) {
 			<pocketlib-horizontal-author-list-item
 				[author]="author"
-				*ngFor="let author of authors"
 			></pocketlib-horizontal-author-list-item>
+			}
 		</div>
+		}
 	</div>
 </div>

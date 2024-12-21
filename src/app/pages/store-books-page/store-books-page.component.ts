@@ -4,17 +4,19 @@ import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { RoutingService } from "src/app/services/routing-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import {
 	List,
 	ApiResponse,
 	StoreBookResource,
 	StoreBooksPageContext
 } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 import { ApolloQueryResult } from "@apollo/client"
 
 interface BookItem {
 	uuid: string
+	slug: string
 	coverContent: string
 	blurhash: string
 	title: string
@@ -25,7 +27,7 @@ interface BookItem {
 	styleUrls: ["./store-books-page.component.scss"]
 })
 export class StoreBooksPageComponent {
-	locale = enUS.storeBooksPage
+	locale = this.localizationService.locale.storeBooksPage
 	header: string = ""
 	books: BookItem[] = []
 
@@ -44,10 +46,11 @@ export class StoreBooksPageComponent {
 		public dataService: DataService,
 		private apiService: ApiService,
 		private routingService: RoutingService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().storeBooksPage
 		this.dataService.simpleLoadingScreenVisible = true
 		this.key = this.activatedRoute.snapshot.paramMap.get("key")
 
@@ -70,7 +73,7 @@ export class StoreBooksPageComponent {
 	}
 
 	BackButtonClick() {
-		this.routingService.NavigateBack("/store")
+		this.routingService.navigateBack("/store")
 	}
 
 	async UpdateView() {
@@ -88,6 +91,11 @@ export class StoreBooksPageComponent {
 			this.header = this.locale.allBooksTitle
 		}
 
+		this.dataService.setMeta({
+			title: `${this.header} | PocketLib`,
+			url: `store/category/${this.key}`
+		})
+
 		// Get the books of the appropriate context
 		this.books = []
 		this.dataService.simpleLoadingScreenVisible = true
@@ -104,6 +112,7 @@ export class StoreBooksPageComponent {
 						total
 						items {
 							uuid
+							slug
 							title
 							cover {
 								url
@@ -113,7 +122,9 @@ export class StoreBooksPageComponent {
 					`,
 					{
 						categories: [this.key],
-						languages: await this.dataService.GetStoreLanguages(),
+						languages: await this.settingsService.getStoreLanguages(
+							this.dataService.locale
+						),
 						limit: this.maxVisibleBooks,
 						offset: (this.page - 1) * this.maxVisibleBooks
 					}
@@ -126,6 +137,7 @@ export class StoreBooksPageComponent {
 						total
 						items {
 							uuid
+							slug
 							title
 							cover {
 								url
@@ -134,7 +146,9 @@ export class StoreBooksPageComponent {
 						}
 					`,
 					{
-						languages: await this.dataService.GetStoreLanguages(),
+						languages: await this.settingsService.getStoreLanguages(
+							this.dataService.locale
+						),
 						limit: this.maxVisibleBooks,
 						offset: (this.page - 1) * this.maxVisibleBooks
 					}
@@ -153,6 +167,7 @@ export class StoreBooksPageComponent {
 		for (let storeBook of responseBooks) {
 			let bookItem: BookItem = {
 				uuid: storeBook.uuid,
+				slug: storeBook.slug,
 				coverContent: this.dataService.defaultStoreBookCover,
 				blurhash: storeBook.cover?.blurhash || "",
 				title: storeBook.title
@@ -178,10 +193,5 @@ export class StoreBooksPageComponent {
 		this.page = page
 		this.router.navigate([], { queryParams: { page } })
 		this.UpdateView()
-	}
-
-	bookItemClick(event: Event, bookItem: BookItem) {
-		event.preventDefault()
-		this.router.navigate(["store", "book", bookItem.uuid])
 	}
 }

@@ -4,18 +4,18 @@
 	</h4>
 
 	<div class="content-container">
-		<div class="progress-ring-container" *ngIf="loading">
+		@if (loading) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="32"></dav-progress-ring>
 		</div>
-
-		<div
-			class="series-list-container horizontal-store-list slide-up-in"
-			*ngIf="!loading"
-		>
+		} @else {
+		<div class="series-list-container horizontal-store-list slide-up-in">
+			@for (s of series; track s.uuid) {
 			<pocketlib-horizontal-series-list-item
 				[series]="s"
-				*ngFor="let s of series"
 			></pocketlib-horizontal-series-list-item>
+			}
 		</div>
+		}
 	</div>
 </div>

@@ -1,10 +1,10 @@
-import { PublisherResource, List } from "../misc/types"
-import { DataService } from "../services/data-service"
 import { ApiService } from "src/app/services/api-service"
 import { Author } from "./Author"
+import { PublisherResource, List, Language } from "../misc/types"
 
 export class Publisher {
 	public uuid: string
+	public slug: string
 	public name: string
 	public description: string
 	public websiteUrl: string
@@ -18,11 +18,12 @@ export class Publisher {
 
 	constructor(
 		publisherResource: PublisherResource,
-		private dataService: DataService,
+		private languages: Language[],
 		private apiService: ApiService
 	) {
 		if (publisherResource != null) {
 			if (publisherResource.uuid != null) this.uuid = publisherResource.uuid
+			if (publisherResource.slug != null) this.slug = publisherResource.slug
 			if (publisherResource.name != null) this.name = publisherResource.name
 			if (publisherResource.description != null)
 				this.description = publisherResource.description
@@ -43,12 +44,13 @@ export class Publisher {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<Publisher> {
 		let response = await apiService.retrievePublisher(
 			`
 				uuid
+				slug
 				name
 				description
 				websiteUrl
@@ -66,7 +68,7 @@ export class Publisher {
 		let responseData = response.data.retrievePublisher
 		if (responseData == null) return null
 
-		return new Publisher(responseData, dataService, apiService)
+		return new Publisher(responseData, languages, apiService)
 	}
 
 	async ReloadLogo() {
@@ -86,10 +88,15 @@ export class Publisher {
 	async GetAuthors(params?: {
 		limit?: number
 		offset?: number
+		query?: string
 	}): Promise<List<Author>> {
 		let response = await this.apiService.retrievePublisher(
 			`
-				authors(limit: $limit, offset: $offset) {
+				authors(
+					limit: $limit
+					offset: $offset
+					query: $query
+				) {
 					total
 					items {
 						uuid
@@ -99,7 +106,8 @@ export class Publisher {
 			{
 				uuid: this.uuid,
 				limit: params.limit,
-				offset: params.offset
+				offset: params.offset,
+				query: params.query
 			}
 		)
 
@@ -110,7 +118,7 @@ export class Publisher {
 
 		for (let item of responseData.authors.items) {
 			items.push(
-				await Author.Retrieve(item.uuid, this.dataService, this.apiService)
+				await Author.Retrieve(item.uuid, this.languages, this.apiService)
 			)
 		}
 

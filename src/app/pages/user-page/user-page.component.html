@@ -1,0 +1,180 @@
+@if (!dataService.dav.isLoggedIn) {
+<!-- Layout for not logged in -->
+<div class="container slide-up-in">
+	<dav-header size="lg">
+		{{ locale.title }}
+	</dav-header>
+
+	<h2 class="headline">
+		{{ locale.text1 }}
+	</h2>
+
+	<div class="benefits-container">
+		<div class="benefit benefit-1">
+			<fa-icon [icon]="faRotate"></fa-icon>
+			<p>{{ locale.text2 }}</p>
+		</div>
+
+		<div class="benefit benefit-2">
+			<fa-icon [icon]="faBagShopping"></fa-icon>
+			<p>{{ locale.text3 }}</p>
+		</div>
+
+		<div class="benefit benefit-3">
+			<fa-icon [icon]="faLockKeyhole"></fa-icon>
+			<p>{{ locale.text4 }}</p>
+		</div>
+	</div>
+
+	<div class="dav-logo-container">
+		<a [href]="websiteUrl" target="blank">
+			<img
+				class="dav-logo"
+				[src]="
+					dataService.darkTheme
+						? '/assets/images/dav-logo-text-white.png'
+						: '/assets/images/dav-logo-text.png'
+				"
+				alt="dav Logo"
+			/>
+		</a>
+	</div>
+
+	<div class="dav-buttons-container">
+		<dav-button tonal (click)="showLoginPage()">
+			{{ locale.login }}
+		</dav-button>
+
+		<dav-button color="secondary" tonal (click)="showSignupPage()">
+			{{ locale.signup }}
+		</dav-button>
+	</div>
+</div>
+} @else {
+<!-- Layout for logged in -->
+<div class="container slide-up-in">
+	<div class="header-logged-in-container">
+		<dav-header size="lg">
+			{{ locale.title }}
+		</dav-header>
+	</div>
+
+	<div class="user-profile-container">
+		<img
+			class="profile-image"
+			[src]="dataService.dav.user.ProfileImage"
+			[height]="width < 410 ? 130 : 150"
+			[width]="width < 410 ? 130 : 150"
+		/>
+
+		<div
+			class="user-details-container"
+			[style.marginLeft.px]="width < 410 ? 20 : 40"
+		>
+			<h4>
+				<a
+					class="profile-link"
+					href="https://dav-apps.tech/login?redirect=user"
+					target="blank"
+				>
+					{{ dataService.dav.user.FirstName }}
+				</a>
+			</h4>
+
+			<p class="plan-label">
+				{{
+					dataService.dav.user.Plan == 0
+						? locale.planFree
+						: dataService.dav.user.Plan == 1
+						? locale.planPlus
+						: locale.planPro
+				}}
+			</p>
+
+			<div class="progress-bar-container">
+				<dav-progress-bar [value]="usedStoragePercent"></dav-progress-bar>
+			</div>
+
+			<p class="used-storage-label">
+				{{ usedStorageText }}
+			</p>
+
+			<dav-button
+				color="error"
+				outline
+				size="sm"
+				(click)="logoutDialog.show()"
+			>
+				{{ locale.logout }}
+			</dav-button>
+		</div>
+	</div>
+
+	@if (dataService.dav.user.Plan < 2 && storeLanguages.includes("de")) {
+	<div class="pro-card-container">
+		<dav-card>
+			<div class="pro-card-inner-container">
+				<h3>{{ locale.upgradeProCard.headline }}</h3>
+				<p class="card-price">{{ locale.upgradeProCard.subhead }}</p>
+
+				<div class="border"></div>
+
+				<div class="card-item">
+					<p>{{ locale.upgradeProCard.benefit1 }}</p>
+
+					<dav-icon-button size="sm" (click)="showUpgradeProDialog()">
+						<fa-icon [icon]="faCircleInfo"></fa-icon>
+					</dav-icon-button>
+				</div>
+
+				<div class="border"></div>
+
+				<div
+					class="card-item action-button-container"
+					[class.loading]="proCardLoading"
+				>
+					<dav-button
+						size="small"
+						[disabled]="proCardLoading"
+						(click)="navigateToCheckoutPage()"
+					>
+						{{ locale.upgradeProCard.getStarted }}
+					</dav-button>
+
+					@if (proCardLoading) {
+					<dav-progress-ring size="16"></dav-progress-ring>
+					}
+				</div>
+			</div>
+		</dav-card>
+	</div>
+	}
+
+	<div class="orders-container slide-up-in" *ngIf="orders.length > 0">
+		<h2>{{ locale.yourOrders }}</h2>
+
+		<div class="orders-list-container">
+			<dav-list>
+				@for (order of orders; track order.uuid) {
+				<dav-list-item
+					[imageSrc]="order.coverSrc"
+					[headline]="order.title"
+					[subhead]="order.status"
+				></dav-list-item>
+				}
+			</dav-list>
+		</div>
+	</div>
+</div>
+
+<pocketlib-logout-dialog
+	#logoutDialog
+	(primaryButtonClick)="logout()"
+></pocketlib-logout-dialog>
+
+<pocketlib-upgrade-pro-dialog
+	#upgradeProDialog
+	[loading]="proCardLoading"
+	(primaryButtonClick)="navigateToCheckoutPage()"
+></pocketlib-upgrade-pro-dialog>
+}

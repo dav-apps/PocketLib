@@ -2,33 +2,34 @@
 	<div class="store-list-header-container">
 		<h4 class="store-list-header">{{ headline }}</h4>
 
+		@if (headline) {
 		<dav-icon-button
-			size="small"
+			size="sm"
 			href="/store/categories"
 			(click)="moreButtonClick($event)"
-			*ngIf="headline"
 		>
 			<fa-icon [icon]="faArrowRightLight"></fa-icon>
 		</dav-icon-button>
+		}
 	</div>
 
 	<div class="content-container" [class.center]="alignment == 'center'">
-		<div class="progress-ring-container" *ngIf="loading">
+		@if (loading) {
+		<div class="progress-ring-container">
 			<dav-progress-ring size="32"></dav-progress-ring>
 		</div>
-
-		<div
-			class="category-cards-container horizontal-store-list slide-up-in"
-			*ngIf="!loading"
-		>
+		} @else {
+		<div class="category-cards-container horizontal-store-list slide-up-in">
+			@for (card of cards; track card.key) {
 			<dav-icon-card
 				[text]="card.text"
 				[href]="'/store/category/' + card.key"
 				(click)="categoryIconCardClick($event, card.key)"
-				*ngFor="let card of cards"
 			>
 				<fa-icon [icon]="card.icon"></fa-icon>
 			</dav-icon-card>
+			}
 		</div>
+		}
 	</div>
 </div>

@@ -6,11 +6,12 @@ import {
 	FindAppropriateLanguage
 } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
 import { GetLanguageByString } from "src/app/misc/utils"
 import { BookListItem, StoreBookStatus } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 
 interface ExtendedBookListItem extends BookListItem {
 	link: string
@@ -22,14 +23,14 @@ interface ExtendedBookListItem extends BookListItem {
 	styleUrls: ["./author-collection-page.component.scss"]
 })
 export class AuthorCollectionPageComponent {
-	locale = enUS.authorCollectionPage
+	locale = this.localizationService.locale.authorCollectionPage
 	@ViewChild("namesDialog")
 	namesDialog: NamesDialogComponent
 	uuid: string
 	author: Author
 	collection: StoreBookCollection = new StoreBookCollection(
 		null,
-		this.dataService,
+		[],
 		this.apiService
 	)
 	books: ExtendedBookListItem[] = []
@@ -55,10 +56,12 @@ export class AuthorCollectionPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().authorCollectionPage
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {
@@ -78,7 +81,9 @@ export class AuthorCollectionPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -100,7 +105,7 @@ export class AuthorCollectionPageComponent {
 		// Get the collection
 		this.collection = await StoreBookCollection.Retrieve(
 			this.uuid,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 
@@ -118,6 +123,7 @@ export class AuthorCollectionPageComponent {
 		for (let storeBook of storeBooksResult.items) {
 			let bookItem: ExtendedBookListItem = {
 				uuid: storeBook.uuid,
+				slug: storeBook.slug,
 				title: storeBook.title,
 				coverContent: null,
 				coverBlurhash: storeBook.cover?.blurhash,
@@ -174,7 +180,7 @@ export class AuthorCollectionPageComponent {
 			this.collectionNames.push({
 				name: collectionName.name,
 				language: collectionName.language,
-				fullLanguage: this.dataService.GetFullLanguage(
+				fullLanguage: this.localizationService.getFullLanguage(
 					GetLanguageByString(collectionName.language)
 				),
 				edit: false

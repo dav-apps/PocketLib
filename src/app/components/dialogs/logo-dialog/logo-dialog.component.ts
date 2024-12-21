@@ -8,8 +8,7 @@ import {
 import { ReadFile } from "ngx-file-helpers"
 import Cropper from "cropperjs"
 import { Dialog } from "dav-ui-components"
-import { DataService } from "src/app/services/data-service"
-import { enUS } from "src/locales/locales"
+import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-logo-dialog",
@@ -17,7 +16,7 @@ import { enUS } from "src/locales/locales"
 	styleUrls: ["logo-dialog.component.scss"]
 })
 export class LogoDialogComponent {
-	locale = enUS.dialogs.logoDialog
+	locale = this.localizationService.locale.dialogs.logoDialog
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	@ViewChild("logoDialogImage", { static: true })
 	logoDialogImage: ElementRef<HTMLImageElement>
@@ -25,9 +24,7 @@ export class LogoDialogComponent {
 	visible: boolean = false
 	logoCropper: Cropper
 
-	constructor(public dataService: DataService) {
-		this.locale = this.dataService.GetLocale().dialogs.logoDialog
-	}
+	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
 		document.body.appendChild(this.dialog.nativeElement)

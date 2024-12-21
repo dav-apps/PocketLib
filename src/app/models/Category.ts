@@ -1,6 +1,5 @@
 import { CategoryResource, Language } from "src/app/misc/types"
 import { GetLanguageByString } from "src/app/misc/utils"
-import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
 
 export class Category {
@@ -24,7 +23,7 @@ export class Category {
 
 	static async Retrieve(
 		uuid: string,
-		dataService: DataService,
+		languages: Language[],
 		apiService: ApiService
 	): Promise<Category> {
 		let response = await apiService.retrieveCategory(
@@ -38,7 +37,7 @@ export class Category {
 			`,
 			{
 				uuid,
-				languages: await dataService.GetStoreLanguages()
+				languages
 			}
 		)
 

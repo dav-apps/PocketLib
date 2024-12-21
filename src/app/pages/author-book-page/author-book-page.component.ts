@@ -9,6 +9,8 @@ import { CategoriesSelectionDialogComponent } from "src/app/components/dialogs/c
 import { PublishChangesDialogComponent } from "src/app/components/dialogs/publish-changes-dialog/publish-changes-dialog.component"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
+import { LocalizationService } from "src/app/services/localization-service"
+import { SettingsService } from "src/app/services/settings-service"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
 import { Author } from "src/app/models/Author"
@@ -21,17 +23,18 @@ import {
 	StoreBookReleaseStatus,
 	StoreBookResource
 } from "src/app/misc/types"
-import { enUS } from "src/locales/locales"
 
 @Component({
 	templateUrl: "./author-book-page.component.html",
 	styleUrls: ["./author-book-page.component.scss"]
 })
 export class AuthorBookPageComponent {
-	locale = enUS.authorBookPage
+	locale = this.localizationService.locale.authorBookPage
 	faPenLight = faPenLight
 	@ViewChild("priceInput")
 	priceInput: PriceInputComponent
+	@ViewChild("printPriceInput")
+	printPriceInput: PriceInputComponent
 	@ViewChild("isbnInput")
 	isbnInput: IsbnInputComponent
 	@ViewChild("editTitleDialog")
@@ -52,10 +55,13 @@ export class AuthorBookPageComponent {
 		description: string
 		language: string
 		price: number
+		printPrice: number
 		isbn: string
 		status: StoreBookStatus
 		coverBlurhash: string
 		fileName: string
+		printCoverFileName: string
+		printFileName: string
 		categories: {
 			key: string
 			name: string
@@ -66,10 +72,13 @@ export class AuthorBookPageComponent {
 		description: "",
 		language: "en",
 		price: 0,
+		printPrice: 0,
 		isbn: "",
 		status: StoreBookStatus.Unpublished,
 		coverBlurhash: null,
 		fileName: null,
+		printCoverFileName: null,
+		printFileName: null,
 		categories: []
 	}
 	editTitleDialogLoading: boolean = false
@@ -88,10 +97,16 @@ export class AuthorBookPageComponent {
 	coverLoading: boolean = false
 	bookFileUploaded: boolean = false
 	bookFileLoading: boolean = false
+	printCoverUploaded: boolean = false
+	printCoverLoading: boolean = false
+	printFileUploaded: boolean = false
+	printFileLoading: boolean = false
 	statusLoading: boolean = false
 	priceUpdating: boolean = false
+	printPriceUpdating: boolean = false
 	isbnUpdating: boolean = false
 	categoriesSelectionDialogLoading: boolean = false
+	orderTestPrintLoading: boolean = false
 	backButtonLink: string = ""
 	errorMessage: string = ""
 	categoryKeys: string[] = []
@@ -99,10 +114,12 @@ export class AuthorBookPageComponent {
 	constructor(
 		public dataService: DataService,
 		private apiService: ApiService,
+		private localizationService: LocalizationService,
+		private settingsService: SettingsService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute
 	) {
-		this.locale = this.dataService.GetLocale().authorBookPage
+		this.dataService.setMeta()
 	}
 
 	async ngOnInit() {
@@ -122,7 +139,9 @@ export class AuthorBookPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					this.dataService,
+					await this.settingsService.getStoreLanguages(
+						this.dataService.locale
+					),
 					this.apiService
 				)
 			}
@@ -141,7 +160,7 @@ export class AuthorBookPageComponent {
 		// Get the store book
 		this.storeBook = await StoreBook.Retrieve(
 			this.uuid,
-			this.dataService,
+			await this.settingsService.getStoreLanguages(this.dataService.locale),
 			this.apiService
 		)
 
@@ -170,11 +189,16 @@ export class AuthorBookPageComponent {
 			this.book.description = this.release.description ?? ""
 			this.book.language = this.storeBook.language
 			this.book.price = this.release.price
+			this.book.printPrice = this.release.printPrice
 			this.book.isbn = this.release.isbn ?? ""
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.release.cover?.blurhash
 			this.book.fileName = this.release.file?.fileName
+			this.book.printCoverFileName = this.release.printCover?.fileName
+			this.book.printFileName = this.release.printFile?.fileName
 			this.bookFileUploaded = this.release.file != null
+			this.printCoverUploaded = this.release.printCover != null
+			this.printFileUploaded = this.release.printFile != null
 
 			let categories = (await this.release.GetCategories()).items
 			this.LoadCategories(categories.map(c => c.key))
@@ -187,11 +211,16 @@ export class AuthorBookPageComponent {
 			this.book.description = this.storeBook.description ?? ""
 			this.book.language = this.storeBook.language
 			this.book.price = this.storeBook.price
+			this.book.printPrice = this.storeBook.printPrice
 			this.book.isbn = this.storeBook.isbn ?? ""
 			this.book.status = this.storeBook.status
 			this.book.coverBlurhash = this.storeBook.cover?.blurhash
 			this.book.fileName = this.storeBook.file.fileName
+			this.book.printCoverFileName = this.storeBook.printCover.fileName
+			this.book.printFileName = this.storeBook.printFile.fileName
 			this.bookFileUploaded = this.storeBook.file.fileName != null
+			this.printCoverUploaded = this.storeBook.printCover.fileName != null
+			this.printFileUploaded = this.storeBook.printFile.fileName != null
 
 			let categories = (await this.storeBook.GetCategories()).items
 			this.LoadCategories(categories.map(c => c.key))
@@ -210,6 +239,7 @@ export class AuthorBookPageComponent {
 		}
 
 		this.priceInput.SetPrice(this.book.price)
+		this.printPriceInput.SetPrice(this.book.printPrice)
 		this.isbnInput.SetIsbn(this.book.isbn)
 	}
 
@@ -368,6 +398,17 @@ export class AuthorBookPageComponent {
 		)
 	}
 
+	async UpdatePrintPrice(printPrice: number) {
+		this.printPriceUpdating = true
+
+		this.UpdateStoreBookResponse(
+			await this.apiService.updateStoreBook(`printPrice`, {
+				uuid: this.uuid,
+				printPrice
+			})
+		)
+	}
+
 	async UpdateIsbn(isbn: string) {
 		this.isbnUpdating = true
 
@@ -464,6 +505,87 @@ export class AuthorBookPageComponent {
 		}
 	}
 
+	async PrintCoverUpload(file: ReadFile) {
+		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
+			let reader = new FileReader()
+			reader.addEventListener("loadend", () => {
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
+
+		let fileContent = await readPromise
+		this.printCoverLoading = true
+
+		// Upload the file
+		let response = await this.apiService.uploadStoreBookPrintCover({
+			uuid: this.uuid,
+			data: fileContent,
+			fileName: file.name
+		})
+
+		this.printCoverUploaded = isSuccessStatusCode(response.status)
+		this.printCoverLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			this.book.printCoverFileName = file.name
+			this.ShowChanges()
+		} else {
+			// Show error
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
+	}
+
+	async PrintFileUpload(file: ReadFile) {
+		let readPromise: Promise<ArrayBuffer> = new Promise(resolve => {
+			let reader = new FileReader()
+			reader.addEventListener("loadend", () => {
+				resolve(reader.result as ArrayBuffer)
+			})
+			reader.readAsArrayBuffer(new Blob([file.underlyingFile]))
+		})
+
+		let fileContent = await readPromise
+		this.printFileLoading = true
+
+		// Upload the file
+		let response = await this.apiService.uploadStoreBookPrintFile({
+			uuid: this.uuid,
+			data: fileContent,
+			fileName: file.name
+		})
+
+		this.printFileUploaded = isSuccessStatusCode(response.status)
+		this.printFileLoading = false
+
+		if (isSuccessStatusCode(response.status)) {
+			this.book.printFileName = file.name
+			this.ShowChanges()
+		} else {
+			// Show error
+			this.errorMessage = this.locale.errors.unexpectedErrorLong
+		}
+	}
+
+	async orderTestPrint() {
+		this.orderTestPrintLoading = true
+
+		const createCheckoutSessionResponse =
+			await this.apiService.createCheckoutSessionForStoreBook(`url`, {
+				storeBookUuid: this.storeBook.uuid,
+				successUrl: window.location.href,
+				cancelUrl: window.location.href
+			})
+
+		if (
+			createCheckoutSessionResponse.data.createCheckoutSessionForStoreBook !=
+			null
+		) {
+			window.location.href =
+				createCheckoutSessionResponse.data.createCheckoutSessionForStoreBook.url
+		}
+	}
+
 	async PublishBook() {
 		if (this.book.status != StoreBookStatus.Unpublished) return
 		this.statusLoading = true
@@ -510,8 +632,16 @@ export class AuthorBookPageComponent {
 	}
 
 	async PublishChanges(result: { releaseName: string; releaseNotes: string }) {
-		let lastRelease = this.releases[0]
-		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) return
+		// Load the releases of the StoreBook
+		const releasesResult = await this.storeBook.GetReleases()
+		const releases = releasesResult.items
+		const lastRelease = releases[0]
+
+		if (lastRelease.status != StoreBookReleaseStatus.Unpublished) {
+			this.publishChangesDialog.hide()
+			return
+		}
+
 		this.publishChangesDialogLoading = true
 
 		let response = await this.apiService.publishStoreBookRelease(`uuid`, {
@@ -597,6 +727,27 @@ export class AuthorBookPageComponent {
 						break
 					default:
 						this.priceInput.SetError(this.locale.errors.unexpectedError)
+						break
+				}
+			}
+		} else if (this.printPriceUpdating) {
+			this.printPriceUpdating = false
+
+			// The printPrice was updated
+			if (response.errors == null) {
+				this.book.printPrice = response.data.updateStoreBook.printPrice
+				this.printPriceInput.SetPrice(this.book.printPrice)
+			} else {
+				let errors = response.errors[0].extensions.errors as string[]
+
+				switch (errors[0]) {
+					case ErrorCodes.printPriceInvalid:
+						this.printPriceInput.SetError(this.locale.errors.priceInvalid)
+						break
+					default:
+						this.printPriceInput.SetError(
+							this.locale.errors.unexpectedError
+						)
 						break
 				}
 			}

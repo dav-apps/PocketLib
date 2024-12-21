@@ -14,7 +14,7 @@ const enDefaults = {
 		bookContextMenuRemove: "Remove",
 		back: "Back"
 	},
-	accountPage: {
+	userPage: {
 		title: "Your Account",
 		text1: "Save your library and access it from anywhere",
 		text2: "Use the same library on all your devices",
@@ -27,7 +27,16 @@ const enDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB of {1} GB used"
+		storageUsed: "{0} GB of {1} GB used",
+		yourOrders: "Your orders",
+		preparationStatus: "Shipping is being prepared",
+		shippedStatus: "Shipped",
+		upgradeProCard: {
+			headline: "PocketLib Pro",
+			subhead: "10 € per month",
+			benefit1: "🚚 Free shipping",
+			getStarted: "Get started"
+		}
 	},
 	settingsPage: {
 		title: "Settings",
@@ -35,6 +44,9 @@ const enDefaults = {
 		lightTheme: "Light",
 		darkTheme: "Dark",
 		systemTheme: "System default",
+		preferredLanguages: "Preferred languages",
+		preferredLanguagesDescription:
+			"Select the languages for which books should be displayed in the PocketLib Store.",
 		openLastReadBook: "Open the last book read when starting the app",
 		news: "News and updates",
 		github: "PocketLib on GitHub",
@@ -44,6 +56,11 @@ const enDefaults = {
 		updateError: "Error while installing the update",
 		noUpdateAvailable: "The app is up-to-date",
 		activateUpdate: "Activate update"
+	},
+	searchPage: {
+		searchInputPlaceholder: "Search for books",
+		previousSearches: "Recently searched",
+		previouslyVisited: "Recently viewed"
 	},
 	authorPage: {
 		yourPublishers: "Your publishers",
@@ -85,13 +102,17 @@ const enDefaults = {
 		noDescription: "No description provided",
 		language: "Language",
 		categories: "Categories",
-		price: "Price",
+		price: "Ebook price",
+		printPrice: "Price (printed book)",
 		free: "Free",
-		bookFile: "Book file",
-		noBookFile: "No book file uploaded",
-		uploadBookFile: "Upload book file",
-		bookFileUploading: "Uploading file...",
-		bookFileUploaded: "Book file was uploaded",
+		bookFile: "Ebook file",
+		printCover: "Print book cover file",
+		printFile: "Print book file",
+		noFile: "No file uploaded",
+		selectFile: "Select file",
+		fileUploading: "Uploading file...",
+		fileUploaded: "File was uploaded",
+		orderTestPrint: "Order test print",
 		status: "Status",
 		unpublished: "Not published",
 		publish: "Publish",
@@ -156,8 +177,8 @@ const enDefaults = {
 			uploadButtonText: "Upload cover"
 		},
 		bookFileSection: {
-			description: "Upload the book file.",
-			uploadButtonText: "Upload book file"
+			description: "Upload the ebook file.",
+			uploadButtonText: "Upload ebook file"
 		},
 		loadingScreen: {
 			creatingBook: "Creating the book...",
@@ -189,6 +210,7 @@ const enDefaults = {
 	storeBookPage: {
 		readNow: "Read now",
 		continueReading: "Continue reading",
+		order: "Order",
 		unpublished: "Unpublished",
 		review: "In review",
 		hidden: "Hidden",
@@ -196,13 +218,20 @@ const enDefaults = {
 		free: "Free",
 		moreOfSeries: 'More from the series "{0}"',
 		moreBooksInCategory: "More books in this category",
-		moreBooksInCategories: "More books in these categories"
+		moreBooksInCategories: "More books in these categories",
+		moreBooksByAuthor: "More books by {0}"
 	},
 	storeBooksPage: {
 		allBooksTitle: "All books"
 	},
 	storeCategoriesPage: {
 		title: "All categories"
+	},
+	orderConfirmationPage: {
+		title: "Thank you for your order!",
+		description: "The following item will be delivered to you shortly:",
+		back: "Back",
+		showOrders: "Show orders"
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name of your collection",
@@ -244,6 +273,7 @@ const enDefaults = {
 		uploadLogo: "Upload logo",
 		descriptionTextareaPlaceholder: "A short description of your publisher",
 		noDescription: "No description provided",
+		searchTextfieldPlaceholder: "Search for authors",
 		errors: {
 			logoFileTooLarge: "The image file is too large",
 			logoUploadFailed: "There was an error in uploading the logo",
@@ -310,14 +340,6 @@ const enDefaults = {
 			isbnInvalid: "The ISBN is invalid"
 		}
 	},
-	davProCard: {
-		plan: "dav Pro",
-		price: "10 € per month",
-		feature1: "Get access to all books in the PocketLib Store",
-		feature2: "Support the authors of the books you read",
-		feature3: "Help us with the development of new apps and features",
-		selectPlan: "Select"
-	},
 	libraryPageCards: {
 		discoverBooks: "Discover books in the PocketLib Store",
 		addBook: "Open a local file",
@@ -347,6 +369,12 @@ const enDefaults = {
 			description: "Are you sure you want to log out?",
 			logout: "Log out",
 			cancel: "Cancel"
+		},
+		upgradeProDialog: {
+			headline: "PocketLib Pro",
+			intro: "Exclusive benefits for our most avid readers:",
+			freeShipping:
+				"🚚 <strong>Free shipping</strong>: Save on shipping costs for all your orders on PocketLib."
 		},
 		createPublisherDialog: {
 			headline: "Create publisher",
@@ -431,6 +459,18 @@ const enDefaults = {
 			continue: "Continue",
 			cancel: "Cancel"
 		},
+		bookDetailsDialog: {
+			headline: "Book details",
+			isbn: "ISBN",
+			language: "Language",
+			publicationDate: "Publication date",
+			pageCount: "Number of pages"
+		},
+		shippingCostInfoDialog: {
+			headline: "Shipping rate at PocketLib",
+			description:
+				"Our shipping costs are a flat rate of €2.50, regardless of the order.<br>Currently, we only ship within Germany.<br><br>Shipping is free for PocketLib Pro users."
+		},
 		errorDialog: {
 			headline: "Error",
 			description:
@@ -478,6 +518,10 @@ const enDefaults = {
 			cancel: "Cancel"
 		}
 	},
+	actions: {
+		getStarted: "Get started",
+		close: "Close"
+	},
 	misc: {
 		languages: {
 			en: "English",
@@ -485,6 +529,7 @@ const enDefaults = {
 		},
 		library: "Library",
 		store: "Store",
+		search: "Search",
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
 		authorProfileImageAlt: "The profile image of the author {0}"
@@ -512,7 +557,7 @@ const deDefaults = {
 		bookContextMenuRemove: "Entfernen",
 		back: "Zurück"
 	},
-	accountPage: {
+	userPage: {
 		title: "Dein Account",
 		text1: "Sichere deine Bibliothek und greife von überall darauf zu",
 		text2: "Nutze die gleiche Bibliothek auf all deinen Geräten",
@@ -525,7 +570,16 @@ const deDefaults = {
 		planFree: "Free",
 		planPlus: "Plus",
 		planPro: "Pro",
-		storageUsed: "{0} GB von {1} GB verwendet"
+		storageUsed: "{0} GB von {1} GB verwendet",
+		yourOrders: "Deine Bestellungen",
+		preparationStatus: "Versand wird vorbereitet",
+		shippedStatus: "Versendet",
+		upgradeProCard: {
+			headline: "PocketLib Pro",
+			subhead: "10 € pro Monat",
+			benefit1: "🚚 Kostenloser Versand",
+			getStarted: "Jetzt loslegen"
+		}
 	},
 	settingsPage: {
 		title: "Einstellungen",
@@ -533,6 +587,9 @@ const deDefaults = {
 		lightTheme: "Hell",
 		darkTheme: "Dunkel",
 		systemTheme: "System-Standard",
+		preferredLanguages: "Bevorzugte Sprachen",
+		preferredLanguagesDescription:
+			"Wähle die Sprachen, für die Bücher im PocketLib Store angezeigt werden sollen.",
 		openLastReadBook: "Öffne das zuletzt gelesene Buch beim Starten der App",
 		news: "Neuigkeiten und Updates",
 		github: "PocketLib auf GitHub",
@@ -542,6 +599,11 @@ const deDefaults = {
 		updateError: "Fehler beim Installieren des Updates",
 		noUpdateAvailable: "Die App ist aktuell",
 		activateUpdate: "Update aktivieren"
+	},
+	searchPage: {
+		searchInputPlaceholder: "Suche nach Büchern",
+		previousSearches: "Zuletzt gesucht",
+		previouslyVisited: "Zuletzt angesehen"
 	},
 	authorPage: {
 		createProfile: "Erstelle dein Profil",
@@ -585,13 +647,17 @@ const deDefaults = {
 		noDescription: "Keine Beschreibung angegeben",
 		language: "Sprache",
 		categories: "Kategorien",
-		price: "Preis",
+		price: "Ebook-Preis",
+		printPrice: "Preis (gedrucktes Buch)",
 		free: "Kostenlos",
-		bookFile: "Buch-Datei",
-		noBookFile: "Keine Buch-Datei hochgeladen",
-		uploadBookFile: "Buch-Datei hochladen",
-		bookFileUploading: "Datei wird hochgeladen...",
-		bookFileUploaded: "Buch-Datei wurde hochgeladen",
+		bookFile: "Ebook-Datei",
+		printCover: "Druck-Cover",
+		printFile: "Druck-Datei",
+		noFile: "Keine Datei hochgeladen",
+		selectFile: "Datei auswählen",
+		fileUploading: "Datei wird hochgeladen...",
+		fileUploaded: "Datei wurde hochgeladen",
+		orderTestPrint: "Test-Druck bestellen",
 		status: "Status",
 		unpublished: "Nicht veröffentlicht",
 		publish: "Veröffentlichen",
@@ -657,8 +723,8 @@ const deDefaults = {
 			uploadButtonText: "Cover hochladen"
 		},
 		bookFileSection: {
-			description: "Lade die Buch-Datei hoch.",
-			uploadButtonText: "Buch-Datei hochladen"
+			description: "Lade die Ebook-Datei hoch.",
+			uploadButtonText: "Ebook-Datei hochladen"
 		},
 		loadingScreen: {
 			creatingBook: "Buch wird erstellt...",
@@ -693,6 +759,7 @@ const deDefaults = {
 	storeBookPage: {
 		readNow: "Jetzt lesen",
 		continueReading: "Weiterlesen",
+		order: "Bestellen",
 		unpublished: "Nicht veröffentlicht",
 		review: "In Überprüfung",
 		hidden: "Versteckt",
@@ -700,13 +767,20 @@ const deDefaults = {
 		free: "Kostenlos",
 		moreOfSeries: 'Mehr aus der Reihe "{0}"',
 		moreBooksInCategory: "Weitere Bücher in dieser Kategorie",
-		moreBooksInCategories: "Weitere Bücher in diesen Kategorien"
+		moreBooksInCategories: "Weitere Bücher in diesen Kategorien",
+		moreBooksByAuthor: "Weitere Bücher von {0}"
 	},
 	storeBooksPage: {
 		allBooksTitle: "Alle Bücher"
 	},
 	storeCategoriesPage: {
 		title: "Alle Kategorien"
+	},
+	orderConfirmationPage: {
+		title: "Danke für deine Bestellung!",
+		description: "Folgender Artikel wird in Kürze zu dir geliefert:",
+		back: "Zurück",
+		showOrders: "Bestellungen ansehen"
 	},
 	editNames: {
 		collectionNameTextfieldPlaceholder: "Name deiner Sammlung",
@@ -748,6 +822,7 @@ const deDefaults = {
 		uploadLogo: "Logo hochladen",
 		descriptionTextareaPlaceholder: "Eine kurze Beschreibung deines Verlags",
 		noDescription: "Keine Beschreibung angegeben",
+		searchTextfieldPlaceholder: "Suche nach Autoren",
 		errors: {
 			logoFileTooLarge: "Die Bilddatei ist zu groß",
 			logoUploadFailed:
@@ -817,14 +892,6 @@ const deDefaults = {
 			isbnInvalid: "Die ISBN ist ungültig"
 		}
 	},
-	davProCard: {
-		plan: "dav Pro",
-		price: "10 € pro Monat",
-		feature1: "Greife auf alle Bücher im PocketLib Store zu",
-		feature2: "Unterstütze die Autoren der Bücher, die du liest",
-		feature3: "Hilf uns bei der Entwicklung von neuen Apps und Funktionen",
-		selectPlan: "Auswählen"
-	},
 	libraryPageCards: {
 		discoverBooks: "Entdecke Bücher im PocketLib Store",
 		addBook: "Öffne eine lokale Datei",
@@ -854,6 +921,12 @@ const deDefaults = {
 			description: "Bist du dir sicher, dass du dich abmelden möchtest?",
 			logout: "Abmelden",
 			cancel: "Abbrechen"
+		},
+		upgradeProDialog: {
+			headline: "PocketLib Pro",
+			intro: "Exklusive Vorteile für unsere eifrigsten Leser:",
+			freeShipping:
+				"🚚 <strong>Kostenloser Versand</strong>: Spar dir die Versandkosten für alle deine Bestellungen auf PocketLib."
 		},
 		createPublisherDialog: {
 			headline: "Verlag erstellen",
@@ -938,6 +1011,18 @@ const deDefaults = {
 			continue: "Weiter",
 			cancel: "Abbrechen"
 		},
+		bookDetailsDialog: {
+			headline: "Buch-Details",
+			isbn: "ISBN",
+			language: "Sprache",
+			publicationDate: "Erscheinungsdatum",
+			pageCount: "Seitenanzahl"
+		},
+		shippingCostInfoDialog: {
+			headline: "Versandkosten bei PocketLib",
+			description:
+				"Unsere Versandkosten betragen pauschal 2,50 €, unabhängig von der Bestellung.<br>Aktuell versenden wir nur innerhalb von Deutschland.<br><br>Für Nutzer von PocketLib Pro ist der Versand kostenlos."
+		},
 		errorDialog: {
 			headline: "Fehler",
 			description:
@@ -985,6 +1070,10 @@ const deDefaults = {
 			cancel: "Abbrechen"
 		}
 	},
+	actions: {
+		getStarted: "Jetzt loslegen",
+		close: "Schließen"
+	},
 	misc: {
 		languages: {
 			en: "Englisch",
@@ -992,6 +1081,7 @@ const deDefaults = {
 		},
 		library: "Bibliothek",
 		store: "Store",
+		search: "Suche",
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
 		authorProfileImageAlt: "Das Profilbild des Autors {0}"
