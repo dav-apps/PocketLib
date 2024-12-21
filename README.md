@@ -11,7 +11,7 @@ The PocketLib Store contains a large collection of literature in the public doma
 ☁ Save your data and read on any device\
 Log in with your dav Account to save your library and reading progress in the cloud. Read on any device, wherever and whenever you want.
 
-<img src="https://dav-misc.fra1.cdn.digitaloceanspaces.com/PocketLibScreenshotV1.7.png" alt="PocketLib Screenshot" width="320" />
+<img src="https://dav-misc.fra1.cdn.digitaloceanspaces.com/PocketLibScreenshot.png" alt="PocketLib Screenshot" width="320" />
 
 ## Getting started
 You can find PocketLib on [pocketlib.app](https://pocketlib.app/)
