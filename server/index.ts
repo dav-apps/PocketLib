@@ -9,7 +9,7 @@ let websiteUrl = "http://localhost:3001"
 
 switch (process.env.ENV) {
 	case "production":
-		backendUrl = "https://pocketlib-api-dj7q2.ondigitalocean.app/"
+		backendUrl = "https://pocketlib-api-bdb2i.ondigitalocean.app/"
 		websiteUrl = "https://pocketlib.app"
 		break
 	case "staging":
