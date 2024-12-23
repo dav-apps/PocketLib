@@ -5,6 +5,7 @@ import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
+import { isServer } from "src/app/misc/utils"
 import { VisitedBook } from "src/app/misc/types"
 
 interface BookItem {
@@ -89,6 +90,7 @@ export class SearchPageComponent {
 	}
 
 	triggerSearch() {
+		if (isServer()) return
 		this.books = []
 
 		if (this.query.length == 0) {

@@ -27,7 +27,11 @@ import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
 import { environment } from "src/environments/environment"
-import { GetStoreBookStatusByString, getLanguage } from "src/app/misc/utils"
+import {
+	GetStoreBookStatusByString,
+	getLanguage,
+	isClient
+} from "src/app/misc/utils"
 import {
 	ApiResponse,
 	Language,
@@ -148,9 +152,11 @@ export class StoreBookPageComponent {
 			if (this.slug != slug) {
 				this.slug = slug
 
-				// Show the loading screen & scroll to the top
-				this.dataService.simpleLoadingScreenVisible = true
-				this.dataService.contentContainer.scrollTo(0, 0)
+				if (isClient()) {
+					// Show the loading screen & scroll to the top
+					this.dataService.simpleLoadingScreenVisible = true
+					this.dataService.contentContainer.scrollTo(0, 0)
+				}
 
 				// Load the data of the new StoreBook
 				await this.Init()

@@ -29,7 +29,8 @@ import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
 	GenerateTwitterLink,
-	getLanguage
+	getLanguage,
+	isServer
 } from "src/app/misc/utils"
 import {
 	ApiResponse,
@@ -324,6 +325,8 @@ export class AuthorProfileComponent {
 
 	@HostListener("window:resize")
 	setSize() {
+		if (isServer()) return
+
 		if (window.innerWidth < 768) {
 			this.profileImageWidth = 110
 		} else if (window.innerWidth < 1200) {

@@ -26,7 +26,8 @@ import { SettingsService } from "src/app/services/settings-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
-	GenerateTwitterLink
+	GenerateTwitterLink,
+	isServer
 } from "src/app/misc/utils"
 import { ApiResponse, BookListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -240,6 +241,8 @@ export class PublisherProfileComponent {
 
 	@HostListener("window:resize")
 	setSize() {
+		if (isServer()) return
+
 		if (window.innerWidth < 768) {
 			this.logoWidth = 110
 		} else if (window.innerWidth < 1200) {
