@@ -7,6 +7,7 @@ import {
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
+import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-logout-dialog",
@@ -22,11 +23,15 @@ export class LogoutDialogComponent {
 	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
-		document.body.appendChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.appendChild(this.dialog.nativeElement)
+		}
 	}
 
 	ngOnDestroy() {
-		document.body.removeChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.removeChild(this.dialog.nativeElement)
+		}
 	}
 
 	show() {

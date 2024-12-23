@@ -9,6 +9,7 @@ import {
 import { Dialog } from "dav-ui-components"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
 import { LocalizationService } from "src/app/services/localization-service"
+import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-categories-selection-dialog",
@@ -28,11 +29,15 @@ export class CategoriesSelectionDialogComponent {
 	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
-		document.body.appendChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.appendChild(this.dialog.nativeElement)
+		}
 	}
 
 	ngOnDestroy() {
-		document.body.removeChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.removeChild(this.dialog.nativeElement)
+		}
 	}
 
 	show() {

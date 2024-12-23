@@ -7,8 +7,9 @@ import {
 	ViewChild
 } from "@angular/core"
 import { Dialog } from "dav-ui-components"
-import { StoreBookItem } from "src/app/misc/types"
 import { LocalizationService } from "src/app/services/localization-service"
+import { StoreBookItem } from "src/app/misc/types"
+import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-add-book-dialog",
@@ -26,11 +27,15 @@ export class AddBookDialogComponent {
 	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
-		document.body.appendChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.appendChild(this.dialog.nativeElement)
+		}
 	}
 
 	ngOnDestroy() {
-		document.body.removeChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.removeChild(this.dialog.nativeElement)
+		}
 	}
 
 	show() {

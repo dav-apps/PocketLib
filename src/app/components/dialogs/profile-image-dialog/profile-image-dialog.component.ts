@@ -9,6 +9,7 @@ import { ReadFile } from "ngx-file-helpers"
 import Cropper from "cropperjs"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
+import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-profile-image-dialog",
@@ -28,11 +29,15 @@ export class ProfileImageDialogComponent {
 	constructor(private localizationService: LocalizationService) {}
 
 	ngAfterViewInit() {
-		document.body.appendChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.appendChild(this.dialog.nativeElement)
+		}
 	}
 
 	ngOnDestroy() {
-		document.body.removeChild(this.dialog.nativeElement)
+		if (isClient()) {
+			document.body.removeChild(this.dialog.nativeElement)
+		}
 	}
 
 	show(file: ReadFile) {
