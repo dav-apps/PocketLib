@@ -1,4 +1,8 @@
-import { BrowserModule } from "@angular/platform-browser"
+import {
+	BrowserModule,
+	provideClientHydration,
+	withEventReplay
+} from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
 import { Environment } from "dav-js"
 import { dataIdFromObject } from "./misc/utils"
@@ -242,7 +246,8 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 			},
 			deps: [HttpLink]
 		},
-		provideHttpClient(withInterceptorsFromDi())
+		provideHttpClient(withInterceptorsFromDi()),
+		provideClientHydration(withEventReplay())
 	]
 })
 export class AppModule {}
