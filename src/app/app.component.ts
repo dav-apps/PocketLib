@@ -36,7 +36,7 @@ import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
-import { dataIdFromObject, getLanguage } from "./misc/utils"
+import { dataIdFromObject, isServer, getLanguage } from "./misc/utils"
 import { Language } from "./misc/types"
 import {
 	smallWindowMaxSize,
@@ -121,6 +121,11 @@ export class AppComponent {
 	}
 
 	async ngOnInit() {
+		if (isServer()) {
+			this.UserLoaded()
+			return
+		}
+
 		this.setSize()
 		this.dataService.ApplyTheme()
 		await this.loadStoreLanguages()
@@ -198,7 +203,8 @@ export class AppComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		this.dataService.isMobile = window.innerWidth <= smallWindowMaxSize
+		this.dataService.isMobile =
+			!isServer() && window.innerWidth <= smallWindowMaxSize
 	}
 
 	@HostListener("window:preferred-languages-setting-changed")

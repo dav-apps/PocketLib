@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core"
-import { DataService } from "src/app/services/data-service"
 import * as locales from "src/locales/locales"
+import { getLanguage } from "../misc/utils"
 import { Language } from "../misc/types"
 
 @Injectable()
 export class LocalizationService {
 	locale = locales.enUS
 
-	constructor(private dataService: DataService) {
-		this.locale = this.getLocale()
+	constructor() {
+		this.locale = this.getLocale(getLanguage())
 	}
 
 	private getLocale(language?: string) {
