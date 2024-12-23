@@ -123,9 +123,7 @@ export class StoreBooksPageComponent {
 					`,
 					{
 						categories: [this.key],
-						languages: await this.settingsService.getStoreLanguages(
-							this.dataService.locale
-						),
+						languages: await this.settingsService.getStoreLanguages(),
 						limit: this.maxVisibleBooks,
 						offset: (this.page - 1) * this.maxVisibleBooks
 					}
@@ -147,9 +145,7 @@ export class StoreBooksPageComponent {
 						}
 					`,
 					{
-						languages: await this.settingsService.getStoreLanguages(
-							this.dataService.locale
-						),
+						languages: await this.settingsService.getStoreLanguages(),
 						limit: this.maxVisibleBooks,
 						offset: (this.page - 1) * this.maxVisibleBooks
 					}

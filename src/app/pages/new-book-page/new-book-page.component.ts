@@ -8,6 +8,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
+import { getLanguage } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-new-book-page",
@@ -51,7 +52,7 @@ export class NewBookPageComponent {
 
 	//#region Description + Language variables
 	description: string = ""
-	language: string = this.dataService.supportedLocale
+	language: string = getLanguage()
 	//#endregion
 
 	//#region Categories variables
@@ -109,9 +110,7 @@ export class NewBookPageComponent {
 			if (author == null) {
 				author = await Author.Retrieve(
 					authorUuid,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}

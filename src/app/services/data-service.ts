@@ -13,6 +13,7 @@ import { Settings } from "../models/Settings"
 import { BookOrder } from "../models/BookOrder"
 import { Publisher } from "../models/Publisher"
 import { Author } from "src/app/models/Author"
+import { getLanguage } from "src/app/misc/utils"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -25,8 +26,6 @@ import { Category } from "src/app/misc/types"
 @Injectable()
 export class DataService {
 	dav = Dav
-	locale: string = navigator.language
-	supportedLocale: string = "en"
 	currentUrl: string = "/"
 	navbarVisible: boolean = true
 	books: Book[] = []
@@ -70,13 +69,6 @@ export class DataService {
 		private title: Title,
 		private meta: Meta
 	) {
-		// Set the supported locale
-		if (this.locale.startsWith("de")) {
-			this.supportedLocale = "de"
-		} else {
-			this.supportedLocale = "en"
-		}
-
 		if (this.swUpdate.isEnabled) {
 			// Check for updates
 			this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
@@ -113,9 +105,7 @@ export class DataService {
 						this.adminPublishers.push(
 							await Publisher.Retrieve(
 								item.uuid,
-								await this.settingsService.getStoreLanguages(
-									this.locale
-								),
+								await this.settingsService.getStoreLanguages(),
 								this.apiService
 							)
 						)
@@ -154,9 +144,7 @@ export class DataService {
 							this.adminAuthors.push(
 								await Author.Retrieve(
 									item.uuid,
-									await this.settingsService.getStoreLanguages(
-										this.locale
-									),
+									await this.settingsService.getStoreLanguages(),
 									this.apiService
 								)
 							)
@@ -169,7 +157,7 @@ export class DataService {
 				// Try to get the author of the user
 				this.userAuthor = await Author.Retrieve(
 					"mine",
-					await this.settingsService.getStoreLanguages(this.locale),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 
@@ -177,7 +165,7 @@ export class DataService {
 					// Try to get the publisher of the user
 					this.userPublisher = await Publisher.Retrieve(
 						"mine",
-						await this.settingsService.getStoreLanguages(this.locale),
+						await this.settingsService.getStoreLanguages(),
 						this.apiService
 					)
 				}
@@ -206,7 +194,7 @@ export class DataService {
 					}
 				}
 			`,
-			{ limit: 100, language: this.supportedLocale }
+			{ limit: 100, language: getLanguage() }
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories.items) {

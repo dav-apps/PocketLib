@@ -5,6 +5,8 @@ import {
 } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { getLanguage } from "src/app/misc/utils"
+import { Language } from "src/app/misc/types"
 
 @Component({
 	selector: "pocketlib-price-input",
@@ -67,7 +69,7 @@ export class PriceInputComponent {
 		} else {
 			this.formattedPrice = (price / 100).toFixed(2) + " €"
 
-			if (this.dataService.supportedLocale == "de") {
+			if (getLanguage() == Language.de) {
 				this.formattedPrice = this.formattedPrice.replace(".", ",")
 			}
 		}

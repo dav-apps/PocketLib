@@ -140,9 +140,7 @@ export class AuthorBookPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}
@@ -161,7 +159,7 @@ export class AuthorBookPageComponent {
 		// Get the store book
 		this.storeBook = await StoreBook.Retrieve(
 			this.uuid,
-			await this.settingsService.getStoreLanguages(this.dataService.locale),
+			await this.settingsService.getStoreLanguages(),
 			this.apiService
 		)
 

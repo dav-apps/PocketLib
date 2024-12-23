@@ -331,3 +331,19 @@ export function dataIdFromObject(responseObject: any) {
 export function randomNumber(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+export function isClient(): boolean {
+	return typeof navigator != "undefined"
+}
+
+export function isServer(): boolean {
+	return typeof navigator == "undefined"
+}
+
+export function getLanguage(): Language {
+	if (isClient() && navigator.language.startsWith("de")) {
+		return Language.de
+	}
+
+	return Language.en
+}

@@ -36,7 +36,7 @@ import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
-import { dataIdFromObject } from "./misc/utils"
+import { dataIdFromObject, getLanguage } from "./misc/utils"
 import { Language } from "./misc/types"
 import {
 	smallWindowMaxSize,
@@ -87,7 +87,7 @@ export class AppComponent {
 		private httpLink: HttpLink,
 		private cd: ChangeDetectorRef
 	) {
-		DavUIComponents.setLocale(this.dataService.locale)
+		DavUIComponents.setLocale(getLanguage())
 
 		this.router.events.forEach(data => {
 			if (data instanceof NavigationStart) {
@@ -154,7 +154,7 @@ export class AppComponent {
 		let htmlElement = document.getElementsByTagName(
 			"html"
 		)[0] as HTMLHtmlElement
-		if (htmlElement) htmlElement.setAttribute("lang", this.dataService.locale)
+		if (htmlElement) htmlElement.setAttribute("lang", getLanguage())
 
 		// Get the settings
 		this.dataService.settings = await GetSettings()
@@ -203,9 +203,7 @@ export class AppComponent {
 
 	@HostListener("window:preferred-languages-setting-changed")
 	async loadStoreLanguages() {
-		this.storeLanguages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		this.storeLanguages = await this.settingsService.getStoreLanguages()
 	}
 
 	navigateToLibraryPage() {

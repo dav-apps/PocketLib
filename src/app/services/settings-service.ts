@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core"
 import * as localforage from "localforage"
+import { getLanguage } from "src/app/misc/utils"
 import { keys } from "src/constants/keys"
 import { Language, VisitedBook } from "src/app/misc/types"
 
@@ -43,10 +44,10 @@ export class SettingsService {
 		this.cache[keys.settingsStoreLanguagesKey] = languages
 	}
 
-	async getStoreLanguages(locale: string): Promise<Language[]> {
+	async getStoreLanguages(): Promise<Language[]> {
 		let defaultLanguages = []
 
-		if (locale.toLowerCase().startsWith("de")) {
+		if (getLanguage() == Language.de) {
 			defaultLanguages = [Language.de, Language.en]
 		} else {
 			defaultLanguages = [Language.en]

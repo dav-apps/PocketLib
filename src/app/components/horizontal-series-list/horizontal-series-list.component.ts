@@ -33,9 +33,7 @@ export class HorizontalSeriesListComponent {
 	) {}
 
 	async ngOnInit() {
-		let languages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		let languages = await this.settingsService.getStoreLanguages()
 
 		if (languages.includes(Language.de)) {
 			// Show VlbCollections
@@ -66,9 +64,7 @@ export class HorizontalSeriesListComponent {
 			`,
 			{
 				random: this.type == "random",
-				languages: await this.settingsService.getStoreLanguages(
-					this.dataService.locale
-				),
+				languages: await this.settingsService.getStoreLanguages(),
 				limit: maxVisibleSeries
 			}
 		)

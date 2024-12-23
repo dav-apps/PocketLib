@@ -10,7 +10,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
 import { StoreBookCollection } from "src/app/models/StoreBookCollection"
-import { GetLanguageByString } from "src/app/misc/utils"
+import { GetLanguageByString, getLanguage } from "src/app/misc/utils"
 import { BookListItem, StoreBookStatus } from "src/app/misc/types"
 
 interface ExtendedBookListItem extends BookListItem {
@@ -82,9 +82,7 @@ export class AuthorCollectionPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}
@@ -106,7 +104,7 @@ export class AuthorCollectionPageComponent {
 		// Get the collection
 		this.collection = await StoreBookCollection.Retrieve(
 			this.uuid,
-			await this.settingsService.getStoreLanguages(this.dataService.locale),
+			await this.settingsService.getStoreLanguages(),
 			this.apiService
 		)
 
@@ -203,10 +201,7 @@ export class AuthorCollectionPageComponent {
 				this.names.push(collectionName)
 
 				// Update the title if the name for the current language was added
-				let j = FindAppropriateLanguage(
-					this.dataService.supportedLocale,
-					this.names
-				)
+				let j = FindAppropriateLanguage(getLanguage(), this.names)
 				if (j != -1) this.collectionName = this.names[j]
 			} else {
 				// Update the name in the collection

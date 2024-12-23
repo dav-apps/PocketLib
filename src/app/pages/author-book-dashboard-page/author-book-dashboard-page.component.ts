@@ -52,9 +52,7 @@ export class AuthorBookDashboardPageComponent {
 			if (this.author == null) {
 				this.author = await Author.Retrieve(
 					authorUuid,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}
@@ -72,7 +70,7 @@ export class AuthorBookDashboardPageComponent {
 
 		this.book = await StoreBook.Retrieve(
 			storeBookUuid,
-			await this.settingsService.getStoreLanguages(this.dataService.locale),
+			await this.settingsService.getStoreLanguages(),
 			this.apiService
 		)
 

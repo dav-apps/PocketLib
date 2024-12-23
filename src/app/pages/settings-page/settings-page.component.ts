@@ -62,9 +62,7 @@ export class SettingsPageComponent {
 
 	async ngOnInit() {
 		// Init the preferred languages setting
-		let languages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		let languages = await this.settingsService.getStoreLanguages()
 
 		for (let language of Object.keys(Language)) {
 			let lang = language as Language

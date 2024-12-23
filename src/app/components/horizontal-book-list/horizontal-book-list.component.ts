@@ -120,9 +120,7 @@ export class HorizontalBookListComponent {
 				}
 			`,
 			{
-				languages: await this.settingsService.getStoreLanguages(
-					this.dataService.locale
-				),
+				languages: await this.settingsService.getStoreLanguages(),
 				limit: this.maxItems,
 				offset: this.maxItems * page
 			}
@@ -154,9 +152,7 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				categories,
-				languages: await this.settingsService.getStoreLanguages(
-					this.dataService.locale
-				),
+				languages: await this.settingsService.getStoreLanguages(),
 				limit: this.maxItems
 			}
 		)
@@ -197,9 +193,7 @@ export class HorizontalBookListComponent {
 			`,
 			{
 				uuid: this.series,
-				languages: await this.settingsService.getStoreLanguages(
-					this.dataService.locale
-				),
+				languages: await this.settingsService.getStoreLanguages(),
 				limit: this.maxItems
 			}
 		)
@@ -325,9 +319,7 @@ export class HorizontalBookListComponent {
 		let page = this.page - 1
 		if (page < 0) page = 0
 
-		let languages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		let languages = await this.settingsService.getStoreLanguages()
 
 		if (languages.includes(Language.de)) {
 			let response = await this.apiService.listVlbItems(

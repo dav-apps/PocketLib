@@ -70,9 +70,7 @@ export class AuthorPageComponent {
 				`,
 				{
 					inReview: true,
-					languages: await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					)
+					languages: await this.settingsService.getStoreLanguages()
 				}
 			)
 
@@ -138,9 +136,7 @@ export class AuthorPageComponent {
 			this.dataService.adminPublishers.push(
 				new Publisher(
 					responseData,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			)
@@ -207,9 +203,7 @@ export class AuthorPageComponent {
 			this.dataService.adminAuthors.push(
 				new Author(
 					responseData,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			)

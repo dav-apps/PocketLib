@@ -28,7 +28,8 @@ import {
 	GetLanguageByString,
 	GenerateFacebookLink,
 	GenerateInstagramLink,
-	GenerateTwitterLink
+	GenerateTwitterLink,
+	getLanguage
 } from "src/app/misc/utils"
 import {
 	ApiResponse,
@@ -185,9 +186,7 @@ export class AuthorProfileComponent {
 			if (author == null) {
 				author = await Author.Retrieve(
 					this.slug,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}
@@ -433,12 +432,11 @@ export class AuthorProfileComponent {
 	}
 
 	async SelectDefaultBio() {
-		let i = this.bios.findIndex(
-			bio => bio.language == this.dataService.supportedLocale
-		)
+		let lang = getLanguage()
+		let i = this.bios.findIndex(bio => bio.language == lang)
 
 		if (i != -1) {
-			this.bioLanguageDropdownSelectedKey = this.dataService.supportedLocale
+			this.bioLanguageDropdownSelectedKey = lang
 		} else if (this.bios.length > 0) {
 			this.bioLanguageDropdownSelectedKey = this.bios[0].language
 		} else {
@@ -824,7 +822,7 @@ export class AuthorProfileComponent {
 	async LoadAuthor() {
 		this.author = await Author.Retrieve(
 			this.slug,
-			await this.settingsService.getStoreLanguages(this.dataService.locale),
+			await this.settingsService.getStoreLanguages(),
 			this.apiService
 		)
 		if (this.author == null) return null

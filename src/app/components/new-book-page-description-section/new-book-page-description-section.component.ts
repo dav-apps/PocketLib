@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
+import { getLanguage } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-new-book-page-description-section",
@@ -17,7 +18,7 @@ export class NewBookPageDescriptionSectionComponent {
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
 	description: string = ""
-	language: string = this.dataService.supportedLocale
+	language: string = getLanguage()
 
 	constructor(
 		public dataService: DataService,

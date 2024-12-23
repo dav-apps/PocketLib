@@ -8,7 +8,7 @@ export class LocalizationService {
 	locale = locales.enUS
 
 	constructor(private dataService: DataService) {
-		this.locale = this.getLocale(this.dataService.locale)
+		this.locale = this.getLocale()
 	}
 
 	private getLocale(language?: string) {

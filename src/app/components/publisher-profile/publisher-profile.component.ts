@@ -204,9 +204,7 @@ export class PublisherProfileComponent {
 			// Get the publisher from the server
 			this.publisher = await Publisher.Retrieve(
 				this.slug,
-				await this.settingsService.getStoreLanguages(
-					this.dataService.locale
-				),
+				await this.settingsService.getStoreLanguages(),
 				this.apiService
 			)
 		} else if (publisher == null) {

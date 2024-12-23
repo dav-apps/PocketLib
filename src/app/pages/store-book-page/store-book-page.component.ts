@@ -27,7 +27,7 @@ import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
 import { environment } from "src/environments/environment"
-import { GetStoreBookStatusByString } from "src/app/misc/utils"
+import { GetStoreBookStatusByString, getLanguage } from "src/app/misc/utils"
 import {
 	ApiResponse,
 	Language,
@@ -217,7 +217,7 @@ export class StoreBookPageComponent {
 		this.description = responseData.description
 		this.price = responseData.price
 		this.priceLabel = (this.price / 100).toFixed(2) + " €"
-		if (this.dataService.supportedLocale == "de") {
+		if (getLanguage() == Language.de) {
 			this.priceLabel = this.priceLabel.replace(".", ",")
 		}
 		this.isbn = responseData.isbn
@@ -391,7 +391,7 @@ export class StoreBookPageComponent {
 		} else {
 			this.priceLabel = (this.price / 100).toFixed(2) + " €"
 
-			if (this.dataService.supportedLocale == "de") {
+			if (getLanguage() == Language.de) {
 				this.priceLabel = this.priceLabel.replace(".", ",")
 			}
 		}

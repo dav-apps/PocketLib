@@ -65,9 +65,7 @@ export class UserPageComponent {
 
 	async ngOnInit() {
 		this.setSize()
-		this.storeLanguages = await this.settingsService.getStoreLanguages(
-			this.dataService.locale
-		)
+		this.storeLanguages = await this.settingsService.getStoreLanguages()
 
 		await this.dataService.userPromiseHolder.AwaitResult()
 

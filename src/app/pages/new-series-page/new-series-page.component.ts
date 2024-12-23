@@ -6,6 +6,7 @@ import { RoutingService } from "src/app/services/routing-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
 import { Author } from "src/app/models/Author"
+import { getLanguage } from "src/app/misc/utils"
 
 interface BookItem {
 	uuid: string
@@ -26,7 +27,7 @@ export class NewSeriesPageComponent {
 	booksLoading: boolean = true
 	loading: boolean = false
 	errorMessage: string = ""
-	language: string = this.dataService.supportedLocale
+	language: string = getLanguage()
 	name: string = ""
 	bookItems: BookItem[] = []
 	selectedBooks: BookItem[] = []
@@ -60,9 +61,7 @@ export class NewSeriesPageComponent {
 			if (author == null) {
 				author = await Author.Retrieve(
 					authorUuid,
-					await this.settingsService.getStoreLanguages(
-						this.dataService.locale
-					),
+					await this.settingsService.getStoreLanguages(),
 					this.apiService
 				)
 			}
