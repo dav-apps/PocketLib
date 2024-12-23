@@ -17,7 +17,8 @@ interface ReleaseItem {
 
 @Component({
 	templateUrl: "./author-releases-page.component.html",
-	styleUrls: ["./author-releases-page.component.scss"]
+	styleUrl: "./author-releases-page.component.scss",
+	standalone: false
 })
 export class AuthorReleasesPageComponent {
 	faAngleRight = faAngleRight

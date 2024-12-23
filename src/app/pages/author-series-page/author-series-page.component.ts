@@ -24,7 +24,8 @@ interface StoreBookItem {
 @Component({
 	selector: "pocketlib-author-series-page",
 	templateUrl: "./author-series-page.component.html",
-	styleUrls: ["./author-series-page.component.scss"]
+	styleUrl: "./author-series-page.component.scss",
+	standalone: false
 })
 export class AuthorSeriesPageComponent {
 	locale = this.localizationService.locale.authorSeriesPage
@@ -62,7 +63,7 @@ export class AuthorSeriesPageComponent {
 		this.dragulaService
 			.dragend("books")
 			.subscribe(() => (this.dragging = false))
-		
+
 		this.dataService.setMeta()
 	}
 

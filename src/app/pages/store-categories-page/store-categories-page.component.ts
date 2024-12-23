@@ -6,7 +6,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-store-categories-page",
 	templateUrl: "./store-categories-page.component.html",
-	styleUrls: ["./store-categories-page.component.scss"]
+	styleUrl: "./store-categories-page.component.scss",
+	standalone: false
 })
 export class StoreCategoriesPageComponent {
 	locale = this.localizationService.locale.storeCategoriesPage

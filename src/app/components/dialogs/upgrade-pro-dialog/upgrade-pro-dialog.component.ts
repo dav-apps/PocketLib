@@ -12,7 +12,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-upgrade-pro-dialog",
 	templateUrl: "./upgrade-pro-dialog.component.html",
-	styleUrl: "./upgrade-pro-dialog.component.scss"
+	styleUrl: "./upgrade-pro-dialog.component.scss",
+	standalone: false
 })
 export class UpgradeProDialogComponent {
 	locale = this.localizationService.locale.dialogs.upgradeProDialog

@@ -11,7 +11,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-buy-book-dialog",
-	templateUrl: "./buy-book-dialog.component.html"
+	templateUrl: "./buy-book-dialog.component.html",
+	standalone: false
 })
 export class BuyBookDialogComponent {
 	locale = this.localizationService.locale.dialogs.buyBookDialog

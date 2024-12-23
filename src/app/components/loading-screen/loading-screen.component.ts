@@ -4,7 +4,8 @@ import { DataService } from "src/app/services/data-service"
 @Component({
 	selector: "pocketlib-loading-screen",
 	templateUrl: "./loading-screen.component.html",
-	styleUrls: ["./loading-screen.component.scss"]
+	styleUrl: "./loading-screen.component.scss",
+	standalone: false
 })
 export class LoadingScreenComponent {
 	@Input() message: string = ""

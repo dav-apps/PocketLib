@@ -10,7 +10,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-login-required-dialog",
-	templateUrl: "./login-required-dialog.component.html"
+	templateUrl: "./login-required-dialog.component.html",
+	standalone: false
 })
 export class LoginRequiredDialogComponent {
 	locale = this.localizationService.locale.dialogs.loginRequiredDialog

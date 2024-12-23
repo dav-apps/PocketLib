@@ -38,7 +38,8 @@ import {
 @Component({
 	selector: "pocketlib-store-book-page",
 	templateUrl: "./store-book-page.component.html",
-	styleUrls: ["./store-book-page.component.scss"]
+	styleUrl: "./store-book-page.component.scss",
+	standalone: false
 })
 export class StoreBookPageComponent {
 	locale = this.localizationService.locale.storeBookPage

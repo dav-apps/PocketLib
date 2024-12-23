@@ -10,7 +10,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-leave-page-dialog",
-	templateUrl: "./leave-page-dialog.component.html"
+	templateUrl: "./leave-page-dialog.component.html",
+	standalone: false
 })
 export class LeavePageDialogComponent {
 	locale = this.localizationService.locale.dialogs.leavePageDialog

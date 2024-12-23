@@ -15,8 +15,8 @@
 		<p class="description-text">{{ locale.collectionSection.description }}</p>
 
 		<dav-list>
-			@for (collection of collections; track collection.uuid; let i = $index)
-			{
+			@for ( collection of collections; track collection.uuid; let i = $index
+			) {
 			<dav-list-item
 				[imageSrc]="collection.coverContent"
 				[imageTitle]="collection.name"

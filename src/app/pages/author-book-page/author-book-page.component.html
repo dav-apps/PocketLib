@@ -140,8 +140,8 @@
 
 			<div class="book-details-data">
 				<div class="categories-container">
-					@for (category of book.categories; track category.key; let i =
-					$index) {
+					@for ( category of book.categories; track category.key; let i =
+					$index ) {
 					<dav-badge [color]="i == 0 ? 'primary' : 'secondary'">
 						{{ category.name }}
 					</dav-badge>
@@ -178,13 +178,13 @@
 				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-				} @if (bookFileUploaded && book.fileName == null &&
-				!bookFileLoading) {
+				} @if ( bookFileUploaded && book.fileName == null &&
+				!bookFileLoading ) {
 				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-				} @if (bookFileUploaded && book.fileName != null &&
-				!bookFileLoading) {
+				} @if ( bookFileUploaded && book.fileName != null &&
+				!bookFileLoading ) {
 				<p class="file-name-text">
 					{{ book.fileName }}
 				</p>
@@ -236,13 +236,13 @@
 				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-				} @if (printCoverUploaded && book.printCoverFileName == null &&
-				!printCoverLoading){
+				} @if ( printCoverUploaded && book.printCoverFileName == null &&
+				!printCoverLoading ) {
 				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-				} @if (printCoverUploaded && book.printCoverFileName != null &&
-				!printCoverLoading) {
+				} @if ( printCoverUploaded && book.printCoverFileName != null &&
+				!printCoverLoading ) {
 				<p class="file-name-text">
 					{{ book.printCoverFileName }}
 				</p>
@@ -279,13 +279,13 @@
 				<p class="no-book-file-text">
 					{{ locale.noFile }}
 				</p>
-				} @if (printFileUploaded && book.printFileName == null &&
-				!printFileLoading) {
+				} @if ( printFileUploaded && book.printFileName == null &&
+				!printFileLoading ) {
 				<p class="book-file-uploaded-text">
 					{{ locale.fileUploaded }}
 				</p>
-				} @if (printFileUploaded && book.printFileName != null &&
-				!printFileLoading) {
+				} @if ( printFileUploaded && book.printFileName != null &&
+				!printFileLoading ) {
 				<p class="file-name-text">
 					{{ book.printFileName }}
 				</p>
@@ -377,8 +377,8 @@
 						}
 					</div>
 				</div>
-				} @if ((book.status == 2 || book.status == 3) && release == null &&
-				changes) {
+				} @if ( (book.status == 2 || book.status == 3) && release == null &&
+				changes ) {
 				<div class="publish-changes-button-container">
 					<dav-button
 						[disabled]="publishChangesLoading"

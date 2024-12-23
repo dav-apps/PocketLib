@@ -3,7 +3,8 @@ import { DataService } from "src/app/services/data-service"
 
 @Component({
 	selector: "pocketlib-categories-selection",
-	templateUrl: "./categories-selection.component.html"
+	templateUrl: "./categories-selection.component.html",
+	standalone: false
 })
 export class CategoriesSelectionComponent {
 	@Output() change = new EventEmitter()

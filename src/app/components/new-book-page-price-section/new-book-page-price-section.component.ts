@@ -11,7 +11,8 @@ import { PriceInputComponent } from "src/app/components/price-input/price-input.
 @Component({
 	selector: "pocketlib-new-book-page-price-section",
 	templateUrl: "./new-book-page-price-section.component.html",
-	styleUrls: ["./new-book-page-price-section.component.scss"]
+	styleUrl: "./new-book-page-price-section.component.scss",
+	standalone: false
 })
 export class NewBookPagePriceSectionComponent {
 	locale = this.localizationService.locale.newBookPage

@@ -11,7 +11,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-library-page-cards",
 	templateUrl: "./library-page-cards.component.html",
-	styleUrls: ["./library-page-cards.component.scss"]
+	styleUrl: "./library-page-cards.component.scss",
+	standalone: false
 })
 export class LibraryPageCardsComponent {
 	locale = this.localizationService.locale.libraryPageCards

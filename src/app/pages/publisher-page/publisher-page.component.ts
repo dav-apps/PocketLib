@@ -3,7 +3,8 @@ import { ActivatedRoute } from "@angular/router"
 
 @Component({
 	selector: "pocketlib-publisher-page",
-	templateUrl: "./publisher-page.component.html"
+	templateUrl: "./publisher-page.component.html",
+	standalone: false
 })
 export class PublisherPageComponent {
 	uuid: string

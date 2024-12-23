@@ -13,7 +13,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-logo-dialog",
 	templateUrl: "./logo-dialog.component.html",
-	styleUrls: ["logo-dialog.component.scss"]
+	styleUrl: "logo-dialog.component.scss",
+	standalone: false
 })
 export class LogoDialogComponent {
 	locale = this.localizationService.locale.dialogs.logoDialog

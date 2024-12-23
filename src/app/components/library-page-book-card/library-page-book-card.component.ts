@@ -14,7 +14,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-library-page-book-card",
 	templateUrl: "./library-page-book-card.component.html",
-	styleUrls: ["./library-page-book-card.component.scss"]
+	styleUrl: "./library-page-book-card.component.scss",
+	standalone: false
 })
 export class LibraryPageBookCardComponent {
 	@Input() book: EpubBook | PdfBook = new EpubBook(null, null, true, null)

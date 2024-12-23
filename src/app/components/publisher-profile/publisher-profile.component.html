@@ -38,9 +38,9 @@
 		>
 			{{ publisher?.name }}
 		</dav-header>
-		} @if (publisher?.websiteUrl || publisher?.facebookUsername ||
+		} @if ( publisher?.websiteUrl || publisher?.facebookUsername ||
 		publisher?.instagramUsername || publisher?.twitterUsername ||
-		vlbPublisherUrl) {
+		vlbPublisherUrl ) {
 		<div class="social-media-buttons-container">
 			@if (publisher?.websiteUrl || vlbPublisherUrl) {
 			<!-- Website -->
@@ -72,8 +72,8 @@
 		<p class="description-text">
 			{{ publisher?.description }}
 		</p>
-		} @if ((publisher?.description == null || publisher?.description.length ==
-		0) && !editDescription) {
+		} @if ( (publisher?.description == null || publisher?.description.length
+		== 0) && !editDescription ) {
 		<p class="no-description-text">
 			{{ locale.noDescription }}
 		</p>

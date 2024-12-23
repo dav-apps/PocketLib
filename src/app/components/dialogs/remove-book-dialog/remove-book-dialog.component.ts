@@ -10,7 +10,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-remove-book-dialog",
-	templateUrl: "./remove-book-dialog.component.html"
+	templateUrl: "./remove-book-dialog.component.html",
+	standalone: false
 })
 export class RemoveBookDialogComponent {
 	locale = this.localizationService.locale.dialogs.removeBookDialog

@@ -14,7 +14,8 @@ interface BookItem {
 @Component({
 	selector: "pocketlib-store-series-page",
 	templateUrl: "./store-series-page.component.html",
-	styleUrl: "./store-series-page.component.scss"
+	styleUrl: "./store-series-page.component.scss",
+	standalone: false
 })
 export class StoreSeriesPageComponent {
 	uuid: string = ""

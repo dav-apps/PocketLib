@@ -18,10 +18,7 @@
 				[placeholder]="locale.nameTextfieldPlaceholder"
 				[errorMessage]="nameError"
 				[disabled]="loading"
-				(change)="
-					name = $event.detail.value;
-					nameError = ''
-				"
+				(change)="name = $event.detail.value; nameError = ''"
 				(enter)="submit()"
 			></dav-textfield>
 		</div>

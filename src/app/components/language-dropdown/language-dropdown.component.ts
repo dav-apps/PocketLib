@@ -4,7 +4,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-language-dropdown",
-	templateUrl: "./language-dropdown.component.html"
+	templateUrl: "./language-dropdown.component.html",
+	standalone: false
 })
 export class LanguageDropdownComponent {
 	@Input() language: string = "en"

@@ -5,7 +5,8 @@ import { SeriesListItem } from "src/app/misc/types"
 @Component({
 	selector: "pocketlib-horizontal-series-list-item",
 	templateUrl: "./horizontal-series-list-item.component.html",
-	styleUrls: ["./horizontal-series-list-item.component.scss"]
+	styleUrl: "./horizontal-series-list-item.component.scss",
+	standalone: false
 })
 export class HorizontalSeriesListItemComponent {
 	@Input() series: SeriesListItem

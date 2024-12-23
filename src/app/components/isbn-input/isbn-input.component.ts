@@ -13,7 +13,8 @@ const isbnValidityRegex =
 @Component({
 	selector: "pocketlib-isbn-input",
 	templateUrl: "./isbn-input.component.html",
-	styleUrls: ["./isbn-input.component.scss"]
+	styleUrl: "./isbn-input.component.scss",
+	standalone: false
 })
 export class IsbnInputComponent {
 	locale = this.localizationService.locale.isbnInput

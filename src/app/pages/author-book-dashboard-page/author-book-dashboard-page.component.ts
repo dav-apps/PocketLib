@@ -11,7 +11,8 @@ import { StoreBookStatus } from "src/app/misc/types"
 
 @Component({
 	templateUrl: "./author-book-dashboard-page.component.html",
-	styleUrls: ["./author-book-dashboard-page.component.scss"]
+	styleUrl: "./author-book-dashboard-page.component.scss",
+	standalone: false
 })
 export class AuthorBookDashboardPageComponent {
 	locale = this.localizationService.locale.authorBookDashboardPage

@@ -7,7 +7,8 @@ import { PdfBook } from "src/app/models/PdfBook"
 
 @Component({
 	selector: "pocketlib-loading-page",
-	template: ""
+	template: "",
+	standalone: false
 })
 export class LoadingPageComponent {
 	height: number = 500

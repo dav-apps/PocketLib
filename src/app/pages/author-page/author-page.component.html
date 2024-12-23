@@ -16,7 +16,8 @@
 
 	<div class="list-container">
 		<dav-list>
-			@for (publisher of dataService.adminPublishers; track publisher.uuid) {
+			@for ( publisher of dataService.adminPublishers; track publisher.uuid )
+			{
 			<dav-list-item
 				[headline]="publisher.name"
 				size="sm"

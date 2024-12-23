@@ -11,7 +11,8 @@ import { CategoriesSelectionComponent } from "src/app/components/categories-sele
 @Component({
 	selector: "pocketlib-new-book-page-categories-section",
 	templateUrl: "./new-book-page-categories-section.component.html",
-	styleUrls: ["./new-book-page-categories-section.component.scss"]
+	styleUrl: "./new-book-page-categories-section.component.scss",
+	standalone: false
 })
 export class NewBookPageCategoriesSectionComponent {
 	locale = this.localizationService.locale.newBookPage

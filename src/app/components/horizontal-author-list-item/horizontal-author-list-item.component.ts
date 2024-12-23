@@ -5,7 +5,8 @@ import { DataService } from "src/app/services/data-service"
 @Component({
 	selector: "pocketlib-horizontal-author-list-item",
 	templateUrl: "./horizontal-author-list-item.component.html",
-	styleUrls: ["./horizontal-author-list-item.component.scss"]
+	styleUrl: "./horizontal-author-list-item.component.scss",
+	standalone: false
 })
 export class HorizontalAuthorListItemComponent {
 	@Input() author: AuthorListItem = {

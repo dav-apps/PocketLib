@@ -13,7 +13,8 @@ type HorizontalAuthorListAlignment = "start" | "center"
 @Component({
 	selector: "pocketlib-horizontal-author-list",
 	templateUrl: "./horizontal-author-list.component.html",
-	styleUrls: ["./horizontal-author-list.component.scss"]
+	styleUrl: "./horizontal-author-list.component.scss",
+	standalone: false
 })
 export class HorizontalAuthorListComponent {
 	@Input() type: HorizontalAuthorListType = "latest"

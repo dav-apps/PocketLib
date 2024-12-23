@@ -3,7 +3,8 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
 
 @Component({
 	selector: "pocketlib-link-icon-button",
-	templateUrl: "./link-icon-button.component.html"
+	templateUrl: "./link-icon-button.component.html",
+	standalone: false
 })
 export class LinkIconButtonComponent {
 	@Input() icon: IconDefinition

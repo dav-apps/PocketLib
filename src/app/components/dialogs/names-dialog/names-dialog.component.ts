@@ -11,7 +11,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-names-dialog",
-	templateUrl: "./names-dialog.component.html"
+	templateUrl: "./names-dialog.component.html",
+	standalone: false
 })
 export class NamesDialogComponent {
 	locale = this.localizationService.locale.dialogs.namesDialog

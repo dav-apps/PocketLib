@@ -47,7 +47,8 @@ interface AuthorItem {
 @Component({
 	selector: "pocketlib-publisher-profile",
 	templateUrl: "./publisher-profile.component.html",
-	styleUrls: ["./publisher-profile.component.scss"]
+	styleUrl: "./publisher-profile.component.scss",
+	standalone: false
 })
 export class PublisherProfileComponent {
 	locale = this.localizationService.locale.publisherProfile

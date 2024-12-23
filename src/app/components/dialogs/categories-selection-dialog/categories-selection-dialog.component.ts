@@ -12,7 +12,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-categories-selection-dialog",
-	templateUrl: "./categories-selection-dialog.component.html"
+	templateUrl: "./categories-selection-dialog.component.html",
+	standalone: false
 })
 export class CategoriesSelectionDialogComponent {
 	locale = this.localizationService.locale.dialogs.categoriesSelectionDialog

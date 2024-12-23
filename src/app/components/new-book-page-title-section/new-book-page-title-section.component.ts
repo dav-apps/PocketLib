@@ -4,7 +4,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-new-book-page-title-section",
 	templateUrl: "./new-book-page-title-section.component.html",
-	styleUrls: ["./new-book-page-title-section.component.scss"]
+	styleUrl: "./new-book-page-title-section.component.scss",
+	standalone: false
 })
 export class NewBookPageTitleSectionComponent {
 	locale = this.localizationService.locale.newBookPage

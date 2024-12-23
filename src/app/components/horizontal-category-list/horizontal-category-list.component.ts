@@ -10,7 +10,8 @@ type HorizontalCategoryListAlignment = "start" | "center"
 @Component({
 	selector: "pocketlib-horizontal-category-list",
 	templateUrl: "./horizontal-category-list.component.html",
-	styleUrls: ["./horizontal-category-list.component.scss"]
+	styleUrl: "./horizontal-category-list.component.scss",
+	standalone: false
 })
 export class HorizontalCategoryListComponent {
 	@Input() headline: string = ""

@@ -26,7 +26,8 @@ import {
 
 @Component({
 	templateUrl: "./author-book-page.component.html",
-	styleUrls: ["./author-book-page.component.scss"]
+	styleUrl: "./author-book-page.component.scss",
+	standalone: false
 })
 export class AuthorBookPageComponent {
 	locale = this.localizationService.locale.authorBookPage

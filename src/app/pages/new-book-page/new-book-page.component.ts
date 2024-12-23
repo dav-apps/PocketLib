@@ -12,7 +12,8 @@ import { Author } from "src/app/models/Author"
 @Component({
 	selector: "pocketlib-new-book-page",
 	templateUrl: "./new-book-page.component.html",
-	styleUrls: ["./new-book-page.component.scss"]
+	styleUrl: "./new-book-page.component.scss",
+	standalone: false
 })
 export class NewBookPageComponent {
 	//#region Navigation variables

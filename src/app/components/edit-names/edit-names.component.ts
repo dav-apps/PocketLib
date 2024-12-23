@@ -19,7 +19,8 @@ interface Name {
 @Component({
 	selector: "pocketlib-edit-names",
 	templateUrl: "./edit-names.component.html",
-	styleUrls: ["./edit-names.component.scss"]
+	styleUrl: "./edit-names.component.scss",
+	standalone: false
 })
 export class EditNamesComponent {
 	locale = this.localizationService.locale.editNames

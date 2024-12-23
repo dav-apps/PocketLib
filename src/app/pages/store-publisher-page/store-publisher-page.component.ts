@@ -2,7 +2,8 @@ import { Component } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 
 @Component({
-	templateUrl: "./store-publisher-page.component.html"
+	templateUrl: "./store-publisher-page.component.html",
+	standalone: false
 })
 export class StorePublisherPageComponent {
 	slug: string

@@ -6,7 +6,8 @@ import { BookListItem } from "src/app/misc/types"
 @Component({
 	selector: "pocketlib-store-book-card",
 	templateUrl: "./store-book-card.component.html",
-	styleUrls: ["./store-book-card.component.scss"]
+	styleUrl: "./store-book-card.component.scss",
+	standalone: false
 })
 export class StoreBookCardComponent {
 	@Input() book: BookListItem

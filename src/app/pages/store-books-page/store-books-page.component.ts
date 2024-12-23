@@ -24,7 +24,8 @@ interface BookItem {
 
 @Component({
 	templateUrl: "./store-books-page.component.html",
-	styleUrls: ["./store-books-page.component.scss"]
+	styleUrl: "./store-books-page.component.scss",
+	standalone: false
 })
 export class StoreBooksPageComponent {
 	locale = this.localizationService.locale.storeBooksPage

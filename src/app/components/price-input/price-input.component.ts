@@ -9,7 +9,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-price-input",
 	templateUrl: "./price-input.component.html",
-	styleUrls: ["./price-input.component.scss"]
+	styleUrl: "./price-input.component.scss",
+	standalone: false
 })
 export class PriceInputComponent {
 	locale = this.localizationService.locale.priceInput

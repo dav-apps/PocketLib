@@ -68,7 +68,8 @@ const maxItemsPerPage = 5
 @Component({
 	selector: "pocketlib-author-profile",
 	templateUrl: "./author-profile.component.html",
-	styleUrls: ["./author-profile.component.scss"]
+	styleUrl: "./author-profile.component.scss",
+	standalone: false
 })
 export class AuthorProfileComponent {
 	locale = this.localizationService.locale.authorProfile

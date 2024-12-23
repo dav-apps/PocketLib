@@ -10,7 +10,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-no-access-dialog",
-	templateUrl: "./no-access-dialog.component.html"
+	templateUrl: "./no-access-dialog.component.html",
+	standalone: false
 })
 export class NoAccessDialogComponent {
 	locale = this.localizationService.locale.dialogs.noAccessDialog

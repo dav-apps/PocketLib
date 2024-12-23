@@ -11,7 +11,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-create-author-dialog",
-	templateUrl: "./create-author-dialog.component.html"
+	templateUrl: "./create-author-dialog.component.html",
+	standalone: false
 })
 export class CreateAuthorDialogComponent {
 	locale = this.localizationService.locale.dialogs.createAuthorDialog

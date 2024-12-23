@@ -4,7 +4,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-error-dialog",
-	templateUrl: "./error-dialog.component.html"
+	templateUrl: "./error-dialog.component.html",
+	standalone: false
 })
 export class ErrorDialogComponent {
 	locale = this.localizationService.locale.dialogs.errorDialog

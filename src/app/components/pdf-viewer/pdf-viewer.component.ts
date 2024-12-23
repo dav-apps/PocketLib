@@ -43,7 +43,8 @@ const doubleTapToleranceTime = 400
 @Component({
 	selector: "pocketlib-pdf-viewer",
 	templateUrl: "./pdf-viewer.component.html",
-	styleUrls: ["./pdf-viewer.component.scss"]
+	styleUrl: "./pdf-viewer.component.scss",
+	standalone: false
 })
 export class PdfViewerComponent {
 	locale = this.localizationService.locale.pdfViewer

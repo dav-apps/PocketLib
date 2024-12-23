@@ -41,8 +41,8 @@
 		>
 			{{ author?.firstName }} {{ author?.lastName }}
 		</dav-header>
-		} @if (author?.websiteUrl || author?.facebookUsername ||
-		author?.instagramUsername || author?.twitterUsername) {
+		} @if ( author?.websiteUrl || author?.facebookUsername ||
+		author?.instagramUsername || author?.twitterUsername ) {
 		<div class="social-media-buttons-container">
 			@if (author?.websiteUrl) {
 			<!-- Website -->

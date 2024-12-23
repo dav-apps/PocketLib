@@ -18,7 +18,8 @@ interface BookItem {
 
 @Component({
 	templateUrl: "./search-page.component.html",
-	styleUrl: "./search-page.component.scss"
+	styleUrl: "./search-page.component.scss",
+	standalone: false
 })
 export class SearchPageComponent {
 	locale = this.localizationService.locale.searchPage

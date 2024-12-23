@@ -36,7 +36,8 @@ const showAllBooksAnimationDuration = 300
 
 @Component({
 	templateUrl: "./library-page.component.html",
-	styleUrls: ["./library-page.component.scss"]
+	styleUrl: "./library-page.component.scss",
+	standalone: false
 })
 export class LibraryPageComponent {
 	locale = this.localizationService.locale.libraryPage

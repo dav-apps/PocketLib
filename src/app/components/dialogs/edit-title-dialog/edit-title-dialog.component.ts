@@ -11,7 +11,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-edit-title-dialog",
-	templateUrl: "./edit-title-dialog.component.html"
+	templateUrl: "./edit-title-dialog.component.html",
+	standalone: false
 })
 export class EditTitleDialogComponent {
 	locale = this.localizationService.locale.dialogs.editTitleDialog

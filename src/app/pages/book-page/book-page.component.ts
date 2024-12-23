@@ -11,12 +11,16 @@ const pdfType = "application/pdf"
 
 @Component({
 	selector: "pocketlib-book-page",
-	templateUrl: "./book-page.component.html"
+	templateUrl: "./book-page.component.html",
+	standalone: false
 })
 export class BookPageComponent {
 	selectedPortal: Portal<any>
 
-	constructor(public dataService: DataService, private router: Router) {
+	constructor(
+		public dataService: DataService,
+		private router: Router
+	) {
 		this.dataService.navbarVisible = false
 		this.dataService.bookPageVisible = true
 

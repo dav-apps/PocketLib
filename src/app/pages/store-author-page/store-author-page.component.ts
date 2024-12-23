@@ -3,7 +3,8 @@ import { ActivatedRoute } from "@angular/router"
 
 @Component({
 	selector: "pocketlib-store-author-page",
-	templateUrl: "./store-author-page.component.html"
+	templateUrl: "./store-author-page.component.html",
+	standalone: false
 })
 export class StoreAuthorPageComponent {
 	slug: string

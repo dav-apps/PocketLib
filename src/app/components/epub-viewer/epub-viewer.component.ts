@@ -60,7 +60,8 @@ const doubleTapToleranceTime = 400
 @Component({
 	selector: "pocketlib-epub-viewer",
 	templateUrl: "./epub-viewer.component.html",
-	styleUrls: ["./epub-viewer.component.scss"]
+	styleUrl: "./epub-viewer.component.scss",
+	standalone: false
 })
 export class EpubViewerComponent {
 	locale = this.localizationService.locale.epubViewer

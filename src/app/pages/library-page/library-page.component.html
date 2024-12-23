@@ -107,8 +107,8 @@
 						[style.maxHeight.px]="largeBookCoverWidth * 1.5 + 200"
 						[style.width.px]="smallBookListWidth"
 					>
-						@for (book of dataService.books; track book.uuid; let i =
-						$index) {
+						@for ( book of dataService.books; track book.uuid; let i =
+						$index ) {
 						<div>
 							@if (i != 0 && i < 5) {
 							<pocketlib-library-page-book-card

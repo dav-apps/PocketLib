@@ -17,7 +17,8 @@ type HorizontalSeriesListType = "latest" | "random"
 @Component({
 	selector: "pocketlib-horizontal-series-list",
 	templateUrl: "./horizontal-series-list.component.html",
-	styleUrls: ["./horizontal-series-list.component.scss"]
+	styleUrl: "./horizontal-series-list.component.scss",
+	standalone: false
 })
 export class HorizontalSeriesListComponent {
 	@Input() type: HorizontalSeriesListType = "latest"

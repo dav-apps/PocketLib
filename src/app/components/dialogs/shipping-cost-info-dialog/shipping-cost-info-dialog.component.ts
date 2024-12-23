@@ -10,7 +10,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-shipping-cost-info-dialog",
-	templateUrl: "./shipping-cost-info-dialog.component.html"
+	templateUrl: "./shipping-cost-info-dialog.component.html",
+	standalone: false
 })
 export class ShippingCostInfoDialogComponent {
 	locale = this.localizationService.locale.dialogs.shippingCostInfoDialog

@@ -13,7 +13,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-profile-image-dialog",
 	templateUrl: "./profile-image-dialog.component.html",
-	styleUrls: ["profile-image-dialog.component.scss"]
+	styleUrl: "profile-image-dialog.component.scss",
+	standalone: false
 })
 export class ProfileImageDialogComponent {
 	locale = this.localizationService.locale.dialogs.profileImageDialog

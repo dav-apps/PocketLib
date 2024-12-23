@@ -28,7 +28,8 @@ type HorizontalBookListAlignment = "start" | "center"
 @Component({
 	selector: "pocketlib-horizontal-book-list",
 	templateUrl: "./horizontal-book-list.component.html",
-	styleUrls: ["./horizontal-book-list.component.scss"]
+	styleUrl: "./horizontal-book-list.component.scss",
+	standalone: false
 })
 export class HorizontalBookListComponent {
 	@Input() type: HorizontalBookListType = "latest"

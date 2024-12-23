@@ -17,10 +17,7 @@
 				[placeholder]="locale.releaseNameTextfieldPlaceholder"
 				[errorMessage]="releaseNameError"
 				[disabled]="loading"
-				(change)="
-					releaseName = $event.detail.value;
-					clearErrors()
-				"
+				(change)="releaseName = $event.detail.value; clearErrors()"
 				(enter)="submit()"
 			></dav-textfield>
 		</div>
@@ -33,10 +30,7 @@
 				[placeholder]="locale.releaseNotesTextfieldPlaceholder"
 				[errorMessage]="releaseNotesError"
 				[disabled]="loading"
-				(change)="
-					releaseNotes = $event.detail.value;
-					clearErrors()
-				"
+				(change)="releaseNotes = $event.detail.value; clearErrors()"
 			></dav-textarea>
 		</div>
 	</form>

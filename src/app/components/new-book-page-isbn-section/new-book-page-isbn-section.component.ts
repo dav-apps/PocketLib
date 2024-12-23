@@ -11,7 +11,8 @@ import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.com
 @Component({
 	selector: "pocketlib-new-book-page-isbn-section",
 	templateUrl: "./new-book-page-isbn-section.component.html",
-	styleUrls: ["./new-book-page-isbn-section.component.scss"]
+	styleUrl: "./new-book-page-isbn-section.component.scss",
+	standalone: false
 })
 export class NewBookPageIsbnSectionComponent {
 	locale = this.localizationService.locale.newBookPage

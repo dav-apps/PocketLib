@@ -17,7 +17,8 @@ interface BookItem {
 @Component({
 	selector: "pocketlib-new-series-page",
 	templateUrl: "./new-series-page.component.html",
-	styleUrls: ["./new-series-page.component.scss"]
+	styleUrl: "./new-series-page.component.scss",
+	standalone: false
 })
 export class NewSeriesPageComponent {
 	locale = this.localizationService.locale.newSeriesPage

@@ -12,9 +12,7 @@
 	<p
 		class="text-color"
 		[innerHTML]="
-			loginRequired
-				? locale.descriptionNotLoggedIn
-				: locale.description
+			loginRequired ? locale.descriptionNotLoggedIn : locale.description
 		"
 	></p>
 </dav-dialog>

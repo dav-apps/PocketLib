@@ -21,7 +21,8 @@ import { environment } from "src/environments/environment"
 
 @Component({
 	templateUrl: "./user-page.component.html",
-	styleUrls: ["./user-page.component.scss"]
+	styleUrl: "./user-page.component.scss",
+	standalone: false
 })
 export class UserPageComponent {
 	faBagShopping = faBagShopping
@@ -64,7 +65,9 @@ export class UserPageComponent {
 
 	async ngOnInit() {
 		this.setSize()
-		this.storeLanguages = await this.settingsService.getStoreLanguages(this.dataService.locale)
+		this.storeLanguages = await this.settingsService.getStoreLanguages(
+			this.dataService.locale
+		)
 
 		await this.dataService.userPromiseHolder.AwaitResult()
 

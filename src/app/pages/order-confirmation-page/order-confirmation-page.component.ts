@@ -8,7 +8,8 @@ import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	templateUrl: "./order-confirmation-page.component.html",
-	styleUrl: "./order-confirmation-page.component.scss"
+	styleUrl: "./order-confirmation-page.component.scss",
+	standalone: false
 })
 export class OrderConfirmationPageComponent {
 	locale = this.localizationService.locale.orderConfirmationPage
