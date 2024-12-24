@@ -12,12 +12,7 @@
 		</dav-header>
 	</div>
 
-	<div
-		class="books-container"
-		dragula="books"
-		[dragulaModel]="books"
-		(dragulaModelChange)="BooksReordered($event)"
-	>
+	<div class="books-container">
 		@for (book of books; track book.uuid) {
 		<div class="book-card" (contextmenu)="ShowBookContextMenu($event, book)">
 			<dav-blurhash-image

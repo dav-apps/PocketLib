@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, HostListener } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { DragulaService } from "ng2-dragula"
 import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
 import { ContextMenu } from "dav-ui-components"
 import { EditNameDialogComponent } from "src/app/components/dialogs/edit-name-dialog/edit-name-dialog.component"
@@ -56,14 +55,8 @@ export class AuthorSeriesPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute,
-		private dragulaService: DragulaService
+		private activatedRoute: ActivatedRoute
 	) {
-		this.dragulaService.drag("books").subscribe(() => (this.dragging = true))
-		this.dragulaService
-			.dragend("books")
-			.subscribe(() => (this.dragging = false))
-
 		this.dataService.setMeta()
 	}
 

@@ -17,9 +17,8 @@ import { AppRoutingModule } from "./app-routing.module"
 import { NgxFileHelpersModule } from "ngx-file-helpers"
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { PortalModule } from "@angular/cdk/portal"
-import { PdfViewerModule } from "ng2-pdf-viewer"
+//import { PdfViewerModule } from "ng2-pdf-viewer"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
-import { DragulaModule } from "ng2-dragula"
 import { ServiceWorkerModule } from "@angular/service-worker"
 
 // Apollo
@@ -209,9 +208,8 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
 		PortalModule,
-		PdfViewerModule,
+		//PdfViewerModule,
 		FontAwesomeModule,
-		DragulaModule.forRoot(),
 		ServiceWorkerModule.register("ngsw-worker.js", {
 			enabled:
 				environment.environment == Environment.Staging ||
