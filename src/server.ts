@@ -4,6 +4,7 @@ import express from "express"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import AppServerModule from "./main.server"
+import { generateSitemap } from "./app/misc/sitemap"
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url))
 const browserDistFolder = resolve(serverDistFolder, "../browser")
@@ -23,6 +24,11 @@ const commonEngine = new CommonEngine()
  * });
  * ```
  */
+
+app.get("/sitemap.txt", async (req, res) => {
+	res.setHeader("Content-Type", "text/plain")
+	res.send(await generateSitemap())
+})
 
 /**
  * Serve static files from /browser
@@ -58,7 +64,8 @@ app.get("**", (req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url)) {
-	const port = process.env["PORT"] || 4000
+	const port = process.env["PORT"] || 3001
+
 	app.listen(port, () => {
 		console.log(`Node Express server listening on http://localhost:${port}`)
 	})
