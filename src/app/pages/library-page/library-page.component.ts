@@ -29,7 +29,7 @@ import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { environment } from "src/environments/environment"
-import { GetDualScreenSettings } from "src/app/misc/utils"
+import { GetDualScreenSettings, isServer } from "src/app/misc/utils"
 
 const pdfType = "application/pdf"
 const showAllBooksAnimationDuration = 300
@@ -115,6 +115,8 @@ export class LibraryPageComponent {
 
 	@HostListener("window:resize")
 	setSize() {
+		if (isServer()) return
+
 		this.height = window.innerHeight
 		this.smallBookList = window.innerWidth < 650
 

@@ -145,6 +145,10 @@ export function GetDualScreenSettings() {
 		dualScreenFoldMargin: 0
 	}
 
+	if (isServer()) {
+		return settings
+	}
+
 	let screenSegments: any
 
 	if (window["getWindowSegments"]) {
