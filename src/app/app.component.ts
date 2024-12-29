@@ -89,7 +89,7 @@ export class AppComponent {
 	) {
 		DavUIComponents.setLocale(getLanguage())
 
-		this.router.events.forEach(data => {
+		this.router.events.forEach((data: any) => {
 			if (data instanceof NavigationStart) {
 				this.dataService.currentUrl = data.url.split("?")[0]
 
@@ -107,7 +107,7 @@ export class AppComponent {
 		})
 
 		// Log the user in if there is an access token in the url
-		this.activatedRoute.queryParams.subscribe(async params => {
+		this.activatedRoute.queryParams.subscribe(async (params: any) => {
 			if (params["accessToken"]) {
 				// Login with the access token
 				await this.dataService.dav.Login(params["accessToken"])

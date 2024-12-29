@@ -83,85 +83,127 @@ export async function generateSitemap(): Promise<string> {
 	}
 
 	// VlbAuthors
+	let vlbAuthorsTotalItems = 0
+	let vlbAuthorsLimit = 1000
+	let vlbAuthorsOffset = 0
+
 	try {
-		let response = await request<{
-			listVlbAuthors?: { items: { slug: string }[] }
-		}>(
-			backendUrl,
-			gql`
-				query ListVlbAuthors {
-					listVlbAuthors(limit: 10000) {
-						items {
-							slug
+		do {
+			let response = await request<{
+				listVlbAuthors?: { total: number; items: { slug: string }[] }
+			}>(
+				backendUrl,
+				gql`
+					query ListVlbAuthors($limit: Int, $offset: Int) {
+						listVlbAuthors(limit: $limit, offset: $offset) {
+							total
+							items {
+								slug
+							}
 						}
 					}
+				`,
+				{
+					limit: vlbAuthorsLimit,
+					offset: vlbAuthorsOffset
 				}
-			`
-		)
+			)
 
-		let vlbAuthorItems = response.listVlbAuthors?.items
+			let vlbAuthorItems = response.listVlbAuthors?.items
 
-		if (vlbAuthorItems != null) {
-			for (let item of vlbAuthorItems) {
-				result += `${websiteUrl}/store/author/${item.slug}\n`
+			if (vlbAuthorItems != null) {
+				vlbAuthorsTotalItems = response.listVlbAuthors?.total
+				vlbAuthorsOffset += vlbAuthorsLimit
+
+				for (let item of vlbAuthorItems) {
+					result += `${websiteUrl}/store/author/${item.slug}\n`
+				}
 			}
-		}
+		} while (vlbAuthorsOffset < vlbAuthorsTotalItems)
 	} catch (error) {
 		console.error(error)
 	}
 
 	// StoreBooks
+	let storeBooksTotalItems = 0
+	let storeBooksLimit = 1000
+	let storeBooksOffset = 0
+
 	try {
-		let response = await request<{
-			listStoreBooks?: { items: { slug: string }[] }
-		}>(
-			backendUrl,
-			gql`
-				query ListStoreBooks {
-					listStoreBooks(limit: 10000) {
-						items {
-							slug
+		do {
+			let response = await request<{
+				listStoreBooks?: { total: number; items: { slug: string }[] }
+			}>(
+				backendUrl,
+				gql`
+					query ListStoreBooks($limit: Int, $offset: Int) {
+						listStoreBooks(limit: $limit, offset: $offset) {
+							total
+							items {
+								slug
+							}
 						}
 					}
+				`,
+				{
+					limit: storeBooksLimit,
+					offset: storeBooksOffset
 				}
-			`
-		)
+			)
 
-		let storeBookItems = response.listStoreBooks?.items
+			let storeBookItems = response.listStoreBooks?.items
 
-		if (storeBookItems != null) {
-			for (let item of storeBookItems) {
-				result += `${websiteUrl}/store/book/${item.slug}\n`
+			if (storeBookItems != null) {
+				storeBooksTotalItems = response.listStoreBooks?.total
+				storeBooksOffset += storeBooksLimit
+
+				for (let item of storeBookItems) {
+					result += `${websiteUrl}/store/book/${item.slug}\n`
+				}
 			}
-		}
+		} while (storeBooksOffset < storeBooksTotalItems)
 	} catch (error) {
 		console.error(error)
 	}
 
 	// VlbItems
+	let vlbItemsTotalItems = 0
+	let vlbItemsLimit = 1000
+	let vlbItemsOffset = 0
+
 	try {
-		let response = await request<{
-			listVlbItems?: { items: { slug: string }[] }
-		}>(
-			backendUrl,
-			gql`
-				query ListVlbItems {
-					listVlbItems(limit: 10000) {
-						items {
-							slug
+		do {
+			let response = await request<{
+				listVlbItems?: { total: number; items: { slug: string }[] }
+			}>(
+				backendUrl,
+				gql`
+					query ListVlbItems($limit: Int, $offset: Int) {
+						listVlbItems(limit: $limit, offset: $offset) {
+							total
+							items {
+								slug
+							}
 						}
 					}
+				`,
+				{
+					limit: vlbItemsLimit,
+					offset: vlbItemsOffset
 				}
-			`
-		)
+			)
 
-		let vlbItems = response.listVlbItems?.items
+			let vlbItems = response.listVlbItems?.items
 
-		if (vlbItems != null) {
-			for (let item of vlbItems) {
-				result += `${websiteUrl}/store/book/${item.slug}\n`
+			if (vlbItems != null) {
+				vlbItemsTotalItems = response.listVlbItems?.total
+				vlbItemsOffset += vlbItemsLimit
+
+				for (let item of vlbItems) {
+					result += `${websiteUrl}/store/book/${item.slug}\n`
+				}
 			}
-		}
+		} while (vlbItemsOffset < vlbItemsTotalItems)
 	} catch (error) {
 		console.error(error)
 	}
