@@ -4,7 +4,6 @@ import express from "express"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import AppServerModule from "./main.server"
-import { generateSitemap } from "./app/misc/sitemap"
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url))
 const browserDistFolder = resolve(serverDistFolder, "../browser")
@@ -24,11 +23,6 @@ const commonEngine = new CommonEngine()
  * });
  * ```
  */
-
-app.get("/sitemap.txt", async (req, res) => {
-	res.setHeader("Content-Type", "text/plain")
-	res.send(await generateSitemap())
-})
 
 /**
  * Serve static files from /browser

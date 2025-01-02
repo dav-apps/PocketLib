@@ -7,9 +7,11 @@
 		"dev": "ng serve --port 3001",
 		"build": "npm run build:prod",
 		"build:prod": "ng build --configuration production",
-		"build:staging": "ng build --configuration staging"
+		"build:staging": "ng build --configuration staging",
+		"generate-sitemap": "node --loader ts-node/esm src/app/misc/sitemap.ts"
 	},
 	"private": true,
+	"type": "module",
 	"dependencies": {
 		"@angular/animations": "^19.0.5",
 		"@angular/cdk": "^19.0.4",

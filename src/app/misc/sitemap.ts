@@ -1,25 +1,17 @@
+import fs from "fs"
 import { request, gql } from "graphql-request"
 
-let sitemap: string = null
-let backendUrl = "http://localhost:4001"
-let websiteUrl = "http://localhost:3001"
+let backendUrl = "https://pocketlib-api-bdb2i.ondigitalocean.app/"
+let websiteUrl = "https://pocketlib.app"
 
-switch (process.env.ENV) {
-	case "production":
-		backendUrl = "https://pocketlib-api-bdb2i.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib.app"
-		break
-	case "staging":
-		backendUrl = "https://pocketlib-api-staging-rl8zc.ondigitalocean.app/"
-		websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
-		break
+if (process.env.ENV == "staging") {
+	backendUrl = "https://pocketlib-api-staging-rl8zc.ondigitalocean.app/"
+	websiteUrl = "https://pocketlib-staging-oo6cn.ondigitalocean.app"
 }
 
-export async function generateSitemap(): Promise<string> {
-	if (sitemap != null) {
-		return sitemap
-	}
+generateSitemap()
 
+async function generateSitemap() {
 	let result = ""
 	const itemsLimit = 500
 
@@ -206,6 +198,5 @@ export async function generateSitemap(): Promise<string> {
 		console.error(error)
 	}
 
-	sitemap = result
-	return result
+	fs.writeFileSync("./src/sitemap.txt", result)
 }
