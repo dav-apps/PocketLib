@@ -21,6 +21,7 @@ export async function generateSitemap(): Promise<string> {
 	}
 
 	let result = ""
+	const itemsLimit = 500
 
 	// Base urls
 	result += `${websiteUrl}\n`
@@ -84,7 +85,6 @@ export async function generateSitemap(): Promise<string> {
 
 	// VlbAuthors
 	let vlbAuthorsTotalItems = 0
-	let vlbAuthorsLimit = 1000
 	let vlbAuthorsOffset = 0
 
 	try {
@@ -104,7 +104,7 @@ export async function generateSitemap(): Promise<string> {
 					}
 				`,
 				{
-					limit: vlbAuthorsLimit,
+					limit: itemsLimit,
 					offset: vlbAuthorsOffset
 				}
 			)
@@ -113,7 +113,7 @@ export async function generateSitemap(): Promise<string> {
 
 			if (vlbAuthorItems != null) {
 				vlbAuthorsTotalItems = response.listVlbAuthors?.total
-				vlbAuthorsOffset += vlbAuthorsLimit
+				vlbAuthorsOffset += itemsLimit
 
 				for (let item of vlbAuthorItems) {
 					result += `${websiteUrl}/store/author/${item.slug}\n`
@@ -126,7 +126,6 @@ export async function generateSitemap(): Promise<string> {
 
 	// StoreBooks
 	let storeBooksTotalItems = 0
-	let storeBooksLimit = 1000
 	let storeBooksOffset = 0
 
 	try {
@@ -146,7 +145,7 @@ export async function generateSitemap(): Promise<string> {
 					}
 				`,
 				{
-					limit: storeBooksLimit,
+					limit: itemsLimit,
 					offset: storeBooksOffset
 				}
 			)
@@ -155,7 +154,7 @@ export async function generateSitemap(): Promise<string> {
 
 			if (storeBookItems != null) {
 				storeBooksTotalItems = response.listStoreBooks?.total
-				storeBooksOffset += storeBooksLimit
+				storeBooksOffset += itemsLimit
 
 				for (let item of storeBookItems) {
 					result += `${websiteUrl}/store/book/${item.slug}\n`
@@ -168,7 +167,6 @@ export async function generateSitemap(): Promise<string> {
 
 	// VlbItems
 	let vlbItemsTotalItems = 0
-	let vlbItemsLimit = 1000
 	let vlbItemsOffset = 0
 
 	try {
@@ -188,7 +186,7 @@ export async function generateSitemap(): Promise<string> {
 					}
 				`,
 				{
-					limit: vlbItemsLimit,
+					limit: itemsLimit,
 					offset: vlbItemsOffset
 				}
 			)
@@ -197,7 +195,7 @@ export async function generateSitemap(): Promise<string> {
 
 			if (vlbItems != null) {
 				vlbItemsTotalItems = response.listVlbItems?.total
-				vlbItemsOffset += vlbItemsLimit
+				vlbItemsOffset += itemsLimit
 
 				for (let item of vlbItems) {
 					result += `${websiteUrl}/store/book/${item.slug}\n`
