@@ -95,17 +95,17 @@
 	class="arrow-button arrow-button-left"
 	(click)="PrevPage()"
 >
-	<dav-icon-button>
+	<dav-icon-button (click)="PrevPage()">
 		<fa-icon [icon]="faArrowLeftLight"></fa-icon>
 	</dav-icon-button>
 </button>
-} @else if (!isMobile) {
+} @if (!isMobile) {
 <button
 	#arrowButtonRight
 	class="arrow-button arrow-button-right"
 	(click)="NextPage()"
 >
-	<dav-icon-button>
+	<dav-icon-button (click)="NextPage()">
 		<fa-icon [icon]="faArrowRightLight"></fa-icon>
 	</dav-icon-button>
 </button>
