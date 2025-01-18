@@ -30,10 +30,6 @@
 							"src/assets",
 							"src/web.config",
 							"src/manifest.webmanifest",
-							"src/sitemap-1.txt",
-							"src/sitemap-2.txt",
-							"src/sitemap-3.txt",
-							"src/sitemap-4.txt",
 							"src/.well-known/assetlinks.json"
 						],
 						"styles": [

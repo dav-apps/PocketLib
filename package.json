@@ -7,8 +7,7 @@
 		"dev": "ng serve --port 3001",
 		"build": "npm run build:prod",
 		"build:prod": "ng build --configuration production",
-		"build:staging": "ng build --configuration staging",
-		"generate-sitemap": "node --loader ts-node/esm src/app/misc/sitemap.ts"
+		"build:staging": "ng build --configuration staging"
 	},
 	"private": true,
 	"type": "module",
