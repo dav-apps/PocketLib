@@ -30,7 +30,12 @@
 							"src/assets",
 							"src/web.config",
 							"src/manifest.webmanifest",
-							"src/.well-known/assetlinks.json"
+							"src/.well-known/assetlinks.json",
+							{
+								"glob": "**/*",
+								"input": "src/assets/sitemaps/",
+								"output": "/"
+							}
 						],
 						"styles": [
 							"src/styles.scss"
