@@ -1,5 +1,5 @@
 //#region Session & authentication
-export const sessionEnded = "SESSION_ENDED"
+export const sessionExpired = "SESSION_EXPIRED"
 //#endregion
 
 //#region Too short fields

@@ -88,7 +88,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -122,7 +122,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -154,7 +154,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -212,7 +212,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -254,7 +254,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -312,7 +312,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -361,7 +361,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -407,7 +407,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -465,7 +465,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -507,7 +507,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -549,7 +549,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -611,7 +611,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -651,7 +651,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -697,7 +697,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -749,7 +749,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -800,7 +800,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -849,7 +849,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -897,7 +897,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -940,7 +940,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -998,7 +998,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1062,7 +1062,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1126,7 +1126,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1169,7 +1169,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1220,7 +1220,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1270,7 +1270,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1320,7 +1320,7 @@ export class ApiService {
 				return { status: 500 }
 			}
 
-			if (error.response.data.code == ErrorCodes.sessionEnded) {
+			if (error.response.data.code == ErrorCodes.sessionExpired) {
 				// Renew the access token and run the query again
 				await renewSession()
 
@@ -1371,7 +1371,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1419,7 +1419,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1460,7 +1460,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1502,7 +1502,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1538,7 +1538,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1590,7 +1590,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1643,7 +1643,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1681,7 +1681,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1736,7 +1736,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1776,7 +1776,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1814,7 +1814,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1854,7 +1854,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1902,7 +1902,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
@@ -1950,7 +1950,7 @@ export class ApiService {
 		if (
 			result.errors != null &&
 			result.errors.length > 0 &&
-			result.errors[0].extensions.code == ErrorCodes.sessionEnded
+			result.errors[0].extensions.code == ErrorCodes.sessionExpired
 		) {
 			// Renew the access token and run the query again
 			await renewSession()
