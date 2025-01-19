@@ -7,9 +7,10 @@ import {
 import {
 	Dav,
 	CheckoutSessionsController,
-	CreateCheckoutSessionResponseData,
 	DownloadTableObject,
-	isSuccessStatusCode
+	isSuccessStatusCode,
+	Plan,
+	TableObjectPriceType
 } from "dav-js"
 import { LoginRequiredDialogComponent } from "src/app/components/dialogs/login-required-dialog/login-required-dialog.component"
 import { NoAccessDialogComponent } from "src/app/components/dialogs/no-access-dialog/no-access-dialog.component"
@@ -561,75 +562,42 @@ export class StoreBookPageComponent {
 				}
 
 				await this.OpenBook()
-			} else {
-				// Check if the book is free
-				if (this.price == 0) {
-					if (!(await this.CreatePurchaseForBook())) {
-						// Show error
-						this.dataService.loadingScreenVisible = false
-						this.errorDialog.show()
-						return
-					}
-
-					if (!(await this.AddBookToLibrary())) {
-						// Show error
-						this.dataService.loadingScreenVisible = false
-						this.errorDialog.show()
-						return
-					}
-
-					await this.OpenBook()
-				} else {
-					// Check if the user can access the book
-					let isAuthorOfBook = false
-
-					if (this.dataService.userAuthor) {
-						// Try to find the book in the books of the author
-						isAuthorOfBook =
-							(
-								await this.dataService.userAuthor.GetCollections()
-							).items.findIndex(c => c.uuid == this.collectionUuid) != -1
-					}
-
-					if (
-						!this.dataService.userIsAdmin &&
-						!isAuthorOfBook &&
-						this.price > 0 &&
-						this.dataService.dav.user.Plan != 2
-					) {
-						// Show dav Pro dialog
-						this.dataService.loadingScreenVisible = false
-						this.noAccessDialog.show()
-						return
-					}
-
-					await this.AddBookToLibrary()
-					await this.OpenBook()
+			} else if (this.price == 0) {
+				if (!(await this.AddBookToLibrary())) {
+					// Show error
+					this.dataService.loadingScreenVisible = false
+					this.errorDialog.show()
+					return
 				}
+
+				await this.OpenBook()
+			} else {
+				// Check if the user can access the book
+				let isAuthorOfBook = false
+
+				if (this.dataService.userAuthor) {
+					// Try to find the book in the books of the author
+					isAuthorOfBook =
+						(
+							await this.dataService.userAuthor.GetCollections()
+						).items.findIndex(c => c.uuid == this.collectionUuid) != -1
+				}
+
+				if (
+					!this.dataService.userIsAdmin &&
+					!isAuthorOfBook &&
+					this.dataService.dav.user.Plan != Plan.Pro
+				) {
+					// Show dav Pro dialog
+					this.dataService.loadingScreenVisible = false
+					this.noAccessDialog.show()
+					return
+				}
+
+				await this.AddBookToLibrary()
+				await this.OpenBook()
 			}
 		}
-	}
-
-	private async CreatePurchaseForBook(): Promise<boolean> {
-		// Purchase this book directly
-		let currentUrl = window.location.origin + this.router.url
-
-		let response = await CheckoutSessionsController.CreateCheckoutSession({
-			mode: "payment",
-			currency: "eur",
-			productName: this.title,
-			productImage: this.coverUrl,
-			tableObjects: [this.uuid],
-			successUrl: currentUrl,
-			cancelUrl: currentUrl
-		})
-
-		if (isSuccessStatusCode(response.status)) {
-			this.purchased = true
-			return true
-		}
-
-		return false
 	}
 
 	private async AddBookToLibrary(): Promise<boolean> {
@@ -771,26 +739,23 @@ export class StoreBookPageComponent {
 	async NavigateToPurchasePage() {
 		let currentUrl = window.location.origin + this.router.url
 
-		let response = await CheckoutSessionsController.CreateCheckoutSession({
-			mode: "payment",
-			currency: "eur",
-			productName: this.title,
-			productImage: this.coverUrl,
-			tableObjects: [this.uuid],
-			successUrl: currentUrl,
-			cancelUrl: currentUrl
-		})
+		let response =
+			await CheckoutSessionsController.createPaymentCheckoutSession(`url`, {
+				tableObjectUuid: this.uuid,
+				type: TableObjectPriceType.Purchase,
+				productName: this.title,
+				productImage: this.coverUrl,
+				successUrl: currentUrl,
+				cancelUrl: currentUrl
+			})
 
-		if (isSuccessStatusCode(response.status)) {
-			// Navigate to the checkout session url
-			let responseData = (
-				response as ApiResponse<CreateCheckoutSessionResponseData>
-			).data
-			window.location.href = responseData.sessionUrl
-		} else {
+		if (Array.isArray(response)) {
 			// Show error
 			this.buyBookDialog.hide()
 			this.errorDialog.show()
+		} else {
+			// Navigate to the checkout session url
+			window.location.href = response.url
 		}
 	}
 
