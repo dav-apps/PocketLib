@@ -1,3 +1,8 @@
+export const bookTableName = "Book"
+export const bookFileTableName = "BookFile"
+export const epubBookmarkTableName = "EpubBookmark"
+export const settingsTableName = "Settings"
+export const bookOrderTableName = "BookOrder"
 export const toolbarHeight = 56
 export const defaultLightStoreBookCoverUrl = "/assets/images/placeholder.png"
 export const defaultDarkStoreBookCoverUrl =

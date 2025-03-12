@@ -39,6 +39,11 @@ import { GetSettings } from "src/app/models/Settings"
 import { dataIdFromObject, isServer, getLanguage } from "./misc/utils"
 import { Language } from "./misc/types"
 import {
+	bookTableName,
+	bookFileTableName,
+	epubBookmarkTableName,
+	settingsTableName,
+	bookOrderTableName,
 	smallWindowMaxSize,
 	davApiClientName,
 	pocketlibApiClientName
@@ -133,12 +138,12 @@ export class AppComponent {
 		new Dav({
 			environment: environment.environment,
 			appId: environment.appId,
-			tableIds: [
-				environment.settingsTableId,
-				environment.bookOrderTableId,
-				environment.bookFileTableId,
-				environment.bookTableId,
-				environment.epubBookmarkTableId
+			tableNames: [
+				settingsTableName,
+				bookOrderTableName,
+				bookFileTableName,
+				bookTableName,
+				epubBookmarkTableName
 			],
 			callbacks: {
 				UpdateAllOfTable: (tableId: number, changed: boolean) =>
