@@ -5,7 +5,7 @@ export const environment = {
 	apiKey: "gHgHKRbIjdguCM4cv5481hdiF5hZGWZ4x12Ur-7v",
 	davApiUrl: "https://dav-api-staging-kb5tf.ondigitalocean.app",
 	pocketlibApiUrl: "https://pocketlib-api-staging-rl8zc.ondigitalocean.app",
-	websiteBaseUrl: "https://dav-website-staging-o3oot.ondigitalocean.app/",
+	websiteBaseUrl: "https://dav-website-staging-knsy9.ondigitalocean.app/",
 	appId: 6,
 	bookTableId: 14,
 	bookFileTableId: 15,
