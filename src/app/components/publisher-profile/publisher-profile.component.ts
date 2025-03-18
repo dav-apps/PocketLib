@@ -3,8 +3,11 @@ import {
 	Input,
 	ViewChild,
 	ElementRef,
-	HostListener
+	HostListener,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
@@ -26,8 +29,7 @@ import { SettingsService } from "src/app/services/settings-service"
 import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
-	GenerateTwitterLink,
-	isServer
+	GenerateTwitterLink
 } from "src/app/misc/utils"
 import { ApiResponse, BookListItem, PublisherMode } from "src/app/misc/types"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -126,7 +128,8 @@ export class PublisherProfileComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 
@@ -241,7 +244,7 @@ export class PublisherProfileComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		if (isServer()) return
+		if (isPlatformServer(this.platformId)) return
 
 		if (window.innerWidth < 768) {
 			this.logoWidth = 110

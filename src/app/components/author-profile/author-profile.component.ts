@@ -4,8 +4,11 @@ import {
 	Output,
 	EventEmitter,
 	HostListener,
-	ViewChild
+	ViewChild,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { MutationResult } from "apollo-angular"
 import { ReadFile } from "ngx-file-helpers"
@@ -29,8 +32,7 @@ import {
 	GenerateFacebookLink,
 	GenerateInstagramLink,
 	GenerateTwitterLink,
-	getLanguage,
-	isServer
+	getLanguage
 } from "src/app/misc/utils"
 import {
 	ApiResponse,
@@ -148,7 +150,8 @@ export class AuthorProfileComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.storeContext = this.dataService.currentUrl.startsWith("/store")
 
@@ -325,7 +328,7 @@ export class AuthorProfileComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		if (isServer()) return
+		if (isPlatformServer(this.platformId)) return
 
 		if (window.innerWidth < 768) {
 			this.profileImageWidth = 110
@@ -435,7 +438,7 @@ export class AuthorProfileComponent {
 	}
 
 	async SelectDefaultBio() {
-		let lang = getLanguage()
+		let lang = getLanguage(isPlatformBrowser(this.platformId))
 		let i = this.bios.findIndex(bio => bio.language == lang)
 
 		if (i != -1) {

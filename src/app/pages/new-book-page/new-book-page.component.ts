@@ -1,4 +1,11 @@
-import { Component, HostListener, ViewChild } from "@angular/core"
+import {
+	Component,
+	HostListener,
+	ViewChild,
+	Inject,
+	PLATFORM_ID
+} from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { PromiseHolder } from "dav-js"
 import { LeavePageDialogComponent } from "src/app/components/dialogs/leave-page-dialog/leave-page-dialog.component"
@@ -52,7 +59,7 @@ export class NewBookPageComponent {
 
 	//#region Description + Language variables
 	description: string = ""
-	language: string = getLanguage()
+	language: string = getLanguage(isPlatformBrowser(this.platformId))
 	//#endregion
 
 	//#region Categories variables
@@ -86,7 +93,8 @@ export class NewBookPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.routingService.toolbarNavigationEvent = async () =>
 			await this.HandleToolbarNavigationEvent()

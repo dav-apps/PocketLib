@@ -1,4 +1,5 @@
-import { Component, ViewChild } from "@angular/core"
+import { Component, ViewChild, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
 	faShareFromSquare,
@@ -28,11 +29,7 @@ import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { GetBook } from "src/app/models/BookManager"
 import { environment } from "src/environments/environment"
-import {
-	GetStoreBookStatusByString,
-	getLanguage,
-	isClient
-} from "src/app/misc/utils"
+import { GetStoreBookStatusByString, getLanguage } from "src/app/misc/utils"
 import {
 	ApiResponse,
 	Language,
@@ -140,7 +137,8 @@ export class StoreBookPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {}
 
 	async ngOnInit() {
@@ -153,7 +151,7 @@ export class StoreBookPageComponent {
 			if (this.slug != slug) {
 				this.slug = slug
 
-				if (isClient()) {
+				if (isPlatformBrowser(this.platformId)) {
 					// Show the loading screen & scroll to the top
 					this.dataService.simpleLoadingScreenVisible = true
 					this.dataService.contentContainer.scrollTo(0, 0)
@@ -224,7 +222,7 @@ export class StoreBookPageComponent {
 		this.description = responseData.description
 		this.price = responseData.price
 		this.priceLabel = (this.price / 100).toFixed(2) + " €"
-		if (getLanguage() == Language.de) {
+		if (getLanguage(isPlatformBrowser(this.platformId)) == Language.de) {
 			this.priceLabel = this.priceLabel.replace(".", ",")
 		}
 		this.isbn = responseData.isbn
@@ -398,7 +396,7 @@ export class StoreBookPageComponent {
 		} else {
 			this.priceLabel = (this.price / 100).toFixed(2) + " €"
 
-			if (getLanguage() == Language.de) {
+			if (getLanguage(isPlatformBrowser(this.platformId)) == Language.de) {
 				this.priceLabel = this.priceLabel.replace(".", ",")
 			}
 		}

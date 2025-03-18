@@ -4,11 +4,13 @@ import {
 	Output,
 	EventEmitter,
 	ElementRef,
-	ViewChild
+	ViewChild,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
-import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-names-dialog",
@@ -23,16 +25,19 @@ export class NamesDialogComponent {
 	@Output() update = new EventEmitter()
 	visible: boolean = false
 
-	constructor(public localizationService: LocalizationService) {}
+	constructor(
+		public localizationService: LocalizationService,
+		@Inject(PLATFORM_ID) private platformId: object
+	) {}
 
 	ngAfterViewInit() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.appendChild(this.dialog.nativeElement)
 		}
 	}
 
 	ngOnDestroy() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.removeChild(this.dialog.nativeElement)
 		}
 	}

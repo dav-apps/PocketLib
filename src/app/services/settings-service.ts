@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core"
+import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import * as localforage from "localforage"
 import { getLanguage } from "src/app/misc/utils"
 import { keys } from "src/constants/keys"
@@ -9,6 +10,8 @@ export class SettingsService {
 	cache: {
 		[key: string]: any
 	} = {}
+
+	constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
 	//#region Theme
 	async setTheme(value: string) {
@@ -47,7 +50,7 @@ export class SettingsService {
 	async getStoreLanguages(): Promise<Language[]> {
 		let defaultLanguages = []
 
-		if (getLanguage() == Language.de) {
+		if (getLanguage(isPlatformBrowser(this.platformId)) == Language.de) {
 			defaultLanguages = [Language.de, Language.en]
 		} else {
 			defaultLanguages = [Language.en]

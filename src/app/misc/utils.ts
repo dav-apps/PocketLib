@@ -139,13 +139,13 @@ export function BytesToGigabytesText(bytes: number, rounding: number): string {
 	return gb == "0.0" ? "0" : gb
 }
 
-export function GetDualScreenSettings() {
+export function GetDualScreenSettings(isClient: boolean) {
 	let settings = {
 		dualScreenLayout: false,
 		dualScreenFoldMargin: 0
 	}
 
-	if (isServer()) {
+	if (!isClient) {
 		return settings
 	}
 
@@ -336,16 +336,8 @@ export function randomNumber(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export function isClient(): boolean {
-	return typeof navigator != "undefined"
-}
-
-export function isServer(): boolean {
-	return typeof navigator == "undefined"
-}
-
-export function getLanguage(): Language {
-	if (isClient() && navigator.language.startsWith("de")) {
+export function getLanguage(isClient: boolean): Language {
+	if (isClient && navigator.language.startsWith("de")) {
 		return Language.de
 	}
 

@@ -3,8 +3,11 @@ import {
 	HostListener,
 	ViewChild,
 	ElementRef,
-	ChangeDetectorRef
+	ChangeDetectorRef,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
 import { HttpHeaders } from "@angular/common/http"
 import { Apollo } from "apollo-angular"
@@ -36,7 +39,7 @@ import { SettingsService } from "src/app/services/settings-service"
 import { EpubBook } from "./models/EpubBook"
 import { GetBookOrder } from "./models/BookOrder"
 import { GetSettings } from "src/app/models/Settings"
-import { dataIdFromObject, isServer, getLanguage } from "./misc/utils"
+import { dataIdFromObject, getLanguage } from "./misc/utils"
 import { Language } from "./misc/types"
 import {
 	bookTableName,
@@ -90,9 +93,10 @@ export class AppComponent {
 		private activatedRoute: ActivatedRoute,
 		private apollo: Apollo,
 		private httpLink: HttpLink,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
-		DavUIComponents.setLocale(getLanguage())
+		DavUIComponents.setLocale(getLanguage(isPlatformBrowser(this.platformId)))
 
 		this.router.events.forEach((data: any) => {
 			if (data instanceof NavigationStart) {
@@ -126,7 +130,7 @@ export class AppComponent {
 	}
 
 	async ngOnInit() {
-		if (isServer()) {
+		if (isPlatformServer(this.platformId)) {
 			this.UserLoaded()
 			return
 		}
@@ -164,7 +168,11 @@ export class AppComponent {
 		let htmlElement = document.getElementsByTagName(
 			"html"
 		)[0] as HTMLHtmlElement
-		if (htmlElement) htmlElement.setAttribute("lang", getLanguage())
+		if (htmlElement)
+			htmlElement.setAttribute(
+				"lang",
+				getLanguage(isPlatformBrowser(this.platformId))
+			)
 
 		// Get the settings
 		this.dataService.settings = await GetSettings()
@@ -209,7 +217,8 @@ export class AppComponent {
 	@HostListener("window:resize")
 	setSize() {
 		this.dataService.isMobile =
-			!isServer() && window.innerWidth <= smallWindowMaxSize
+			isPlatformBrowser(this.platformId) &&
+			window.innerWidth <= smallWindowMaxSize
 	}
 
 	@HostListener("window:preferred-languages-setting-changed")

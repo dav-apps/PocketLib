@@ -4,12 +4,14 @@ import {
 	Output,
 	EventEmitter,
 	ElementRef,
-	ViewChild
+	ViewChild,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
 import { StoreBookItem } from "src/app/misc/types"
-import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-add-book-dialog",
@@ -24,16 +26,19 @@ export class AddBookDialogComponent {
 	@Output() addBook = new EventEmitter()
 	visible: boolean = false
 
-	constructor(private localizationService: LocalizationService) {}
+	constructor(
+		private localizationService: LocalizationService,
+		@Inject(PLATFORM_ID) private platformId: object
+	) {}
 
 	ngAfterViewInit() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.appendChild(this.dialog.nativeElement)
 		}
 	}
 
 	ngOnDestroy() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.removeChild(this.dialog.nativeElement)
 		}
 	}

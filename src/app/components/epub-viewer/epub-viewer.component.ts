@@ -3,8 +3,11 @@ import {
 	HostListener,
 	NgZone,
 	ViewChild,
-	ElementRef
+	ElementRef,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Router } from "@angular/router"
 import {
 	faArrowLeft as faArrowLeftRegular,
@@ -230,7 +233,8 @@ export class EpubViewerComponent {
 		public dataService: DataService,
 		private localizationService: LocalizationService,
 		private router: Router,
-		private ngZone: NgZone
+		private ngZone: NgZone,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		if (this.dataService.windows) {
 			this.paddingTop += windowsToolbarHeight
@@ -257,7 +261,9 @@ export class EpubViewerComponent {
 		this.navigationHistory = []
 
 		// Check if this is a dual-screen device with a vertical fold
-		this.dualScreenLayout = GetDualScreenSettings().dualScreenLayout
+		this.dualScreenLayout = GetDualScreenSettings(
+			isPlatformBrowser(this.platformId)
+		).dualScreenLayout
 
 		// Load the ebook
 		if (

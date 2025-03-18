@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	Inject,
+	PLATFORM_ID
+} from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { getLanguage } from "src/app/misc/utils"
@@ -18,11 +26,12 @@ export class NewBookPageDescriptionSectionComponent {
 	@Output() previous = new EventEmitter()
 	@Output() submit = new EventEmitter()
 	description: string = ""
-	language: string = getLanguage()
+	language: string = getLanguage(isPlatformBrowser(this.platformId))
 
 	constructor(
 		public dataService: DataService,
-		private localizationService: LocalizationService
+		private localizationService: LocalizationService,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {}
 
 	SetLanguage(language: string) {

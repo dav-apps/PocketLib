@@ -1,4 +1,5 @@
-import { Component, ViewChild } from "@angular/core"
+import { Component, ViewChild, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { NamesDialogComponent } from "src/app/components/dialogs/names-dialog/names-dialog.component"
 import {
@@ -60,7 +61,8 @@ export class AuthorCollectionPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.dataService.setMeta()
 	}
@@ -201,7 +203,10 @@ export class AuthorCollectionPageComponent {
 				this.names.push(collectionName)
 
 				// Update the title if the name for the current language was added
-				let j = FindAppropriateLanguage(getLanguage(), this.names)
+				let j = FindAppropriateLanguage(
+					getLanguage(isPlatformBrowser(this.platformId)),
+					this.names
+				)
 				if (j != -1) this.collectionName = this.names[j]
 			} else {
 				// Update the name in the collection

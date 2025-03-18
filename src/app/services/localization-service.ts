@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core"
+import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import * as locales from "src/locales/locales"
 import { getLanguage } from "../misc/utils"
 import { Language } from "../misc/types"
@@ -7,8 +8,10 @@ import { Language } from "../misc/types"
 export class LocalizationService {
 	locale = locales.enUS
 
-	constructor() {
-		this.locale = this.getLocale(getLanguage())
+	constructor(@Inject(PLATFORM_ID) private platformId: object) {
+		this.locale = this.getLocale(
+			getLanguage(isPlatformBrowser(this.platformId))
+		)
 	}
 
 	private getLocale(language?: string) {

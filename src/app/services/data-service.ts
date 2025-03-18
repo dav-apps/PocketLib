@@ -1,4 +1,5 @@
-import { Injectable } from "@angular/core"
+import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
@@ -67,7 +68,8 @@ export class DataService {
 		private settingsService: SettingsService,
 		private swUpdate: SwUpdate,
 		private title: Title,
-		private meta: Meta
+		private meta: Meta,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		if (this.swUpdate.isEnabled) {
 			// Check for updates
@@ -194,7 +196,10 @@ export class DataService {
 					}
 				}
 			`,
-			{ limit: 100, language: getLanguage() }
+			{
+				limit: 100,
+				language: getLanguage(isPlatformBrowser(this.platformId))
+			}
 		)
 
 		for (let category of listCategoriesResponse.data.listCategories.items) {

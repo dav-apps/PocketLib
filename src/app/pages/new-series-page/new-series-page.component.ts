@@ -1,4 +1,5 @@
-import { Component } from "@angular/core"
+import { Component, Inject, PLATFORM_ID } from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -27,7 +28,7 @@ export class NewSeriesPageComponent {
 	booksLoading: boolean = true
 	loading: boolean = false
 	errorMessage: string = ""
-	language: string = getLanguage()
+	language: string = getLanguage(isPlatformBrowser(this.platformId))
 	name: string = ""
 	bookItems: BookItem[] = []
 	selectedBooks: BookItem[] = []
@@ -39,7 +40,8 @@ export class NewSeriesPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.dataService.setMeta()
 	}

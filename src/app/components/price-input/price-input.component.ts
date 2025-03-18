@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	Inject,
+	PLATFORM_ID
+} from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight
@@ -27,7 +35,8 @@ export class PriceInputComponent {
 
 	constructor(
 		public dataService: DataService,
-		private localizationService: LocalizationService
+		private localizationService: LocalizationService,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {}
 
 	ngOnInit() {
@@ -69,7 +78,7 @@ export class PriceInputComponent {
 		} else {
 			this.formattedPrice = (price / 100).toFixed(2) + " €"
 
-			if (getLanguage() == Language.de) {
+			if (getLanguage(isPlatformBrowser(this.platformId)) == Language.de) {
 				this.formattedPrice = this.formattedPrice.replace(".", ",")
 			}
 		}

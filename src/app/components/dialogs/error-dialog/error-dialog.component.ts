@@ -1,7 +1,13 @@
-import { Component, ElementRef, ViewChild } from "@angular/core"
+import {
+	Component,
+	ElementRef,
+	ViewChild,
+	Inject,
+	PLATFORM_ID
+} from "@angular/core"
+import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
-import { isClient } from "src/app/misc/utils"
 
 @Component({
 	selector: "pocketlib-error-dialog",
@@ -13,16 +19,19 @@ export class ErrorDialogComponent {
 	@ViewChild("dialog") dialog: ElementRef<Dialog>
 	visible: boolean = false
 
-	constructor(private localizationService: LocalizationService) {}
+	constructor(
+		private localizationService: LocalizationService,
+		@Inject(PLATFORM_ID) private platformId: object
+	) {}
 
 	ngAfterViewInit() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.appendChild(this.dialog.nativeElement)
 		}
 	}
 
 	ngOnDestroy() {
-		if (isClient()) {
+		if (isPlatformBrowser(this.platformId)) {
 			document.body.removeChild(this.dialog.nativeElement)
 		}
 	}

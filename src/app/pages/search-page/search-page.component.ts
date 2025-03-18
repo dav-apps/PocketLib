@@ -1,11 +1,17 @@
-import { Component, ElementRef, ViewChild } from "@angular/core"
+import {
+	Component,
+	ElementRef,
+	ViewChild,
+	Inject,
+	PLATFORM_ID
+} from "@angular/core"
+import { isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faMagnifyingGlass } from "@fortawesome/pro-light-svg-icons"
 import { ApiService } from "src/app/services/api-service"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { SettingsService } from "src/app/services/settings-service"
-import { isServer } from "src/app/misc/utils"
 import { VisitedBook } from "src/app/misc/types"
 
 interface BookItem {
@@ -43,7 +49,8 @@ export class SearchPageComponent {
 		private localizationService: LocalizationService,
 		private settingsService: SettingsService,
 		private router: Router,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.dataService.setMeta()
 
@@ -90,7 +97,7 @@ export class SearchPageComponent {
 	}
 
 	triggerSearch() {
-		if (isServer()) return
+		if (isPlatformServer(this.platformId)) return
 		this.books = []
 
 		if (this.query.length == 0) {

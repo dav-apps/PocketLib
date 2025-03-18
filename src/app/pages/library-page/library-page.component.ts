@@ -3,8 +3,11 @@ import {
 	HostListener,
 	ViewChild,
 	ElementRef,
-	ChangeDetectorRef
+	ChangeDetectorRef,
+	Inject,
+	PLATFORM_ID
 } from "@angular/core"
+import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router } from "@angular/router"
 import { ReadFile } from "ngx-file-helpers"
 import {
@@ -29,7 +32,7 @@ import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
 import { UpdateBookOrder } from "src/app/models/BookOrder"
 import { environment } from "src/environments/environment"
-import { GetDualScreenSettings, isServer } from "src/app/misc/utils"
+import { GetDualScreenSettings } from "src/app/misc/utils"
 
 const pdfType = "application/pdf"
 const showAllBooksAnimationDuration = 300
@@ -84,14 +87,17 @@ export class LibraryPageComponent {
 		public dataService: DataService,
 		private localizationService: LocalizationService,
 		private router: Router,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		@Inject(PLATFORM_ID) private platformId: object
 	) {
 		this.dataService.navbarVisible = true
 		this.dataService.bookPageVisible = false
 		this.dataService.loadingScreenVisible = true
 
 		// Check if this is a dual-screen device with a vertical fold
-		let dualScreenSettings = GetDualScreenSettings()
+		let dualScreenSettings = GetDualScreenSettings(
+			isPlatformBrowser(this.platformId)
+		)
 		this.dualScreenLayout = dualScreenSettings.dualScreenLayout
 		this.dualScreenFoldMargin = dualScreenSettings.dualScreenFoldMargin
 	}
@@ -115,7 +121,7 @@ export class LibraryPageComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		if (isServer()) return
+		if (isPlatformServer(this.platformId)) return
 
 		this.height = window.innerHeight
 		this.smallBookList = window.innerWidth < 650
