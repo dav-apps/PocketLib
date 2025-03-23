@@ -83,14 +83,15 @@ async function GetBookFileOfBookTableObject(
 }
 
 async function LoadEpubBookDetails(book: EpubBook) {
-	if (book.file.type != epubType) return
+	if (book?.file?.type != epubType) return
 
 	let epubReader = new EpubReader()
 	if (
 		!(await epubReader.Init(book.file)) ||
 		!(await epubReader.LoadMetadata())
-	)
+	) {
 		return
+	}
 
 	book.title = epubReader.title
 	book.author = epubReader.author
