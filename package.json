@@ -38,7 +38,7 @@
 		"axios": "^1.7.9",
 		"core-js": "^3.39.0",
 		"cropperjs": "^1.6.2",
-		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v3.1.1",
+		"dav-js": "git+https://github.com/dav-apps/dav-js.git#v3.1.2",
 		"dav-ui-components": "git+https://github.com/dav-apps/dav-ui-components.git#v1.7",
 		"express": "^4.21.2",
 		"graphql": "^16.10.0",
