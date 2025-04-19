@@ -1,6 +1,6 @@
 {
 	"name": "pocketlib",
-	"version": "1.7.4",
+	"version": "1.7.5",
 	"scripts": {
 		"ng": "ng",
 		"start": "node dist/PocketLib/server/server.mjs",
