@@ -79,7 +79,7 @@ export class SettingsPageComponent {
 		// Set the openLastReadBook toggle
 		this.openLastReadBook = await this.settingsService.getOpenLastReadBook()
 
-		// Select the correct theme radio button
+		// Select the correct theme
 		this.selectedTheme = await this.settingsService.getTheme()
 
 		if (this.swUpdate.isEnabled && !this.dataService.updateInstalled) {

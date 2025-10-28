@@ -1021,7 +1021,7 @@ const deDefaults = {
 		shippingCostInfoDialog: {
 			headline: "Versandkosten bei PocketLib",
 			description:
-				"Unsere Versandkosten betragen pauschal 2,50 €, unabhängig von der Bestellung.<br>Aktuell versenden wir nur innerhalb von Deutschland.<br><br>Für Nutzer von PocketLib Pro ist der Versand kostenlos."
+				"Unsere Versandkosten betragen pauschal 4,50 €, unabhängig von der Bestellung.<br>Aktuell versenden wir nur innerhalb von Deutschland.<br><br>Für Nutzer von PocketLib Pro ist der Versand kostenlos."
 		},
 		errorDialog: {
 			headline: "Fehler",
