@@ -1,3 +1,4 @@
+import "@dav-apps/ssr-angular/enable-lit-ssr.js"
 import { APP_BASE_HREF } from "@angular/common"
 import { CommonEngine, isMainModule } from "@angular/ssr/node"
 import express from "express"

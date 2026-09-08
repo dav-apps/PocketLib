@@ -27,6 +27,7 @@
 		"@angular/ssr": "^19.0.6",
 		"@apollo/client": "^3.12.4",
 		"@babel/compat-data": "^7.26.3",
+		"@dav-apps/ssr-angular": "git+https://github.com/dav-apps/ssr-angular.git#v0.1.0",
 		"@fortawesome/angular-fontawesome": "^1.0.0",
 		"@fortawesome/fontawesome-svg-core": "^6.7.2",
 		"@fortawesome/free-brands-svg-icons": "^6.7.2",

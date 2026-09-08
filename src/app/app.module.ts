@@ -1,3 +1,4 @@
+import { provideLitHydration } from "@dav-apps/ssr-angular"
 import {
 	BrowserModule,
 	provideClientHydration,
@@ -245,7 +246,8 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 			deps: [HttpLink]
 		},
 		provideHttpClient(withInterceptorsFromDi()),
-		provideClientHydration(withEventReplay())
+		provideClientHydration(withEventReplay()),
+		provideLitHydration()
 	]
 })
 export class AppModule {}
