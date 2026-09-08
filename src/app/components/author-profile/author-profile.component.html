@@ -276,24 +276,26 @@
 	}
 </div>
 
-<pocketlib-profile-image-dialog
-	#profileImageDialog
-	(primaryButtonClick)="UploadProfileImage($event)"
-></pocketlib-profile-image-dialog>
+@if (authorMode == 1 || authorMode == 2) {
+	<pocketlib-profile-image-dialog
+		#profileImageDialog
+		(primaryButtonClick)="UploadProfileImage($event)"
+	></pocketlib-profile-image-dialog>
 
-<pocketlib-edit-author-profile-dialog
-	#editProfileDialog
-	[firstName]="editProfileDialogFirstName"
-	[lastName]="editProfileDialogLastName"
-	[websiteUrl]="editProfileDialogWebsiteUrl"
-	[facebookUsername]="editProfileDialogFacebookUsername"
-	[instagramUsername]="editProfileDialogInstagramUsername"
-	[twitterUsername]="editProfileDialogTwitterUsername"
-	[firstNameError]="editProfileDialogFirstNameError"
-	[lastNameError]="editProfileDialogLastNameError"
-	[websiteUrlError]="editProfileDialogWebsiteUrlError"
-	[facebookUsernameError]="editProfileDialogFacebookUsernameError"
-	[instagramUsernameError]="editProfileDialogInstagramUsernameError"
-	[twitterUsernameError]="editProfileDialogTwitterUsernameError"
-	(primaryButtonClick)="SaveProfile($event)"
-></pocketlib-edit-author-profile-dialog>
+	<pocketlib-edit-author-profile-dialog
+		#editProfileDialog
+		[firstName]="editProfileDialogFirstName"
+		[lastName]="editProfileDialogLastName"
+		[websiteUrl]="editProfileDialogWebsiteUrl"
+		[facebookUsername]="editProfileDialogFacebookUsername"
+		[instagramUsername]="editProfileDialogInstagramUsername"
+		[twitterUsername]="editProfileDialogTwitterUsername"
+		[firstNameError]="editProfileDialogFirstNameError"
+		[lastNameError]="editProfileDialogLastNameError"
+		[websiteUrlError]="editProfileDialogWebsiteUrlError"
+		[facebookUsernameError]="editProfileDialogFacebookUsernameError"
+		[instagramUsernameError]="editProfileDialogInstagramUsernameError"
+		[twitterUsernameError]="editProfileDialogTwitterUsernameError"
+		(primaryButtonClick)="SaveProfile($event)"
+	></pocketlib-edit-author-profile-dialog>
+}
