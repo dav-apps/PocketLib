@@ -132,6 +132,7 @@ export class AppComponent {
 	async ngOnInit() {
 		if (isPlatformServer(this.platformId)) {
 			this.UserLoaded()
+			await this.dataService.LoadAuthorOfUser()
 			return
 		}
 
