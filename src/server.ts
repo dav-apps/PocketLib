@@ -1,6 +1,6 @@
 import "@dav-apps/ssr-angular/enable-lit-ssr.js"
 import { APP_BASE_HREF } from "@angular/common"
-import { REQUEST_LANGUAGE } from "./app/misc/tokens"
+import { REQUEST_LANGUAGE, RESPONSE_STATE } from "./app/misc/tokens"
 import { CommonEngine, isMainModule } from "@angular/ssr/node"
 import express from "express"
 import { dirname, join, resolve } from "node:path"
@@ -47,6 +47,10 @@ app.get("**", (req, res, next) => {
 	// of this server have to keep the variants apart
 	res.setHeader("Vary", "Accept-Language")
 
+	// The application writes into this while rendering if the route turns out
+	// to resolve to nothing
+	const responseState = { status: 200 }
+
 	commonEngine
 		.render({
 			bootstrap: AppServerModule,
@@ -58,10 +62,11 @@ app.get("**", (req, res, next) => {
 				{
 					provide: REQUEST_LANGUAGE,
 					useValue: headers["accept-language"] ?? null
-				}
+				},
+				{ provide: RESPONSE_STATE, useValue: responseState }
 			]
 		})
-		.then(html => res.send(html))
+		.then(html => res.status(responseState.status).send(html))
 		.catch(err => next(err))
 })
 

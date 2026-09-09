@@ -17,3 +17,21 @@ import { InjectionToken } from "@angular/core"
 export const REQUEST_LANGUAGE = new InjectionToken<string | null>(
 	"REQUEST_LANGUAGE"
 )
+
+/**
+ * Lets the application tell the server which status to answer with. The object
+ * is created per request, so writing to it cannot leak into another one.
+ *
+ * Without this a slug that resolves to nothing still answers 200 with an empty
+ * shell - a soft 404, which search engines index and then hold against the
+ * site rather than dropping the url.
+ *
+ * Same reason as REQUEST_LANGUAGE for having no `providedIn: "root"` default.
+ */
+export interface ResponseState {
+	status: number
+}
+
+export const RESPONSE_STATE = new InjectionToken<ResponseState>(
+	"RESPONSE_STATE"
+)

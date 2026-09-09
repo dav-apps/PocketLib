@@ -49,6 +49,7 @@ export class StoreBookPageComponent {
 	faShareFromSquare = faShareFromSquare
 	faCircleInfo = faCircleInfo
 	bookSource: "pocketlib" | "vlb" = "pocketlib"
+	notFound: boolean = false
 	orderLoading: boolean = false
 	redirectToCheckout: boolean = false
 
@@ -174,10 +175,16 @@ export class StoreBookPageComponent {
 
 	async Init() {
 		this.bookSource = "vlb"
+		this.notFound = false
 
 		if (!(await this.loadVlbItemData())) {
 			this.bookSource = "pocketlib"
-			await this.LoadStoreBookData()
+			this.notFound = !(await this.LoadStoreBookData())
+
+			if (this.notFound) {
+				this.dataService.setNotFound()
+				this.dataService.setMeta()
+			}
 		}
 	}
 
@@ -289,7 +296,7 @@ export class StoreBookPageComponent {
 		return true
 	}
 
-	async LoadStoreBookData() {
+	async LoadStoreBookData(): Promise<boolean> {
 		let response = await this.apiService.retrieveStoreBook(
 			`
 				uuid
@@ -345,6 +352,10 @@ export class StoreBookPageComponent {
 
 		let responseData = response.data.retrieveStoreBook
 		this.dataService.simpleLoadingScreenVisible = false
+
+		// Neither source knows this slug. Dereferencing responseData used to
+		// throw here, which left the page half rendered and still answered 200.
+		if (responseData == null) return false
 
 		this.uuid = responseData.uuid
 		this.title = responseData.title
@@ -520,6 +531,8 @@ export class StoreBookPageComponent {
 			coverBlurhash: this.coverBlurhash,
 			coverAspectRatio: cover?.aspectRatio
 		})
+
+		return true
 	}
 
 	async Read() {
@@ -810,28 +823,33 @@ export class StoreBookPageComponent {
 			url
 		}
 
-		if (this.description.length > 0) {
+		// Several of these are nullable in the api schema - description and isbn
+		// among them - so none of them may be dereferenced directly
+		const filled = (value?: string) =>
+			value != null && value.trim().length > 0
+
+		if (filled(this.description)) {
 			book.description = this.description.replace(/\s+/g, " ").trim()
 		}
-		if (this.authorName.length > 0) {
+		if (filled(this.authorName)) {
 			book.author = {
 				"@type": "Person",
 				name: this.authorName,
-				...(this.authorSlug.length > 0 && {
+				...(filled(this.authorSlug) && {
 					url: `https://pocketlib.app/store/author/${this.authorSlug}`
 				})
 			}
 		}
-		if (this.publisherName.length > 0) {
+		if (filled(this.publisherName)) {
 			book.publisher = { "@type": "Organization", name: this.publisherName }
 		}
-		if (this.isbn.length > 0) book.isbn = this.isbn
-		if (this.languageCode.length > 0) book.inLanguage = this.languageCode
-		if (this.publicationDate.length > 0) {
+		if (filled(this.isbn)) book.isbn = this.isbn
+		if (filled(this.languageCode)) book.inLanguage = this.languageCode
+		if (filled(this.publicationDate)) {
 			book.datePublished = this.publicationDate
 		}
 		if (this.pageCount > 0) book.numberOfPages = this.pageCount
-		if (this.coverUrl.length > 0) book.image = this.coverUrl
+		if (filled(this.coverUrl)) book.image = this.coverUrl
 
 		if (this.price > 0) {
 			book.offers = {

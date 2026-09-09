@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
+import { Injectable, Inject, Optional, PLATFORM_ID } from "@angular/core"
 import { DOCUMENT } from "@angular/common"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { Title, Meta } from "@angular/platform-browser"
@@ -15,6 +15,7 @@ import { BookOrder } from "../models/BookOrder"
 import { Publisher } from "../models/Publisher"
 import { Author } from "src/app/models/Author"
 import { LocalizationService } from "src/app/services/localization-service"
+import { RESPONSE_STATE, ResponseState } from "src/app/misc/tokens"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -71,7 +72,8 @@ export class DataService {
 		private title: Title,
 		private meta: Meta,
 		@Inject(PLATFORM_ID) private platformId: object,
-		@Inject(DOCUMENT) private document: Document
+		@Inject(DOCUMENT) private document: Document,
+		@Optional() @Inject(RESPONSE_STATE) private responseState: ResponseState
 	) {
 		if (this.swUpdate.isEnabled) {
 			// Check for updates
@@ -400,6 +402,14 @@ export class DataService {
 			property: "og:locale",
 			content: toOpenGraphLocale(language)
 		})
+	}
+
+	/**
+	 * Tells the server to answer with 404 for the route being rendered. A no-op
+	 * in the browser, where the status has long been sent.
+	 */
+	setNotFound() {
+		if (this.responseState != null) this.responseState.status = 404
 	}
 
 	/**
