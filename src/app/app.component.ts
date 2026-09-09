@@ -133,6 +133,12 @@ export class AppComponent {
 		if (isPlatformServer(this.platformId)) {
 			this.UserLoaded()
 			await this.dataService.LoadAuthorOfUser()
+
+			// The library lives in the browser's storage, so there is nothing to
+			// load here - but LibraryPage waits for this before it sets the meta
+			// tags, and the start page would otherwise render without a title,
+			// a description or a canonical url
+			this.dataService.allBooksInitialLoadPromiseHolder.Resolve()
 			return
 		}
 
