@@ -23,6 +23,7 @@ export class StoreSeriesPageComponent {
 	title: string = ""
 	books: BookItem[] = []
 	loading: boolean = false
+	notFound: boolean = false
 
 	//#region Variables for pagination
 	pages: number = 1
@@ -75,7 +76,11 @@ export class StoreSeriesPageComponent {
 			retrieveVlbCollectionResponse.data?.retrieveVlbCollection
 
 		if (retrieveVlbCollectionResponseData == null) {
-			this.routingService.navigateBack("/store")
+			// Used to send the visitor back to the store, which left the dead url
+			// answering 200 and told a crawler nothing
+			this.notFound = true
+			this.dataService.setNotFound()
+			this.dataService.setMeta()
 			return
 		}
 

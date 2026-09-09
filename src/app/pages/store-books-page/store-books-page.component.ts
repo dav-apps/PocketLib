@@ -30,6 +30,7 @@ interface BookItem {
 export class StoreBooksPageComponent {
 	locale = this.localizationService.locale.storeBooksPage
 	header: string = ""
+	notFound: boolean = false
 	books: BookItem[] = []
 
 	//#region Variables for pagination
@@ -84,7 +85,15 @@ export class StoreBooksPageComponent {
 			// Get the selected category
 			await this.dataService.categoriesPromiseHolder.AwaitResult()
 			let category = this.dataService.categories.find(c => c.key == this.key)
-			if (!category) return
+
+			if (!category) {
+				// The route matches any key, so an unknown one used to render an
+				// empty page under a 200
+				this.notFound = true
+				this.dataService.setNotFound()
+				this.dataService.setMeta()
+				return
+			}
 
 			this.header = category.name
 		} else {

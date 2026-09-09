@@ -87,6 +87,7 @@ export class AuthorProfileComponent {
 	collectionsLoaded: boolean = false
 	seriesLoaded: boolean = false
 	storeContext: boolean = true // Whether the component is shown in the Store
+	notFound: boolean = false
 	authorMode: AuthorMode = AuthorMode.Normal
 	author: Author = new Author(null, [], this.apiService)
 	facebookLink: string = ""
@@ -243,6 +244,7 @@ export class AuthorProfileComponent {
 				await this.LoadAuthor()
 
 				if (this.author == null) {
+					this.notFound = true
 					// Neither api knows this slug. setMeta below would read
 					// this.author and throw, which used to leave the page half
 					// rendered and still answered 200.

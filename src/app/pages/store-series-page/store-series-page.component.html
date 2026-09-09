@@ -1,3 +1,6 @@
+@if (notFound) {
+<pocketlib-not-found></pocketlib-not-found>
+} @else {
 <div class="container slide-up-in">
 	<div class="header-container">
 		<dav-header backButtonVisible (backButtonClick)="backButtonClick()">
@@ -32,3 +35,4 @@
 	</div>
 	}
 </div>
+}

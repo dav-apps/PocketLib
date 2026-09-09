@@ -1,3 +1,6 @@
+@if (notFound) {
+<pocketlib-not-found></pocketlib-not-found>
+} @else {
 <div
 	class="container"
 	[class]="dataService.simpleLoadingScreenVisible ? '' : 'slide-up-in'"
@@ -252,3 +255,4 @@
 ></pocketlib-shipping-cost-info-dialog>
 
 <pocketlib-error-dialog #errorDialog></pocketlib-error-dialog>
+}

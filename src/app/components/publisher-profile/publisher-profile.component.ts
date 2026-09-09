@@ -76,6 +76,7 @@ export class PublisherProfileComponent {
 	descriptionLoading: boolean = false
 	errorMessage: string = ""
 	storeContext: boolean = true // Whether the component is shown in the Store
+	notFound: boolean = false
 	authorItems: AuthorItem[] = []
 	authorsLoading: boolean = true
 	searchAuthorsLoading: boolean = false
@@ -218,6 +219,7 @@ export class PublisherProfileComponent {
 		}
 
 		if (this.publisher == null) {
+			this.notFound = true
 			this.dataService.setNotFound()
 			this.dataService.setMeta()
 			return

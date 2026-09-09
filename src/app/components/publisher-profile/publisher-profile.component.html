@@ -1,3 +1,6 @@
+@if (notFound) {
+<pocketlib-not-found></pocketlib-not-found>
+} @else {
 <div class="container slide-up-in" [class.compact]="publisherMode == 3">
 	<div class="publisher-panel">
 		@if (publisherMode != 3) {
@@ -243,3 +246,4 @@
 	[lastNameError]="createAuthorDialogLastNameError"
 	(primaryButtonClick)="CreateAuthor($event)"
 ></pocketlib-create-author-dialog>
+}

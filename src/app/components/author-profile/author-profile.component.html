@@ -1,3 +1,6 @@
+@if (notFound) {
+<pocketlib-not-found></pocketlib-not-found>
+} @else {
 <div
 	class="container slide-up-in"
 	[class.compact]="authorMode == 3 && vlbAuthorBio.length == 0"
@@ -298,4 +301,5 @@
 		[twitterUsernameError]="editProfileDialogTwitterUsernameError"
 		(primaryButtonClick)="SaveProfile($event)"
 	></pocketlib-edit-author-profile-dialog>
+}
 }
