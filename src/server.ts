@@ -1,5 +1,6 @@
 import "@dav-apps/ssr-angular/enable-lit-ssr.js"
 import { APP_BASE_HREF } from "@angular/common"
+import { REQUEST_LANGUAGE } from "./app/misc/tokens"
 import { CommonEngine, isMainModule } from "@angular/ssr/node"
 import express from "express"
 import { dirname, join, resolve } from "node:path"
@@ -42,13 +43,23 @@ app.get(
 app.get("**", (req, res, next) => {
 	const { protocol, originalUrl, baseUrl, headers } = req
 
+	// The rendered markup depends on the requested language, so caches in front
+	// of this server have to keep the variants apart
+	res.setHeader("Vary", "Accept-Language")
+
 	commonEngine
 		.render({
 			bootstrap: AppServerModule,
 			documentFilePath: indexHtml,
 			url: `${protocol}://${headers.host}${originalUrl}`,
 			publicPath: browserDistFolder,
-			providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }]
+			providers: [
+				{ provide: APP_BASE_HREF, useValue: baseUrl },
+				{
+					provide: REQUEST_LANGUAGE,
+					useValue: headers["accept-language"] ?? null
+				}
+			]
 		})
 		.then(html => res.send(html))
 		.catch(err => next(err))

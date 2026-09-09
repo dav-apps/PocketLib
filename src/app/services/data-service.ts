@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
-import { DOCUMENT, isPlatformBrowser } from "@angular/common"
+import { DOCUMENT } from "@angular/common"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
@@ -14,7 +14,7 @@ import { Settings } from "../models/Settings"
 import { BookOrder } from "../models/BookOrder"
 import { Publisher } from "../models/Publisher"
 import { Author } from "src/app/models/Author"
-import { getLanguage } from "src/app/misc/utils"
+import { LocalizationService } from "src/app/services/localization-service"
 import {
 	defaultLightStoreBookCoverUrl,
 	defaultDarkStoreBookCoverUrl,
@@ -66,6 +66,7 @@ export class DataService {
 	constructor(
 		private apiService: ApiService,
 		private settingsService: SettingsService,
+		private localizationService: LocalizationService,
 		private swUpdate: SwUpdate,
 		private title: Title,
 		private meta: Meta,
@@ -199,7 +200,7 @@ export class DataService {
 			`,
 			{
 				limit: 100,
-				language: getLanguage(isPlatformBrowser(this.platformId))
+				language: this.localizationService.language
 			}
 		)
 
@@ -364,7 +365,7 @@ export class DataService {
 		// that do not know theirs fall back to the interface language.
 		const language =
 			normalizeLanguage(params?.language) ??
-			getLanguage(isPlatformBrowser(this.platformId))
+			this.localizationService.language
 
 		this.title.setTitle(title)
 		this.document.documentElement.setAttribute("lang", language)
