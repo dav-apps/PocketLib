@@ -188,38 +188,44 @@ export class DataService {
 		// Get the categories
 		this.categories = []
 
-		let listCategoriesResponse = await this.apiService.listCategories(
-			`
-				total
-				items {
-					uuid
-					key
-					name(language: $language) {
-						name
-						language
+		try {
+			let listCategoriesResponse = await this.apiService.listCategories(
+				`
+					total
+					items {
+						uuid
+						key
+						name(language: $language) {
+							name
+							language
+						}
 					}
+				`,
+				{
+					limit: 100,
+					language: this.localizationService.language
 				}
-			`,
-			{
-				limit: 100,
-				language: this.localizationService.language
+			)
+
+			for (let category of listCategoriesResponse.data.listCategories
+				.items) {
+				this.categories.push({
+					key: category.key,
+					name: category.name.name,
+					language: category.name.language
+				})
 			}
-		)
 
-		for (let category of listCategoriesResponse.data.listCategories.items) {
-			this.categories.push({
-				key: category.key,
-				name: category.name.name,
-				language: category.name.language
-			})
+			// Sort the categories by name
+			this.categories.sort((a: Category, b: Category) =>
+				a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+			)
+		} finally {
+			// Has to happen even when the request failed. Whoever awaits this
+			// holder - the store book page, the category pages - would stop
+			// rendering halfway through otherwise.
+			this.categoriesPromiseHolder.Resolve()
 		}
-
-		// Sort the categories by name
-		this.categories.sort((a: Category, b: Category) =>
-			a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-		)
-
-		this.categoriesPromiseHolder.Resolve()
 	}
 
 	async LoadAllBooks() {

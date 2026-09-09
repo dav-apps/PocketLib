@@ -139,6 +139,10 @@ export class AppComponent {
 			// tags, and the start page would otherwise render without a title,
 			// a description or a canonical url
 			this.dataService.allBooksInitialLoadPromiseHolder.Resolve()
+
+			// Public data, and the store book page as well as the category pages
+			// wait for it before they finish rendering
+			await this.dataService.LoadCategories()
 			return
 		}
 
