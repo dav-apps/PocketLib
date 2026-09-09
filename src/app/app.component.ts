@@ -165,15 +165,8 @@ export class AppComponent {
 			}
 		})
 
-		// Set the lang attribute of the html element
-		let htmlElement = document.getElementsByTagName(
-			"html"
-		)[0] as HTMLHtmlElement
-		if (htmlElement)
-			htmlElement.setAttribute(
-				"lang",
-				getLanguage(isPlatformBrowser(this.platformId))
-			)
+		// The lang attribute is set by DataService.setMeta, which every page calls
+		// and which knows the language of the content rather than of the interface
 
 		// Get the settings
 		this.dataService.settings = await GetSettings()

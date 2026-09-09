@@ -78,6 +78,7 @@ export class StoreBookPageComponent {
 	//#region VlbItem variables
 	isbn: string = ""
 	language: string = ""
+	languageCode: string = ""
 	publicationDate: string = ""
 	pageCount: number = 0
 	collections: VlbCollectionResource[] = []
@@ -226,6 +227,7 @@ export class StoreBookPageComponent {
 			this.priceLabel = this.priceLabel.replace(".", ",")
 		}
 		this.isbn = responseData.isbn
+		this.languageCode = responseData.language
 		this.language = this.localizationService.getFullLanguage(
 			responseData.language as Language
 		)
@@ -270,7 +272,8 @@ export class StoreBookPageComponent {
 			description: this.description,
 			image: this.coverUrl,
 			url: `store/book/${this.slug}`,
-			type: "book"
+			type: "book",
+			language: this.languageCode
 		})
 
 		this.settingsService.addVisitedBook({
@@ -313,6 +316,7 @@ export class StoreBookPageComponent {
 				}
 				title
 				description
+				language
 				price
 				luluPrintableId
 				status
@@ -344,6 +348,7 @@ export class StoreBookPageComponent {
 		this.uuid = responseData.uuid
 		this.title = responseData.title
 		this.description = responseData.description
+		this.languageCode = responseData.language
 		this.price = responseData.price
 		this.luluPrintableId = responseData.luluPrintableId
 		this.status = GetStoreBookStatusByString(responseData.status)
@@ -501,7 +506,8 @@ export class StoreBookPageComponent {
 			description: this.description,
 			image: this.coverUrl,
 			url: `store/book/${this.slug}`,
-			type: "book"
+			type: "book",
+			language: this.languageCode
 		})
 
 		this.settingsService.addVisitedBook({

@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from "@angular/core"
-import { isPlatformBrowser } from "@angular/common"
+import { DOCUMENT, isPlatformBrowser } from "@angular/common"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
@@ -69,7 +69,8 @@ export class DataService {
 		private swUpdate: SwUpdate,
 		private title: Title,
 		private meta: Meta,
-		@Inject(PLATFORM_ID) private platformId: object
+		@Inject(PLATFORM_ID) private platformId: object,
+		@Inject(DOCUMENT) private document: Document
 	) {
 		if (this.swUpdate.isEnabled) {
 			// Check for updates
@@ -341,6 +342,7 @@ export class DataService {
 		image?: string
 		url?: string
 		type?: string
+		language?: string
 	}) {
 		// Callers pass through values that are often empty strings rather than
 		// null - an author without a biography, a book without a cover - and ??
@@ -356,12 +358,16 @@ export class DataService {
 		const url = params?.url ?? ""
 		const absoluteUrl = `https://pocketlib.app/${url}`
 		const type = params?.type ?? "website"
-		const locale =
-			getLanguage(isPlatformBrowser(this.platformId)) == "de"
-				? "de_DE"
-				: "en_US"
+
+		// The language of the content, not of the interface: a German book stays
+		// German whichever language the surrounding app is displayed in. Pages
+		// that do not know theirs fall back to the interface language.
+		const language =
+			normalizeLanguage(params?.language) ??
+			getLanguage(isPlatformBrowser(this.platformId))
 
 		this.title.setTitle(title)
+		this.document.documentElement.setAttribute("lang", language)
 
 		// Pass the whole definition instead of a selector. updateTag falls back
 		// to addTag when nothing matches, and addTag only writes the attributes
@@ -380,8 +386,23 @@ export class DataService {
 		this.meta.updateTag({ property: "og:url", content: absoluteUrl })
 		this.meta.updateTag({ property: "og:type", content: type })
 		this.meta.updateTag({ property: "og:site_name", content: "PocketLib" })
-		this.meta.updateTag({ property: "og:locale", content: locale })
+		this.meta.updateTag({
+			property: "og:locale",
+			content: toOpenGraphLocale(language)
+		})
 	}
+}
+
+/** Reduces a language tag like "de-AT" to the bare code the html lang needs */
+function normalizeLanguage(language?: string): string | null {
+	const code = language?.trim().slice(0, 2).toLowerCase()
+	return code != null && /^[a-z]{2}$/.test(code) ? code : null
+}
+
+/** "de" -> "de_DE". Open Graph wants a full locale, not a language code. */
+function toOpenGraphLocale(language: string): string {
+	if (language == "en") return "en_US"
+	return `${language}_${language.toUpperCase()}`
 }
 
 /** Treats an empty or whitespace only string like a missing value */
