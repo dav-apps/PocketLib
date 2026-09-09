@@ -80,7 +80,6 @@ export class StoreSeriesPageComponent {
 			// answering 200 and told a crawler nothing
 			this.notFound = true
 			this.dataService.setNotFound()
-			this.dataService.setMeta()
 			return
 		}
 

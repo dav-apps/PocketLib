@@ -1,8 +1,10 @@
-import { Injectable, Inject, Optional, PLATFORM_ID } from "@angular/core"
+import { Injectable, Inject, Optional, PLATFORM_ID, TransferState, makeStateKey } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import * as locales from "src/locales/locales"
 import { Language } from "../misc/types"
 import { REQUEST_LANGUAGE } from "../misc/tokens"
+
+const renderedLanguage = makeStateKey<string>("pocketlib.language")
 
 @Injectable()
 export class LocalizationService {
@@ -12,11 +14,18 @@ export class LocalizationService {
 
 	constructor(
 		@Inject(PLATFORM_ID) private platformId: object,
-		@Optional() @Inject(REQUEST_LANGUAGE) requestLanguage: string | null
+		@Optional() @Inject(REQUEST_LANGUAGE) requestLanguage: string | null,
+		transferState: TransferState
 	) {
-		const tag = isPlatformBrowser(this.platformId)
-			? navigator.language
+		const browser = isPlatformBrowser(this.platformId)
+		const preferred = browser
+			? preferredLanguageTag(navigator.languages.join(","))
 			: preferredLanguageTag(requestLanguage)
+		// Hydrate with the exact locale used for the server markup.
+		const tag = browser
+			? transferState.get(renderedLanguage, preferred ?? "en")
+			: preferred ?? "en"
+		if (!browser) transferState.set(renderedLanguage, tag)
 
 		this.locale = this.getLocale(tag)
 		this.language = tag?.toLowerCase().startsWith("de")

@@ -33,7 +33,8 @@ app.get(
 	"**",
 	express.static(browserDistFolder, {
 		maxAge: "1y",
-		index: "index.html"
+		index: false,
+		redirect: false
 	})
 )
 
@@ -45,7 +46,7 @@ app.get("**", (req, res, next) => {
 
 	// The rendered markup depends on the requested language, so caches in front
 	// of this server have to keep the variants apart
-	res.setHeader("Vary", "Accept-Language")
+	res.vary("Accept-Language")
 
 	// The application writes into this while rendering if the route turns out
 	// to resolve to nothing

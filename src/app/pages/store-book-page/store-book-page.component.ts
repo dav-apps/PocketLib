@@ -183,7 +183,6 @@ export class StoreBookPageComponent {
 
 			if (this.notFound) {
 				this.dataService.setNotFound()
-				this.dataService.setMeta()
 			}
 		}
 	}

@@ -249,7 +249,6 @@ export class AuthorProfileComponent {
 					// this.author and throw, which used to leave the page half
 					// rendered and still answered 200.
 					this.dataService.setNotFound()
-					this.dataService.setMeta()
 					return
 				}
 

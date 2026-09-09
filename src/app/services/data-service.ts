@@ -1,5 +1,7 @@
 import { Injectable, Inject, Optional, PLATFORM_ID } from "@angular/core"
 import { DOCUMENT } from "@angular/common"
+import { NavigationEnd, Router } from "@angular/router"
+import { canonicalUrl } from "../misc/seo"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { Title, Meta } from "@angular/platform-browser"
 import { Dav, GetAllTableObjects, PromiseHolder } from "dav-js"
@@ -29,6 +31,7 @@ import { Category } from "src/app/misc/types"
 export class DataService {
 	dav = Dav
 	currentUrl: string = "/"
+	private canonicalPath: string | null = null
 	navbarVisible: boolean = true
 	books: Book[] = []
 	currentBook: Book = null
@@ -71,10 +74,18 @@ export class DataService {
 		private swUpdate: SwUpdate,
 		private title: Title,
 		private meta: Meta,
+		private router: Router,
 		@Inject(PLATFORM_ID) private platformId: object,
 		@Inject(DOCUMENT) private document: Document,
 		@Optional() @Inject(RESPONSE_STATE) private responseState: ResponseState
 	) {
+		// Query-only navigation can reuse a page without calling setMeta again.
+		this.router.events.subscribe(event => {
+			if (event instanceof NavigationEnd && this.canonicalPath != null) {
+				this.updateCanonical(event.urlAfterRedirects)
+			}
+		})
+
 		if (this.swUpdate.isEnabled) {
 			// Check for updates
 			this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
@@ -358,18 +369,19 @@ export class DataService {
 		// null - an author without a biography, a book without a cover - and ??
 		// would keep those, leaving the tag with an empty content attribute
 		const title = notBlank(params?.title) ?? "PocketLib"
-		const description = shortenForMeta(
+		const description = (
 			notBlank(params?.description) ??
-				"PocketLib is a simple and modern ebook reader"
-		)
+			"PocketLib is a simple and modern ebook reader"
+		).replace(/\s+/g, " ").trim()
 		const image =
 			notBlank(params?.image) ??
 			"https://pocketlib.app/assets/icons/icon-128x128.png"
 		// Falling back to "" would canonicalise every page that calls setMeta
 		// without a url - the store start page among them - onto the home page.
 		// currentUrl is the route being navigated to, without the query string.
-		const path = (params?.url ?? this.currentUrl).replace(/^\/+/, "")
-		const absoluteUrl = `https://pocketlib.app/${path}`
+		this.canonicalPath = params?.url ?? this.currentUrl
+		const navigationUrl = this.router.getCurrentNavigation()?.extractedUrl.toString() ?? this.router.url
+		const absoluteUrl = canonicalUrl(this.canonicalPath, navigationUrl)
 		const type = params?.type ?? "website"
 
 		// The language of the content, not of the interface: a German book stays
@@ -410,12 +422,21 @@ export class DataService {
 		})
 	}
 
-	/**
-	 * Tells the server to answer with 404 for the route being rendered. A no-op
-	 * in the browser, where the status has long been sent.
-	 */
+	/** Finish the loading state and present consistent metadata for missing pages. */
 	setNotFound() {
 		if (this.responseState != null) this.responseState.status = 404
+		this.simpleLoadingScreenVisible = false
+		const locale = this.localizationService.locale.notFoundPage
+		this.setMeta({
+			title: `${locale.headline} | PocketLib`,
+			description: locale.description
+		})
+	}
+
+	private updateCanonical(navigationUrl: string) {
+		const url = canonicalUrl(this.canonicalPath, navigationUrl)
+		this.setCanonicalUrl(url)
+		this.meta.updateTag({ property: "og:url", content: url })
 	}
 
 	/**
@@ -480,19 +501,6 @@ function toOpenGraphLocale(language: string): string {
 /** Treats an empty or whitespace only string like a missing value */
 function notBlank(value?: string): string | null {
 	return value != null && value.trim().length > 0 ? value : null
-}
-
-/**
- * Book descriptions arrive as multi line prose. Meta tags hold a single line,
- * and search engines cut the description off at around 160 characters anyway.
- */
-function shortenForMeta(text: string, maxLength: number = 160): string {
-	const singleLine = text.replace(/\s+/g, " ").trim()
-	if (singleLine.length <= maxLength) return singleLine
-
-	const cut = singleLine.slice(0, maxLength - 1)
-	const lastSpace = cut.lastIndexOf(" ")
-	return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`
 }
 
 export function FindElement(currentElement: Element, tagName: string): Element {

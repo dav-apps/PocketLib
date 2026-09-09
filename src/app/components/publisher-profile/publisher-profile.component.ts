@@ -182,7 +182,11 @@ export class PublisherProfileComponent {
 			let retrieveVlbPublisherResponseData =
 				retrieveVlbPublisherResponse.data?.retrieveVlbPublisher
 
-			if (retrieveVlbPublisherResponseData == null) return
+			if (retrieveVlbPublisherResponseData == null) {
+				this.notFound = true
+				this.dataService.setNotFound()
+				return
+			}
 
 			this.publisherMode = PublisherMode.VlbPublisher
 			this.vlbPublisherId = retrieveVlbPublisherResponseData.id
@@ -221,7 +225,6 @@ export class PublisherProfileComponent {
 		if (this.publisher == null) {
 			this.notFound = true
 			this.dataService.setNotFound()
-			this.dataService.setMeta()
 			return
 		}
 

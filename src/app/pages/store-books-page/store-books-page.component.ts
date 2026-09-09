@@ -60,6 +60,7 @@ export class StoreBooksPageComponent {
 			this.context = StoreBooksPageContext.AllBooks
 		}
 
+		this.page = Number(this.activatedRoute.snapshot.queryParamMap.get("page")) || 1
 		this.UpdateView()
 
 		this.activatedRoute.url.subscribe(async () => {
@@ -91,7 +92,6 @@ export class StoreBooksPageComponent {
 				// empty page under a 200
 				this.notFound = true
 				this.dataService.setNotFound()
-				this.dataService.setMeta()
 				return
 			}
 

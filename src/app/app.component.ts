@@ -96,7 +96,7 @@ export class AppComponent {
 		private cd: ChangeDetectorRef,
 		@Inject(PLATFORM_ID) private platformId: object
 	) {
-		DavUIComponents.setLocale(getLanguage(isPlatformBrowser(this.platformId)))
+		DavUIComponents.setLocale(this.localizationService.language)
 
 		this.router.events.forEach((data: any) => {
 			if (data instanceof NavigationStart) {
