@@ -340,27 +340,66 @@ export class DataService {
 		description?: string
 		image?: string
 		url?: string
+		type?: string
 	}) {
-		const title = params?.title ?? "PocketLib"
-		const description =
-			params?.description ?? "PocketLib is a simple and modern ebook reader"
-		const image = params?.image ?? "/assets/icons/icon-128x128.png"
+		// Callers pass through values that are often empty strings rather than
+		// null - an author without a biography, a book without a cover - and ??
+		// would keep those, leaving the tag with an empty content attribute
+		const title = notBlank(params?.title) ?? "PocketLib"
+		const description = shortenForMeta(
+			notBlank(params?.description) ??
+				"PocketLib is a simple and modern ebook reader"
+		)
+		const image =
+			notBlank(params?.image) ??
+			"https://pocketlib.app/assets/icons/icon-128x128.png"
 		const url = params?.url ?? ""
 		const absoluteUrl = `https://pocketlib.app/${url}`
+		const type = params?.type ?? "website"
+		const locale =
+			getLanguage(isPlatformBrowser(this.platformId)) == "de"
+				? "de_DE"
+				: "en_US"
 
 		this.title.setTitle(title)
-		this.meta.updateTag({ content: description }, "name='description'")
-		this.meta.updateTag({ content: title }, "name='twitter:title'")
-		this.meta.updateTag(
-			{ content: description },
-			"name='twitter:description'"
-		)
-		this.meta.updateTag({ content: image }, "name='twitter:image'")
 
-		this.meta.updateTag({ content: title }, "property='og:title'")
-		this.meta.updateTag({ content: image }, "property='og:image'")
-		this.meta.updateTag({ content: absoluteUrl }, "property='og:url'")
+		// Pass the whole definition instead of a selector. updateTag falls back
+		// to addTag when nothing matches, and addTag only writes the attributes
+		// it is given - passing just { content } used to produce a nameless
+		// <meta content="..."> for every tag that index.html does not declare,
+		// which is why the pages had no description at all.
+		this.meta.updateTag({ name: "description", content: description })
+
+		this.meta.updateTag({ name: "twitter:title", content: title })
+		this.meta.updateTag({ name: "twitter:description", content: description })
+		this.meta.updateTag({ name: "twitter:image", content: image })
+
+		this.meta.updateTag({ property: "og:title", content: title })
+		this.meta.updateTag({ property: "og:description", content: description })
+		this.meta.updateTag({ property: "og:image", content: image })
+		this.meta.updateTag({ property: "og:url", content: absoluteUrl })
+		this.meta.updateTag({ property: "og:type", content: type })
+		this.meta.updateTag({ property: "og:site_name", content: "PocketLib" })
+		this.meta.updateTag({ property: "og:locale", content: locale })
 	}
+}
+
+/** Treats an empty or whitespace only string like a missing value */
+function notBlank(value?: string): string | null {
+	return value != null && value.trim().length > 0 ? value : null
+}
+
+/**
+ * Book descriptions arrive as multi line prose. Meta tags hold a single line,
+ * and search engines cut the description off at around 160 characters anyway.
+ */
+function shortenForMeta(text: string, maxLength: number = 160): string {
+	const singleLine = text.replace(/\s+/g, " ").trim()
+	if (singleLine.length <= maxLength) return singleLine
+
+	const cut = singleLine.slice(0, maxLength - 1)
+	const lastSpace = cut.lastIndexOf(" ")
+	return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`
 }
 
 export function FindElement(currentElement: Element, tagName: string): Element {

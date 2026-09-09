@@ -602,14 +602,16 @@ export class AuthorProfileComponent {
 			this.dataService.setMeta({
 				title: `${this.vlbAuthorFirstName} ${this.vlbAuthorLastName} | PocketLib`,
 				description: this.vlbAuthorBio,
-				url: `store/author/${this.vlbAuthorSlug}`
+				url: `store/author/${this.vlbAuthorSlug}`,
+				type: "profile"
 			})
 		} else {
 			this.dataService.setMeta({
 				title: `${this.author.firstName} ${this.author.lastName} | PocketLib`,
 				description: this.author.bio.bio,
 				image: this.author.profileImage.url,
-				url: `store/author/${this.author.slug}`
+				url: `store/author/${this.author.slug}`,
+				type: "profile"
 			})
 		}
 	}

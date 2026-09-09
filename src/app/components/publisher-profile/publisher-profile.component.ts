@@ -404,14 +404,16 @@ export class PublisherProfileComponent {
 		if (this.publisherMode == PublisherMode.VlbPublisher) {
 			this.dataService.setMeta({
 				title: `${this.vlbPublisherName} | PocketLib`,
-				url: `store/publisher/${this.vlbPublisherId}`
+				url: `store/publisher/${this.vlbPublisherId}`,
+				type: "profile"
 			})
 		} else {
 			this.dataService.setMeta({
 				title: `${this.publisher.name} | PocketLib`,
 				description: this.publisher.description,
 				image: this.publisher.logo.url,
-				url: `store/publisher/${this.publisher.slug}`
+				url: `store/publisher/${this.publisher.slug}`,
+				type: "profile"
 			})
 		}
 	}

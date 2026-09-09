@@ -269,7 +269,8 @@ export class StoreBookPageComponent {
 			title: `${this.title} | PocketLib`,
 			description: this.description,
 			image: this.coverUrl,
-			url: `store/book/${this.slug}`
+			url: `store/book/${this.slug}`,
+			type: "book"
 		})
 
 		this.settingsService.addVisitedBook({
@@ -499,7 +500,8 @@ export class StoreBookPageComponent {
 			title: `${this.title} | PocketLib`,
 			description: this.description,
 			image: this.coverUrl,
-			url: `store/book/${this.slug}`
+			url: `store/book/${this.slug}`,
+			type: "book"
 		})
 
 		this.settingsService.addVisitedBook({
