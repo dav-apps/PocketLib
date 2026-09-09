@@ -15,7 +15,7 @@ export class SettingsService {
 
 	//#region Theme
 	async setTheme(value: string) {
-		await localforage.setItem(keys.settingsThemeKey, value)
+		await this.setSetting(keys.settingsThemeKey, value)
 		this.cache[keys.settingsThemeKey] = value
 	}
 
@@ -29,7 +29,7 @@ export class SettingsService {
 
 	//#region openLastReadBook
 	async setOpenLastReadBook(value: boolean) {
-		await localforage.setItem(keys.settingsOpenLastReadBookKey, value)
+		await this.setSetting(keys.settingsOpenLastReadBookKey, value)
 		this.cache[keys.settingsOpenLastReadBookKey] = value
 	}
 
@@ -43,7 +43,7 @@ export class SettingsService {
 
 	//#region storeLanguages
 	async setStoreLanguages(languages: Language[]) {
-		await localforage.setItem(keys.settingsStoreLanguagesKey, languages)
+		await this.setSetting(keys.settingsStoreLanguagesKey, languages)
 		this.cache[keys.settingsStoreLanguagesKey] = languages
 	}
 
@@ -65,7 +65,7 @@ export class SettingsService {
 
 	//#region SearchQueries
 	async setSearchQueries(searchQueries: string[]) {
-		await localforage.setItem(keys.settingsSearchQueriesKey, searchQueries)
+		await this.setSetting(keys.settingsSearchQueriesKey, searchQueries)
 		this.cache[keys.settingsSearchQueriesKey] = searchQueries
 	}
 
@@ -101,7 +101,7 @@ export class SettingsService {
 
 	//#region VisitedBooks
 	async setVisitedBooks(visitedBooks: VisitedBook[]) {
-		await localforage.setItem(keys.settingsVisitedBooksKey, visitedBooks)
+		await this.setSetting(keys.settingsVisitedBooksKey, visitedBooks)
 		this.cache[keys.settingsVisitedBooksKey] = visitedBooks
 	}
 
@@ -126,9 +126,19 @@ export class SettingsService {
 	}
 	//#endregion
 
+	private async setSetting(key: string, value: unknown) {
+		if (!isPlatformBrowser(this.platformId)) return
+		await localforage.setItem(key, value)
+	}
+
 	private async getSetting<T>(key: string, defaultValue: T): Promise<T> {
 		let cachedValue = this.cache[key]
 		if (cachedValue != null) return cachedValue
+
+		// The settings live in the browser's storage. On the server localforage
+		// throws "No available storage method found", which used to reject
+		// whatever was awaiting the setting - Author.Retrieve among them.
+		if (!isPlatformBrowser(this.platformId)) return defaultValue
 
 		let value = (await localforage.getItem(key)) as T
 		if (value == null) value = defaultValue
