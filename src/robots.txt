@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# The reader and everything behind a login holds nothing a crawler can use
+Disallow: /book
+Disallow: /user
+Disallow: /settings
+Disallow: /loading
+
+# Search results are assembled in the browser and duplicate the store pages
+Disallow: /search
+
+# The authoring area, not the store - /store/author/... is the public one
+Disallow: /author
+Disallow: /publisher/
+
+# Checkout
+Disallow: /store/book/*/confirmation
+
+Sitemap: https://pocketlib.app/sitemap-index.xml
