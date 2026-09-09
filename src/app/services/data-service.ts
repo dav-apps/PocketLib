@@ -344,6 +344,7 @@ export class DataService {
 		url?: string
 		type?: string
 		language?: string
+		structuredData?: object | object[]
 	}) {
 		// Callers pass through values that are often empty strings rather than
 		// null - an author without a biography, a book without a cover - and ??
@@ -356,8 +357,11 @@ export class DataService {
 		const image =
 			notBlank(params?.image) ??
 			"https://pocketlib.app/assets/icons/icon-128x128.png"
-		const url = params?.url ?? ""
-		const absoluteUrl = `https://pocketlib.app/${url}`
+		// Falling back to "" would canonicalise every page that calls setMeta
+		// without a url - the store start page among them - onto the home page.
+		// currentUrl is the route being navigated to, without the query string.
+		const path = (params?.url ?? this.currentUrl).replace(/^\/+/, "")
+		const absoluteUrl = `https://pocketlib.app/${path}`
 		const type = params?.type ?? "website"
 
 		// The language of the content, not of the interface: a German book stays
@@ -369,6 +373,11 @@ export class DataService {
 
 		this.title.setTitle(title)
 		this.document.documentElement.setAttribute("lang", language)
+		this.setCanonicalUrl(absoluteUrl)
+
+		// Always written, so that navigating from a book to a page without any
+		// leaves no stale markup behind
+		this.setStructuredData(params?.structuredData ?? null)
 
 		// Pass the whole definition instead of a selector. updateTag falls back
 		// to addTag when nothing matches, and addTag only writes the attributes
@@ -391,6 +400,52 @@ export class DataService {
 			property: "og:locale",
 			content: toOpenGraphLocale(language)
 		})
+	}
+
+	/**
+	 * Angular has a Meta service but no equivalent for link tags, so the
+	 * canonical one is kept in sync by hand. Without it the tracking parameters
+	 * that ChatGPT and Perplexity append, and the trailing slash variants the
+	 * server answers to, are all indexable copies of the same page.
+	 */
+	private setCanonicalUrl(url: string) {
+		let link = this.document.head.querySelector<HTMLLinkElement>(
+			"link[rel='canonical']"
+		)
+
+		if (link == null) {
+			link = this.document.createElement("link")
+			link.setAttribute("rel", "canonical")
+			this.document.head.appendChild(link)
+		}
+
+		link.setAttribute("href", url)
+	}
+
+	/**
+	 * Writes the schema.org description of the page as JSON-LD, or removes it.
+	 * This is the part of a store page a crawler can read without guessing:
+	 * which of the numbers on it is the price, which string is the author.
+	 */
+	private setStructuredData(data: object | object[] | null) {
+		let script = this.document.head.querySelector(
+			"script[type='application/ld+json']"
+		)
+
+		if (data == null) {
+			script?.remove()
+			return
+		}
+
+		if (script == null) {
+			script = this.document.createElement("script")
+			script.setAttribute("type", "application/ld+json")
+			this.document.head.appendChild(script)
+		}
+
+		// A description containing "</script>" would end the element early, so
+		// the character that can start a tag never reaches the document as is
+		script.textContent = JSON.stringify(data).replace(/</g, "\\u003c")
 	}
 }
 

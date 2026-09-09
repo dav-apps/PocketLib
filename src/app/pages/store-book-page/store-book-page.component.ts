@@ -273,7 +273,8 @@ export class StoreBookPageComponent {
 			image: this.coverUrl,
 			url: `store/book/${this.slug}`,
 			type: "book",
-			language: this.languageCode
+			language: this.languageCode,
+			structuredData: this.getStructuredData()
 		})
 
 		this.settingsService.addVisitedBook({
@@ -507,7 +508,8 @@ export class StoreBookPageComponent {
 			image: this.coverUrl,
 			url: `store/book/${this.slug}`,
 			type: "book",
-			language: this.languageCode
+			language: this.languageCode,
+			structuredData: this.getStructuredData()
 		})
 
 		this.settingsService.addVisitedBook({
@@ -791,6 +793,76 @@ export class StoreBookPageComponent {
 		}
 
 		this.publishLoading = false
+	}
+
+	/**
+	 * Describes the book in schema.org terms. Both loading paths share this -
+	 * the fields the StoreBook api does not provide, such as the ISBN or the
+	 * page count, are simply left out rather than emitted empty.
+	 */
+	private getStructuredData(): object[] {
+		const url = `https://pocketlib.app/store/book/${this.slug}`
+
+		const book: Record<string, unknown> = {
+			"@context": "https://schema.org",
+			"@type": "Book",
+			name: this.title,
+			url
+		}
+
+		if (this.description.length > 0) {
+			book.description = this.description.replace(/\s+/g, " ").trim()
+		}
+		if (this.authorName.length > 0) {
+			book.author = {
+				"@type": "Person",
+				name: this.authorName,
+				...(this.authorSlug.length > 0 && {
+					url: `https://pocketlib.app/store/author/${this.authorSlug}`
+				})
+			}
+		}
+		if (this.publisherName.length > 0) {
+			book.publisher = { "@type": "Organization", name: this.publisherName }
+		}
+		if (this.isbn.length > 0) book.isbn = this.isbn
+		if (this.languageCode.length > 0) book.inLanguage = this.languageCode
+		if (this.publicationDate.length > 0) {
+			book.datePublished = this.publicationDate
+		}
+		if (this.pageCount > 0) book.numberOfPages = this.pageCount
+		if (this.coverUrl.length > 0) book.image = this.coverUrl
+
+		if (this.price > 0) {
+			book.offers = {
+				"@type": "Offer",
+				url,
+				price: (this.price / 100).toFixed(2),
+				priceCurrency: "EUR",
+				availability: "https://schema.org/InStock"
+			}
+		}
+
+		const breadcrumbs = {
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			itemListElement: [
+				{
+					"@type": "ListItem",
+					position: 1,
+					name: this.miscLocale.store,
+					item: "https://pocketlib.app/store/"
+				},
+				{
+					"@type": "ListItem",
+					position: 2,
+					name: this.title,
+					item: url
+				}
+			]
+		}
+
+		return [book, breadcrumbs]
 	}
 
 	coverImageLoaded(event: CustomEvent<{ image: HTMLImageElement }>) {
