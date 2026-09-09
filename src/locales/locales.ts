@@ -533,6 +533,12 @@ const enDefaults = {
 		bookCoverAlt: "The cover of the ebook {0}",
 		publisherLogoAlt: "The logo of {0}",
 		authorProfileImageAlt: "The profile image of the author {0}"
+	},
+	notFoundPage: {
+		headline: "This page does not exist",
+		description:
+			"The page you were looking for was moved or never existed.",
+		goToStore: "Go to the store"
 	}
 }
 
@@ -1085,6 +1091,12 @@ const deDefaults = {
 		bookCoverAlt: "Das Cover des Ebooks {0}",
 		publisherLogoAlt: "Das Logo von {0}",
 		authorProfileImageAlt: "Das Profilbild des Autors {0}"
+	},
+	notFoundPage: {
+		headline: "Diese Seite gibt es nicht",
+		description:
+			"Die Seite, die du gesucht hast, wurde verschoben oder hat nie existiert.",
+		goToStore: "Zum Store"
 	}
 }
 

@@ -109,6 +109,7 @@ import { AuthorBookPageComponent } from "./pages/author-book-page/author-book-pa
 import { NewBookPageComponent } from "./pages/new-book-page/new-book-page.component"
 import { AuthorReleasesPageComponent } from "./pages/author-releases-page/author-releases-page.component"
 import { LoadingPageComponent } from "./pages/loading-page/loading-page.component"
+import { NotFoundPageComponent } from "./pages/not-found-page/not-found-page.component"
 import { StoreStartPageComponent } from "./pages/store-start-page/store-start-page.component"
 import { StoreCategoriesPageComponent } from "./pages/store-categories-page/store-categories-page.component"
 import { StorePublisherPageComponent } from "./pages/store-publisher-page/store-publisher-page.component"
@@ -191,6 +192,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		NewBookPageComponent,
 		AuthorReleasesPageComponent,
 		LoadingPageComponent,
+		NotFoundPageComponent,
 		StoreStartPageComponent,
 		StoreCategoriesPageComponent,
 		StorePublisherPageComponent,

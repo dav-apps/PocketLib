@@ -217,7 +217,11 @@ export class PublisherProfileComponent {
 			this.publisher = publisher
 		}
 
-		if (this.publisher == null) return
+		if (this.publisher == null) {
+			this.dataService.setNotFound()
+			this.dataService.setMeta()
+			return
+		}
 
 		this.UpdateSocialMediaLinks()
 		this.setMeta()

@@ -241,6 +241,16 @@ export class AuthorProfileComponent {
 			if (retrieveVlbAuthorResponseData == null) {
 				// Get the author from the server
 				await this.LoadAuthor()
+
+				if (this.author == null) {
+					// Neither api knows this slug. setMeta below would read
+					// this.author and throw, which used to leave the page half
+					// rendered and still answered 200.
+					this.dataService.setNotFound()
+					this.dataService.setMeta()
+					return
+				}
+
 				this.setMeta()
 			} else {
 				this.authorMode = AuthorMode.VlbAuthor

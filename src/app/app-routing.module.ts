@@ -23,6 +23,7 @@ import { StoreBookPageComponent } from "./pages/store-book-page/store-book-page.
 import { StoreBooksPageComponent } from "./pages/store-books-page/store-books-page.component"
 import { StoreSeriesPageComponent } from "./pages/store-series-page/store-series-page.component"
 import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/order-confirmation-page.component"
+import { NotFoundPageComponent } from "./pages/not-found-page/not-found-page.component"
 
 const routes: Routes = [
 	{ path: "", component: LibraryPageComponent },
@@ -92,7 +93,9 @@ const routes: Routes = [
 	{
 		path: "store/book/:slug/confirmation",
 		component: OrderConfirmationPageComponent
-	}
+	},
+	// Has to stay last: matches everything the routes above did not
+	{ path: "**", component: NotFoundPageComponent }
 ]
 
 @NgModule({
