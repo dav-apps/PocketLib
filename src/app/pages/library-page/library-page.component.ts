@@ -112,6 +112,9 @@ export class LibraryPageComponent {
 
 	ngOnDestroy() {
 		this.dataService.contentContainer.style.overflow = "auto"
+
+		// Hide the loading screen, as it is shown while opening a book file
+		this.dataService.loadingScreenVisible = false
 	}
 
 	ngAfterViewInit() {
@@ -183,7 +186,15 @@ export class LibraryPageComponent {
 
 		// Get the created book and show it
 		let book = this.dataService.books.find(b => b.uuid == uuid)
-		if (book != null) this.ShowBook(book)
+
+		if (book == null) {
+			// Show error dialog
+			this.dataService.loadingScreenVisible = false
+			this.addBookErrorDialog.show()
+			return
+		}
+
+		this.ShowBook(book)
 	}
 
 	async ShowBook(book: Book) {
