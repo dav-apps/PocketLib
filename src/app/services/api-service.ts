@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core"
-import { Apollo, ApolloBase, gql, MutationResult } from "apollo-angular"
-import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
+import { Apollo, ApolloBase, gql } from "apollo-angular"
+import { ErrorPolicy } from "@apollo/client/core"
+import { map } from "rxjs"
+import { ApiResult, toApiResult } from "../misc/api-result"
 import axios from "axios"
 import { Dav, BlobToBase64, renewSession } from "dav-js"
 import { environment } from "src/environments/environment"
@@ -59,7 +61,7 @@ export class ApiService {
 			offset?: number
 			query?: string
 		}
-	): Promise<ApolloQueryResult<{ retrievePublisher: PublisherResource }>> {
+	): Promise<ApiResult<{ retrievePublisher: PublisherResource }>> {
 		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
 		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
 		let queryParam = queryData.includes("query") ? "$query: String" : ""
@@ -83,6 +85,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -102,7 +105,7 @@ export class ApiService {
 	async listPublishers(
 		queryData: string,
 		variables?: { limit?: number; offset?: number }
-	): Promise<ApolloQueryResult<{ listPublishers: List<PublisherResource> }>> {
+	): Promise<ApiResult<{ listPublishers: List<PublisherResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listPublishers: List<PublisherResource>
@@ -117,6 +120,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -136,7 +140,7 @@ export class ApiService {
 	async createPublisher(
 		queryData: string,
 		variables: { name: string }
-	): Promise<MutationResult<{ createPublisher: PublisherResource }>> {
+	): Promise<ApiResult<{ createPublisher: PublisherResource }>> {
 		let result = await this.apollo
 			.mutate<{ createPublisher: PublisherResource }>({
 				mutation: gql`
@@ -149,6 +153,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -176,7 +181,7 @@ export class ApiService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<MutationResult<{ updatePublisher: PublisherResource }>> {
+	): Promise<ApiResult<{ updatePublisher: PublisherResource }>> {
 		let result = await this.apollo
 			.mutate<{
 				updatePublisher: PublisherResource
@@ -207,6 +212,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -281,7 +287,7 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ retrieveAuthor: AuthorResource }>> {
+	): Promise<ApiResult<{ retrieveAuthor: AuthorResource }>> {
 		let languagesParam = queryData.includes("languages")
 			? `$languages: [String!]`
 			: ""
@@ -307,6 +313,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -331,7 +338,7 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ listAuthors: List<AuthorResource> }>> {
+	): Promise<ApiResult<{ listAuthors: List<AuthorResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listAuthors: List<AuthorResource>
@@ -356,6 +363,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -379,7 +387,7 @@ export class ApiService {
 			firstName: string
 			lastName: string
 		}
-	): Promise<MutationResult<{ createAuthor: AuthorResource }>> {
+	): Promise<ApiResult<{ createAuthor: AuthorResource }>> {
 		let result = await this.apollo
 			.mutate<{
 				createAuthor: AuthorResource
@@ -402,6 +410,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -429,7 +438,7 @@ export class ApiService {
 			instagramUsername?: string
 			twitterUsername?: string
 		}
-	): Promise<MutationResult<{ updateAuthor: AuthorResource }>> {
+	): Promise<ApiResult<{ updateAuthor: AuthorResource }>> {
 		let result = await this.apollo
 			.mutate<{
 				updateAuthor: AuthorResource
@@ -460,6 +469,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -481,7 +491,7 @@ export class ApiService {
 	async setAuthorBio(
 		queryData: string,
 		variables: { uuid: string; bio: string; language: string }
-	): Promise<MutationResult<{ setAuthorBio: AuthorBioResource }>> {
+	): Promise<ApiResult<{ setAuthorBio: AuthorBioResource }>> {
 		let result = await this.apollo
 			.mutate<{ setAuthorBio: AuthorBioResource }>({
 				mutation: gql`
@@ -502,6 +512,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -577,7 +588,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<
-		ApolloQueryResult<{
+		ApiResult<{
 			retrieveStoreBookCollection: StoreBookCollectionResource
 		}>
 	> {
@@ -606,6 +617,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -628,7 +640,7 @@ export class ApiService {
 		queryData: string,
 		variables: { uuid: string }
 	): Promise<
-		ApolloQueryResult<{
+		ApiResult<{
 			retrieveStoreBookCollectionName: StoreBookCollectionNameResource
 		}>
 	> {
@@ -646,6 +658,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -666,7 +679,7 @@ export class ApiService {
 		queryData: string,
 		variables: { uuid: string; name: string; language: string }
 	): Promise<
-		MutationResult<{
+		ApiResult<{
 			setStoreBookCollectionName: StoreBookCollectionNameResource
 		}>
 	> {
@@ -692,6 +705,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -719,7 +733,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<
-		ApolloQueryResult<{ retrieveStoreBookSeries: StoreBookSeriesResource }>
+		ApiResult<{ retrieveStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		let languagesParam = queryData.includes("languages")
 			? `$languages: [String!]`
@@ -744,6 +758,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -769,7 +784,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<
-		ApolloQueryResult<{ listStoreBookSeries: List<StoreBookSeriesResource> }>
+		ApiResult<{ listStoreBookSeries: List<StoreBookSeriesResource> }>
 	> {
 		let result = await this.apollo
 			.query<{
@@ -795,6 +810,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -820,7 +836,7 @@ export class ApiService {
 			storeBooks?: string[]
 		}
 	): Promise<
-		MutationResult<{ createStoreBookSeries: StoreBookSeriesResource }>
+		ApiResult<{ createStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		let result = await this.apollo
 			.mutate<{ createStoreBookSeries: StoreBookSeriesResource }>({
@@ -844,6 +860,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -868,7 +885,7 @@ export class ApiService {
 			storeBooks?: string[]
 		}
 	): Promise<
-		MutationResult<{ updateStoreBookSeries: StoreBookSeriesResource }>
+		ApiResult<{ updateStoreBookSeries: StoreBookSeriesResource }>
 	> {
 		let result = await this.apollo
 			.mutate<{
@@ -892,6 +909,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -913,7 +931,7 @@ export class ApiService {
 	async retrieveStoreBook(
 		queryData: string,
 		variables: { uuid: string; limit?: number; offset?: number }
-	): Promise<ApolloQueryResult<{ retrieveStoreBook: StoreBookResource }>> {
+	): Promise<ApiResult<{ retrieveStoreBook: StoreBookResource }>> {
 		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
 		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
 
@@ -935,6 +953,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -962,7 +981,7 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ listStoreBooks: List<StoreBookResource> }>> {
+	): Promise<ApiResult<{ listStoreBooks: List<StoreBookResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listStoreBooks: List<StoreBookResource>
@@ -993,6 +1012,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1022,7 +1042,7 @@ export class ApiService {
 			isbn?: string
 			categories?: string[]
 		}
-	): Promise<MutationResult<{ createStoreBook: StoreBookResource }>> {
+	): Promise<ApiResult<{ createStoreBook: StoreBookResource }>> {
 		let result = await this.apollo
 			.mutate<{
 				createStoreBook: StoreBookResource
@@ -1057,6 +1077,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1086,7 +1107,7 @@ export class ApiService {
 			status?: string
 			categories?: string[]
 		}
-	): Promise<MutationResult<{ updateStoreBook: StoreBookResource }>> {
+	): Promise<ApiResult<{ updateStoreBook: StoreBookResource }>> {
 		let result = await this.apollo
 			.mutate<{
 				updateStoreBook: StoreBookResource
@@ -1121,6 +1142,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1343,7 +1365,7 @@ export class ApiService {
 		queryData: string,
 		variables: { uuid: string; limit?: number; offset?: number }
 	): Promise<
-		ApolloQueryResult<{ retrieveStoreBookRelease: StoreBookReleaseResource }>
+		ApiResult<{ retrieveStoreBookRelease: StoreBookReleaseResource }>
 	> {
 		let limitParam = queryData.includes("limit") ? "$limit: Int" : ""
 		let offsetParam = queryData.includes("offset") ? "$offset: Int" : ""
@@ -1366,6 +1388,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1390,7 +1413,7 @@ export class ApiService {
 			releaseNotes?: string
 		}
 	): Promise<
-		MutationResult<{ publishStoreBookRelease: StoreBookReleaseResource }>
+		ApiResult<{ publishStoreBookRelease: StoreBookReleaseResource }>
 	> {
 		let result = await this.apollo
 			.mutate<{
@@ -1414,6 +1437,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1435,7 +1459,7 @@ export class ApiService {
 	async retrieveCategory(
 		queryData: string,
 		variables: { uuid: string; languages?: string[] }
-	): Promise<ApolloQueryResult<{ retrieveCategory: CategoryResource }>> {
+	): Promise<ApiResult<{ retrieveCategory: CategoryResource }>> {
 		let languagesParam = queryData.includes("languages")
 			? `$languages: [String!]`
 			: ""
@@ -1455,6 +1479,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1474,7 +1499,7 @@ export class ApiService {
 	async listCategories(
 		queryData: string,
 		variables?: { limit?: number; offset?: number; language?: string }
-	): Promise<ApolloQueryResult<{ listCategories: List<CategoryResource> }>> {
+	): Promise<ApiResult<{ listCategories: List<CategoryResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listCategories: List<CategoryResource>
@@ -1497,6 +1522,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1520,7 +1546,7 @@ export class ApiService {
 		variables: {
 			storeBook: string
 		}
-	): Promise<MutationResult<{ createBook: BookResource }>> {
+	): Promise<ApiResult<{ createBook: BookResource }>> {
 		let result = await this.apollo
 			.mutate<{ createBook: BookResource }>({
 				mutation: gql`
@@ -1533,6 +1559,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1559,7 +1586,7 @@ export class ApiService {
 			cancelUrl: string
 		}
 	): Promise<
-		MutationResult<{
+		ApiResult<{
 			createCheckoutSessionForStoreBook: CheckoutSessionResource
 		}>
 	> {
@@ -1585,6 +1612,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1612,7 +1640,7 @@ export class ApiService {
 			cancelUrl: string
 		}
 	): Promise<
-		MutationResult<{
+		ApiResult<{
 			createCheckoutSessionForVlbItem: CheckoutSessionResource
 		}>
 	> {
@@ -1638,6 +1666,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1661,7 +1690,7 @@ export class ApiService {
 		variables: {
 			uuid: string
 		}
-	): Promise<ApolloQueryResult<{ retrieveVlbItem: VlbItemResource }>> {
+	): Promise<ApiResult<{ retrieveVlbItem: VlbItemResource }>> {
 		let result = await this.apollo
 			.query<{
 				retrieveVlbItem: VlbItemResource
@@ -1676,6 +1705,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1702,7 +1732,7 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ listVlbItems: List<VlbItemResource> }>> {
+	): Promise<ApiResult<{ listVlbItems: List<VlbItemResource> }>> {
 		let result = await this.apollo
 			.query<{
 				listVlbItems: List<VlbItemResource>
@@ -1731,6 +1761,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1755,7 +1786,7 @@ export class ApiService {
 			id: string
 		}
 	): Promise<
-		ApolloQueryResult<{ retrieveVlbPublisher: VlbPublisherResource }>
+		ApiResult<{ retrieveVlbPublisher: VlbPublisherResource }>
 	> {
 		let result = await this.apollo
 			.query<{
@@ -1771,6 +1802,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1794,7 +1826,7 @@ export class ApiService {
 		variables: {
 			uuid: string
 		}
-	): Promise<ApolloQueryResult<{ retrieveVlbAuthor: VlbAuthorResource }>> {
+	): Promise<ApiResult<{ retrieveVlbAuthor: VlbAuthorResource }>> {
 		let result = await this.apollo
 			.query<{
 				retrieveVlbAuthor: VlbAuthorResource
@@ -1809,6 +1841,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1833,7 +1866,7 @@ export class ApiService {
 			uuid: string
 		}
 	): Promise<
-		ApolloQueryResult<{ retrieveVlbCollection: VlbCollectionResource }>
+		ApiResult<{ retrieveVlbCollection: VlbCollectionResource }>
 	> {
 		let result = await this.apollo
 			.query<{
@@ -1849,6 +1882,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1873,7 +1907,7 @@ export class ApiService {
 			offset?: number
 		}
 	): Promise<
-		ApolloQueryResult<{ listVlbCollections: List<VlbCollectionResource> }>
+		ApiResult<{ listVlbCollections: List<VlbCollectionResource> }>
 	> {
 		let result = await this.apollo
 			.query<{
@@ -1897,6 +1931,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -1922,7 +1957,7 @@ export class ApiService {
 			limit?: number
 			offset?: number
 		}
-	): Promise<ApolloQueryResult<{ search: List<VlbItemResource> }>> {
+	): Promise<ApiResult<{ search: List<VlbItemResource> }>> {
 		let result = await this.apollo
 			.query<{
 				search: List<VlbItemResource>
@@ -1945,6 +1980,7 @@ export class ApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (

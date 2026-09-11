@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { RoutingService } from "src/app/services/routing-service"
 import { LocalizationService } from "src/app/services/localization-service"
@@ -7,6 +7,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-store-categories-page",
 	templateUrl: "./store-categories-page.component.html",
 	styleUrl: "./store-categories-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class StoreCategoriesPageComponent {

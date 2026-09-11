@@ -1,12 +1,13 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
@@ -16,6 +17,7 @@ import { StoreBookItem } from "src/app/misc/types"
 @Component({
 	selector: "pocketlib-add-book-dialog",
 	templateUrl: "./add-book-dialog.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AddBookDialogComponent {

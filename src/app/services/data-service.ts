@@ -1,5 +1,4 @@
-import { Injectable, Inject, Optional, PLATFORM_ID } from "@angular/core"
-import { DOCUMENT } from "@angular/common"
+import { Injectable, Inject, Optional, PLATFORM_ID, DOCUMENT } from "@angular/core"
 import { NavigationEnd, Router } from "@angular/router"
 import { canonicalUrl } from "../misc/seo"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"

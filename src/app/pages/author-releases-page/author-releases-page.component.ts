@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faAngleRight } from "@fortawesome/pro-light-svg-icons"
 import { DataService } from "src/app/services/data-service"
@@ -18,6 +18,7 @@ interface ReleaseItem {
 @Component({
 	templateUrl: "./author-releases-page.component.html",
 	styleUrl: "./author-releases-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorReleasesPageComponent {

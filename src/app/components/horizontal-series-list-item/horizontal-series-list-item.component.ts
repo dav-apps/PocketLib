@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { SeriesListItem } from "src/app/misc/types"
 
@@ -6,6 +6,7 @@ import { SeriesListItem } from "src/app/misc/types"
 	selector: "pocketlib-horizontal-series-list-item",
 	templateUrl: "./horizontal-series-list-item.component.html",
 	styleUrl: "./horizontal-series-list-item.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalSeriesListItemComponent {

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from "@angular/core"
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import { ReadFile } from "ngx-file-helpers"
 import {
 	faAddressCard as faAddressCardLight,
@@ -12,6 +12,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-library-page-cards",
 	templateUrl: "./library-page-cards.component.html",
 	styleUrl: "./library-page-cards.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class LibraryPageCardsComponent {

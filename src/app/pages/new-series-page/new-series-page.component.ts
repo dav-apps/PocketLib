@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from "@angular/core"
+import { Component, Inject, PLATFORM_ID, ChangeDetectionStrategy } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
@@ -20,6 +20,7 @@ interface BookItem {
 	selector: "pocketlib-new-series-page",
 	templateUrl: "./new-series-page.component.html",
 	styleUrl: "./new-series-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewSeriesPageComponent {

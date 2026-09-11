@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { Portal, ComponentPortal } from "@angular/cdk/portal"
@@ -12,6 +12,7 @@ const pdfType = "application/pdf"
 @Component({
 	selector: "pocketlib-book-page",
 	templateUrl: "./book-page.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class BookPageComponent {

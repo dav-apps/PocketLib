@@ -1,9 +1,10 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	ViewChild
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { LocalizationService } from "src/app/services/localization-service"
 import { PriceInputComponent } from "src/app/components/price-input/price-input.component"
@@ -12,6 +13,7 @@ import { PriceInputComponent } from "src/app/components/price-input/price-input.
 	selector: "pocketlib-new-book-page-price-section",
 	templateUrl: "./new-book-page-price-section.component.html",
 	styleUrl: "./new-book-page-price-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPagePriceSectionComponent {

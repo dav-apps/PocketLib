@@ -1,10 +1,11 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	SimpleChange,
-	SimpleChanges
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChange,
+  SimpleChanges,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { EpubBook } from "src/app/models/EpubBook"
 import { PdfBook } from "src/app/models/PdfBook"
@@ -15,6 +16,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-library-page-book-card",
 	templateUrl: "./library-page-book-card.component.html",
 	styleUrl: "./library-page-book-card.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class LibraryPageBookCardComponent {

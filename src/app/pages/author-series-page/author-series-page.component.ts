@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, HostListener } from "@angular/core"
+import { Component, ViewChild, ElementRef, HostListener, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faTrashCan as faTrashCanLight } from "@fortawesome/pro-light-svg-icons"
 import { ContextMenu } from "dav-ui-components"
@@ -24,6 +24,7 @@ interface StoreBookItem {
 	selector: "pocketlib-author-series-page",
 	templateUrl: "./author-series-page.component.html",
 	styleUrl: "./author-series-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorSeriesPageComponent {

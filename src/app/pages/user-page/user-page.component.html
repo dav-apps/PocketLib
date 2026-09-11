@@ -150,7 +150,8 @@
 	</div>
 	}
 
-	<div class="orders-container slide-up-in" *ngIf="orders.length > 0">
+	@if (orders.length > 0) {
+	<div class="orders-container slide-up-in">
 		<h2>{{ locale.yourOrders }}</h2>
 
 		<div class="orders-list-container">
@@ -165,6 +166,7 @@
 			</dav-list>
 		</div>
 	</div>
+	}
 </div>
 
 <pocketlib-logout-dialog

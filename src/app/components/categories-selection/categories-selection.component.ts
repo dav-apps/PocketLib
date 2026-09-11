@@ -1,9 +1,10 @@
-import { Component, Output, EventEmitter } from "@angular/core"
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 
 @Component({
 	selector: "pocketlib-categories-selection",
 	templateUrl: "./categories-selection.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class CategoriesSelectionComponent {

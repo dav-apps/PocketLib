@@ -1,12 +1,13 @@
 import {
-	Component,
-	Input,
-	Output,
-	ViewChild,
-	ElementRef,
-	EventEmitter,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  ViewChild,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
@@ -16,6 +17,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-upgrade-pro-dialog",
 	templateUrl: "./upgrade-pro-dialog.component.html",
 	styleUrl: "./upgrade-pro-dialog.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class UpgradeProDialogComponent {

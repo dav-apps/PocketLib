@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { LocalizationService } from "src/app/services/localization-service"
 
 /**
@@ -11,6 +11,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-not-found",
 	templateUrl: "./not-found.component.html",
 	styleUrl: "./not-found.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NotFoundComponent {

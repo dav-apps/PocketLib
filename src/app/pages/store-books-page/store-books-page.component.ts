@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
@@ -12,7 +12,7 @@ import {
 	StoreBookResource,
 	StoreBooksPageContext
 } from "src/app/misc/types"
-import { ApolloQueryResult } from "@apollo/client"
+import { ApiResult } from "../../misc/api-result"
 
 interface BookItem {
 	uuid: string
@@ -25,6 +25,7 @@ interface BookItem {
 @Component({
 	templateUrl: "./store-books-page.component.html",
 	styleUrl: "./store-books-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class StoreBooksPageComponent {
@@ -110,7 +111,7 @@ export class StoreBooksPageComponent {
 		this.books = []
 		this.dataService.simpleLoadingScreenVisible = true
 
-		let response: ApolloQueryResult<{
+		let response: ApiResult<{
 			listStoreBooks: List<StoreBookResource>
 		}> = null
 

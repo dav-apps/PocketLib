@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { SwUpdate, VersionEvent } from "@angular/service-worker"
 import { faCheck } from "@fortawesome/pro-light-svg-icons"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
@@ -18,6 +18,7 @@ interface LanguageOption {
 @Component({
 	templateUrl: "./settings-page.component.html",
 	styleUrl: "./settings-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class SettingsPageComponent {

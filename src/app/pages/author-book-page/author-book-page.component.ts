@@ -1,6 +1,6 @@
-import { Component, ViewChild } from "@angular/core"
+import { Component, ViewChild, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
-import { MutationResult } from "apollo-angular"
+import { ApiResult } from "../../misc/api-result"
 import { ReadFile } from "ngx-file-helpers"
 import { faPen as faPenLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
@@ -27,6 +27,7 @@ import {
 @Component({
 	templateUrl: "./author-book-page.component.html",
 	styleUrl: "./author-book-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorBookPageComponent {
@@ -682,7 +683,7 @@ export class AuthorBookPageComponent {
 	}
 
 	UpdateStoreBookResponse(
-		response: MutationResult<{ updateStoreBook: StoreBookResource }>
+		response: ApiResult<{ updateStoreBook: StoreBookResource }>
 	) {
 		if (this.editDescription) {
 			// The description was updated

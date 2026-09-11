@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import { DropdownOption, DropdownOptionType } from "dav-ui-components"
 import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-language-dropdown",
 	templateUrl: "./language-dropdown.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class LanguageDropdownComponent {

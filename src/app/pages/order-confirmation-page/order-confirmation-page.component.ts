@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { confetti } from "@tsparticles/confetti"
 import { DataService } from "src/app/services/data-service"
@@ -9,6 +9,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	templateUrl: "./order-confirmation-page.component.html",
 	styleUrl: "./order-confirmation-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class OrderConfirmationPageComponent {

@@ -1,10 +1,11 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { DataService } from "src/app/services/data-service"
@@ -15,6 +16,7 @@ import { getLanguage } from "src/app/misc/utils"
 	selector: "pocketlib-new-book-page-description-section",
 	templateUrl: "./new-book-page-description-section.component.html",
 	styleUrl: "./new-book-page-description-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageDescriptionSectionComponent {

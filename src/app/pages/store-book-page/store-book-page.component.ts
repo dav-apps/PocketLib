@@ -1,4 +1,4 @@
-import { Component, ViewChild, Inject, PLATFORM_ID } from "@angular/core"
+import { Component, ViewChild, Inject, PLATFORM_ID, ChangeDetectionStrategy } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute, ParamMap } from "@angular/router"
 import {
@@ -41,6 +41,7 @@ import {
 	selector: "pocketlib-store-book-page",
 	templateUrl: "./store-book-page.component.html",
 	styleUrl: "./store-book-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class StoreBookPageComponent {
@@ -895,7 +896,7 @@ export class StoreBookPageComponent {
 	backButtonClick() {
 		// Check if the user came from the confirmation page
 		let lastUrl =
-			this.router.lastSuccessfulNavigation.previousNavigation?.extractedUrl.toString()
+			this.router.lastSuccessfulNavigation().previousNavigation?.extractedUrl.toString()
 
 		if (lastUrl != null && lastUrl.endsWith("/confirmation")) {
 			this.routingService.navigateToStorePage()

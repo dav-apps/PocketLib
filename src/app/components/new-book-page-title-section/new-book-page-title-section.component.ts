@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import { LocalizationService } from "src/app/services/localization-service"
 
 @Component({
 	selector: "pocketlib-new-book-page-title-section",
 	templateUrl: "./new-book-page-title-section.component.html",
 	styleUrl: "./new-book-page-title-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageTitleSectionComponent {

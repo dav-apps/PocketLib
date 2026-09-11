@@ -16,6 +16,27 @@ Log in with your dav Account to save your library and reading progress in the cl
 ## Getting started
 You can find PocketLib on [pocketlib.app](https://pocketlib.app/)
 
+### Local development
+
+Use the Node.js version in `.nvmrc` (`nvm install && nvm use`). Angular 22
+requires Node.js 22.22.3+, 24.15.0+, or 26+ within the supported release lines.
+Set `FONTAWESOME_NPM_AUTH_TOKEN` for access to the private Font Awesome packages,
+then run:
+
+```sh
+npm ci
+npm run dev
+```
+
+Run `npm test` for the regression tests and `npm run build` for the production
+browser and SSR bundles. `npm start` serves the production build on port 3001
+(override with `PORT`).
+
+SSR accepts `pocketlib.app`, `www.pocketlib.app`, and local loopback hosts by
+default. For staging or other deployment domains, set `NG_ALLOWED_HOSTS` to a
+comma-separated list of allowed hostnames (without schemes or ports). This
+replaces the default list.
+
 <a href='https://pocketlib.app/' target="_blank"><img src='https://dav-misc.fra1.cdn.digitaloceanspaces.com/PWA-white-en.svg' height="48" /></a>
 
 ## Contributing

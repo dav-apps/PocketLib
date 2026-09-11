@@ -1,11 +1,12 @@
 import {
-	Component,
-	Input,
-	ViewChild,
-	ElementRef,
-	HostListener,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
@@ -51,6 +52,7 @@ interface AuthorItem {
 	selector: "pocketlib-publisher-profile",
 	templateUrl: "./publisher-profile.component.html",
 	styleUrl: "./publisher-profile.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class PublisherProfileComponent {

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 import { LocalizationService } from "src/app/services/localization-service"
 import { BookListItem } from "src/app/misc/types"
@@ -7,6 +7,7 @@ import { BookListItem } from "src/app/misc/types"
 	selector: "pocketlib-store-book-card",
 	templateUrl: "./store-book-card.component.html",
 	styleUrl: "./store-book-card.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class StoreBookCardComponent {

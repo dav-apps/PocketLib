@@ -1,11 +1,12 @@
 import {
-	Component,
-	Output,
-	EventEmitter,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
@@ -14,6 +15,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-remove-book-dialog",
 	templateUrl: "./remove-book-dialog.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class RemoveBookDialogComponent {

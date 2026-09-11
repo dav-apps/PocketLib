@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight
@@ -20,6 +20,7 @@ interface Name {
 	selector: "pocketlib-edit-names",
 	templateUrl: "./edit-names.component.html",
 	styleUrl: "./edit-names.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class EditNamesComponent {

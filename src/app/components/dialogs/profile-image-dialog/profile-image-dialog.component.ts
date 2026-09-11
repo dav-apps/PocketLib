@@ -1,11 +1,12 @@
 import {
-	Component,
-	Output,
-	EventEmitter,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { ReadFile } from "ngx-file-helpers"
@@ -17,6 +18,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-profile-image-dialog",
 	templateUrl: "./profile-image-dialog.component.html",
 	styleUrl: "profile-image-dialog.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class ProfileImageDialogComponent {

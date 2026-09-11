@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -12,6 +12,7 @@ import { StoreBookStatus } from "src/app/misc/types"
 @Component({
 	templateUrl: "./author-book-dashboard-page.component.html",
 	styleUrl: "./author-book-dashboard-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorBookDashboardPageComponent {

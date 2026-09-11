@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { Router } from "@angular/router"
 import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { CategoryCard } from "src/app/misc/types"
@@ -11,6 +11,7 @@ type HorizontalCategoryListAlignment = "start" | "center"
 	selector: "pocketlib-horizontal-category-list",
 	templateUrl: "./horizontal-category-list.component.html",
 	styleUrl: "./horizontal-category-list.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalCategoryListComponent {

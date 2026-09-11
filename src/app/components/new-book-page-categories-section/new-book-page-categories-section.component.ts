@@ -1,9 +1,10 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	ViewChild
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { LocalizationService } from "src/app/services/localization-service"
 import { CategoriesSelectionComponent } from "src/app/components/categories-selection/categories-selection.component"
@@ -12,6 +13,7 @@ import { CategoriesSelectionComponent } from "src/app/components/categories-sele
 	selector: "pocketlib-new-book-page-categories-section",
 	templateUrl: "./new-book-page-categories-section.component.html",
 	styleUrl: "./new-book-page-categories-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageCategoriesSectionComponent {

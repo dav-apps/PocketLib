@@ -8,8 +8,8 @@
 			<dav-blurhash-image
 				[src]="logoContent"
 				[fallbackSrc]="dataService.defaultProfileImageUrl"
-				[blurhash]="publisher?.logo?.blurhash"
-				[title]="publisher?.name"
+				[blurhash]="$safeNavigationMigration(publisher?.logo?.blurhash)"
+				[title]="$safeNavigationMigration(publisher?.name)"
 				[alt]="logoAlt"
 				[width]="logoWidth"
 				[height]="logoWidth"

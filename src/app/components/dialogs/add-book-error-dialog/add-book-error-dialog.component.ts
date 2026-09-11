@@ -1,9 +1,10 @@
 import {
-	Component,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
@@ -12,6 +13,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 @Component({
 	selector: "pocketlib-add-book-error-dialog",
 	templateUrl: "./add-book-error-dialog.component.html",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AddBookErrorDialogComponent {

@@ -1,11 +1,12 @@
 import {
-	Component,
-	HostListener,
-	NgZone,
-	ViewChild,
-	ElementRef,
-	Inject,
-	PLATFORM_ID
+  Component,
+  HostListener,
+  NgZone,
+  ViewChild,
+  ElementRef,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Router } from "@angular/router"
@@ -64,6 +65,7 @@ const doubleTapToleranceTime = 400
 	selector: "pocketlib-epub-viewer",
 	templateUrl: "./epub-viewer.component.html",
 	styleUrl: "./epub-viewer.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class EpubViewerComponent {

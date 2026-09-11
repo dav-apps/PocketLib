@@ -1,16 +1,17 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	HostListener,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  HostListener,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
-import { MutationResult } from "apollo-angular"
+import { ApiResult } from "../../misc/api-result"
 import { ReadFile } from "ngx-file-helpers"
 import { faGlobe as faGlobeLight } from "@fortawesome/pro-light-svg-icons"
 import {
@@ -73,6 +74,7 @@ const maxItemsPerPage = 5
 	selector: "pocketlib-author-profile",
 	templateUrl: "./author-profile.component.html",
 	styleUrl: "./author-profile.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorProfileComponent {
@@ -810,7 +812,7 @@ export class AuthorProfileComponent {
 	}
 
 	async ProcessSetBioResponse(
-		response: MutationResult<{ setAuthorBio: AuthorBioResource }>
+		response: ApiResult<{ setAuthorBio: AuthorBioResource }>
 	) {
 		if (response.errors == null) {
 			//this.author.ClearBios()

@@ -1,10 +1,11 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import {
@@ -20,6 +21,7 @@ import { Language } from "src/app/misc/types"
 	selector: "pocketlib-price-input",
 	templateUrl: "./price-input.component.html",
 	styleUrl: "./price-input.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class PriceInputComponent {

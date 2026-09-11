@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { GetBook } from "src/app/models/BookManager"
@@ -8,6 +8,7 @@ import { PdfBook } from "src/app/models/PdfBook"
 @Component({
 	selector: "pocketlib-loading-page",
 	template: "",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class LoadingPageComponent {

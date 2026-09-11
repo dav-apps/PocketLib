@@ -11,8 +11,8 @@
 				<dav-blurhash-image
 					[src]="profileImageContent"
 					[fallbackSrc]="dataService.defaultProfileImageUrl"
-					[blurhash]="author?.profileImage?.blurhash"
-					[title]="author?.firstName + ' ' + author?.lastName"
+					[blurhash]="$safeNavigationMigration(author?.profileImage?.blurhash)"
+					[title]="$safeNavigationMigration(author?.firstName) + ' ' + $safeNavigationMigration(author?.lastName)"
 					[alt]="profileImageAlt"
 					[width]="profileImageWidth"
 					[height]="profileImageWidth"

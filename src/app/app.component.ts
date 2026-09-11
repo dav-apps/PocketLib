@@ -1,11 +1,12 @@
 import {
-	Component,
-	HostListener,
-	ViewChild,
-	ElementRef,
-	ChangeDetectorRef,
-	Inject,
-	PLATFORM_ID
+  Component,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router"
@@ -57,6 +58,7 @@ import { environment } from "src/environments/environment"
 	selector: "app-root",
 	templateUrl: "./app.component.html",
 	styleUrl: "./app.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AppComponent {

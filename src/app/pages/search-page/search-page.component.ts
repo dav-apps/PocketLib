@@ -1,9 +1,10 @@
 import {
-	Component,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformServer } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
@@ -26,6 +27,7 @@ interface BookItem {
 @Component({
 	templateUrl: "./search-page.component.html",
 	styleUrl: "./search-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class SearchPageComponent {

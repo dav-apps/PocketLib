@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -18,6 +18,7 @@ type HorizontalSeriesListType = "latest" | "random"
 	selector: "pocketlib-horizontal-series-list",
 	templateUrl: "./horizontal-series-list.component.html",
 	styleUrl: "./horizontal-series-list.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalSeriesListComponent {

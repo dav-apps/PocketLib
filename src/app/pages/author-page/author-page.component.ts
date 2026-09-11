@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core"
+import { Component, ViewChild, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { faPlus as faPlusLight } from "@fortawesome/pro-light-svg-icons"
 import { CreatePublisherDialogComponent } from "src/app/components/dialogs/create-publisher-dialog/create-publisher-dialog.component"
@@ -15,6 +15,7 @@ import { Author } from "src/app/models/Author"
 	selector: "pocketlib-author-page",
 	templateUrl: "./author-page.component.html",
 	styleUrl: "./author-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorPageComponent {

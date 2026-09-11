@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { Router } from "@angular/router"
 import { isSuccessStatusCode } from "dav-js"
 import { DataService } from "src/app/services/data-service"
@@ -14,6 +14,7 @@ type HorizontalAuthorListAlignment = "start" | "center"
 	selector: "pocketlib-horizontal-author-list",
 	templateUrl: "./horizontal-author-list.component.html",
 	styleUrl: "./horizontal-author-list.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalAuthorListComponent {

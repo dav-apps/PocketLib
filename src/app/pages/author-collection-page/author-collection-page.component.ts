@@ -1,4 +1,4 @@
-import { Component, ViewChild, Inject, PLATFORM_ID } from "@angular/core"
+import { Component, ViewChild, Inject, PLATFORM_ID, ChangeDetectionStrategy } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
 import { NamesDialogComponent } from "src/app/components/dialogs/names-dialog/names-dialog.component"
@@ -22,6 +22,7 @@ interface ExtendedBookListItem extends BookListItem {
 	selector: "pocketlib-author-collection-page",
 	templateUrl: "./author-collection-page.component.html",
 	styleUrl: "./author-collection-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class AuthorCollectionPageComponent {

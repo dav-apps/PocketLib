@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from "@angular/core"
+import { Component, Input, SimpleChanges, ChangeDetectionStrategy } from "@angular/core"
 import { Router } from "@angular/router"
 import { faArrowRight as faArrowRightLight } from "@fortawesome/pro-light-svg-icons"
 import { isSuccessStatusCode } from "dav-js"
@@ -29,6 +29,7 @@ type HorizontalBookListAlignment = "start" | "center"
 	selector: "pocketlib-horizontal-book-list",
 	templateUrl: "./horizontal-book-list.component.html",
 	styleUrl: "./horizontal-book-list.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalBookListComponent {

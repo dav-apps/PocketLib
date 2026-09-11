@@ -1,11 +1,12 @@
 import {
-	Component,
-	HostListener,
-	ViewChild,
-	ElementRef,
-	ChangeDetectorRef,
-	Inject,
-	PLATFORM_ID
+  Component,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser, isPlatformServer } from "@angular/common"
 import { Router } from "@angular/router"
@@ -40,6 +41,7 @@ const showAllBooksAnimationDuration = 300
 @Component({
 	templateUrl: "./library-page.component.html",
 	styleUrl: "./library-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class LibraryPageComponent {

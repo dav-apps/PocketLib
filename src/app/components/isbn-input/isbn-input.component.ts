@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import {
 	faFloppyDisk as faFloppyDiskLight,
 	faPen as faPenLight,
@@ -14,6 +14,7 @@ const isbnValidityRegex =
 	selector: "pocketlib-isbn-input",
 	templateUrl: "./isbn-input.component.html",
 	styleUrl: "./isbn-input.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class IsbnInputComponent {

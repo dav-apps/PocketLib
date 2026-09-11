@@ -1,11 +1,21 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
 		"outDir": "../out-tsc/app",
-		"types": ["node"]
-  },
-  "files": ["main.ts", "polyfills.ts", "main.server.ts", "server.ts"],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+		"types": [
+			"node"
+		]
+	},
+	"files": [
+		"main.ts",
+		"polyfills.ts",
+		"main.server.ts",
+		"server.ts"
+	],
+	"include": [
+		"src/**/*.d.ts"
+	],
+	"angularCompilerOptions": {
+		"strictTemplates": false
+	}
 }

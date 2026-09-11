@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core"
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core"
 import { AuthorListItem } from "src/app/misc/types"
 import { DataService } from "src/app/services/data-service"
 
@@ -6,6 +6,7 @@ import { DataService } from "src/app/services/data-service"
 	selector: "pocketlib-horizontal-author-list-item",
 	templateUrl: "./horizontal-author-list-item.component.html",
 	styleUrl: "./horizontal-author-list-item.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class HorizontalAuthorListItemComponent {

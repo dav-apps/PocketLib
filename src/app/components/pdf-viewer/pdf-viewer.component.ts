@@ -1,9 +1,10 @@
 import {
-	Component,
-	HostListener,
-	NgZone,
-	ViewChild,
-	ElementRef
+  Component,
+  HostListener,
+  NgZone,
+  ViewChild,
+  ElementRef,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { Router } from "@angular/router"
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons"
@@ -44,6 +45,7 @@ const doubleTapToleranceTime = 400
 	selector: "pocketlib-pdf-viewer",
 	templateUrl: "./pdf-viewer.component.html",
 	styleUrl: "./pdf-viewer.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class PdfViewerComponent {

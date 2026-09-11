@@ -1,9 +1,10 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	ViewChild
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { LocalizationService } from "src/app/services/localization-service"
 import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.component"
@@ -12,6 +13,7 @@ import { IsbnInputComponent } from "src/app/components/isbn-input/isbn-input.com
 	selector: "pocketlib-new-book-page-isbn-section",
 	templateUrl: "./new-book-page-isbn-section.component.html",
 	styleUrl: "./new-book-page-isbn-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageIsbnSectionComponent {

@@ -1,5 +1,5 @@
 import "@dav-apps/ssr-angular/enable-lit-ssr.js"
-import { enableProdMode } from '@angular/core'
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 import { Environment } from "dav-js"
 
@@ -13,5 +13,8 @@ if (
 	enableProdMode()
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic()
+	.bootstrapModule(AppModule, {
+		applicationProviders: [provideZoneChangeDetection()]
+	})
 	.catch(err => console.error(err))

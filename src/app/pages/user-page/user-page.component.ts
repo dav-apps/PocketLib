@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from "@angular/core"
+import { Component, HostListener, ViewChild, ChangeDetectionStrategy } from "@angular/core"
 import { ActivatedRoute } from "@angular/router"
 import { faCircleInfo } from "@fortawesome/pro-regular-svg-icons"
 import {
@@ -22,6 +22,7 @@ import { environment } from "src/environments/environment"
 @Component({
 	templateUrl: "./user-page.component.html",
 	styleUrl: "./user-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class UserPageComponent {
@@ -36,7 +37,7 @@ export class UserPageComponent {
 	@ViewChild("upgradeProDialog")
 	upgradeProDialog: UpgradeProDialogComponent
 	websiteUrl = environment.websiteBaseUrl
-	width: number = window.innerWidth
+	width: number = 0
 	redirect: string
 	usedStoragePercent: number = 0
 	usedStorageText: string = ""
@@ -89,7 +90,7 @@ export class UserPageComponent {
 
 	@HostListener("window:resize")
 	setSize() {
-		this.width = window.innerWidth
+		if (typeof window !== "undefined") this.width = window.innerWidth
 	}
 
 	async loadOrders() {

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { Router, ActivatedRoute } from "@angular/router"
 import { DataService } from "src/app/services/data-service"
 import { ApiService } from "src/app/services/api-service"
@@ -15,6 +15,7 @@ interface BookItem {
 	selector: "pocketlib-store-series-page",
 	templateUrl: "./store-series-page.component.html",
 	styleUrl: "./store-series-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class StoreSeriesPageComponent {

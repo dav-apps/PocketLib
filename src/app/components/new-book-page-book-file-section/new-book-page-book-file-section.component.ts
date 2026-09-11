@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core"
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core"
 import { ReadFile } from "ngx-file-helpers"
 import { LocalizationService } from "src/app/services/localization-service"
 
@@ -6,6 +6,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-new-book-page-book-file-section",
 	templateUrl: "./new-book-page-book-file-section.component.html",
 	styleUrl: "./new-book-page-book-file-section.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageBookFileSectionComponent {

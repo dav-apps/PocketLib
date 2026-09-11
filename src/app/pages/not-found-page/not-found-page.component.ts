@@ -1,9 +1,10 @@
-import { Component } from "@angular/core"
+import { Component, ChangeDetectionStrategy } from "@angular/core"
 import { DataService } from "src/app/services/data-service"
 
 @Component({
 	selector: "pocketlib-not-found-page",
 	template: "<pocketlib-not-found></pocketlib-not-found>",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NotFoundPageComponent {

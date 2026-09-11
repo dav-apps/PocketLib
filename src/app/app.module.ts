@@ -1,8 +1,9 @@
 import { provideLitHydration } from "@dav-apps/ssr-angular"
 import {
-	BrowserModule,
-	provideClientHydration,
-	withEventReplay
+  BrowserModule,
+  provideClientHydration,
+  withEventReplay,
+  withNoIncrementalHydration
 } from "@angular/platform-browser"
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core"
 import { Environment } from "dav-js"
@@ -23,8 +24,8 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome"
 import { ServiceWorkerModule } from "@angular/service-worker"
 
 // Apollo
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http"
-import { APOLLO_NAMED_OPTIONS, ApolloModule } from "apollo-angular"
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http"
+import { APOLLO_NAMED_OPTIONS, Apollo } from "apollo-angular"
 import { HttpLink } from "apollo-angular/http"
 import { InMemoryCache } from "@apollo/client/core"
 
@@ -209,7 +210,6 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		ApolloModule,
 		NgxFileHelpersModule,
 		BrowserAnimationsModule,
 		PortalModule,
@@ -222,6 +222,7 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 		})
 	],
 	providers: [
+		Apollo,
 		RoutingService,
 		DataService,
 		ApiService,
@@ -249,8 +250,8 @@ import { OrderConfirmationPageComponent } from "./pages/order-confirmation-page/
 			},
 			deps: [HttpLink]
 		},
-		provideHttpClient(withInterceptorsFromDi()),
-		provideClientHydration(withEventReplay()),
+		provideHttpClient(withXhr(), withInterceptorsFromDi()),
+		provideClientHydration(withEventReplay(), withNoIncrementalHydration()),
 		provideLitHydration()
 	]
 })

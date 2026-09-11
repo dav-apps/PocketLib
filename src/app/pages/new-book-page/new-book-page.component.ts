@@ -1,9 +1,10 @@
 import {
-	Component,
-	HostListener,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  HostListener,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Router, ActivatedRoute } from "@angular/router"
@@ -21,6 +22,7 @@ import { getLanguage } from "src/app/misc/utils"
 	selector: "pocketlib-new-book-page",
 	templateUrl: "./new-book-page.component.html",
 	styleUrl: "./new-book-page.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class NewBookPageComponent {

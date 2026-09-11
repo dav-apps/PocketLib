@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core"
-import { Apollo, ApolloBase, MutationResult, gql } from "apollo-angular"
-import { ApolloQueryResult, ErrorPolicy } from "@apollo/client/core"
+import { Apollo, ApolloBase, gql } from "apollo-angular"
+import { ErrorPolicy } from "@apollo/client/core"
+import { map } from "rxjs"
+import { ApiResult, toApiResult } from "../misc/api-result"
 import { renewSession } from "dav-js"
 import { davApiClientName } from "src/constants/constants"
 import * as ErrorCodes from "src/constants/errorCodes"
@@ -24,7 +26,7 @@ export class DavApiService {
 	async listOrders(
 		queryData: string,
 		variables?: { status?: OrderStatus[]; limit?: number; offset?: number }
-	): Promise<ApolloQueryResult<{ listOrders: List<Order> }>> {
+	): Promise<ApiResult<{ listOrders: List<Order> }>> {
 		let result = await this.apollo
 			.query<{ listOrders: List<Order> }>({
 				query: gql`
@@ -45,6 +47,7 @@ export class DavApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (
@@ -67,7 +70,7 @@ export class DavApiService {
 		queryData: string,
 		variables: { plan: Plan; successUrl: string; cancelUrl: string }
 	): Promise<
-		MutationResult<{ createSubscriptionCheckoutSession: CheckoutSession }>
+		ApiResult<{ createSubscriptionCheckoutSession: CheckoutSession }>
 	> {
 		let result = await this.apollo
 			.mutate<{
@@ -91,6 +94,7 @@ export class DavApiService {
 				variables,
 				errorPolicy
 			})
+			.pipe(map(toApiResult))
 			.toPromise()
 
 		if (

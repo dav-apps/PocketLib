@@ -1,12 +1,13 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	ElementRef,
-	ViewChild,
-	Inject,
-	PLATFORM_ID
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+  ChangeDetectionStrategy
 } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import { Dialog } from "dav-ui-components"
@@ -16,6 +17,7 @@ import { LocalizationService } from "src/app/services/localization-service"
 	selector: "pocketlib-book-details-dialog",
 	templateUrl: "./book-details-dialog.component.html",
 	styleUrl: "./book-details-dialog.component.scss",
+	changeDetection: ChangeDetectionStrategy.Eager,
 	standalone: false
 })
 export class BookDetailsDialogComponent {
