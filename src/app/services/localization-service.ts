@@ -1,4 +1,4 @@
-import { Injectable, Inject, Optional, PLATFORM_ID, TransferState, makeStateKey } from "@angular/core"
+import { Injectable, Inject, Optional, PLATFORM_ID, REQUEST, TransferState, makeStateKey } from "@angular/core"
 import { isPlatformBrowser } from "@angular/common"
 import * as locales from "src/locales/locales"
 import { Language } from "../misc/types"
@@ -15,12 +15,14 @@ export class LocalizationService {
 	constructor(
 		@Inject(PLATFORM_ID) private platformId: object,
 		@Optional() @Inject(REQUEST_LANGUAGE) requestLanguage: string | null,
-		transferState: TransferState
+		transferState: TransferState,
+		@Optional() @Inject(REQUEST) request: Request | null
 	) {
 		const browser = isPlatformBrowser(this.platformId)
 		const preferred = browser
 			? preferredLanguageTag(navigator.languages.join(","))
-			: preferredLanguageTag(requestLanguage)
+			// ng serve uses Angular's request token instead of our Express provider.
+			: preferredLanguageTag(requestLanguage ?? request?.headers.get("accept-language") ?? null)
 		// Hydrate with the exact locale used for the server markup.
 		const tag = browser
 			? transferState.get(renderedLanguage, preferred ?? "en")
